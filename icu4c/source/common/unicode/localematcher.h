@@ -4,18 +4,18 @@
 // localematcher.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LOCALEMATCHER_H__
-#define __LOCALEMATCHER_H__
+#నిర్వచితం_కాకపోతే __LOCALEMATCHER_H__
+#నిర్వచించు __LOCALEMATCHER_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include <optional>
+#అన్తర్భావ <optional>
 
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/uobject.h"
 
 /**
  * \file
@@ -28,7 +28,7 @@
  * @see LocaleMatcher::Builder#setFavorSubtag(ULocMatchFavorSubtag)
  * @stable ICU 65
  */
-enum ULocMatchFavorSubtag {
+గణన ULoc_సరిపోలిక_Favor_Subtag {
     /**
      * Language differences are most important, then script differences, then region differences.
      * (This is the default behavior.)
@@ -43,9 +43,9 @@ enum ULocMatchFavorSubtag {
      */
     ULOCMATCH_FAVOR_SCRIPT
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
-#endif
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
+రకనిర్వచనం గణన ULoc_సరిపోలిక_Favor_Subtag ULoc_సరిపోలిక_Favor_Subtag;
+#అయితే_ముగింపు
 
 /**
  * Builder option for whether all desired locales are treated equally or
@@ -54,7 +54,7 @@ typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
  * @see LocaleMatcher::Builder#setDemotionPerDesiredLocale(ULocMatchDemotion)
  * @stable ICU 65
  */
-enum ULocMatchDemotion {
+గణన ULoc_సరిపోలిక_Demotion {
     /**
      * All desired locales are treated equally.
      *
@@ -89,9 +89,9 @@ enum ULocMatchDemotion {
      */
     ULOCMATCH_DEMOTION_REGION
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDemotion ULocMatchDemotion;
-#endif
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
+రకనిర్వచనం గణన ULoc_సరిపోలిక_Demotion ULoc_సరిపోలిక_Demotion;
+#అయితే_ముగింపు
 
 /**
  * Builder option for whether to include or ignore one-way (fallback) match data.
@@ -110,7 +110,7 @@ typedef enum ULocMatchDemotion ULocMatchDemotion;
  * @see LocaleMatcher::Builder#setDirection(ULocMatchDirection)
  * @stable ICU 67
  */
-enum ULocMatchDirection {
+గణన ULoc_సరిపోలిక_Direction {
     /**
      * Locale matching includes one-way matches such as Breton→French. (default)
      *
@@ -125,18 +125,18 @@ enum ULocMatchDirection {
      */
     ULOCMATCH_DIRECTION_ONLY_TWO_WAY
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDirection ULocMatchDirection;
-#endif
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
+రకనిర్వచనం గణన ULoc_సరిపోలిక_Direction ULoc_సరిపోలిక_Direction;
+#అయితే_ముగింపు
 
-struct UHashtable;
+నిర్మాణం UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LSR;
+నిర్మాణం LSR;
 
 class LikelySubtags;
-class LocaleDistance;
+class Locale_దూరం;
 class LocaleLsrIterator;
 class UVector;
 
@@ -183,16 +183,16 @@ class UVector;
  *
  * @stable ICU 65
  */
-class U_COMMON_API LocaleMatcher : public UMemory {
-public:
+class U_COMMON_API LocaleMatcher : బహిరంగ UMemory {
+బహిరంగ:
     /**
      * Data for the best-matching pair of a desired and a supported locale.
      * Movable but not copyable.
      *
      * @stable ICU 65
      */
-    class U_COMMON_API Result : public UMemory {
-    public:
+    class U_COMMON_API ఫలితం_2 : బహిరంగ UMemory {
+    బహిరంగ:
         /**
          * Move constructor; might modify the source.
          * This object will have the same contents that the source object had.
@@ -200,14 +200,14 @@ public:
          * @param src Result to move contents from.
          * @stable ICU 65
          */
-        Result(Result &&src) noexcept;
+        ఫలితం_2(ఫలితం_2 &&src) noexcept;
 
         /**
          * Destructor.
          *
          * @stable ICU 65
          */
-        ~Result();
+        ~ఫలితం_2();
 
         /**
          * Move assignment; might modify the source.
@@ -216,7 +216,7 @@ public:
          * @param src Result to move contents from.
          * @stable ICU 65
          */
-        Result& operator=(Result&& src) noexcept U_LIFETIME_BOUND;
+        ఫలితం_2& క్రియాకారకం=(ఫలితం_2&& src) noexcept U_LIFETIME_BOUND;
 
         /**
          * Returns the best-matching desired locale.
@@ -225,7 +225,7 @@ public:
          * @return the best-matching desired locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getDesiredLocale() const U_LIFETIME_BOUND { return desiredLocale; }
+        అంతఃవరుస స్థిరరాశి Locale* getDesiredLocale() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి desiredLocale; }
 
         /**
          * Returns the best-matching supported locale.
@@ -236,7 +236,7 @@ public:
          * @return the best-matching supported locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getSupportedLocale() const U_LIFETIME_BOUND { return supportedLocale; }
+        అంతఃవరుస స్థిరరాశి Locale* getSupportedLocale() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి supportedLocale; }
 
         /**
          * Returns the index of the best-matching desired locale in the input Iterable order.
@@ -245,7 +245,7 @@ public:
          * @return the index of the best-matching desired locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getDesiredIndex() const { return desiredIndex; }
+        అంతఃవరుస int32_t get_Desired_సూచీ() స్థిరరాశి { తిరిగి desired_సూచీ; }
 
         /**
          * Returns the index of the best-matching supported locale in the
@@ -257,7 +257,7 @@ public:
          * @return the index of the best-matching supported locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getSupportedIndex() const { return supportedIndex; }
+        అంతఃవరుస int32_t get_Supported_సూచీ() స్థిరరాశి { తిరిగి supported_సూచీ; }
 
         /**
          * Takes the best-matching supported locale and adds relevant fields of the
@@ -271,25 +271,25 @@ public:
          * @return a locale combining the best-matching desired and supported locales.
          * @stable ICU 65
          */
-        Locale makeResolvedLocale(UErrorCode &errorCode) const;
+        Locale makeResolvedLocale(UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
-    private:
-        Result(const Locale *desired, const Locale *supported,
-               int32_t desIndex, int32_t suppIndex, UBool owned) :
+    అంతరంగ:
+        ఫలితం_2(స్థిరరాశి Locale *desired, స్థిరరాశి Locale *supported,
+               int32_t des_సూచీ, int32_t supp_సూచీ, UBool owned) :
                 desiredLocale(desired), supportedLocale(supported),
-                desiredIndex(desIndex), supportedIndex(suppIndex),
+                desired_సూచీ(des_సూచీ), supported_సూచీ(supp_సూచీ),
                 desiredIsOwned(owned) {}
 
-        Result(const Result &other) = delete;
-        Result &operator=(const Result &other) = delete;
+        ఫలితం_2(స్థిరరాశి ఫలితం_2 &other) = delete;
+        ఫలితం_2 &క్రియాకారకం=(స్థిరరాశి ఫలితం_2 &other) = delete;
 
-        const Locale *desiredLocale;
-        const Locale *supportedLocale;
-        int32_t desiredIndex;
-        int32_t supportedIndex;
+        స్థిరరాశి Locale *desiredLocale;
+        స్థిరరాశి Locale *supportedLocale;
+        int32_t desired_సూచీ;
+        int32_t supported_సూచీ;
         UBool desiredIsOwned;
 
-        friend class LocaleMatcher;
+        మిత్ర class LocaleMatcher;
     };
 
     /**
@@ -298,8 +298,8 @@ public:
      *
      * @stable ICU 65
      */
-    class U_COMMON_API Builder : public UMemory {
-    public:
+    class U_COMMON_API Builder : బహిరంగ UMemory {
+    బహిరంగ:
         /**
          * Constructs a builder used in chaining parameters for building a LocaleMatcher.
          *
@@ -330,7 +330,7 @@ public:
          * @param src Builder to move contents from.
          * @stable ICU 65
          */
-        Builder& operator=(Builder&& src) noexcept U_LIFETIME_BOUND;
+        Builder& క్రియాకారకం=(Builder&& src) noexcept U_LIFETIME_BOUND;
 
         /**
          * Parses an Accept-Language string
@@ -343,7 +343,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setSupportedLocalesFromListString(StringPiece locales) U_LIFETIME_BOUND;
+        Builder& సమితి_Supported_Locales_From_List_String(StringPiece locales) U_LIFETIME_BOUND;
 
         /**
          * Copies the supported locales, preserving iteration order.
@@ -354,7 +354,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setSupportedLocales(Locale::Iterator& locales) U_LIFETIME_BOUND;
+        Builder& సమితి_Supported_Locales(Locale::Iterator& locales) U_LIFETIME_BOUND;
 
         /**
          * Copies the supported locales from the begin/end range, preserving iteration order.
@@ -369,14 +369,14 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        template <typename Iter>
-        Builder& setSupportedLocales(Iter begin, Iter end) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+        మూస <typename Iter>
+        Builder& సమితి_Supported_Locales(Iter begin, Iter చివర) U_LIFETIME_BOUND {
+            ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి *this; }
             clearSupportedLocales();
-            while (begin != end) {
-                addSupportedLocale(*begin++);
+            అయితే (begin != చివర) {
+                కూడు_Supported_Locale(*begin++);
             }
-            return *this;
+            తిరిగి *this;
         }
 
         /**
@@ -394,15 +394,15 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        template <typename Iter, typename Conv>
-        Builder& setSupportedLocalesViaConverter(Iter begin, Iter end,
+        మూస <typename Iter, typename Conv>
+        Builder& సమితి_Supported_Locales_ద్వారా_Converter(Iter begin, Iter చివర,
                                                  Conv converter) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+            ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి *this; }
             clearSupportedLocales();
-            while (begin != end) {
-                addSupportedLocale(converter(*begin++));
+            అయితే (begin != చివర) {
+                కూడు_Supported_Locale(converter(*begin++));
             }
-            return *this;
+            తిరిగి *this;
         }
 
         /**
@@ -413,7 +413,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& addSupportedLocale(const Locale& locale) U_LIFETIME_BOUND;
+        Builder& కూడు_Supported_Locale(స్థిరరాశి Locale& locale) U_LIFETIME_BOUND;
 
         /**
          * Sets no default locale.
@@ -423,7 +423,7 @@ public:
          *
          * @stable ICU 68
          */
-        Builder& setNoDefaultLocale() U_LIFETIME_BOUND;
+        Builder& సమితి_No_Default_Locale() U_LIFETIME_BOUND;
 
         /**
          * Sets the default locale; if nullptr, or if it is not set explicitly,
@@ -435,7 +435,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setDefaultLocale(const Locale* defaultLocale) U_LIFETIME_BOUND;
+        Builder& సమితి_Default_Locale(స్థిరరాశి Locale* defaultLocale) U_LIFETIME_BOUND;
 
         /**
          * If ULOCMATCH_FAVOR_SCRIPT, then the language differences are smaller than script
@@ -447,7 +447,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setFavorSubtag(ULocMatchFavorSubtag subtag) U_LIFETIME_BOUND;
+        Builder& సమితి_Favor_Subtag(ULoc_సరిపోలిక_Favor_Subtag subtag) U_LIFETIME_BOUND;
 
         /**
          * Option for whether all desired locales are treated equally or
@@ -457,7 +457,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setDemotionPerDesiredLocale(ULocMatchDemotion demotion) U_LIFETIME_BOUND;
+        Builder& సమితి_Demotion_చొప్పున_Desired_Locale(ULoc_సరిపోలిక_Demotion demotion) U_LIFETIME_BOUND;
 
         /**
          * Option for whether to include or ignore one-way (fallback) match data.
@@ -467,11 +467,11 @@ public:
          * @return this Builder object
          * @stable ICU 67
          */
-        Builder& setDirection(ULocMatchDirection matchDirection) U_LIFETIME_BOUND {
-            if (U_SUCCESS(errorCode_)) {
-                direction_ = matchDirection;
+        Builder& సమితి_Direction(ULoc_సరిపోలిక_Direction సరిపోలిక_Direction) U_LIFETIME_BOUND {
+            ఒకవేళ (U_SUCCESS(error_సంకేతం_2)) {
+                direction_ = సరిపోలిక_Direction;
             }
-            return *this;
+            తిరిగి *this;
         }
 
         /**
@@ -495,7 +495,7 @@ public:
          * @return this Builder object
          * @stable ICU 68
          */
-        Builder& setMaxDistance(const Locale& desired, const Locale& supported) U_LIFETIME_BOUND;
+        Builder& సమితి_Max_దూరం(స్థిరరాశి Locale& desired, స్థిరరాశి Locale& supported) U_LIFETIME_BOUND;
 
         /**
          * Sets the UErrorCode if an error occurred while setting parameters.
@@ -507,7 +507,7 @@ public:
          * @return true if U_FAILURE(outErrorCode)
          * @stable ICU 65
          */
-        UBool copyErrorTo(UErrorCode &outErrorCode) const;
+        UBool copy_Error_గమ్యం(UError_సంకేతం &బహిర్గతం_Error_సంకేతం) స్థిరరాశి;
 
         /**
          * Builds and returns a new locale matcher.
@@ -519,27 +519,27 @@ public:
          * @return LocaleMatcher
          * @stable ICU 65
          */
-        LocaleMatcher build(UErrorCode &errorCode) const;
+        LocaleMatcher build(UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
-    private:
-        friend class LocaleMatcher;
+    అంతరంగ:
+        మిత్ర class LocaleMatcher;
 
-        Builder(const Builder &other) = delete;
-        Builder &operator=(const Builder &other) = delete;
+        Builder(స్థిరరాశి Builder &other) = delete;
+        Builder &క్రియాకారకం=(స్థిరరాశి Builder &other) = delete;
 
-        void clearSupportedLocales();
-        bool ensureSupportedLocaleVector();
+        శూన్య clearSupportedLocales();
+        bool ensure_Supported_Locale_సదిశ();
 
-        UErrorCode errorCode_ = U_ZERO_ERROR;
+        UError_సంకేతం error_సంకేతం_2 = U_ZERO_ERROR;
         UVector *supportedLocales_ = nullptr;
-        int32_t thresholdDistance_ = -1;
-        ULocMatchDemotion demotion_ = ULOCMATCH_DEMOTION_REGION;
+        int32_t పరిమితి_దూరం = -1;
+        ULoc_సరిపోలిక_Demotion demotion_ = ULOCMATCH_DEMOTION_REGION;
         Locale *defaultLocale_ = nullptr;
         bool withDefault_ = true;
-        ULocMatchFavorSubtag favor_ = ULOCMATCH_FAVOR_LANGUAGE;
-        ULocMatchDirection direction_ = ULOCMATCH_DIRECTION_WITH_ONE_WAY;
-        Locale *maxDistanceDesired_ = nullptr;
-        Locale *maxDistanceSupported_ = nullptr;
+        ULoc_సరిపోలిక_Favor_Subtag favor_ = ULOCMATCH_FAVOR_LANGUAGE;
+        ULoc_సరిపోలిక_Direction direction_ = ULOCMATCH_DIRECTION_WITH_ONE_WAY;
+        Locale *max_దూరం_Desired = nullptr;
+        Locale *max_దూరం_Supported = nullptr;
     };
 
     // FYI No public LocaleMatcher constructors in C++; use the Builder.
@@ -566,7 +566,7 @@ public:
      * @return *this
      * @stable ICU 65
      */
-    LocaleMatcher& operator=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND;
+    LocaleMatcher& క్రియాకారకం=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND;
 
     /**
      * Returns the supported locale which best matches the desired locale.
@@ -578,8 +578,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatch(const Locale& desiredLocale,
-                               UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    స్థిరరాశి Locale* get_ఉత్తమ_సరిపోలిక(స్థిరరాశి Locale& desiredLocale,
+                               UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * Returns the supported locale which best matches one of the desired locales.
@@ -591,8 +591,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatch(Locale::Iterator& desiredLocales,
-                               UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    స్థిరరాశి Locale* get_ఉత్తమ_సరిపోలిక(Locale::Iterator& desiredLocales,
+                               UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * Parses an Accept-Language string
@@ -608,8 +608,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatchForListString(StringPiece desiredLocaleList,
-                                            UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    స్థిరరాశి Locale* get_ఉత్తమ_సరిపోలిక_For_List_String(StringPiece desiredLocaleList,
+                                            UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * Returns the best match between the desired locale and the supported locales.
@@ -623,8 +623,8 @@ public:
      * @return the best-matching pair of the desired and a supported locale.
      * @stable ICU 65
      */
-    Result getBestMatchResult(const Locale& desiredLocale U_LIFETIME_BOUND,
-                              UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ఫలితం_2 get_ఉత్తమ_సరిపోలిక_ఫలితం(స్థిరరాశి Locale& desiredLocale U_LIFETIME_BOUND,
+                              UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * Returns the best match between the desired and supported locales.
@@ -638,8 +638,8 @@ public:
      * @return the best-matching pair of a desired and a supported locale.
      * @stable ICU 65
      */
-    Result getBestMatchResult(Locale::Iterator& desiredLocales,
-                              UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ఫలితం_2 get_ఉత్తమ_సరిపోలిక_ఫలితం(Locale::Iterator& desiredLocales,
+                              UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * Returns true if the pair of locales matches acceptably.
@@ -654,9 +654,9 @@ public:
      * @return true if the pair of locales matches acceptably.
      * @stable ICU 68
      */
-    UBool isMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
+    UBool is_సరిపోలిక(స్థిరరాశి Locale &desired, స్థిరరాశి Locale &supported, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     /**
      * Returns a fraction between 0 and 1, where 1 means that the languages are a
      * perfect match, and 0 means that they are completely different.
@@ -675,41 +675,41 @@ public:
      * @return value between 0 and 1, inclusive.
      * @internal (has a known user)
      */
-    double internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
-#endif  // U_HIDE_INTERNAL_API
+    ద్విగుణ అంతర్గత_సరిపోలిక(స్థిరరాశి Locale &desired, స్థిరరాశి Locale &supported, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
+#అయితే_ముగింపు  // U_HIDE_INTERNAL_API
 
-private:
-    LocaleMatcher(const Builder &builder, UErrorCode &errorCode);
-    LocaleMatcher(const LocaleMatcher &other) = delete;
-    LocaleMatcher &operator=(const LocaleMatcher &other) = delete;
+అంతరంగ:
+    LocaleMatcher(స్థిరరాశి Builder &builder, UError_సంకేతం &error_సంకేతం);
+    LocaleMatcher(స్థిరరాశి LocaleMatcher &other) = delete;
+    LocaleMatcher &క్రియాకారకం=(స్థిరరాశి LocaleMatcher &other) = delete;
 
-    int32_t putIfAbsent(const LSR &lsr, int32_t i, int32_t suppLength, UErrorCode &errorCode);
+    int32_t putIfAbsent(స్థిరరాశి LSR &lsr, int32_t i, int32_t supp_నిడివి, UError_సంకేతం &error_సంకేతం);
 
-    std::optional<int32_t> getBestSuppIndex(LSR desiredLSR, LocaleLsrIterator *remainingIter, UErrorCode &errorCode) const;
+    std::optional<int32_t> get_ఉత్తమ_Supp_సూచీ(LSR desiredLSR, LocaleLsrIterator *మిగిలిన_Iter, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
-    const LikelySubtags &likelySubtags;
-    const LocaleDistance &localeDistance;
-    int32_t thresholdDistance;
-    int32_t demotionPerDesiredLocale;
-    ULocMatchFavorSubtag favorSubtag;
-    ULocMatchDirection direction;
+    స్థిరరాశి LikelySubtags &likelySubtags;
+    స్థిరరాశి Locale_దూరం &locale_దూరం;
+    int32_t పరిమితి_దూరం_2;
+    int32_t demotion_చొప్పున_Desired_Locale;
+    ULoc_సరిపోలిక_Favor_Subtag favorSubtag;
+    ULoc_సరిపోలిక_Direction direction;
 
     // These are in input order.
-    const Locale ** supportedLocales;
+    స్థిరరాశి Locale ** supportedLocales;
     LSR *lsrs;
-    int32_t supportedLocalesLength;
+    int32_t supported_Locales_నిడివి;
     // These are in preference order: 1. Default locale 2. paradigm locales 3. others.
-    UHashtable *supportedLsrToIndex;  // Map<LSR, Integer>
+    UHashtable *supported_Lsr_గమ్యం_సూచీ;  // Map<LSR, Integer>
     // Array versions of the supportedLsrToIndex keys and values.
     // The distance lookup loops over the supportedLSRs and returns the index of the best match.
-    const LSR **supportedLSRs;
+    స్థిరరాశి LSR **supportedLSRs;
     int32_t *supportedIndexes;
-    int32_t supportedLSRsLength;
+    int32_t supported_LSRs_నిడివి;
     Locale *ownedDefaultLocale;
-    const Locale *defaultLocale;
+    స్థిరరాశి Locale *defaultLocale;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // U_SHOW_CPLUSPLUS_API
-#endif  // __LOCALEMATCHER_H__
+#అయితే_ముగింపు  // U_SHOW_CPLUSPLUS_API
+#అయితే_ముగింపు  // __LOCALEMATCHER_H__

@@ -16,21 +16,21 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "bmpset.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "bmpset.h"
+#అన్తర్భావ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
-BMPSet::BMPSet(const int32_t *parentList, int32_t parentListLength) :
-        list(parentList), listLength(parentListLength) {
-    uprv_memset(latin1Contains, 0, sizeof(latin1Contains));
-    uprv_memset(table7FF, 0, sizeof(table7FF));
-    uprv_memset(bmpBlockBits, 0, sizeof(bmpBlockBits));
+BMPSet::BMPSet(స్థిరరాశి int32_t *మాతృ_List, int32_t మాతృ_List_నిడివి) :
+        list(మాతృ_List), list_నిడివి(మాతృ_List_నిడివి) {
+    uprv_memset(latin1_కలిగియుంది, 0, పరిమాణం(latin1_కలిగియుంది));
+    uprv_memset(table7FF, 0, పరిమాణం(table7FF));
+    uprv_memset(bmp_ఖండం_బిట్లు, 0, పరిమాణం(bmp_ఖండం_బిట్లు));
 
     /*
      * Set the list indexes for binary searches for
@@ -39,25 +39,25 @@ BMPSet::BMPSet(const int32_t *parentList, int32_t parentListLength) :
      * looked up in the bit tables.
      * The last pair of indexes is for finding supplementary code points.
      */
-    list4kStarts[0]=findCodePoint(0x800, 0, listLength-1);
+    list4kStarts[0]=కనుగొను_సంకేతం_బిందువు(0x800, 0, list_నిడివి-1);
     int32_t i;
-    for(i=1; i<=0x10; ++i) {
-        list4kStarts[i]=findCodePoint(i<<12, list4kStarts[i-1], listLength-1);
+    కొరకు(i=1; i<=0x10; ++i) {
+        list4kStarts[i]=కనుగొను_సంకేతం_బిందువు(i<<12, list4kStarts[i-1], list_నిడివి-1);
     }
-    list4kStarts[0x11]=listLength-1;
-    containsFFFD=containsSlow(0xfffd, list4kStarts[0xf], list4kStarts[0x10]);
+    list4kStarts[0x11]=list_నిడివి-1;
+    కలిగియుంది_FFFD=కలిగియుంది_Slow(0xfffd, list4kStarts[0xf], list4kStarts[0x10]);
 
-    initBits();
+    init_బిట్లు();
     overrideIllegal();
 }
 
-BMPSet::BMPSet(const BMPSet &otherBMPSet, const int32_t *newParentList, int32_t newParentListLength) :
-        containsFFFD(otherBMPSet.containsFFFD),
-        list(newParentList), listLength(newParentListLength) {
-    uprv_memcpy(latin1Contains, otherBMPSet.latin1Contains, sizeof(latin1Contains));
-    uprv_memcpy(table7FF, otherBMPSet.table7FF, sizeof(table7FF));
-    uprv_memcpy(bmpBlockBits, otherBMPSet.bmpBlockBits, sizeof(bmpBlockBits));
-    uprv_memcpy(list4kStarts, otherBMPSet.list4kStarts, sizeof(list4kStarts));
+BMPSet::BMPSet(స్థిరరాశి BMPSet &otherBMPSet, స్థిరరాశి int32_t *new_మాతృ_List, int32_t new_మాతృ_List_నిడివి) :
+        కలిగియుంది_FFFD(otherBMPSet.కలిగియుంది_FFFD),
+        list(new_మాతృ_List), list_నిడివి(new_మాతృ_List_నిడివి) {
+    uprv_memcpy(latin1_కలిగియుంది, otherBMPSet.latin1_కలిగియుంది, పరిమాణం(latin1_కలిగియుంది));
+    uprv_memcpy(table7FF, otherBMPSet.table7FF, పరిమాణం(table7FF));
+    uprv_memcpy(bmp_ఖండం_బిట్లు, otherBMPSet.bmp_ఖండం_బిట్లు, పరిమాణం(bmp_ఖండం_బిట్లు));
+    uprv_memcpy(list4kStarts, otherBMPSet.list4kStarts, పరిమాణం(list4kStarts));
 }
 
 BMPSet::~BMPSet() {
@@ -67,153 +67,153 @@ BMPSet::~BMPSet() {
  * Set bits in a bit rectangle in "vertical" bit organization.
  * start<limit<=0x800
  */
-static void set32x64Bits(uint32_t table[64], int32_t start, int32_t limit) {
-    U_ASSERT(start<limit);
-    U_ASSERT(limit<=0x800);
+స్థిర శూన్య set32x64_బిట్లు(uint32_t పట్టిక[64], int32_t ప్రారంభం, int32_t హద్దు) {
+    U_ASSERT(ప్రారంభం<హద్దు);
+    U_ASSERT(హద్దు<=0x800);
 
-    int32_t lead=start>>6;  // Named for UTF-8 2-byte lead byte with upper 5 bits.
-    int32_t trail=start&0x3f;  // Named for UTF-8 2-byte trail byte with lower 6 bits.
+    int32_t lead=ప్రారంభం>>6;  // Named for UTF-8 2-byte lead byte with upper 5 bits.
+    int32_t trail=ప్రారంభం&0x3f;  // Named for UTF-8 2-byte trail byte with lower 6 bits.
 
     // Set one bit indicating an all-one block.
-    uint32_t bits = static_cast<uint32_t>(1) << lead;
-    if((start+1)==limit) {  // Single-character shortcut.
-        table[trail]|=bits;
-        return;
+    uint32_t బిట్లు = static_cast<uint32_t>(1) << lead;
+    ఒకవేళ((ప్రారంభం+1)==హద్దు) {  // Single-character shortcut.
+        పట్టిక[trail]|=బిట్లు;
+        తిరిగి;
     }
 
-    int32_t limitLead=limit>>6;
-    int32_t limitTrail=limit&0x3f;
+    int32_t హద్దు_Lead=హద్దు>>6;
+    int32_t హద్దు_Trail=హద్దు&0x3f;
 
-    if(lead==limitLead) {
+    ఒకవేళ(lead==హద్దు_Lead) {
         // Partial vertical bit column.
-        while(trail<limitTrail) {
-            table[trail++]|=bits;
+        అయితే(trail<హద్దు_Trail) {
+            పట్టిక[trail++]|=బిట్లు;
         }
-    } else {
+    } లేకపోతే {
         // Partial vertical bit column,
         // followed by a bit rectangle,
         // followed by another partial vertical bit column.
-        if(trail>0) {
-            do {
-                table[trail++]|=bits;
-            } while(trail<64);
+        ఒకవేళ(trail>0) {
+            చేయి {
+                పట్టిక[trail++]|=బిట్లు;
+            } అయితే(trail<64);
             ++lead;
         }
-        if(lead<limitLead) {
-            bits = ~((static_cast<unsigned>(1) << lead) - 1);
-            if(limitLead<0x20) {
-                bits &= (static_cast<unsigned>(1) << limitLead) - 1;
+        ఒకవేళ(lead<హద్దు_Lead) {
+            బిట్లు = ~((static_cast<గుర్తులేని>(1) << lead) - 1);
+            ఒకవేళ(హద్దు_Lead<0x20) {
+                బిట్లు &= (static_cast<గుర్తులేని>(1) << హద్దు_Lead) - 1;
             }
-            for(trail=0; trail<64; ++trail) {
-                table[trail]|=bits;
+            కొరకు(trail=0; trail<64; ++trail) {
+                పట్టిక[trail]|=బిట్లు;
             }
         }
         // limit<=0x800. If limit==0x800 then limitLead=32 and limitTrail=0.
         // In that case, bits=1<<limitLead is undefined but the bits value
         // is not used because trail<limitTrail is already false.
-        bits = static_cast<uint32_t>(1) << ((limitLead == 0x20) ? (limitLead - 1) : limitLead);
-        for(trail=0; trail<limitTrail; ++trail) {
-            table[trail]|=bits;
+        బిట్లు = static_cast<uint32_t>(1) << ((హద్దు_Lead == 0x20) ? (హద్దు_Lead - 1) : హద్దు_Lead);
+        కొరకు(trail=0; trail<హద్దు_Trail; ++trail) {
+            పట్టిక[trail]|=బిట్లు;
         }
     }
 }
 
-void BMPSet::initBits() {
-    UChar32 start, limit;
-    int32_t listIndex=0;
+శూన్య BMPSet::init_బిట్లు() {
+    UChar32 ప్రారంభం, హద్దు;
+    int32_t list_సూచీ=0;
 
     // Set latin1Contains[].
-    do {
-        start=list[listIndex++];
-        if(listIndex<listLength) {
-            limit=list[listIndex++];
-        } else {
-            limit=0x110000;
+    చేయి {
+        ప్రారంభం=list[list_సూచీ++];
+        ఒకవేళ(list_సూచీ<list_నిడివి) {
+            హద్దు=list[list_సూచీ++];
+        } లేకపోతే {
+            హద్దు=0x110000;
         }
-        if(start>=0x100) {
-            break;
+        ఒకవేళ(ప్రారంభం>=0x100) {
+            ఆపు;
         }
-        do {
-            latin1Contains[start++]=1;
-        } while(start<limit && start<0x100);
-    } while(limit<=0x100);
+        చేయి {
+            latin1_కలిగియుంది[ప్రారంభం++]=1;
+        } అయితే(ప్రారంభం<హద్దు && ప్రారంభం<0x100);
+    } అయితే(హద్దు<=0x100);
 
     // Find the first range overlapping with (or after) 80..FF again,
     // to include them in table7FF as well.
-    for(listIndex=0;;) {
-        start=list[listIndex++];
-        if(listIndex<listLength) {
-            limit=list[listIndex++];
-        } else {
-            limit=0x110000;
+    కొరకు(list_సూచీ=0;;) {
+        ప్రారంభం=list[list_సూచీ++];
+        ఒకవేళ(list_సూచీ<list_నిడివి) {
+            హద్దు=list[list_సూచీ++];
+        } లేకపోతే {
+            హద్దు=0x110000;
         }
-        if(limit>0x80) {
-            if(start<0x80) {
-                start=0x80;
+        ఒకవేళ(హద్దు>0x80) {
+            ఒకవేళ(ప్రారంభం<0x80) {
+                ప్రారంభం=0x80;
             }
-            break;
+            ఆపు;
         }
     }
 
     // Set table7FF[].
-    while(start<0x800) {
-        set32x64Bits(table7FF, start, limit<=0x800 ? limit : 0x800);
-        if(limit>0x800) {
-            start=0x800;
-            break;
+    అయితే(ప్రారంభం<0x800) {
+        set32x64_బిట్లు(table7FF, ప్రారంభం, హద్దు<=0x800 ? హద్దు : 0x800);
+        ఒకవేళ(హద్దు>0x800) {
+            ప్రారంభం=0x800;
+            ఆపు;
         }
 
-        start=list[listIndex++];
-        if(listIndex<listLength) {
-            limit=list[listIndex++];
-        } else {
-            limit=0x110000;
+        ప్రారంభం=list[list_సూచీ++];
+        ఒకవేళ(list_సూచీ<list_నిడివి) {
+            హద్దు=list[list_సూచీ++];
+        } లేకపోతే {
+            హద్దు=0x110000;
         }
     }
 
     // Set bmpBlockBits[].
-    int32_t minStart=0x800;
-    while(start<0x10000) {
-        if(limit>0x10000) {
-            limit=0x10000;
+    int32_t min_ప్రారంభం=0x800;
+    అయితే(ప్రారంభం<0x10000) {
+        ఒకవేళ(హద్దు>0x10000) {
+            హద్దు=0x10000;
         }
 
-        if(start<minStart) {
-            start=minStart;
+        ఒకవేళ(ప్రారంభం<min_ప్రారంభం) {
+            ప్రారంభం=min_ప్రారంభం;
         }
-        if(start<limit) {  // Else: Another range entirely in a known mixed-value block.
-            if(start&0x3f) {
+        ఒకవేళ(ప్రారంభం<హద్దు) {  // Else: Another range entirely in a known mixed-value block.
+            ఒకవేళ(ప్రారంభం&0x3f) {
                 // Mixed-value block of 64 code points.
-                start>>=6;
-                bmpBlockBits[start&0x3f]|=0x10001<<(start>>6);
-                start=(start+1)<<6;  // Round up to the next block boundary.
-                minStart=start;      // Ignore further ranges in this block.
+                ప్రారంభం>>=6;
+                bmp_ఖండం_బిట్లు[ప్రారంభం&0x3f]|=0x10001<<(ప్రారంభం>>6);
+                ప్రారంభం=(ప్రారంభం+1)<<6;  // Round up to the next block boundary.
+                min_ప్రారంభం=ప్రారంభం;      // Ignore further ranges in this block.
             }
-            if(start<limit) {
-                if(start<(limit&~0x3f)) {
+            ఒకవేళ(ప్రారంభం<హద్దు) {
+                ఒకవేళ(ప్రారంభం<(హద్దు&~0x3f)) {
                     // Multiple all-ones blocks of 64 code points each.
-                    set32x64Bits(bmpBlockBits, start>>6, limit>>6);
+                    set32x64_బిట్లు(bmp_ఖండం_బిట్లు, ప్రారంభం>>6, హద్దు>>6);
                 }
 
-                if(limit&0x3f) {
+                ఒకవేళ(హద్దు&0x3f) {
                     // Mixed-value block of 64 code points.
-                    limit>>=6;
-                    bmpBlockBits[limit&0x3f]|=0x10001<<(limit>>6);
-                    limit=(limit+1)<<6;  // Round up to the next block boundary.
-                    minStart=limit;      // Ignore further ranges in this block.
+                    హద్దు>>=6;
+                    bmp_ఖండం_బిట్లు[హద్దు&0x3f]|=0x10001<<(హద్దు>>6);
+                    హద్దు=(హద్దు+1)<<6;  // Round up to the next block boundary.
+                    min_ప్రారంభం=హద్దు;      // Ignore further ranges in this block.
                 }
             }
         }
 
-        if(limit==0x10000) {
-            break;
+        ఒకవేళ(హద్దు==0x10000) {
+            ఆపు;
         }
 
-        start=list[listIndex++];
-        if(listIndex<listLength) {
-            limit=list[listIndex++];
-        } else {
-            limit=0x110000;
+        ప్రారంభం=list[list_సూచీ++];
+        ఒకవేళ(list_సూచీ<list_నిడివి) {
+            హద్దు=list[list_సూచీ++];
+        } లేకపోతే {
+            హద్దు=0x110000;
         }
     }
 }
@@ -226,35 +226,35 @@ void BMPSet::initBits() {
  * (table7FF[] 0..7F, bmpBlockBits[] 0..7FF)
  * Need to set 0 values for surrogates D800..DFFF.
  */
-void BMPSet::overrideIllegal() {
-    uint32_t bits, mask;
+శూన్య BMPSet::overrideIllegal() {
+    uint32_t బిట్లు, mask;
     int32_t i;
 
-    if(containsFFFD) {
-        bits=3;                 // Lead bytes 0xC0 and 0xC1.
-        for(i=0; i<64; ++i) {
-            table7FF[i]|=bits;
+    ఒకవేళ(కలిగియుంది_FFFD) {
+        బిట్లు=3;                 // Lead bytes 0xC0 and 0xC1.
+        కొరకు(i=0; i<64; ++i) {
+            table7FF[i]|=బిట్లు;
         }
 
-        bits=1;                 // Lead byte 0xE0.
-        for(i=0; i<32; ++i) {   // First half of 4k block.
-            bmpBlockBits[i]|=bits;
+        బిట్లు=1;                 // Lead byte 0xE0.
+        కొరకు(i=0; i<32; ++i) {   // First half of 4k block.
+            bmp_ఖండం_బిట్లు[i]|=బిట్లు;
         }
 
         mask= static_cast<uint32_t>(~(0x10001<<0xd));   // Lead byte 0xED.
-        bits=1<<0xd;
-        for(i=32; i<64; ++i) {  // Second half of 4k block.
-            bmpBlockBits[i]=(bmpBlockBits[i]&mask)|bits;
+        బిట్లు=1<<0xd;
+        కొరకు(i=32; i<64; ++i) {  // Second half of 4k block.
+            bmp_ఖండం_బిట్లు[i]=(bmp_ఖండం_బిట్లు[i]&mask)|బిట్లు;
         }
-    } else {
+    } లేకపోతే {
         mask= static_cast<uint32_t>(~(0x10001<<0xd));   // Lead byte 0xED.
-        for(i=32; i<64; ++i) {  // Second half of 4k block.
-            bmpBlockBits[i]&=mask;
+        కొరకు(i=32; i<64; ++i) {  // Second half of 4k block.
+            bmp_ఖండం_బిట్లు[i]&=mask;
         }
     }
 }
 
-int32_t BMPSet::findCodePoint(UChar32 c, int32_t lo, int32_t hi) const {
+int32_t BMPSet::కనుగొను_సంకేతం_బిందువు(UChar32 c, int32_t lo, int32_t hi) స్థిరరాశి {
     /* Examples:
                                        findCodePoint(c)
        set              list[]         c=0 1 3 4 7 8
@@ -267,51 +267,51 @@ int32_t BMPSet::findCodePoint(UChar32 c, int32_t lo, int32_t hi) const {
 
     // Return the smallest i such that c < list[i].  Assume
     // list[len - 1] == HIGH and that c is legal (0..HIGH-1).
-    if (c < list[lo])
-        return lo;
+    ఒకవేళ (c < list[lo])
+        తిరిగి lo;
     // High runner test.  c is often after the last range, so an
     // initial check for this condition pays off.
-    if (lo >= hi || c >= list[hi-1])
-        return hi;
+    ఒకవేళ (lo >= hi || c >= list[hi-1])
+        తిరిగి hi;
     // invariant: c >= list[lo]
     // invariant: c < list[hi]
-    for (;;) {
+    కొరకు (;;) {
         int32_t i = (lo + hi) >> 1;
-        if (i == lo) {
-            break; // Found!
-        } else if (c < list[i]) {
+        ఒకవేళ (i == lo) {
+            ఆపు; // Found!
+        } లేకపోతే ఒకవేళ (c < list[i]) {
             hi = i;
-        } else {
+        } లేకపోతే {
             lo = i;
         }
     }
-    return hi;
+    తిరిగి hi;
 }
 
 UBool
-BMPSet::contains(UChar32 c) const {
-    if (static_cast<uint32_t>(c) <= 0xff) {
-        return latin1Contains[c];
-    } else if (static_cast<uint32_t>(c) <= 0x7ff) {
-        return (table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0;
-    } else if (static_cast<uint32_t>(c) < 0xd800 || (c >= 0xe000 && c <= 0xffff)) {
-        int lead=c>>12;
-        uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-        if(twoBits<=1) {
+BMPSet::కలిగియుంది(UChar32 c) స్థిరరాశి {
+    ఒకవేళ (static_cast<uint32_t>(c) <= 0xff) {
+        తిరిగి latin1_కలిగియుంది[c];
+    } లేకపోతే ఒకవేళ (static_cast<uint32_t>(c) <= 0x7ff) {
+        తిరిగి (table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0;
+    } లేకపోతే ఒకవేళ (static_cast<uint32_t>(c) < 0xd800 || (c >= 0xe000 && c <= 0xffff)) {
+        పూర్ణాంకం lead=c>>12;
+        uint32_t two_బిట్లు=(bmp_ఖండం_బిట్లు[(c>>6)&0x3f]>>lead)&0x10001;
+        ఒకవేళ(two_బిట్లు<=1) {
             // All 64 code points with the same bits 15..6
             // are either in the set or not.
-            return twoBits;
-        } else {
+            తిరిగి two_బిట్లు;
+        } లేకపోతే {
             // Look up the code point in its 4k block of code points.
-            return containsSlow(c, list4kStarts[lead], list4kStarts[lead+1]);
+            తిరిగి కలిగియుంది_Slow(c, list4kStarts[lead], list4kStarts[lead+1]);
         }
-    } else if (static_cast<uint32_t>(c) <= 0x10ffff) {
+    } లేకపోతే ఒకవేళ (static_cast<uint32_t>(c) <= 0x10ffff) {
         // surrogate or supplementary code point
-        return containsSlow(c, list4kStarts[0xd], list4kStarts[0x11]);
-    } else {
+        తిరిగి కలిగియుంది_Slow(c, list4kStarts[0xd], list4kStarts[0x11]);
+    } లేకపోతే {
         // Out-of-range code points get false, consistent with long-standing
         // behavior of UnicodeSet::contains(c).
-        return false;
+        తిరిగి అబద్ధం;
     }
 }
 
@@ -319,222 +319,222 @@ BMPSet::contains(UChar32 c) const {
  * Check for sufficient length for trail unit for each surrogate pair.
  * Handle single surrogates as surrogate code points as usual in ICU.
  */
-const char16_t *
-BMPSet::span(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const {
+స్థిరరాశి char16_t *
+BMPSet::పరిధి(స్థిరరాశి char16_t *s, స్థిరరాశి char16_t *హద్దు, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి {
     char16_t c, c2;
 
-    if(spanCondition) {
-        // span
-        do {
+    ఒకవేళ(పరిధి_Condition) {
+        //పరిధి
+        చేయి {
             c=*s;
-            if(c<=0xff) {
-                if(!latin1Contains[c]) {
-                    break;
+            ఒకవేళ(c<=0xff) {
+                ఒకవేళ(!latin1_కలిగియుంది[c]) {
+                    ఆపు;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
-                    break;
+            } లేకపోతే ఒకవేళ(c<=0x7ff) {
+                ఒకవేళ ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
+                    ఆపు;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
-                uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+            } లేకపోతే ఒకవేళ(c<0xd800 || c>=0xe000) {
+                పూర్ణాంకం lead=c>>12;
+                uint32_t two_బిట్లు=(bmp_ఖండం_బిట్లు[(c>>6)&0x3f]>>lead)&0x10001;
+                ఒకవేళ(two_బిట్లు<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits==0) {
-                        break;
+                    ఒకవేళ(two_బిట్లు==0) {
+                        ఆపు;
                     }
-                } else {
+                } లేకపోతే {
                     // Look up the code point in its 4k block of code points.
-                    if(!containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    ఒకవేళ(!కలిగియుంది_Slow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        ఆపు;
                     }
                 }
-            } else if(c>=0xdc00 || (s+1)==limit || (c2=s[1])<0xdc00 || c2>=0xe000) {
+            } లేకపోతే ఒకవేళ(c>=0xdc00 || (s+1)==హద్దు || (c2=s[1])<0xdc00 || c2>=0xe000) {
                 // surrogate code point
-                if(!containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                ఒకవేళ(!కలిగియుంది_Slow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 // surrogate pair
-                if(!containsSlow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                ఒకవేళ(!కలిగియుంది_Slow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
+                    ఆపు;
                 }
                 ++s;
             }
-        } while(++s<limit);
-    } else {
+        } అయితే(++s<హద్దు);
+    } లేకపోతే {
         // span not
-        do {
+        చేయి {
             c=*s;
-            if(c<=0xff) {
-                if(latin1Contains[c]) {
-                    break;
+            ఒకవేళ(c<=0xff) {
+                ఒకవేళ(latin1_కలిగియుంది[c]) {
+                    ఆపు;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
-                    break;
+            } లేకపోతే ఒకవేళ(c<=0x7ff) {
+                ఒకవేళ ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
+                    ఆపు;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
-                uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+            } లేకపోతే ఒకవేళ(c<0xd800 || c>=0xe000) {
+                పూర్ణాంకం lead=c>>12;
+                uint32_t two_బిట్లు=(bmp_ఖండం_బిట్లు[(c>>6)&0x3f]>>lead)&0x10001;
+                ఒకవేళ(two_బిట్లు<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits!=0) {
-                        break;
+                    ఒకవేళ(two_బిట్లు!=0) {
+                        ఆపు;
                     }
-                } else {
+                } లేకపోతే {
                     // Look up the code point in its 4k block of code points.
-                    if(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    ఒకవేళ(కలిగియుంది_Slow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        ఆపు;
                     }
                 }
-            } else if(c>=0xdc00 || (s+1)==limit || (c2=s[1])<0xdc00 || c2>=0xe000) {
+            } లేకపోతే ఒకవేళ(c>=0xdc00 || (s+1)==హద్దు || (c2=s[1])<0xdc00 || c2>=0xe000) {
                 // surrogate code point
-                if(containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                ఒకవేళ(కలిగియుంది_Slow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 // surrogate pair
-                if(containsSlow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                ఒకవేళ(కలిగియుంది_Slow(U16_GET_SUPPLEMENTARY(c, c2), list4kStarts[0x10], list4kStarts[0x11])) {
+                    ఆపు;
                 }
                 ++s;
             }
-        } while(++s<limit);
+        } అయితే(++s<హద్దు);
     }
-    return s;
+    తిరిగి s;
 }
 
 /* Symmetrical with span(). */
-const char16_t *
-BMPSet::spanBack(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const {
+స్థిరరాశి char16_t *
+BMPSet::పరిధి_వెనుక(స్థిరరాశి char16_t *s, స్థిరరాశి char16_t *హద్దు, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి {
     char16_t c, c2;
 
-    if(spanCondition) {
-        // span
-        for(;;) {
-            c=*(--limit);
-            if(c<=0xff) {
-                if(!latin1Contains[c]) {
-                    break;
+    ఒకవేళ(పరిధి_Condition) {
+        //పరిధి
+        కొరకు(;;) {
+            c=*(--హద్దు);
+            ఒకవేళ(c<=0xff) {
+                ఒకవేళ(!latin1_కలిగియుంది[c]) {
+                    ఆపు;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
-                    break;
+            } లేకపోతే ఒకవేళ(c<=0x7ff) {
+                ఒకవేళ ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) == 0) {
+                    ఆపు;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
-                uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+            } లేకపోతే ఒకవేళ(c<0xd800 || c>=0xe000) {
+                పూర్ణాంకం lead=c>>12;
+                uint32_t two_బిట్లు=(bmp_ఖండం_బిట్లు[(c>>6)&0x3f]>>lead)&0x10001;
+                ఒకవేళ(two_బిట్లు<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits==0) {
-                        break;
+                    ఒకవేళ(two_బిట్లు==0) {
+                        ఆపు;
                     }
-                } else {
+                } లేకపోతే {
                     // Look up the code point in its 4k block of code points.
-                    if(!containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    ఒకవేళ(!కలిగియుంది_Slow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        ఆపు;
                     }
                 }
-            } else if(c<0xdc00 || s==limit || (c2=*(limit-1))<0xd800 || c2>=0xdc00) {
+            } లేకపోతే ఒకవేళ(c<0xdc00 || s==హద్దు || (c2=*(హద్దు-1))<0xd800 || c2>=0xdc00) {
                 // surrogate code point
-                if(!containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                ఒకవేళ(!కలిగియుంది_Slow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 // surrogate pair
-                if(!containsSlow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                ఒకవేళ(!కలిగియుంది_Slow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
+                    ఆపు;
                 }
-                --limit;
+                --హద్దు;
             }
-            if(s==limit) {
-                return s;
+            ఒకవేళ(s==హద్దు) {
+                తిరిగి s;
             }
         }
-    } else {
+    } లేకపోతే {
         // span not
-        for(;;) {
-            c=*(--limit);
-            if(c<=0xff) {
-                if(latin1Contains[c]) {
-                    break;
+        కొరకు(;;) {
+            c=*(--హద్దు);
+            ఒకవేళ(c<=0xff) {
+                ఒకవేళ(latin1_కలిగియుంది[c]) {
+                    ఆపు;
                 }
-            } else if(c<=0x7ff) {
-                if ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
-                    break;
+            } లేకపోతే ఒకవేళ(c<=0x7ff) {
+                ఒకవేళ ((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) {
+                    ఆపు;
                 }
-            } else if(c<0xd800 || c>=0xe000) {
-                int lead=c>>12;
-                uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-                if(twoBits<=1) {
+            } లేకపోతే ఒకవేళ(c<0xd800 || c>=0xe000) {
+                పూర్ణాంకం lead=c>>12;
+                uint32_t two_బిట్లు=(bmp_ఖండం_బిట్లు[(c>>6)&0x3f]>>lead)&0x10001;
+                ఒకవేళ(two_బిట్లు<=1) {
                     // All 64 code points with the same bits 15..6
                     // are either in the set or not.
-                    if(twoBits!=0) {
-                        break;
+                    ఒకవేళ(two_బిట్లు!=0) {
+                        ఆపు;
                     }
-                } else {
+                } లేకపోతే {
                     // Look up the code point in its 4k block of code points.
-                    if(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1])) {
-                        break;
+                    ఒకవేళ(కలిగియుంది_Slow(c, list4kStarts[lead], list4kStarts[lead+1])) {
+                        ఆపు;
                     }
                 }
-            } else if(c<0xdc00 || s==limit || (c2=*(limit-1))<0xd800 || c2>=0xdc00) {
+            } లేకపోతే ఒకవేళ(c<0xdc00 || s==హద్దు || (c2=*(హద్దు-1))<0xd800 || c2>=0xdc00) {
                 // surrogate code point
-                if(containsSlow(c, list4kStarts[0xd], list4kStarts[0xe])) {
-                    break;
+                ఒకవేళ(కలిగియుంది_Slow(c, list4kStarts[0xd], list4kStarts[0xe])) {
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 // surrogate pair
-                if(containsSlow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
-                    break;
+                ఒకవేళ(కలిగియుంది_Slow(U16_GET_SUPPLEMENTARY(c2, c), list4kStarts[0x10], list4kStarts[0x11])) {
+                    ఆపు;
                 }
-                --limit;
+                --హద్దు;
             }
-            if(s==limit) {
-                return s;
+            ఒకవేళ(s==హద్దు) {
+                తిరిగి s;
             }
         }
     }
-    return limit+1;
+    తిరిగి హద్దు+1;
 }
 
 /*
  * Precheck for sufficient trail bytes at end of string only once per span.
  * Check validity.
  */
-const uint8_t *
-BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    const uint8_t *limit=s+length;
+స్థిరరాశి uint8_t *
+BMPSet::పరిధి_UTF8(స్థిరరాశి uint8_t *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి {
+    స్థిరరాశి uint8_t *హద్దు=s+length;
     uint8_t b=*s;
-    if(U8_IS_SINGLE(b)) {
+    ఒకవేళ(U8_IS_SINGLE(b)) {
         // Initial all-ASCII span.
-        if(spanCondition) {
-            do {
-                if(!latin1Contains[b] || ++s==limit) {
-                    return s;
+        ఒకవేళ(పరిధి_Condition) {
+            చేయి {
+                ఒకవేళ(!latin1_కలిగియుంది[b] || ++s==హద్దు) {
+                    తిరిగి s;
                 }
                 b=*s;
-            } while(U8_IS_SINGLE(b));
-        } else {
-            do {
-                if(latin1Contains[b] || ++s==limit) {
-                    return s;
+            } అయితే(U8_IS_SINGLE(b));
+        } లేకపోతే {
+            చేయి {
+                ఒకవేళ(latin1_కలిగియుంది[b] || ++s==హద్దు) {
+                    తిరిగి s;
                 }
                 b=*s;
-            } while(U8_IS_SINGLE(b));
+            } అయితే(U8_IS_SINGLE(b));
         }
-        length = static_cast<int32_t>(limit - s);
+        length = static_cast<int32_t>(హద్దు - s);
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    ఒకవేళ(పరిధి_Condition!=USET_పరిధి_NOT_CONTAINED) {
+        పరిధి_Condition=USET_పరిధి_CONTAINED;  // Pin to 0/1 values.
     }
 
-    const uint8_t *limit0=limit;
+    స్థిరరాశి uint8_t *limit0=హద్దు;
 
     /*
      * Make sure that the last 1/2/3/4-byte sequence before limit is complete
@@ -546,122 +546,122 @@ BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanConditi
      * including it if that is part of the span, otherwise set limit0 to before
      * the truncated sequence.
      */
-    b=*(limit-1);
-    if (static_cast<int8_t>(b) < 0) {
+    b=*(హద్దు-1);
+    ఒకవేళ (static_cast<int8_t>(b) < 0) {
         // b>=0x80: lead or trail byte
-        if(b<0xc0) {
+        ఒకవేళ(b<0xc0) {
             // single trail byte, check for preceding 3- or 4-byte lead byte
-            if(length>=2 && (b=*(limit-2))>=0xe0) {
-                limit-=2;
-                if(containsFFFD!=spanCondition) {
-                    limit0=limit;
+            ఒకవేళ(length>=2 && (b=*(హద్దు-2))>=0xe0) {
+                హద్దు-=2;
+                ఒకవేళ(కలిగియుంది_FFFD!=పరిధి_Condition) {
+                    limit0=హద్దు;
                 }
-            } else if(b<0xc0 && b>=0x80 && length>=3 && (b=*(limit-3))>=0xf0) {
+            } లేకపోతే ఒకవేళ(b<0xc0 && b>=0x80 && length>=3 && (b=*(హద్దు-3))>=0xf0) {
                 // 4-byte lead byte with only two trail bytes
-                limit-=3;
-                if(containsFFFD!=spanCondition) {
-                    limit0=limit;
+                హద్దు-=3;
+                ఒకవేళ(కలిగియుంది_FFFD!=పరిధి_Condition) {
+                    limit0=హద్దు;
                 }
             }
-        } else {
+        } లేకపోతే {
             // lead byte with no trail bytes
-            --limit;
-            if(containsFFFD!=spanCondition) {
-                limit0=limit;
+            --హద్దు;
+            ఒకవేళ(కలిగియుంది_FFFD!=పరిధి_Condition) {
+                limit0=హద్దు;
             }
         }
     }
 
     uint8_t t1, t2, t3;
 
-    while(s<limit) {
+    అయితే(s<హద్దు) {
         b=*s;
-        if(U8_IS_SINGLE(b)) {
+        ఒకవేళ(U8_IS_SINGLE(b)) {
             // ASCII
-            if(spanCondition) {
-                do {
-                    if(!latin1Contains[b]) {
-                        return s;
-                    } else if(++s==limit) {
-                        return limit0;
+            ఒకవేళ(పరిధి_Condition) {
+                చేయి {
+                    ఒకవేళ(!latin1_కలిగియుంది[b]) {
+                        తిరిగి s;
+                    } లేకపోతే ఒకవేళ(++s==హద్దు) {
+                        తిరిగి limit0;
                     }
                     b=*s;
-                } while(U8_IS_SINGLE(b));
-            } else {
-                do {
-                    if(latin1Contains[b]) {
-                        return s;
-                    } else if(++s==limit) {
-                        return limit0;
+                } అయితే(U8_IS_SINGLE(b));
+            } లేకపోతే {
+                చేయి {
+                    ఒకవేళ(latin1_కలిగియుంది[b]) {
+                        తిరిగి s;
+                    } లేకపోతే ఒకవేళ(++s==హద్దు) {
+                        తిరిగి limit0;
                     }
                     b=*s;
-                } while(U8_IS_SINGLE(b));
+                } అయితే(U8_IS_SINGLE(b));
             }
         }
         ++s;  // Advance past the lead byte.
-        if(b>=0xe0) {
-            if(b<0xf0) {
-                if( /* handle U+0000..U+FFFF inline */
+        ఒకవేళ(b>=0xe0) {
+            ఒకవేళ(b<0xf0) {
+                ఒకవేళ( /* handle U+0000..U+FFFF inline */
                     (t1 = static_cast<uint8_t>(s[0] - 0x80)) <= 0x3f &&
                     (t2 = static_cast<uint8_t>(s[1] - 0x80)) <= 0x3f
                 ) {
                     b&=0xf;
-                    uint32_t twoBits=(bmpBlockBits[t1]>>b)&0x10001;
-                    if(twoBits<=1) {
+                    uint32_t two_బిట్లు=(bmp_ఖండం_బిట్లు[t1]>>b)&0x10001;
+                    ఒకవేళ(two_బిట్లు<=1) {
                         // All 64 code points with this lead byte and middle trail byte
                         // are either in the set or not.
-                        if (twoBits != static_cast<uint32_t>(spanCondition)) {
-                            return s-1;
+                        ఒకవేళ (two_బిట్లు != static_cast<uint32_t>(పరిధి_Condition)) {
+                            తిరిగి s-1;
                         }
-                    } else {
+                    } లేకపోతే {
                         // Look up the code point in its 4k block of code points.
                         UChar32 c=(b<<12)|(t1<<6)|t2;
-                        if(containsSlow(c, list4kStarts[b], list4kStarts[b+1]) != spanCondition) {
-                            return s-1;
+                        ఒకవేళ(కలిగియుంది_Slow(c, list4kStarts[b], list4kStarts[b+1]) != పరిధి_Condition) {
+                            తిరిగి s-1;
                         }
                     }
                     s+=2;
-                    continue;
+                    కొనసాగు;
                 }
-            } else if( /* handle U+10000..U+10FFFF inline */
+            } లేకపోతే ఒకవేళ( /* handle U+10000..U+10FFFF inline */
                 (t1 = static_cast<uint8_t>(s[0] - 0x80)) <= 0x3f &&
                 (t2 = static_cast<uint8_t>(s[1] - 0x80)) <= 0x3f &&
                 (t3 = static_cast<uint8_t>(s[2] - 0x80)) <= 0x3f
             ) {
                 // Give an illegal sequence the same value as the result of contains(FFFD).
                 UChar32 c = (static_cast<UChar32>(b - 0xf0) << 18) | (static_cast<UChar32>(t1) << 12) | (t2 << 6) | t3;
-                if( (   (0x10000<=c && c<=0x10ffff) ?
-                            containsSlow(c, list4kStarts[0x10], list4kStarts[0x11]) :
-                            containsFFFD
-                    ) != spanCondition
+                ఒకవేళ( (   (0x10000<=c && c<=0x10ffff) ?
+                            కలిగియుంది_Slow(c, list4kStarts[0x10], list4kStarts[0x11]) :
+                            కలిగియుంది_FFFD
+                    ) != పరిధి_Condition
                 ) {
-                    return s-1;
+                    తిరిగి s-1;
                 }
                 s+=3;
-                continue;
+                కొనసాగు;
             }
-        } else {
-            if( /* handle U+0000..U+07FF inline */
+        } లేకపోతే {
+            ఒకవేళ( /* handle U+0000..U+07FF inline */
                 b>=0xc0 &&
                 (t1 = static_cast<uint8_t>(*s - 0x80)) <= 0x3f
             ) {
-                if (static_cast<USetSpanCondition>((table7FF[t1] & (static_cast<uint32_t>(1) << (b & 0x1f))) != 0) != spanCondition) {
-                    return s-1;
+                ఒకవేళ (static_cast<USet_పరిధి_Condition>((table7FF[t1] & (static_cast<uint32_t>(1) << (b & 0x1f))) != 0) != పరిధి_Condition) {
+                    తిరిగి s-1;
                 }
                 ++s;
-                continue;
+                కొనసాగు;
             }
         }
 
         // Give an illegal sequence the same value as the result of contains(FFFD).
         // Handle each byte of an illegal sequence separately to simplify the code;
         // no need to optimize error handling.
-        if(containsFFFD!=spanCondition) {
-            return s-1;
+        ఒకవేళ(కలిగియుంది_FFFD!=పరిధి_Condition) {
+            తిరిగి s-1;
         }
     }
 
-    return limit0;
+    తిరిగి limit0;
 }
 
 /*
@@ -672,35 +672,35 @@ BMPSet::spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanConditi
  * is much harder than going forward.
  */
 int32_t
-BMPSet::spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+BMPSet::పరిధి_వెనుక_UTF8(స్థిరరాశి uint8_t *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి {
+    ఒకవేళ(పరిధి_Condition!=USET_పరిధి_NOT_CONTAINED) {
+        పరిధి_Condition=USET_పరిధి_CONTAINED;  // Pin to 0/1 values.
     }
 
     uint8_t b;
 
-    do {
+    చేయి {
         b=s[--length];
-        if(U8_IS_SINGLE(b)) {
+        ఒకవేళ(U8_IS_SINGLE(b)) {
             // ASCII sub-span
-            if(spanCondition) {
-                do {
-                    if(!latin1Contains[b]) {
-                        return length+1;
-                    } else if(length==0) {
-                        return 0;
+            ఒకవేళ(పరిధి_Condition) {
+                చేయి {
+                    ఒకవేళ(!latin1_కలిగియుంది[b]) {
+                        తిరిగి length+1;
+                    } లేకపోతే ఒకవేళ(length==0) {
+                        తిరిగి 0;
                     }
                     b=s[--length];
-                } while(U8_IS_SINGLE(b));
-            } else {
-                do {
-                    if(latin1Contains[b]) {
-                        return length+1;
-                    } else if(length==0) {
-                        return 0;
+                } అయితే(U8_IS_SINGLE(b));
+            } లేకపోతే {
+                చేయి {
+                    ఒకవేళ(latin1_కలిగియుంది[b]) {
+                        తిరిగి length+1;
+                    } లేకపోతే ఒకవేళ(length==0) {
+                        తిరిగి 0;
                     }
                     b=s[--length];
-                } while(U8_IS_SINGLE(b));
+                } అయితే(U8_IS_SINGLE(b));
             }
         }
 
@@ -708,34 +708,34 @@ BMPSet::spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCon
         UChar32 c;
         // trail byte: collect a multi-byte character
         // (or  lead byte in last-trail position)
-        c=utf8_prevCharSafeBody(s, 0, &length, b, -3);
+        c=utf8_prev_Char_సురక్షిత_Body(s, 0, &length, b, -3);
         // c is a valid code point, not ASCII, not a surrogate
-        if(c<=0x7ff) {
-            if (static_cast<USetSpanCondition>((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) != spanCondition) {
-                return prev+1;
+        ఒకవేళ(c<=0x7ff) {
+            ఒకవేళ (static_cast<USet_పరిధి_Condition>((table7FF[c & 0x3f] & (static_cast<uint32_t>(1) << (c >> 6))) != 0) != పరిధి_Condition) {
+                తిరిగి prev+1;
             }
-        } else if(c<=0xffff) {
-            int lead=c>>12;
-            uint32_t twoBits=(bmpBlockBits[(c>>6)&0x3f]>>lead)&0x10001;
-            if(twoBits<=1) {
+        } లేకపోతే ఒకవేళ(c<=0xffff) {
+            పూర్ణాంకం lead=c>>12;
+            uint32_t two_బిట్లు=(bmp_ఖండం_బిట్లు[(c>>6)&0x3f]>>lead)&0x10001;
+            ఒకవేళ(two_బిట్లు<=1) {
                 // All 64 code points with the same bits 15..6
                 // are either in the set or not.
-                if (twoBits != static_cast<uint32_t>(spanCondition)) {
-                    return prev+1;
+                ఒకవేళ (two_బిట్లు != static_cast<uint32_t>(పరిధి_Condition)) {
+                    తిరిగి prev+1;
                 }
-            } else {
+            } లేకపోతే {
                 // Look up the code point in its 4k block of code points.
-                if(containsSlow(c, list4kStarts[lead], list4kStarts[lead+1]) != spanCondition) {
-                    return prev+1;
+                ఒకవేళ(కలిగియుంది_Slow(c, list4kStarts[lead], list4kStarts[lead+1]) != పరిధి_Condition) {
+                    తిరిగి prev+1;
                 }
             }
-        } else {
-            if(containsSlow(c, list4kStarts[0x10], list4kStarts[0x11]) != spanCondition) {
-                return prev+1;
+        } లేకపోతే {
+            ఒకవేళ(కలిగియుంది_Slow(c, list4kStarts[0x10], list4kStarts[0x11]) != పరిధి_Condition) {
+                తిరిగి prev+1;
             }
         }
-    } while(length>0);
-    return 0;
+    } అయితే(length>0);
+    తిరిగి 0;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

@@ -9,14 +9,14 @@
 *   02/04/00    aliu        Creation.
 **********************************************************************
 */
-#ifndef SYMTABLE_H
-#define SYMTABLE_H
+#నిర్వచితం_కాకపోతే SYMTABLE_H
+#నిర్వచించు SYMTABLE_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/uobject.h"
 
 /**
  * \file
@@ -28,7 +28,7 @@ U_NAMESPACE_BEGIN
 
 class ParsePosition;
 class UnicodeFunctor;
-class UnicodeSet;
+class Unicode_సమితి;
 class UnicodeString;
 
 /**
@@ -56,20 +56,20 @@ class UnicodeString;
  *
  * @stable ICU 2.8
  */
-class U_COMMON_API SymbolTable /* not : public UObject because this is an interface/mixin class */ {
-public:
+class U_COMMON_API చిహ్నం_పట్టిక /* not : public UObject because this is an interface/mixin class */ {
+బహిరంగ:
 
     /**
      * The character preceding a symbol reference name.
      * @stable ICU 2.8
      */
-    enum { SYMBOL_REF = 0x0024 /*$*/ };
+    గణన { చిహ్నం_REF = 0x0024 /*$*/ };
 
     /**
      * Destructor.
      * @stable ICU 2.8
      */
-    virtual ~SymbolTable();
+    మాయా ~చిహ్నం_పట్టిక();
 
     /**
      * Lookup the characters associated with this string and return it.
@@ -80,7 +80,7 @@ public:
      * there is no mapping for s.
      * @stable ICU 2.8
      */
-    virtual const UnicodeString* lookup(const UnicodeString& s) const U_LIFETIME_BOUND = 0;
+    మాయా స్థిరరాశి UnicodeString* lookup(స్థిరరాశి UnicodeString& s) స్థిరరాశి U_LIFETIME_BOUND = 0;
 
     /**
      * Returns a pointer to a pre-parsed set associated with the variable with
@@ -88,8 +88,8 @@ public:
      * undefined or string-valued variable).
      * @internal
      */
-    virtual const UnicodeSet* lookupSet(const UnicodeString& /*name*/) const {
-        return nullptr;
+    మాయా స్థిరరాశి Unicode_సమితి* lookup_సమితి(స్థిరరాశి UnicodeString& /*name*/) స్థిరరాశి {
+        తిరిగి nullptr;
     }
 
     /**
@@ -100,7 +100,7 @@ public:
      * character, or nullptr if there is no mapping for ch.
      * @stable ICU 2.8
      */
-    virtual const UnicodeFunctor* lookupMatcher(UChar32 ch) const U_LIFETIME_BOUND = 0;
+    మాయా స్థిరరాశి UnicodeFunctor* lookupMatcher(UChar32 ch) స్థిరరాశి U_LIFETIME_BOUND = 0;
 
     /**
      * Parse a symbol reference name from the given string, starting
@@ -119,11 +119,11 @@ public:
      * valid symbolic name at the given position.
      * @stable ICU 2.8
      */
-    virtual UnicodeString parseReference(const UnicodeString& text,
-                                         ParsePosition& pos, int32_t limit) const = 0;
+    మాయా UnicodeString parseReference(స్థిరరాశి UnicodeString& పాఠ్యం,
+                                         ParsePosition& pos, int32_t హద్దు) స్థిరరాశి = 0;
 };
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#అయితే_ముగింపు

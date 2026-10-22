@@ -20,132 +20,132 @@
 *   charset families (ASCII<->EBCDIC).
 */
 
-#include <stdarg.h>
-#include "unicode/utypes.h"
-#include "unicode/udata.h" /* UDataInfo */
-#include "ucmndata.h" /* DataHeader */
-#include "cmemory.h"
-#include "udataswp.h"
+#అన్తర్భావ <stdarg.h>
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/udata.h" /* UDataInfo */
+#అన్తర్భావ "ucmndata.h" /* DataHeader */
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "udataswp.h"
 
 /* swapping primitives ------------------------------------------------------ */
 
-static int32_t U_CALLCONV
-uprv_swapArray16(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const uint16_t *p;
+స్థిర int32_t U_CALLCONV
+uprv_మార్పిడి_Array16(స్థిరరాశి UDataSwapper *ds,
+                 స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                 UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి uint16_t *p;
     uint16_t *q;
     int32_t count;
     uint16_t x;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&1)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<0 || (length&1)!=0 || బహిర్గతం_దత్తాంశం==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* setup and swapping */
-    p = static_cast<const uint16_t*>(inData);
-    q = static_cast<uint16_t*>(outData);
+    p = static_cast<స్థిరరాశి uint16_t*>(లోపల_దత్తాంశం);
+    q = static_cast<uint16_t*>(బహిర్గతం_దత్తాంశం);
     count=length/2;
-    while(count>0) {
+    అయితే(count>0) {
         x=*p++;
         *q++ = static_cast<uint16_t>((x << 8) | (x >> 8));
         --count;
     }
 
-    return length;
+    తిరిగి length;
 }
 
-static int32_t U_CALLCONV
-uprv_copyArray16(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+స్థిర int32_t U_CALLCONV
+uprv_copyArray16(స్థిరరాశి UDataSwapper *ds,
+                 స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                 UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&1)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<0 || (length&1)!=0 || బహిర్గతం_దత్తాంశం==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    ఒకవేళ(length>0 && లోపల_దత్తాంశం!=బహిర్గతం_దత్తాంశం) {
+        uprv_memcpy(బహిర్గతం_దత్తాంశం, లోపల_దత్తాంశం, length);
     }
-    return length;
+    తిరిగి length;
 }
 
-static int32_t U_CALLCONV
-uprv_swapArray32(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const uint32_t *p;
+స్థిర int32_t U_CALLCONV
+uprv_మార్పిడి_Array32(స్థిరరాశి UDataSwapper *ds,
+                 స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                 UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి uint32_t *p;
     uint32_t *q;
     int32_t count;
     uint32_t x;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&3)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<0 || (length&3)!=0 || బహిర్గతం_దత్తాంశం==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* setup and swapping */
-    p = static_cast<const uint32_t*>(inData);
-    q = static_cast<uint32_t*>(outData);
+    p = static_cast<స్థిరరాశి uint32_t*>(లోపల_దత్తాంశం);
+    q = static_cast<uint32_t*>(బహిర్గతం_దత్తాంశం);
     count=length/4;
-    while(count>0) {
+    అయితే(count>0) {
         x=*p++;
         *q++ = (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
         --count;
     }
 
-    return length;
+    తిరిగి length;
 }
 
-static int32_t U_CALLCONV
-uprv_copyArray32(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+స్థిర int32_t U_CALLCONV
+uprv_copyArray32(స్థిరరాశి UDataSwapper *ds,
+                 స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                 UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&3)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<0 || (length&3)!=0 || బహిర్గతం_దత్తాంశం==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    ఒకవేళ(length>0 && లోపల_దత్తాంశం!=బహిర్గతం_దత్తాంశం) {
+        uprv_memcpy(బహిర్గతం_దత్తాంశం, లోపల_దత్తాంశం, length);
     }
-    return length;
+    తిరిగి length;
 }
 
-static int32_t U_CALLCONV
-uprv_swapArray64(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const uint64_t *p;
+స్థిర int32_t U_CALLCONV
+uprv_మార్పిడి_Array64(స్థిరరాశి UDataSwapper *ds,
+                 స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                 UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి uint64_t *p;
     uint64_t *q;
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&7)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<0 || (length&7)!=0 || బహిర్గతం_దత్తాంశం==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* setup and swapping */
-    p = static_cast<const uint64_t*>(inData);
-    q = static_cast<uint64_t*>(outData);
+    p = static_cast<స్థిరరాశి uint64_t*>(లోపల_దత్తాంశం);
+    q = static_cast<uint64_t*>(బహిర్గతం_దత్తాంశం);
     count=length/8;
-    while(count>0) {
+    అయితే(count>0) {
         uint64_t x=*p++;
         x=(x<<56)|((x&0xff00)<<40)|((x&0xff0000)<<24)|((x&0xff000000)<<8)|
             ((x>>8)&0xff000000)|((x>>24)&0xff0000)|((x>>40)&0xff00)|(x>>56);
@@ -153,75 +153,75 @@ uprv_swapArray64(const UDataSwapper *ds,
         --count;
     }
 
-    return length;
+    తిరిగి length;
 }
 
-static int32_t U_CALLCONV
-uprv_copyArray64(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+స్థిర int32_t U_CALLCONV
+uprv_copyArray64(స్థిరరాశి UDataSwapper *ds,
+                 స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                 UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length&7)!=0 || outData==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<0 || (length&7)!=0 || బహిర్గతం_దత్తాంశం==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    ఒకవేళ(length>0 && లోపల_దత్తాంశం!=బహిర్గతం_దత్తాంశం) {
+        uprv_memcpy(బహిర్గతం_దత్తాంశం, లోపల_దత్తాంశం, length);
     }
-    return length;
+    తిరిగి length;
 }
 
-static uint16_t U_CALLCONV
-uprv_readSwapUInt16(uint16_t x) {
-    return static_cast<uint16_t>((x << 8) | (x >> 8));
+స్థిర uint16_t U_CALLCONV
+uprv_read_మార్పిడి_UInt16(uint16_t x) {
+    తిరిగి static_cast<uint16_t>((x << 8) | (x >> 8));
 }
 
-static uint16_t U_CALLCONV
-uprv_readDirectUInt16(uint16_t x) {
-    return x;
+స్థిర uint16_t U_CALLCONV
+uprv_read_ప్రత్యక్ష_UInt16(uint16_t x) {
+    తిరిగి x;
 }
 
-static uint32_t U_CALLCONV
-uprv_readSwapUInt32(uint32_t x) {
-    return (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
+స్థిర uint32_t U_CALLCONV
+uprv_read_మార్పిడి_UInt32(uint32_t x) {
+    తిరిగి (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
 }
 
-static uint32_t U_CALLCONV
-uprv_readDirectUInt32(uint32_t x) {
-    return x;
+స్థిర uint32_t U_CALLCONV
+uprv_read_ప్రత్యక్ష_UInt32(uint32_t x) {
+    తిరిగి x;
 }
 
-static void U_CALLCONV
-uprv_writeSwapUInt16(uint16_t *p, uint16_t x) {
+స్థిర శూన్య U_CALLCONV
+uprv_write_మార్పిడి_UInt16(uint16_t *p, uint16_t x) {
     *p = static_cast<uint16_t>((x << 8) | (x >> 8));
 }
 
-static void U_CALLCONV
-uprv_writeDirectUInt16(uint16_t *p, uint16_t x) {
+స్థిర శూన్య U_CALLCONV
+uprv_write_ప్రత్యక్ష_UInt16(uint16_t *p, uint16_t x) {
     *p=x;
 }
 
-static void U_CALLCONV
-uprv_writeSwapUInt32(uint32_t *p, uint32_t x) {
+స్థిర శూన్య U_CALLCONV
+uprv_write_మార్పిడి_UInt32(uint32_t *p, uint32_t x) {
     *p = (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | (x >> 24);
 }
 
-static void U_CALLCONV
-uprv_writeDirectUInt32(uint32_t *p, uint32_t x) {
+స్థిర శూన్య U_CALLCONV
+uprv_write_ప్రత్యక్ష_UInt32(uint32_t *p, uint32_t x) {
     *p=x;
 }
 
 U_CAPI int16_t U_EXPORT2
-udata_readInt16(const UDataSwapper *ds, int16_t x) {
-    return (int16_t)ds->readUInt16((uint16_t)x);
+udata_readInt16(స్థిరరాశి UDataSwapper *ds, int16_t x) {
+    తిరిగి (int16_t)ds->readUInt16((uint16_t)x);
 }
 
 U_CAPI int32_t U_EXPORT2
-udata_readInt32(const UDataSwapper *ds, int32_t x) {
-    return (int32_t)ds->readUInt32((uint32_t)x);
+udata_readInt32(స్థిరరాశి UDataSwapper *ds, int32_t x) {
+    తిరిగి (int32_t)ds->readUInt32((uint32_t)x);
 }
 
 /**
@@ -230,244 +230,244 @@ udata_readInt32(const UDataSwapper *ds, int32_t x) {
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-udata_swapInvStringBlock(const UDataSwapper *ds,
-                         const void *inData, int32_t length, void *outData,
-                         UErrorCode *pErrorCode) {
-    const char *inChars;
-    int32_t stringsLength;
+udata_మార్పిడి_Inv_String_ఖండం(స్థిరరాశి UDataSwapper *ds,
+                         స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                         UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి అక్షరం *లోపల_Chars;
+    int32_t అక్షరశ్రేణులు_నిడివి;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<0 || (length>0 && బహిర్గతం_దత్తాంశం==శూన్యసూచిక)) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* reduce the strings length to not include bytes after the last NUL */
-    inChars=(const char *)inData;
-    stringsLength=length;
-    while(stringsLength>0 && inChars[stringsLength-1]!=0) {
-        --stringsLength;
+    లోపల_Chars=(స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం;
+    అక్షరశ్రేణులు_నిడివి=length;
+    అయితే(అక్షరశ్రేణులు_నిడివి>0 && లోపల_Chars[అక్షరశ్రేణులు_నిడివి-1]!=0) {
+        --అక్షరశ్రేణులు_నిడివి;
     }
 
     /* swap up to the last NUL */
-    ds->swapInvChars(ds, inData, stringsLength, outData, pErrorCode);
+    ds->మార్పిడి_Inv_Chars(ds, లోపల_దత్తాంశం, అక్షరశ్రేణులు_నిడివి, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
 
     /* copy the bytes after the last NUL */
-    if(inData!=outData && length>stringsLength) {
-        uprv_memcpy((char *)outData+stringsLength, inChars+stringsLength, length-stringsLength);
+    ఒకవేళ(లోపల_దత్తాంశం!=బహిర్గతం_దత్తాంశం && length>అక్షరశ్రేణులు_నిడివి) {
+        uprv_memcpy((అక్షరం *)బహిర్గతం_దత్తాంశం+అక్షరశ్రేణులు_నిడివి, లోపల_Chars+అక్షరశ్రేణులు_నిడివి, length-అక్షరశ్రేణులు_నిడివి);
     }
 
     /* return the length including padding bytes */
-    if(U_SUCCESS(*pErrorCode)) {
-        return length;
-    } else {
-        return 0;
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం)) {
+        తిరిగి length;
+    } లేకపోతే {
+        తిరిగి 0;
     }
 }
 
-U_CAPI void U_EXPORT2
-udata_printError(const UDataSwapper *ds,
-                 const char *fmt,
+U_CAPI శూన్య U_EXPORT2
+udata_printError(స్థిరరాశి UDataSwapper *ds,
+                 స్థిరరాశి అక్షరం *fmt,
                  ...) {
-    va_list args;
+    va_list వాదనలు_2;
 
-    if(ds->printError!=nullptr) {
-        va_start(args, fmt);
-        ds->printError(ds->printErrorContext, fmt, args);
-        va_end(args);
+    ఒకవేళ(ds->printError!=శూన్యసూచిక) {
+        va_start(వాదనలు_2, fmt);
+        ds->printError(ds->printErrorContext, fmt, వాదనలు_2);
+        va_end(వాదనలు_2);
     }
 }
 
 /* swap a data header ------------------------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-udata_swapDataHeader(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode) {
-    const DataHeader *pHeader;
-    uint16_t headerSize, infoSize;
+udata_మార్పిడి_దత్తాంశం_శీర్షిక(స్థిరరాశి UDataSwapper *ds,
+                     స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                     UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి దత్తాంశం_శీర్షిక *p_శీర్షిక;
+    uint16_t శీర్షిక_కొలత, info_కొలత;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<-1 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<-1 || (length>0 && బహిర్గతం_దత్తాంశం==శూన్యసూచిక)) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* check minimum length and magic bytes */
-    pHeader=(const DataHeader *)inData;
-    if( (length>=0 && length<(int32_t)sizeof(DataHeader)) ||
-        pHeader->dataHeader.magic1!=0xda ||
-        pHeader->dataHeader.magic2!=0x27 ||
-        pHeader->info.sizeofUChar!=2
+    p_శీర్షిక=(స్థిరరాశి దత్తాంశం_శీర్షిక *)లోపల_దత్తాంశం;
+    ఒకవేళ( (length>=0 && length<(int32_t)పరిమాణం(దత్తాంశం_శీర్షిక)) ||
+        p_శీర్షిక->దత్తాంశం_శీర్షిక_2.magic1!=0xda ||
+        p_శీర్షిక->దత్తాంశం_శీర్షిక_2.magic2!=0x27 ||
+        p_శీర్షిక->info.sizeofUChar!=2
     ) {
         udata_printError(ds, "udata_swapDataHeader(): initial bytes do not look like ICU data\n");
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    headerSize=ds->readUInt16(pHeader->dataHeader.headerSize);
-    infoSize=ds->readUInt16(pHeader->info.size);
+    శీర్షిక_కొలత=ds->readUInt16(p_శీర్షిక->దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత);
+    info_కొలత=ds->readUInt16(p_శీర్షిక->info.size);
 
-    if( headerSize<sizeof(DataHeader) ||
-        infoSize<sizeof(UDataInfo) ||
-        headerSize<(sizeof(pHeader->dataHeader)+infoSize) ||
-        (length>=0 && length<headerSize)
+    ఒకవేళ( శీర్షిక_కొలత<పరిమాణం(దత్తాంశం_శీర్షిక) ||
+        info_కొలత<పరిమాణం(UDataInfo) ||
+        శీర్షిక_కొలత<(పరిమాణం(p_శీర్షిక->దత్తాంశం_శీర్షిక_2)+info_కొలత) ||
+        (length>=0 && length<శీర్షిక_కొలత)
     ) {
         udata_printError(ds, "udata_swapDataHeader(): header size mismatch - headerSize %d infoSize %d length %d\n",
-                         headerSize, infoSize, length);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+                         శీర్షిక_కొలత, info_కొలత, length);
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
 
-    if(length>0) {
-        DataHeader *outHeader;
-        const char *s;
-        int32_t maxLength;
+    ఒకవేళ(length>0) {
+        దత్తాంశం_శీర్షిక *బహిర్గతం_శీర్షిక;
+        స్థిరరాశి అక్షరం *s;
+        int32_t max_నిడివి_2;
 
         /* Most of the fields are just bytes and need no swapping. */
-        if(inData!=outData) {
-            uprv_memcpy(outData, inData, headerSize);
+        ఒకవేళ(లోపల_దత్తాంశం!=బహిర్గతం_దత్తాంశం) {
+            uprv_memcpy(బహిర్గతం_దత్తాంశం, లోపల_దత్తాంశం, శీర్షిక_కొలత);
         }
-        outHeader=(DataHeader *)outData;
+        బహిర్గతం_శీర్షిక=(దత్తాంశం_శీర్షిక *)బహిర్గతం_దత్తాంశం;
 
-        outHeader->info.isBigEndian = ds->outIsBigEndian;
-        outHeader->info.charsetFamily = ds->outCharset;
+        బహిర్గతం_శీర్షిక->info.isBigEndian = ds->బహిర్గతం_Is_Big_Endian;
+        బహిర్గతం_శీర్షిక->info.charsetFamily = ds->బహిర్గతం_Charset;
 
         /* swap headerSize */
-        ds->swapArray16(ds, &pHeader->dataHeader.headerSize, 2, &outHeader->dataHeader.headerSize, pErrorCode);
+        ds->మార్పిడి_Array16(ds, &p_శీర్షిక->దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత, 2, &బహిర్గతం_శీర్షిక->దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత, p_Error_సంకేతం);
 
         /* swap UDataInfo size and reservedWord */
-        ds->swapArray16(ds, &pHeader->info.size, 4, &outHeader->info.size, pErrorCode);
+        ds->మార్పిడి_Array16(ds, &p_శీర్షిక->info.size, 4, &బహిర్గతం_శీర్షిక->info.size, p_Error_సంకేతం);
 
         /* swap copyright statement after the UDataInfo */
-        infoSize+=sizeof(pHeader->dataHeader);
-        s=(const char *)inData+infoSize;
-        maxLength=headerSize-infoSize;
+        info_కొలత+=పరిమాణం(p_శీర్షిక->దత్తాంశం_శీర్షిక_2);
+        s=(స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+info_కొలత;
+        max_నిడివి_2=శీర్షిక_కొలత-info_కొలత;
         /* get the length of the string */
-        for(length=0; length<maxLength && s[length]!=0; ++length) {}
+        కొరకు(length=0; length<max_నిడివి_2 && s[length]!=0; ++length) {}
         /* swap the string contents */
-        ds->swapInvChars(ds, s, length, (char *)outData+infoSize, pErrorCode);
+        ds->మార్పిడి_Inv_Chars(ds, s, length, (అక్షరం *)బహిర్గతం_దత్తాంశం+info_కొలత, p_Error_సంకేతం);
     }
 
-    return headerSize;
+    తిరిగి శీర్షిక_కొలత;
 }
 
 /* API functions ------------------------------------------------------------ */
 
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
-                  UBool outIsBigEndian, uint8_t outCharset,
-                  UErrorCode *pErrorCode) {
+udata_openSwapper(UBool లోపల_Is_Big_Endian, uint8_t లోపల_Charset,
+                  UBool బహిర్గతం_Is_Big_Endian, uint8_t బహిర్గతం_Charset,
+                  UError_సంకేతం *p_Error_సంకేతం) {
     UDataSwapper *swapper;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(inCharset>U_EBCDIC_FAMILY || outCharset>U_EBCDIC_FAMILY) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ(లోపల_Charset>U_EBCDIC_FAMILY || బహిర్గతం_Charset>U_EBCDIC_FAMILY) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
     /* allocate the swapper */
-    swapper=(UDataSwapper *)uprv_malloc(sizeof(UDataSwapper));
-    if(swapper==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    swapper=(UDataSwapper *)uprv_malloc(పరిమాణం(UDataSwapper));
+    ఒకవేళ(swapper==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    uprv_memset(swapper, 0, sizeof(UDataSwapper));
+    uprv_memset(swapper, 0, పరిమాణం(UDataSwapper));
 
     /* set values and functions pointers according to in/out parameters */
-    swapper->inIsBigEndian=inIsBigEndian;
-    swapper->inCharset=inCharset;
-    swapper->outIsBigEndian=outIsBigEndian;
-    swapper->outCharset=outCharset;
+    swapper->లోపల_Is_Big_Endian=లోపల_Is_Big_Endian;
+    swapper->లోపల_Charset=లోపల_Charset;
+    swapper->బహిర్గతం_Is_Big_Endian=బహిర్గతం_Is_Big_Endian;
+    swapper->బహిర్గతం_Charset=బహిర్గతం_Charset;
 
-    swapper->readUInt16= inIsBigEndian==U_IS_BIG_ENDIAN ? uprv_readDirectUInt16 : uprv_readSwapUInt16;
-    swapper->readUInt32= inIsBigEndian==U_IS_BIG_ENDIAN ? uprv_readDirectUInt32 : uprv_readSwapUInt32;
+    swapper->readUInt16= లోపల_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_read_ప్రత్యక్ష_UInt16 : uprv_read_మార్పిడి_UInt16;
+    swapper->readUInt32= లోపల_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_read_ప్రత్యక్ష_UInt32 : uprv_read_మార్పిడి_UInt32;
 
-    swapper->writeUInt16= outIsBigEndian==U_IS_BIG_ENDIAN ? uprv_writeDirectUInt16 : uprv_writeSwapUInt16;
-    swapper->writeUInt32= outIsBigEndian==U_IS_BIG_ENDIAN ? uprv_writeDirectUInt32 : uprv_writeSwapUInt32;
+    swapper->writeUInt16= బహిర్గతం_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_write_ప్రత్యక్ష_UInt16 : uprv_write_మార్పిడి_UInt16;
+    swapper->writeUInt32= బహిర్గతం_Is_Big_Endian==U_IS_BIG_ENDIAN ? uprv_write_ప్రత్యక్ష_UInt32 : uprv_write_మార్పిడి_UInt32;
 
-    swapper->compareInvChars= outCharset==U_ASCII_FAMILY ? uprv_compareInvAscii : uprv_compareInvEbcdic;
+    swapper->compareInvChars= బహిర్గతం_Charset==U_ASCII_FAMILY ? uprv_compareInvAscii : uprv_compareInvEbcdic;
 
-    if(inIsBigEndian==outIsBigEndian) {
-        swapper->swapArray16=uprv_copyArray16;
-        swapper->swapArray32=uprv_copyArray32;
-        swapper->swapArray64=uprv_copyArray64;
-    } else {
-        swapper->swapArray16=uprv_swapArray16;
-        swapper->swapArray32=uprv_swapArray32;
-        swapper->swapArray64=uprv_swapArray64;
+    ఒకవేళ(లోపల_Is_Big_Endian==బహిర్గతం_Is_Big_Endian) {
+        swapper->మార్పిడి_Array16=uprv_copyArray16;
+        swapper->మార్పిడి_Array32=uprv_copyArray32;
+        swapper->మార్పిడి_Array64=uprv_copyArray64;
+    } లేకపోతే {
+        swapper->మార్పిడి_Array16=uprv_మార్పిడి_Array16;
+        swapper->మార్పిడి_Array32=uprv_మార్పిడి_Array32;
+        swapper->మార్పిడి_Array64=uprv_మార్పిడి_Array64;
     }
 
-    if(inCharset==U_ASCII_FAMILY) {
-        swapper->swapInvChars= outCharset==U_ASCII_FAMILY ? uprv_copyAscii : uprv_ebcdicFromAscii;
-    } else /* U_EBCDIC_FAMILY */ {
-        swapper->swapInvChars= outCharset==U_EBCDIC_FAMILY ? uprv_copyEbcdic : uprv_asciiFromEbcdic;
+    ఒకవేళ(లోపల_Charset==U_ASCII_FAMILY) {
+        swapper->మార్పిడి_Inv_Chars= బహిర్గతం_Charset==U_ASCII_FAMILY ? uprv_copyAscii : uprv_ebcdicFromAscii;
+    } లేకపోతే /* U_EBCDIC_FAMILY */ {
+        swapper->మార్పిడి_Inv_Chars= బహిర్గతం_Charset==U_EBCDIC_FAMILY ? uprv_copyEbcdic : uprv_asciiFromEbcdic;
     }
 
-    return swapper;
+    తిరిగి swapper;
 }
 
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapperForInputData(const void *data, int32_t length,
-                              UBool outIsBigEndian, uint8_t outCharset,
-                              UErrorCode *pErrorCode) {
-    const DataHeader *pHeader;
-    uint16_t headerSize, infoSize;
-    UBool inIsBigEndian;
-    int8_t inCharset;
+udata_open_Swapper_For_ఆదానం_దత్తాంశం(స్థిరరాశి శూన్య *దత్తాంశం, int32_t length,
+                              UBool బహిర్గతం_Is_Big_Endian, uint8_t బహిర్గతం_Charset,
+                              UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి దత్తాంశం_శీర్షిక *p_శీర్షిక;
+    uint16_t శీర్షిక_కొలత, info_కొలత;
+    UBool లోపల_Is_Big_Endian;
+    int8_t లోపల_Charset;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if( data==nullptr ||
-        (length>=0 && length<(int32_t)sizeof(DataHeader)) ||
-        outCharset>U_EBCDIC_FAMILY
+    ఒకవేళ( దత్తాంశం==శూన్యసూచిక ||
+        (length>=0 && length<(int32_t)పరిమాణం(దత్తాంశం_శీర్షిక)) ||
+        బహిర్గతం_Charset>U_EBCDIC_FAMILY
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    pHeader=(const DataHeader *)data;
-    if( (length>=0 && length<(int32_t)sizeof(DataHeader)) ||
-        pHeader->dataHeader.magic1!=0xda ||
-        pHeader->dataHeader.magic2!=0x27 ||
-        pHeader->info.sizeofUChar!=2
+    p_శీర్షిక=(స్థిరరాశి దత్తాంశం_శీర్షిక *)దత్తాంశం;
+    ఒకవేళ( (length>=0 && length<(int32_t)పరిమాణం(దత్తాంశం_శీర్షిక)) ||
+        p_శీర్షిక->దత్తాంశం_శీర్షిక_2.magic1!=0xda ||
+        p_శీర్షిక->దత్తాంశం_శీర్షిక_2.magic2!=0x27 ||
+        p_శీర్షిక->info.sizeofUChar!=2
     ) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    inIsBigEndian=(UBool)pHeader->info.isBigEndian;
-    inCharset=pHeader->info.charsetFamily;
+    లోపల_Is_Big_Endian=(UBool)p_శీర్షిక->info.isBigEndian;
+    లోపల_Charset=p_శీర్షిక->info.charsetFamily;
 
-    if(inIsBigEndian==U_IS_BIG_ENDIAN) {
-        headerSize=pHeader->dataHeader.headerSize;
-        infoSize=pHeader->info.size;
-    } else {
-        headerSize=uprv_readSwapUInt16(pHeader->dataHeader.headerSize);
-        infoSize=uprv_readSwapUInt16(pHeader->info.size);
+    ఒకవేళ(లోపల_Is_Big_Endian==U_IS_BIG_ENDIAN) {
+        శీర్షిక_కొలత=p_శీర్షిక->దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత;
+        info_కొలత=p_శీర్షిక->info.size;
+    } లేకపోతే {
+        శీర్షిక_కొలత=uprv_read_మార్పిడి_UInt16(p_శీర్షిక->దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత);
+        info_కొలత=uprv_read_మార్పిడి_UInt16(p_శీర్షిక->info.size);
     }
 
-    if( headerSize<sizeof(DataHeader) ||
-        infoSize<sizeof(UDataInfo) ||
-        headerSize<(sizeof(pHeader->dataHeader)+infoSize) ||
-        (length>=0 && length<headerSize)
+    ఒకవేళ( శీర్షిక_కొలత<పరిమాణం(దత్తాంశం_శీర్షిక) ||
+        info_కొలత<పరిమాణం(UDataInfo) ||
+        శీర్షిక_కొలత<(పరిమాణం(p_శీర్షిక->దత్తాంశం_శీర్షిక_2)+info_కొలత) ||
+        (length>=0 && length<శీర్షిక_కొలత)
     ) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    return udata_openSwapper(inIsBigEndian, inCharset, outIsBigEndian, outCharset, pErrorCode);
+    తిరిగి udata_openSwapper(లోపల_Is_Big_Endian, లోపల_Charset, బహిర్గతం_Is_Big_Endian, బహిర్గతం_Charset, p_Error_సంకేతం);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 udata_closeSwapper(UDataSwapper *ds) {
     uprv_free(ds);
 }

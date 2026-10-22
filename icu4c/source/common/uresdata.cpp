@@ -19,275 +19,275 @@
 *   06/24/02    weiv        Added support for resource sharing
 */
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "resource.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "ucol_swp.h"
-#include "udataswp.h"
-#include "uinvchar.h"
-#include "uresdata.h"
-#include "uresimp.h"
-#include "utracimp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "resource.h"
+#అన్తర్భావ "uarrsort.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucol_swp.h"
+#అన్తర్భావ "udataswp.h"
+#అన్తర్భావ "uinvchar.h"
+#అన్తర్భావ "uresdata.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "utracimp.h"
 
 /*
  * Resource access helpers
  */
 
 /* get a const char* pointer to the key with the keyOffset byte offset from pRoot */
-#define RES_GET_KEY16(pResData, keyOffset) \
-    ((keyOffset)<(pResData)->localKeyLimit ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
-        (pResData)->poolBundleKeys+(keyOffset)-(pResData)->localKeyLimit)
+#నిర్వచించు RES_GET_KEY16(p_Res_దత్తాంశం, కీలకం_స్థానభ్రంశం) \
+    ((కీలకం_స్థానభ్రంశం)<(p_Res_దత్తాంశం)->local_కీలకం_హద్దు ? \
+        (స్థిరరాశి అక్షరం *)(p_Res_దత్తాంశం)->p_మూలం+(కీలకం_స్థానభ్రంశం) : \
+        (p_Res_దత్తాంశం)->pool_Bundle_కీలకాలు+(కీలకం_స్థానభ్రంశం)-(p_Res_దత్తాంశం)->local_కీలకం_హద్దు)
 
-#define RES_GET_KEY32(pResData, keyOffset) \
-    ((keyOffset)>=0 ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
-        (pResData)->poolBundleKeys+((keyOffset)&0x7fffffff))
+#నిర్వచించు RES_GET_KEY32(p_Res_దత్తాంశం, కీలకం_స్థానభ్రంశం) \
+    ((కీలకం_స్థానభ్రంశం)>=0 ? \
+        (స్థిరరాశి అక్షరం *)(p_Res_దత్తాంశం)->p_మూలం+(కీలకం_స్థానభ్రంశం) : \
+        (p_Res_దత్తాంశం)->pool_Bundle_కీలకాలు+((కీలకం_స్థానభ్రంశం)&0x7fffffff))
 
-#define URESDATA_ITEM_NOT_FOUND -1
+#నిర్వచించు URESDATA_అంశం_NOT_దొరికింది -1
 
 /* empty resources, returned when the resource offset is 0 */
-static const uint16_t gEmpty16=0;
+స్థిర స్థిరరాశి uint16_t gEmpty16=0;
 
-static const struct {
+స్థిర స్థిరరాశి నిర్మాణం {
     int32_t length;
     int32_t res;
 } gEmpty32={ 0, 0 };
 
-static const struct {
+స్థిర స్థిరరాశి నిర్మాణం {
     int32_t length;
     char16_t nul;
     char16_t pad;
-} gEmptyString={ 0, 0, 0 };
+} g_ఖాళీలు_String={ 0, 0, 0 };
 
 /*
  * All the type-access functions assume that
  * the resource is of the expected type.
  */
 
-static int32_t
-_res_findTableItem(const ResourceData *pResData, const uint16_t *keyOffsets, int32_t length,
-                   const char *key, const char **realKey) {
-    const char *tableKey;
-    int32_t mid, start, limit;
-    int result;
+స్థిర int32_t
+res_కనుగొను_పట్టిక_అంశం(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, స్థిరరాశి uint16_t *కీలకం_Offsets, int32_t length,
+                   స్థిరరాశి అక్షరం *కీలకం, స్థిరరాశి అక్షరం **real_కీలకం) {
+    స్థిరరాశి అక్షరం *పట్టిక_కీలకం;
+    int32_t mid, ప్రారంభం, హద్దు;
+    పూర్ణాంకం ఫలితం;
 
     /* do a binary search for the key */
-    start=0;
-    limit=length;
-    while(start<limit) {
-        mid = (start + limit) / 2;
-        tableKey = RES_GET_KEY16(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
-            result = uprv_strcmp(key, tableKey);
-        } else {
-            result = uprv_compareInvCharsAsAscii(key, tableKey);
+    ప్రారంభం=0;
+    హద్దు=length;
+    అయితే(ప్రారంభం<హద్దు) {
+        mid = (ప్రారంభం + హద్దు) / 2;
+        పట్టిక_కీలకం = RES_GET_KEY16(p_Res_దత్తాంశం, కీలకం_Offsets[mid]);
+        ఒకవేళ (p_Res_దత్తాంశం->useNativeStrcmp) {
+            ఫలితం = uprv_strcmp(కీలకం, పట్టిక_కీలకం);
+        } లేకపోతే {
+            ఫలితం = uprv_compareInvCharsAsAscii(కీలకం, పట్టిక_కీలకం);
         }
-        if (result < 0) {
-            limit = mid;
-        } else if (result > 0) {
-            start = mid + 1;
-        } else {
+        ఒకవేళ (ఫలితం < 0) {
+            హద్దు = mid;
+        } లేకపోతే ఒకవేళ (ఫలితం > 0) {
+            ప్రారంభం = mid + 1;
+        } లేకపోతే {
             /* We found it! */
-            *realKey=tableKey;
-            return mid;
+            *real_కీలకం=పట్టిక_కీలకం;
+            తిరిగి mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    తిరిగి URESDATA_అంశం_NOT_దొరికింది;  /* not found or table is empty. */
 }
 
-static int32_t
-_res_findTable32Item(const ResourceData *pResData, const int32_t *keyOffsets, int32_t length,
-                     const char *key, const char **realKey) {
-    const char *tableKey;
-    int32_t mid, start, limit;
-    int result;
+స్థిర int32_t
+res_కనుగొను_Table32_అంశం(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, స్థిరరాశి int32_t *కీలకం_Offsets, int32_t length,
+                     స్థిరరాశి అక్షరం *కీలకం, స్థిరరాశి అక్షరం **real_కీలకం) {
+    స్థిరరాశి అక్షరం *పట్టిక_కీలకం;
+    int32_t mid, ప్రారంభం, హద్దు;
+    పూర్ణాంకం ఫలితం;
 
     /* do a binary search for the key */
-    start=0;
-    limit=length;
-    while(start<limit) {
-        mid = (start + limit) / 2;
-        tableKey = RES_GET_KEY32(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
-            result = uprv_strcmp(key, tableKey);
-        } else {
-            result = uprv_compareInvCharsAsAscii(key, tableKey);
+    ప్రారంభం=0;
+    హద్దు=length;
+    అయితే(ప్రారంభం<హద్దు) {
+        mid = (ప్రారంభం + హద్దు) / 2;
+        పట్టిక_కీలకం = RES_GET_KEY32(p_Res_దత్తాంశం, కీలకం_Offsets[mid]);
+        ఒకవేళ (p_Res_దత్తాంశం->useNativeStrcmp) {
+            ఫలితం = uprv_strcmp(కీలకం, పట్టిక_కీలకం);
+        } లేకపోతే {
+            ఫలితం = uprv_compareInvCharsAsAscii(కీలకం, పట్టిక_కీలకం);
         }
-        if (result < 0) {
-            limit = mid;
-        } else if (result > 0) {
-            start = mid + 1;
-        } else {
+        ఒకవేళ (ఫలితం < 0) {
+            హద్దు = mid;
+        } లేకపోతే ఒకవేళ (ఫలితం > 0) {
+            ప్రారంభం = mid + 1;
+        } లేకపోతే {
             /* We found it! */
-            *realKey=tableKey;
-            return mid;
+            *real_కీలకం=పట్టిక_కీలకం;
+            తిరిగి mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    తిరిగి URESDATA_అంశం_NOT_దొరికింది;  /* not found or table is empty. */
 }
 
 /* helper for res_load() ---------------------------------------------------- */
 
-static UBool U_CALLCONV
-isAcceptable(void *context,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
-    uprv_memcpy(context, pInfo->formatVersion, 4);
-    return
+స్థిర UBool U_CALLCONV
+isAcceptable(శూన్య *context,
+             స్థిరరాశి అక్షరం * /*type*/, స్థిరరాశి అక్షరం * /*name*/,
+             స్థిరరాశి UDataInfo *pInfo) {
+    uprv_memcpy(context, pInfo->format_సంస్కరణ, 4);
+    తిరిగి
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
         pInfo->sizeofUChar==U_SIZEOF_UCHAR &&
-        pInfo->dataFormat[0]==0x52 &&   /* dataFormat="ResB" */
-        pInfo->dataFormat[1]==0x65 &&
-        pInfo->dataFormat[2]==0x73 &&
-        pInfo->dataFormat[3]==0x42 &&
-        (1<=pInfo->formatVersion[0] && pInfo->formatVersion[0]<=3);
+        pInfo->దత్తాంశం_Format[0]==0x52 &&   /* dataFormat="ResB" */
+        pInfo->దత్తాంశం_Format[1]==0x65 &&
+        pInfo->దత్తాంశం_Format[2]==0x73 &&
+        pInfo->దత్తాంశం_Format[3]==0x42 &&
+        (1<=pInfo->format_సంస్కరణ[0] && pInfo->format_సంస్కరణ[0]<=3);
 }
 
 /* semi-public functions ---------------------------------------------------- */
 
-static void
-res_init(ResourceData *pResData,
-         UVersionInfo formatVersion, const void *inBytes, int32_t length,
-         UErrorCode *errorCode) {
-    UResType rootType;
+స్థిర శూన్య
+res_init(Resource_దత్తాంశం *p_Res_దత్తాంశం,
+         UVersionInfo format_సంస్కరణ, స్థిరరాశి శూన్య *లోపల_బైట్లు, int32_t length,
+         UError_సంకేతం *error_సంకేతం) {
+    UResType మూలం_Type;
 
     /* get the root resource */
-    pResData->pRoot = static_cast<const int32_t*>(inBytes);
-    pResData->rootRes = static_cast<Resource>(*pResData->pRoot);
-    pResData->p16BitUnits=&gEmpty16;
+    p_Res_దత్తాంశం->p_మూలం = static_cast<స్థిరరాశి int32_t*>(లోపల_బైట్లు);
+    p_Res_దత్తాంశం->మూలం_Res = static_cast<Resource>(*p_Res_దత్తాంశం->p_మూలం);
+    p_Res_దత్తాంశం->p16_బిట్టు_Units=&gEmpty16;
 
     /* formatVersion 1.1 must have a root item and at least 5 indexes */
-    if(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
-        *errorCode=U_INVALID_FORMAT_ERROR;
-        res_unload(pResData);
-        return;
+    ఒకవేళ(length>=0 && (length/4)<((format_సంస్కరణ[0]==1 && format_సంస్కరణ[1]==0) ? 1 : 1+5)) {
+        *error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        res_unload(p_Res_దత్తాంశం);
+        తిరిగి;
     }
 
     /* currently, we accept only resources that have a Table as their roots */
-    rootType = static_cast<UResType>(RES_GET_TYPE(pResData->rootRes));
-    if(!URES_IS_TABLE(rootType)) {
-        *errorCode=U_INVALID_FORMAT_ERROR;
-        res_unload(pResData);
-        return;
+    మూలం_Type = static_cast<UResType>(RES_GET_TYPE(p_Res_దత్తాంశం->మూలం_Res));
+    ఒకవేళ(!URES_IS_పట్టిక(మూలం_Type)) {
+        *error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        res_unload(p_Res_దత్తాంశం);
+        తిరిగి;
     }
 
-    if(formatVersion[0]==1 && formatVersion[1]==0) {
-        pResData->localKeyLimit=0x10000;  /* greater than any 16-bit key string offset */
-    } else {
+    ఒకవేళ(format_సంస్కరణ[0]==1 && format_సంస్కరణ[1]==0) {
+        p_Res_దత్తాంశం->local_కీలకం_హద్దు=0x10000;  /* greater than any 16-bit key string offset */
+    } లేకపోతే {
         /* bundles with formatVersion 1.1 and later contain an indexes[] array */
-        const int32_t *indexes=pResData->pRoot+1;
-        int32_t indexLength=indexes[URES_INDEX_LENGTH]&0xff;
-        if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
-            *errorCode=U_INVALID_FORMAT_ERROR;
-            res_unload(pResData);
-            return;
+        స్థిరరాశి int32_t *indexes=p_Res_దత్తాంశం->p_మూలం+1;
+        int32_t సూచీ_నిడివి=indexes[URES_సూచీ_నిడివి]&0xff;
+        ఒకవేళ(సూచీ_నిడివి<=URES_సూచీ_MAX_పట్టిక_నిడివి) {
+            *error_సంకేతం=U_INVALID_FORMAT_ERROR;
+            res_unload(p_Res_దత్తాంశం);
+            తిరిగి;
         }
-        if( length>=0 &&
-            (length<((1+indexLength)<<2) ||
-             length<(indexes[URES_INDEX_BUNDLE_TOP]<<2))
+        ఒకవేళ( length>=0 &&
+            (length<((1+సూచీ_నిడివి)<<2) ||
+             length<(indexes[URES_సూచీ_BUNDLE_శిఖరం]<<2))
         ) {
-            *errorCode=U_INVALID_FORMAT_ERROR;
-            res_unload(pResData);
-            return;
+            *error_సంకేతం=U_INVALID_FORMAT_ERROR;
+            res_unload(p_Res_దత్తాంశం);
+            తిరిగి;
         }
-        if(indexes[URES_INDEX_KEYS_TOP]>(1+indexLength)) {
-            pResData->localKeyLimit=indexes[URES_INDEX_KEYS_TOP]<<2;
+        ఒకవేళ(indexes[URES_సూచీ_కీలకాలు_శిఖరం]>(1+సూచీ_నిడివి)) {
+            p_Res_దత్తాంశం->local_కీలకం_హద్దు=indexes[URES_సూచీ_కీలకాలు_శిఖరం]<<2;
         }
-        if(formatVersion[0]>=3) {
+        ఒకవేళ(format_సంస్కరణ[0]>=3) {
             // In formatVersion 1, the indexLength took up this whole int.
             // In version 2, bits 31..8 were reserved and always 0.
             // In version 3, they contain bits 23..0 of the poolStringIndexLimit.
             // Bits 27..24 are in indexes[URES_INDEX_ATTRIBUTES] bits 15..12.
-            pResData->poolStringIndexLimit = static_cast<int32_t>(static_cast<uint32_t>(indexes[URES_INDEX_LENGTH]) >> 8);
+            p_Res_దత్తాంశం->pool_String_సూచీ_హద్దు = static_cast<int32_t>(static_cast<uint32_t>(indexes[URES_సూచీ_నిడివి]) >> 8);
         }
-        if(indexLength>URES_INDEX_ATTRIBUTES) {
-            int32_t att=indexes[URES_INDEX_ATTRIBUTES];
-            pResData->noFallback = static_cast<UBool>(att & URES_ATT_NO_FALLBACK);
-            pResData->isPoolBundle = static_cast<UBool>((att & URES_ATT_IS_POOL_BUNDLE) != 0);
-            pResData->usesPoolBundle = static_cast<UBool>((att & URES_ATT_USES_POOL_BUNDLE) != 0);
-            pResData->poolStringIndexLimit|=(att&0xf000)<<12;  // bits 15..12 -> 27..24
-            pResData->poolStringIndex16Limit = static_cast<int32_t>(static_cast<uint32_t>(att) >> 16);
+        ఒకవేళ(సూచీ_నిడివి>URES_సూచీ_లక్షణాలు) {
+            int32_t att=indexes[URES_సూచీ_లక్షణాలు];
+            p_Res_దత్తాంశం->noFallback = static_cast<UBool>(att & URES_ATT_NO_FALLBACK);
+            p_Res_దత్తాంశం->isPoolBundle = static_cast<UBool>((att & URES_ATT_IS_POOL_BUNDLE) != 0);
+            p_Res_దత్తాంశం->ఉపయోగిస్తుంది_Pool_Bundle = static_cast<UBool>((att & URES_ATT_ఉపయోగిస్తుంది_POOL_BUNDLE) != 0);
+            p_Res_దత్తాంశం->pool_String_సూచీ_హద్దు|=(att&0xf000)<<12;  // bits 15..12 -> 27..24
+            p_Res_దత్తాంశం->pool_String_Index16_హద్దు = static_cast<int32_t>(static_cast<uint32_t>(att) >> 16);
         }
-        if((pResData->isPoolBundle || pResData->usesPoolBundle) && indexLength<=URES_INDEX_POOL_CHECKSUM) {
-            *errorCode=U_INVALID_FORMAT_ERROR;
-            res_unload(pResData);
-            return;
+        ఒకవేళ((p_Res_దత్తాంశం->isPoolBundle || p_Res_దత్తాంశం->ఉపయోగిస్తుంది_Pool_Bundle) && సూచీ_నిడివి<=URES_సూచీ_POOL_CHECKSUM) {
+            *error_సంకేతం=U_INVALID_FORMAT_ERROR;
+            res_unload(p_Res_దత్తాంశం);
+            తిరిగి;
         }
-        if( indexLength>URES_INDEX_16BIT_TOP &&
-            indexes[URES_INDEX_16BIT_TOP]>indexes[URES_INDEX_KEYS_TOP]
+        ఒకవేళ( సూచీ_నిడివి>URES_సూచీ_16_బిట్టు_శిఖరం &&
+            indexes[URES_సూచీ_16_బిట్టు_శిఖరం]>indexes[URES_సూచీ_కీలకాలు_శిఖరం]
         ) {
-            pResData->p16BitUnits = reinterpret_cast<const uint16_t*>(pResData->pRoot + indexes[URES_INDEX_KEYS_TOP]);
+            p_Res_దత్తాంశం->p16_బిట్టు_Units = reinterpret_cast<స్థిరరాశి uint16_t*>(p_Res_దత్తాంశం->p_మూలం + indexes[URES_సూచీ_కీలకాలు_శిఖరం]);
         }
     }
 
-    if(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
+    ఒకవేళ(format_సంస్కరణ[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
         /*
          * formatVersion 1: compare key strings in native-charset order
          * formatVersion 2 and up: compare key strings in ASCII order
          */
-        pResData->useNativeStrcmp=true;
+        p_Res_దత్తాంశం->useNativeStrcmp=నిజం;
     }
 }
 
-U_CAPI void U_EXPORT2
-res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
-         UErrorCode *errorCode) {
-    UVersionInfo formatVersion;
+U_CAPI శూన్య U_EXPORT2
+res_read(Resource_దత్తాంశం *p_Res_దత్తాంశం,
+         స్థిరరాశి UDataInfo *pInfo, స్థిరరాశి శూన్య *లోపల_బైట్లు, int32_t length,
+         UError_సంకేతం *error_సంకేతం) {
+    UVersionInfo format_సంస్కరణ;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
-    if(U_FAILURE(*errorCode)) {
-        return;
+    uprv_memset(p_Res_దత్తాంశం, 0, పరిమాణం(Resource_దత్తాంశం));
+    ఒకవేళ(U_FAILURE(*error_సంకేతం)) {
+        తిరిగి;
     }
-    if(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
-        *errorCode=U_INVALID_FORMAT_ERROR;
-        return;
+    ఒకవేళ(!isAcceptable(format_సంస్కరణ, శూన్యసూచిక, శూన్యసూచిక, pInfo)) {
+        *error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        తిరిగి;
     }
-    res_init(pResData, formatVersion, inBytes, length, errorCode);
+    res_init(p_Res_దత్తాంశం, format_సంస్కరణ, లోపల_బైట్లు, length, error_సంకేతం);
 }
 
-U_CFUNC void
-res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode) {
-    UVersionInfo formatVersion;
+U_CFUNC శూన్య
+res_ఎక్కించు(Resource_దత్తాంశం *p_Res_దత్తాంశం,
+         స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *name, UError_సంకేతం *error_సంకేతం) {
+    UVersionInfo format_సంస్కరణ;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
+    uprv_memset(p_Res_దత్తాంశం, 0, పరిమాణం(Resource_దత్తాంశం));
 
     /* load the ResourceBundle file */
-    pResData->data=udata_openChoice(path, "res", name, isAcceptable, formatVersion, errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return;
+    p_Res_దత్తాంశం->దత్తాంశం=udata_openChoice(మార్గం, "res", name, isAcceptable, format_సంస్కరణ, error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*error_సంకేతం)) {
+        తిరిగి;
     }
 
     /* get its memory and initialize *pResData */
-    res_init(pResData, formatVersion, udata_getMemory(pResData->data), -1, errorCode);
+    res_init(p_Res_దత్తాంశం, format_సంస్కరణ, udata_get_జ్ఞాపకం(p_Res_దత్తాంశం->దత్తాంశం), -1, error_సంకేతం);
 }
 
-U_CFUNC void
-res_unload(ResourceData *pResData) {
-    if(pResData->data!=nullptr) {
-        udata_close(pResData->data);
-        pResData->data=nullptr;
+U_CFUNC శూన్య
+res_unload(Resource_దత్తాంశం *p_Res_దత్తాంశం) {
+    ఒకవేళ(p_Res_దత్తాంశం->దత్తాంశం!=శూన్యసూచిక) {
+        udata_close(p_Res_దత్తాంశం->దత్తాంశం);
+        p_Res_దత్తాంశం->దత్తాంశం=శూన్యసూచిక;
     }
 }
 
-static const int8_t gPublicTypes[URES_LIMIT] = {
+స్థిర స్థిరరాశి int8_t g_ప్రజా_Types[URES_హద్దు] = {
     URES_STRING,
-    URES_BINARY,
-    URES_TABLE,
+    URES_ద్విమాన,
+    URES_పట్టిక,
     URES_ALIAS,
 
-    URES_TABLE,     /* URES_TABLE32 */
-    URES_TABLE,     /* URES_TABLE16 */
+    URES_పట్టిక,     /* URES_TABLE32 */
+    URES_పట్టిక,     /* URES_TABLE16 */
     URES_STRING,    /* URES_STRING_V2 */
     URES_INT,
 
@@ -298,55 +298,55 @@ static const int8_t gPublicTypes[URES_LIMIT] = {
 
     URES_NONE,
     URES_NONE,
-    URES_INT_VECTOR,
+    URES_INT_సదిశ,
     URES_NONE
 };
 
 U_CAPI UResType U_EXPORT2
-res_getPublicType(Resource res) {
-    return (UResType)gPublicTypes[RES_GET_TYPE(res)];
+res_get_ప్రజా_Type(Resource res) {
+    తిరిగి (UResType)g_ప్రజా_Types[RES_GET_TYPE(res)];
 }
 
-U_CAPI const char16_t * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
-    uint32_t offset=RES_GET_OFFSET(res);
+U_CAPI స్థిరరాశి char16_t * U_EXPORT2
+res_getStringNoTrace(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి) {
+    స్థిరరాశి char16_t *p;
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_STRING_V2) {
+    ఒకవేళ(RES_GET_TYPE(res)==URES_STRING_V2) {
         int32_t first;
-        if((int32_t)offset<pResData->poolStringIndexLimit) {
-            p=(const char16_t *)pResData->poolBundleStrings+offset;
-        } else {
-            p=(const char16_t *)pResData->p16BitUnits+(offset-pResData->poolStringIndexLimit);
+        ఒకవేళ((int32_t)స్థానభ్రంశం<p_Res_దత్తాంశం->pool_String_సూచీ_హద్దు) {
+            p=(స్థిరరాశి char16_t *)p_Res_దత్తాంశం->pool_Bundle_అక్షరశ్రేణులు+స్థానభ్రంశం;
+        } లేకపోతే {
+            p=(స్థిరరాశి char16_t *)p_Res_దత్తాంశం->p16_బిట్టు_Units+(స్థానభ్రంశం-p_Res_దత్తాంశం->pool_String_సూచీ_హద్దు);
         }
         first=*p;
-        if(!U16_IS_TRAIL(first)) {
+        ఒకవేళ(!U16_IS_TRAIL(first)) {
             length=u_strlen(p);
-        } else if(first<0xdfef) {
+        } లేకపోతే ఒకవేళ(first<0xdfef) {
             length=first&0x3ff;
             ++p;
-        } else if(first<0xdfff) {
+        } లేకపోతే ఒకవేళ(first<0xdfff) {
             length=((first-0xdfef)<<16)|p[1];
             p+=2;
-        } else {
+        } లేకపోతే {
             length=((int32_t)p[1]<<16)|p[2];
             p+=3;
         }
-    } else if(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
-        const int32_t *p32= res==0 ? &gEmptyString.length : pResData->pRoot+res;
+    } లేకపోతే ఒకవేళ(res==స్థానభ్రంశం) /* RES_GET_TYPE(res)==URES_STRING */ {
+        స్థిరరాశి int32_t *p32= res==0 ? &g_ఖాళీలు_String.length : p_Res_దత్తాంశం->p_మూలం+res;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
-        p=nullptr;
+        p=(స్థిరరాశి char16_t *)p32;
+    } లేకపోతే {
+        p=శూన్యసూచిక;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    ఒకవేళ(p_నిడివి) {
+        *p_నిడివి=length;
     }
-    return p;
+    తిరిగి p;
 }
 
-namespace {
+నామాకాశ {
 
 /**
  * CLDR string value (three empty-set symbols)=={2205, 2205, 2205}
@@ -354,630 +354,630 @@ namespace {
  * TODO: combine with other code that handles this marker, use EMPTY_SET constant.
  * TODO: maybe move to uresbund.cpp?
  */
-UBool isNoInheritanceMarker(const ResourceData *pResData, Resource res) {
-    uint32_t offset=RES_GET_OFFSET(res);
-    if (offset == 0) {
+UBool isNoInheritanceMarker(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res) {
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(res);
+    ఒకవేళ (స్థానభ్రంశం == 0) {
         // empty string
-    } else if (res == offset) {
-        const int32_t *p32=pResData->pRoot+res;
+    } లేకపోతే ఒకవేళ (res == స్థానభ్రంశం) {
+        స్థిరరాశి int32_t *p32=p_Res_దత్తాంశం->p_మూలం+res;
         int32_t length=*p32;
-        const char16_t* p = reinterpret_cast<const char16_t*>(p32);
-        return length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
-    } else if (RES_GET_TYPE(res) == URES_STRING_V2) {
-        const char16_t *p;
-        if (static_cast<int32_t>(offset) < pResData->poolStringIndexLimit) {
-            p = reinterpret_cast<const char16_t*>(pResData->poolBundleStrings) + offset;
-        } else {
-            p = reinterpret_cast<const char16_t*>(pResData->p16BitUnits) + (offset - pResData->poolStringIndexLimit);
+        స్థిరరాశి char16_t* p = reinterpret_cast<స్థిరరాశి char16_t*>(p32);
+        తిరిగి length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
+    } లేకపోతే ఒకవేళ (RES_GET_TYPE(res) == URES_STRING_V2) {
+        స్థిరరాశి char16_t *p;
+        ఒకవేళ (static_cast<int32_t>(స్థానభ్రంశం) < p_Res_దత్తాంశం->pool_String_సూచీ_హద్దు) {
+            p = reinterpret_cast<స్థిరరాశి char16_t*>(p_Res_దత్తాంశం->pool_Bundle_అక్షరశ్రేణులు) + స్థానభ్రంశం;
+        } లేకపోతే {
+            p = reinterpret_cast<స్థిరరాశి char16_t*>(p_Res_దత్తాంశం->p16_బిట్టు_Units) + (స్థానభ్రంశం - p_Res_దత్తాంశం->pool_String_సూచీ_హద్దు);
         }
         int32_t first=*p;
-        if (first == 0x2205) {  // implicit length
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
-        } else if (first == 0xdc03) {  // explicit length 3 (should not occur)
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
-        } else {
+        ఒకవేళ (first == 0x2205) {  // implicit length
+            తిరిగి p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
+        } లేకపోతే ఒకవేళ (first == 0xdc03) {  // explicit length 3 (should not occur)
+            తిరిగి p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
+        } లేకపోతే {
             // Assume that the string has not been stored with more length units than necessary.
-            return false;
+            తిరిగి అబద్ధం;
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-int32_t getStringArray(const ResourceData *pResData, const icu::ResourceArray &array,
+int32_t getStringArray(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, స్థిరరాశి icu::ResourceArray &array,
                        icu::UnicodeString *dest, int32_t capacity,
-                       UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+                       UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(dest == శూన్యసూచిక ? capacity != 0 : capacity < 0) {
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    int32_t length = array.getSize();
-    if(length == 0) {
-        return 0;
+    int32_t length = array.get_కొలత();
+    ఒకవేళ(length == 0) {
+        తిరిగి 0;
     }
-    if(length > capacity) {
-        errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+    ఒకవేళ(length > capacity) {
+        error_సంకేతం = U_బఫరు_అధికప్రవాహం_ERROR;
+        తిరిగి length;
     }
-    for(int32_t i = 0; i < length; ++i) {
-        int32_t sLength;
+    కొరకు(int32_t i = 0; i < length; ++i) {
+        int32_t s_నిడివి;
         // No tracing: handled by the caller
-        const char16_t *s = res_getStringNoTrace(pResData, array.internalGetResource(pResData, i), &sLength);
-        if(s == nullptr) {
-            errorCode = U_RESOURCE_TYPE_MISMATCH;
-            return 0;
+        స్థిరరాశి char16_t *s = res_getStringNoTrace(p_Res_దత్తాంశం, array.అంతర్గత_Get_Resource(p_Res_దత్తాంశం, i), &s_నిడివి);
+        ఒకవేళ(s == శూన్యసూచిక) {
+            error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
+            తిరిగి 0;
         }
-        dest[i].setTo(true, s, sLength);
+        dest[i].సమితి_గమ్యం(నిజం, s, s_నిడివి);
     }
-    return length;
+    తిరిగి length;
 }
 
 }  // namespace
 
-U_CAPI const char16_t * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
-    uint32_t offset=RES_GET_OFFSET(res);
+U_CAPI స్థిరరాశి char16_t * U_EXPORT2
+res_getAlias(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి) {
+    స్థిరరాశి char16_t *p;
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_ALIAS) {
-        const int32_t *p32= offset==0 ? &gEmptyString.length : pResData->pRoot+offset;
+    ఒకవేళ(RES_GET_TYPE(res)==URES_ALIAS) {
+        స్థిరరాశి int32_t *p32= స్థానభ్రంశం==0 ? &g_ఖాళీలు_String.length : p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
-        p=nullptr;
+        p=(స్థిరరాశి char16_t *)p32;
+    } లేకపోతే {
+        p=శూన్యసూచిక;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    ఒకవేళ(p_నిడివి) {
+        *p_నిడివి=length;
     }
-    return p;
+    తిరిగి p;
 }
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const uint8_t *p;
-    uint32_t offset=RES_GET_OFFSET(res);
+U_CAPI స్థిరరాశి uint8_t * U_EXPORT2
+res_get_ద్విమాన_No_Trace(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి) {
+    స్థిరరాశి uint8_t *p;
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_BINARY) {
-        const int32_t *p32= offset==0 ? (const int32_t*)&gEmpty32 : pResData->pRoot+offset;
+    ఒకవేళ(RES_GET_TYPE(res)==URES_ద్విమాన) {
+        స్థిరరాశి int32_t *p32= స్థానభ్రంశం==0 ? (స్థిరరాశి int32_t*)&gEmpty32 : p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం;
         length=*p32++;
-        p=(const uint8_t *)p32;
-    } else {
-        p=nullptr;
+        p=(స్థిరరాశి uint8_t *)p32;
+    } లేకపోతే {
+        p=శూన్యసూచిక;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    ఒకవేళ(p_నిడివి) {
+        *p_నిడివి=length;
     }
-    return p;
+    తిరిగి p;
 }
 
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const int32_t *p;
-    uint32_t offset=RES_GET_OFFSET(res);
+U_CAPI స్థిరరాశి int32_t * U_EXPORT2
+res_get_Int_సదిశ_No_Trace(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి) {
+    స్థిరరాశి int32_t *p;
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_INT_VECTOR) {
-        p= offset==0 ? (const int32_t *)&gEmpty32 : pResData->pRoot+offset;
+    ఒకవేళ(RES_GET_TYPE(res)==URES_INT_సదిశ) {
+        p= స్థానభ్రంశం==0 ? (స్థిరరాశి int32_t *)&gEmpty32 : p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం;
         length=*p++;
-    } else {
-        p=nullptr;
+    } లేకపోతే {
+        p=శూన్యసూచిక;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    ఒకవేళ(p_నిడివి) {
+        *p_నిడివి=length;
     }
-    return p;
+    తిరిగి p;
 }
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res) {
-    uint32_t offset=RES_GET_OFFSET(res);
-    switch(RES_GET_TYPE(res)) {
-    case URES_STRING:
-    case URES_STRING_V2:
-    case URES_BINARY:
-    case URES_ALIAS:
-    case URES_INT:
-    case URES_INT_VECTOR:
-        return 1;
-    case URES_ARRAY:
-    case URES_TABLE32:
-        return offset==0 ? 0 : *(pResData->pRoot+offset);
-    case URES_TABLE:
-        return offset==0 ? 0 : *((const uint16_t *)(pResData->pRoot+offset));
-    case URES_ARRAY16:
-    case URES_TABLE16:
-        return pResData->p16BitUnits[offset];
-    default:
-        return 0;
+res_లెక్క_Array_వస్తువులు(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res) {
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(res);
+    ఎంపిక(RES_GET_TYPE(res)) {
+    స్థితి URES_STRING:
+    స్థితి URES_STRING_V2:
+    స్థితి URES_ద్విమాన:
+    స్థితి URES_ALIAS:
+    స్థితి URES_INT:
+    స్థితి URES_INT_సదిశ:
+        తిరిగి 1;
+    స్థితి URES_ARRAY:
+    స్థితి URES_TABLE32:
+        తిరిగి స్థానభ్రంశం==0 ? 0 : *(p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం);
+    స్థితి URES_పట్టిక:
+        తిరిగి స్థానభ్రంశం==0 ? 0 : *((స్థిరరాశి uint16_t *)(p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం));
+    స్థితి URES_ARRAY16:
+    స్థితి URES_TABLE16:
+        తిరిగి p_Res_దత్తాంశం->p16_బిట్టు_Units[స్థానభ్రంశం];
+    అప్రమేయ:
+        తిరిగి 0;
     }
 }
 
 U_NAMESPACE_BEGIN
 
-ResourceDataValue::~ResourceDataValue() {}
+Resource_దత్తాంశం_విలువ::~Resource_దత్తాంశం_విలువ() {}
 
-UResType ResourceDataValue::getType() const {
-    return res_getPublicType(res);
+UResType Resource_దత్తాంశం_విలువ::getType() స్థిరరాశి {
+    తిరిగి res_get_ప్రజా_Type(res);
 }
 
-const char16_t *ResourceDataValue::getString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+స్థిరరాశి char16_t *Resource_దత్తాంశం_విలువ::getString(int32_t &length, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &length);
-    if(s == nullptr) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    స్థిరరాశి char16_t *s = res_getString(fTraceInfo, &get_దత్తాంశం(), res, &length);
+    ఒకవేళ(s == శూన్యసూచిక) {
+        error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    తిరిగి s;
 }
 
-const char16_t *ResourceDataValue::getAliasString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+స్థిరరాశి char16_t *Resource_దత్తాంశం_విలువ::getAliasString(int32_t &length, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    const char16_t *s = res_getAlias(&getData(), res, &length);
-    if(s == nullptr) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    స్థిరరాశి char16_t *s = res_getAlias(&get_దత్తాంశం(), res, &length);
+    ఒకవేళ(s == శూన్యసూచిక) {
+        error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    తిరిగి s;
 }
 
-int32_t ResourceDataValue::getInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+int32_t Resource_దత్తాంశం_విలువ::getInt(UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    ఒకవేళ(RES_GET_TYPE(res) != URES_INT) {
+        error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getInt(fTraceInfo, res);
+    తిరిగి res_getInt(fTraceInfo, res);
 }
 
-uint32_t ResourceDataValue::getUInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+uint32_t Resource_దత్తాంశం_విలువ::getUInt(UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    ఒకవేళ(RES_GET_TYPE(res) != URES_INT) {
+        error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getUInt(fTraceInfo, res);
+    తిరిగి res_getUInt(fTraceInfo, res);
 }
 
-const int32_t *ResourceDataValue::getIntVector(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+స్థిరరాశి int32_t *Resource_దత్తాంశం_విలువ::get_Int_సదిశ(int32_t &length, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    const int32_t *iv = res_getIntVector(fTraceInfo, &getData(), res, &length);
-    if(iv == nullptr) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    స్థిరరాశి int32_t *iv = res_get_Int_సదిశ(fTraceInfo, &get_దత్తాంశం(), res, &length);
+    ఒకవేళ(iv == శూన్యసూచిక) {
+        error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
     }
-    return iv;
+    తిరిగి iv;
 }
 
-const uint8_t *ResourceDataValue::getBinary(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+స్థిరరాశి uint8_t *Resource_దత్తాంశం_విలువ::get_ద్విమాన(int32_t &length, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    const uint8_t *b = res_getBinary(fTraceInfo, &getData(), res, &length);
-    if(b == nullptr) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    స్థిరరాశి uint8_t *b = res_get_ద్విమాన(fTraceInfo, &get_దత్తాంశం(), res, &length);
+    ఒకవేళ(b == శూన్యసూచిక) {
+        error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
     }
-    return b;
+    తిరిగి b;
 }
 
-ResourceArray ResourceDataValue::getArray(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+ResourceArray Resource_దత్తాంశం_విలువ::getArray(UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి {};
     }
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
-    uint32_t offset=RES_GET_OFFSET(res);
+    స్థిరరాశి uint16_t *items16 = శూన్యసూచిక;
+    స్థిరరాశి Resource *items32 = శూన్యసూచిక;
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_ARRAY:
-        if (offset!=0) {  // empty if offset==0
-            items32 = reinterpret_cast<const Resource*>(getData().pRoot) + offset;
+    ఎంపిక(RES_GET_TYPE(res)) {
+    స్థితి URES_ARRAY:
+        ఒకవేళ (స్థానభ్రంశం!=0) {  // empty if offset==0
+            items32 = reinterpret_cast<స్థిరరాశి Resource*>(get_దత్తాంశం().p_మూలం) + స్థానభ్రంశం;
             length = *items32++;
         }
-        break;
-    case URES_ARRAY16:
-        items16 = getData().p16BitUnits+offset;
+        ఆపు;
+    స్థితి URES_ARRAY16:
+        items16 = get_దత్తాంశం().p16_బిట్టు_Units+స్థానభ్రంశం;
         length = *items16++;
-        break;
-    default:
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        ఆపు;
+    అప్రమేయ:
+        error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
+        తిరిగి {};
     }
-    return ResourceArray(items16, items32, length, fTraceInfo);
+    తిరిగి ResourceArray(items16, items32, length, fTraceInfo);
 }
 
-ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+Resource_పట్టిక Resource_దత్తాంశం_విలువ::get_పట్టిక(UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి {};
     }
-    const uint16_t *keys16 = nullptr;
-    const int32_t *keys32 = nullptr;
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
-    uint32_t offset = RES_GET_OFFSET(res);
+    స్థిరరాశి uint16_t *keys16 = శూన్యసూచిక;
+    స్థిరరాశి int32_t *keys32 = శూన్యసూచిక;
+    స్థిరరాశి uint16_t *items16 = శూన్యసూచిక;
+    స్థిరరాశి Resource *items32 = శూన్యసూచిక;
+    uint32_t స్థానభ్రంశం = RES_GET_స్థానభ్రంశం(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE:
-        if (offset != 0) {  // empty if offset==0
-            keys16 = reinterpret_cast<const uint16_t*>(getData().pRoot + offset);
+    ఎంపిక(RES_GET_TYPE(res)) {
+    స్థితి URES_పట్టిక:
+        ఒకవేళ (స్థానభ్రంశం != 0) {  // empty if offset==0
+            keys16 = reinterpret_cast<స్థిరరాశి uint16_t*>(get_దత్తాంశం().p_మూలం + స్థానభ్రంశం);
             length = *keys16++;
-            items32 = reinterpret_cast<const Resource*>(keys16 + length + (~length & 1));
+            items32 = reinterpret_cast<స్థిరరాశి Resource*>(keys16 + length + (~length & 1));
         }
-        break;
-    case URES_TABLE16:
-        keys16 = getData().p16BitUnits+offset;
+        ఆపు;
+    స్థితి URES_TABLE16:
+        keys16 = get_దత్తాంశం().p16_బిట్టు_Units+స్థానభ్రంశం;
         length = *keys16++;
         items16 = keys16 + length;
-        break;
-    case URES_TABLE32:
-        if (offset != 0) {  // empty if offset==0
-            keys32 = getData().pRoot+offset;
+        ఆపు;
+    స్థితి URES_TABLE32:
+        ఒకవేళ (స్థానభ్రంశం != 0) {  // empty if offset==0
+            keys32 = get_దత్తాంశం().p_మూలం+స్థానభ్రంశం;
             length = *keys32++;
-            items32 = reinterpret_cast<const Resource*>(keys32) + length;
+            items32 = reinterpret_cast<స్థిరరాశి Resource*>(keys32) + length;
         }
-        break;
-    default:
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        ఆపు;
+    అప్రమేయ:
+        error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
+        తిరిగి {};
     }
-    return ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
+    తిరిగి Resource_పట్టిక(keys16, keys32, items16, items32, length, fTraceInfo);
 }
 
-UBool ResourceDataValue::isNoInheritanceMarker() const {
-    return ::isNoInheritanceMarker(&getData(), res);
+UBool Resource_దత్తాంశం_విలువ::isNoInheritanceMarker() స్థిరరాశి {
+    తిరిగి ::isNoInheritanceMarker(&get_దత్తాంశం(), res);
 }
 
-int32_t ResourceDataValue::getStringArray(UnicodeString *dest, int32_t capacity,
-                                          UErrorCode &errorCode) const {
-    return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+int32_t Resource_దత్తాంశం_విలువ::getStringArray(UnicodeString *dest, int32_t capacity,
+                                          UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    తిరిగి ::getStringArray(&get_దత్తాంశం(), getArray(error_సంకేతం), dest, capacity, error_సంకేతం);
 }
 
-int32_t ResourceDataValue::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                         UErrorCode &errorCode) const {
-    if(URES_IS_ARRAY(res)) {
-        return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+int32_t Resource_దత్తాంశం_విలువ::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
+                                                         UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(URES_IS_ARRAY(res)) {
+        తిరిగి ::getStringArray(&get_దత్తాంశం(), getArray(error_సంకేతం), dest, capacity, error_సంకేతం);
     }
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(dest == శూన్యసూచిక ? capacity != 0 : capacity < 0) {
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    if(capacity < 1) {
-        errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+    ఒకవేళ(capacity < 1) {
+        error_సంకేతం = U_బఫరు_అధికప్రవాహం_ERROR;
+        తిరిగి 1;
     }
-    int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        dest[0].setTo(true, s, sLength);
-        return 1;
+    int32_t s_నిడివి;
+    స్థిరరాశి char16_t *s = res_getString(fTraceInfo, &get_దత్తాంశం(), res, &s_నిడివి);
+    ఒకవేళ(s != శూన్యసూచిక) {
+        dest[0].సమితి_గమ్యం(నిజం, s, s_నిడివి);
+        తిరిగి 1;
     }
-    errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return 0;
+    error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
+    తిరిగి 0;
 }
 
-UnicodeString ResourceDataValue::getStringOrFirstOfArray(UErrorCode &errorCode) const {
+UnicodeString Resource_దత్తాంశం_విలువ::get_String_Or_మొదటి_యొక్క_Array(UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
     UnicodeString us;
-    if(U_FAILURE(errorCode)) {
-        return us;
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి us;
     }
-    int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        us.setTo(true, s, sLength);
-        return us;
+    int32_t s_నిడివి;
+    స్థిరరాశి char16_t *s = res_getString(fTraceInfo, &get_దత్తాంశం(), res, &s_నిడివి);
+    ఒకవేళ(s != శూన్యసూచిక) {
+        us.సమితి_గమ్యం(నిజం, s, s_నిడివి);
+        తిరిగి us;
     }
-    ResourceArray array = getArray(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return us;
+    ResourceArray array = getArray(error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి us;
     }
-    if(array.getSize() > 0) {
+    ఒకవేళ(array.get_కొలత() > 0) {
         // Tracing is already performed above (unimportant for trace that this is an array)
-        s = res_getStringNoTrace(&getData(), array.internalGetResource(&getData(), 0), &sLength);
-        if(s != nullptr) {
-            us.setTo(true, s, sLength);
-            return us;
+        s = res_getStringNoTrace(&get_దత్తాంశం(), array.అంతర్గత_Get_Resource(&get_దత్తాంశం(), 0), &s_నిడివి);
+        ఒకవేళ(s != శూన్యసూచిక) {
+            us.సమితి_గమ్యం(నిజం, s, s_నిడివి);
+            తిరిగి us;
         }
     }
-    errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return us;
+    error_సంకేతం = U_RESOURCE_TYPE_MISMATCH;
+    తిరిగి us;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-static Resource
-makeResourceFrom16(const ResourceData *pResData, int32_t res16) {
-    if(res16<pResData->poolStringIndex16Limit) {
+స్థిర Resource
+makeResourceFrom16(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, int32_t res16) {
+    ఒకవేళ(res16<p_Res_దత్తాంశం->pool_String_Index16_హద్దు) {
         // Pool string, nothing to do.
-    } else {
+    } లేకపోతే {
         // Local string, adjust the 16-bit offset to a regular one,
         // with a larger pool string index limit.
-        res16=res16-pResData->poolStringIndex16Limit+pResData->poolStringIndexLimit;
+        res16=res16-p_Res_దత్తాంశం->pool_String_Index16_హద్దు+p_Res_దత్తాంశం->pool_String_సూచీ_హద్దు;
     }
-    return URES_MAKE_RESOURCE(URES_STRING_V2, res16);
+    తిరిగి URES_MAKE_RESOURCE(URES_STRING_V2, res16);
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table,
-                      int32_t *indexR, const char **key) {
-    uint32_t offset=RES_GET_OFFSET(table);
+res_get_పట్టిక_అంశం_By_కీలకం(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource పట్టిక,
+                      int32_t *సూచీ_R, స్థిరరాశి అక్షరం **కీలకం) {
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(పట్టిక);
     int32_t length;
     int32_t idx;
-    if(key == nullptr || *key == nullptr) {
-        return RES_BOGUS;
+    ఒకవేళ(కీలకం == శూన్యసూచిక || *కీలకం == శూన్యసూచిక) {
+        తిరిగి RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset!=0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    ఎంపిక(RES_GET_TYPE(పట్టిక)) {
+    స్థితి URES_పట్టిక: {
+        ఒకవేళ (స్థానభ్రంశం!=0) { /* empty if offset==0 */
+            స్థిరరాశి uint16_t *p= (స్థిరరాశి uint16_t *)(p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం);
             length=*p++;
-            *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-            if(idx>=0) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                return p32[idx];
+            *సూచీ_R=idx=res_కనుగొను_పట్టిక_అంశం(p_Res_దత్తాంశం, p, length, *కీలకం, కీలకం);
+            ఒకవేళ(idx>=0) {
+                స్థిరరాశి Resource *p32=(స్థిరరాశి Resource *)(p+length+(~length&1));
+                తిరిగి p32[idx];
             }
         }
-        break;
+        ఆపు;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    స్థితి URES_TABLE16: {
+        స్థిరరాశి uint16_t *p=p_Res_దత్తాంశం->p16_బిట్టు_Units+స్థానభ్రంశం;
         length=*p++;
-        *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-        if(idx>=0) {
-            return makeResourceFrom16(pResData, p[length+idx]);
+        *సూచీ_R=idx=res_కనుగొను_పట్టిక_అంశం(p_Res_దత్తాంశం, p, length, *కీలకం, కీలకం);
+        ఒకవేళ(idx>=0) {
+            తిరిగి makeResourceFrom16(p_Res_దత్తాంశం, p[length+idx]);
         }
-        break;
+        ఆపు;
     }
-    case URES_TABLE32: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    స్థితి URES_TABLE32: {
+        ఒకవేళ (స్థానభ్రంశం!=0) { /* empty if offset==0 */
+            స్థిరరాశి int32_t *p= p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం;
             length=*p++;
-            *indexR=idx=_res_findTable32Item(pResData, p, length, *key, key);
-            if(idx>=0) {
-                return (Resource)p[length+idx];
+            *సూచీ_R=idx=res_కనుగొను_Table32_అంశం(p_Res_దత్తాంశం, p, length, *కీలకం, కీలకం);
+            ఒకవేళ(idx>=0) {
+                తిరిగి (Resource)p[length+idx];
             }
         }
-        break;
+        ఆపు;
     }
-    default:
-        break;
+    అప్రమేయ:
+        ఆపు;
     }
-    return RES_BOGUS;
+    తిరిగి RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table,
-                        int32_t indexR, const char **key) {
-    uint32_t offset=RES_GET_OFFSET(table);
+res_get_పట్టిక_అంశం_By_సూచీ(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource పట్టిక,
+                        int32_t సూచీ_R, స్థిరరాశి అక్షరం **కీలకం) {
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(పట్టిక);
     int32_t length;
-    if (indexR < 0) {
-        return RES_BOGUS;
+    ఒకవేళ (సూచీ_R < 0) {
+        తిరిగి RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset != 0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    ఎంపిక(RES_GET_TYPE(పట్టిక)) {
+    స్థితి URES_పట్టిక: {
+        ఒకవేళ (స్థానభ్రంశం != 0) { /* empty if offset==0 */
+            స్థిరరాశి uint16_t *p= (స్థిరరాశి uint16_t *)(p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం);
             length=*p++;
-            if(indexR<length) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                if(key!=nullptr) {
-                    *key=RES_GET_KEY16(pResData, p[indexR]);
+            ఒకవేళ(సూచీ_R<length) {
+                స్థిరరాశి Resource *p32=(స్థిరరాశి Resource *)(p+length+(~length&1));
+                ఒకవేళ(కీలకం!=శూన్యసూచిక) {
+                    *కీలకం=RES_GET_KEY16(p_Res_దత్తాంశం, p[సూచీ_R]);
                 }
-                return p32[indexR];
+                తిరిగి p32[సూచీ_R];
             }
         }
-        break;
+        ఆపు;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    స్థితి URES_TABLE16: {
+        స్థిరరాశి uint16_t *p=p_Res_దత్తాంశం->p16_బిట్టు_Units+స్థానభ్రంశం;
         length=*p++;
-        if(indexR<length) {
-            if(key!=nullptr) {
-                *key=RES_GET_KEY16(pResData, p[indexR]);
+        ఒకవేళ(సూచీ_R<length) {
+            ఒకవేళ(కీలకం!=శూన్యసూచిక) {
+                *కీలకం=RES_GET_KEY16(p_Res_దత్తాంశం, p[సూచీ_R]);
             }
-            return makeResourceFrom16(pResData, p[length+indexR]);
+            తిరిగి makeResourceFrom16(p_Res_దత్తాంశం, p[length+సూచీ_R]);
         }
-        break;
+        ఆపు;
     }
-    case URES_TABLE32: {
-        if (offset != 0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    స్థితి URES_TABLE32: {
+        ఒకవేళ (స్థానభ్రంశం != 0) { /* empty if offset==0 */
+            స్థిరరాశి int32_t *p= p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం;
             length=*p++;
-            if(indexR<length) {
-                if(key!=nullptr) {
-                    *key=RES_GET_KEY32(pResData, p[indexR]);
+            ఒకవేళ(సూచీ_R<length) {
+                ఒకవేళ(కీలకం!=శూన్యసూచిక) {
+                    *కీలకం=RES_GET_KEY32(p_Res_దత్తాంశం, p[సూచీ_R]);
                 }
-                return (Resource)p[length+indexR];
+                తిరిగి (Resource)p[length+సూచీ_R];
             }
         }
-        break;
+        ఆపు;
     }
-    default:
-        break;
+    అప్రమేయ:
+        ఆపు;
     }
-    return RES_BOGUS;
+    తిరిగి RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key) {
-    const char *realKey=key;
+res_getResource(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, స్థిరరాశి అక్షరం *కీలకం) {
+    స్థిరరాశి అక్షరం *real_కీలకం=కీలకం;
     int32_t idx;
-    return res_getTableItemByKey(pResData, pResData->rootRes, &idx, &realKey);
+    తిరిగి res_get_పట్టిక_అంశం_By_కీలకం(p_Res_దత్తాంశం, p_Res_దత్తాంశం->మూలం_Res, &idx, &real_కీలకం);
 }
 
 
-UBool icu::ResourceTable::getKeyAndValue(int32_t i,
-                                         const char *&key, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
-        icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-        if (keys16 != nullptr) {
-            key = RES_GET_KEY16(&rdValue.getData(), keys16[i]);
-        } else {
-            key = RES_GET_KEY32(&rdValue.getData(), keys32[i]);
+UBool icu::Resource_పట్టిక::get_కీలకం_And_విలువ(int32_t i,
+                                         స్థిరరాశి అక్షరం *&కీలకం, icu::Resource_విలువ &value) స్థిరరాశి {
+    ఒకవేళ(0 <= i && i < length) {
+        icu::Resource_దత్తాంశం_విలువ &rd_విలువ = static_cast<icu::Resource_దత్తాంశం_విలువ &>(value);
+        ఒకవేళ (keys16 != శూన్యసూచిక) {
+            కీలకం = RES_GET_KEY16(&rd_విలువ.get_దత్తాంశం(), keys16[i]);
+        } లేకపోతే {
+            కీలకం = RES_GET_KEY32(&rd_విలువ.get_దత్తాంశం(), keys32[i]);
         }
         Resource res;
-        if (items16 != nullptr) {
-            res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        ఒకవేళ (items16 != శూన్యసూచిక) {
+            res = makeResourceFrom16(&rd_విలువ.get_దత్తాంశం(), items16[i]);
+        } లేకపోతే {
             res = items32[i];
         }
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceTable. This is OK because the ResourceTable should remain
         // alive for the duration that fields are being read from it
         // (including nested fields).
-        rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        rd_విలువ.సమితి_Resource(res, ResourceTracer(fTraceInfo, కీలకం));
+        తిరిగి నిజం;
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-UBool icu::ResourceTable::findValue(const char *key, ResourceValue &value) const {
-    icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-    const char *realKey = nullptr;
+UBool icu::Resource_పట్టిక::కనుగొను_విలువ(స్థిరరాశి అక్షరం *కీలకం, Resource_విలువ &value) స్థిరరాశి {
+    icu::Resource_దత్తాంశం_విలువ &rd_విలువ = static_cast<icu::Resource_దత్తాంశం_విలువ &>(value);
+    స్థిరరాశి అక్షరం *real_కీలకం = శూన్యసూచిక;
     int32_t i;
-    if (keys16 != nullptr) {
-        i = _res_findTableItem(&rdValue.getData(), keys16, length, key, &realKey);
-    } else {
-        i = _res_findTable32Item(&rdValue.getData(), keys32, length, key, &realKey);
+    ఒకవేళ (keys16 != శూన్యసూచిక) {
+        i = res_కనుగొను_పట్టిక_అంశం(&rd_విలువ.get_దత్తాంశం(), keys16, length, కీలకం, &real_కీలకం);
+    } లేకపోతే {
+        i = res_కనుగొను_Table32_అంశం(&rd_విలువ.get_దత్తాంశం(), keys32, length, కీలకం, &real_కీలకం);
     }
-    if (i >= 0) {
+    ఒకవేళ (i >= 0) {
         Resource res;
-        if (items16 != nullptr) {
-            res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        ఒకవేళ (items16 != శూన్యసూచిక) {
+            res = makeResourceFrom16(&rd_విలువ.get_దత్తాంశం(), items16[i]);
+        } లేకపోతే {
             res = items32[i];
         }
         // Same note about lifetime as in getKeyAndValue().
-        rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        rd_విలువ.సమితి_Resource(res, ResourceTracer(fTraceInfo, కీలకం));
+        తిరిగి నిజం;
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexR) {
-    uint32_t offset=RES_GET_OFFSET(array);
-    if (indexR < 0) {
-        return RES_BOGUS;
+res_get_Array_అంశం(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource array, int32_t సూచీ_R) {
+    uint32_t స్థానభ్రంశం=RES_GET_స్థానభ్రంశం(array);
+    ఒకవేళ (సూచీ_R < 0) {
+        తిరిగి RES_BOGUS;
     }
-    switch(RES_GET_TYPE(array)) {
-    case URES_ARRAY: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
-            if(indexR<*p) {
-                return (Resource)p[1+indexR];
+    ఎంపిక(RES_GET_TYPE(array)) {
+    స్థితి URES_ARRAY: {
+        ఒకవేళ (స్థానభ్రంశం!=0) { /* empty if offset==0 */
+            స్థిరరాశి int32_t *p= p_Res_దత్తాంశం->p_మూలం+స్థానభ్రంశం;
+            ఒకవేళ(సూచీ_R<*p) {
+                తిరిగి (Resource)p[1+సూచీ_R];
             }
         }
-        break;
+        ఆపు;
     }
-    case URES_ARRAY16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
-        if(indexR<*p) {
-            return makeResourceFrom16(pResData, p[1+indexR]);
+    స్థితి URES_ARRAY16: {
+        స్థిరరాశి uint16_t *p=p_Res_దత్తాంశం->p16_బిట్టు_Units+స్థానభ్రంశం;
+        ఒకవేళ(సూచీ_R<*p) {
+            తిరిగి makeResourceFrom16(p_Res_దత్తాంశం, p[1+సూచీ_R]);
         }
-        break;
+        ఆపు;
     }
-    default:
-        break;
+    అప్రమేయ:
+        ఆపు;
     }
-    return RES_BOGUS;
+    తిరిగి RES_BOGUS;
 }
 
-uint32_t icu::ResourceArray::internalGetResource(const ResourceData *pResData, int32_t i) const {
-    if (items16 != nullptr) {
-        return makeResourceFrom16(pResData, items16[i]);
-    } else {
-        return items32[i];
+uint32_t icu::ResourceArray::అంతర్గత_Get_Resource(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, int32_t i) స్థిరరాశి {
+    ఒకవేళ (items16 != శూన్యసూచిక) {
+        తిరిగి makeResourceFrom16(p_Res_దత్తాంశం, items16[i]);
+    } లేకపోతే {
+        తిరిగి items32[i];
     }
 }
 
-UBool icu::ResourceArray::getValue(int32_t i, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
-        icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
+UBool icu::ResourceArray::get_విలువ(int32_t i, icu::Resource_విలువ &value) స్థిరరాశి {
+    ఒకవేళ(0 <= i && i < length) {
+        icu::Resource_దత్తాంశం_విలువ &rd_విలువ = static_cast<icu::Resource_దత్తాంశం_విలువ &>(value);
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceArray. This is OK because the ResourceArray should remain
         // alive for the duration that fields are being read from it
         // (including nested fields).
-        rdValue.setResource(
-            internalGetResource(&rdValue.getData(), i),
+        rd_విలువ.సమితి_Resource(
+            అంతర్గత_Get_Resource(&rd_విలువ.get_దత్తాంశం(), i),
             ResourceTracer(fTraceInfo, i));
-        return true;
+        తిరిగి నిజం;
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
 U_CFUNC Resource
-res_findResource(const ResourceData *pResData, Resource r, char** path, const char** key) {
-  char *pathP = *path, *nextSepP = *path;
-  char *closeIndex = nullptr;
+res_కనుగొను_Resource(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource r, అక్షరం** మార్గం, స్థిరరాశి అక్షరం** కీలకం) {
+  అక్షరం *మార్గం_P = *మార్గం, *తదుపరి_Sep_P = *మార్గం;
+  అక్షరం *close_సూచీ = శూన్యసూచిక;
   Resource t1 = r;
   Resource t2;
-  int32_t indexR = 0;
+  int32_t సూచీ_R = 0;
   UResType type = (UResType)RES_GET_TYPE(t1);
 
   /* if you come in with an empty path, you'll be getting back the same resource */
-  if(!uprv_strlen(pathP)) {
-      return r;
+  ఒకవేళ(!uprv_strlen(మార్గం_P)) {
+      తిరిగి r;
   }
 
   /* one needs to have an aggregate resource in order to search in it */
-  if(!URES_IS_CONTAINER(type)) {
-      return RES_BOGUS;
+  ఒకవేళ(!URES_IS_CONTAINER(type)) {
+      తిరిగి RES_BOGUS;
   }
   
-  while(nextSepP && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
+  అయితే(తదుపరి_Sep_P && *మార్గం_P && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
     /* Iteration stops if: the path has been consumed, we found a non-existing
      * resource (t1 == RES_BOGUS) or we found a scalar resource (including alias)
      */
-    nextSepP = uprv_strchr(pathP, RES_PATH_SEPARATOR);
+    తదుపరి_Sep_P = uprv_strchr(మార్గం_P, RES_మార్గం_SEPARATOR);
     /* if there are more separators, terminate string 
      * and set path to the remaining part of the string
      */
-    if(nextSepP != nullptr) {
-      if(nextSepP == pathP) {
+    ఒకవేళ(తదుపరి_Sep_P != శూన్యసూచిక) {
+      ఒకవేళ(తదుపరి_Sep_P == మార్గం_P) {
         // Empty key string.
-        return RES_BOGUS;
+        తిరిగి RES_BOGUS;
       }
-      *nextSepP = 0; /* overwrite the separator with a NUL to terminate the key */
-      *path = nextSepP+1;
-    } else {
-      *path = uprv_strchr(pathP, 0);
+      *తదుపరి_Sep_P = 0; /* overwrite the separator with a NUL to terminate the key */
+      *మార్గం = తదుపరి_Sep_P+1;
+    } లేకపోతే {
+      *మార్గం = uprv_strchr(మార్గం_P, 0);
     }
 
     /* if the resource is a table */
     /* try the key based access */
-    if(URES_IS_TABLE(type)) {
-      *key = pathP;
-      t2 = res_getTableItemByKey(pResData, t1, &indexR, key);
-    } else if(URES_IS_ARRAY(type)) {
-      indexR = uprv_strtol(pathP, &closeIndex, 10);
-      if(indexR >= 0 && *closeIndex == 0) {
-        t2 = res_getArrayItem(pResData, t1, indexR);
-      } else {
+    ఒకవేళ(URES_IS_పట్టిక(type)) {
+      *కీలకం = మార్గం_P;
+      t2 = res_get_పట్టిక_అంశం_By_కీలకం(p_Res_దత్తాంశం, t1, &సూచీ_R, కీలకం);
+    } లేకపోతే ఒకవేళ(URES_IS_ARRAY(type)) {
+      సూచీ_R = uprv_strtol(మార్గం_P, &close_సూచీ, 10);
+      ఒకవేళ(సూచీ_R >= 0 && *close_సూచీ == 0) {
+        t2 = res_get_Array_అంశం(p_Res_దత్తాంశం, t1, సూచీ_R);
+      } లేకపోతే {
         t2 = RES_BOGUS; /* have an array, but don't have a valid index */
       }
-      *key = nullptr;
-    } else { /* can't do much here, except setting t2 to bogus */
+      *కీలకం = శూన్యసూచిక;
+    } లేకపోతే { /* can't do much here, except setting t2 to bogus */
       t2 = RES_BOGUS;
     }
     t1 = t2;
     type = (UResType)RES_GET_TYPE(t1);
     /* position pathP to next resource key/index */
-    pathP = *path;
+    మార్గం_P = *మార్గం;
   }
 
-  return t1;
+  తిరిగి t1;
 }
 
 /* resource bundle swapping ------------------------------------------------- */
@@ -1013,189 +1013,189 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
  * after sorting this array by keys, the actual key/value arrays are permutated
  * according to the sorting indexes
  */
-typedef struct Row {
-    int32_t keyIndex, sortIndex;
-} Row;
+రకనిర్వచనం నిర్మాణం అడ్డువరుస_2 {
+    int32_t కీలకం_సూచీ, క్రమీకరించు_సూచీ;
+} అడ్డువరుస_2;
 
-static int32_t U_CALLCONV
-ures_compareRows(const void *context, const void *left, const void *right) {
-    const char* keyChars = static_cast<const char*>(context);
-    return static_cast<int32_t>(uprv_strcmp(keyChars + static_cast<const Row*>(left)->keyIndex,
-                                            keyChars + static_cast<const Row*>(right)->keyIndex));
+స్థిర int32_t U_CALLCONV
+ures_compare_అడ్డువరుసలు(స్థిరరాశి శూన్య *context, స్థిరరాశి శూన్య *ఎడమ, స్థిరరాశి శూన్య *కుడి) {
+    స్థిరరాశి అక్షరం* కీలకం_Chars = static_cast<స్థిరరాశి అక్షరం*>(context);
+    తిరిగి static_cast<int32_t>(uprv_strcmp(కీలకం_Chars + static_cast<స్థిరరాశి అడ్డువరుస_2*>(ఎడమ)->కీలకం_సూచీ,
+                                            కీలకం_Chars + static_cast<స్థిరరాశి అడ్డువరుస_2*>(కుడి)->కీలకం_సూచీ));
 }
 
-typedef struct TempTable {
-    const char *keyChars;
-    Row *rows;
+రకనిర్వచనం నిర్మాణం తాత్కాలిక_పట్టిక_2 {
+    స్థిరరాశి అక్షరం *కీలకం_Chars;
+    అడ్డువరుస_2 *అడ్డువరుసలు;
     int32_t *resort;
     uint32_t *resFlags;
-    int32_t localKeyLimit;
-    uint8_t majorFormatVersion;
-} TempTable;
+    int32_t local_కీలకం_హద్దు;
+    uint8_t major_Format_సంస్కరణ;
+} తాత్కాలిక_పట్టిక_2;
 
-enum {
-    STACK_ROW_CAPACITY=200
+గణన {
+    దొంతర_అడ్డువరుస_సామర్థ్యం=200
 };
 
 /* The table item key string is not locally available. */
-static const char *const gUnknownKey="";
+స్థిర స్థిరరాశి అక్షరం *స్థిరరాశి g_Unknown_కీలకం="";
 
-#if !UCONFIG_NO_COLLATION
+#ఒకవేళ !UCONFIG_NO_COLLATION
 // resource table key for collation binaries
-static const char16_t gCollationBinKey[]=u"%%CollationBin";
-#endif
+స్థిర స్థిరరాశి char16_t g_Collation_Bin_కీలకం[]=u"%%CollationBin";
+#అయితే_ముగింపు
 
 /*
  * swap one resource item
  */
-static void
-ures_swapResource(const UDataSwapper *ds,
-                  const Resource *inBundle, Resource *outBundle,
+స్థిర శూన్య
+ures_మార్పిడి_Resource(స్థిరరాశి UDataSwapper *ds,
+                  స్థిరరాశి Resource *లోపల_Bundle, Resource *బహిర్గతం_Bundle,
                   Resource res, /* caller swaps res itself */
-                  const char *key,
-                  TempTable *pTempTable,
-                  UErrorCode *pErrorCode) {
-    const Resource *p;
+                  స్థిరరాశి అక్షరం *కీలకం,
+                  తాత్కాలిక_పట్టిక_2 *p_తాత్కాలిక_పట్టిక,
+                  UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి Resource *p;
     Resource *q;
-    int32_t offset, count;
+    int32_t స్థానభ్రంశం, count;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE16:
-    case URES_STRING_V2:
-    case URES_INT:
-    case URES_ARRAY16:
+    ఎంపిక(RES_GET_TYPE(res)) {
+    స్థితి URES_TABLE16:
+    స్థితి URES_STRING_V2:
+    స్థితి URES_INT:
+    స్థితి URES_ARRAY16:
         /* integer, or points to 16-bit units, nothing to do here */
-        return;
-    default:
-        break;
+        తిరిగి;
+    అప్రమేయ:
+        ఆపు;
     }
 
     /* all other types use an offset to point to their data */
-    offset = static_cast<int32_t>(RES_GET_OFFSET(res));
-    if(offset==0) {
+    స్థానభ్రంశం = static_cast<int32_t>(RES_GET_స్థానభ్రంశం(res));
+    ఒకవేళ(స్థానభ్రంశం==0) {
         /* special offset indicating an empty item */
-        return;
+        తిరిగి;
     }
-    if (pTempTable->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
+    ఒకవేళ (p_తాత్కాలిక_పట్టిక->resFlags[స్థానభ్రంశం >> 5] & (static_cast<uint32_t>(1) << (స్థానభ్రంశం & 0x1f))) {
         /* we already swapped this resource item */
-        return;
-    } else {
+        తిరిగి;
+    } లేకపోతే {
         /* mark it as swapped now */
-        pTempTable->resFlags[offset >> 5] |= static_cast<uint32_t>(1) << (offset & 0x1f);
+        p_తాత్కాలిక_పట్టిక->resFlags[స్థానభ్రంశం >> 5] |= static_cast<uint32_t>(1) << (స్థానభ్రంశం & 0x1f);
     }
 
-    p=inBundle+offset;
-    q=outBundle+offset;
+    p=లోపల_Bundle+స్థానభ్రంశం;
+    q=బహిర్గతం_Bundle+స్థానభ్రంశం;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_ALIAS:
+    ఎంపిక(RES_GET_TYPE(res)) {
+    స్థితి URES_ALIAS:
         /* physically same value layout as string, fall through */
         U_FALLTHROUGH;
-    case URES_STRING:
+    స్థితి URES_STRING:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
-        ds->swapArray32(ds, p, 4, q, pErrorCode);
+        ds->మార్పిడి_Array32(ds, p, 4, q, p_Error_సంకేతం);
         /* swap each char16_t (the terminating NUL would not change) */
-        ds->swapArray16(ds, p+1, 2*count, q+1, pErrorCode);
-        break;
-    case URES_BINARY:
+        ds->మార్పిడి_Array16(ds, p+1, 2*count, q+1, p_Error_సంకేతం);
+        ఆపు;
+    స్థితి URES_ద్విమాన:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
-        ds->swapArray32(ds, p, 4, q, pErrorCode);
+        ds->మార్పిడి_Array32(ds, p, 4, q, p_Error_సంకేతం);
         /* no need to swap or copy bytes - ures_swap() copied them all */
 
         /* swap known formats */
-#if !UCONFIG_NO_COLLATION
-        if( key!=nullptr &&  /* the binary is in a table */
-            (key!=gUnknownKey ?
+#ఒకవేళ !UCONFIG_NO_COLLATION
+        ఒకవేళ( కీలకం!=శూన్యసూచిక &&  /* the binary is in a table */
+            (కీలకం!=g_Unknown_కీలకం ?
                 /* its table key string is "%%CollationBin" */
-                0==ds->compareInvChars(ds, key, -1,
-                                       gCollationBinKey, UPRV_LENGTHOF(gCollationBinKey)-1) :
+                0==ds->compareInvChars(ds, కీలకం, -1,
+                                       g_Collation_Bin_కీలకం, UPRV_LENGTHOF(g_Collation_Bin_కీలకం)-1) :
                 /* its table key string is unknown but it looks like a collation binary */
-                ucol_looksLikeCollationBinary(ds, p+1, count))
+                ucol_looks_Like_Collation_ద్విమాన(ds, p+1, count))
         ) {
-            ucol_swap(ds, p+1, count, q+1, pErrorCode);
+            ucol_మార్పిడి(ds, p+1, count, q+1, p_Error_సంకేతం);
         }
-#endif
-        break;
-    case URES_TABLE:
-    case URES_TABLE32:
+#అయితే_ముగింపు
+        ఆపు;
+    స్థితి URES_పట్టిక:
+    స్థితి URES_TABLE32:
         {
-            const uint16_t *pKey16;
+            స్థిరరాశి uint16_t *pKey16;
             uint16_t *qKey16;
 
-            const int32_t *pKey32;
+            స్థిరరాశి int32_t *pKey32;
             int32_t *qKey32;
 
-            Resource item;
-            int32_t i, oldIndex;
+            Resource అంశం;
+            int32_t i, old_సూచీ;
 
-            if(RES_GET_TYPE(res)==URES_TABLE) {
+            ఒకవేళ(RES_GET_TYPE(res)==URES_పట్టిక) {
                 /* get table item count */
-                pKey16 = reinterpret_cast<const uint16_t*>(p);
+                pKey16 = reinterpret_cast<స్థిరరాశి uint16_t*>(p);
                 qKey16 = reinterpret_cast<uint16_t*>(q);
                 count=ds->readUInt16(*pKey16);
 
-                pKey32=qKey32=nullptr;
+                pKey32=qKey32=శూన్యసూచిక;
 
                 /* swap count */
-                ds->swapArray16(ds, pKey16++, 2, qKey16++, pErrorCode);
+                ds->మార్పిడి_Array16(ds, pKey16++, 2, qKey16++, p_Error_సంకేతం);
 
-                offset+=((1+count)+1)/2;
-            } else {
+                స్థానభ్రంశం+=((1+count)+1)/2;
+            } లేకపోతే {
                 /* get table item count */
-                pKey32 = reinterpret_cast<const int32_t*>(p);
+                pKey32 = reinterpret_cast<స్థిరరాశి int32_t*>(p);
                 qKey32 = reinterpret_cast<int32_t*>(q);
                 count=udata_readInt32(ds, *pKey32);
 
-                pKey16=qKey16=nullptr;
+                pKey16=qKey16=శూన్యసూచిక;
 
                 /* swap count */
-                ds->swapArray32(ds, pKey32++, 4, qKey32++, pErrorCode);
+                ds->మార్పిడి_Array32(ds, pKey32++, 4, qKey32++, p_Error_సంకేతం);
 
-                offset+=1+count;
+                స్థానభ్రంశం+=1+count;
             }
 
-            if(count==0) {
-                break;
+            ఒకవేళ(count==0) {
+                ఆపు;
             }
 
-            p=inBundle+offset; /* pointer to table resources */
-            q=outBundle+offset;
+            p=లోపల_Bundle+స్థానభ్రంశం; /* pointer to table resources */
+            q=బహిర్గతం_Bundle+స్థానభ్రంశం;
 
             /* recurse */
-            for(i=0; i<count; ++i) {
-                const char *itemKey=gUnknownKey;
-                if(pKey16!=nullptr) {
-                    int32_t keyOffset=ds->readUInt16(pKey16[i]);
-                    if(keyOffset<pTempTable->localKeyLimit) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+            కొరకు(i=0; i<count; ++i) {
+                స్థిరరాశి అక్షరం *అంశం_కీలకం=g_Unknown_కీలకం;
+                ఒకవేళ(pKey16!=శూన్యసూచిక) {
+                    int32_t కీలకం_స్థానభ్రంశం=ds->readUInt16(pKey16[i]);
+                    ఒకవేళ(కీలకం_స్థానభ్రంశం<p_తాత్కాలిక_పట్టిక->local_కీలకం_హద్దు) {
+                        అంశం_కీలకం = reinterpret_cast<స్థిరరాశి అక్షరం*>(బహిర్గతం_Bundle) + కీలకం_స్థానభ్రంశం;
                     }
-                } else {
-                    int32_t keyOffset=udata_readInt32(ds, pKey32[i]);
-                    if(keyOffset>=0) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+                } లేకపోతే {
+                    int32_t కీలకం_స్థానభ్రంశం=udata_readInt32(ds, pKey32[i]);
+                    ఒకవేళ(కీలకం_స్థానభ్రంశం>=0) {
+                        అంశం_కీలకం = reinterpret_cast<స్థిరరాశి అక్షరం*>(బహిర్గతం_Bundle) + కీలకం_స్థానభ్రంశం;
                     }
                 }
-                item=ds->readUInt32(p[i]);
-                ures_swapResource(ds, inBundle, outBundle, item, itemKey, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                అంశం=ds->readUInt32(p[i]);
+                ures_మార్పిడి_Resource(ds, లోపల_Bundle, బహిర్గతం_Bundle, అంశం, అంశం_కీలకం, p_తాత్కాలిక_పట్టిక, p_Error_సంకేతం);
+                ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                     udata_printError(ds, "ures_swapResource(table res=%08x)[%d].recurse(%08x) failed\n",
-                                     res, i, item);
-                    return;
+                                     res, i, అంశం);
+                    తిరిగి;
                 }
             }
 
-            if(pTempTable->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
+            ఒకవేళ(p_తాత్కాలిక_పట్టిక->major_Format_సంస్కరణ>1 || ds->లోపల_Charset==ds->బహిర్గతం_Charset) {
                 /* no need to sort, just swap the offset/value arrays */
-                if(pKey16!=nullptr) {
-                    ds->swapArray16(ds, pKey16, count*2, qKey16, pErrorCode);
-                    ds->swapArray32(ds, p, count*4, q, pErrorCode);
-                } else {
+                ఒకవేళ(pKey16!=శూన్యసూచిక) {
+                    ds->మార్పిడి_Array16(ds, pKey16, count*2, qKey16, p_Error_సంకేతం);
+                    ds->మార్పిడి_Array32(ds, p, count*4, q, p_Error_సంకేతం);
+                } లేకపోతే {
                     /* swap key offsets and items as one array */
-                    ds->swapArray32(ds, pKey32, count*2*4, qKey32, pErrorCode);
+                    ds->మార్పిడి_Array32(ds, pKey32, count*2*4, qKey32, p_Error_సంకేతం);
                 }
-                break;
+                ఆపు;
             }
 
             /*
@@ -1206,24 +1206,24 @@ ures_swapResource(const UDataSwapper *ds,
              * sorting indexes and sort that.
              * Then we permutate and copy/swap the actual values.
              */
-            if(pKey16!=nullptr) {
-                for(i=0; i<count; ++i) {
-                    pTempTable->rows[i].keyIndex=ds->readUInt16(pKey16[i]);
-                    pTempTable->rows[i].sortIndex=i;
+            ఒకవేళ(pKey16!=శూన్యసూచిక) {
+                కొరకు(i=0; i<count; ++i) {
+                    p_తాత్కాలిక_పట్టిక->అడ్డువరుసలు[i].కీలకం_సూచీ=ds->readUInt16(pKey16[i]);
+                    p_తాత్కాలిక_పట్టిక->అడ్డువరుసలు[i].క్రమీకరించు_సూచీ=i;
                 }
-            } else {
-                for(i=0; i<count; ++i) {
-                    pTempTable->rows[i].keyIndex=udata_readInt32(ds, pKey32[i]);
-                    pTempTable->rows[i].sortIndex=i;
+            } లేకపోతే {
+                కొరకు(i=0; i<count; ++i) {
+                    p_తాత్కాలిక_పట్టిక->అడ్డువరుసలు[i].కీలకం_సూచీ=udata_readInt32(ds, pKey32[i]);
+                    p_తాత్కాలిక_పట్టిక->అడ్డువరుసలు[i].క్రమీకరించు_సూచీ=i;
                 }
             }
-            uprv_sortArray(pTempTable->rows, count, sizeof(Row),
-                           ures_compareRows, pTempTable->keyChars,
-                           false, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            uprv_క్రమీకరించు_Array(p_తాత్కాలిక_పట్టిక->అడ్డువరుసలు, count, పరిమాణం(అడ్డువరుస_2),
+                           ures_compare_అడ్డువరుసలు, p_తాత్కాలిక_పట్టిక->కీలకం_Chars,
+                           అబద్ధం, p_Error_సంకేతం);
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                 udata_printError(ds, "ures_swapResource(table res=%08x).uprv_sortArray(%d items) failed\n",
                                  res, count);
-                return;
+                తిరిగి;
             }
 
             /*
@@ -1233,35 +1233,35 @@ ures_swapResource(const UDataSwapper *ds,
              * temporary array (pTempTable->resort)
              * before the results are copied to the outBundle.
              */
-            /* keys */
-            if(pKey16!=nullptr) {
+            /*కీలకాలు*/
+            ఒకవేళ(pKey16!=శూన్యసూచిక) {
                 uint16_t *rKey16;
 
-                if(pKey16!=qKey16) {
+                ఒకవేళ(pKey16!=qKey16) {
                     rKey16=qKey16;
-                } else {
-                    rKey16 = reinterpret_cast<uint16_t*>(pTempTable->resort);
+                } లేకపోతే {
+                    rKey16 = reinterpret_cast<uint16_t*>(p_తాత్కాలిక_పట్టిక->resort);
                 }
-                for(i=0; i<count; ++i) {
-                    oldIndex=pTempTable->rows[i].sortIndex;
-                    ds->swapArray16(ds, pKey16+oldIndex, 2, rKey16+i, pErrorCode);
+                కొరకు(i=0; i<count; ++i) {
+                    old_సూచీ=p_తాత్కాలిక_పట్టిక->అడ్డువరుసలు[i].క్రమీకరించు_సూచీ;
+                    ds->మార్పిడి_Array16(ds, pKey16+old_సూచీ, 2, rKey16+i, p_Error_సంకేతం);
                 }
-                if(qKey16!=rKey16) {
+                ఒకవేళ(qKey16!=rKey16) {
                     uprv_memcpy(qKey16, rKey16, 2*count);
                 }
-            } else {
+            } లేకపోతే {
                 int32_t *rKey32;
 
-                if(pKey32!=qKey32) {
+                ఒకవేళ(pKey32!=qKey32) {
                     rKey32=qKey32;
-                } else {
-                    rKey32=pTempTable->resort;
+                } లేకపోతే {
+                    rKey32=p_తాత్కాలిక_పట్టిక->resort;
                 }
-                for(i=0; i<count; ++i) {
-                    oldIndex=pTempTable->rows[i].sortIndex;
-                    ds->swapArray32(ds, pKey32+oldIndex, 4, rKey32+i, pErrorCode);
+                కొరకు(i=0; i<count; ++i) {
+                    old_సూచీ=p_తాత్కాలిక_పట్టిక->అడ్డువరుసలు[i].క్రమీకరించు_సూచీ;
+                    ds->మార్పిడి_Array32(ds, pKey32+old_సూచీ, 4, rKey32+i, p_Error_సంకేతం);
                 }
-                if(qKey32!=rKey32) {
+                ఒకవేళ(qKey32!=rKey32) {
                     uprv_memcpy(qKey32, rKey32, 4*count);
                 }
             }
@@ -1271,156 +1271,156 @@ ures_swapResource(const UDataSwapper *ds,
                 Resource *r;
 
 
-                if(p!=q) {
+                ఒకవేళ(p!=q) {
                     r=q;
-                } else {
-                    r = reinterpret_cast<Resource*>(pTempTable->resort);
+                } లేకపోతే {
+                    r = reinterpret_cast<Resource*>(p_తాత్కాలిక_పట్టిక->resort);
                 }
-                for(i=0; i<count; ++i) {
-                    oldIndex=pTempTable->rows[i].sortIndex;
-                    ds->swapArray32(ds, p+oldIndex, 4, r+i, pErrorCode);
+                కొరకు(i=0; i<count; ++i) {
+                    old_సూచీ=p_తాత్కాలిక_పట్టిక->అడ్డువరుసలు[i].క్రమీకరించు_సూచీ;
+                    ds->మార్పిడి_Array32(ds, p+old_సూచీ, 4, r+i, p_Error_సంకేతం);
                 }
-                if(q!=r) {
+                ఒకవేళ(q!=r) {
                     uprv_memcpy(q, r, 4*count);
                 }
             }
         }
-        break;
-    case URES_ARRAY:
+        ఆపు;
+    స్థితి URES_ARRAY:
         {
-            Resource item;
+            Resource అంశం;
             int32_t i;
 
             count = udata_readInt32(ds, static_cast<int32_t>(*p));
             /* swap length */
-            ds->swapArray32(ds, p++, 4, q++, pErrorCode);
+            ds->మార్పిడి_Array32(ds, p++, 4, q++, p_Error_సంకేతం);
 
             /* recurse */
-            for(i=0; i<count; ++i) {
-                item=ds->readUInt32(p[i]);
-                ures_swapResource(ds, inBundle, outBundle, item, nullptr, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+            కొరకు(i=0; i<count; ++i) {
+                అంశం=ds->readUInt32(p[i]);
+                ures_మార్పిడి_Resource(ds, లోపల_Bundle, బహిర్గతం_Bundle, అంశం, శూన్యసూచిక, p_తాత్కాలిక_పట్టిక, p_Error_సంకేతం);
+                ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                     udata_printError(ds, "ures_swapResource(array res=%08x)[%d].recurse(%08x) failed\n",
-                                     res, i, item);
-                    return;
+                                     res, i, అంశం);
+                    తిరిగి;
                 }
             }
 
             /* swap items */
-            ds->swapArray32(ds, p, 4*count, q, pErrorCode);
+            ds->మార్పిడి_Array32(ds, p, 4*count, q, p_Error_సంకేతం);
         }
-        break;
-    case URES_INT_VECTOR:
+        ఆపు;
+    స్థితి URES_INT_సదిశ:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length and each integer */
-        ds->swapArray32(ds, p, 4*(1+count), q, pErrorCode);
-        break;
-    default:
+        ds->మార్పిడి_Array32(ds, p, 4*(1+count), q, p_Error_సంకేతం);
+        ఆపు;
+    అప్రమేయ:
         /* also catches RES_BOGUS */
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        break;
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        ఆపు;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    const Resource *inBundle;
-    Resource rootRes;
-    int32_t headerSize, maxTableLength;
+ures_మార్పిడి(స్థిరరాశి UDataSwapper *ds,
+          స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+          UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి UDataInfo *pInfo;
+    స్థిరరాశి Resource *లోపల_Bundle;
+    Resource మూలం_Res;
+    int32_t శీర్షిక_కొలత, max_పట్టిక_నిడివి;
 
-    Row rows[STACK_ROW_CAPACITY];
-    int32_t resort[STACK_ROW_CAPACITY];
-    TempTable tempTable;
+    అడ్డువరుస_2 అడ్డువరుసలు[దొంతర_అడ్డువరుస_సామర్థ్యం];
+    int32_t resort[దొంతర_అడ్డువరుస_సామర్థ్యం];
+    తాత్కాలిక_పట్టిక_2 తాత్కాలిక_పట్టిక;
 
-    const int32_t *inIndexes;
+    స్థిరరాశి int32_t *లోపల_Indexes;
 
     /* the following integers count Resource item offsets (4 bytes each), not bytes */
-    int32_t bundleLength, indexLength, keysBottom, keysTop, resBottom, top;
+    int32_t bundle_నిడివి, సూచీ_నిడివి, కీలకాలు_Bottom, కీలకాలు_శిఖరం, resBottom, శిఖరం;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    శీర్షిక_కొలత=udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x52 &&   /* dataFormat="ResB" */
-        pInfo->dataFormat[1]==0x65 &&
-        pInfo->dataFormat[2]==0x73 &&
-        pInfo->dataFormat[3]==0x42 &&
+    pInfo=(స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+4);
+    ఒకవేళ(!(
+        pInfo->దత్తాంశం_Format[0]==0x52 &&   /* dataFormat="ResB" */
+        pInfo->దత్తాంశం_Format[1]==0x65 &&
+        pInfo->దత్తాంశం_Format[2]==0x73 &&
+        pInfo->దత్తాంశం_Format[3]==0x42 &&
         /* formatVersion 1.1+ or 2.x or 3.x */
-        ((pInfo->formatVersion[0]==1 && pInfo->formatVersion[1]>=1) ||
-            pInfo->formatVersion[0]==2 || pInfo->formatVersion[0]==3)
+        ((pInfo->format_సంస్కరణ[0]==1 && pInfo->format_సంస్కరణ[1]>=1) ||
+            pInfo->format_సంస్కరణ[0]==2 || pInfo->format_సంస్కరణ[0]==3)
     )) {
         udata_printError(ds, "ures_swap(): data format %02x.%02x.%02x.%02x (format version %02x.%02x) is not a resource bundle\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0], pInfo->formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->దత్తాంశం_Format[0], pInfo->దత్తాంశం_Format[1],
+                         pInfo->దత్తాంశం_Format[2], pInfo->దత్తాంశం_Format[3],
+                         pInfo->format_సంస్కరణ[0], pInfo->format_సంస్కరణ[1]);
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
-    tempTable.majorFormatVersion=pInfo->formatVersion[0];
+    తాత్కాలిక_పట్టిక.major_Format_సంస్కరణ=pInfo->format_సంస్కరణ[0];
 
     /* a resource bundle must contain at least one resource item */
-    if(length<0) {
-        bundleLength=-1;
-    } else {
-        bundleLength=(length-headerSize)/4;
+    ఒకవేళ(length<0) {
+        bundle_నిడివి=-1;
+    } లేకపోతే {
+        bundle_నిడివి=(length-శీర్షిక_కొలత)/4;
 
         /* formatVersion 1.1 must have a root item and at least 5 indexes */
-        if(bundleLength<(1+5)) {
+        ఒకవేళ(bundle_నిడివి<(1+5)) {
             udata_printError(ds, "ures_swap(): too few bytes (%d after header) for a resource bundle\n",
-                             length-headerSize);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+                             length-శీర్షిక_కొలత);
+            *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి 0;
         }
     }
 
-    inBundle=(const Resource *)((const char *)inData+headerSize);
-    rootRes=ds->readUInt32(*inBundle);
+    లోపల_Bundle=(స్థిరరాశి Resource *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+శీర్షిక_కొలత);
+    మూలం_Res=ds->readUInt32(*లోపల_Bundle);
 
     /* formatVersion 1.1 adds the indexes[] array */
-    inIndexes=(const int32_t *)(inBundle+1);
+    లోపల_Indexes=(స్థిరరాశి int32_t *)(లోపల_Bundle+1);
 
-    indexLength=udata_readInt32(ds, inIndexes[URES_INDEX_LENGTH])&0xff;
-    if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+    సూచీ_నిడివి=udata_readInt32(ds, లోపల_Indexes[URES_సూచీ_నిడివి])&0xff;
+    ఒకవేళ(సూచీ_నిడివి<=URES_సూచీ_MAX_పట్టిక_నిడివి) {
         udata_printError(ds, "ures_swap(): too few indexes for a 1.1+ resource bundle\n");
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
-    keysBottom=1+indexLength;
-    keysTop=udata_readInt32(ds, inIndexes[URES_INDEX_KEYS_TOP]);
-    if(indexLength>URES_INDEX_16BIT_TOP) {
-        resBottom=udata_readInt32(ds, inIndexes[URES_INDEX_16BIT_TOP]);
-    } else {
-        resBottom=keysTop;
+    కీలకాలు_Bottom=1+సూచీ_నిడివి;
+    కీలకాలు_శిఖరం=udata_readInt32(ds, లోపల_Indexes[URES_సూచీ_కీలకాలు_శిఖరం]);
+    ఒకవేళ(సూచీ_నిడివి>URES_సూచీ_16_బిట్టు_శిఖరం) {
+        resBottom=udata_readInt32(ds, లోపల_Indexes[URES_సూచీ_16_బిట్టు_శిఖరం]);
+    } లేకపోతే {
+        resBottom=కీలకాలు_శిఖరం;
     }
-    top=udata_readInt32(ds, inIndexes[URES_INDEX_BUNDLE_TOP]);
-    maxTableLength=udata_readInt32(ds, inIndexes[URES_INDEX_MAX_TABLE_LENGTH]);
+    శిఖరం=udata_readInt32(ds, లోపల_Indexes[URES_సూచీ_BUNDLE_శిఖరం]);
+    max_పట్టిక_నిడివి=udata_readInt32(ds, లోపల_Indexes[URES_సూచీ_MAX_పట్టిక_నిడివి]);
 
-    if(0<=bundleLength && bundleLength<top) {
+    ఒకవేళ(0<=bundle_నిడివి && bundle_నిడివి<శిఖరం) {
         udata_printError(ds, "ures_swap(): resource top %d exceeds bundle length %d\n",
-                         top, bundleLength);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+                         శిఖరం, bundle_నిడివి);
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
-    if(keysTop>(1+indexLength)) {
-        tempTable.localKeyLimit=keysTop<<2;
-    } else {
-        tempTable.localKeyLimit=0;
+    ఒకవేళ(కీలకాలు_శిఖరం>(1+సూచీ_నిడివి)) {
+        తాత్కాలిక_పట్టిక.local_కీలకం_హద్దు=కీలకాలు_శిఖరం<<2;
+    } లేకపోతే {
+        తాత్కాలిక_పట్టిక.local_కీలకం_హద్దు=0;
     }
 
-    if(length>=0) {
-        Resource *outBundle=(Resource *)((char *)outData+headerSize);
+    ఒకవేళ(length>=0) {
+        Resource *బహిర్గతం_Bundle=(Resource *)((అక్షరం *)బహిర్గతం_దత్తాంశం+శీర్షిక_కొలత);
 
         /* track which resources we have already swapped */
-        uint32_t stackResFlags[STACK_ROW_CAPACITY];
-        int32_t resFlagsLength;
+        uint32_t దొంతర_Res_Flags[దొంతర_అడ్డువరుస_సామర్థ్యం];
+        int32_t res_Flags_నిడివి;
 
         /*
          * We need one bit per 4 resource bundle bytes so that we can track
@@ -1430,84 +1430,84 @@ ures_swap(const UDataSwapper *ds,
          * We could optimize this by allocating only for locations above
          * where Resource values are stored (above keys & strings).
          */
-        resFlagsLength=(length+31)>>5;          /* number of bytes needed */
-        resFlagsLength=(resFlagsLength+3)&~3;   /* multiple of 4 bytes for uint32_t */
-        if(resFlagsLength<=(int32_t)sizeof(stackResFlags)) {
-            tempTable.resFlags=stackResFlags;
-        } else {
-            tempTable.resFlags=(uint32_t *)uprv_malloc(resFlagsLength);
-            if(tempTable.resFlags==nullptr) {
+        res_Flags_నిడివి=(length+31)>>5;          /* number of bytes needed */
+        res_Flags_నిడివి=(res_Flags_నిడివి+3)&~3;   /* multiple of 4 bytes for uint32_t */
+        ఒకవేళ(res_Flags_నిడివి<=(int32_t)పరిమాణం(దొంతర_Res_Flags)) {
+            తాత్కాలిక_పట్టిక.resFlags=దొంతర_Res_Flags;
+        } లేకపోతే {
+            తాత్కాలిక_పట్టిక.resFlags=(uint32_t *)uprv_malloc(res_Flags_నిడివి);
+            ఒకవేళ(తాత్కాలిక_పట్టిక.resFlags==శూన్యసూచిక) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for tracking resources\n");
-                *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి 0;
             }
         }
-        uprv_memset(tempTable.resFlags, 0, resFlagsLength);
+        uprv_memset(తాత్కాలిక_పట్టిక.resFlags, 0, res_Flags_నిడివి);
 
         /* copy the bundle for binary and inaccessible data */
-        if(inData!=outData) {
-            uprv_memcpy(outBundle, inBundle, 4*top);
+        ఒకవేళ(లోపల_దత్తాంశం!=బహిర్గతం_దత్తాంశం) {
+            uprv_memcpy(బహిర్గతం_Bundle, లోపల_Bundle, 4*శిఖరం);
         }
 
         /* swap the key strings, but not the padding bytes (0xaa) after the last string and its NUL */
-        udata_swapInvStringBlock(ds, inBundle+keysBottom, 4*(keysTop-keysBottom),
-                                    outBundle+keysBottom, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(keysTop-keysBottom));
-            if(tempTable.resFlags!=stackResFlags) {
-                uprv_free(tempTable.resFlags);
+        udata_మార్పిడి_Inv_String_ఖండం(ds, లోపల_Bundle+కీలకాలు_Bottom, 4*(కీలకాలు_శిఖరం-కీలకాలు_Bottom),
+                                    బహిర్గతం_Bundle+కీలకాలు_Bottom, p_Error_సంకేతం);
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+            udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(కీలకాలు_శిఖరం-కీలకాలు_Bottom));
+            ఒకవేళ(తాత్కాలిక_పట్టిక.resFlags!=దొంతర_Res_Flags) {
+                uprv_free(తాత్కాలిక_పట్టిక.resFlags);
             }
-            return 0;
+            తిరిగి 0;
         }
 
         /* swap the 16-bit units (strings, table16, array16) */
-        if(keysTop<resBottom) {
-            ds->swapArray16(ds, inBundle+keysTop, (resBottom-keysTop)*4, outBundle+keysTop, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-keysTop));
-                if(tempTable.resFlags!=stackResFlags) {
-                    uprv_free(tempTable.resFlags);
+        ఒకవేళ(కీలకాలు_శిఖరం<resBottom) {
+            ds->మార్పిడి_Array16(ds, లోపల_Bundle+కీలకాలు_శిఖరం, (resBottom-కీలకాలు_శిఖరం)*4, బహిర్గతం_Bundle+కీలకాలు_శిఖరం, p_Error_సంకేతం);
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+                udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-కీలకాలు_శిఖరం));
+                ఒకవేళ(తాత్కాలిక_పట్టిక.resFlags!=దొంతర_Res_Flags) {
+                    uprv_free(తాత్కాలిక_పట్టిక.resFlags);
                 }
-                return 0;
+                తిరిగి 0;
             }
         }
 
         /* allocate the temporary table for sorting resource tables */
-        tempTable.keyChars=(const char *)outBundle; /* sort by outCharset */
-        if(tempTable.majorFormatVersion>1 || maxTableLength<=STACK_ROW_CAPACITY) {
-            tempTable.rows=rows;
-            tempTable.resort=resort;
-        } else {
-            tempTable.rows=(Row *)uprv_malloc(maxTableLength*sizeof(Row)+maxTableLength*4);
-            if(tempTable.rows==nullptr) {
+        తాత్కాలిక_పట్టిక.కీలకం_Chars=(స్థిరరాశి అక్షరం *)బహిర్గతం_Bundle; /* sort by outCharset */
+        ఒకవేళ(తాత్కాలిక_పట్టిక.major_Format_సంస్కరణ>1 || max_పట్టిక_నిడివి<=దొంతర_అడ్డువరుస_సామర్థ్యం) {
+            తాత్కాలిక_పట్టిక.అడ్డువరుసలు=అడ్డువరుసలు;
+            తాత్కాలిక_పట్టిక.resort=resort;
+        } లేకపోతే {
+            తాత్కాలిక_పట్టిక.అడ్డువరుసలు=(అడ్డువరుస_2 *)uprv_malloc(max_పట్టిక_నిడివి*పరిమాణం(అడ్డువరుస_2)+max_పట్టిక_నిడివి*4);
+            ఒకవేళ(తాత్కాలిక_పట్టిక.అడ్డువరుసలు==శూన్యసూచిక) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for sorting tables (max length: %d)\n",
-                                 maxTableLength);
-                *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                if(tempTable.resFlags!=stackResFlags) {
-                    uprv_free(tempTable.resFlags);
+                                 max_పట్టిక_నిడివి);
+                *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                ఒకవేళ(తాత్కాలిక_పట్టిక.resFlags!=దొంతర_Res_Flags) {
+                    uprv_free(తాత్కాలిక_పట్టిక.resFlags);
                 }
-                return 0;
+                తిరిగి 0;
             }
-            tempTable.resort=(int32_t *)(tempTable.rows+maxTableLength);
+            తాత్కాలిక_పట్టిక.resort=(int32_t *)(తాత్కాలిక_పట్టిక.అడ్డువరుసలు+max_పట్టిక_నిడివి);
         }
 
         /* swap the resources */
-        ures_swapResource(ds, inBundle, outBundle, rootRes, nullptr, &tempTable, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        ures_మార్పిడి_Resource(ds, లోపల_Bundle, బహిర్గతం_Bundle, మూలం_Res, శూన్యసూచిక, &తాత్కాలిక_పట్టిక, p_Error_సంకేతం);
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             udata_printError(ds, "ures_swapResource(root res=%08x) failed\n",
-                             rootRes);
+                             మూలం_Res);
         }
 
-        if(tempTable.rows!=rows) {
-            uprv_free(tempTable.rows);
+        ఒకవేళ(తాత్కాలిక_పట్టిక.అడ్డువరుసలు!=అడ్డువరుసలు) {
+            uprv_free(తాత్కాలిక_పట్టిక.అడ్డువరుసలు);
         }
-        if(tempTable.resFlags!=stackResFlags) {
-            uprv_free(tempTable.resFlags);
+        ఒకవేళ(తాత్కాలిక_పట్టిక.resFlags!=దొంతర_Res_Flags) {
+            uprv_free(తాత్కాలిక_పట్టిక.resFlags);
         }
 
         /* swap the root resource and indexes */
-        ds->swapArray32(ds, inBundle, keysBottom*4, outBundle, pErrorCode);
+        ds->మార్పిడి_Array32(ds, లోపల_Bundle, కీలకాలు_Bottom*4, బహిర్గతం_Bundle, p_Error_సంకేతం);
     }
 
-    return headerSize+4*top;
+    తిరిగి శీర్షిక_కొలత+4*శిఖరం;
 }

@@ -7,12 +7,12 @@
 ******************************************************************************
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#అన్తర్భావ "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/uchriter.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
+#అన్తర్భావ "unicode/uchriter.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -20,349 +20,349 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UCharCharacterIterator)
 
 UCharCharacterIterator::UCharCharacterIterator()
   : CharacterIterator(),
-  text(nullptr)
+  పాఠ్యం(శూన్యసూచిక)
 {
     // never default construct!
 }
 
-UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME_BOUND,
+UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr పాఠ్యం_Ptr U_LIFETIME_BOUND,
                                                int32_t length)
-  : CharacterIterator(textPtr != nullptr ? (length >= 0 ? length : u_strlen(textPtr)) : 0),
-  text(textPtr)
+  : CharacterIterator(పాఠ్యం_Ptr != శూన్యసూచిక ? (length >= 0 ? length : u_strlen(పాఠ్యం_Ptr)) : 0),
+  పాఠ్యం(పాఠ్యం_Ptr)
 {
 }
 
-UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME_BOUND,
+UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr పాఠ్యం_Ptr U_LIFETIME_BOUND,
                                                int32_t length,
                                                int32_t position)
-  : CharacterIterator(textPtr != nullptr ? (length >= 0 ? length : u_strlen(textPtr)) : 0, position),
-  text(textPtr)
+  : CharacterIterator(పాఠ్యం_Ptr != శూన్యసూచిక ? (length >= 0 ? length : u_strlen(పాఠ్యం_Ptr)) : 0, position),
+  పాఠ్యం(పాఠ్యం_Ptr)
 {
 }
 
-UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME_BOUND,
+UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr పాఠ్యం_Ptr U_LIFETIME_BOUND,
                                                int32_t length,
-                                               int32_t textBegin,
-                                               int32_t textEnd,
+                                               int32_t పాఠ్యం_Begin,
+                                               int32_t పాఠ్యం_చివర,
                                                int32_t position)
-  : CharacterIterator(textPtr != nullptr ? (length >= 0 ? length : u_strlen(textPtr)) : 0,
-                      textBegin, textEnd, position),
-  text(textPtr)
+  : CharacterIterator(పాఠ్యం_Ptr != శూన్యసూచిక ? (length >= 0 ? length : u_strlen(పాఠ్యం_Ptr)) : 0,
+                      పాఠ్యం_Begin, పాఠ్యం_చివర, position),
+  పాఠ్యం(పాఠ్యం_Ptr)
 {
 }
 
-UCharCharacterIterator::UCharCharacterIterator(const UCharCharacterIterator& that)
+UCharCharacterIterator::UCharCharacterIterator(స్థిరరాశి UCharCharacterIterator& that)
 : CharacterIterator(that),
-  text(that.text)
+  పాఠ్యం(that.పాఠ్యం)
 {
 }
 
 UCharCharacterIterator&
-UCharCharacterIterator::operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND {
-    CharacterIterator::operator=(that);
-    text = that.text;
-    return *this;
+UCharCharacterIterator::క్రియాకారకం=(స్థిరరాశి UCharCharacterIterator& that) U_LIFETIME_BOUND {
+    CharacterIterator::క్రియాకారకం=(that);
+    పాఠ్యం = that.పాఠ్యం;
+    తిరిగి *ఇది;
 }
 
 UCharCharacterIterator::~UCharCharacterIterator() {
 }
 
-bool
-UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+తార్కిక
+UCharCharacterIterator::క్రియాకారకం==(స్థిరరాశి ForwardCharacterIterator& that) స్థిరరాశి {
+    ఒకవేళ (ఇది == &that) {
+        తిరిగి నిజం;
     }
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    ఒకవేళ (typeid(*ఇది) != typeid(that)) {
+        తిరిగి అబద్ధం;
     }
 
-    const UCharCharacterIterator&    realThat = static_cast<const UCharCharacterIterator&>(that);
+    స్థిరరాశి UCharCharacterIterator&    realThat = static_cast<స్థిరరాశి UCharCharacterIterator&>(that);
 
-    return text == realThat.text
-        && textLength == realThat.textLength
+    తిరిగి పాఠ్యం == realThat.పాఠ్యం
+        && పాఠ్యం_నిడివి == realThat.పాఠ్యం_నిడివి
         && pos == realThat.pos
         && begin == realThat.begin
-        && end == realThat.end;
+        && చివర == realThat.చివర;
 }
 
 int32_t
-UCharCharacterIterator::hashCode() const {
-    return ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
+UCharCharacterIterator::hash_సంకేతం() స్థిరరాశి {
+    తిరిగి ustr_hashUCharsN(పాఠ్యం, పాఠ్యం_నిడివి) ^ pos ^ begin ^ చివర;
 }
 
 UCharCharacterIterator*
-UCharCharacterIterator::clone() const {
-    return new UCharCharacterIterator(*this);
+UCharCharacterIterator::clone() స్థిరరాశి {
+    తిరిగి కొత్త UCharCharacterIterator(*ఇది);
 }
 
 char16_t
 UCharCharacterIterator::first() {
     pos = begin;
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ఒకవేళ(pos < చివర) {
+        తిరిగి పాఠ్యం[pos];
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::firstPostInc() {
+UCharCharacterIterator::మొదటి_Post_Inc() {
     pos = begin;
-    if(pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    ఒకవేళ(pos < చివర) {
+        తిరిగి పాఠ్యం[pos++];
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::last() {
-    pos = end;
-    if(pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+UCharCharacterIterator::చివరి() {
+    pos = చివర;
+    ఒకవేళ(pos > begin) {
+        తిరిగి పాఠ్యం[--pos];
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::setIndex(int32_t position) {
-    if(position < begin) {
+UCharCharacterIterator::సమితి_సూచీ(int32_t position) {
+    ఒకవేళ(position < begin) {
         pos = begin;
-    } else if(position > end) {
-        pos = end;
-    } else {
+    } లేకపోతే ఒకవేళ(position > చివర) {
+        pos = చివర;
+    } లేకపోతే {
         pos = position;
     }
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ఒకవేళ(pos < చివర) {
+        తిరిగి పాఠ్యం[pos];
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::current() const {
-    if (pos >= begin && pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+UCharCharacterIterator::current() స్థిరరాశి {
+    ఒకవేళ (pos >= begin && pos < చివర) {
+        తిరిగి పాఠ్యం[pos];
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 char16_t
 UCharCharacterIterator::next() {
-    if (pos + 1 < end) {
-        return text[++pos];
-    } else {
+    ఒకవేళ (pos + 1 < చివర) {
+        తిరిగి పాఠ్యం[++pos];
+    } లేకపోతే {
         /* make current() return DONE */
-        pos = end;
-        return DONE;
+        pos = చివర;
+        తిరిగి పూర్తి_2;
     }
 }
 
 char16_t
-UCharCharacterIterator::nextPostInc() {
-    if (pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+UCharCharacterIterator::తదుపరి_Post_Inc() {
+    ఒకవేళ (pos < చివర) {
+        తిరిగి పాఠ్యం[pos++];
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 UBool
-UCharCharacterIterator::hasNext() {
-    return pos < end;
+UCharCharacterIterator::has_తదుపరి() {
+    తిరిగి pos < చివర;
 }
 
 char16_t
-UCharCharacterIterator::previous() {
-    if (pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+UCharCharacterIterator::మునుపటి() {
+    ఒకవేళ (pos > begin) {
+        తిరిగి పాఠ్యం[--pos];
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 UBool
-UCharCharacterIterator::hasPrevious() {
-    return pos > begin;
+UCharCharacterIterator::has_మునుపటి() {
+    తిరిగి pos > begin;
 }
 
 UChar32
 UCharCharacterIterator::first32() {
     pos = begin;
-    if(pos < end) {
+    ఒకవేళ(pos < చివర) {
         int32_t i = pos;
         UChar32 c;
-        U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        return DONE;
+        U16_తదుపరి(పాఠ్యం, i, చివర, c);
+        తిరిగి c;
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 UChar32
 UCharCharacterIterator::first32PostInc() {
     pos = begin;
-    if(pos < end) {
+    ఒకవేళ(pos < చివర) {
         UChar32 c;
-        U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        U16_తదుపరి(పాఠ్యం, pos, చివర, c);
+        తిరిగి c;
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 UChar32
 UCharCharacterIterator::last32() {
-    pos = end;
-    if(pos > begin) {
+    pos = చివర;
+    ఒకవేళ(pos > begin) {
         UChar32 c;
-        U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        U16_PREV(పాఠ్యం, begin, pos, c);
+        తిరిగి c;
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 UChar32
-UCharCharacterIterator::setIndex32(int32_t position) {
-    if(position < begin) {
+UCharCharacterIterator::సమితి_Index32(int32_t position) {
+    ఒకవేళ(position < begin) {
         position = begin;
-    } else if(position > end) {
-        position = end;
+    } లేకపోతే ఒకవేళ(position > చివర) {
+        position = చివర;
     }
-    if(position < end) {
-        U16_SET_CP_START(text, begin, position);
-        int32_t i = this->pos = position;
+    ఒకవేళ(position < చివర) {
+        U16_సమితి_CP_ప్రారంభం(పాఠ్యం, begin, position);
+        int32_t i = ఇది->pos = position;
         UChar32 c;
-        U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        this->pos = position;
-        return DONE;
+        U16_తదుపరి(పాఠ్యం, i, చివర, c);
+        తిరిగి c;
+    } లేకపోతే {
+        ఇది->pos = position;
+        తిరిగి పూర్తి_2;
     }
 }
 
 UChar32
-UCharCharacterIterator::current32() const {
-    if (pos >= begin && pos < end) {
+UCharCharacterIterator::current32() స్థిరరాశి {
+    ఒకవేళ (pos >= begin && pos < చివర) {
         UChar32 c;
-        U16_GET(text, begin, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        U16_GET(పాఠ్యం, begin, pos, చివర, c);
+        తిరిగి c;
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 UChar32
 UCharCharacterIterator::next32() {
-    if (pos < end) {
-        U16_FWD_1(text, pos, end);
-        if(pos < end) {
+    ఒకవేళ (pos < చివర) {
+        U16_FWD_1(పాఠ్యం, pos, చివర);
+        ఒకవేళ(pos < చివర) {
             int32_t i = pos;
             UChar32 c;
-            U16_NEXT(text, i, end, c);
-            return c;
+            U16_తదుపరి(పాఠ్యం, i, చివర, c);
+            తిరిగి c;
         }
     }
     /* make current() return DONE */
-    pos = end;
-    return DONE;
+    pos = చివర;
+    తిరిగి పూర్తి_2;
 }
 
 UChar32
 UCharCharacterIterator::next32PostInc() {
-    if (pos < end) {
+    ఒకవేళ (pos < చివర) {
         UChar32 c;
-        U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        U16_తదుపరి(పాఠ్యం, pos, చివర, c);
+        తిరిగి c;
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 UChar32
 UCharCharacterIterator::previous32() {
-    if (pos > begin) {
+    ఒకవేళ (pos > begin) {
         UChar32 c;
-        U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        U16_PREV(పాఠ్యం, begin, pos, c);
+        తిరిగి c;
+    } లేకపోతే {
+        తిరిగి పూర్తి_2;
     }
 }
 
 int32_t
 UCharCharacterIterator::move(int32_t delta, CharacterIterator::EOrigin origin) {
-    switch(origin) {
-    case kStart:
+    ఎంపిక(origin) {
+    స్థితి k_ప్రారంభం:
         pos = begin + delta;
-        break;
-    case kCurrent:
+        ఆపు;
+    స్థితి kCurrent:
         pos += delta;
-        break;
-    case kEnd:
-        pos = end + delta;
-        break;
-    default:
-        break;
+        ఆపు;
+    స్థితి k_చివర:
+        pos = చివర + delta;
+        ఆపు;
+    అప్రమేయ:
+        ఆపు;
     }
 
-    if(pos < begin) {
+    ఒకవేళ(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
-        pos = end;
+    } లేకపోతే ఒకవేళ(pos > చివర) {
+        pos = చివర;
     }
 
-    return pos;
+    తిరిగి pos;
 }
 
 int32_t
 UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin) {
     // this implementation relies on the "safe" version of the UTF macros
     // (or the trustworthiness of the caller)
-    switch(origin) {
-    case kStart:
+    ఎంపిక(origin) {
+    స్థితి k_ప్రారంభం:
         pos = begin;
-        if(delta > 0) {
-            U16_FWD_N(text, pos, end, delta);
+        ఒకవేళ(delta > 0) {
+            U16_FWD_N(పాఠ్యం, pos, చివర, delta);
         }
-        break;
-    case kCurrent:
-        if(delta > 0) {
-            U16_FWD_N(text, pos, end, delta);
-        } else {
-            U16_BACK_N(text, begin, pos, -delta);
+        ఆపు;
+    స్థితి kCurrent:
+        ఒకవేళ(delta > 0) {
+            U16_FWD_N(పాఠ్యం, pos, చివర, delta);
+        } లేకపోతే {
+            U16_వెనుక_N(పాఠ్యం, begin, pos, -delta);
         }
-        break;
-    case kEnd:
-        pos = end;
-        if(delta < 0) {
-            U16_BACK_N(text, begin, pos, -delta);
+        ఆపు;
+    స్థితి k_చివర:
+        pos = చివర;
+        ఒకవేళ(delta < 0) {
+            U16_వెనుక_N(పాఠ్యం, begin, pos, -delta);
         }
-        break;
-    default:
-        break;
+        ఆపు;
+    అప్రమేయ:
+        ఆపు;
     }
 
-    return pos;
+    తిరిగి pos;
 }
 
-void UCharCharacterIterator::setText(ConstChar16Ptr newText,
-                                     int32_t      newTextLength) {
-    text = newText;
-    if (newText == nullptr || newTextLength < 0) {
-        newTextLength = 0;
+శూన్య UCharCharacterIterator::సమితి_పాఠ్యం(ConstChar16Ptr new_పాఠ్యం,
+                                     int32_t      new_పాఠ్యం_నిడివి) {
+    పాఠ్యం = new_పాఠ్యం;
+    ఒకవేళ (new_పాఠ్యం == శూన్యసూచిక || new_పాఠ్యం_నిడివి < 0) {
+        new_పాఠ్యం_నిడివి = 0;
     }
-    end = textLength = newTextLength;
+    చివర = పాఠ్యం_నిడివి = new_పాఠ్యం_నిడివి;
     pos = begin = 0;
 }
 
-void
-UCharCharacterIterator::getText(UnicodeString& result) {
-    result = UnicodeString(text, textLength);
+శూన్య
+UCharCharacterIterator::get_పాఠ్యం(UnicodeString& ఫలితం) {
+    ఫలితం = UnicodeString(పాఠ్యం, పాఠ్యం_నిడివి);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

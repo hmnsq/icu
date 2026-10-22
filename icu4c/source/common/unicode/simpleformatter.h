@@ -8,24 +8,24 @@
 * simpleformatter.h
 */
 
-#ifndef __SIMPLEFORMATTER_H__
-#define __SIMPLEFORMATTER_H__
+#నిర్వచితం_కాకపోతే __SIMPLEFORMATTER_H__
+#నిర్వచించు __SIMPLEFORMATTER_H__
 
 /**
  * \file
  * \brief C++ API: Simple formatter, minimal subset of MessageFormat.
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unistr.h"
+#అన్తర్భావ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 
 // Forward declaration:
-namespace number::impl {
+namespace సంఖ్య::impl {
 class SimpleModifier;
 }
 
@@ -57,13 +57,13 @@ class SimpleModifier;
  * @see UMessagePatternApostropheMode
  * @stable ICU 57
  */
-class U_COMMON_API SimpleFormatter final : public UMemory {
-public:
+class U_COMMON_API SimpleFormatter final : బహిరంగ UMemory {
+బహిరంగ:
     /**
      * Default constructor.
      * @stable ICU 57
      */
-    SimpleFormatter() : compiledPattern(static_cast<char16_t>(0)) {}
+    SimpleFormatter() : compiled_నమూనా(static_cast<char16_t>(0)) {}
 
     /**
      * Constructs a formatter from the pattern string.
@@ -74,8 +74,8 @@ public:
      *                  Set to U_ILLEGAL_ARGUMENT_ERROR for bad argument syntax.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, UErrorCode &errorCode) {
-        applyPattern(pattern, errorCode);
+    SimpleFormatter(స్థిరరాశి UnicodeString& నమూనా, UError_సంకేతం &error_సంకేతం) {
+        apply_నమూనా(నమూనా, error_సంకేతం);
     }
 
     /**
@@ -92,23 +92,23 @@ public:
      *                  too few or too many arguments.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, int32_t min, int32_t max,
-                    UErrorCode &errorCode) {
-        applyPatternMinMaxArguments(pattern, min, max, errorCode);
+    SimpleFormatter(స్థిరరాశి UnicodeString& నమూనా, int32_t min, int32_t max,
+                    UError_సంకేతం &error_సంకేతం) {
+        apply_నమూనా_Min_Max_Arguments(నమూనా, min, max, error_సంకేతం);
     }
 
     /**
      * Copy constructor.
      * @stable ICU 57
      */
-    SimpleFormatter(const SimpleFormatter& other)
-            : compiledPattern(other.compiledPattern) {}
+    SimpleFormatter(స్థిరరాశి SimpleFormatter& other)
+            : compiled_నమూనా(other.compiled_నమూనా) {}
 
     /**
      * Assignment operator.
      * @stable ICU 57
      */
-    SimpleFormatter& operator=(const SimpleFormatter& other) U_LIFETIME_BOUND;
+    SimpleFormatter& క్రియాకారకం=(స్థిరరాశి SimpleFormatter& other) U_LIFETIME_BOUND;
 
     /**
      * Destructor.
@@ -126,8 +126,8 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPattern(const UnicodeString &pattern, UErrorCode &errorCode) {
-        return applyPatternMinMaxArguments(pattern, 0, INT32_MAX, errorCode);
+    UBool apply_నమూనా(స్థిరరాశి UnicodeString &నమూనా, UError_సంకేతం &error_సంకేతం) {
+        తిరిగి apply_నమూనా_Min_Max_Arguments(నమూనా, 0, INT32_MAX, error_సంకేతం);
     }
 
     /**
@@ -145,15 +145,15 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPatternMinMaxArguments(const UnicodeString &pattern,
-                                      int32_t min, int32_t max, UErrorCode &errorCode);
+    UBool apply_నమూనా_Min_Max_Arguments(స్థిరరాశి UnicodeString &నమూనా,
+                                      int32_t min, int32_t max, UError_సంకేతం &error_సంకేతం);
 
     /**
      * @return The max argument number + 1.
      * @stable ICU 57
      */
-    int32_t getArgumentLimit() const {
-        return getArgumentLimit(compiledPattern.getBuffer(), compiledPattern.length());
+    int32_t get_వాదం_హద్దు() స్థిరరాశి {
+        తిరిగి get_వాదం_హద్దు(compiled_నమూనా.get_బఫరు(), compiled_నమూనా.నిడివి());
     }
 
     /**
@@ -169,9 +169,9 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            స్థిరరాశి UnicodeString& value0,
+            UnicodeString& append_గమ్యం U_LIFETIME_BOUND,
+            UError_సంకేతం& error_సంకేతం) స్థిరరాశి;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -187,10 +187,10 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            స్థిరరాశి UnicodeString& value0,
+            స్థిరరాశి UnicodeString& value1,
+            UnicodeString& append_గమ్యం U_LIFETIME_BOUND,
+            UError_సంకేతం& error_సంకేతం) స్థిరరాశి;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -207,11 +207,11 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            const UnicodeString& value2,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            స్థిరరాశి UnicodeString& value0,
+            స్థిరరాశి UnicodeString& value1,
+            స్థిరరాశి UnicodeString& value2,
+            UnicodeString& append_గమ్యం U_LIFETIME_BOUND,
+            UError_సంకేతం& error_సంకేతం) స్థిరరాశి;
 
     /**
      * Formats the given values, appending to the appendTo string.
@@ -233,12 +233,12 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndAppend(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
+            స్థిరరాశి UnicodeString* స్థిరరాశి* విలువలు,
+            int32_t విలువలు_నిడివి,
+            UnicodeString& append_గమ్యం U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_నిడివి,
+            UError_సంకేతం& error_సంకేతం) స్థిరరాశి;
 
     /**
      * Formats the given values, replacing the contents of the result string.
@@ -262,27 +262,27 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndReplace(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& result U_LIFETIME_BOUND,
+            స్థిరరాశి UnicodeString* స్థిరరాశి* విలువలు,
+            int32_t విలువలు_నిడివి,
+            UnicodeString& ఫలితం U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_నిడివి,
+            UError_సంకేతం& error_సంకేతం) స్థిరరాశి;
 
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
      * @stable ICU 57
      */
-    UnicodeString getTextWithNoArguments() const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString get_పాఠ్యం_With_No_Arguments() స్థిరరాశి {
+        తిరిగి get_పాఠ్యం_With_No_Arguments(
+            compiled_నమూనా.get_బఫరు(),
+            compiled_నమూనా.నిడివి(),
             nullptr,
             0);
     }
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
@@ -298,16 +298,16 @@ public:
      *
      * @internal
      */
-    UnicodeString getTextWithNoArguments(int32_t *offsets, int32_t offsetsLength) const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString get_పాఠ్యం_With_No_Arguments(int32_t *offsets, int32_t offsets_నిడివి) స్థిరరాశి {
+        తిరిగి get_పాఠ్యం_With_No_Arguments(
+            compiled_నమూనా.get_బఫరు(),
+            compiled_నమూనా.నిడివి(),
             offsets,
-            offsetsLength);
+            offsets_నిడివి);
     }
-#endif // U_HIDE_INTERNAL_API
+#అయితే_ముగింపు // U_HIDE_INTERNAL_API
 
-private:
+అంతరంగ:
     /**
      * Binary representation of the compiled pattern.
      * Index 0: One more than the highest argument number.
@@ -317,36 +317,36 @@ private:
      * A literal-text segment is stored as its length (at least 1) offset by ARG_NUM_LIMIT,
      * followed by that many chars.
      */
-    UnicodeString compiledPattern;
+    UnicodeString compiled_నమూనా;
 
-    static inline int32_t getArgumentLimit(const char16_t *compiledPattern,
-                                              int32_t compiledPatternLength) {
-        return compiledPatternLength == 0 ? 0 : compiledPattern[0];
+    స్థిర అంతఃవరుస int32_t get_వాదం_హద్దు(స్థిరరాశి char16_t *compiled_నమూనా,
+                                              int32_t compiled_నమూనా_నిడివి) {
+        తిరిగి compiled_నమూనా_నిడివి == 0 ? 0 : compiled_నమూనా[0];
     }
 
-    static UnicodeString getTextWithNoArguments(
-        const char16_t *compiledPattern,
-        int32_t compiledPatternLength,
+    స్థిర UnicodeString get_పాఠ్యం_With_No_Arguments(
+        స్థిరరాశి char16_t *compiled_నమూనా,
+        int32_t compiled_నమూనా_నిడివి,
         int32_t *offsets,
-        int32_t offsetsLength);
+        int32_t offsets_నిడివి);
 
-    static UnicodeString& format(
-            const char16_t* compiledPattern,
-            int32_t compiledPatternLength,
-            const UnicodeString* const* values,
-            UnicodeString& result U_LIFETIME_BOUND,
-            const UnicodeString* resultCopy,
-            UBool forbidResultAsValue,
+    స్థిర UnicodeString& format(
+            స్థిరరాశి char16_t* compiled_నమూనా,
+            int32_t compiled_నమూనా_నిడివి,
+            స్థిరరాశి UnicodeString* స్థిరరాశి* విలువలు,
+            UnicodeString& ఫలితం U_LIFETIME_BOUND,
+            స్థిరరాశి UnicodeString* ఫలితం_Copy,
+            UBool forbid_ఫలితం_As_విలువ,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode);
+            int32_t offsets_నిడివి,
+            UError_సంకేతం& error_సంకేతం);
 
     // Give access to internals to SimpleModifier for number formatting
-    friend class number::impl::SimpleModifier;
+    మిత్ర class సంఖ్య::impl::SimpleModifier;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __SIMPLEFORMATTER_H__
+#అయితే_ముగింపు  // __SIMPLEFORMATTER_H__

@@ -4,15 +4,15 @@
 // casemap.h
 // created: 2017jan12 Markus W. Scherer
 
-#ifndef __CASEMAP_H__
-#define __CASEMAP_H__
+#నిర్వచితం_కాకపోతే __CASEMAP_H__
+#నిర్వచించు __CASEMAP_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/uobject.h"
 
 /**
  * \file
@@ -30,8 +30,8 @@ class Edits;
  *
  * @stable ICU 59
  */
-class U_COMMON_API CaseMap final : public UMemory {
-public:
+class U_COMMON_API CaseMap final : బహిరంగ UMemory {
+బహిరంగ:
     /**
      * Lowercases a UTF-16 string and optionally records edits.
      * Casing is locale-dependent and context-sensitive.
@@ -62,11 +62,11 @@ public:
      * @see u_strToLower
      * @stable ICU 59
      */
-     static int32_t toLower(
-            const char *locale, uint32_t options,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+     స్థిర int32_t గమ్యం_క్రింది(
+            స్థిరరాశి అక్షరం *locale, uint32_t options,
+            స్థిరరాశి char16_t *src, int32_t src_నిడివి,
+            char16_t *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+            UError_సంకేతం &error_సంకేతం);
 
     /**
      * Uppercases a UTF-16 string and optionally records edits.
@@ -98,13 +98,13 @@ public:
      * @see u_strToUpper
      * @stable ICU 59
      */
-    static int32_t toUpper(
-            const char *locale, uint32_t options,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    స్థిర int32_t గమ్యం_పై(
+            స్థిరరాశి అక్షరం *locale, uint32_t options,
+            స్థిరరాశి char16_t *src, int32_t src_నిడివి,
+            char16_t *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+            UError_సంకేతం &error_సంకేతం);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-16 string and optionally records edits.
@@ -149,13 +149,13 @@ public:
      * @see ucasemap_toTitle
      * @stable ICU 59
      */
-    static int32_t toTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    స్థిర int32_t గమ్యం_Title(
+            స్థిరరాశి అక్షరం *locale, uint32_t options, BreakIterator *iter,
+            స్థిరరాశి char16_t *src, int32_t src_నిడివి,
+            char16_t *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+            UError_సంకేతం &error_సంకేతం);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#అయితే_ముగింపు  // UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Case-folds a UTF-16 string and optionally records edits.
@@ -191,11 +191,11 @@ public:
      * @see u_strFoldCase
      * @stable ICU 59
      */
-    static int32_t fold(
+    స్థిర int32_t fold(
             uint32_t options,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+            స్థిరరాశి char16_t *src, int32_t src_నిడివి,
+            char16_t *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+            UError_సంకేతం &error_సంకేతం);
 
     /**
      * Lowercases a UTF-8 string and optionally records edits.
@@ -218,10 +218,10 @@ public:
      * @see ucasemap_utf8ToLower
      * @stable ICU 60
      */
-    static void utf8ToLower(
-            const char *locale, uint32_t options,
+    స్థిర శూన్య utf8_గమ్యం_క్రింది(
+            స్థిరరాశి అక్షరం *locale, uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
-            UErrorCode &errorCode);
+            UError_సంకేతం &error_సంకేతం);
 
     /**
      * Uppercases a UTF-8 string and optionally records edits.
@@ -244,12 +244,12 @@ public:
      * @see ucasemap_utf8ToUpper
      * @stable ICU 60
      */
-    static void utf8ToUpper(
-            const char *locale, uint32_t options,
+    స్థిర శూన్య utf8_గమ్యం_పై(
+            స్థిరరాశి అక్షరం *locale, uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
-            UErrorCode &errorCode);
+            UError_సంకేతం &error_సంకేతం);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.
@@ -284,12 +284,12 @@ public:
      * @see ucasemap_utf8ToTitle
      * @stable ICU 60
      */
-    static void utf8ToTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
+    స్థిర శూన్య utf8_గమ్యం_Title(
+            స్థిరరాశి అక్షరం *locale, uint32_t options, BreakIterator *iter,
             StringPiece src, ByteSink &sink, Edits *edits,
-            UErrorCode &errorCode);
+            UError_సంకేతం &error_సంకేతం);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#అయితే_ముగింపు  // UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Case-folds a UTF-8 string and optionally records edits.
@@ -315,10 +315,10 @@ public:
      * @see ucasemap_utf8FoldCase
      * @stable ICU 60
      */
-    static void utf8Fold(
+    స్థిర శూన్య utf8Fold(
             uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
-            UErrorCode &errorCode);
+            UError_సంకేతం &error_సంకేతం);
 
     /**
      * Lowercases a UTF-8 string and optionally records edits.
@@ -350,11 +350,11 @@ public:
      * @see ucasemap_utf8ToLower
      * @stable ICU 59
      */
-    static int32_t utf8ToLower(
-            const char *locale, uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    స్థిర int32_t utf8_గమ్యం_క్రింది(
+            స్థిరరాశి అక్షరం *locale, uint32_t options,
+            స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+            అక్షరం *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+            UError_సంకేతం &error_సంకేతం);
 
     /**
      * Uppercases a UTF-8 string and optionally records edits.
@@ -386,13 +386,13 @@ public:
      * @see ucasemap_utf8ToUpper
      * @stable ICU 59
      */
-    static int32_t utf8ToUpper(
-            const char *locale, uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    స్థిర int32_t utf8_గమ్యం_పై(
+            స్థిరరాశి అక్షరం *locale, uint32_t options,
+            స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+            అక్షరం *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+            UError_సంకేతం &error_సంకేతం);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.
@@ -436,13 +436,13 @@ public:
      * @see ucasemap_utf8ToTitle
      * @stable ICU 59
      */
-    static int32_t utf8ToTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+    స్థిర int32_t utf8_గమ్యం_Title(
+            స్థిరరాశి అక్షరం *locale, uint32_t options, BreakIterator *iter,
+            స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+            అక్షరం *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+            UError_సంకేతం &error_సంకేతం);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#అయితే_ముగింపు  // UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Case-folds a UTF-8 string and optionally records edits.
@@ -478,20 +478,20 @@ public:
      * @see ucasemap_utf8FoldCase
      * @stable ICU 59
      */
-    static int32_t utf8Fold(
+    స్థిర int32_t utf8Fold(
             uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
-            UErrorCode &errorCode);
+            స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+            అక్షరం *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+            UError_సంకేతం &error_సంకేతం);
 
-private:
+అంతరంగ:
     CaseMap() = delete;
-    CaseMap(const CaseMap &other) = delete;
-    CaseMap &operator=(const CaseMap &other) = delete;
+    CaseMap(స్థిరరాశి CaseMap &other) = delete;
+    CaseMap &క్రియాకారకం=(స్థిరరాశి CaseMap &other) = delete;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __CASEMAP_H__
+#అయితే_ముగింపు  // __CASEMAP_H__

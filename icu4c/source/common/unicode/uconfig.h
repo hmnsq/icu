@@ -14,8 +14,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UCONFIG_H__
-#define __UCONFIG_H__
+#నిర్వచితం_కాకపోతే __UCONFIG_H__
+#నిర్వచించు __UCONFIG_H__
 
 
 /*!
@@ -51,9 +51,9 @@
  *
  * @internal ICU 4.0
  */
-#if defined(UCONFIG_USE_LOCAL)
-#include "uconfig_local.h"
-#endif
+#ఒకవేళ defined(UCONFIG_USE_LOCAL)
+#అన్తర్భావ "uconfig_local.h"
+#అయితే_ముగింపు
 
 /**
  * \def U_DEBUG
@@ -62,35 +62,35 @@
  * related predefined macros.
  * @internal
  */
-#ifdef U_DEBUG
+#నిర్వచితమైతే U_DEBUG
     /* Use the predefined value. */
-#elif defined(_DEBUG)
+#లేదావేళ defined(_DEBUG)
     /*
      * _DEBUG is defined by Visual Studio debug compilation.
      * Do *not* test for its NDEBUG macro: It is an orthogonal macro
      * which disables assert().
      */
 #   define U_DEBUG 1
-# else
+# లేకపోతే
 #   define U_DEBUG 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * Determines whether to enable auto cleanup of libraries. 
  * @internal
  */
-#ifndef UCLN_NO_AUTO_CLEANUP
-#define UCLN_NO_AUTO_CLEANUP 1
-#endif
+#నిర్వచితం_కాకపోతే UCLN_NO_AUTO_CLEANUP
+#నిర్వచించు UCLN_NO_AUTO_CLEANUP 1
+#అయితే_ముగింపు
 
 /**
  * \def U_DISABLE_RENAMING
  * Determines whether to disable renaming or not.
  * @internal
  */
-#ifndef U_DISABLE_RENAMING
-#define U_DISABLE_RENAMING 0
-#endif
+#నిర్వచితం_కాకపోతే U_DISABLE_RENAMING
+#నిర్వచించు U_DISABLE_RENAMING 0
+#అయితే_ముగింపు
 
 /**
  * \def U_NO_DEFAULT_INCLUDE_UTF_HEADERS
@@ -100,15 +100,15 @@
  * Defaults to 0 for backward compatibility, except inside ICU.
  * @stable ICU 49
  */
-#ifdef U_NO_DEFAULT_INCLUDE_UTF_HEADERS
+#నిర్వచితమైతే U_NO_DEFAULT_INCLUDE_UTF_శీర్షికలు
     /* Use the predefined value. */
-#elif defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || \
+#లేదావేళ defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || \
       defined(U_IO_IMPLEMENTATION) || defined(U_LAYOUT_IMPLEMENTATION) || defined(U_LAYOUTEX_IMPLEMENTATION) || \
       defined(U_TOOLUTIL_IMPLEMENTATION)
-#   define U_NO_DEFAULT_INCLUDE_UTF_HEADERS 1
-#else
-#   define U_NO_DEFAULT_INCLUDE_UTF_HEADERS 0
-#endif
+#   define U_NO_DEFAULT_INCLUDE_UTF_శీర్షికలు 1
+#లేకపోతే
+#   define U_NO_DEFAULT_INCLUDE_UTF_శీర్షికలు 0
+#అయితే_ముగింపు
 
 /**
  * \def U_OVERRIDE_CXX_ALLOCATION
@@ -123,54 +123,54 @@
  *
  * @stable ICU 2.2
  */
-#ifndef U_OVERRIDE_CXX_ALLOCATION
-#define U_OVERRIDE_CXX_ALLOCATION 1
-#endif
+#నిర్వచితం_కాకపోతే U_OVERRIDE_CXX_కేటాయింపు
+#నిర్వచించు U_OVERRIDE_CXX_కేటాయింపు 1
+#అయితే_ముగింపు
 
 /**
  * \def U_ENABLE_TRACING
  * Determines whether to enable tracing.
  * @internal
  */
-#ifndef U_ENABLE_TRACING
-#define U_ENABLE_TRACING 0
-#endif
+#నిర్వచితం_కాకపోతే U_ENABLE_TRACING
+#నిర్వచించు U_ENABLE_TRACING 0
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_ENABLE_PLUGINS
  * Determines whether to enable ICU plugins.
  * @internal
  */
-#ifndef UCONFIG_ENABLE_PLUGINS
-#define UCONFIG_ENABLE_PLUGINS 0
-#endif
+#నిర్వచితం_కాకపోతే UCONFIG_ENABLE_PLUGINS
+#నిర్వచించు UCONFIG_ENABLE_PLUGINS 0
+#అయితే_ముగింపు
 
 /**
  * \def U_ENABLE_DYLOAD
  * Whether to enable Dynamic loading in ICU.
  * @internal
  */
-#ifndef U_ENABLE_DYLOAD
-#define U_ENABLE_DYLOAD 1
-#endif
+#నిర్వచితం_కాకపోతే U_ENABLE_DYLOAD
+#నిర్వచించు U_ENABLE_DYLOAD 1
+#అయితే_ముగింపు
 
 /**
  * \def U_CHECK_DYLOAD
  * Whether to test Dynamic loading as an OS capability.
  * @internal
  */
-#ifndef U_CHECK_DYLOAD
-#define U_CHECK_DYLOAD 1
-#endif
+#నిర్వచితం_కాకపోతే U_CHECK_DYLOAD
+#నిర్వచించు U_CHECK_DYLOAD 1
+#అయితే_ముగింపు
 
 /**
  * \def U_DEFAULT_SHOW_DRAFT
  * Do we allow ICU users to use the draft APIs by default?
  * @internal
  */
-#ifndef U_DEFAULT_SHOW_DRAFT
-#define U_DEFAULT_SHOW_DRAFT 1
-#endif
+#నిర్వచితం_కాకపోతే U_DEFAULT_SHOW_DRAFT
+#నిర్వచించు U_DEFAULT_SHOW_DRAFT 1
+#అయితే_ముగింపు
 
 /*===========================================================================*/
 /* Custom icu entry point renaming                                           */
@@ -181,25 +181,25 @@
  * 1 if a custom library suffix is set.
  * @internal
  */
-#ifdef U_HAVE_LIB_SUFFIX
+#నిర్వచితమైతే U_HAVE_LIB_SUFFIX
     /* Use the predefined value. */
-#elif defined(U_LIB_SUFFIX_C_NAME) || defined(U_IN_DOXYGEN)
+#లేదావేళ defined(U_LIB_SUFFIX_C_NAME) || defined(U_లోపల_DOXYGEN)
 #   define U_HAVE_LIB_SUFFIX 1
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_LIB_SUFFIX_C_NAME_STRING
  * Defines the library suffix as a string with C syntax.
  * @internal
  */
-#ifdef U_LIB_SUFFIX_C_NAME_STRING
+#నిర్వచితమైతే U_LIB_SUFFIX_C_NAME_STRING
     /* Use the predefined value. */
-#elif defined(U_LIB_SUFFIX_C_NAME)
-#   define CONVERT_TO_STRING(s) #s
-#   define U_LIB_SUFFIX_C_NAME_STRING CONVERT_TO_STRING(U_LIB_SUFFIX_C_NAME)
-#else
+#లేదావేళ defined(U_LIB_SUFFIX_C_NAME)
+#   define CONVERT_గమ్యం_STRING(s) #s
+#   define U_LIB_SUFFIX_C_NAME_STRING CONVERT_గమ్యం_STRING(U_LIB_SUFFIX_C_NAME)
+#లేకపోతే
 #   define U_LIB_SUFFIX_C_NAME_STRING ""
-#endif
+#అయితే_ముగింపు
 
 /* common/i18n library switches --------------------------------------------- */
 
@@ -214,23 +214,23 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_ONLY_COLLATION
+#నిర్వచితం_కాకపోతే UCONFIG_ONLY_COLLATION
 #   define UCONFIG_ONLY_COLLATION 0
-#endif
+#అయితే_ముగింపు
 
-#if UCONFIG_ONLY_COLLATION
+#ఒకవేళ UCONFIG_ONLY_COLLATION
     /* common library */
 #   define UCONFIG_NO_BREAK_ITERATION 1
 #   define UCONFIG_NO_IDNA 1
 
     /* i18n library */
-#   if UCONFIG_NO_COLLATION
-#       error Contradictory collation switches in uconfig.h.
+#   ఒకవేళ UCONFIG_NO_COLLATION
+#       error Contradictory collation switches లోపల uconfig.h.
 #   endif
 #   define UCONFIG_NO_FORMATTING 1
 #   define UCONFIG_NO_TRANSLITERATION 1
 #   define UCONFIG_NO_REGULAR_EXPRESSIONS 1
-#endif
+#అయితే_ముగింపు
 
 /* common library switches -------------------------------------------------- */
 
@@ -252,13 +252,13 @@
  *
  * @stable ICU 3.6
  */
-#ifndef UCONFIG_NO_FILE_IO
+#నిర్వచితం_కాకపోతే UCONFIG_NO_FILE_IO
 #   define UCONFIG_NO_FILE_IO 0
-#endif
+#అయితే_ముగింపు
 
-#if UCONFIG_NO_FILE_IO && defined(U_TIMEZONE_FILES_DIR) 
-#   error Contradictory file io switches in uconfig.h.
-#endif
+#ఒకవేళ UCONFIG_NO_FILE_IO && defined(U_TIMEZONE_FILES_DIR) 
+#   error Contradictory file io switches లోపల uconfig.h.
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_CONVERSION
@@ -272,13 +272,13 @@
  * @stable ICU 3.2
  * @see U_CHARSET_IS_UTF8
  */
-#ifndef UCONFIG_NO_CONVERSION
+#నిర్వచితం_కాకపోతే UCONFIG_NO_CONVERSION
 #   define UCONFIG_NO_CONVERSION 0
-#endif
+#అయితే_ముగింపు
 
-#if UCONFIG_NO_CONVERSION
+#ఒకవేళ UCONFIG_NO_CONVERSION
 #   define UCONFIG_NO_LEGACY_CONVERSION 1
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_ONLY_HTML_CONVERSION
@@ -291,9 +291,9 @@
  *
  * @stable ICU 55
  */
-#ifndef UCONFIG_ONLY_HTML_CONVERSION
+#నిర్వచితం_కాకపోతే UCONFIG_ONLY_HTML_CONVERSION
 #   define UCONFIG_ONLY_HTML_CONVERSION 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_LEGACY_CONVERSION
@@ -307,9 +307,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_LEGACY_CONVERSION
+#నిర్వచితం_కాకపోతే UCONFIG_NO_LEGACY_CONVERSION
 #   define UCONFIG_NO_LEGACY_CONVERSION 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_NORMALIZATION
@@ -319,9 +319,9 @@
  *
  * @stable ICU 2.6
  */
-#ifndef UCONFIG_NO_NORMALIZATION
+#నిర్వచితం_కాకపోతే UCONFIG_NO_NORMALIZATION
 #   define UCONFIG_NO_NORMALIZATION 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_USE_ML_PHRASE_BREAKING
@@ -329,11 +329,11 @@
  *
  * @internal
  */
-#ifndef UCONFIG_USE_ML_PHRASE_BREAKING
+#నిర్వచితం_కాకపోతే UCONFIG_USE_ML_PHRASE_BREAKING
 #   define UCONFIG_USE_ML_PHRASE_BREAKING 0
-#endif
+#అయితే_ముగింపు
 
-#if UCONFIG_NO_NORMALIZATION
+#ఒకవేళ UCONFIG_NO_NORMALIZATION
     /* common library */
     /* ICU 50 CJK dictionary BreakIterator uses normalization */
 #   define UCONFIG_NO_BREAK_ITERATION 1
@@ -341,12 +341,12 @@
 #   define UCONFIG_NO_IDNA 1
 
     /* i18n library */
-#   if UCONFIG_ONLY_COLLATION
-#       error Contradictory collation switches in uconfig.h.
+#   ఒకవేళ UCONFIG_ONLY_COLLATION
+#       error Contradictory collation switches లోపల uconfig.h.
 #   endif
 #   define UCONFIG_NO_COLLATION 1
 #   define UCONFIG_NO_TRANSLITERATION 1
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_BREAK_ITERATION
@@ -354,9 +354,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_BREAK_ITERATION
+#నిర్వచితం_కాకపోతే UCONFIG_NO_BREAK_ITERATION
 #   define UCONFIG_NO_BREAK_ITERATION 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_IDNA
@@ -364,9 +364,9 @@
  *
  * @stable ICU 2.6
  */
-#ifndef UCONFIG_NO_IDNA
+#నిర్వచితం_కాకపోతే UCONFIG_NO_IDNA
 #   define UCONFIG_NO_IDNA 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE
@@ -375,9 +375,9 @@
  *
  * @stable ICU 4.8
  */
-#ifndef UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE
-#   define UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE UMSGPAT_APOS_DOUBLE_OPTIONAL
-#endif
+#నిర్వచితం_కాకపోతే UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_బహుళకం
+#   define UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_బహుళకం UMSGPAT_APOS_DOUBLE_OPTIONAL
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_USE_WINDOWS_LCID_MAPPING_API
@@ -387,9 +387,9 @@
  * 
  * @internal ICU 64
  */
-#ifndef UCONFIG_USE_WINDOWS_LCID_MAPPING_API
+#నిర్వచితం_కాకపోతే UCONFIG_USE_WINDOWS_LCID_MAPPING_API
 #   define UCONFIG_USE_WINDOWS_LCID_MAPPING_API 1
-#endif
+#అయితే_ముగింపు
 
 /* i18n library switches ---------------------------------------------------- */
 
@@ -399,9 +399,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_COLLATION
+#నిర్వచితం_కాకపోతే UCONFIG_NO_COLLATION
 #   define UCONFIG_NO_COLLATION 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_FORMATTING
@@ -409,9 +409,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_FORMATTING
+#నిర్వచితం_కాకపోతే UCONFIG_NO_FORMATTING
 #   define UCONFIG_NO_FORMATTING 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_MF2
@@ -420,9 +420,9 @@
  * @internal ICU 75 technology preview
  * @deprecated This API is for technology preview only.
  */
-#ifndef UCONFIG_NO_MF2
+#నిర్వచితం_కాకపోతే UCONFIG_NO_MF2
 #   define UCONFIG_NO_MF2 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_TRANSLITERATION
@@ -430,9 +430,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_TRANSLITERATION
+#నిర్వచితం_కాకపోతే UCONFIG_NO_TRANSLITERATION
 #   define UCONFIG_NO_TRANSLITERATION 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_REGULAR_EXPRESSIONS
@@ -440,9 +440,9 @@
  *
  * @stable ICU 2.4
  */
-#ifndef UCONFIG_NO_REGULAR_EXPRESSIONS
+#నిర్వచితం_కాకపోతే UCONFIG_NO_REGULAR_EXPRESSIONS
 #   define UCONFIG_NO_REGULAR_EXPRESSIONS 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_SERVICE
@@ -450,9 +450,9 @@
  *
  * @stable ICU 3.2
  */
-#ifndef UCONFIG_NO_SERVICE
+#నిర్వచితం_కాకపోతే UCONFIG_NO_SERVICE
 #   define UCONFIG_NO_SERVICE 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_HAVE_PARSEALLINPUT
@@ -460,9 +460,9 @@
  *
  * @internal
  */
-#ifndef UCONFIG_HAVE_PARSEALLINPUT
+#నిర్వచితం_కాకపోతే UCONFIG_HAVE_PARSEALLINPUT
 #   define UCONFIG_HAVE_PARSEALLINPUT 1
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UCONFIG_NO_FILTERED_BREAK_ITERATION
@@ -470,8 +470,8 @@
  *
  * @internal
  */
-#ifndef UCONFIG_NO_FILTERED_BREAK_ITERATION
+#నిర్వచితం_కాకపోతే UCONFIG_NO_FILTERED_BREAK_ITERATION
 #   define UCONFIG_NO_FILTERED_BREAK_ITERATION 0
-#endif
+#అయితే_ముగింపు
 
-#endif  // __UCONFIG_H__
+#అయితే_ముగింపు  // __UCONFIG_H__

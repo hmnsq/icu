@@ -14,34 +14,34 @@
 *   created by: George Rhoten
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icuplug.h"
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "icuplugimp.h"
-#include "ucln_cmn.h"
-#include "ucnv_io.h"
-#include "umutex.h"
-#include "utracimp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/icuplug.h"
+#అన్తర్భావ "unicode/uclean.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "icuplugimp.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "ucnv_io.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "utracimp.h"
 
 U_NAMESPACE_BEGIN
 
-static UInitOnce gICUInitOnce {};
+స్థిర UInitOnce gICUInitOnce {};
 
-static UBool U_CALLCONV uinit_cleanup() {
+స్థిర UBool U_CALLCONV uinit_cleanup() {
     gICUInitOnce.reset();
-    return true;
+    తిరిగి నిజం;
 }
 
-static void U_CALLCONV
-initData(UErrorCode &status)
+స్థిర శూన్య U_CALLCONV
+init_దత్తాంశం(UError_సంకేతం &స్థితి_2)
 {
-#if UCONFIG_ENABLE_PLUGINS
+#ఒకవేళ UCONFIG_ENABLE_PLUGINS
     /* initialize plugins */
-    uplug_init(&status);
-#endif
+    uplug_init(&స్థితి_2);
+#అయితే_ముగింపు
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
     /*
      * 2005-may-02
      *
@@ -54,21 +54,21 @@ initData(UErrorCode &status)
      * for errors there, to make sure that the actual items they need are
      * available.
      */
-    ucnv_io_countKnownConverters(&status);
-#endif
-    ucln_common_registerCleanup(UCLN_COMMON_UINIT, uinit_cleanup);
+    ucnv_io_లెక్క_తెలిసిన_Converters(&స్థితి_2);
+#అయితే_ముగింపు
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_UINIT, uinit_cleanup);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 U_NAMESPACE_USE
 
 /*
  * ICU Initialization Function. Need not be called.
  */
-U_CAPI void U_EXPORT2
-u_init(UErrorCode *status) {
-    UTRACE_ENTRY_OC(UTRACE_U_INIT);
-    umtx_initOnce(gICUInitOnce, &initData, *status);
-    UTRACE_EXIT_STATUS(*status);
+U_CAPI శూన్య U_EXPORT2
+u_init(UError_సంకేతం *స్థితి_2) {
+    UTRACE_నమోదు_OC(UTRACE_U_INIT);
+    umtx_initOnce(gICUInitOnce, &init_దత్తాంశం, *స్థితి_2);
+    UTRACE_EXIT_స్థితి(*స్థితి_2);
 }

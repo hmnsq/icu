@@ -1,15 +1,15 @@
 // © 2025 and later: Unicode, Inc. and others.
 // License & terms of use: https://www.unicode.org/copyright.html
 
-#ifndef FIXEDSTRING_H
-#define FIXEDSTRING_H
+#నిర్వచితం_కాకపోతే FIXEDSTRING_H
+#నిర్వచించు FIXEDSTRING_H
 
-#include <string_view>
-#include <utility>
+#అన్తర్భావ <string_view>
+#అన్తర్భావ <utility>
 
-#include "unicode/uobject.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,79 +26,79 @@ class UnicodeString;
  * This class wants to be convenient but is also deliberately minimalist.
  * Please do not add methods if they only add minor convenience.
  */
-class FixedString : public UMemory {
-public:
-    FixedString() = default;
-    ~FixedString() { operator delete[](ptr); }
+class FixedString : బహిరంగ UMemory {
+బహిరంగ:
+    FixedString() = అప్రమేయ;
+    ~FixedString() { క్రియాకారకం delete[](ptr); }
 
-    FixedString(const FixedString& other) : FixedString(other.data()) {}
+    FixedString(స్థిరరాశి FixedString& other) : FixedString(other.దత్తాంశం()) {}
 
     FixedString(std::string_view init) {
-        size_t size = init.size();
-        if (size > 0 && reserve(size + 1)) {
-            uprv_memcpy(ptr, init.data(), size);
-            ptr[size] = '\0';
+        size_t కొలత_2 = init.కొలత_2();
+        ఒకవేళ (కొలత_2 > 0 && reserve(కొలత_2 + 1)) {
+            uprv_memcpy(ptr, init.దత్తాంశం(), కొలత_2);
+            ptr[కొలత_2] = '\0';
         }
     }
 
-    FixedString& operator=(const FixedString& other) {
-        *this = other.data();
-        return *this;
+    FixedString& క్రియాకారకం=(స్థిరరాశి FixedString& other) {
+        *this = other.దత్తాంశం();
+        తిరిగి *this;
     }
 
-    FixedString& operator=(std::string_view init) {
-        if (init.empty()) {
-            operator delete[](ptr);
+    FixedString& క్రియాకారకం=(std::string_view init) {
+        ఒకవేళ (init.ఖాళీలు()) {
+            క్రియాకారకం delete[](ptr);
             ptr = nullptr;
-        } else {
-            size_t size = init.size();
-            if (reserve(size + 1)) {
-                uprv_memcpy(ptr, init.data(), size);
-                ptr[size] = '\0';
+        } లేకపోతే {
+            size_t కొలత_2 = init.కొలత_2();
+            ఒకవేళ (reserve(కొలత_2 + 1)) {
+                uprv_memcpy(ptr, init.దత్తాంశం(), కొలత_2);
+                ptr[కొలత_2] = '\0';
             }
         }
-        return *this;
+        తిరిగి *this;
     }
 
     FixedString(FixedString&& other) noexcept : ptr(std::exchange(other.ptr, nullptr)) {}
 
-    FixedString& operator=(FixedString&& other) noexcept {
-        operator delete[](ptr);
+    FixedString& క్రియాకారకం=(FixedString&& other) noexcept {
+        క్రియాకారకం delete[](ptr);
         ptr = other.ptr;
         other.ptr = nullptr;
-        return *this;
+        తిరిగి *this;
     }
 
-    void clear() {
-        operator delete[](ptr);
+    శూన్య clear() {
+        క్రియాకారకం delete[](ptr);
         ptr = nullptr;
     }
 
-    const char* data() const {
-        return isEmpty() ? "" : ptr;
+    స్థిరరాశి అక్షరం* దత్తాంశం() స్థిరరాశి {
+        తిరిగి is_ఖాళీలు() ? "" : ptr;
     }
 
-    char* getAlias() {
-        return ptr;
+    అక్షరం* getAlias() {
+        తిరిగి ptr;
     }
 
-    bool isEmpty() const {
-        return ptr == nullptr;
+    bool is_ఖాళీలు() స్థిరరాశి {
+        తిరిగి ptr == nullptr;
     }
 
     /** Allocate storage for a new string, without initializing it. */
-    bool reserve(size_t size) {
-        operator delete[](ptr);
-        ptr = static_cast<char*>(operator new[](size));
-        return ptr != nullptr;
+    bool reserve(size_t కొలత_2) {
+        క్రియాకారకం delete[](ptr);
+        ptr = static_cast<అక్షరం*>(క్రియాకారకం new[](కొలత_2));
+        తిరిగి ptr != nullptr;
     }
 
-private:
-    char* ptr = nullptr;
+అంతరంగ:
+    అక్షరం* ptr = nullptr;
 };
 
-U_COMMON_API void copyInvariantChars(const UnicodeString& src, FixedString& dst, UErrorCode& status);
+U_COMMON_API శూన్య copyInvariantChars(స్థిరరాశి UnicodeString& src, FixedString& dst, UError_సంకేతం& స్థితి_2);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు

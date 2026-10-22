@@ -26,266 +26,266 @@
  */
 
 
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/utf.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "uassert.h"
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF32WithSub(char16_t* dest U_LIFETIME_BOUND,
-                      int32_t destCapacity,
-                      int32_t* pDestLength,
-                      const UChar32* src,
-                      int32_t srcLength,
+                      int32_t dest_సామర్థ్యం,
+                      int32_t* p_Dest_నిడివి,
+                      స్థిరరాశి UChar32* src,
+                      int32_t src_నిడివి,
                       UChar32 subchar,
-                      int32_t* pNumSubstitutions,
-                      UErrorCode* pErrorCode) {
-    const UChar32 *srcLimit;
+                      int32_t* p_అంకె_Substitutions,
+                      UError_సంకేతం* p_Error_సంకేతం) {
+    స్థిరరాశి UChar32 *src_హద్దు;
     UChar32 ch;
-    char16_t *destLimit;
+    char16_t *dest_హద్దు;
     char16_t *pDest;
-    int32_t reqLength;
-    int32_t numSubstitutions;
+    int32_t req_నిడివి;
+    int32_t అంకె_Substitutions;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)){
+        తిరిగి శూన్యసూచిక;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (destCapacity<0) || (dest == nullptr && destCapacity > 0) ||
+    ఒకవేళ( (src==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి < -1 ||
+        (dest_సామర్థ్యం<0) || (dest == శూన్యసూచిక && dest_సామర్థ్యం > 0) ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = 0;
+    ఒకవేళ(p_అంకె_Substitutions != శూన్యసూచిక) {
+        *p_అంకె_Substitutions = 0;
     }
 
     pDest = dest;
-    destLimit = (dest!=nullptr)?(dest + destCapacity):nullptr;
-    reqLength = 0;
-    numSubstitutions = 0;
+    dest_హద్దు = (dest!=శూన్యసూచిక)?(dest + dest_సామర్థ్యం):శూన్యసూచిక;
+    req_నిడివి = 0;
+    అంకె_Substitutions = 0;
 
-    if(srcLength < 0) {
+    ఒకవేళ(src_నిడివి < 0) {
         /* simple loop for conversion of a NUL-terminated BMP string */
-        while((ch=*src) != 0 &&
+        అయితే((ch=*src) != 0 &&
               ((uint32_t)ch < 0xd800 || (0xe000 <= ch && ch <= 0xffff))) {
             ++src;
-            if(pDest < destLimit) {
+            ఒకవేళ(pDest < dest_హద్దు) {
                 *pDest++ = (char16_t)ch;
-            } else {
-                ++reqLength;
+            } లేకపోతే {
+                ++req_నిడివి;
             }
         }
-        srcLimit = src;
-        if(ch != 0) {
+        src_హద్దు = src;
+        ఒకవేళ(ch != 0) {
             /* "complicated" case, find the end of the remaining string */
-            while(*++srcLimit != 0) {}
+            అయితే(*++src_హద్దు != 0) {}
         }
-    } else {
-      srcLimit = (src!=nullptr)?(src + srcLength):nullptr;
+    } లేకపోతే {
+      src_హద్దు = (src!=శూన్యసూచిక)?(src + src_నిడివి):శూన్యసూచిక;
     }
 
     /* convert with length */
-    while(src < srcLimit) {
+    అయితే(src < src_హద్దు) {
         ch = *src++;
-        do {
+        చేయి {
             /* usually "loops" once; twice only for writing subchar */
-            if((uint32_t)ch < 0xd800 || (0xe000 <= ch && ch <= 0xffff)) {
-                if(pDest < destLimit) {
+            ఒకవేళ((uint32_t)ch < 0xd800 || (0xe000 <= ch && ch <= 0xffff)) {
+                ఒకవేళ(pDest < dest_హద్దు) {
                     *pDest++ = (char16_t)ch;
-                } else {
-                    ++reqLength;
+                } లేకపోతే {
+                    ++req_నిడివి;
                 }
-                break;
-            } else if(0x10000 <= ch && ch <= 0x10ffff) {
-                if(pDest!=nullptr && ((pDest + 2) <= destLimit)) {
+                ఆపు;
+            } లేకపోతే ఒకవేళ(0x10000 <= ch && ch <= 0x10ffff) {
+                ఒకవేళ(pDest!=శూన్యసూచిక && ((pDest + 2) <= dest_హద్దు)) {
                     *pDest++ = U16_LEAD(ch);
                     *pDest++ = U16_TRAIL(ch);
-                } else {
-                    reqLength += 2;
+                } లేకపోతే {
+                    req_నిడివి += 2;
                 }
-                break;
-            } else if((ch = subchar) < 0) {
+                ఆపు;
+            } లేకపోతే ఒకవేళ((ch = subchar) < 0) {
                 /* surrogate code point, or not a Unicode code point at all */
-                *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
-            } else {
-                ++numSubstitutions;
+                *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                తిరిగి శూన్యసూచిక;
+            } లేకపోతే {
+                ++అంకె_Substitutions;
             }
-        } while(true);
+        } అయితే(నిజం);
     }
 
-    reqLength += (int32_t)(pDest - dest);
-    if(pDestLength) {
-        *pDestLength = reqLength;
+    req_నిడివి += (int32_t)(pDest - dest);
+    ఒకవేళ(p_Dest_నిడివి) {
+        *p_Dest_నిడివి = req_నిడివి;
     }
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = numSubstitutions;
+    ఒకవేళ(p_అంకె_Substitutions != శూన్యసూచిక) {
+        *p_అంకె_Substitutions = అంకె_Substitutions;
     }
 
     /* Terminate the buffer */
-    u_terminateUChars(dest, destCapacity, reqLength, pErrorCode);
+    u_terminateUChars(dest, dest_సామర్థ్యం, req_నిడివి, p_Error_సంకేతం);
     
-    return dest;
+    తిరిగి dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF32(char16_t* dest U_LIFETIME_BOUND,
-               int32_t destCapacity,
-               int32_t* pDestLength,
-               const UChar32* src,
-               int32_t srcLength,
-               UErrorCode* pErrorCode) {
-    return u_strFromUTF32WithSub(
-            dest, destCapacity, pDestLength,
-            src, srcLength,
-            U_SENTINEL, nullptr,
-            pErrorCode);
+               int32_t dest_సామర్థ్యం,
+               int32_t* p_Dest_నిడివి,
+               స్థిరరాశి UChar32* src,
+               int32_t src_నిడివి,
+               UError_సంకేతం* p_Error_సంకేతం) {
+    తిరిగి u_strFromUTF32WithSub(
+            dest, dest_సామర్థ్యం, p_Dest_నిడివి,
+            src, src_నిడివి,
+            U_SENTINEL, శూన్యసూచిక,
+            p_Error_సంకేతం);
 }
 
 U_CAPI UChar32* U_EXPORT2
-u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
-                    int32_t destCapacity,
-                    int32_t* pDestLength,
-                    const char16_t* src,
-                    int32_t srcLength,
+u_str_గమ్యం_UTF32_With_Sub(UChar32* dest U_LIFETIME_BOUND,
+                    int32_t dest_సామర్థ్యం,
+                    int32_t* p_Dest_నిడివి,
+                    స్థిరరాశి char16_t* src,
+                    int32_t src_నిడివి,
                     UChar32 subchar,
-                    int32_t* pNumSubstitutions,
-                    UErrorCode* pErrorCode) {
-    const char16_t *srcLimit;
+                    int32_t* p_అంకె_Substitutions,
+                    UError_సంకేతం* p_Error_సంకేతం) {
+    స్థిరరాశి char16_t *src_హద్దు;
     UChar32 ch;
     char16_t ch2;
-    UChar32 *destLimit;
+    UChar32 *dest_హద్దు;
     UChar32 *pDest;
-    int32_t reqLength;
-    int32_t numSubstitutions;
+    int32_t req_నిడివి;
+    int32_t అంకె_Substitutions;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)){
+        తిరిగి శూన్యసూచిక;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (destCapacity<0) || (dest == nullptr && destCapacity > 0) ||
+    ఒకవేళ( (src==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి < -1 ||
+        (dest_సామర్థ్యం<0) || (dest == శూన్యసూచిక && dest_సామర్థ్యం > 0) ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = 0;
+    ఒకవేళ(p_అంకె_Substitutions != శూన్యసూచిక) {
+        *p_అంకె_Substitutions = 0;
     }
 
     pDest = dest;
-    destLimit = (dest!=nullptr)?(dest + destCapacity):nullptr;
-    reqLength = 0;
-    numSubstitutions = 0;
+    dest_హద్దు = (dest!=శూన్యసూచిక)?(dest + dest_సామర్థ్యం):శూన్యసూచిక;
+    req_నిడివి = 0;
+    అంకె_Substitutions = 0;
 
-    if(srcLength < 0) {
+    ఒకవేళ(src_నిడివి < 0) {
         /* simple loop for conversion of a NUL-terminated BMP string */
-        while((ch=*src) != 0 && !U16_IS_SURROGATE(ch)) {
+        అయితే((ch=*src) != 0 && !U16_IS_SURROGATE(ch)) {
             ++src;
-            if(pDest < destLimit) {
+            ఒకవేళ(pDest < dest_హద్దు) {
                 *pDest++ = ch;
-            } else {
-                ++reqLength;
+            } లేకపోతే {
+                ++req_నిడివి;
             }
         }
-        srcLimit = src;
-        if(ch != 0) {
+        src_హద్దు = src;
+        ఒకవేళ(ch != 0) {
             /* "complicated" case, find the end of the remaining string */
-            while(*++srcLimit != 0) {}
+            అయితే(*++src_హద్దు != 0) {}
         }
-    } else {
-        srcLimit = (src!=nullptr)?(src + srcLength):nullptr;
+    } లేకపోతే {
+        src_హద్దు = (src!=శూన్యసూచిక)?(src + src_నిడివి):శూన్యసూచిక;
     }
 
     /* convert with length */
-    while(src < srcLimit) {
+    అయితే(src < src_హద్దు) {
         ch = *src++;
-        if(!U16_IS_SURROGATE(ch)) {
+        ఒకవేళ(!U16_IS_SURROGATE(ch)) {
             /* write or count ch below */
-        } else if(U16_IS_SURROGATE_LEAD(ch) && src < srcLimit && U16_IS_TRAIL(ch2 = *src)) {
+        } లేకపోతే ఒకవేళ(U16_IS_SURROGATE_LEAD(ch) && src < src_హద్దు && U16_IS_TRAIL(ch2 = *src)) {
             ++src;
             ch = U16_GET_SUPPLEMENTARY(ch, ch2);
-        } else if((ch = subchar) < 0) {
+        } లేకపోతే ఒకవేళ((ch = subchar) < 0) {
             /* unpaired surrogate */
-            *pErrorCode = U_INVALID_CHAR_FOUND;
-            return nullptr;
-        } else {
-            ++numSubstitutions;
+            *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+            తిరిగి శూన్యసూచిక;
+        } లేకపోతే {
+            ++అంకె_Substitutions;
         }
-        if(pDest < destLimit) {
+        ఒకవేళ(pDest < dest_హద్దు) {
             *pDest++ = ch;
-        } else {
-            ++reqLength;
+        } లేకపోతే {
+            ++req_నిడివి;
         }
     }
 
-    reqLength += (int32_t)(pDest - dest);
-    if(pDestLength) {
-        *pDestLength = reqLength;
+    req_నిడివి += (int32_t)(pDest - dest);
+    ఒకవేళ(p_Dest_నిడివి) {
+        *p_Dest_నిడివి = req_నిడివి;
     }
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = numSubstitutions;
+    ఒకవేళ(p_అంకె_Substitutions != శూన్యసూచిక) {
+        *p_అంకె_Substitutions = అంకె_Substitutions;
     }
 
     /* Terminate the buffer */
-    u_terminateUChar32s(dest, destCapacity, reqLength, pErrorCode);
+    u_terminateUChar32s(dest, dest_సామర్థ్యం, req_నిడివి, p_Error_సంకేతం);
 
-    return dest;
+    తిరిగి dest;
 }
 
 U_CAPI UChar32* U_EXPORT2
-u_strToUTF32(UChar32* dest U_LIFETIME_BOUND,
-             int32_t destCapacity,
-             int32_t* pDestLength,
-             const char16_t* src,
-             int32_t srcLength,
-             UErrorCode* pErrorCode) {
-    return u_strToUTF32WithSub(
-            dest, destCapacity, pDestLength,
-            src, srcLength,
-            U_SENTINEL, nullptr,
-            pErrorCode);
+u_str_గమ్యం_UTF32(UChar32* dest U_LIFETIME_BOUND,
+             int32_t dest_సామర్థ్యం,
+             int32_t* p_Dest_నిడివి,
+             స్థిరరాశి char16_t* src,
+             int32_t src_నిడివి,
+             UError_సంకేతం* p_Error_సంకేతం) {
+    తిరిగి u_str_గమ్యం_UTF32_With_Sub(
+            dest, dest_సామర్థ్యం, p_Dest_నిడివి,
+            src, src_నిడివి,
+            U_SENTINEL, శూన్యసూచిక,
+            p_Error_సంకేతం);
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
-                     int32_t destCapacity,
-                     int32_t* pDestLength,
-                     const char* src,
-                     int32_t srcLength,
+                     int32_t dest_సామర్థ్యం,
+                     int32_t* p_Dest_నిడివి,
+                     స్థిరరాశి అక్షరం* src,
+                     int32_t src_నిడివి,
                      UChar32 subchar,
-                     int32_t* pNumSubstitutions,
-                     UErrorCode* pErrorCode) {
+                     int32_t* p_అంకె_Substitutions,
+                     UError_సంకేతం* p_Error_సంకేతం) {
     /* args check */
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (destCapacity<0) || (dest == nullptr && destCapacity > 0) ||
+    ఒకవేళ( (src==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి < -1 ||
+        (dest_సామర్థ్యం<0) || (dest == శూన్యసూచిక && dest_సామర్థ్యం > 0) ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=0;
+    ఒకవేళ(p_అంకె_Substitutions!=శూన్యసూచిక) {
+        *p_అంకె_Substitutions=0;
     }
     char16_t *pDest = dest;
-    char16_t *pDestLimit = dest+destCapacity;
-    int32_t reqLength = 0;
-    int32_t numSubstitutions=0;
+    char16_t *p_Dest_హద్దు = dest+dest_సామర్థ్యం;
+    int32_t req_నిడివి = 0;
+    int32_t అంకె_Substitutions=0;
 
     /*
      * Inline processing of UTF-8 byte sequences:
@@ -300,7 +300,7 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
      * Each branch then tests for the other end of its range.
      */
 
-    if(srcLength < 0){
+    ఒకవేళ(src_నిడివి < 0){
         /*
          * Transform a NUL-terminated string.
          * The code explicitly checks for NULs only in the lead byte position.
@@ -308,39 +308,39 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
          */
         int32_t i;
         UChar32 c;
-        for(i = 0; (c = (uint8_t)src[i]) != 0 && (pDest < pDestLimit);) {
+        కొరకు(i = 0; (c = (uint8_t)src[i]) != 0 && (pDest < p_Dest_హద్దు);) {
             // modified copy of U8_NEXT()
             ++i;
-            if(U8_IS_SINGLE(c)) {
+            ఒకవేళ(U8_IS_SINGLE(c)) {
                 *pDest++=(char16_t)c;
-            } else {
+            } లేకపోతే {
                 uint8_t __t1, __t2;
-                if( /* handle U+0800..U+FFFF inline */
+                ఒకవేళ( /* handle U+0800..U+FFFF inline */
                         (0xe0<=(c) && (c)<0xf0) &&
                         U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                         (__t2=src[(i)+1]-0x80)<=0x3f) {
                     *pDest++ = (((c)&0xf)<<12)|((src[i]&0x3f)<<6)|__t2;
                     i+=2;
-                } else if( /* handle U+0080..U+07FF inline */
+                } లేకపోతే ఒకవేళ( /* handle U+0080..U+07FF inline */
                         ((c)<0xe0 && (c)>=0xc2) &&
                         (__t1=src[i]-0x80)<=0x3f) {
                     *pDest++ = (((c)&0x1f)<<6)|__t1;
                     ++(i);
-                } else {
+                } లేకపోతే {
                     /* function call for "complicated" and error cases */
-                    (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), -1, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
-                        *pErrorCode = U_INVALID_CHAR_FOUND;
-                        return nullptr;
-                    } else if(c<=0xFFFF) {
+                    (c)=utf8_తదుపరి_Char_సురక్షిత_Body((స్థిరరాశి uint8_t *)src, &(i), -1, c, -1);
+                    ఒకవేళ(c<0 && (++అంకె_Substitutions, c = subchar) < 0) {
+                        *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                        తిరిగి శూన్యసూచిక;
+                    } లేకపోతే ఒకవేళ(c<=0xFFFF) {
                         *(pDest++)=(char16_t)c;
-                    } else {
+                    } లేకపోతే {
                         *(pDest++)=U16_LEAD(c);
-                        if(pDest<pDestLimit) {
+                        ఒకవేళ(pDest<p_Dest_హద్దు) {
                             *(pDest++)=U16_TRAIL(c);
-                        } else {
-                            reqLength++;
-                            break;
+                        } లేకపోతే {
+                            req_నిడివి++;
+                            ఆపు;
                         }
                     }
                 }
@@ -348,141 +348,141 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
         }
 
         /* Pre-flight the rest of the string. */
-        while((c = (uint8_t)src[i]) != 0) {
+        అయితే((c = (uint8_t)src[i]) != 0) {
             // modified copy of U8_NEXT()
             ++i;
-            if(U8_IS_SINGLE(c)) {
-                ++reqLength;
-            } else {
+            ఒకవేళ(U8_IS_SINGLE(c)) {
+                ++req_నిడివి;
+            } లేకపోతే {
                 uint8_t __t1, __t2;
-                if( /* handle U+0800..U+FFFF inline */
+                ఒకవేళ( /* handle U+0800..U+FFFF inline */
                         (0xe0<=(c) && (c)<0xf0) &&
                         U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                         (__t2=src[(i)+1]-0x80)<=0x3f) {
-                    ++reqLength;
+                    ++req_నిడివి;
                     i+=2;
-                } else if( /* handle U+0080..U+07FF inline */
+                } లేకపోతే ఒకవేళ( /* handle U+0080..U+07FF inline */
                         ((c)<0xe0 && (c)>=0xc2) &&
                         (__t1=src[i]-0x80)<=0x3f) {
-                    ++reqLength;
+                    ++req_నిడివి;
                     ++(i);
-                } else {
+                } లేకపోతే {
                     /* function call for "complicated" and error cases */
-                    (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), -1, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
-                        *pErrorCode = U_INVALID_CHAR_FOUND;
-                        return nullptr;
+                    (c)=utf8_తదుపరి_Char_సురక్షిత_Body((స్థిరరాశి uint8_t *)src, &(i), -1, c, -1);
+                    ఒకవేళ(c<0 && (++అంకె_Substitutions, c = subchar) < 0) {
+                        *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                        తిరిగి శూన్యసూచిక;
                     }
-                    reqLength += U16_LENGTH(c);
+                    req_నిడివి += U16_నిడివి(c);
                 }
             }
         }
-    } else /* srcLength >= 0 */ {
+    } లేకపోతే /* srcLength >= 0 */ {
         /* Faster loop without ongoing checking for srcLength and pDestLimit. */
         int32_t i = 0;
         UChar32 c;
-        for(;;) {
+        కొరకు(;;) {
             /*
              * Each iteration of the inner loop progresses by at most 3 UTF-8
              * bytes and one char16_t, for most characters.
              * For supplementary code points (4 & 2), which are rare,
              * there is an additional adjustment.
              */
-            int32_t count = (int32_t)(pDestLimit - pDest);
-            int32_t count2 = (srcLength - i) / 3;
-            if(count > count2) {
+            int32_t count = (int32_t)(p_Dest_హద్దు - pDest);
+            int32_t count2 = (src_నిడివి - i) / 3;
+            ఒకవేళ(count > count2) {
                 count = count2; /* min(remaining dest, remaining src/3) */
             }
-            if(count < 3) {
+            ఒకవేళ(count < 3) {
                 /*
                  * Too much overhead if we get near the end of the string,
                  * continue with the next loop.
                  */
-                break;
+                ఆపు;
             }
 
-            do {
+            చేయి {
                 // modified copy of U8_NEXT()
                 c = (uint8_t)src[i++];
-                if(U8_IS_SINGLE(c)) {
+                ఒకవేళ(U8_IS_SINGLE(c)) {
                     *pDest++=(char16_t)c;
-                } else {
+                } లేకపోతే {
                     uint8_t __t1, __t2;
-                    if( /* handle U+0800..U+FFFF inline */
+                    ఒకవేళ( /* handle U+0800..U+FFFF inline */
                             (0xe0<=(c) && (c)<0xf0) &&
-                            ((i)+1)<srcLength &&
+                            ((i)+1)<src_నిడివి &&
                             U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                             (__t2=src[(i)+1]-0x80)<=0x3f) {
                         *pDest++ = (((c)&0xf)<<12)|((src[i]&0x3f)<<6)|__t2;
                         i+=2;
-                    } else if( /* handle U+0080..U+07FF inline */
+                    } లేకపోతే ఒకవేళ( /* handle U+0080..U+07FF inline */
                             ((c)<0xe0 && (c)>=0xc2) &&
-                            ((i)!=srcLength) &&
+                            ((i)!=src_నిడివి) &&
                             (__t1=src[i]-0x80)<=0x3f) {
                         *pDest++ = (((c)&0x1f)<<6)|__t1;
                         ++(i);
-                    } else {
-                        if(c >= 0xf0 || subchar > 0xffff) {
+                    } లేకపోతే {
+                        ఒకవేళ(c >= 0xf0 || subchar > 0xffff) {
                             // We may read up to four bytes and write up to two UChars,
                             // which we didn't account for with computing count,
                             // so we adjust it here.
-                            if(--count == 0) {
+                            ఒకవేళ(--count == 0) {
                                 --i;  // back out byte c
-                                break;
+                                ఆపు;
                             }
                         }
 
                         /* function call for "complicated" and error cases */
-                        (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, c, -1);
-                        if(c<0 && (++numSubstitutions, c = subchar) < 0) {
-                            *pErrorCode = U_INVALID_CHAR_FOUND;
-                            return nullptr;
-                        } else if(c<=0xFFFF) {
+                        (c)=utf8_తదుపరి_Char_సురక్షిత_Body((స్థిరరాశి uint8_t *)src, &(i), src_నిడివి, c, -1);
+                        ఒకవేళ(c<0 && (++అంకె_Substitutions, c = subchar) < 0) {
+                            *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                            తిరిగి శూన్యసూచిక;
+                        } లేకపోతే ఒకవేళ(c<=0xFFFF) {
                             *(pDest++)=(char16_t)c;
-                        } else {
+                        } లేకపోతే {
                             *(pDest++)=U16_LEAD(c);
                             *(pDest++)=U16_TRAIL(c);
                         }
                     }
                 }
-            } while(--count > 0);
+            } అయితే(--count > 0);
         }
 
-        while(i < srcLength && (pDest < pDestLimit)) {
+        అయితే(i < src_నిడివి && (pDest < p_Dest_హద్దు)) {
             // modified copy of U8_NEXT()
             c = (uint8_t)src[i++];
-            if(U8_IS_SINGLE(c)) {
+            ఒకవేళ(U8_IS_SINGLE(c)) {
                 *pDest++=(char16_t)c;
-            } else {
+            } లేకపోతే {
                 uint8_t __t1, __t2;
-                if( /* handle U+0800..U+FFFF inline */
+                ఒకవేళ( /* handle U+0800..U+FFFF inline */
                         (0xe0<=(c) && (c)<0xf0) &&
-                        ((i)+1)<srcLength &&
+                        ((i)+1)<src_నిడివి &&
                         U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                         (__t2=src[(i)+1]-0x80)<=0x3f) {
                     *pDest++ = (((c)&0xf)<<12)|((src[i]&0x3f)<<6)|__t2;
                     i+=2;
-                } else if( /* handle U+0080..U+07FF inline */
+                } లేకపోతే ఒకవేళ( /* handle U+0080..U+07FF inline */
                         ((c)<0xe0 && (c)>=0xc2) &&
-                        ((i)!=srcLength) &&
+                        ((i)!=src_నిడివి) &&
                         (__t1=src[i]-0x80)<=0x3f) {
                     *pDest++ = (((c)&0x1f)<<6)|__t1;
                     ++(i);
-                } else {
+                } లేకపోతే {
                     /* function call for "complicated" and error cases */
-                    (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
-                        *pErrorCode = U_INVALID_CHAR_FOUND;
-                        return nullptr;
-                    } else if(c<=0xFFFF) {
+                    (c)=utf8_తదుపరి_Char_సురక్షిత_Body((స్థిరరాశి uint8_t *)src, &(i), src_నిడివి, c, -1);
+                    ఒకవేళ(c<0 && (++అంకె_Substitutions, c = subchar) < 0) {
+                        *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                        తిరిగి శూన్యసూచిక;
+                    } లేకపోతే ఒకవేళ(c<=0xFFFF) {
                         *(pDest++)=(char16_t)c;
-                    } else {
+                    } లేకపోతే {
                         *(pDest++)=U16_LEAD(c);
-                        if(pDest<pDestLimit) {
+                        ఒకవేళ(pDest<p_Dest_హద్దు) {
                             *(pDest++)=U16_TRAIL(c);
-                        } else {
-                            reqLength++;
-                            break;
+                        } లేకపోతే {
+                            req_నిడివి++;
+                            ఆపు;
                         }
                     }
                 }
@@ -490,100 +490,100 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
         }
 
         /* Pre-flight the rest of the string. */
-        while(i < srcLength) {
+        అయితే(i < src_నిడివి) {
             // modified copy of U8_NEXT()
             c = (uint8_t)src[i++];
-            if(U8_IS_SINGLE(c)) {
-                ++reqLength;
-            } else {
+            ఒకవేళ(U8_IS_SINGLE(c)) {
+                ++req_నిడివి;
+            } లేకపోతే {
                 uint8_t __t1, __t2;
-                if( /* handle U+0800..U+FFFF inline */
+                ఒకవేళ( /* handle U+0800..U+FFFF inline */
                         (0xe0<=(c) && (c)<0xf0) &&
-                        ((i)+1)<srcLength &&
+                        ((i)+1)<src_నిడివి &&
                         U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                         (__t2=src[(i)+1]-0x80)<=0x3f) {
-                    ++reqLength;
+                    ++req_నిడివి;
                     i+=2;
-                } else if( /* handle U+0080..U+07FF inline */
+                } లేకపోతే ఒకవేళ( /* handle U+0080..U+07FF inline */
                         ((c)<0xe0 && (c)>=0xc2) &&
-                        ((i)!=srcLength) &&
+                        ((i)!=src_నిడివి) &&
                         (__t1=src[i]-0x80)<=0x3f) {
-                    ++reqLength;
+                    ++req_నిడివి;
                     ++(i);
-                } else {
+                } లేకపోతే {
                     /* function call for "complicated" and error cases */
-                    (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
-                        *pErrorCode = U_INVALID_CHAR_FOUND;
-                        return nullptr;
+                    (c)=utf8_తదుపరి_Char_సురక్షిత_Body((స్థిరరాశి uint8_t *)src, &(i), src_నిడివి, c, -1);
+                    ఒకవేళ(c<0 && (++అంకె_Substitutions, c = subchar) < 0) {
+                        *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                        తిరిగి శూన్యసూచిక;
                     }
-                    reqLength += U16_LENGTH(c);
+                    req_నిడివి += U16_నిడివి(c);
                 }
             }
         }
     }
 
-    reqLength+=(int32_t)(pDest - dest);
+    req_నిడివి+=(int32_t)(pDest - dest);
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=numSubstitutions;
+    ఒకవేళ(p_అంకె_Substitutions!=శూన్యసూచిక) {
+        *p_అంకె_Substitutions=అంకె_Substitutions;
     }
 
-    if(pDestLength){
-        *pDestLength = reqLength;
+    ఒకవేళ(p_Dest_నిడివి){
+        *p_Dest_నిడివి = req_నిడివి;
     }
 
     /* Terminate the buffer */
-    u_terminateUChars(dest,destCapacity,reqLength,pErrorCode);
+    u_terminateUChars(dest,dest_సామర్థ్యం,req_నిడివి,p_Error_సంకేతం);
 
-    return dest;
+    తిరిగి dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF8(char16_t* dest U_LIFETIME_BOUND,
-              int32_t destCapacity,
-              int32_t* pDestLength,
-              const char* src,
-              int32_t srcLength,
-              UErrorCode* pErrorCode) {
-    return u_strFromUTF8WithSub(
-            dest, destCapacity, pDestLength,
-            src, srcLength,
-            U_SENTINEL, nullptr,
-            pErrorCode);
+              int32_t dest_సామర్థ్యం,
+              int32_t* p_Dest_నిడివి,
+              స్థిరరాశి అక్షరం* src,
+              int32_t src_నిడివి,
+              UError_సంకేతం* p_Error_సంకేతం) {
+    తిరిగి u_strFromUTF8WithSub(
+            dest, dest_సామర్థ్యం, p_Dest_నిడివి,
+            src, src_నిడివి,
+            U_SENTINEL, శూన్యసూచిక,
+            p_Error_సంకేతం);
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF8Lenient(char16_t* dest U_LIFETIME_BOUND,
-                     int32_t destCapacity,
-                     int32_t* pDestLength,
-                     const char* src,
-                     int32_t srcLength,
-                     UErrorCode* pErrorCode) {
+                     int32_t dest_సామర్థ్యం,
+                     int32_t* p_Dest_నిడివి,
+                     స్థిరరాశి అక్షరం* src,
+                     int32_t src_నిడివి,
+                     UError_సంకేతం* p_Error_సంకేతం) {
     char16_t *pDest = dest;
     UChar32 ch;
-    int32_t reqLength = 0;
+    int32_t req_నిడివి = 0;
     uint8_t* pSrc = (uint8_t*) src;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)){
+        తిరిగి శూన్యసూచిక;
     }
         
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (destCapacity<0) || (dest == nullptr && destCapacity > 0)
+    ఒకవేళ( (src==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి < -1 ||
+        (dest_సామర్థ్యం<0) || (dest == శూన్యసూచిక && dest_సామర్థ్యం > 0)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(srcLength < 0) {
+    ఒకవేళ(src_నిడివి < 0) {
         /* Transform a NUL-terminated string. */
-        char16_t *pDestLimit = (dest!=nullptr)?(dest+destCapacity):nullptr;
+        char16_t *p_Dest_హద్దు = (dest!=శూన్యసూచిక)?(dest+dest_సామర్థ్యం):శూన్యసూచిక;
         uint8_t t1, t2, t3; /* trail bytes */
 
-        while(((ch = *pSrc) != 0) && (pDest < pDestLimit)) {
-            if(ch < 0xc0) {
+        అయితే(((ch = *pSrc) != 0) && (pDest < p_Dest_హద్దు)) {
+            ఒకవేళ(ch < 0xc0) {
                 /*
                  * ASCII, or a trail byte in lead position which is treated like
                  * a single-byte sequence for better character boundary
@@ -591,117 +591,117 @@ u_strFromUTF8Lenient(char16_t* dest U_LIFETIME_BOUND,
                  */
                 *pDest++=(char16_t)ch;
                 ++pSrc;
-                continue;
-            } else if(ch < 0xe0) { /* U+0080..U+07FF */
-                if((t1 = pSrc[1]) != 0) {
+                కొనసాగు;
+            } లేకపోతే ఒకవేళ(ch < 0xe0) { /* U+0080..U+07FF */
+                ఒకవేళ((t1 = pSrc[1]) != 0) {
                     /* 0x3080 = (0xc0 << 6) + 0x80 */
                     *pDest++ = (char16_t)((ch << 6) + t1 - 0x3080);
                     pSrc += 2;
-                    continue;
+                    కొనసాగు;
                 }
-            } else if(ch < 0xf0) { /* U+0800..U+FFFF */
-                if((t1 = pSrc[1]) != 0 && (t2 = pSrc[2]) != 0) {
+            } లేకపోతే ఒకవేళ(ch < 0xf0) { /* U+0800..U+FFFF */
+                ఒకవేళ((t1 = pSrc[1]) != 0 && (t2 = pSrc[2]) != 0) {
                     /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                     /* 0x2080 = (0x80 << 6) + 0x80 */
                     *pDest++ = (char16_t)((ch << 12) + (t1 << 6) + t2 - 0x2080);
                     pSrc += 3;
-                    continue;
+                    కొనసాగు;
                 }
-            } else /* f0..f4 */ { /* U+10000..U+10FFFF */
-                if((t1 = pSrc[1]) != 0 && (t2 = pSrc[2]) != 0 && (t3 = pSrc[3]) != 0) {
+            } లేకపోతే /* f0..f4 */ { /* U+10000..U+10FFFF */
+                ఒకవేళ((t1 = pSrc[1]) != 0 && (t2 = pSrc[2]) != 0 && (t3 = pSrc[3]) != 0) {
                     pSrc += 4;
                     /* 0x3c82080 = (0xf0 << 18) + (0x80 << 12) + (0x80 << 6) + 0x80 */
                     ch = (ch << 18) + (t1 << 12) + (t2 << 6) + t3 - 0x3c82080;
                     *(pDest++) = U16_LEAD(ch);
-                    if(pDest < pDestLimit) {
+                    ఒకవేళ(pDest < p_Dest_హద్దు) {
                         *(pDest++) = U16_TRAIL(ch);
-                    } else {
-                        reqLength = 1;
-                        break;
+                    } లేకపోతే {
+                        req_నిడివి = 1;
+                        ఆపు;
                     }
-                    continue;
+                    కొనసాగు;
                 }
             }
 
             /* truncated character at the end */
             *pDest++ = 0xfffd;
-            while(*++pSrc != 0) {}
-            break;
+            అయితే(*++pSrc != 0) {}
+            ఆపు;
         }
 
         /* Pre-flight the rest of the string. */
-        while((ch = *pSrc) != 0) {
-            if(ch < 0xc0) {
+        అయితే((ch = *pSrc) != 0) {
+            ఒకవేళ(ch < 0xc0) {
                 /*
                  * ASCII, or a trail byte in lead position which is treated like
                  * a single-byte sequence for better character boundary
                  * resynchronization after illegal sequences.
                  */
-                ++reqLength;
+                ++req_నిడివి;
                 ++pSrc;
-                continue;
-            } else if(ch < 0xe0) { /* U+0080..U+07FF */
-                if(pSrc[1] != 0) {
-                    ++reqLength;
+                కొనసాగు;
+            } లేకపోతే ఒకవేళ(ch < 0xe0) { /* U+0080..U+07FF */
+                ఒకవేళ(pSrc[1] != 0) {
+                    ++req_నిడివి;
                     pSrc += 2;
-                    continue;
+                    కొనసాగు;
                 }
-            } else if(ch < 0xf0) { /* U+0800..U+FFFF */
-                if(pSrc[1] != 0 && pSrc[2] != 0) {
-                    ++reqLength;
+            } లేకపోతే ఒకవేళ(ch < 0xf0) { /* U+0800..U+FFFF */
+                ఒకవేళ(pSrc[1] != 0 && pSrc[2] != 0) {
+                    ++req_నిడివి;
                     pSrc += 3;
-                    continue;
+                    కొనసాగు;
                 }
-            } else /* f0..f4 */ { /* U+10000..U+10FFFF */
-                if(pSrc[1] != 0 && pSrc[2] != 0 && pSrc[3] != 0) {
-                    reqLength += 2;
+            } లేకపోతే /* f0..f4 */ { /* U+10000..U+10FFFF */
+                ఒకవేళ(pSrc[1] != 0 && pSrc[2] != 0 && pSrc[3] != 0) {
+                    req_నిడివి += 2;
                     pSrc += 4;
-                    continue;
+                    కొనసాగు;
                 }
             }
 
             /* truncated character at the end */
-            ++reqLength;
-            break;
+            ++req_నిడివి;
+            ఆపు;
         }
-    } else /* srcLength >= 0 */ {
-      const uint8_t *pSrcLimit = (pSrc!=nullptr)?(pSrc + srcLength):nullptr;
+    } లేకపోతే /* srcLength >= 0 */ {
+      స్థిరరాశి uint8_t *p_Src_హద్దు = (pSrc!=శూన్యసూచిక)?(pSrc + src_నిడివి):శూన్యసూచిక;
 
         /*
          * This function requires that if srcLength is given, then it must be
          * destCapatity >= srcLength so that we need not check for
          * destination buffer overflow in the loop.
          */
-        if(destCapacity < srcLength) {
-            if(pDestLength != nullptr) {
-                *pDestLength = srcLength; /* this likely overestimates the true destLength! */
+        ఒకవేళ(dest_సామర్థ్యం < src_నిడివి) {
+            ఒకవేళ(p_Dest_నిడివి != శూన్యసూచిక) {
+                *p_Dest_నిడివి = src_నిడివి; /* this likely overestimates the true destLength! */
             }
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-            return nullptr;
+            *p_Error_సంకేతం = U_బఫరు_అధికప్రవాహం_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
 
-        if((pSrcLimit - pSrc) >= 4) {
-            pSrcLimit -= 3; /* temporarily reduce pSrcLimit */
+        ఒకవేళ((p_Src_హద్దు - pSrc) >= 4) {
+            p_Src_హద్దు -= 3; /* temporarily reduce pSrcLimit */
 
             /* in this loop, we can always access at least 4 bytes, up to pSrc+3 */
-            do {
+            చేయి {
                 ch = *pSrc++;
-                if(ch < 0xc0) {
+                ఒకవేళ(ch < 0xc0) {
                     /*
                      * ASCII, or a trail byte in lead position which is treated like
                      * a single-byte sequence for better character boundary
                      * resynchronization after illegal sequences.
                      */
                     *pDest++=(char16_t)ch;
-                } else if(ch < 0xe0) { /* U+0080..U+07FF */
+                } లేకపోతే ఒకవేళ(ch < 0xe0) { /* U+0080..U+07FF */
                     /* 0x3080 = (0xc0 << 6) + 0x80 */
                     *pDest++ = (char16_t)((ch << 6) + *pSrc++ - 0x3080);
-                } else if(ch < 0xf0) { /* U+0800..U+FFFF */
+                } లేకపోతే ఒకవేళ(ch < 0xf0) { /* U+0800..U+FFFF */
                     /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                     /* 0x2080 = (0x80 << 6) + 0x80 */
                     ch = (ch << 12) + (*pSrc++ << 6);
                     *pDest++ = (char16_t)(ch + *pSrc++ - 0x2080);
-                } else /* f0..f4 */ { /* U+10000..U+10FFFF */
+                } లేకపోతే /* f0..f4 */ { /* U+10000..U+10FFFF */
                     /* 0x3c82080 = (0xf0 << 18) + (0x80 << 12) + (0x80 << 6) + 0x80 */
                     ch = (ch << 18) + (*pSrc++ << 12);
                     ch += *pSrc++ << 6;
@@ -709,38 +709,38 @@ u_strFromUTF8Lenient(char16_t* dest U_LIFETIME_BOUND,
                     *(pDest++) = U16_LEAD(ch);
                     *(pDest++) = U16_TRAIL(ch);
                 }
-            } while(pSrc < pSrcLimit);
+            } అయితే(pSrc < p_Src_హద్దు);
 
-            pSrcLimit += 3; /* restore original pSrcLimit */
+            p_Src_హద్దు += 3; /* restore original pSrcLimit */
         }
 
-        while(pSrc < pSrcLimit) {
+        అయితే(pSrc < p_Src_హద్దు) {
             ch = *pSrc++;
-            if(ch < 0xc0) {
+            ఒకవేళ(ch < 0xc0) {
                 /*
                  * ASCII, or a trail byte in lead position which is treated like
                  * a single-byte sequence for better character boundary
                  * resynchronization after illegal sequences.
                  */
                 *pDest++=(char16_t)ch;
-                continue;
-            } else if(ch < 0xe0) { /* U+0080..U+07FF */
-                if(pSrc < pSrcLimit) {
+                కొనసాగు;
+            } లేకపోతే ఒకవేళ(ch < 0xe0) { /* U+0080..U+07FF */
+                ఒకవేళ(pSrc < p_Src_హద్దు) {
                     /* 0x3080 = (0xc0 << 6) + 0x80 */
                     *pDest++ = (char16_t)((ch << 6) + *pSrc++ - 0x3080);
-                    continue;
+                    కొనసాగు;
                 }
-            } else if(ch < 0xf0) { /* U+0800..U+FFFF */
-                if((pSrcLimit - pSrc) >= 2) {
+            } లేకపోతే ఒకవేళ(ch < 0xf0) { /* U+0800..U+FFFF */
+                ఒకవేళ((p_Src_హద్దు - pSrc) >= 2) {
                     /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                     /* 0x2080 = (0x80 << 6) + 0x80 */
                     ch = (ch << 12) + (*pSrc++ << 6);
                     *pDest++ = (char16_t)(ch + *pSrc++ - 0x2080);
                     pSrc += 3;
-                    continue;
+                    కొనసాగు;
                 }
-            } else /* f0..f4 */ { /* U+10000..U+10FFFF */
-                if((pSrcLimit - pSrc) >= 3) {
+            } లేకపోతే /* f0..f4 */ { /* U+10000..U+10FFFF */
+                ఒకవేళ((p_Src_హద్దు - pSrc) >= 3) {
                     /* 0x3c82080 = (0xf0 << 18) + (0x80 << 12) + (0x80 << 6) + 0x80 */
                     ch = (ch << 18) + (*pSrc++ << 12);
                     ch += *pSrc++ << 6;
@@ -748,201 +748,201 @@ u_strFromUTF8Lenient(char16_t* dest U_LIFETIME_BOUND,
                     *(pDest++) = U16_LEAD(ch);
                     *(pDest++) = U16_TRAIL(ch);
                     pSrc += 4;
-                    continue;
+                    కొనసాగు;
                 }
             }
 
             /* truncated character at the end */
             *pDest++ = 0xfffd;
-            break;
+            ఆపు;
         }
     }
 
-    reqLength+=(int32_t)(pDest - dest);
+    req_నిడివి+=(int32_t)(pDest - dest);
 
-    if(pDestLength){
-        *pDestLength = reqLength;
+    ఒకవేళ(p_Dest_నిడివి){
+        *p_Dest_నిడివి = req_నిడివి;
     }
 
     /* Terminate the buffer */
-    u_terminateUChars(dest,destCapacity,reqLength,pErrorCode);
+    u_terminateUChars(dest,dest_సామర్థ్యం,req_నిడివి,p_Error_సంకేతం);
 
-    return dest;
+    తిరిగి dest;
 }
 
-static inline uint8_t *
+స్థిర అంతఃవరుస uint8_t *
 _appendUTF8(uint8_t *pDest, UChar32 c) {
     /* it is 0<=c<=0x10ffff and not a surrogate if called by a validating function */
-    if((c)<=0x7f) {
+    ఒకవేళ((c)<=0x7f) {
         *pDest++ = static_cast<uint8_t>(c);
-    } else if(c<=0x7ff) {
+    } లేకపోతే ఒకవేళ(c<=0x7ff) {
         *pDest++ = static_cast<uint8_t>((c >> 6) | 0xc0);
         *pDest++ = static_cast<uint8_t>((c & 0x3f) | 0x80);
-    } else if(c<=0xffff) {
+    } లేకపోతే ఒకవేళ(c<=0xffff) {
         *pDest++ = static_cast<uint8_t>((c >> 12) | 0xe0);
         *pDest++ = static_cast<uint8_t>(((c >> 6) & 0x3f) | 0x80);
         *pDest++ = static_cast<uint8_t>(((c) & 0x3f) | 0x80);
-    } else /* if((uint32_t)(c)<=0x10ffff) */ {
+    } లేకపోతే /* if((uint32_t)(c)<=0x10ffff) */ {
         *pDest++ = static_cast<uint8_t>(((c) >> 18) | 0xf0);
         *pDest++ = static_cast<uint8_t>((((c) >> 12) & 0x3f) | 0x80);
         *pDest++ = static_cast<uint8_t>((((c) >> 6) & 0x3f) | 0x80);
         *pDest++ = static_cast<uint8_t>(((c) & 0x3f) | 0x80);
     }
-    return pDest;
+    తిరిగి pDest;
 }
 
-U_CAPI char* U_EXPORT2
-u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
-                   int32_t destCapacity,
-                   int32_t* pDestLength,
-                   const char16_t* pSrc,
-                   int32_t srcLength,
+U_CAPI అక్షరం* U_EXPORT2
+u_str_గమ్యం_UTF8_With_Sub(అక్షరం* dest U_LIFETIME_BOUND,
+                   int32_t dest_సామర్థ్యం,
+                   int32_t* p_Dest_నిడివి,
+                   స్థిరరాశి char16_t* pSrc,
+                   int32_t src_నిడివి,
                    UChar32 subchar,
-                   int32_t* pNumSubstitutions,
-                   UErrorCode* pErrorCode) {
-    int32_t reqLength=0;
+                   int32_t* p_అంకె_Substitutions,
+                   UError_సంకేతం* p_Error_సంకేతం) {
+    int32_t req_నిడివి=0;
     uint32_t ch=0,ch2=0;
     uint8_t *pDest = (uint8_t *)dest;
-    uint8_t *pDestLimit = (pDest!=nullptr)?(pDest + destCapacity):nullptr;
-    int32_t numSubstitutions;
+    uint8_t *p_Dest_హద్దు = (pDest!=శూన్యసూచిక)?(pDest + dest_సామర్థ్యం):శూన్యసూచిక;
+    int32_t అంకె_Substitutions;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)){
+        తిరిగి శూన్యసూచిక;
     }
         
-    if( (pSrc==nullptr && srcLength!=0) || srcLength < -1 ||
-        (destCapacity<0) || (dest == nullptr && destCapacity > 0) ||
+    ఒకవేళ( (pSrc==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి < -1 ||
+        (dest_సామర్థ్యం<0) || (dest == శూన్యసూచిక && dest_సామర్థ్యం > 0) ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=0;
+    ఒకవేళ(p_అంకె_Substitutions!=శూన్యసూచిక) {
+        *p_అంకె_Substitutions=0;
     }
-    numSubstitutions=0;
+    అంకె_Substitutions=0;
 
-    if(srcLength==-1) {
-        while((ch=*pSrc)!=0) {
+    ఒకవేళ(src_నిడివి==-1) {
+        అయితే((ch=*pSrc)!=0) {
             ++pSrc;
-            if(ch <= 0x7f) {
-                if(pDest<pDestLimit) {
+            ఒకవేళ(ch <= 0x7f) {
+                ఒకవేళ(pDest<p_Dest_హద్దు) {
                     *pDest++ = (uint8_t)ch;
-                } else {
-                    reqLength = 1;
-                    break;
+                } లేకపోతే {
+                    req_నిడివి = 1;
+                    ఆపు;
                 }
-            } else if(ch <= 0x7ff) {
-                if((pDestLimit - pDest) >= 2) {
+            } లేకపోతే ఒకవేళ(ch <= 0x7ff) {
+                ఒకవేళ((p_Dest_హద్దు - pDest) >= 2) {
                     *pDest++=(uint8_t)((ch>>6)|0xc0);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else {
-                    reqLength = 2;
-                    break;
+                } లేకపోతే {
+                    req_నిడివి = 2;
+                    ఆపు;
                 }
-            } else if(ch <= 0xd7ff || ch >= 0xe000) {
-                if((pDestLimit - pDest) >= 3) {
+            } లేకపోతే ఒకవేళ(ch <= 0xd7ff || ch >= 0xe000) {
+                ఒకవేళ((p_Dest_హద్దు - pDest) >= 3) {
                     *pDest++=(uint8_t)((ch>>12)|0xe0);
                     *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else {
-                    reqLength = 3;
-                    break;
+                } లేకపోతే {
+                    req_నిడివి = 3;
+                    ఆపు;
                 }
-            } else /* ch is a surrogate */ {
+            } లేకపోతే /* ch is a surrogate */ {
                 int32_t length;
 
                 /*need not check for NUL because NUL fails U16_IS_TRAIL() anyway*/
-                if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) { 
+                ఒకవేళ(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) { 
                     ++pSrc;
                     ch=U16_GET_SUPPLEMENTARY(ch, ch2);
-                } else if(subchar>=0) {
+                } లేకపోతే ఒకవేళ(subchar>=0) {
                     ch=subchar;
-                    ++numSubstitutions;
-                } else {
+                    ++అంకె_Substitutions;
+                } లేకపోతే {
                     /* Unicode 3.2 forbids surrogate code points in UTF-8 */
-                    *pErrorCode = U_INVALID_CHAR_FOUND;
-                    return nullptr;
+                    *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                    తిరిగి శూన్యసూచిక;
                 }
 
-                length = U8_LENGTH(ch);
-                if((pDestLimit - pDest) >= length) {
+                length = U8_నిడివి(ch);
+                ఒకవేళ((p_Dest_హద్దు - pDest) >= length) {
                     /* convert and append*/
                     pDest=_appendUTF8(pDest, ch);
-                } else {
-                    reqLength = length;
-                    break;
+                } లేకపోతే {
+                    req_నిడివి = length;
+                    ఆపు;
                 }
             }
         }
-        while((ch=*pSrc++)!=0) {
-            if(ch<=0x7f) {
-                ++reqLength;
-            } else if(ch<=0x7ff) {
-                reqLength+=2;
-            } else if(!U16_IS_SURROGATE(ch)) {
-                reqLength+=3;
-            } else if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) {
+        అయితే((ch=*pSrc++)!=0) {
+            ఒకవేళ(ch<=0x7f) {
+                ++req_నిడివి;
+            } లేకపోతే ఒకవేళ(ch<=0x7ff) {
+                req_నిడివి+=2;
+            } లేకపోతే ఒకవేళ(!U16_IS_SURROGATE(ch)) {
+                req_నిడివి+=3;
+            } లేకపోతే ఒకవేళ(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) {
                 ++pSrc;
-                reqLength+=4;
-            } else if(subchar>=0) {
-                reqLength+=U8_LENGTH(subchar);
-                ++numSubstitutions;
-            } else {
+                req_నిడివి+=4;
+            } లేకపోతే ఒకవేళ(subchar>=0) {
+                req_నిడివి+=U8_నిడివి(subchar);
+                ++అంకె_Substitutions;
+            } లేకపోతే {
                 /* Unicode 3.2 forbids surrogate code points in UTF-8 */
-                *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
+                *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                తిరిగి శూన్యసూచిక;
             }
         }
-    } else {
-        const char16_t *pSrcLimit = (pSrc!=nullptr)?(pSrc+srcLength):nullptr;
+    } లేకపోతే {
+        స్థిరరాశి char16_t *p_Src_హద్దు = (pSrc!=శూన్యసూచిక)?(pSrc+src_నిడివి):శూన్యసూచిక;
         int32_t count;
 
         /* Faster loop without ongoing checking for pSrcLimit and pDestLimit. */
-        for(;;) {
+        కొరకు(;;) {
             /*
              * Each iteration of the inner loop progresses by at most 3 UTF-8
              * bytes and one char16_t, for most characters.
              * For supplementary code points (4 & 2), which are rare,
              * there is an additional adjustment.
              */
-            count = (int32_t)((pDestLimit - pDest) / 3);
-            srcLength = (int32_t)(pSrcLimit - pSrc);
-            if(count > srcLength) {
-                count = srcLength; /* min(remaining dest/3, remaining src) */
+            count = (int32_t)((p_Dest_హద్దు - pDest) / 3);
+            src_నిడివి = (int32_t)(p_Src_హద్దు - pSrc);
+            ఒకవేళ(count > src_నిడివి) {
+                count = src_నిడివి; /* min(remaining dest/3, remaining src) */
             }
-            if(count < 3) {
+            ఒకవేళ(count < 3) {
                 /*
                  * Too much overhead if we get near the end of the string,
                  * continue with the next loop.
                  */
-                break;
+                ఆపు;
             }
-            do {
+            చేయి {
                 ch=*pSrc++;
-                if(ch <= 0x7f) {
+                ఒకవేళ(ch <= 0x7f) {
                     *pDest++ = (uint8_t)ch;
-                } else if(ch <= 0x7ff) {
+                } లేకపోతే ఒకవేళ(ch <= 0x7ff) {
                     *pDest++=(uint8_t)((ch>>6)|0xc0);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else if(ch <= 0xd7ff || ch >= 0xe000) {
+                } లేకపోతే ఒకవేళ(ch <= 0xd7ff || ch >= 0xe000) {
                     *pDest++=(uint8_t)((ch>>12)|0xe0);
                     *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else /* ch is a surrogate */ {
+                } లేకపోతే /* ch is a surrogate */ {
                     /*
                      * We will read two UChars and probably output four bytes,
                      * which we didn't account for with computing count,
                      * so we adjust it here.
                      */
-                    if(--count == 0) {
+                    ఒకవేళ(--count == 0) {
                         --pSrc; /* undo ch=*pSrc++ for the lead surrogate */
-                        break;  /* recompute count */
+                        ఆపు;  /* recompute count */
                     }
 
-                    if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) { 
+                    ఒకవేళ(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) { 
                         ++pSrc;
                         ch=U16_GET_SUPPLEMENTARY(ch, ch2);
 
@@ -951,193 +951,193 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
                         *pDest++=(uint8_t)(((ch>>12)&0x3f)|0x80);
                         *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                         *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                    } else  {
+                    } లేకపోతే  {
                         /* Unicode 3.2 forbids surrogate code points in UTF-8 */
-                        if(subchar>=0) {
+                        ఒకవేళ(subchar>=0) {
                             ch=subchar;
-                            ++numSubstitutions;
-                        } else {
-                            *pErrorCode = U_INVALID_CHAR_FOUND;
-                            return nullptr;
+                            ++అంకె_Substitutions;
+                        } లేకపోతే {
+                            *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                            తిరిగి శూన్యసూచిక;
                         }
 
                         /* convert and append*/
                         pDest=_appendUTF8(pDest, ch);
                     }
                 }
-            } while(--count > 0);
+            } అయితే(--count > 0);
         }
 
-        while(pSrc<pSrcLimit) {
+        అయితే(pSrc<p_Src_హద్దు) {
             ch=*pSrc++;
-            if(ch <= 0x7f) {
-                if(pDest<pDestLimit) {
+            ఒకవేళ(ch <= 0x7f) {
+                ఒకవేళ(pDest<p_Dest_హద్దు) {
                     *pDest++ = (uint8_t)ch;
-                } else {
-                    reqLength = 1;
-                    break;
+                } లేకపోతే {
+                    req_నిడివి = 1;
+                    ఆపు;
                 }
-            } else if(ch <= 0x7ff) {
-                if((pDestLimit - pDest) >= 2) {
+            } లేకపోతే ఒకవేళ(ch <= 0x7ff) {
+                ఒకవేళ((p_Dest_హద్దు - pDest) >= 2) {
                     *pDest++=(uint8_t)((ch>>6)|0xc0);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else {
-                    reqLength = 2;
-                    break;
+                } లేకపోతే {
+                    req_నిడివి = 2;
+                    ఆపు;
                 }
-            } else if(ch <= 0xd7ff || ch >= 0xe000) {
-                if((pDestLimit - pDest) >= 3) {
+            } లేకపోతే ఒకవేళ(ch <= 0xd7ff || ch >= 0xe000) {
+                ఒకవేళ((p_Dest_హద్దు - pDest) >= 3) {
                     *pDest++=(uint8_t)((ch>>12)|0xe0);
                     *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else {
-                    reqLength = 3;
-                    break;
+                } లేకపోతే {
+                    req_నిడివి = 3;
+                    ఆపు;
                 }
-            } else /* ch is a surrogate */ {
+            } లేకపోతే /* ch is a surrogate */ {
                 int32_t length;
 
-                if(U16_IS_SURROGATE_LEAD(ch) && pSrc<pSrcLimit && U16_IS_TRAIL(ch2=*pSrc)) { 
+                ఒకవేళ(U16_IS_SURROGATE_LEAD(ch) && pSrc<p_Src_హద్దు && U16_IS_TRAIL(ch2=*pSrc)) { 
                     ++pSrc;
                     ch=U16_GET_SUPPLEMENTARY(ch, ch2);
-                } else if(subchar>=0) {
+                } లేకపోతే ఒకవేళ(subchar>=0) {
                     ch=subchar;
-                    ++numSubstitutions;
-                } else {
+                    ++అంకె_Substitutions;
+                } లేకపోతే {
                     /* Unicode 3.2 forbids surrogate code points in UTF-8 */
-                    *pErrorCode = U_INVALID_CHAR_FOUND;
-                    return nullptr;
+                    *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                    తిరిగి శూన్యసూచిక;
                 }
 
-                length = U8_LENGTH(ch);
-                if((pDestLimit - pDest) >= length) {
+                length = U8_నిడివి(ch);
+                ఒకవేళ((p_Dest_హద్దు - pDest) >= length) {
                     /* convert and append*/
                     pDest=_appendUTF8(pDest, ch);
-                } else {
-                    reqLength = length;
-                    break;
+                } లేకపోతే {
+                    req_నిడివి = length;
+                    ఆపు;
                 }
             }
         }
-        while(pSrc<pSrcLimit) {
+        అయితే(pSrc<p_Src_హద్దు) {
             ch=*pSrc++;
-            if(ch<=0x7f) {
-                ++reqLength;
-            } else if(ch<=0x7ff) {
-                reqLength+=2;
-            } else if(!U16_IS_SURROGATE(ch)) {
-                reqLength+=3;
-            } else if(U16_IS_SURROGATE_LEAD(ch) && pSrc<pSrcLimit && U16_IS_TRAIL(ch2=*pSrc)) {
+            ఒకవేళ(ch<=0x7f) {
+                ++req_నిడివి;
+            } లేకపోతే ఒకవేళ(ch<=0x7ff) {
+                req_నిడివి+=2;
+            } లేకపోతే ఒకవేళ(!U16_IS_SURROGATE(ch)) {
+                req_నిడివి+=3;
+            } లేకపోతే ఒకవేళ(U16_IS_SURROGATE_LEAD(ch) && pSrc<p_Src_హద్దు && U16_IS_TRAIL(ch2=*pSrc)) {
                 ++pSrc;
-                reqLength+=4;
-            } else if(subchar>=0) {
-                reqLength+=U8_LENGTH(subchar);
-                ++numSubstitutions;
-            } else {
+                req_నిడివి+=4;
+            } లేకపోతే ఒకవేళ(subchar>=0) {
+                req_నిడివి+=U8_నిడివి(subchar);
+                ++అంకె_Substitutions;
+            } లేకపోతే {
                 /* Unicode 3.2 forbids surrogate code points in UTF-8 */
-                *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
+                *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                తిరిగి శూన్యసూచిక;
             }
         }
     }
 
-    reqLength+=(int32_t)(pDest - (uint8_t *)dest);
+    req_నిడివి+=(int32_t)(pDest - (uint8_t *)dest);
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=numSubstitutions;
+    ఒకవేళ(p_అంకె_Substitutions!=శూన్యసూచిక) {
+        *p_అంకె_Substitutions=అంకె_Substitutions;
     }
 
-    if(pDestLength){
-        *pDestLength = reqLength;
+    ఒకవేళ(p_Dest_నిడివి){
+        *p_Dest_నిడివి = req_నిడివి;
     }
 
     /* Terminate the buffer */
-    u_terminateChars(dest, destCapacity, reqLength, pErrorCode);
-    return dest;
+    u_terminateChars(dest, dest_సామర్థ్యం, req_నిడివి, p_Error_సంకేతం);
+    తిరిగి dest;
 }
 
-U_CAPI char* U_EXPORT2
-u_strToUTF8(char* dest U_LIFETIME_BOUND,
-            int32_t destCapacity,
-            int32_t* pDestLength,
-            const char16_t* pSrc,
-            int32_t srcLength,
-            UErrorCode* pErrorCode) {
-    return u_strToUTF8WithSub(
-            dest, destCapacity, pDestLength,
-            pSrc, srcLength,
-            U_SENTINEL, nullptr,
-            pErrorCode);
+U_CAPI అక్షరం* U_EXPORT2
+u_str_గమ్యం_UTF8(అక్షరం* dest U_LIFETIME_BOUND,
+            int32_t dest_సామర్థ్యం,
+            int32_t* p_Dest_నిడివి,
+            స్థిరరాశి char16_t* pSrc,
+            int32_t src_నిడివి,
+            UError_సంకేతం* p_Error_సంకేతం) {
+    తిరిగి u_str_గమ్యం_UTF8_With_Sub(
+            dest, dest_సామర్థ్యం, p_Dest_నిడివి,
+            pSrc, src_నిడివి,
+            U_SENTINEL, శూన్యసూచిక,
+            p_Error_సంకేతం);
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
-                                 int32_t destCapacity,
-                                 int32_t* pDestLength,
-                                 const char* src,
-                                 int32_t srcLength,
+                                 int32_t dest_సామర్థ్యం,
+                                 int32_t* p_Dest_నిడివి,
+                                 స్థిరరాశి అక్షరం* src,
+                                 int32_t src_నిడివి,
                                  UChar32 subchar,
-                                 int32_t* pNumSubstitutions,
-                                 UErrorCode* pErrorCode) {
+                                 int32_t* p_అంకె_Substitutions,
+                                 UError_సంకేతం* p_Error_సంకేతం) {
     /* args check */
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (dest==nullptr && destCapacity!=0) || destCapacity<0 ||
+    ఒకవేళ( (src==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి < -1 ||
+        (dest==శూన్యసూచిక && dest_సామర్థ్యం!=0) || dest_సామర్థ్యం<0 ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=0;
+    ఒకవేళ(p_అంకె_Substitutions!=శూన్యసూచిక) {
+        *p_అంకె_Substitutions=0;
     }
     char16_t *pDest = dest;
-    char16_t *pDestLimit = dest+destCapacity;
-    int32_t reqLength = 0;
-    int32_t numSubstitutions=0;
+    char16_t *p_Dest_హద్దు = dest+dest_సామర్థ్యం;
+    int32_t req_నిడివి = 0;
+    int32_t అంకె_Substitutions=0;
 
-    if(srcLength < 0) {
+    ఒకవేళ(src_నిడివి < 0) {
         /*
          * Transform a NUL-terminated ASCII string.
          * Handle non-ASCII strings with slower code.
          */
         UChar32 c;
-        while(((c = (uint8_t)*src) != 0) && c <= 0x7f && (pDest < pDestLimit)) {
+        అయితే(((c = (uint8_t)*src) != 0) && c <= 0x7f && (pDest < p_Dest_హద్దు)) {
             *pDest++=(char16_t)c;
             ++src;
         }
-        if(c == 0) {
-            reqLength=(int32_t)(pDest - dest);
-            if(pDestLength) {
-                *pDestLength = reqLength;
+        ఒకవేళ(c == 0) {
+            req_నిడివి=(int32_t)(pDest - dest);
+            ఒకవేళ(p_Dest_నిడివి) {
+                *p_Dest_నిడివి = req_నిడివి;
             }
 
             /* Terminate the buffer */
-            u_terminateUChars(dest, destCapacity, reqLength, pErrorCode);
-            return dest;
+            u_terminateUChars(dest, dest_సామర్థ్యం, req_నిడివి, p_Error_సంకేతం);
+            తిరిగి dest;
         }
-        srcLength = static_cast<int32_t>(uprv_strlen(src));
+        src_నిడివి = static_cast<int32_t>(uprv_strlen(src));
     }
 
     /* Faster loop without ongoing checking for srcLength and pDestLimit. */
     UChar32 ch;
     uint8_t t1, t2;
     int32_t i = 0;
-    for(;;) {
-        int32_t count = (int32_t)(pDestLimit - pDest);
-        int32_t count2 = srcLength - i;
-        if(count >= count2 && srcLength > 0 && U8_IS_SINGLE(*src)) {
+    కొరకు(;;) {
+        int32_t count = (int32_t)(p_Dest_హద్దు - pDest);
+        int32_t count2 = src_నిడివి - i;
+        ఒకవేళ(count >= count2 && src_నిడివి > 0 && U8_IS_SINGLE(*src)) {
             /* fast ASCII loop */
-            int32_t start = i;
+            int32_t ప్రారంభం = i;
             uint8_t b;
-            while(i < srcLength && U8_IS_SINGLE(b = src[i])) {
+            అయితే(i < src_నిడివి && U8_IS_SINGLE(b = src[i])) {
                 *pDest++=b;
                 ++i;
             }
-            int32_t delta = i - start;
+            int32_t delta = i - ప్రారంభం;
             count -= delta;
             count2 -= delta;
         }
@@ -1145,27 +1145,27 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
          * Each iteration of the inner loop progresses by at most 3 UTF-8
          * bytes and one char16_t.
          */
-        if(subchar > 0xFFFF) {
-            break;
+        ఒకవేళ(subchar > 0xFFFF) {
+            ఆపు;
         }
         count2 /= 3;
-        if(count > count2) {
+        ఒకవేళ(count > count2) {
             count = count2; /* min(remaining dest, remaining src/3) */
         }
-        if(count < 3) {
+        ఒకవేళ(count < 3) {
             /*
              * Too much overhead if we get near the end of the string,
              * continue with the next loop.
              */
-            break;
+            ఆపు;
         }
-        do {
+        చేయి {
             ch = (uint8_t)src[i++];
-            if(U8_IS_SINGLE(ch)) {
+            ఒకవేళ(U8_IS_SINGLE(ch)) {
                 *pDest++=(char16_t)ch;
-            } else {
-                if(ch >= 0xe0) {
-                    if( /* handle U+0000..U+FFFF inline */
+            } లేకపోతే {
+                ఒకవేళ(ch >= 0xe0) {
+                    ఒకవేళ( /* handle U+0000..U+FFFF inline */
                         ch <= 0xef &&
                         (t1 = (uint8_t)(src[i] - 0x80)) <= 0x3f &&
                         (t2 = (uint8_t)(src[i+1] - 0x80)) <= 0x3f
@@ -1173,84 +1173,84 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                         /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                         *pDest++ = (char16_t)((ch << 12) | (t1 << 6) | t2);
                         i += 2;
-                        continue;
+                        కొనసాగు;
                     }
-                } else {
-                    if( /* handle U+0000..U+07FF inline */
+                } లేకపోతే {
+                    ఒకవేళ( /* handle U+0000..U+07FF inline */
                         ch >= 0xc0 &&
                         (t1 = (uint8_t)(src[i] - 0x80)) <= 0x3f
                     ) {
                         *pDest++ = (char16_t)(((ch & 0x1f) << 6) | t1);
                         ++i;
-                        continue;
+                        కొనసాగు;
                     }
                 }
 
-                if(subchar < 0) {
-                    *pErrorCode = U_INVALID_CHAR_FOUND;
-                    return nullptr;
-                } else if(subchar > 0xffff && --count == 0) {
+                ఒకవేళ(subchar < 0) {
+                    *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                    తిరిగి శూన్యసూచిక;
+                } లేకపోతే ఒకవేళ(subchar > 0xffff && --count == 0) {
                     /*
                      * We need to write two UChars, adjusted count for that,
                      * and ran out of space.
                      */
                     --i;  // back out byte ch
-                    break;
-                } else {
+                    ఆపు;
+                } లేకపోతే {
                     /* function call for error cases */
-                    utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, ch, -1);
-                    ++numSubstitutions;
+                    utf8_తదుపరి_Char_సురక్షిత_Body((స్థిరరాశి uint8_t *)src, &(i), src_నిడివి, ch, -1);
+                    ++అంకె_Substitutions;
                     *(pDest++)=(char16_t)subchar;
                 }
             }
-        } while(--count > 0);
+        } అయితే(--count > 0);
     }
 
-    while(i < srcLength && (pDest < pDestLimit)) {
+    అయితే(i < src_నిడివి && (pDest < p_Dest_హద్దు)) {
         ch = (uint8_t)src[i++];
-        if(U8_IS_SINGLE(ch)){
+        ఒకవేళ(U8_IS_SINGLE(ch)){
             *pDest++=(char16_t)ch;
-        } else {
-            if(ch >= 0xe0) {
-                if( /* handle U+0000..U+FFFF inline */
+        } లేకపోతే {
+            ఒకవేళ(ch >= 0xe0) {
+                ఒకవేళ( /* handle U+0000..U+FFFF inline */
                     ch <= 0xef &&
-                    (i+1) < srcLength &&
+                    (i+1) < src_నిడివి &&
                     (t1 = (uint8_t)(src[i] - 0x80)) <= 0x3f &&
                     (t2 = (uint8_t)(src[i+1] - 0x80)) <= 0x3f
                 ) {
                     /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                     *pDest++ = (char16_t)((ch << 12) | (t1 << 6) | t2);
                     i += 2;
-                    continue;
+                    కొనసాగు;
                 }
-            } else {
-                if( /* handle U+0000..U+07FF inline */
+            } లేకపోతే {
+                ఒకవేళ( /* handle U+0000..U+07FF inline */
                     ch >= 0xc0 &&
-                    i < srcLength &&
+                    i < src_నిడివి &&
                     (t1 = (uint8_t)(src[i] - 0x80)) <= 0x3f
                 ) {
                     *pDest++ = (char16_t)(((ch & 0x1f) << 6) | t1);
                     ++i;
-                    continue;
+                    కొనసాగు;
                 }
             }
 
-            if(subchar < 0) {
-                *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
-            } else {
+            ఒకవేళ(subchar < 0) {
+                *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                తిరిగి శూన్యసూచిక;
+            } లేకపోతే {
                 /* function call for error cases */
-                utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, ch, -1);
-                ++numSubstitutions;
-                if(subchar<=0xFFFF) {
+                utf8_తదుపరి_Char_సురక్షిత_Body((స్థిరరాశి uint8_t *)src, &(i), src_నిడివి, ch, -1);
+                ++అంకె_Substitutions;
+                ఒకవేళ(subchar<=0xFFFF) {
                     *(pDest++)=(char16_t)subchar;
-                } else {
+                } లేకపోతే {
                     *(pDest++)=U16_LEAD(subchar);
-                    if(pDest<pDestLimit) {
+                    ఒకవేళ(pDest<p_Dest_హద్దు) {
                         *(pDest++)=U16_TRAIL(subchar);
-                    } else {
-                        reqLength++;
-                        break;
+                    } లేకపోతే {
+                        req_నిడివి++;
+                        ఆపు;
                     }
                 }
             }
@@ -1258,196 +1258,196 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
     }
 
     /* Pre-flight the rest of the string. */
-    while(i < srcLength) {
+    అయితే(i < src_నిడివి) {
         ch = (uint8_t)src[i++];
-        if(U8_IS_SINGLE(ch)) {
-            reqLength++;
-        } else {
-            if(ch >= 0xe0) {
-                if( /* handle U+0000..U+FFFF inline */
+        ఒకవేళ(U8_IS_SINGLE(ch)) {
+            req_నిడివి++;
+        } లేకపోతే {
+            ఒకవేళ(ch >= 0xe0) {
+                ఒకవేళ( /* handle U+0000..U+FFFF inline */
                     ch <= 0xef &&
-                    (i+1) < srcLength &&
+                    (i+1) < src_నిడివి &&
                     (uint8_t)(src[i] - 0x80) <= 0x3f &&
                     (uint8_t)(src[i+1] - 0x80) <= 0x3f
                 ) {
-                    reqLength++;
+                    req_నిడివి++;
                     i += 2;
-                    continue;
+                    కొనసాగు;
                 }
-            } else {
-                if( /* handle U+0000..U+07FF inline */
+            } లేకపోతే {
+                ఒకవేళ( /* handle U+0000..U+07FF inline */
                     ch >= 0xc0 &&
-                    i < srcLength &&
+                    i < src_నిడివి &&
                     (uint8_t)(src[i] - 0x80) <= 0x3f
                 ) {
-                    reqLength++;
+                    req_నిడివి++;
                     ++i;
-                    continue;
+                    కొనసాగు;
                 }
             }
 
-            if(subchar < 0) {
-                *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
-            } else {
+            ఒకవేళ(subchar < 0) {
+                *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                తిరిగి శూన్యసూచిక;
+            } లేకపోతే {
                 /* function call for error cases */
-                utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, ch, -1);
-                ++numSubstitutions;
-                reqLength+=U16_LENGTH(ch);
+                utf8_తదుపరి_Char_సురక్షిత_Body((స్థిరరాశి uint8_t *)src, &(i), src_నిడివి, ch, -1);
+                ++అంకె_Substitutions;
+                req_నిడివి+=U16_నిడివి(ch);
             }
         }
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=numSubstitutions;
+    ఒకవేళ(p_అంకె_Substitutions!=శూన్యసూచిక) {
+        *p_అంకె_Substitutions=అంకె_Substitutions;
     }
 
-    reqLength+=(int32_t)(pDest - dest);
-    if(pDestLength) {
-        *pDestLength = reqLength;
+    req_నిడివి+=(int32_t)(pDest - dest);
+    ఒకవేళ(p_Dest_నిడివి) {
+        *p_Dest_నిడివి = req_నిడివి;
     }
 
     /* Terminate the buffer */
-    u_terminateUChars(dest, destCapacity, reqLength, pErrorCode);
-    return dest;
+    u_terminateUChars(dest, dest_సామర్థ్యం, req_నిడివి, p_Error_సంకేతం);
+    తిరిగి dest;
 }
 
-U_CAPI char* U_EXPORT2
-u_strToJavaModifiedUTF8(char* dest U_LIFETIME_BOUND,
-                        int32_t destCapacity,
-                        int32_t* pDestLength,
-                        const char16_t* src,
-                        int32_t srcLength,
-                        UErrorCode* pErrorCode) {
-    int32_t reqLength=0;
+U_CAPI అక్షరం* U_EXPORT2
+u_str_గమ్యం_Java_Modified_UTF8(అక్షరం* dest U_LIFETIME_BOUND,
+                        int32_t dest_సామర్థ్యం,
+                        int32_t* p_Dest_నిడివి,
+                        స్థిరరాశి char16_t* src,
+                        int32_t src_నిడివి,
+                        UError_సంకేతం* p_Error_సంకేతం) {
+    int32_t req_నిడివి=0;
     uint32_t ch=0;
-    const char16_t *pSrcLimit;
+    స్థిరరాశి char16_t *p_Src_హద్దు;
     int32_t count;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)){
+        తిరిగి శూన్యసూచిక;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (dest==nullptr && destCapacity!=0) || destCapacity<0
+    ఒకవేళ( (src==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి < -1 ||
+        (dest==శూన్యసూచిక && dest_సామర్థ్యం!=0) || dest_సామర్థ్యం<0
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
     uint8_t *pDest = (uint8_t *)dest;
-    uint8_t *pDestLimit = pDest + destCapacity;
+    uint8_t *p_Dest_హద్దు = pDest + dest_సామర్థ్యం;
 
-    if(srcLength==-1) {
+    ఒకవేళ(src_నిడివి==-1) {
         /* Convert NUL-terminated ASCII, then find the string length. */
-        while((ch=*src)<=0x7f && ch != 0 && pDest<pDestLimit) {
+        అయితే((ch=*src)<=0x7f && ch != 0 && pDest<p_Dest_హద్దు) {
             *pDest++ = (uint8_t)ch;
             ++src;
         }
-        if(ch == 0) {
-            reqLength=(int32_t)(pDest - (uint8_t *)dest);
-            if(pDestLength) {
-                *pDestLength = reqLength;
+        ఒకవేళ(ch == 0) {
+            req_నిడివి=(int32_t)(pDest - (uint8_t *)dest);
+            ఒకవేళ(p_Dest_నిడివి) {
+                *p_Dest_నిడివి = req_నిడివి;
             }
 
             /* Terminate the buffer */
-            u_terminateChars(dest, destCapacity, reqLength, pErrorCode);
-            return dest;
+            u_terminateChars(dest, dest_సామర్థ్యం, req_నిడివి, p_Error_సంకేతం);
+            తిరిగి dest;
         }
-        srcLength = u_strlen(src);
+        src_నిడివి = u_strlen(src);
     }
 
     /* Faster loop without ongoing checking for pSrcLimit and pDestLimit. */
-    pSrcLimit = (src!=nullptr)?(src+srcLength):nullptr;
-    for(;;) {
-        count = (int32_t)(pDestLimit - pDest);
-        srcLength = (int32_t)(pSrcLimit - src);
-        if(count >= srcLength && srcLength > 0 && *src <= 0x7f) {
+    p_Src_హద్దు = (src!=శూన్యసూచిక)?(src+src_నిడివి):శూన్యసూచిక;
+    కొరకు(;;) {
+        count = (int32_t)(p_Dest_హద్దు - pDest);
+        src_నిడివి = (int32_t)(p_Src_హద్దు - src);
+        ఒకవేళ(count >= src_నిడివి && src_నిడివి > 0 && *src <= 0x7f) {
             /* fast ASCII loop */
-            const char16_t *prevSrc = src;
+            స్థిరరాశి char16_t *prevSrc = src;
             int32_t delta;
-            while(src < pSrcLimit && (ch = *src) <= 0x7f && ch != 0) {
+            అయితే(src < p_Src_హద్దు && (ch = *src) <= 0x7f && ch != 0) {
                 *pDest++=(uint8_t)ch;
                 ++src;
             }
             delta = (int32_t)(src - prevSrc);
             count -= delta;
-            srcLength -= delta;
+            src_నిడివి -= delta;
         }
         /*
          * Each iteration of the inner loop progresses by at most 3 UTF-8
          * bytes and one char16_t.
          */
         count /= 3;
-        if(count > srcLength) {
-            count = srcLength; /* min(remaining dest/3, remaining src) */
+        ఒకవేళ(count > src_నిడివి) {
+            count = src_నిడివి; /* min(remaining dest/3, remaining src) */
         }
-        if(count < 3) {
+        ఒకవేళ(count < 3) {
             /*
              * Too much overhead if we get near the end of the string,
              * continue with the next loop.
              */
-            break;
+            ఆపు;
         }
-        do {
+        చేయి {
             ch=*src++;
-            if(ch <= 0x7f && ch != 0) {
+            ఒకవేళ(ch <= 0x7f && ch != 0) {
                 *pDest++ = (uint8_t)ch;
-            } else if(ch <= 0x7ff) {
+            } లేకపోతే ఒకవేళ(ch <= 0x7ff) {
                 *pDest++=(uint8_t)((ch>>6)|0xc0);
                 *pDest++=(uint8_t)((ch&0x3f)|0x80);
-            } else {
+            } లేకపోతే {
                 *pDest++=(uint8_t)((ch>>12)|0xe0);
                 *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                 *pDest++=(uint8_t)((ch&0x3f)|0x80);
             }
-        } while(--count > 0);
+        } అయితే(--count > 0);
     }
 
-    while(src<pSrcLimit) {
+    అయితే(src<p_Src_హద్దు) {
         ch=*src++;
-        if(ch <= 0x7f && ch != 0) {
-            if(pDest<pDestLimit) {
+        ఒకవేళ(ch <= 0x7f && ch != 0) {
+            ఒకవేళ(pDest<p_Dest_హద్దు) {
                 *pDest++ = (uint8_t)ch;
-            } else {
-                reqLength = 1;
-                break;
+            } లేకపోతే {
+                req_నిడివి = 1;
+                ఆపు;
             }
-        } else if(ch <= 0x7ff) {
-            if((pDestLimit - pDest) >= 2) {
+        } లేకపోతే ఒకవేళ(ch <= 0x7ff) {
+            ఒకవేళ((p_Dest_హద్దు - pDest) >= 2) {
                 *pDest++=(uint8_t)((ch>>6)|0xc0);
                 *pDest++=(uint8_t)((ch&0x3f)|0x80);
-            } else {
-                reqLength = 2;
-                break;
+            } లేకపోతే {
+                req_నిడివి = 2;
+                ఆపు;
             }
-        } else {
-            if((pDestLimit - pDest) >= 3) {
+        } లేకపోతే {
+            ఒకవేళ((p_Dest_హద్దు - pDest) >= 3) {
                 *pDest++=(uint8_t)((ch>>12)|0xe0);
                 *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                 *pDest++=(uint8_t)((ch&0x3f)|0x80);
-            } else {
-                reqLength = 3;
-                break;
+            } లేకపోతే {
+                req_నిడివి = 3;
+                ఆపు;
             }
         }
     }
-    while(src<pSrcLimit) {
+    అయితే(src<p_Src_హద్దు) {
         ch=*src++;
-        if(ch <= 0x7f && ch != 0) {
-            ++reqLength;
-        } else if(ch<=0x7ff) {
-            reqLength+=2;
-        } else {
-            reqLength+=3;
+        ఒకవేళ(ch <= 0x7f && ch != 0) {
+            ++req_నిడివి;
+        } లేకపోతే ఒకవేళ(ch<=0x7ff) {
+            req_నిడివి+=2;
+        } లేకపోతే {
+            req_నిడివి+=3;
         }
     }
 
-    reqLength+=(int32_t)(pDest - (uint8_t *)dest);
-    if(pDestLength){
-        *pDestLength = reqLength;
+    req_నిడివి+=(int32_t)(pDest - (uint8_t *)dest);
+    ఒకవేళ(p_Dest_నిడివి){
+        *p_Dest_నిడివి = req_నిడివి;
     }
 
     /* Terminate the buffer */
-    u_terminateChars(dest, destCapacity, reqLength, pErrorCode);
-    return dest;
+    u_terminateChars(dest, dest_సామర్థ్యం, req_నిడివి, p_Error_సంకేతం);
+    తిరిగి dest;
 }

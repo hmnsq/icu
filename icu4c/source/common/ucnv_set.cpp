@@ -20,51 +20,51 @@
 *   implementation functions on the USet implementation.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "uset_imp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "uset_imp.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-U_CAPI void U_EXPORT2
-ucnv_getUnicodeSet(const UConverter *cnv,
-                   USet *setFillIn,
-                   UConverterUnicodeSet whichSet,
-                   UErrorCode *pErrorCode) {
+U_CAPI శూన్య U_EXPORT2
+ucnv_get_Unicode_సమితి(స్థిరరాశి UConverter *cnv,
+                   USet *సమితి_Fill_లోపల,
+                   UConverter_Unicode_సమితి which_సమితి,
+                   UError_సంకేతం *p_Error_సంకేతం) {
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
-    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ(cnv==శూన్యసూచిక || సమితి_Fill_లోపల==శూన్యసూచిక || which_సమితి<UCNV_ROUNDTRIP_సమితి || UCNV_సమితి_లెక్క<=which_సమితి) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
     /* does this converter support this function? */
-    if(cnv->sharedData->impl->getUnicodeSet==nullptr) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return;
+    ఒకవేళ(cnv->shared_దత్తాంశం->impl->get_Unicode_సమితి==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి;
     }
 
     {
         USetAdder sa={
-            nullptr,
-            uset_add,
-            uset_addRange,
-            uset_addString,
+            శూన్యసూచిక,
+            uset_కూడు,
+            uset_కూడు_Range,
+            uset_కూడు_String,
             uset_remove,
             uset_removeRange
         };
-        sa.set=setFillIn;
+        sa.సమితి=సమితి_Fill_లోపల;
 
         /* empty the set */
-        uset_clear(setFillIn);
+        uset_clear(సమితి_Fill_లోపల);
 
         /* call the converter to add the code points it supports */
-        cnv->sharedData->impl->getUnicodeSet(cnv, &sa, whichSet, pErrorCode);
+        cnv->shared_దత్తాంశం->impl->get_Unicode_సమితి(cnv, &sa, which_సమితి, p_Error_సంకేతం);
     }
 }
 
-#endif
+#అయితే_ముగింపు

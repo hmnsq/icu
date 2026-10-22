@@ -10,10 +10,10 @@
 ******************************************************************************
 */
 
-#ifndef __UREP_H
-#define __UREP_H
+#నిర్వచితం_కాకపోతే __UREP_H
+#నిర్వచించు __UREP_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
 U_CDECL_BEGIN
 
@@ -41,7 +41,7 @@ U_CDECL_BEGIN
  * This is currently only used in the Transliterator C API, see utrans.h .
  * @stable ICU 2.0
  */
-typedef void* UReplaceable;
+రకనిర్వచనం శూన్య* UReplaceable;
 
 /**
  * A set of function pointers that transliterators use to manipulate a
@@ -50,7 +50,7 @@ typedef void* UReplaceable;
  * Replaceable.
  * @stable ICU 2.0
  */
-typedef struct UReplaceableCallbacks {
+రకనిర్వచనం నిర్మాణం UReplaceableCallbacks {
 
     /**
      * Function pointer that returns the number of UChar code units in
@@ -60,7 +60,7 @@ typedef struct UReplaceableCallbacks {
      * @return The length of the text.
      * @stable ICU 2.0
      */
-    int32_t (*length)(const UReplaceable* rep);
+    int32_t (*నిడివి)(స్థిరరాశి UReplaceable* rep);
 
     /**
      * Function pointer that returns a UChar code units at the given
@@ -73,8 +73,8 @@ typedef struct UReplaceableCallbacks {
      * @return The UChar (code unit) at offset, or U+FFFF if the offset is out of bounds.
      * @stable ICU 2.0
      */
-    UChar   (*charAt)(const UReplaceable* rep,
-                      int32_t offset);
+    UChar   (*charAt)(స్థిరరాశి UReplaceable* rep,
+                      int32_t స్థానభ్రంశం);
 
     /**
      * Function pointer that returns a UChar32 code point at the given
@@ -86,8 +86,8 @@ typedef struct UReplaceableCallbacks {
      * @return The UChar32 (code point) at offset, or U+FFFF if the offset is out of bounds.
      * @stable ICU 2.0
      */
-    UChar32 (*char32At)(const UReplaceable* rep,
-                        int32_t offset);
+    UChar32 (*char32At)(స్థిరరాశి UReplaceable* rep,
+                        int32_t స్థానభ్రంశం);
     
     /**
      * Function pointer that replaces text between start and limit in
@@ -105,11 +105,11 @@ typedef struct UReplaceableCallbacks {
      * is null-terminated.
      * @stable ICU 2.0
      */
-    void    (*replace)(UReplaceable* rep,
-                       int32_t start,
-                       int32_t limit,
-                       const UChar* text,
-                       int32_t textLength);
+    శూన్య    (*replace)(UReplaceable* rep,
+                       int32_t ప్రారంభం,
+                       int32_t హద్దు,
+                       స్థిరరాశి UChar* పాఠ్యం,
+                       int32_t పాఠ్యం_నిడివి);
     
     /**
      * Function pointer that copies the characters in the range
@@ -124,9 +124,9 @@ typedef struct UReplaceableCallbacks {
      * <tt>dst</tt> must be at least <tt>(limit - start)</tt>.
      * @stable ICU 2.1
      */
-    void    (*extract)(UReplaceable* rep,
-                       int32_t start,
-                       int32_t limit,
+    శూన్య    (*వెలికితీయి)(UReplaceable* rep,
+                       int32_t ప్రారంభం,
+                       int32_t హద్దు,
                        UChar* dst);
 
     /**
@@ -145,13 +145,13 @@ typedef struct UReplaceableCallbacks {
      * inserted.
      * @stable ICU 2.0
      */
-    void    (*copy)(UReplaceable* rep,
-                    int32_t start,
-                    int32_t limit,
+    శూన్య    (*copy)(UReplaceable* rep,
+                    int32_t ప్రారంభం,
+                    int32_t హద్దు,
                     int32_t dest);    
 
 } UReplaceableCallbacks;
 
-U_CDECL_END
+U_CDECL_చివర
 
-#endif
+#అయితే_ముగింపు

@@ -16,14 +16,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UOBJECT_H__
-#define __UOBJECT_H__
+#నిర్వచితం_కాకపోతే __UOBJECT_H__
+#నిర్వచించు __UOBJECT_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/platform.h"
+#అన్తర్భావ "unicode/platform.h"
 
 /**
  * \file
@@ -45,9 +45,9 @@
  *
  * @stable ICU 4.2. Since ICU 64, Use noexcept instead. See ICU-20422.
  */
-#ifndef U_NO_THROW
-#define U_NO_THROW noexcept
-#endif
+#నిర్వచితం_కాకపోతే U_NO_THROW
+#నిర్వచించు U_NO_THROW noexcept
+#అయితే_ముగింపు
 
 /*===========================================================================*/
 /* UClassID-based RTTI */
@@ -93,7 +93,7 @@
  * \endcode
  * @stable ICU 2.0
  */
-typedef void* UClassID;
+రకనిర్వచనం శూన్య* UClassID;
 
 U_NAMESPACE_BEGIN
 
@@ -113,16 +113,16 @@ U_NAMESPACE_BEGIN
  * @stable ICU 2.4
  */
 class U_COMMON_API UMemory {
-public:
+బహిరంగ:
 
 /* test versions for debugging shaper heap memory problems */
-#ifdef SHAPER_MEMORY_DEBUG  
-    static void * NewArray(int size, int count);
-    static void * GrowArray(void * array, int newSize );
-    static void   FreeArray(void * array );
-#endif
+#నిర్వచితమైతే SHAPER_జ్ఞాపకం_DEBUG  
+    స్థిర శూన్య * NewArray(పూర్ణాంకం కొలత_2, పూర్ణాంకం లెక్క);
+    స్థిర శూన్య * GrowArray(శూన్య * array, పూర్ణాంకం new_కొలత );
+    స్థిర శూన్య   FreeArray(శూన్య * array );
+#అయితే_ముగింపు
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#ఒకవేళ U_OVERRIDE_CXX_కేటాయింపు
     /**
      * Override for ICU4C C++ memory management.
      * simple, non-class types are allocated using the macros in common/cmemory.h
@@ -131,14 +131,14 @@ public:
      * for ICU4C C++ classes
      * @stable ICU 2.4
      */
-    static void * U_EXPORT2 operator new(size_t size) noexcept;
+    స్థిర శూన్య * U_EXPORT2 క్రియాకారకం new(size_t కొలత_2) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
      * See new().
      * @stable ICU 2.4
      */
-    static void * U_EXPORT2 operator new[](size_t size) noexcept;
+    స్థిర శూన్య * U_EXPORT2 క్రియాకారకం new[](size_t కొలత_2) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
@@ -148,30 +148,30 @@ public:
      * for ICU4C C++ classes
      * @stable ICU 2.4
      */
-    static void U_EXPORT2 operator delete(void *p) noexcept;
+    స్థిర శూన్య U_EXPORT2 క్రియాకారకం delete(శూన్య *p) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
      * See delete().
      * @stable ICU 2.4
      */
-    static void U_EXPORT2 operator delete[](void *p) noexcept;
+    స్థిర శూన్య U_EXPORT2 క్రియాకారకం delete[](శూన్య *p) noexcept;
 
     /**
      * Override for ICU4C C++ memory management for STL.
      * See new().
      * @stable ICU 2.6
      */
-    static inline void * U_EXPORT2 operator new(size_t, void *ptr) noexcept { return ptr; }
+    స్థిర అంతఃవరుస శూన్య * U_EXPORT2 క్రియాకారకం new(size_t, శూన్య *ptr) noexcept { తిరిగి ptr; }
 
     /**
      * Override for ICU4C C++ memory management for STL.
      * See delete().
      * @stable ICU 2.6
      */
-    static inline void U_EXPORT2 operator delete(void *, void *) noexcept {}
+    స్థిర అంతఃవరుస శూన్య U_EXPORT2 క్రియాకారకం delete(శూన్య *, శూన్య *) noexcept {}
 
-#if U_HAVE_DEBUG_LOCATION_NEW
+#ఒకవేళ U_HAVE_DEBUG_LOCATION_NEW
     /**
       * This method overrides the MFC debug version of the operator new
       * 
@@ -179,7 +179,7 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void * U_EXPORT2 operator new(size_t size, const char* file, int line) noexcept;
+    స్థిర శూన్య * U_EXPORT2 క్రియాకారకం new(size_t కొలత_2, స్థిరరాశి అక్షరం* file, పూర్ణాంకం పంక్తి) noexcept;
     /**
       * This method provides a matching delete for the MFC debug new
       * 
@@ -187,9 +187,9 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void U_EXPORT2 operator delete(void* p, const char* file, int line) noexcept;
-#endif /* U_HAVE_DEBUG_LOCATION_NEW */
-#endif /* U_OVERRIDE_CXX_ALLOCATION */
+    స్థిర శూన్య U_EXPORT2 క్రియాకారకం delete(శూన్య* p, స్థిరరాశి అక్షరం* file, పూర్ణాంకం పంక్తి) noexcept;
+#అయితే_ముగింపు /* U_HAVE_DEBUG_LOCATION_NEW */
+#అయితే_ముగింపు /* U_OVERRIDE_CXX_ALLOCATION */
 
     /*
      * Assignment operator not declared. The compiler will provide one
@@ -219,14 +219,14 @@ public:
  *
  * @stable ICU 2.2
  */
-class U_COMMON_API UObject : public UMemory {
-public:
+class U_COMMON_API UObject : బహిరంగ UMemory {
+బహిరంగ:
     /**
      * Destructor.
      *
      * @stable ICU 2.2
      */
-    virtual ~UObject();
+    మాయా ~UObject();
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for the actual ICU class.
@@ -237,9 +237,9 @@ public:
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const;
+    మాయా UClassID getDynamicClassID() స్థిరరాశి;
 
-protected:
+రక్షిత:
     // the following functions are protected to prevent instantiation and
     // direct use of UObject itself
 
@@ -249,7 +249,7 @@ protected:
     // copy constructor
     // inline UObject(const UObject &other) {}
 
-#if 0
+#ఒకవేళ 0
     // TODO Sometime in the future. Implement operator==().
     // (This comment inserted in 2.2)
     // some or all of the following "boilerplate" functions may be made public
@@ -261,15 +261,15 @@ protected:
     // UObject &operator=(const UObject &other) { return *this; }
 
     // comparison operators
-    virtual inline bool operator==(const UObject &other) const { return this==&other; }
-    inline bool operator!=(const UObject &other) const { return !operator==(other); }
+    మాయా అంతఃవరుస bool క్రియాకారకం==(స్థిరరాశి UObject &other) స్థిరరాశి { తిరిగి this==&other; }
+    అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి UObject &other) స్థిరరాశి { తిరిగి !క్రియాకారకం==(other); }
 
     // clone() commented out from the base class:
     // some compilers do not support co-variant return types
     // (i.e., subclasses would have to return UObject * as well, instead of SubClass *)
     // see also UObject class documentation.
     // virtual UObject *clone() const;
-#endif
+#అయితే_ముగింపు
 
     /*
      * Assignment operator not declared. The compiler will provide one
@@ -283,7 +283,7 @@ protected:
      */
 };
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
 /**
  * This is a simple macro to add ICU RTTI to an ICU object implementation.
  * This does not go into the header. This should only be used in *.cpp files.
@@ -291,13 +291,13 @@ protected:
  * @param myClass The name of the class that needs RTTI defined.
  * @internal
  */
-#define UOBJECT_DEFINE_RTTI_IMPLEMENTATION(myClass) \
+#నిర్వచించు UOBJECT_DEFINE_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        స్థిర అక్షరం classID = 0; \
+        తిరిగి (UClassID)&classID; \
     } \
-    UClassID myClass::getDynamicClassID() const \
-    { return myClass::getStaticClassID(); }
+    UClassID myClass::getDynamicClassID() స్థిరరాశి \
+    { తిరిగి myClass::getStaticClassID(); }
 
 
 /**
@@ -308,16 +308,16 @@ protected:
  * @param myClass The name of the class that needs RTTI defined.
  * @internal
  */
-#define UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(myClass) \
+#నిర్వచించు UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        స్థిర అక్షరం classID = 0; \
+        తిరిగి (UClassID)&classID; \
     }
 
-#endif  /* U_HIDE_INTERNAL_API */
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#అయితే_ముగింపు

@@ -18,44 +18,44 @@
  *                  a UDataMemory * is returned.
  *
  *----------------------------------------------------------------------------------*/
-#ifndef __UDATAMEM_H__
-#define __UDATAMEM_H__
+#నిర్వచితం_కాకపోతే __UDATAMEM_H__
+#నిర్వచించు __UDATAMEM_H__
 
-#include "unicode/udata.h"
-#include "ucmndata.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "ucmndata.h"
 
-struct UDataMemory {
-    const commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
+నిర్మాణం UData_జ్ఞాపకం {
+    స్థిరరాశి common_దత్తాంశం_Funcs  *vFuncs;      /* Function Pointers for accessing TOC             */
 
-    const DataHeader *pHeader;     /* Header of the memory being described by this    */
+    స్థిరరాశి దత్తాంశం_శీర్షిక *p_శీర్షిక;     /* Header of the memory being described by this    */
                                    /*   UDataMemory object.                           */
-    const void       *toc;         /* For common memory, table of contents for        */
+    స్థిరరాశి శూన్య       *toc;         /* For common memory, table of contents for        */
                                    /*   the pieces within.                            */
-    UBool             heapAllocated;  /* True if this UDataMemory Object is on the    */
+    UBool             కుప్ప_Allocated;  /* True if this UDataMemory Object is on the    */
                                    /*  heap and thus needs to be deleted when closed. */
 
-    void             *mapAddr;     /* For mapped or allocated memory, the start addr. */
+    శూన్య             *mapAddr;     /* For mapped or allocated memory, the start addr. */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data.                           */
-    void             *map;         /* Handle, or other data, OS dependent.            */
+    శూన్య             *map;         /* Handle, or other data, OS dependent.            */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data, and additional info       */
                                    /*   beyond the mapAddr is needed to do that.      */
-    int32_t           length;      /* Length of the data in bytes; -1 if unknown.     */
+    int32_t           నిడివి;      /* Length of the data in bytes; -1 if unknown.     */
 };
 
-U_CAPI  UDataMemory* U_EXPORT2 UDataMemory_createNewInstance(UErrorCode *pErr);
-U_CFUNC void         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
-U_CFUNC void         UDataMemory_init    (UDataMemory *This);
-U_CFUNC UBool        UDataMemory_isLoaded(const UDataMemory *This);
-U_CFUNC void         UDataMemory_setData (UDataMemory *This, const void *dataAddr);
+U_CAPI  UData_జ్ఞాపకం* U_EXPORT2 UData_జ్ఞాపకం_create_New_Instance(UError_సంకేతం *pErr);
+U_CFUNC శూన్య         UDatamemory_కేటాయించు  (UData_జ్ఞాపకం *dest, UData_జ్ఞాపకం *ఆధారం);
+U_CFUNC శూన్య         UData_జ్ఞాపకం_init    (UData_జ్ఞాపకం *This);
+U_CFUNC UBool        UData_జ్ఞాపకం_is_Loaded(స్థిరరాశి UData_జ్ఞాపకం *This);
+U_CFUNC శూన్య         UData_జ్ఞాపకం_సమితి_దత్తాంశం (UData_జ్ఞాపకం *This, స్థిరరాశి శూన్య *దత్తాంశం_Addr);
 
-U_CFUNC const DataHeader* UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND);
+U_CFUNC స్థిరరాశి దత్తాంశం_శీర్షిక* UData_జ్ఞాపకం_normalize_దత్తాంశం_సూచిక(స్థిరరాశి శూన్య* p U_LIFETIME_BOUND);
 
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData);
+udata_get_నిడివి(స్థిరరాశి UData_జ్ఞాపకం *p_దత్తాంశం);
 
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI స్థిరరాశి శూన్య* U_EXPORT2
+udata_get_Raw_జ్ఞాపకం(స్థిరరాశి UData_జ్ఞాపకం* p_దత్తాంశం U_LIFETIME_BOUND);
 
-#endif
+#అయితే_ముగింపు

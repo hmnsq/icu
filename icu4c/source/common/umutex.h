@@ -17,25 +17,25 @@
 ******************************************************************************
 */
 
-#ifndef UMUTEX_H
-#define UMUTEX_H
+#నిర్వచితం_కాకపోతే UMUTEX_H
+#నిర్వచించు UMUTEX_H
 
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <type_traits>
+#అన్తర్భావ <atomic>
+#అన్తర్భావ <condition_variable>
+#అన్తర్భావ <mutex>
+#అన్తర్భావ <type_traits>
 
-#include "unicode/utypes.h"
-#include "unicode/uclean.h"
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uclean.h"
+#అన్తర్భావ "unicode/uobject.h"
 
-#include "putilimp.h"
+#అన్తర్భావ "putilimp.h"
 
-#if defined(U_USER_ATOMICS_H) || defined(U_USER_MUTEX_H)
+#ఒకవేళ defined(U_USER_ATOMICS_H) || defined(U_USER_MUTEX_H)
 // Support for including an alternate implementation of atomic & mutex operations has been withdrawn.
 // See issue ICU-20185.
-#error U_USER_ATOMICS and U_USER_MUTEX_H are not supported
-#endif
+#దోషం U_USER_ATOMICS and U_USER_MUTEX_H are not supported
+#అయితే_ముగింపు
 
 U_NAMESPACE_BEGIN
 
@@ -45,22 +45,22 @@ U_NAMESPACE_BEGIN
  *
  ****************************************************************************/
 
-typedef std::atomic<int32_t> u_atomic_int32_t;
+రకనిర్వచనం std::atomic<int32_t> u_atomic_int32_t;
 
-inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
-    return var.load(std::memory_order_acquire);
+అంతఃవరుస int32_t umtx_ఎక్కించు_Acquire(u_atomic_int32_t &var) {
+    తిరిగి var.ఎక్కించు(std::జ్ఞాపకం_క్రమం_acquire);
 }
 
-inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
-    var.store(val, std::memory_order_release);
+అంతఃవరుస శూన్య umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
+    var.store(val, std::జ్ఞాపకం_క్రమం_release);
 }
 
-inline int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
-    return var->fetch_add(1) + 1;
+అంతఃవరుస int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
+    తిరిగి var->fetch_కూడు(1) + 1;
 }
 
-inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
-    return var->fetch_sub(1) - 1;
+అంతఃవరుస int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
+    తిరిగి var->fetch_sub(1) - 1;
 }
 
 
@@ -70,34 +70,34 @@ inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
  *
  *************************************************************************************************/
 
-struct U_COMMON_API_CLASS UInitOnce {
-private:
-    friend U_COMMON_API UBool U_EXPORT2 umtx_initImplPreInit(UInitOnce&);
-    friend U_COMMON_API void U_EXPORT2 umtx_initImplPostInit(UInitOnce&);
-    template <typename T> friend void umtx_initOnce(UInitOnce&, T*, void (T::*)());
-    friend void umtx_initOnce(UInitOnce&, void (*)());
-    friend void umtx_initOnce(UInitOnce&, void (*)(UErrorCode&), UErrorCode&);
-    template <typename T> friend void umtx_initOnce(UInitOnce&, void (*)(T), T);
-    template <typename T> friend void umtx_initOnce(UInitOnce&, void (*)(T, UErrorCode&), T, UErrorCode&);
+నిర్మాణం U_COMMON_API_CLASS UInitOnce {
+అంతరంగ:
+    మిత్ర U_COMMON_API UBool U_EXPORT2 umtx_initImplPreInit(UInitOnce&);
+    మిత్ర U_COMMON_API శూన్య U_EXPORT2 umtx_initImplPostInit(UInitOnce&);
+    మూస <typename T> మిత్ర శూన్య umtx_initOnce(UInitOnce&, T*, శూన్య (T::*)());
+    మిత్ర శూన్య umtx_initOnce(UInitOnce&, శూన్య (*)());
+    మిత్ర శూన్య umtx_initOnce(UInitOnce&, శూన్య (*)(UError_సంకేతం&), UError_సంకేతం&);
+    మూస <typename T> మిత్ర శూన్య umtx_initOnce(UInitOnce&, శూన్య (*)(T), T);
+    మూస <typename T> మిత్ర శూన్య umtx_initOnce(UInitOnce&, శూన్య (*)(T, UError_సంకేతం&), T, UError_సంకేతం&);
 
     u_atomic_int32_t fState{0};
-    UErrorCode fErrCode{U_ZERO_ERROR};
+    UError_సంకేతం f_Err_సంకేతం{U_ZERO_ERROR};
 
-public:
-    U_COMMON_API void reset() { fState = 0; }
-    U_COMMON_API UBool isReset() { return umtx_loadAcquire(fState) == 0; }
+బహిరంగ:
+    U_COMMON_API శూన్య reset() { fState = 0; }
+    U_COMMON_API UBool isReset() { తిరిగి umtx_ఎక్కించు_Acquire(fState) == 0; }
 // Note: isReset() is used by service registration code.
 //                 Thread safety of this usage needs review.
 };
 
 U_COMMON_API UBool U_EXPORT2 umtx_initImplPreInit(UInitOnce &);
-U_COMMON_API void  U_EXPORT2 umtx_initImplPostInit(UInitOnce &);
+U_COMMON_API శూన్య  U_EXPORT2 umtx_initImplPostInit(UInitOnce &);
 
-template<class T> void umtx_initOnce(UInitOnce &uio, T *obj, void (U_CALLCONV T::*fp)()) {
-    if (umtx_loadAcquire(uio.fState) == 2) {
-        return;
+మూస<class T> శూన్య umtx_initOnce(UInitOnce &uio, T *obj, శూన్య (U_CALLCONV T::*fp)()) {
+    ఒకవేళ (umtx_ఎక్కించు_Acquire(uio.fState) == 2) {
+        తిరిగి;
     }
-    if (umtx_initImplPreInit(uio)) {
+    ఒకవేళ (umtx_initImplPreInit(uio)) {
         (obj->*fp)();
         umtx_initImplPostInit(uio);
     }
@@ -106,11 +106,11 @@ template<class T> void umtx_initOnce(UInitOnce &uio, T *obj, void (U_CALLCONV T:
 
 // umtx_initOnce variant for plain functions, or static class functions.
 //               No context parameter.
-inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)()) {
-    if (umtx_loadAcquire(uio.fState) == 2) {
-        return;
+అంతఃవరుస శూన్య umtx_initOnce(UInitOnce &uio, శూన్య (U_CALLCONV *fp)()) {
+    ఒకవేళ (umtx_ఎక్కించు_Acquire(uio.fState) == 2) {
+        తిరిగి;
     }
-    if (umtx_initImplPreInit(uio)) {
+    ఒకవేళ (umtx_initImplPreInit(uio)) {
         (*fp)();
         umtx_initImplPostInit(uio);
     }
@@ -118,30 +118,30 @@ inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)()) {
 
 // umtx_initOnce variant for plain functions, or static class functions.
 //               With ErrorCode, No context parameter.
-inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(UErrorCode &), UErrorCode &errCode) {
-    if (U_FAILURE(errCode)) {
-        return;
+అంతఃవరుస శూన్య umtx_initOnce(UInitOnce &uio, శూన్య (U_CALLCONV *fp)(UError_సంకేతం &), UError_సంకేతం &err_సంకేతం) {
+    ఒకవేళ (U_FAILURE(err_సంకేతం)) {
+        తిరిగి;
     }
-    if (umtx_loadAcquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
+    ఒకవేళ (umtx_ఎక్కించు_Acquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
         // We run the initialization.
-        (*fp)(errCode);
-        uio.fErrCode = errCode;
+        (*fp)(err_సంకేతం);
+        uio.f_Err_సంకేతం = err_సంకేతం;
         umtx_initImplPostInit(uio);
-    } else {
+    } లేకపోతే {
         // Someone else already ran the initialization.
-        if (U_FAILURE(uio.fErrCode)) {
-            errCode = uio.fErrCode;
+        ఒకవేళ (U_FAILURE(uio.f_Err_సంకేతం)) {
+            err_సంకేతం = uio.f_Err_సంకేతం;
         }
     }
 }
 
 // umtx_initOnce variant for plain functions, or static class functions,
 //               with a context parameter.
-template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T), T context) {
-    if (umtx_loadAcquire(uio.fState) == 2) {
-        return;
+మూస<class T> శూన్య umtx_initOnce(UInitOnce &uio, శూన్య (U_CALLCONV *fp)(T), T context) {
+    ఒకవేళ (umtx_ఎక్కించు_Acquire(uio.fState) == 2) {
+        తిరిగి;
     }
-    if (umtx_initImplPreInit(uio)) {
+    ఒకవేళ (umtx_initImplPreInit(uio)) {
         (*fp)(context);
         umtx_initImplPostInit(uio);
     }
@@ -149,19 +149,19 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T), T
 
 // umtx_initOnce variant for plain functions, or static class functions,
 //               with a context parameter and an error code.
-template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T, UErrorCode &), T context, UErrorCode &errCode) {
-    if (U_FAILURE(errCode)) {
-        return;
+మూస<class T> శూన్య umtx_initOnce(UInitOnce &uio, శూన్య (U_CALLCONV *fp)(T, UError_సంకేతం &), T context, UError_సంకేతం &err_సంకేతం) {
+    ఒకవేళ (U_FAILURE(err_సంకేతం)) {
+        తిరిగి;
     }
-    if (umtx_loadAcquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
+    ఒకవేళ (umtx_ఎక్కించు_Acquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
         // We run the initialization.
-        (*fp)(context, errCode);
-        uio.fErrCode = errCode;
+        (*fp)(context, err_సంకేతం);
+        uio.f_Err_సంకేతం = err_సంకేతం;
         umtx_initImplPostInit(uio);
-    } else {
+    } లేకపోతే {
         // Someone else already ran the initialization.
-        if (U_FAILURE(uio.fErrCode)) {
-            errCode = uio.fErrCode;
+        ఒకవేళ (U_FAILURE(uio.f_Err_సంకేతం)) {
+            err_సంకేతం = uio.f_Err_సంకేతం;
         }
     }
 }
@@ -169,13 +169,13 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T, UE
 // UMutex should be constexpr-constructible, so that no initialization code
 // is run during startup.
 // This works on all C++ libraries except MS VS before VS2019.
-#if (defined(_CPPLIB_VER) && !defined(_MSVC_STL_VERSION)) || \
-    (defined(_MSVC_STL_VERSION) && _MSVC_STL_VERSION < 142)
+#ఒకవేళ (defined(_CPPLIB_VER) && !defined(MSVC_STL_సంస్కరణ)) || \
+    (defined(MSVC_STL_సంస్కరణ) && MSVC_STL_సంస్కరణ < 142)
     // (VS std lib older than VS2017) || (VS std lib version < VS2019)
 #   define UMUTEX_CONSTEXPR
-#else
+#లేకపోతే
 #   define UMUTEX_CONSTEXPR constexpr
-#endif
+#అయితే_ముగింపు
 
 /**
  * UMutex - ICU Mutex class.
@@ -203,33 +203,33 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T, UE
  */
 
 class U_COMMON_API_CLASS UMutex {
-public:
+బహిరంగ:
     U_COMMON_API UMUTEX_CONSTEXPR UMutex() {}
-    U_COMMON_API ~UMutex() = default;
+    U_COMMON_API ~UMutex() = అప్రమేయ;
 
-    UMutex(const UMutex& other) = delete;
-    UMutex& operator=(const UMutex& other) = delete;
-    void* operator new(size_t) = delete;
+    UMutex(స్థిరరాశి UMutex& other) = delete;
+    UMutex& క్రియాకారకం=(స్థిరరాశి UMutex& other) = delete;
+    శూన్య* క్రియాకారకం new(size_t) = delete;
 
     // requirements for C++ BasicLockable, allows UMutex to work with std::lock_guard
-    U_COMMON_API void lock() {
-        std::mutex *m = fMutex.load(std::memory_order_acquire);
-        if (m == nullptr) { m = getMutex(); }
-        m->lock();
+    U_COMMON_API శూన్య తాళం() {
+        std::mutex *m = fMutex.ఎక్కించు(std::జ్ఞాపకం_క్రమం_acquire);
+        ఒకవేళ (m == nullptr) { m = getMutex(); }
+        m->తాళం();
     }
-    U_COMMON_API void unlock() { fMutex.load(std::memory_order_relaxed)->unlock(); }
+    U_COMMON_API శూన్య unlock() { fMutex.ఎక్కించు(std::జ్ఞాపకం_క్రమం_relaxed)->unlock(); }
 
-    U_COMMON_API static void cleanup();
+    U_COMMON_API స్థిర శూన్య cleanup();
 
-private:
-    alignas(std::mutex) char fStorage[sizeof(std::mutex)] {};
+అంతరంగ:
+    alignas(std::mutex) అక్షరం fStorage[పరిమాణం(std::mutex)] {};
     std::atomic<std::mutex *> fMutex { nullptr };
 
     /** All initialized UMutexes are kept in a linked list, so that they can be found,
      * and the underlying std::mutex destructed, by u_cleanup().
      */
     UMutex *fListLink { nullptr };
-    static UMutex *gListHead;
+    స్థిర UMutex *g_List_తల;
 
     /** Out-of-line function to lazily initialize a UMutex on first use.
      * Initial fast check is inline, in lock().  The returned value may never
@@ -244,16 +244,16 @@ private:
  *              the global ICU mutex.  Recursive locks are an error
  *              and may cause a deadlock on some platforms.
  */
-U_CAPI void U_EXPORT2 umtx_lock(UMutex* mutex);
+U_CAPI శూన్య U_EXPORT2 umtx_తాళం(UMutex* mutex);
 
 /* Unlock a mutex.
  * @param mutex The given mutex to be unlocked.  Pass NULL to specify
  *              the global ICU mutex.
  */
-U_CAPI void U_EXPORT2 umtx_unlock (UMutex* mutex);
+U_CAPI శూన్య U_EXPORT2 umtx_unlock (UMutex* mutex);
 
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* UMUTEX_H */
+#అయితే_ముగింపు /* UMUTEX_H */
 /*eof*/

@@ -21,112 +21,112 @@
 *   code also builds UnicodeSets from patterns and needs uniset_props.
 */
 
-#include "unicode/brkiter.h"
-#include "unicode/locid.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ruleiter.h"
-#include "ucase.h"
-#include "uprops.h"
-#include "util.h"
-#include "uvector.h"
+#అన్తర్భావ "unicode/brkiter.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/parsepos.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ruleiter.h"
+#అన్తర్భావ "ucase.h"
+#అన్తర్భావ "uprops.h"
+#అన్తర్భావ "util.h"
+#అన్తర్భావ "uvector.h"
 
 U_NAMESPACE_BEGIN
 
 // TODO memory debugging provided inside uniset.cpp
 // could be made available here but probably obsolete with use of modern
 // memory leak checker tools
-#define _dbgct(me)
+#నిర్వచించు _dbgct(me)
 
 //----------------------------------------------------------------
 // Constructors &c
 //----------------------------------------------------------------
 
-UnicodeSet::UnicodeSet(const UnicodeString& pattern,
+Unicode_సమితి::Unicode_సమితి(స్థిరరాశి UnicodeString& నమూనా,
                        uint32_t options,
-                       const SymbolTable* symbols,
-                       UErrorCode& status) {
-    applyPattern(pattern, options, symbols, status);
-    _dbgct(this);
+                       స్థిరరాశి చిహ్నం_పట్టిక* symbols,
+                       UError_సంకేతం& స్థితి_2) {
+    apply_నమూనా(నమూనా, options, symbols, స్థితి_2);
+    _dbgct(ఇది);
 }
 
-UnicodeSet::UnicodeSet(const UnicodeString& pattern, ParsePosition& pos,
+Unicode_సమితి::Unicode_సమితి(స్థిరరాశి UnicodeString& నమూనా, ParsePosition& pos,
                        uint32_t options,
-                       const SymbolTable* symbols,
-                       UErrorCode& status) {
-    applyPattern(pattern, pos, options, symbols, status);
-    _dbgct(this);
+                       స్థిరరాశి చిహ్నం_పట్టిక* symbols,
+                       UError_సంకేతం& స్థితి_2) {
+    apply_నమూనా(నమూనా, pos, options, symbols, స్థితి_2);
+    _dbgct(ఇది);
 }
 
 //----------------------------------------------------------------
 // Public API
 //----------------------------------------------------------------
 
-UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
+Unicode_సమితి& Unicode_సమితి::apply_నమూనా(స్థిరరాశి UnicodeString& నమూనా,
                                      uint32_t options,
-                                     const SymbolTable* symbols,
-                                     UErrorCode& status) U_LIFETIME_BOUND {
+                                     స్థిరరాశి చిహ్నం_పట్టిక* symbols,
+                                     UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND {
     ParsePosition pos(0);
-    applyPattern(pattern, pos, options, symbols, status);
-    if (U_FAILURE(status)) return *this;
+    apply_నమూనా(నమూనా, pos, options, symbols, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి *ఇది;
 
-    int32_t i = pos.getIndex();
+    int32_t i = pos.get_సూచీ();
 
-    if (options & USET_IGNORE_SPACE) {
+    ఒకవేళ (options & USET_IGNORE_SPACE) {
         // Skip over trailing whitespace
-        ICU_Utility::skipWhitespace(pattern, i, true);
+        ICU_Utility::skipWhitespace(నమూనా, i, నిజం);
     }
 
-    if (i != pattern.length()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
+    ఒకవేళ (i != నమూనా.length()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
+Unicode_సమితి& Unicode_సమితి::apply_నమూనా(స్థిరరాశి UnicodeString& నమూనా,
                                      ParsePosition& pos,
                                      uint32_t options,
-                                     const SymbolTable* symbols,
-                                     UErrorCode& status) U_LIFETIME_BOUND {
-    if (U_FAILURE(status)) {
-        return *this;
+                                     స్థిరరాశి చిహ్నం_పట్టిక* symbols,
+                                     UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి *ఇది;
     }
-    if (isFrozen()) {
-        status = U_NO_WRITE_PERMISSION;
-        return *this;
+    ఒకవేళ (isFrozen()) {
+        స్థితి_2 = U_NO_WRITE_PERMISSION;
+        తిరిగి *ఇది;
     }
     // Need to build the pattern in a temporary string because
     // _applyPattern calls add() etc., which set pat to empty.
     UnicodeString rebuiltPat;
-    RuleCharacterIterator chars(pattern, symbols, pos);
-    applyPattern(pattern, pos, chars, symbols, rebuiltPat, options, &UnicodeSet::closeOver, status);
-    if (U_FAILURE(status)) return *this;
-    if (chars.inVariable()) {
+    నియమం_Character_Iterator chars(నమూనా, symbols, pos);
+    apply_నమూనా(నమూనా, pos, chars, symbols, rebuiltPat, options, &Unicode_సమితి::closeOver, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి *ఇది;
+    ఒకవేళ (chars.లోపల_Variable()) {
         // syntaxError(chars, "Extra chars in variable value");
-        status = U_MALFORMED_SET;
-        return *this;
+        స్థితి_2 = U_MALFORMED_సమితి;
+        తిరిగి *ఇది;
     }
-    setPattern(rebuiltPat);
-    return *this;
+    సమితి_నమూనా(rebuiltPat);
+    తిరిగి *ఇది;
 }
 
 // USetAdder implementation
 // Does not use uset.h to reduce code dependencies
-static void U_CALLCONV
-_set_add(USet *set, UChar32 c) {
-    reinterpret_cast<UnicodeSet*>(set)->add(c);
+స్థిర శూన్య U_CALLCONV
+సమితి_కూడు(USet *సమితి, UChar32 c) {
+    reinterpret_cast<Unicode_సమితి*>(సమితి)->కూడు(c);
 }
 
-static void U_CALLCONV
-_set_addRange(USet *set, UChar32 start, UChar32 end) {
-    reinterpret_cast<UnicodeSet*>(set)->add(start, end);
+స్థిర శూన్య U_CALLCONV
+సమితి_కూడు_Range(USet *సమితి, UChar32 ప్రారంభం, UChar32 చివర) {
+    reinterpret_cast<Unicode_సమితి*>(సమితి)->కూడు(ప్రారంభం, చివర);
 }
 
-static void U_CALLCONV
-_set_addString(USet *set, const char16_t *str, int32_t length) {
-    reinterpret_cast<UnicodeSet*>(set)->add(UnicodeString(static_cast<UBool>(length < 0), str, length));
+స్థిర శూన్య U_CALLCONV
+సమితి_కూడు_String(USet *సమితి, స్థిరరాశి char16_t *str, int32_t length) {
+    reinterpret_cast<Unicode_సమితి*>(సమితి)->కూడు(UnicodeString(static_cast<UBool>(length < 0), str, length));
 }
 
 //----------------------------------------------------------------
@@ -135,225 +135,225 @@ _set_addString(USet *set, const char16_t *str, int32_t length) {
 
 // add the result of a full case mapping to the set
 // use str as a temporary string to avoid constructing one
-static inline void
-addCaseMapping(UnicodeSet &set, int32_t result, const char16_t *full, UnicodeString &str) {
-    if(result >= 0) {
-        if(result > UCASE_MAX_STRING_LENGTH) {
+స్థిర అంతఃవరుస శూన్య
+కూడు_Case_Mapping(Unicode_సమితి &సమితి, int32_t ఫలితం, స్థిరరాశి char16_t *నిండిన, UnicodeString &str) {
+    ఒకవేళ(ఫలితం >= 0) {
+        ఒకవేళ(ఫలితం > UCASE_MAX_STRING_నిడివి) {
             // add a single-code point case mapping
-            set.add(result);
-        } else {
+            సమితి.కూడు(ఫలితం);
+        } లేకపోతే {
             // add a string case mapping from full with length result
-            str.setTo(static_cast<UBool>(false), full, result);
-            set.add(str);
+            str.సమితి_గమ్యం(static_cast<UBool>(అబద్ధం), నిండిన, ఫలితం);
+            సమితి.కూడు(str);
         }
     }
     // result < 0: the code point mapped to itself, no need to add it
     // see ucase.h
 }
 
-namespace {
+నామాకాశ {
 
 /** For case closure on a large set, look only at code points with relevant properties. */
-const UnicodeSet &maybeOnlyCaseSensitive(const UnicodeSet &src U_LIFETIME_BOUND,
-                                         UnicodeSet &subset U_LIFETIME_BOUND) {
+స్థిరరాశి Unicode_సమితి &maybeOnlyCaseSensitive(స్థిరరాశి Unicode_సమితి &src U_LIFETIME_BOUND,
+                                         Unicode_సమితి &subset U_LIFETIME_BOUND) {
     // The subset must have been constructed with all code points,
     // so that the retainAll() intersection effectively copies all single code points from src.
-    U_ASSERT(subset.contains(0, 0x10ffff));
-    if (src.size() < 30) {
-        return src;
+    U_ASSERT(subset.కలిగియుంది(0, 0x10ffff));
+    ఒకవేళ (src.size() < 30) {
+        తిరిగి src;
     }
     // Return the intersection of the src code points with Case_Sensitive ones.
-    UErrorCode errorCode = U_ZERO_ERROR;
-    const UnicodeSet *sensitive =
-        CharacterProperties::getBinaryPropertySet(UCHAR_CASE_SENSITIVE, errorCode);
-    if (U_FAILURE(errorCode)) {
-        return src;
+    UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
+    స్థిరరాశి Unicode_సమితి *sensitive =
+        CharacterProperties::get_ద్విమాన_Property_సమితి(UCHAR_CASE_SENSITIVE, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి src;
     }
     // Start by copying the "smaller" set.
     // (We "copy" by intersecting all Unicode *code points* with the first set,
     // which omits any strings.)
-    if (src.getRangeCount() > sensitive->getRangeCount()) {
+    ఒకవేళ (src.get_Range_లెక్క() > sensitive->get_Range_లెక్క()) {
         subset.retainAll(*sensitive);
         subset.retainAll(src);
-    } else {
+    } లేకపోతే {
         subset.retainAll(src);
         subset.retainAll(*sensitive);
     }
-    return subset;
+    తిరిగి subset;
 }
 
 // Per-character scf = Simple_Case_Folding of a string.
 // (Normally when we case-fold a string we use full case foldings.)
-bool scfString(const UnicodeString &s, UnicodeString &scf) {
+తార్కిక scfString(స్థిరరాశి UnicodeString &s, UnicodeString &scf) {
     // Iterate over the raw buffer for best performance.
-    const char16_t *p = s.getBuffer();
+    స్థిరరాశి char16_t *p = s.get_బఫరు();
     int32_t length = s.length();
     // Loop while not needing modification.
-    for (int32_t i = 0; i < length;) {
+    కొరకు (int32_t i = 0; i < length;) {
         UChar32 c;
-        U16_NEXT(p, i, length, c);  // post-increments i
+        U16_తదుపరి(p, i, length, c);  // post-increments i
         UChar32 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
-        if (scfChar != c) {
+        ఒకవేళ (scfChar != c) {
             // Copy the characters before c.
-            scf.setTo(p, i - U16_LENGTH(c));
+            scf.సమితి_గమ్యం(p, i - U16_నిడివి(c));
             // Loop over the rest of the string and keep case-folding.
-            for (;;) {
+            కొరకు (;;) {
                 scf.append(scfChar);
-                if (i == length) {
-                    return true;
+                ఒకవేళ (i == length) {
+                    తిరిగి నిజం;
                 }
-                U16_NEXT(p, i, length, c);  // post-increments i
+                U16_తదుపరి(p, i, length, c);  // post-increments i
                 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
             }
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
 }  // namespace
 
-UnicodeSet& UnicodeSet::closeOver(int32_t attribute) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_సమితి& Unicode_సమితి::closeOver(int32_t attribute) U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి *ఇది;
     }
-    switch (attribute & USET_CASE_MASK) {
-    case 0:
-        break;
-    case USET_CASE_INSENSITIVE:
-        closeOverCaseInsensitive(/* simple= */ false);
-        break;
-    case USET_ADD_CASE_MAPPINGS:
-        closeOverAddCaseMappings();
-        break;
-    case USET_SIMPLE_CASE_INSENSITIVE:
-        closeOverCaseInsensitive(/* simple= */ true);
-        break;
-    default:
+    ఎంపిక (attribute & USET_CASE_ముసుగు) {
+    స్థితి 0:
+        ఆపు;
+    స్థితి USET_CASE_INSENSITIVE:
+        closeOverCaseInsensitive(/* simple= */ అబద్ధం);
+        ఆపు;
+    స్థితి USET_కూడు_CASE_MAPPINGS:
+        close_Over_కూడు_Case_Mappings();
+        ఆపు;
+    స్థితి USET_SIMPLE_CASE_INSENSITIVE:
+        closeOverCaseInsensitive(/* simple= */ నిజం);
+        ఆపు;
+    అప్రమేయ:
         // bad option (unreachable)
-        break;
+        ఆపు;
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-void UnicodeSet::closeOverCaseInsensitive(bool simple) {
+శూన్య Unicode_సమితి::closeOverCaseInsensitive(తార్కిక simple) {
     // Start with input set to guarantee inclusion.
-    UnicodeSet foldSet(*this);
+    Unicode_సమితి fold_సమితి(*ఇది);
     // Full case mappings closure:
     // Remove strings because the strings will actually be reduced (folded);
     // therefore, start with no strings and add only those needed.
     // Do this before processing code points, because they may add strings.
-    if (!simple && foldSet.hasStrings()) {
-        foldSet.strings_->removeAllElements();
+    ఒకవేళ (!simple && fold_సమితి.has_అక్షరశ్రేణులు()) {
+        fold_సమితి.అక్షరశ్రేణులు_2->removeAllElements();
     }
 
     USetAdder sa = {
-        foldSet.toUSet(),
-        _set_add,
-        _set_addRange,
-        _set_addString,
-        nullptr, // don't need remove()
-        nullptr // don't need removeRange()
+        fold_సమితి.గమ్యం_USet(),
+        సమితి_కూడు,
+        సమితి_కూడు_Range,
+        సమితి_కూడు_String,
+        శూన్యసూచిక, // don't need remove()
+        శూన్యసూచిక // don't need removeRange()
     };
 
-    UnicodeSet subset(0, 0x10ffff);
-    const UnicodeSet &codePoints = maybeOnlyCaseSensitive(*this, subset);
+    Unicode_సమితి subset(0, 0x10ffff);
+    స్థిరరాశి Unicode_సమితి &సంకేతం_Points = maybeOnlyCaseSensitive(*ఇది, subset);
 
     // Iterate over the ranges of single code points. Nested loop for each code point.
-    int32_t n = codePoints.getRangeCount();
+    int32_t n = సంకేతం_Points.get_Range_లెక్క();
 
-    for (int32_t i=0; i<n; ++i) {
-        UChar32 start = codePoints.getRangeStart(i);
-        UChar32 end   = codePoints.getRangeEnd(i);
+    కొరకు (int32_t i=0; i<n; ++i) {
+        UChar32 ప్రారంభం = సంకేతం_Points.get_Range_ప్రారంభం(i);
+        UChar32 చివర   = సంకేతం_Points.get_Range_చివర(i);
 
-        if (simple) {
-            for (UChar32 cp=start; cp<=end; ++cp) {
-                ucase_addSimpleCaseClosure(cp, &sa);
+        ఒకవేళ (simple) {
+            కొరకు (UChar32 cp=ప్రారంభం; cp<=చివర; ++cp) {
+                ucase_కూడు_Simple_Case_సంవృతం(cp, &sa);
             }
-        } else {
-            for (UChar32 cp=start; cp<=end; ++cp) {
-                ucase_addCaseClosure(cp, &sa);
+        } లేకపోతే {
+            కొరకు (UChar32 cp=ప్రారంభం; cp<=చివర; ++cp) {
+                ucase_కూడు_Case_సంవృతం(cp, &sa);
             }
         }
     }
-    if (hasStrings()) {
+    ఒకవేళ (has_అక్షరశ్రేణులు()) {
         UnicodeString str;
-        for (int32_t j=0; j<strings_->size(); ++j) {
-            const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
-            if (simple) {
-                if (scfString(*pStr, str)) {
-                    foldSet.remove(*pStr).add(str);
+        కొరకు (int32_t j=0; j<అక్షరశ్రేణులు_2->size(); ++j) {
+            స్థిరరాశి UnicodeString* pStr = static_cast<స్థిరరాశి UnicodeString*>(అక్షరశ్రేణులు_2->elementAt(j));
+            ఒకవేళ (simple) {
+                ఒకవేళ (scfString(*pStr, str)) {
+                    fold_సమితి.remove(*pStr).కూడు(str);
                 }
-            } else {
+            } లేకపోతే {
                 str = *pStr;
                 str.foldCase();
-                if(!ucase_addStringCaseClosure(str.getBuffer(), str.length(), &sa)) {
-                    foldSet.add(str); // does not map to code points: add the folded string itself
+                ఒకవేళ(!ucase_కూడు_String_Case_సంవృతం(str.get_బఫరు(), str.length(), &sa)) {
+                    fold_సమితి.కూడు(str); // does not map to code points: add the folded string itself
                 }
             }
         }
     }
-    *this = foldSet;
+    *ఇది = fold_సమితి;
 }
 
-void UnicodeSet::closeOverAddCaseMappings() {
+శూన్య Unicode_సమితి::close_Over_కూడు_Case_Mappings() {
     // Start with input set to guarantee inclusion.
-    UnicodeSet foldSet(*this);
+    Unicode_సమితి fold_సమితి(*ఇది);
 
-    UnicodeSet subset(0, 0x10ffff);
-    const UnicodeSet &codePoints = maybeOnlyCaseSensitive(*this, subset);
+    Unicode_సమితి subset(0, 0x10ffff);
+    స్థిరరాశి Unicode_సమితి &సంకేతం_Points = maybeOnlyCaseSensitive(*ఇది, subset);
 
     // Iterate over the ranges of single code points. Nested loop for each code point.
-    int32_t n = codePoints.getRangeCount();
-    UChar32 result;
-    const char16_t *full;
+    int32_t n = సంకేతం_Points.get_Range_లెక్క();
+    UChar32 ఫలితం;
+    స్థిరరాశి char16_t *నిండిన;
     UnicodeString str;
 
-    for (int32_t i=0; i<n; ++i) {
-        UChar32 start = codePoints.getRangeStart(i);
-        UChar32 end   = codePoints.getRangeEnd(i);
+    కొరకు (int32_t i=0; i<n; ++i) {
+        UChar32 ప్రారంభం = సంకేతం_Points.get_Range_ప్రారంభం(i);
+        UChar32 చివర   = సంకేతం_Points.get_Range_చివర(i);
 
         // add case mappings
         // (does not add long s for regular s, or Kelvin for k, for example)
-        for (UChar32 cp=start; cp<=end; ++cp) {
-            result = ucase_toFullLower(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
-            addCaseMapping(foldSet, result, full, str);
+        కొరకు (UChar32 cp=ప్రారంభం; cp<=చివర; ++cp) {
+            ఫలితం = ucase_గమ్యం_నిండిన_క్రింది(cp, శూన్యసూచిక, శూన్యసూచిక, &నిండిన, UCASE_LOC_మూలం);
+            కూడు_Case_Mapping(fold_సమితి, ఫలితం, నిండిన, str);
 
-            result = ucase_toFullTitle(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
-            addCaseMapping(foldSet, result, full, str);
+            ఫలితం = ucase_గమ్యం_నిండిన_Title(cp, శూన్యసూచిక, శూన్యసూచిక, &నిండిన, UCASE_LOC_మూలం);
+            కూడు_Case_Mapping(fold_సమితి, ఫలితం, నిండిన, str);
 
-            result = ucase_toFullUpper(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
-            addCaseMapping(foldSet, result, full, str);
+            ఫలితం = ucase_గమ్యం_నిండిన_పై(cp, శూన్యసూచిక, శూన్యసూచిక, &నిండిన, UCASE_LOC_మూలం);
+            కూడు_Case_Mapping(fold_సమితి, ఫలితం, నిండిన, str);
 
-            result = ucase_toFullFolding(cp, &full, 0);
-            addCaseMapping(foldSet, result, full, str);
+            ఫలితం = ucase_గమ్యం_నిండిన_Folding(cp, &నిండిన, 0);
+            కూడు_Case_Mapping(fold_సమితి, ఫలితం, నిండిన, str);
         }
     }
-    if (hasStrings()) {
-        Locale root("");
-#if !UCONFIG_NO_BREAK_ITERATION
-        UErrorCode status = U_ZERO_ERROR;
-        BreakIterator *bi = BreakIterator::createWordInstance(root, status);
-        if (U_SUCCESS(status)) {
-#endif
-            for (int32_t j=0; j<strings_->size(); ++j) {
-                const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
-                (str = *pStr).toLower(root);
-                foldSet.add(str);
-#if !UCONFIG_NO_BREAK_ITERATION
-                (str = *pStr).toTitle(bi, root);
-                foldSet.add(str);
-#endif
-                (str = *pStr).toUpper(root);
-                foldSet.add(str);
+    ఒకవేళ (has_అక్షరశ్రేణులు()) {
+        Locale మూలం("");
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+        BreakIterator *bi = BreakIterator::create_మాట_Instance(మూలం, స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+#అయితే_ముగింపు
+            కొరకు (int32_t j=0; j<అక్షరశ్రేణులు_2->size(); ++j) {
+                స్థిరరాశి UnicodeString* pStr = static_cast<స్థిరరాశి UnicodeString*>(అక్షరశ్రేణులు_2->elementAt(j));
+                (str = *pStr).గమ్యం_క్రింది(మూలం);
+                fold_సమితి.కూడు(str);
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
+                (str = *pStr).గమ్యం_Title(bi, మూలం);
+                fold_సమితి.కూడు(str);
+#అయితే_ముగింపు
+                (str = *pStr).గమ్యం_పై(మూలం);
+                fold_సమితి.కూడు(str);
                 (str = *pStr).foldCase();
-                foldSet.add(str);
+                fold_సమితి.కూడు(str);
             }
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
         }
-        delete bi;
-#endif
+        తొలగించు bi;
+#అయితే_ముగింపు
     }
-    *this = foldSet;
+    *ఇది = fold_సమితి;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

@@ -10,119 +10,119 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "ruleiter.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
+#అన్తర్భావ "ruleiter.h"
+#అన్తర్భావ "unicode/parsepos.h"
+#అన్తర్భావ "unicode/symtable.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "patternprops.h"
 
 /* \U87654321 or \ud800\udc00 */
-#define MAX_U_NOTATION_LEN 12
+#నిర్వచించు MAX_U_NOTATION_LEN 12
 
 U_NAMESPACE_BEGIN
 
-RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const SymbolTable* theSym,
+నియమం_Character_Iterator::నియమం_Character_Iterator(స్థిరరాశి UnicodeString& the_పాఠ్యం, స్థిరరాశి చిహ్నం_పట్టిక* theSym,
                       ParsePosition& thePos) :
-    text(theText),
+    పాఠ్యం(the_పాఠ్యం),
     pos(thePos),
     sym(theSym),
-    buf(nullptr),
+    buf(శూన్యసూచిక),
     bufPos(0)
 {}
 
-UBool RuleCharacterIterator::atEnd() const {
-    return buf == nullptr && pos.getIndex() == text.length();
+UBool నియమం_Character_Iterator::at_చివర() స్థిరరాశి {
+    తిరిగి buf == శూన్యసూచిక && pos.get_సూచీ() == పాఠ్యం.length();
 }
 
-UChar32 RuleCharacterIterator::next(int32_t options, UBool& isEscaped, UErrorCode& ec) {
-    if (U_FAILURE(ec)) return DONE;
+UChar32 నియమం_Character_Iterator::next(int32_t options, UBool& isEscaped, UError_సంకేతం& ec) {
+    ఒకవేళ (U_FAILURE(ec)) తిరిగి పూర్తి_2;
 
-    UChar32 c = DONE;
-    isEscaped = false;
+    UChar32 c = పూర్తి_2;
+    isEscaped = అబద్ధం;
 
-    for (;;) {
+    కొరకు (;;) {
         c = _current();
-        _advance(U16_LENGTH(c));
+        _advance(U16_నిడివి(c));
 
-        if (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
-            (options & PARSE_VARIABLES) != 0 && sym != nullptr) {
-            UnicodeString name = sym->parseReference(text, pos, text.length());
+        ఒకవేళ (c == చిహ్నం_పట్టిక::చిహ్నం_REF && buf == శూన్యసూచిక &&
+            (options & PARSE_VARIABLES) != 0 && sym != శూన్యసూచిక) {
+            UnicodeString name = sym->parseReference(పాఠ్యం, pos, పాఠ్యం.length());
             // If name is empty there was an isolated SYMBOL_REF;
             // return it.  Caller must be prepared for this.
-            if (name.length() == 0) {
-                break;
+            ఒకవేళ (name.length() == 0) {
+                ఆపు;
             }
             bufPos = 0;
             buf = sym->lookup(name);
-            if (buf == nullptr) {
+            ఒకవేళ (buf == శూన్యసూచిక) {
                 ec = U_UNDEFINED_VARIABLE;
-                return DONE;
+                తిరిగి పూర్తి_2;
             }
             // Handle empty variable value
-            if (buf->length() == 0) {
-                buf = nullptr;
+            ఒకవేళ (buf->length() == 0) {
+                buf = శూన్యసూచిక;
             }
-            continue;
+            కొనసాగు;
         }
 
-        if ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
-            continue;
+        ఒకవేళ ((options & SKIP_WHITESPACE) != 0 && నమూనా_Props::isWhiteSpace(c)) {
+            కొనసాగు;
         }
 
-        if (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
-            UnicodeString tempEscape;
-            int32_t offset = 0;
-            c = lookahead(tempEscape, MAX_U_NOTATION_LEN).unescapeAt(offset);
-            jumpahead(offset);
-            isEscaped = true;
-            if (c < 0) {
+        ఒకవేళ (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
+            UnicodeString తాత్కాలిక_Escape;
+            int32_t స్థానభ్రంశం = 0;
+            c = lookahead(తాత్కాలిక_Escape, MAX_U_NOTATION_LEN).unescapeAt(స్థానభ్రంశం);
+            jumpahead(స్థానభ్రంశం);
+            isEscaped = నిజం;
+            ఒకవేళ (c < 0) {
                 ec = U_MALFORMED_UNICODE_ESCAPE;
-                return DONE;
+                తిరిగి పూర్తి_2;
             }
         }
 
-        break;
+        ఆపు;
     }
 
-    return c;
+    తిరిగి c;
 }
 
-void RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) const {
+శూన్య నియమం_Character_Iterator::getPos(నియమం_Character_Iterator::Pos& p) స్థిరరాశి {
     p.buf = buf;
-    p.pos = pos.getIndex();
+    p.pos = pos.get_సూచీ();
     p.bufPos = bufPos;
 }
 
-void RuleCharacterIterator::setPos(const RuleCharacterIterator::Pos& p) {
+శూన్య నియమం_Character_Iterator::సమితి_Pos(స్థిరరాశి నియమం_Character_Iterator::Pos& p) {
     buf = p.buf;
-    pos.setIndex(p.pos);
+    pos.సమితి_సూచీ(p.pos);
     bufPos = p.bufPos;
 }
 
-void RuleCharacterIterator::skipIgnored(int32_t options) {
-    if ((options & SKIP_WHITESPACE) != 0) {
-        for (;;) {
+శూన్య నియమం_Character_Iterator::skipIgnored(int32_t options) {
+    ఒకవేళ ((options & SKIP_WHITESPACE) != 0) {
+        కొరకు (;;) {
             UChar32 a = _current();
-            if (!PatternProps::isWhiteSpace(a)) break;
-            _advance(U16_LENGTH(a));
+            ఒకవేళ (!నమూనా_Props::isWhiteSpace(a)) ఆపు;
+            _advance(U16_నిడివి(a));
         }
     }
 }
 
-UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) const {
-    if (maxLookAhead < 0) {
+UnicodeString& నియమం_Character_Iterator::lookahead(UnicodeString& ఫలితం, int32_t maxLookAhead) స్థిరరాశి {
+    ఒకవేళ (maxLookAhead < 0) {
         maxLookAhead = 0x7FFFFFFF;
     }
-    if (buf != nullptr) {
-        buf->extract(bufPos, maxLookAhead, result);
-    } else {
-        text.extract(pos.getIndex(), maxLookAhead, result);
+    ఒకవేళ (buf != శూన్యసూచిక) {
+        buf->extract(bufPos, maxLookAhead, ఫలితం);
+    } లేకపోతే {
+        పాఠ్యం.extract(pos.get_సూచీ(), maxLookAhead, ఫలితం);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-void RuleCharacterIterator::jumpahead(int32_t count) {
+శూన్య నియమం_Character_Iterator::jumpahead(int32_t count) {
     _advance(count);
 }
 
@@ -134,29 +134,29 @@ UnicodeString& RuleCharacterIterator::toString(UnicodeString& result) const {
 }
 */
 
-UChar32 RuleCharacterIterator::_current() const {
-    if (buf != nullptr) {
-        return buf->char32At(bufPos);
-    } else {
-        int i = pos.getIndex();
-        return (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
+UChar32 నియమం_Character_Iterator::_current() స్థిరరాశి {
+    ఒకవేళ (buf != శూన్యసూచిక) {
+        తిరిగి buf->char32At(bufPos);
+    } లేకపోతే {
+        పూర్ణాంకం i = pos.get_సూచీ();
+        తిరిగి (i < పాఠ్యం.length()) ? పాఠ్యం.char32At(i) : static_cast<UChar32>(పూర్తి_2);
     }
 }
 
-void RuleCharacterIterator::_advance(int32_t count) {
-    if (buf != nullptr) {
+శూన్య నియమం_Character_Iterator::_advance(int32_t count) {
+    ఒకవేళ (buf != శూన్యసూచిక) {
         bufPos += count;
-        if (bufPos == buf->length()) {
-            buf = nullptr;
+        ఒకవేళ (bufPos == buf->length()) {
+            buf = శూన్యసూచిక;
         }
-    } else {
-        pos.setIndex(pos.getIndex() + count);
-        if (pos.getIndex() > text.length()) {
-            pos.setIndex(text.length());
+    } లేకపోతే {
+        pos.సమితి_సూచీ(pos.get_సూచీ() + count);
+        ఒకవేళ (pos.get_సూచీ() > పాఠ్యం.length()) {
+            pos.సమితి_సూచీ(పాఠ్యం.length());
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 //eof

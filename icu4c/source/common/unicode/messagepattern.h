@@ -14,22 +14,22 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __MESSAGEPATTERN_H__
-#define __MESSAGEPATTERN_H__
+#నిర్వచితం_కాకపోతే __MESSAGEPATTERN_H__
+#నిర్వచించు __MESSAGEPATTERN_H__
 
 /**
  * \file
  * \brief C++ API: MessagePattern class: Parses and represents ICU MessageFormat patterns.
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_FORMATTING
+#ఒకవేళ !UCONFIG_NO_FORMATTING
 
-#include "unicode/parseerr.h"
-#include "unicode/unistr.h"
+#అన్తర్భావ "unicode/parseerr.h"
+#అన్తర్భావ "unicode/unistr.h"
 
 /**
  * Mode for when an apostrophe starts quoted literal text for MessageFormat output.
@@ -67,7 +67,7 @@
  * @stable ICU 4.8
  * @see UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE
  */
-enum UMessagePatternApostropheMode {
+గణన UMessage_నమూనా_Apostrophe_బహుళకం {
     /**
      * A literal apostrophe is represented by
      * either a single or a double apostrophe pattern character.
@@ -93,13 +93,13 @@ enum UMessagePatternApostropheMode {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternApostropheMode UMessagePatternApostropheMode;
+రకనిర్వచనం గణన UMessage_నమూనా_Apostrophe_బహుళకం UMessage_నమూనా_Apostrophe_బహుళకం;
 
 /**
  * MessagePattern::Part type constants.
  * @stable ICU 4.8
  */
-enum UMessagePatternPartType {
+గణన UMessage_నమూనా_Part_Type {
     /**
      * Start of a message pattern (main or nested).
      * The length is 0 for the top-level message
@@ -109,7 +109,7 @@ enum UMessagePatternPartType {
      * There is always a later MSG_LIMIT part.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_MSG_START,
+    UMSGPAT_PART_TYPE_సందేశం_ప్రారంభం,
     /**
      * End of a message pattern (main or nested).
      * The length is 0 for the top-level message and
@@ -118,7 +118,7 @@ enum UMessagePatternPartType {
      * The value indicates the nesting level, starting with 0 for the main message.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_MSG_LIMIT,
+    UMSGPAT_PART_TYPE_సందేశం_హద్దు,
     /**
      * Indicates a substring of the pattern string which is to be skipped when formatting.
      * For example, an apostrophe that begins or ends quoted text
@@ -133,7 +133,7 @@ enum UMessagePatternPartType {
      * The value is the character code of the insertion character. (U+0027=APOSTROPHE)
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_INSERT_CHAR,
+    UMSGPAT_PART_TYPE_చొప్పించు_CHAR,
     /**
      * Indicates a syntactic (non-escaped) # symbol in a plural variant.
      * When formatting, replace this part's substring with the
@@ -141,7 +141,7 @@ enum UMessagePatternPartType {
      * The value is undefined and currently always 0.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_REPLACE_NUMBER,
+    UMSGPAT_PART_TYPE_REPLACE_సంఖ్య,
     /**
      * Start of an argument.
      * The length is 1 for the '{'.
@@ -152,19 +152,19 @@ enum UMessagePatternPartType {
      * and finally an ARG_LIMIT part.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_ARG_START,
+    UMSGPAT_PART_TYPE_ARG_ప్రారంభం,
     /**
      * End of an argument.
      * The length is 1 for the '}'.
      * The value is the ordinal value of the ArgType. Use getArgType().
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_ARG_LIMIT,
+    UMSGPAT_PART_TYPE_ARG_హద్దు,
     /**
      * The argument number, provided by the value.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_ARG_NUMBER,
+    UMSGPAT_PART_TYPE_ARG_సంఖ్య,
     /**
      * The argument name.
      * The value is undefined and currently always 0.
@@ -208,7 +208,7 @@ enum UMessagePatternPartType {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternPartType UMessagePatternPartType;
+రకనిర్వచనం గణన UMessage_నమూనా_Part_Type UMessage_నమూనా_Part_Type;
 
 /**
  * Argument type constants.
@@ -218,7 +218,7 @@ typedef enum UMessagePatternPartType UMessagePatternPartType;
  * with a nesting level one greater than the surrounding message.
  * @stable ICU 4.8
  */
-enum UMessagePatternArgType {
+గణన UMessage_నమూనా_Arg_Type {
     /**
      * The argument has no specified type.
      * @stable ICU 4.8
@@ -261,7 +261,7 @@ enum UMessagePatternArgType {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternArgType UMessagePatternArgType;
+రకనిర్వచనం గణన UMessage_నమూనా_Arg_Type UMessage_నమూనా_Arg_Type;
 
 /**
  * \def UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE
@@ -269,16 +269,16 @@ typedef enum UMessagePatternArgType UMessagePatternArgType;
  * for example UMSGPAT_ARG_TYPE_PLURAL and UMSGPAT_ARG_TYPE_SELECTORDINAL.
  * @stable ICU 50
  */
-#define UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) \
+#నిర్వచించు UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) \
     ((argType)==UMSGPAT_ARG_TYPE_PLURAL || (argType)==UMSGPAT_ARG_TYPE_SELECTORDINAL)
 
-enum {
+గణన {
     /**
      * Return value from MessagePattern.validateArgumentName() for when
      * the string is a valid "pattern identifier" but not a number.
      * @stable ICU 4.8
      */
-    UMSGPAT_ARG_NAME_NOT_NUMBER=-1,
+    UMSGPAT_ARG_NAME_NOT_సంఖ్య=-1,
 
     /**
      * Return value from MessagePattern.validateArgumentName() for when
@@ -296,12 +296,12 @@ enum {
  * @see MessagePattern.getNumericValue()
  * @stable ICU 4.8
  */
-#define UMSGPAT_NO_NUMERIC_VALUE ((double)(-123456789))
+#నిర్వచించు UMSGPAT_NO_NUMERIC_విలువ ((ద్విగుణ)(-123456789))
 
 U_NAMESPACE_BEGIN
 
-class MessagePatternDoubleList;
-class MessagePatternPartsList;
+class సందేశం_నమూనా_Double_List;
+class సందేశం_నమూనా_Parts_List;
 
 /**
  * Parses and represents ICU MessageFormat patterns.
@@ -359,8 +359,8 @@ class MessagePatternPartsList;
  *
  * @stable ICU 4.8
  */
-class U_COMMON_API MessagePattern : public UObject {
-public:
+class U_COMMON_API సందేశం_నమూనా : బహిరంగ UObject {
+బహిరంగ:
     /**
      * Constructs an empty MessagePattern with default UMessagePatternApostropheMode.
      * @param errorCode Standard ICU error code. Its input value must
@@ -369,7 +369,7 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.8
      */
-    MessagePattern(UErrorCode &errorCode);
+    సందేశం_నమూనా(UError_సంకేతం &error_సంకేతం);
 
     /**
      * Constructs an empty MessagePattern.
@@ -380,7 +380,7 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.8
      */
-    MessagePattern(UMessagePatternApostropheMode mode, UErrorCode &errorCode);
+    సందేశం_నమూనా(UMessage_నమూనా_Apostrophe_బహుళకం బహుళకం, UError_సంకేతం &error_సంకేతం);
 
     /**
      * Constructs a MessagePattern with default UMessagePatternApostropheMode and
@@ -400,14 +400,14 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode);
+    సందేశం_నమూనా(స్థిరరాశి UnicodeString &నమూనా, UParseError *parseError, UError_సంకేతం &error_సంకేతం);
 
     /**
      * Copy constructor.
      * @param other Object to copy.
      * @stable ICU 4.8
      */
-    MessagePattern(const MessagePattern &other);
+    సందేశం_నమూనా(స్థిరరాశి సందేశం_నమూనా &other);
 
     /**
      * Assignment operator.
@@ -415,13 +415,13 @@ public:
      * @return *this=other
      * @stable ICU 4.8
      */
-    MessagePattern& operator=(const MessagePattern& other) U_LIFETIME_BOUND;
+    సందేశం_నమూనా& క్రియాకారకం=(స్థిరరాశి సందేశం_నమూనా& other) U_LIFETIME_BOUND;
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~MessagePattern();
+    మాయా ~సందేశం_నమూనా();
 
     /**
      * Parses a MessageFormat pattern string.
@@ -440,9 +440,9 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parse(const UnicodeString& pattern,
+    సందేశం_నమూనా& parse(స్థిరరాశి UnicodeString& నమూనా,
                           UParseError* parseError,
-                          UErrorCode& errorCode) U_LIFETIME_BOUND;
+                          UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
 
     /**
      * Parses a ChoiceFormat pattern string.
@@ -461,9 +461,9 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parseChoiceStyle(const UnicodeString& pattern,
+    సందేశం_నమూనా& parseChoiceStyle(స్థిరరాశి UnicodeString& నమూనా,
                                      UParseError* parseError,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                     UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
 
     /**
      * Parses a PluralFormat pattern string.
@@ -482,9 +482,9 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parsePluralStyle(const UnicodeString& pattern,
+    సందేశం_నమూనా& parsePluralStyle(స్థిరరాశి UnicodeString& నమూనా,
                                      UParseError* parseError,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                     UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
 
     /**
      * Parses a SelectFormat pattern string.
@@ -503,16 +503,16 @@ public:
      * @throws NumberFormatException if a number could not be parsed
      * @stable ICU 4.8
      */
-    MessagePattern& parseSelectStyle(const UnicodeString& pattern,
+    సందేశం_నమూనా& parseSelectStyle(స్థిరరాశి UnicodeString& నమూనా,
                                      UParseError* parseError,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                     UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
 
     /**
      * Clears this MessagePattern.
      * countParts() will return 0.
      * @stable ICU 4.8
      */
-    void clear();
+    శూన్య clear();
 
     /**
      * Clears this MessagePattern and sets the UMessagePatternApostropheMode.
@@ -520,9 +520,9 @@ public:
      * @param mode The new UMessagePatternApostropheMode.
      * @stable ICU 4.8
      */
-    void clearPatternAndSetApostropheMode(UMessagePatternApostropheMode mode) {
+    శూన్య clear_నమూనా_And_సమితి_Apostrophe_బహుళకం(UMessage_నమూనా_Apostrophe_బహుళకం బహుళకం) {
         clear();
-        aposMode=mode;
+        apos_బహుళకం=బహుళకం;
     }
 
     /**
@@ -530,29 +530,29 @@ public:
      * @return true if this object is equivalent to the other one.
      * @stable ICU 4.8
      */
-    bool operator==(const MessagePattern &other) const;
+    bool క్రియాకారకం==(స్థిరరాశి సందేశం_నమూనా &other) స్థిరరాశి;
 
     /**
      * @param other another object to compare with.
      * @return false if this object is equivalent to the other one.
      * @stable ICU 4.8
      */
-    inline bool operator!=(const MessagePattern &other) const {
-        return !operator==(other);
+    అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి సందేశం_నమూనా &other) స్థిరరాశి {
+        తిరిగి !క్రియాకారకం==(other);
     }
 
     /**
      * @return A hash code for this object.
      * @stable ICU 4.8
      */
-    int32_t hashCode() const;
+    int32_t hash_సంకేతం() స్థిరరాశి;
 
     /**
      * @return this instance's UMessagePatternApostropheMode.
      * @stable ICU 4.8
      */
-    UMessagePatternApostropheMode getApostropheMode() const {
-        return aposMode;
+    UMessage_నమూనా_Apostrophe_బహుళకం get_Apostrophe_బహుళకం() స్థిరరాశి {
+        తిరిగి apos_బహుళకం;
     }
 
     // Java has package-private jdkAposMode() here.
@@ -562,8 +562,8 @@ public:
      * @return the parsed pattern string (null if none was parsed).
      * @stable ICU 4.8
      */
-    const UnicodeString& getPatternString() const U_LIFETIME_BOUND {
-        return msg;
+    స్థిరరాశి UnicodeString& get_నమూనా_String() స్థిరరాశి U_LIFETIME_BOUND {
+        తిరిగి సందేశం;
     }
 
     /**
@@ -571,8 +571,8 @@ public:
      * @return true if the parsed pattern has at least one named argument.
      * @stable ICU 4.8
      */
-    UBool hasNamedArguments() const {
-        return hasArgNames;
+    UBool hasNamedArguments() స్థిరరాశి {
+        తిరిగి has_Arg_పేర్లు;
     }
 
     /**
@@ -580,8 +580,8 @@ public:
      * @return true if the parsed pattern has at least one numbered argument.
      * @stable ICU 4.8
      */
-    UBool hasNumberedArguments() const {
-        return hasArgNumbers;
+    UBool hasNumberedArguments() స్థిరరాశి {
+        తిరిగి hasArgNumbers;
     }
 
     /**
@@ -595,7 +595,7 @@ public:
      *         ARG_NAME_NOT_VALID (-2) if it is neither.
      * @stable ICU 4.8
      */
-    static int32_t validateArgumentName(const UnicodeString &name);
+    స్థిర int32_t validate_వాదం_Name(స్థిరరాశి UnicodeString &name);
 
     /**
      * Returns a version of the parsed pattern string where each ASCII apostrophe
@@ -607,7 +607,7 @@ public:
      * @see MessageFormat.autoQuoteApostrophe()
      * @stable ICU 4.8
      */
-    UnicodeString autoQuoteApostropheDeep() const;
+    UnicodeString autoQuoteApostropheDeep() స్థిరరాశి;
 
     class Part;
 
@@ -617,8 +617,8 @@ public:
      * @return the number of pattern parts.
      * @stable ICU 4.8
      */
-    int32_t countParts() const {
-        return partsLength;
+    int32_t లెక్క_Parts() స్థిరరాశి {
+        తిరిగి parts_నిడివి;
     }
 
     /**
@@ -627,8 +627,8 @@ public:
      * @return the i-th pattern "part".
      * @stable ICU 4.8
      */
-    const Part& getPart(int32_t i) const U_LIFETIME_BOUND {
-        return parts[i];
+    స్థిరరాశి Part& getPart(int32_t i) స్థిరరాశి U_LIFETIME_BOUND {
+        తిరిగి parts[i];
     }
 
     /**
@@ -638,8 +638,8 @@ public:
      * @return The UMessagePatternPartType of the i-th Part.
      * @stable ICU 4.8
      */
-    UMessagePatternPartType getPartType(int32_t i) const {
-        return getPart(i).type;
+    UMessage_నమూనా_Part_Type getPartType(int32_t i) స్థిరరాశి {
+        తిరిగి getPart(i).type;
     }
 
     /**
@@ -649,8 +649,8 @@ public:
      * @return The pattern index of this Part.
      * @stable ICU 4.8
      */
-    int32_t getPatternIndex(int32_t partIndex) const {
-        return getPart(partIndex).index;
+    int32_t get_నమూనా_సూచీ(int32_t part_సూచీ) స్థిరరాశి {
+        తిరిగి getPart(part_సూచీ).సూచీ;
     }
 
     /**
@@ -660,8 +660,8 @@ public:
      * @return the substring associated with part.
      * @stable ICU 4.8
      */
-    UnicodeString getSubstring(const Part& part) const U_LIFETIME_BOUND {
-        return msg.tempSubString(part.index, part.length);
+    UnicodeString getSubstring(స్థిరరాశి Part& part) స్థిరరాశి U_LIFETIME_BOUND {
+        తిరిగి సందేశం.తాత్కాలిక_Sub_String(part.సూచీ, part.నిడివి);
     }
 
     /**
@@ -671,8 +671,8 @@ public:
      * @return true if getSubstring(part).equals(s).
      * @stable ICU 4.8
      */
-    UBool partSubstringMatches(const Part &part, const UnicodeString &s) const {
-        return 0==msg.compare(part.index, part.length, s);
+    UBool partSubstringMatches(స్థిరరాశి Part &part, స్థిరరాశి UnicodeString &s) స్థిరరాశి {
+        తిరిగి 0==సందేశం.compare(part.సూచీ, part.నిడివి, s);
     }
 
     /**
@@ -681,7 +681,7 @@ public:
      * @return the part's numeric value, or UMSGPAT_NO_NUMERIC_VALUE if this is not a numeric part.
      * @stable ICU 4.8
      */
-    double getNumericValue(const Part &part) const;
+    ద్విగుణ get_Numeric_విలువ(స్థిరరాశి Part &part) స్థిరరాశి;
 
     /**
      * Returns the "offset:" value of a PluralFormat argument, or 0 if none is specified.
@@ -689,7 +689,7 @@ public:
      * @return the "offset:" value.
      * @stable ICU 4.8
      */
-    double getPluralOffset(int32_t pluralStart) const;
+    ద్విగుణ get_Plural_స్థానభ్రంశం(int32_t plural_ప్రారంభం) స్థిరరాశి;
 
     /**
      * Returns the index of the ARG|MSG_LIMIT part corresponding to the ARG|MSG_START at start.
@@ -699,12 +699,12 @@ public:
      *         or start itself if getPartType(msgStart)!=ARG|MSG_START.
      * @stable ICU 4.8
      */
-    int32_t getLimitPartIndex(int32_t start) const {
-        int32_t limit=getPart(start).limitPartIndex;
-        if(limit<start) {
-            return start;
+    int32_t get_హద్దు_Part_సూచీ(int32_t ప్రారంభం) స్థిరరాశి {
+        int32_t హద్దు=getPart(ప్రారంభం).హద్దు_Part_సూచీ;
+        ఒకవేళ(హద్దు<ప్రారంభం) {
+            తిరిగి ప్రారంభం;
         }
-        return limit;
+        తిరిగి హద్దు;
     }
 
     /**
@@ -714,8 +714,8 @@ public:
      * and for syntax elements of "complex" arguments.
      * @stable ICU 4.8
      */
-    class Part : public UMemory {
-    public:
+    class Part : బహిరంగ UMemory {
+    బహిరంగ:
         /**
          * Default constructor, do not use.
          * @internal
@@ -727,8 +727,8 @@ public:
          * @return the part type.
          * @stable ICU 4.8
          */
-        UMessagePatternPartType getType() const {
-            return type;
+        UMessage_నమూనా_Part_Type getType() స్థిరరాశి {
+            తిరిగి type;
         }
 
         /**
@@ -736,8 +736,8 @@ public:
          * @return this part's pattern string index.
          * @stable ICU 4.8
          */
-        int32_t getIndex() const {
-            return index;
+        int32_t get_సూచీ() స్థిరరాశి {
+            తిరిగి సూచీ;
         }
 
         /**
@@ -746,8 +746,8 @@ public:
          * @return this part's pattern substring length.
          * @stable ICU 4.8
          */
-        int32_t getLength() const {
-            return length;
+        int32_t get_నిడివి() స్థిరరాశి {
+            తిరిగి నిడివి;
         }
 
         /**
@@ -756,8 +756,8 @@ public:
          * @return this part's pattern string limit index, same as getIndex()+getLength().
          * @stable ICU 4.8
          */
-        int32_t getLimit() const {
-            return index+length;
+        int32_t get_హద్దు() స్థిరరాశి {
+            తిరిగి సూచీ+నిడివి;
         }
 
         /**
@@ -766,8 +766,8 @@ public:
          * @return the part value.
          * @stable ICU 4.8
          */
-        int32_t getValue() const {
-            return value;
+        int32_t get_విలువ() స్థిరరాశి {
+            తిరిగి విలువ_2;
         }
 
         /**
@@ -776,12 +776,12 @@ public:
          * @return the argument type for this part.
          * @stable ICU 4.8
          */
-        UMessagePatternArgType getArgType() const {
-            UMessagePatternPartType msgType=getType();
-            if(msgType ==UMSGPAT_PART_TYPE_ARG_START || msgType ==UMSGPAT_PART_TYPE_ARG_LIMIT) {
-                return static_cast<UMessagePatternArgType>(value);
-            } else {
-                return UMSGPAT_ARG_TYPE_NONE;
+        UMessage_నమూనా_Arg_Type getArgType() స్థిరరాశి {
+            UMessage_నమూనా_Part_Type సందేశం_Type=getType();
+            ఒకవేళ(సందేశం_Type ==UMSGPAT_PART_TYPE_ARG_ప్రారంభం || సందేశం_Type ==UMSGPAT_PART_TYPE_ARG_హద్దు) {
+                తిరిగి static_cast<UMessage_నమూనా_Arg_Type>(విలువ_2);
+            } లేకపోతే {
+                తిరిగి UMSGPAT_ARG_TYPE_NONE;
             }
         }
 
@@ -792,8 +792,8 @@ public:
          * @return true if the Part type has a numeric value.
          * @stable ICU 4.8
          */
-        static UBool hasNumericValue(UMessagePatternPartType type) {
-            return type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
+        స్థిర UBool has_Numeric_విలువ(UMessage_నమూనా_Part_Type type) {
+            తిరిగి type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
         }
 
         /**
@@ -801,60 +801,60 @@ public:
          * @return true if this object is equivalent to the other one.
          * @stable ICU 4.8
          */
-        bool operator==(const Part &other) const;
+        bool క్రియాకారకం==(స్థిరరాశి Part &other) స్థిరరాశి;
 
         /**
          * @param other another object to compare with.
          * @return false if this object is equivalent to the other one.
          * @stable ICU 4.8
          */
-        inline bool operator!=(const Part &other) const {
-            return !operator==(other);
+        అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి Part &other) స్థిరరాశి {
+            తిరిగి !క్రియాకారకం==(other);
         }
 
         /**
          * @return A hash code for this object.
          * @stable ICU 4.8
          */
-        int32_t hashCode() const {
-            return ((type*37+index)*37+length)*37+value;
+        int32_t hash_సంకేతం() స్థిరరాశి {
+            తిరిగి ((type*37+సూచీ)*37+నిడివి)*37+విలువ_2;
         }
 
-    private:
-        friend class MessagePattern;
+    అంతరంగ:
+        మిత్ర class సందేశం_నమూనా;
 
-        static const int32_t MAX_LENGTH=0xffff;
-        static const int32_t MAX_VALUE=0x7fff;
-        static const int32_t MAX_NESTED_LEVELS=0x03ff;
+        స్థిర స్థిరరాశి int32_t MAX_నిడివి=0xffff;
+        స్థిర స్థిరరాశి int32_t MAX_విలువ=0x7fff;
+        స్థిర స్థిరరాశి int32_t MAX_NESTED_స్థాయిలు=0x03ff;
 
         // Some fields are not final because they are modified during pattern parsing.
         // After pattern parsing, the parts are effectively immutable.
-        UMessagePatternPartType type;
-        int32_t index;
-        uint16_t length;
-        int16_t value;
-        int32_t limitPartIndex;
+        UMessage_నమూనా_Part_Type type;
+        int32_t సూచీ;
+        uint16_t నిడివి;
+        int16_t విలువ_2;
+        int32_t హద్దు_Part_సూచీ;
     };
 
-private:
-    void preParse(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode);
+అంతరంగ:
+    శూన్య preParse(స్థిరరాశి UnicodeString &నమూనా, UParseError *parseError, UError_సంకేతం &error_సంకేతం);
 
-    void postParse();
+    శూన్య postParse();
 
-    int32_t parseMessage(int32_t index, int32_t msgStartLength,
-                         int32_t nestingLevel, UMessagePatternArgType parentType,
-                         UParseError *parseError, UErrorCode &errorCode);
+    int32_t parse_సందేశం(int32_t సూచీ, int32_t సందేశం_ప్రారంభం_నిడివి,
+                         int32_t nestingLevel, UMessage_నమూనా_Arg_Type మాతృ_Type,
+                         UParseError *parseError, UError_సంకేతం &error_సంకేతం);
 
-    int32_t parseArg(int32_t index, int32_t argStartLength, int32_t nestingLevel,
-                     UParseError *parseError, UErrorCode &errorCode);
+    int32_t parseArg(int32_t సూచీ, int32_t arg_ప్రారంభం_నిడివి, int32_t nestingLevel,
+                     UParseError *parseError, UError_సంకేతం &error_సంకేతం);
 
-    int32_t parseSimpleStyle(int32_t index, UParseError *parseError, UErrorCode &errorCode);
+    int32_t parseSimpleStyle(int32_t సూచీ, UParseError *parseError, UError_సంకేతం &error_సంకేతం);
 
-    int32_t parseChoiceStyle(int32_t index, int32_t nestingLevel,
-                             UParseError *parseError, UErrorCode &errorCode);
+    int32_t parseChoiceStyle(int32_t సూచీ, int32_t nestingLevel,
+                             UParseError *parseError, UError_సంకేతం &error_సంకేతం);
 
-    int32_t parsePluralOrSelectStyle(UMessagePatternArgType argType, int32_t index, int32_t nestingLevel,
-                                     UParseError *parseError, UErrorCode &errorCode);
+    int32_t parsePluralOrSelectStyle(UMessage_నమూనా_Arg_Type argType, int32_t సూచీ, int32_t nestingLevel,
+                                     UParseError *parseError, UError_సంకేతం &error_సంకేతం);
 
     /**
      * Validates and parses an argument name or argument number string.
@@ -864,10 +864,10 @@ private:
      *         ARG_NAME_NOT_VALID (-2) if it is neither.
      * @see #validateArgumentName(String)
      */
-    static int32_t parseArgNumber(const UnicodeString &s, int32_t start, int32_t limit);
+    స్థిర int32_t parse_Arg_సంఖ్య(స్థిరరాశి UnicodeString &s, int32_t ప్రారంభం, int32_t హద్దు);
 
-    int32_t parseArgNumber(int32_t start, int32_t limit) {
-        return parseArgNumber(msg, start, limit);
+    int32_t parse_Arg_సంఖ్య(int32_t ప్రారంభం, int32_t హద్దు) {
+        తిరిగి parse_Arg_సంఖ్య(సందేశం, ప్రారంభం, హద్దు);
     }
 
     /**
@@ -878,77 +878,77 @@ private:
      * @param parseError
      * @param errorCode
      */
-    void parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
-                     UParseError *parseError, UErrorCode &errorCode);
+    శూన్య parseDouble(int32_t ప్రారంభం, int32_t హద్దు, UBool allowInfinity,
+                     UParseError *parseError, UError_సంకేతం &error_సంకేతం);
 
     // Java has package-private appendReducedApostrophes() here.
     // In C++, this is declared in the MessageImpl class.
 
-    int32_t skipWhiteSpace(int32_t index);
+    int32_t skipWhiteSpace(int32_t సూచీ);
 
-    int32_t skipIdentifier(int32_t index);
+    int32_t skipIdentifier(int32_t సూచీ);
 
     /**
      * Skips a sequence of characters that could occur in a double value.
      * Does not fully parse or validate the value.
      */
-    int32_t skipDouble(int32_t index);
+    int32_t skipDouble(int32_t సూచీ);
 
-    static UBool isArgTypeChar(UChar32 c);
+    స్థిర UBool isArgTypeChar(UChar32 c);
 
-    UBool isChoice(int32_t index);
+    UBool isChoice(int32_t సూచీ);
 
-    UBool isPlural(int32_t index);
+    UBool isPlural(int32_t సూచీ);
 
-    UBool isSelect(int32_t index);
+    UBool isSelect(int32_t సూచీ);
 
-    UBool isOrdinal(int32_t index);
+    UBool isOrdinal(int32_t సూచీ);
 
     /**
      * @return true if we are inside a MessageFormat (sub-)pattern,
      *         as opposed to inside a top-level choice/plural/select pattern.
      */
-    UBool inMessageFormatPattern(int32_t nestingLevel);
+    UBool లోపల_సందేశం_Format_నమూనా(int32_t nestingLevel);
 
     /**
      * @return true if we are in a MessageFormat sub-pattern
      *         of a top-level ChoiceFormat pattern.
      */
-    UBool inTopLevelChoiceMessage(int32_t nestingLevel, UMessagePatternArgType parentType);
+    UBool లోపల_శిఖరం_Level_Choice_సందేశం(int32_t nestingLevel, UMessage_నమూనా_Arg_Type మాతృ_Type);
 
-    void addPart(UMessagePatternPartType type, int32_t index, int32_t length,
-                 int32_t value, UErrorCode &errorCode);
+    శూన్య కూడు_Part(UMessage_నమూనా_Part_Type type, int32_t సూచీ, int32_t నిడివి,
+                 int32_t విలువ_2, UError_సంకేతం &error_సంకేతం);
 
-    void addLimitPart(int32_t start,
-                      UMessagePatternPartType type, int32_t index, int32_t length,
-                      int32_t value, UErrorCode &errorCode);
+    శూన్య కూడు_హద్దు_Part(int32_t ప్రారంభం,
+                      UMessage_నమూనా_Part_Type type, int32_t సూచీ, int32_t నిడివి,
+                      int32_t విలువ_2, UError_సంకేతం &error_సంకేతం);
 
-    void addArgDoublePart(double numericValue, int32_t start, int32_t length, UErrorCode &errorCode);
+    శూన్య కూడు_Arg_Double_Part(ద్విగుణ numeric_విలువ, int32_t ప్రారంభం, int32_t నిడివి, UError_సంకేతం &error_సంకేతం);
 
-    void setParseError(UParseError *parseError, int32_t index);
+    శూన్య సమితి_Parse_Error(UParseError *parseError, int32_t సూచీ);
 
-    UBool init(UErrorCode &errorCode);
-    UBool copyStorage(const MessagePattern &other, UErrorCode &errorCode);
+    UBool init(UError_సంకేతం &error_సంకేతం);
+    UBool copyStorage(స్థిరరాశి సందేశం_నమూనా &other, UError_సంకేతం &error_సంకేతం);
 
-    UMessagePatternApostropheMode aposMode;
-    UnicodeString msg;
+    UMessage_నమూనా_Apostrophe_బహుళకం apos_బహుళకం;
+    UnicodeString సందేశం;
     // ArrayList<Part> parts=new ArrayList<Part>();
-    MessagePatternPartsList *partsList;
+    సందేశం_నమూనా_Parts_List *partsList;
     Part *parts;
-    int32_t partsLength;
+    int32_t parts_నిడివి;
     // ArrayList<Double> numericValues;
-    MessagePatternDoubleList *numericValuesList;
-    double *numericValues;
-    int32_t numericValuesLength;
-    UBool hasArgNames;
+    సందేశం_నమూనా_Double_List *numeric_విలువలు_List;
+    ద్విగుణ *numeric_విలువలు;
+    int32_t numeric_విలువలు_నిడివి;
+    UBool has_Arg_పేర్లు;
     UBool hasArgNumbers;
     UBool needsAutoQuoting;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // !UCONFIG_NO_FORMATTING
+#అయితే_ముగింపు  // !UCONFIG_NO_FORMATTING
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __MESSAGEPATTERN_H__
+#అయితే_ముగింపు  // __MESSAGEPATTERN_H__

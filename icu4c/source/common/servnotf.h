@@ -6,12 +6,12 @@
  * others. All Rights Reserved.                                                *
  *******************************************************************************
  */
-#ifndef ICUNOTIF_H
-#define ICUNOTIF_H
+#నిర్వచితం_కాకపోతే ICUNOTIF_H
+#నిర్వచించు ICUNOTIF_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#ఒకవేళ UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -21,37 +21,37 @@ U_NAMESPACE_BEGIN
  */
 class ICUNotifier;
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#else
+#లేకపోతే
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/unistr.h"
 
-#include "mutex.h"
-#include "uvector.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "uvector.h"
 
 U_NAMESPACE_BEGIN
 
-class U_COMMON_API EventListener : public UObject {
-public: 
-    virtual ~EventListener();
+class U_COMMON_API EventListener : బహిరంగ UObject {
+బహిరంగ: 
+    మాయా ~EventListener();
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID();
+బహిరంగ:
+    స్థిర UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    మాయా UClassID getDynamicClassID() స్థిరరాశి override;
 
-public:
-#ifdef SERVICE_DEBUG
-    virtual UnicodeString& debug(UnicodeString& result) const {
-      return debugClass(result);
+బహిరంగ:
+#నిర్వచితమైతే SERVICE_DEBUG
+    మాయా UnicodeString& debug(UnicodeString& ఫలితం) స్థిరరాశి {
+      తిరిగి debugClass(ఫలితం);
     }
 
-    virtual UnicodeString& debugClass(UnicodeString& result) const {
-      return result.append((UnicodeString)"Key");
+    మాయా UnicodeString& debugClass(UnicodeString& ఫలితం) స్థిరరాశి {
+      తిరిగి ఫలితం.append((UnicodeString)"Key");
     }
-#endif
+#అయితే_ముగింపు
 };
 
 /**
@@ -71,13 +71,13 @@ public:
  * type and call the appropriate method on the listener.
  */
 
-class U_COMMON_API ICUNotifier : public UMemory  {
-private: UVector* listeners;
+class U_COMMON_API ICUNotifier : బహిరంగ UMemory  {
+అంతరంగ: UVector* listeners;
          
-public: 
+బహిరంగ: 
     ICUNotifier();
     
-    virtual ~ICUNotifier();
+    మాయా ~ICUNotifier();
     
     /**
      * Add a listener to be notified when notifyChanged is called.
@@ -86,14 +86,14 @@ public:
      * register the identical listener more than once will be
      * silently ignored.  
      */
-    virtual void addListener(const EventListener* l, UErrorCode& status);
+    మాయా శూన్య కూడు_Listener(స్థిరరాశి EventListener* l, UError_సంకేతం& స్థితి_2);
     
     /**
      * Stop notifying this listener.  The listener must
      * not be null. Attempts to remove a listener that is
      * not registered will be silently ignored.
      */
-    virtual void removeListener(const EventListener* l, UErrorCode& status);
+    మాయా శూన్య removeListener(స్థిరరాశి EventListener* l, UError_సంకేతం& స్థితి_2);
     
     /**
      * ICU doesn't spawn its own threads.  All listeners are notified in
@@ -101,25 +101,25 @@ public:
      * indefinitely block the calling thread.  Callers should beware of
      * deadlock situations.  
      */
-    virtual void notifyChanged();
+    మాయా శూన్య notify_మారింది();
     
-protected: 
+రక్షిత: 
     /**
      * Subclasses implement this to return true if the listener is
      * of the appropriate type.
      */
-    virtual UBool acceptsListener(const EventListener& l) const = 0;
+    మాయా UBool స్వీకరించు_Listener(స్థిరరాశి EventListener& l) స్థిరరాశి = 0;
     
     /**
      * Subclasses implement this to notify the listener.
      */
-    virtual void notifyListener(EventListener& l) const = 0;
+    మాయా శూన్య notifyListener(EventListener& l) స్థిరరాశి = 0;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* UCONFIG_NO_SERVICE */
-#endif
+#అయితే_ముగింపు
 
 /* ICUNOTIF_H */
-#endif
+#అయితే_ముగింపు

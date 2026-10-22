@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/chariter.h"
+#అన్తర్భావ "unicode/chariter.h"
 
 U_NAMESPACE_BEGIN
 
@@ -15,86 +15,86 @@ ForwardCharacterIterator::~ForwardCharacterIterator() {}
 ForwardCharacterIterator::ForwardCharacterIterator()
 : UObject()
 {}
-ForwardCharacterIterator::ForwardCharacterIterator(const ForwardCharacterIterator &other)
+ForwardCharacterIterator::ForwardCharacterIterator(స్థిరరాశి ForwardCharacterIterator &other)
 : UObject(other)
 {}
 
 
 CharacterIterator::CharacterIterator()
-: textLength(0), pos(0), begin(0), end(0) {
+: పాఠ్యం_నిడివి(0), pos(0), begin(0), చివర(0) {
 }
 
 CharacterIterator::CharacterIterator(int32_t length)
-: textLength(length), pos(0), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: పాఠ్యం_నిడివి(length), pos(0), begin(0), చివర(length) {
+    ఒకవేళ(పాఠ్యం_నిడివి < 0) {
+        పాఠ్యం_నిడివి = చివర = 0;
     }
 }
 
 CharacterIterator::CharacterIterator(int32_t length, int32_t position)
-: textLength(length), pos(position), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: పాఠ్యం_నిడివి(length), pos(position), begin(0), చివర(length) {
+    ఒకవేళ(పాఠ్యం_నిడివి < 0) {
+        పాఠ్యం_నిడివి = చివర = 0;
     }
-    if(pos < 0) {
+    ఒకవేళ(pos < 0) {
         pos = 0;
-    } else if(pos > end) {
-        pos = end;
+    } లేకపోతే ఒకవేళ(pos > చివర) {
+        pos = చివర;
     }
 }
 
-CharacterIterator::CharacterIterator(int32_t length, int32_t textBegin, int32_t textEnd, int32_t position)
-: textLength(length), pos(position), begin(textBegin), end(textEnd) {
-    if(textLength < 0) {
-        textLength = 0;
+CharacterIterator::CharacterIterator(int32_t length, int32_t పాఠ్యం_Begin, int32_t పాఠ్యం_చివర, int32_t position)
+: పాఠ్యం_నిడివి(length), pos(position), begin(పాఠ్యం_Begin), చివర(పాఠ్యం_చివర) {
+    ఒకవేళ(పాఠ్యం_నిడివి < 0) {
+        పాఠ్యం_నిడివి = 0;
     }
-    if(begin < 0) {
+    ఒకవేళ(begin < 0) {
         begin = 0;
-    } else if(begin > textLength) {
-        begin = textLength;
+    } లేకపోతే ఒకవేళ(begin > పాఠ్యం_నిడివి) {
+        begin = పాఠ్యం_నిడివి;
     }
-    if(end < begin) {
-        end = begin;
-    } else if(end > textLength) {
-        end = textLength;
+    ఒకవేళ(చివర < begin) {
+        చివర = begin;
+    } లేకపోతే ఒకవేళ(చివర > పాఠ్యం_నిడివి) {
+        చివర = పాఠ్యం_నిడివి;
     }
-    if(pos < begin) {
+    ఒకవేళ(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
-        pos = end;
+    } లేకపోతే ఒకవేళ(pos > చివర) {
+        pos = చివర;
     }
 }
 
 CharacterIterator::~CharacterIterator() {}
 
-CharacterIterator::CharacterIterator(const CharacterIterator &that) :
+CharacterIterator::CharacterIterator(స్థిరరాశి CharacterIterator &that) :
 ForwardCharacterIterator(that),
-textLength(that.textLength), pos(that.pos), begin(that.begin), end(that.end)
+పాఠ్యం_నిడివి(that.పాఠ్యం_నిడివి), pos(that.pos), begin(that.begin), చివర(that.చివర)
 {
 }
 
 CharacterIterator&
-CharacterIterator::operator=(const CharacterIterator& that) U_LIFETIME_BOUND {
-    ForwardCharacterIterator::operator=(that);
-    textLength = that.textLength;
+CharacterIterator::క్రియాకారకం=(స్థిరరాశి CharacterIterator& that) U_LIFETIME_BOUND {
+    ForwardCharacterIterator::క్రియాకారకం=(that);
+    పాఠ్యం_నిడివి = that.పాఠ్యం_నిడివి;
     pos = that.pos;
     begin = that.begin;
-    end = that.end;
-    return *this;
+    చివర = that.చివర;
+    తిరిగి *ఇది;
 }
 
 // implementing first[32]PostInc() directly in a subclass should be faster
 // but these implementations make subclassing a little easier
 char16_t
-CharacterIterator::firstPostInc() {
-    setToStart();
-    return nextPostInc();
+CharacterIterator::మొదటి_Post_Inc() {
+    సమితి_గమ్యం_ప్రారంభం();
+    తిరిగి తదుపరి_Post_Inc();
 }
 
 UChar32
 CharacterIterator::first32PostInc() {
-    setToStart();
-    return next32PostInc();
+    సమితి_గమ్యం_ప్రారంభం();
+    తిరిగి next32PostInc();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

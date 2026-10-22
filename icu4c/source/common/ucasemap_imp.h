@@ -4,14 +4,14 @@
 // ucasemap_imp.h
 // created: 2017feb08 Markus W. Scherer
 
-#ifndef __UCASEMAP_IMP_H__
-#define __UCASEMAP_IMP_H__
+#నిర్వచితం_కాకపోతే __UCASEMAP_IMP_H__
+#నిర్వచించు __UCASEMAP_IMP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/ucasemap.h"
-#include "unicode/uchar.h"
-#include "unicode/unistr.h"  // for UStringCaseMapper
-#include "ucase.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/ucasemap.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/unistr.h"  // for UStringCaseMapper
+#అన్తర్భావ "ucase.h"
 
 /**
  * Bit mask for the titlecasing iterator options bit field.
@@ -20,7 +20,7 @@
  * See stringoptions.h.
  * @internal
  */
-#define U_TITLECASE_ITERATOR_MASK 0xe0
+#నిర్వచించు U_TITLECASE_ITERATOR_ముసుగు 0xe0
 
 /**
  * Bit mask for the titlecasing index adjustment options bit set.
@@ -29,7 +29,7 @@
  * See stringoptions.h.
  * @internal
  */
-#define U_TITLECASE_ADJUSTMENT_MASK 0x600
+#నిర్వచించు U_TITLECASE_ADJUSTMENT_ముసుగు 0x600
 
 /**
  * Internal API, used by u_strcasecmp() etc.
@@ -37,10 +37,10 @@
  * in code point order or code unit order.
  */
 U_CFUNC int32_t
-u_strcmpFold(const UChar *s1, int32_t length1,
-             const UChar *s2, int32_t length2,
+u_strcmpFold(స్థిరరాశి UChar *s1, int32_t length1,
+             స్థిరరాశి UChar *s2, int32_t length2,
              uint32_t options,
-             UErrorCode *pErrorCode);
+             UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Internal API, used for detecting length of
@@ -54,14 +54,14 @@ u_strcmpFold(const UChar *s1, int32_t length1,
  * @param matchLen2     (output) length of partial prefix match in s2
  * @param pErrorCode    receives error status
  */
-U_CAPI void
-u_caseInsensitivePrefixMatch(const UChar *s1, int32_t length1,
-                             const UChar *s2, int32_t length2,
+U_CAPI శూన్య
+u_case_Insensitive_ఉపసర్గ_సరిపోలిక(స్థిరరాశి UChar *s1, int32_t length1,
+                             స్థిరరాశి UChar *s2, int32_t length2,
                              uint32_t options,
-                             int32_t *matchLen1, int32_t *matchLen2,
-                             UErrorCode *pErrorCode);
+                             int32_t *సరిపోలిక_Len1, int32_t *సరిపోలిక_Len2,
+                             UError_సంకేతం *p_Error_సంకేతం);
 
-#ifdef __cplusplus
+#నిర్వచితమైతే __cplusplus
 
 U_NAMESPACE_BEGIN
 
@@ -70,110 +70,110 @@ class ByteSink;
 class Locale;               // unicode/locid.h
 
 /** Returns true if the options are valid. Otherwise false, and sets an error. */
-inline UBool ustrcase_checkTitleAdjustmentOptions(uint32_t options, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((options & U_TITLECASE_ADJUSTMENT_MASK) == U_TITLECASE_ADJUSTMENT_MASK) {
+అంతఃవరుస UBool ustrcase_checkTitleAdjustmentOptions(uint32_t options, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి false; }
+    ఒకవేళ ((options & U_TITLECASE_ADJUSTMENT_ముసుగు) == U_TITLECASE_ADJUSTMENT_ముసుగు) {
         // Both options together.
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి false;
     }
-    return true;
+    తిరిగి true;
 }
 
-inline UBool ustrcase_isLNS(UChar32 c) {
+అంతఃవరుస UBool ustrcase_isLNS(UChar32 c) {
     // Letter, number, symbol,
     // or a private use code point because those are typically used as letters or numbers.
     // Consider modifier letters only if they are cased.
-    const uint32_t LNS = (U_GC_L_MASK|U_GC_N_MASK|U_GC_S_MASK|U_GC_CO_MASK) & ~U_GC_LM_MASK;
-    int gc = u_charType(c);
-    return (U_MASK(gc) & LNS) != 0 || (gc == U_MODIFIER_LETTER && ucase_getType(c) != UCASE_NONE);
+    స్థిరరాశి uint32_t LNS = (U_GC_L_ముసుగు|U_GC_N_ముసుగు|U_GC_S_ముసుగు|U_GC_CO_ముసుగు) & ~U_GC_LM_ముసుగు;
+    పూర్ణాంకం gc = u_charType(c);
+    తిరిగి (U_ముసుగు(gc) & LNS) != 0 || (gc == U_MODIFIER_LETTER && ucase_getType(c) != UCASE_NONE);
 }
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
 /** Returns nullptr if error. Pass in either locale or locID, not both. */
 U_CFUNC
-BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
-                                              const char* locID,
+BreakIterator* ustrcase_getTitleBreakIterator(స్థిరరాశి Locale* locale,
+                                              స్థిరరాశి అక్షరం* locID,
                                               uint32_t options,
                                               BreakIterator* iter U_LIFETIME_BOUND,
-                                              LocalPointer<BreakIterator>& ownedIter,
-                                              UErrorCode& errorCode);
+                                              Local_సూచిక<BreakIterator>& ownedIter,
+                                              UError_సంకేతం& error_సంకేతం);
 
-#endif
+#అయితే_ముగింపు
 
 /*
  * Internal string casing functions implementing
  * ustring.h/ustrcase.cpp and UnicodeString case mapping functions.
  */
 
-struct UCaseMapImpl : public icu::UMemory {
+నిర్మాణం UCaseMapImpl : బహిరంగ icu::UMemory {
     /** Implements most of ucasemap_open(). */
-    UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErrorCode);
+    UCaseMapImpl(స్థిరరాశి అక్షరం *localeID, uint32_t opts, UError_సంకేతం *p_Error_సంకేతం);
     ~UCaseMapImpl();
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
     icu::BreakIterator *iter;  /* We adopt the iterator, so we own it. */
-#endif
-    char locale[32];
+#అయితే_ముగింపు
+    అక్షరం locale[32];
     int32_t caseLocale;
     uint32_t options;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#if UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ UCONFIG_NO_BREAK_ITERATION
 #   define UCASEMAP_BREAK_ITERATOR_PARAM
-#   define UCASEMAP_BREAK_ITERATOR_UNUSED
+#   define UCASEMAP_BREAK_ITERATOR_వాడని
 #   define UCASEMAP_BREAK_ITERATOR
 #   define UCASEMAP_BREAK_ITERATOR_NULL
-#else
+#లేకపోతే
 #   define UCASEMAP_BREAK_ITERATOR_PARAM icu::BreakIterator *iter,
-#   define UCASEMAP_BREAK_ITERATOR_UNUSED icu::BreakIterator *,
+#   define UCASEMAP_BREAK_ITERATOR_వాడని icu::BreakIterator *,
 #   define UCASEMAP_BREAK_ITERATOR iter,
-#   define UCASEMAP_BREAK_ITERATOR_NULL NULL,
-#endif
+#   define UCASEMAP_BREAK_ITERATOR_NULL ఖాళీ,
+#అయితే_ముగింపు
 
 U_CFUNC int32_t
-ustrcase_getCaseLocale(const char *locale);
+ustrcase_getCaseLocale(స్థిరరాశి అక్షరం *locale);
 
 // TODO: swap src / dest if approved for new public api
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalToLower(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                         char16_t *dest, int32_t destCapacity,
-                         const char16_t *src, int32_t srcLength,
+ustrcase_అంతర్గత_గమ్యం_క్రింది(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
+                         char16_t *dest, int32_t dest_సామర్థ్యం,
+                         స్థిరరాశి char16_t *src, int32_t src_నిడివి,
                          icu::Edits *edits,
-                         UErrorCode &errorCode);
+                         UError_సంకేతం &error_సంకేతం);
 
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                         char16_t *dest, int32_t destCapacity,
-                         const char16_t *src, int32_t srcLength,
+ustrcase_అంతర్గత_గమ్యం_పై(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
+                         char16_t *dest, int32_t dest_సామర్థ్యం,
+                         స్థిరరాశి char16_t *src, int32_t src_నిడివి,
                          icu::Edits *edits,
-                         UErrorCode &errorCode);
+                         UError_సంకేతం &error_సంకేతం);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalToTitle(int32_t caseLocale, uint32_t options,
+ustrcase_అంతర్గత_గమ్యం_Title(int32_t caseLocale, uint32_t options,
                          icu::BreakIterator *iter,
-                         char16_t *dest, int32_t destCapacity,
-                         const char16_t *src, int32_t srcLength,
+                         char16_t *dest, int32_t dest_సామర్థ్యం,
+                         స్థిరరాశి char16_t *src, int32_t src_నిడివి,
                          icu::Edits *edits,
-                         UErrorCode &errorCode);
+                         UError_సంకేతం &error_సంకేతం);
 
-#endif
+#అయితే_ముగింపు
 
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalFold(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                      char16_t *dest, int32_t destCapacity,
-                      const char16_t *src, int32_t srcLength,
+ustrcase_అంతర్గత_Fold(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
+                      char16_t *dest, int32_t dest_సామర్థ్యం,
+                      స్థిరరాశి char16_t *src, int32_t src_నిడివి,
                       icu::Edits *edits,
-                      UErrorCode &errorCode);
+                      UError_సంకేతం &error_సంకేతం);
 
 /**
  * Common string case mapping implementation for ucasemap_toXyz() and UnicodeString::toXyz().
@@ -181,11 +181,11 @@ ustrcase_internalFold(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERA
  */
 U_CFUNC int32_t
 ustrcase_map(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-             char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
+             char16_t *dest, int32_t dest_సామర్థ్యం,
+             స్థిరరాశి char16_t *src, int32_t src_నిడివి,
              UStringCaseMapper *stringCaseMapper,
              icu::Edits *edits,
-             UErrorCode &errorCode);
+             UError_సంకేతం &error_సంకేతం);
 
 /**
  * Common string case mapping implementation for old-fashioned u_strToXyz() functions
@@ -194,43 +194,43 @@ ustrcase_map(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
  */
 U_CFUNC int32_t
 ustrcase_mapWithOverlap(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                        char16_t *dest, int32_t destCapacity,
-                        const char16_t *src, int32_t srcLength,
+                        char16_t *dest, int32_t dest_సామర్థ్యం,
+                        స్థిరరాశి char16_t *src, int32_t src_నిడివి,
                         UStringCaseMapper *stringCaseMapper,
-                        UErrorCode &errorCode);
+                        UError_సంకేతం &error_సంకేతం);
 
 /**
  * UTF-8 string case mapping function type, used by ucasemap_mapUTF8().
  * UTF-8 version of UStringCaseMapper.
  * All error checking must be done.
  */
-typedef void U_CALLCONV
+రకనిర్వచనం శూన్య U_CALLCONV
 UTF8CaseMapper(int32_t caseLocale, uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
                icu::BreakIterator *iter,
-#endif
-               const uint8_t *src, int32_t srcLength,
+#అయితే_ముగింపు
+               స్థిరరాశి uint8_t *src, int32_t src_నిడివి,
                icu::ByteSink &sink, icu::Edits *edits,
-               UErrorCode &errorCode);
+               UError_సంకేతం &error_సంకేతం);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
 /** Implements UTF8CaseMapper. */
-U_CFUNC void U_CALLCONV
-ucasemap_internalUTF8ToTitle(int32_t caseLocale, uint32_t options,
+U_CFUNC శూన్య U_CALLCONV
+ucasemap_అంతర్గత_UTF8_గమ్యం_Title(int32_t caseLocale, uint32_t options,
         icu::BreakIterator *iter,
-        const uint8_t *src, int32_t srcLength,
+        స్థిరరాశి uint8_t *src, int32_t src_నిడివి,
         icu::ByteSink &sink, icu::Edits *edits,
-        UErrorCode &errorCode);
+        UError_సంకేతం &error_సంకేతం);
 
-#endif
+#అయితే_ముగింపు
 
-void
+శూన్య
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 const char *src, int32_t srcLength,
+                 స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::ByteSink &sink, icu::Edits *edits,
-                 UErrorCode &errorCode);
+                 UError_సంకేతం &error_సంకేతం);
 
 /**
  * Implements argument checking and buffer handling
@@ -238,47 +238,47 @@ ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_P
  */
 int32_t
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 char *dest, int32_t destCapacity,
-                 const char *src, int32_t srcLength,
+                 అక్షరం *dest, int32_t dest_సామర్థ్యం,
+                 స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::Edits *edits,
-                 UErrorCode &errorCode);
+                 UError_సంకేతం &error_సంకేతం);
 
 U_NAMESPACE_BEGIN
-namespace GreekUpper {
+namespace Greek_పై {
 
 // Data bits.
-static const uint32_t UPPER_MASK = 0x3ff;
-static const uint32_t HAS_VOWEL = 0x1000;
-static const uint32_t HAS_YPOGEGRAMMENI = 0x2000;
-static const uint32_t HAS_ACCENT = 0x4000;
-static const uint32_t HAS_DIALYTIKA = 0x8000;
+స్థిర స్థిరరాశి uint32_t పై_ముసుగు = 0x3ff;
+స్థిర స్థిరరాశి uint32_t HAS_VOWEL = 0x1000;
+స్థిర స్థిరరాశి uint32_t HAS_YPOGEGRAMMENI = 0x2000;
+స్థిర స్థిరరాశి uint32_t HAS_ACCENT = 0x4000;
+స్థిర స్థిరరాశి uint32_t HAS_DIALYTIKA = 0x8000;
 // Further bits during data building and processing, not stored in the data map.
-static const uint32_t HAS_COMBINING_DIALYTIKA = 0x10000;
-static const uint32_t HAS_OTHER_GREEK_DIACRITIC = 0x20000;
+స్థిర స్థిరరాశి uint32_t HAS_COMBINING_DIALYTIKA = 0x10000;
+స్థిర స్థిరరాశి uint32_t HAS_OTHER_GREEK_DIACRITIC = 0x20000;
 
-static const uint32_t HAS_VOWEL_AND_ACCENT = HAS_VOWEL | HAS_ACCENT;
-static const uint32_t HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA =
+స్థిర స్థిరరాశి uint32_t HAS_VOWEL_AND_ACCENT = HAS_VOWEL | HAS_ACCENT;
+స్థిర స్థిరరాశి uint32_t HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA =
         HAS_VOWEL_AND_ACCENT | HAS_DIALYTIKA;
-static const uint32_t HAS_EITHER_DIALYTIKA = HAS_DIALYTIKA | HAS_COMBINING_DIALYTIKA;
+స్థిర స్థిరరాశి uint32_t HAS_EITHER_DIALYTIKA = HAS_DIALYTIKA | HAS_COMBINING_DIALYTIKA;
 
 // State bits.
-static const uint32_t AFTER_CASED = 1;
-static const uint32_t AFTER_VOWEL_WITH_COMBINING_ACCENT = 2;
-static const uint32_t AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT = 4;
+స్థిర స్థిరరాశి uint32_t AFTER_CASED = 1;
+స్థిర స్థిరరాశి uint32_t AFTER_VOWEL_WITH_COMBINING_ACCENT = 2;
+స్థిర స్థిరరాశి uint32_t AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT = 4;
 
-uint32_t getLetterData(UChar32 c);
+uint32_t get_Letter_దత్తాంశం(UChar32 c);
 
 /**
  * Returns a non-zero value for each of the Greek combining diacritics
  * listed in The Unicode Standard, version 8, chapter 7.2 Greek,
  * plus some perispomeni look-alikes.
  */
-uint32_t getDiacriticData(UChar32 c);
+uint32_t get_Diacritic_దత్తాంశం(UChar32 c);
 
 }  // namespace GreekUpper
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // __cplusplus
+#అయితే_ముగింపు  // __cplusplus
 
-#endif  // __UCASEMAP_IMP_H__
+#అయితే_ముగింపు  // __UCASEMAP_IMP_H__

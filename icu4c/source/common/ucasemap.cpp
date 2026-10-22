@@ -18,29 +18,29 @@
 *   Case mapping service object and functions using it.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/brkiter.h"
-#include "unicode/bytestream.h"
-#include "unicode/casemap.h"
-#include "unicode/edits.h"
-#include "unicode/stringoptions.h"
-#include "unicode/stringpiece.h"
-#include "unicode/ubrk.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "unicode/ucasemap.h"
-#if !UCONFIG_NO_BREAK_ITERATION
-#include "unicode/utext.h"
-#endif
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/brkiter.h"
+#అన్తర్భావ "unicode/bytestream.h"
+#అన్తర్భావ "unicode/casemap.h"
+#అన్తర్భావ "unicode/edits.h"
+#అన్తర్భావ "unicode/stringoptions.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/ubrk.h"
+#అన్తర్భావ "unicode/uloc.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/ucasemap.h"
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
+#అన్తర్భావ "unicode/utext.h"
+#అయితే_ముగింపు
+#అన్తర్భావ "unicode/utf.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "bytesinkutil.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucase.h"
+#అన్తర్భావ "ucasemap_imp.h"
 
 U_NAMESPACE_USE
 
@@ -51,89 +51,89 @@ U_NAMESPACE_USE
 
 U_NAMESPACE_BEGIN
 
-UCaseMapImpl::UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErrorCode) :
-#if !UCONFIG_NO_BREAK_ITERATION
-        iter(nullptr),
-#endif
+UCaseMapImpl::UCaseMapImpl(స్థిరరాశి అక్షరం *localeID, uint32_t opts, UError_సంకేతం *p_Error_సంకేతం) :
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
+        iter(శూన్యసూచిక),
+#అయితే_ముగింపు
         caseLocale(UCASE_LOC_UNKNOWN), options(opts) {
-    ucasemap_setLocale(reinterpret_cast<UCaseMap *>(this), localeID, pErrorCode);
+    ucasemap_సమితి_Locale(reinterpret_cast<UCaseMap *>(ఇది), localeID, p_Error_సంకేతం);
 }
 
 UCaseMapImpl::~UCaseMapImpl() {
-#if !UCONFIG_NO_BREAK_ITERATION
-    delete iter;
-#endif
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
+    తొలగించు iter;
+#అయితే_ముగింపు
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 U_CAPI UCaseMap * U_EXPORT2
-ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+ucasemap_open(స్థిరరాశి అక్షరం *locale, uint32_t options, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    UCaseMapImpl *csm = new UCaseMapImpl(locale, options, pErrorCode);
-    if(csm==nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
-    } else if (U_FAILURE(*pErrorCode)) {
-        delete csm;
-        return nullptr;
+    UCaseMapImpl *csm = కొత్త UCaseMapImpl(locale, options, p_Error_సంకేతం);
+    ఒకవేళ(csm==శూన్యసూచిక) {
+        *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+        తొలగించు csm;
+        తిరిగి శూన్యసూచిక;
     }
-    return reinterpret_cast<UCaseMap *>(csm);
+    తిరిగి reinterpret_cast<UCaseMap *>(csm);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ucasemap_close(UCaseMap *csm) {
-    delete reinterpret_cast<UCaseMapImpl *>(csm);
+    తొలగించు reinterpret_cast<UCaseMapImpl *>(csm);
 }
 
-U_CAPI const char* U_EXPORT2
-ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->locale;
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ucasemap_getLocale(స్థిరరాశి UCaseMap* csm U_LIFETIME_BOUND) {
+    తిరిగి reinterpret_cast<స్థిరరాశి UCaseMapImpl *>(csm)->locale;
 }
 
 U_CAPI uint32_t U_EXPORT2
-ucasemap_getOptions(const UCaseMap *csm) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->options;
+ucasemap_getOptions(స్థిరరాశి UCaseMap *csm) {
+    తిరిగి reinterpret_cast<స్థిరరాశి UCaseMapImpl *>(csm)->options;
 }
 
-U_CAPI void U_EXPORT2
-ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI శూన్య U_EXPORT2
+ucasemap_సమితి_Locale(UCaseMap *csm, స్థిరరాశి అక్షరం *locale, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
-    auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if (locale != nullptr && *locale == 0) {
+    స్వయంచాలక *impl = reinterpret_cast<UCaseMapImpl *>(csm);
+    ఒకవేళ (locale != శూన్యసూచిక && *locale == 0) {
         impl->locale[0] = 0;
-        impl->caseLocale = UCASE_LOC_ROOT;
-        return;
+        impl->caseLocale = UCASE_LOC_మూలం;
+        తిరిగి;
     }
 
-    UErrorCode bufferStatus = U_ZERO_ERROR;
-    int32_t length=uloc_getName(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
-    if(bufferStatus==U_BUFFER_OVERFLOW_ERROR || (U_SUCCESS(bufferStatus) && length==sizeof(impl->locale))) {
-        bufferStatus = U_ZERO_ERROR;
+    UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
+    int32_t length=uloc_getName(locale, impl->locale, (int32_t)పరిమాణం(impl->locale), &బఫరు_స్థితి);
+    ఒకవేళ(బఫరు_స్థితి==U_బఫరు_అధికప్రవాహం_ERROR || (U_SUCCESS(బఫరు_స్థితి) && length==పరిమాణం(impl->locale))) {
+        బఫరు_స్థితి = U_ZERO_ERROR;
         /* we only really need the language code for case mappings */
-        length=uloc_getLanguage(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
+        length=uloc_getLanguage(locale, impl->locale, (int32_t)పరిమాణం(impl->locale), &బఫరు_స్థితి);
     }
-    if(U_FAILURE(bufferStatus)) {
-        *pErrorCode=bufferStatus;
-    } else if(length==sizeof(impl->locale)) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    ఒకవేళ(U_FAILURE(బఫరు_స్థితి)) {
+        *p_Error_సంకేతం=బఫరు_స్థితి;
+    } లేకపోతే ఒకవేళ(length==పరిమాణం(impl->locale)) {
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
     }
-    if(U_SUCCESS(*pErrorCode)) {     
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం)) {     
         impl->caseLocale = ucase_getCaseLocale(impl->locale);
-    } else {
+    } లేకపోతే {
         impl->locale[0]=0;
-        impl->caseLocale = UCASE_LOC_ROOT;
+        impl->caseLocale = UCASE_LOC_మూలం;
     }
 }
 
-U_CAPI void U_EXPORT2
-ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI శూన్య U_EXPORT2
+ucasemap_సమితి_Options(UCaseMap *csm, uint32_t options, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
     reinterpret_cast<UCaseMapImpl *>(csm)->options=options;
 }
@@ -142,294 +142,294 @@ ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode) {
 
 /* TODO(markus): Move to a new, separate utf8case.cpp file. */
 
-namespace {
+నామాకాశ {
 
 /* append a full case mapping result, see UCASE_MAX_STRING_LENGTH */
-inline UBool
-appendResult(int32_t cpLength, int32_t result, const char16_t *s,
-             ByteSink &sink, uint32_t options, icu::Edits *edits, UErrorCode &errorCode) {
-    U_ASSERT(U_SUCCESS(errorCode));
+అంతఃవరుస UBool
+append_ఫలితం(int32_t cp_నిడివి, int32_t ఫలితం, స్థిరరాశి char16_t *s,
+             ByteSink &sink, uint32_t options, icu::Edits *edits, UError_సంకేతం &error_సంకేతం) {
+    U_ASSERT(U_SUCCESS(error_సంకేతం));
 
     /* decode the result */
-    if(result<0) {
+    ఒకవేళ(ఫలితం<0) {
         /* (not) original code point */
-        if(edits!=nullptr) {
-            edits->addUnchanged(cpLength);
+        ఒకవేళ(edits!=శూన్యసూచిక) {
+            edits->కూడు_Unchanged(cp_నిడివి);
         }
-        if((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-            ByteSinkUtil::appendCodePoint(cpLength, ~result, sink);
+        ఒకవేళ((options & U_OMIT_UNCHANGED_పాఠ్యం) == 0) {
+            ByteSinkUtil::append_సంకేతం_బిందువు(cp_నిడివి, ~ఫలితం, sink);
         }
-    } else {
-        if(result<=UCASE_MAX_STRING_LENGTH) {
+    } లేకపోతే {
+        ఒకవేళ(ఫలితం<=UCASE_MAX_STRING_నిడివి) {
             // string: "result" is the UTF-16 length
-            return ByteSinkUtil::appendChange(cpLength, s, result, sink, edits, errorCode);
-        } else {
-            ByteSinkUtil::appendCodePoint(cpLength, result, sink, edits);
+            తిరిగి ByteSinkUtil::appendChange(cp_నిడివి, s, ఫలితం, sink, edits, error_సంకేతం);
+        } లేకపోతే {
+            ByteSinkUtil::append_సంకేతం_బిందువు(cp_నిడివి, ఫలితం, sink, edits);
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+అంతఃవరుస uint8_t getTwoByteLead(UChar32 c) { తిరిగి static_cast<uint8_t>((c >> 6) | 0xc0); }
+అంతఃవరుస uint8_t getTwoByteTrail(UChar32 c) { తిరిగి static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 UChar32 U_CALLCONV
-utf8_caseContextIterator(void *context, int8_t dir) {
+utf8_caseContextIterator(శూన్య *context, int8_t dir) {
     UCaseContext* csc = static_cast<UCaseContext*>(context);
     UChar32 c;
 
-    if(dir<0) {
+    ఒకవేళ(dir<0) {
         /* reset for backward iteration */
-        csc->index=csc->cpStart;
+        csc->సూచీ=csc->cp_ప్రారంభం;
         csc->dir=dir;
-    } else if(dir>0) {
+    } లేకపోతే ఒకవేళ(dir>0) {
         /* reset for forward iteration */
-        csc->index=csc->cpLimit;
+        csc->సూచీ=csc->cp_హద్దు;
         csc->dir=dir;
-    } else {
+    } లేకపోతే {
         /* continue current iteration direction */
         dir=csc->dir;
     }
 
-    if(dir<0) {
-        if(csc->start<csc->index) {
-            U8_PREV((const uint8_t *)csc->p, csc->start, csc->index, c);
-            return c;
+    ఒకవేళ(dir<0) {
+        ఒకవేళ(csc->ప్రారంభం<csc->సూచీ) {
+            U8_PREV((స్థిరరాశి uint8_t *)csc->p, csc->ప్రారంభం, csc->సూచీ, c);
+            తిరిగి c;
         }
-    } else {
-        if(csc->index<csc->limit) {
-            U8_NEXT((const uint8_t *)csc->p, csc->index, csc->limit, c);
-            return c;
+    } లేకపోతే {
+        ఒకవేళ(csc->సూచీ<csc->హద్దు) {
+            U8_తదుపరి((స్థిరరాశి uint8_t *)csc->p, csc->సూచీ, csc->హద్దు, c);
+            తిరిగి c;
         }
     }
-    return U_SENTINEL;
+    తిరిగి U_SENTINEL;
 }
 
 /**
  * caseLocale >= 0: Lowercases [srcStart..srcLimit[ but takes context [0..srcLength[ into account.
  * caseLocale < 0: Case-folds [srcStart..srcLimit[.
  */
-void toLower(int32_t caseLocale, uint32_t options,
-             const uint8_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
-             icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToLower;
-    if (caseLocale == UCASE_LOC_ROOT ||
+శూన్య గమ్యం_క్రింది(int32_t caseLocale, uint32_t options,
+             స్థిరరాశి uint8_t *src, UCaseContext *csc, int32_t src_ప్రారంభం, int32_t src_హద్దు,
+             icu::ByteSink &sink, icu::Edits *edits, UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి int8_t *latin_గమ్యం_క్రింది;
+    ఒకవేళ (caseLocale == UCASE_LOC_మూలం ||
             (caseLocale >= 0 ?
                 !(caseLocale == UCASE_LOC_TURKISH || caseLocale == UCASE_LOC_LITHUANIAN) :
-                (options & _FOLD_CASE_OPTIONS_MASK) == U_FOLD_CASE_DEFAULT)) {
-        latinToLower = LatinCase::TO_LOWER_NORMAL;
-    } else {
-        latinToLower = LatinCase::TO_LOWER_TR_LT;
+                (options & FOLD_CASE_OPTIONS_ముసుగు) == U_FOLD_CASE_DEFAULT)) {
+        latin_గమ్యం_క్రింది = LatinCase::గమ్యం_క్రింది_సాధారణ;
+    } లేకపోతే {
+        latin_గమ్యం_క్రింది = LatinCase::గమ్యం_క్రింది_TR_LT;
     }
-    const UTrie2 *trie = ucase_getTrie();
-    int32_t prev = srcStart;
-    int32_t srcIndex = srcStart;
-    for (;;) {
+    స్థిరరాశి UTrie2 *trie = ucase_getTrie();
+    int32_t prev = src_ప్రారంభం;
+    int32_t src_సూచీ = src_ప్రారంభం;
+    కొరకు (;;) {
         // fast path for simple cases
-        int32_t cpStart;
+        int32_t cp_ప్రారంభం;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLimit) {
+        కొరకు (;;) {
+            ఒకవేళ (U_FAILURE(error_సంకేతం) || src_సూచీ >= src_హద్దు) {
                 c = U_SENTINEL;
-                break;
+                ఆపు;
             }
-            uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
-                int8_t d = latinToLower[lead];
-                if (d == LatinCase::EXC) {
-                    cpStart = srcIndex - 1;
+            uint8_t lead = src[src_సూచీ++];
+            ఒకవేళ (lead <= 0x7f) {
+                int8_t d = latin_గమ్యం_క్రింది[lead];
+                ఒకవేళ (d == LatinCase::EXC) {
+                    cp_ప్రారంభం = src_సూచీ - 1;
                     c = lead;
-                    break;
+                    ఆపు;
                 }
-                if (d == 0) { continue; }
-                ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
-                                              sink, options, edits, errorCode);
-                char ascii = static_cast<char>(lead + d);
+                ఒకవేళ (d == 0) { కొనసాగు; }
+                ByteSinkUtil::appendUnchanged(src + prev, src_సూచీ - 1 - prev,
+                                              sink, options, edits, error_సంకేతం);
+                అక్షరం ascii = static_cast<అక్షరం>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
-                    edits->addReplace(1, 1);
+                ఒకవేళ (edits != శూన్యసూచిక) {
+                    edits->కూడు_Replace(1, 1);
                 }
-                prev = srcIndex;
-                continue;
-            } else if (lead < 0xe3) {
+                prev = src_సూచీ;
+                కొనసాగు;
+            } లేకపోతే ఒకవేళ (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLimit &&
-                        (t = src[srcIndex] - 0x80) <= 0x3f) {
+                ఒకవేళ (0xc2 <= lead && lead <= 0xc5 && src_సూచీ < src_హద్దు &&
+                        (t = src[src_సూచీ] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
-                    ++srcIndex;
+                    ++src_సూచీ;
                     c = ((lead - 0xc0) << 6) | t;
-                    int8_t d = latinToLower[c];
-                    if (d == LatinCase::EXC) {
-                        cpStart = srcIndex - 2;
-                        break;
+                    int8_t d = latin_గమ్యం_క్రింది[c];
+                    ఒకవేళ (d == LatinCase::EXC) {
+                        cp_ప్రారంభం = src_సూచీ - 2;
+                        ఆపు;
                     }
-                    if (d == 0) { continue; }
-                    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
-                                                  sink, options, edits, errorCode);
-                    ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
-                        edits->addReplace(2, 2);
+                    ఒకవేళ (d == 0) { కొనసాగు; }
+                    ByteSinkUtil::appendUnchanged(src + prev, src_సూచీ - 2 - prev,
+                                                  sink, options, edits, error_సంకేతం);
+                    ByteSinkUtil::append_Two_బైట్లు(c + d, sink);
+                    ఒకవేళ (edits != శూన్యసూచిక) {
+                        edits->కూడు_Replace(2, 2);
                     }
-                    prev = srcIndex;
-                    continue;
+                    prev = src_సూచీ;
+                    కొనసాగు;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
-                    (srcIndex + 2) <= srcLimit &&
-                    U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
+            } లేకపోతే ఒకవేళ ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+                    (src_సూచీ + 2) <= src_హద్దు &&
+                    U8_IS_TRAIL(src[src_సూచీ]) && U8_IS_TRAIL(src[src_సూచీ + 1])) {
                 // most of CJK: no case mappings
-                srcIndex += 2;
-                continue;
+                src_సూచీ += 2;
+                కొనసాగు;
             }
-            cpStart = --srcIndex;
-            U8_NEXT(src, srcIndex, srcLimit, c);
-            if (c < 0) {
+            cp_ప్రారంభం = --src_సూచీ;
+            U8_తదుపరి(src, src_సూచీ, src_హద్దు, c);
+            ఒకవేళ (c < 0) {
                 // ill-formed UTF-8
-                continue;
+                కొనసాగు;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            ఒకవేళ (UCASE_HAS_EXCEPTION(props)) { ఆపు; }
             int32_t delta;
-            if (!UCASE_IS_UPPER_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
-                continue;
+            ఒకవేళ (!UCASE_IS_పై_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
+                కొనసాగు;
             }
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
-                                          sink, options, edits, errorCode);
-            ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
-            prev = srcIndex;
+            ByteSinkUtil::appendUnchanged(src + prev, cp_ప్రారంభం - prev,
+                                          sink, options, edits, error_సంకేతం);
+            ByteSinkUtil::append_సంకేతం_బిందువు(src_సూచీ - cp_ప్రారంభం, c + delta, sink, edits);
+            prev = src_సూచీ;
         }
-        if (c < 0) {
-            break;
+        ఒకవేళ (c < 0) {
+            ఆపు;
         }
         // slow path
-        const char16_t *s;
-        if (caseLocale >= 0) {
-            csc->cpStart = cpStart;
-            csc->cpLimit = srcIndex;
-            c = ucase_toFullLower(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        } else {
-            c = ucase_toFullFolding(c, &s, options);
+        స్థిరరాశి char16_t *s;
+        ఒకవేళ (caseLocale >= 0) {
+            csc->cp_ప్రారంభం = cp_ప్రారంభం;
+            csc->cp_హద్దు = src_సూచీ;
+            c = ucase_గమ్యం_నిండిన_క్రింది(c, utf8_caseContextIterator, csc, &s, caseLocale);
+        } లేకపోతే {
+            c = ucase_గమ్యం_నిండిన_Folding(c, &s, options);
         }
-        if (c >= 0) {
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
-                                          sink, options, edits, errorCode);
-            appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
-            prev = srcIndex;
+        ఒకవేళ (c >= 0) {
+            ByteSinkUtil::appendUnchanged(src + prev, cp_ప్రారంభం - prev,
+                                          sink, options, edits, error_సంకేతం);
+            append_ఫలితం(src_సూచీ - cp_ప్రారంభం, c, s, sink, options, edits, error_సంకేతం);
+            prev = src_సూచీ;
         }
     }
-    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - prev,
-                                  sink, options, edits, errorCode);
+    ByteSinkUtil::appendUnchanged(src + prev, src_సూచీ - prev,
+                                  sink, options, edits, error_సంకేతం);
 }
 
-void toUpper(int32_t caseLocale, uint32_t options,
-             const uint8_t *src, UCaseContext *csc, int32_t srcLength,
-             icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToUpper;
-    if (caseLocale == UCASE_LOC_TURKISH) {
-        latinToUpper = LatinCase::TO_UPPER_TR;
-    } else {
-        latinToUpper = LatinCase::TO_UPPER_NORMAL;
+శూన్య గమ్యం_పై(int32_t caseLocale, uint32_t options,
+             స్థిరరాశి uint8_t *src, UCaseContext *csc, int32_t src_నిడివి,
+             icu::ByteSink &sink, icu::Edits *edits, UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి int8_t *latin_గమ్యం_పై;
+    ఒకవేళ (caseLocale == UCASE_LOC_TURKISH) {
+        latin_గమ్యం_పై = LatinCase::గమ్యం_పై_TR;
+    } లేకపోతే {
+        latin_గమ్యం_పై = LatinCase::గమ్యం_పై_సాధారణ;
     }
-    const UTrie2 *trie = ucase_getTrie();
+    స్థిరరాశి UTrie2 *trie = ucase_getTrie();
     int32_t prev = 0;
-    int32_t srcIndex = 0;
-    for (;;) {
+    int32_t src_సూచీ = 0;
+    కొరకు (;;) {
         // fast path for simple cases
-        int32_t cpStart;
+        int32_t cp_ప్రారంభం;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLength) {
+        కొరకు (;;) {
+            ఒకవేళ (U_FAILURE(error_సంకేతం) || src_సూచీ >= src_నిడివి) {
                 c = U_SENTINEL;
-                break;
+                ఆపు;
             }
-            uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
-                int8_t d = latinToUpper[lead];
-                if (d == LatinCase::EXC) {
-                    cpStart = srcIndex - 1;
+            uint8_t lead = src[src_సూచీ++];
+            ఒకవేళ (lead <= 0x7f) {
+                int8_t d = latin_గమ్యం_పై[lead];
+                ఒకవేళ (d == LatinCase::EXC) {
+                    cp_ప్రారంభం = src_సూచీ - 1;
                     c = lead;
-                    break;
+                    ఆపు;
                 }
-                if (d == 0) { continue; }
-                ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
-                                              sink, options, edits, errorCode);
-                char ascii = static_cast<char>(lead + d);
+                ఒకవేళ (d == 0) { కొనసాగు; }
+                ByteSinkUtil::appendUnchanged(src + prev, src_సూచీ - 1 - prev,
+                                              sink, options, edits, error_సంకేతం);
+                అక్షరం ascii = static_cast<అక్షరం>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
-                    edits->addReplace(1, 1);
+                ఒకవేళ (edits != శూన్యసూచిక) {
+                    edits->కూడు_Replace(1, 1);
                 }
-                prev = srcIndex;
-                continue;
-            } else if (lead < 0xe3) {
+                prev = src_సూచీ;
+                కొనసాగు;
+            } లేకపోతే ఒకవేళ (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLength &&
-                        (t = src[srcIndex] - 0x80) <= 0x3f) {
+                ఒకవేళ (0xc2 <= lead && lead <= 0xc5 && src_సూచీ < src_నిడివి &&
+                        (t = src[src_సూచీ] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
-                    ++srcIndex;
+                    ++src_సూచీ;
                     c = ((lead - 0xc0) << 6) | t;
-                    int8_t d = latinToUpper[c];
-                    if (d == LatinCase::EXC) {
-                        cpStart = srcIndex - 2;
-                        break;
+                    int8_t d = latin_గమ్యం_పై[c];
+                    ఒకవేళ (d == LatinCase::EXC) {
+                        cp_ప్రారంభం = src_సూచీ - 2;
+                        ఆపు;
                     }
-                    if (d == 0) { continue; }
-                    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
-                                                  sink, options, edits, errorCode);
-                    ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
-                        edits->addReplace(2, 2);
+                    ఒకవేళ (d == 0) { కొనసాగు; }
+                    ByteSinkUtil::appendUnchanged(src + prev, src_సూచీ - 2 - prev,
+                                                  sink, options, edits, error_సంకేతం);
+                    ByteSinkUtil::append_Two_బైట్లు(c + d, sink);
+                    ఒకవేళ (edits != శూన్యసూచిక) {
+                        edits->కూడు_Replace(2, 2);
                     }
-                    prev = srcIndex;
-                    continue;
+                    prev = src_సూచీ;
+                    కొనసాగు;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
-                    (srcIndex + 2) <= srcLength &&
-                    U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
+            } లేకపోతే ఒకవేళ ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+                    (src_సూచీ + 2) <= src_నిడివి &&
+                    U8_IS_TRAIL(src[src_సూచీ]) && U8_IS_TRAIL(src[src_సూచీ + 1])) {
                 // most of CJK: no case mappings
-                srcIndex += 2;
-                continue;
+                src_సూచీ += 2;
+                కొనసాగు;
             }
-            cpStart = --srcIndex;
-            U8_NEXT(src, srcIndex, srcLength, c);
-            if (c < 0) {
+            cp_ప్రారంభం = --src_సూచీ;
+            U8_తదుపరి(src, src_సూచీ, src_నిడివి, c);
+            ఒకవేళ (c < 0) {
                 // ill-formed UTF-8
-                continue;
+                కొనసాగు;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            ఒకవేళ (UCASE_HAS_EXCEPTION(props)) { ఆపు; }
             int32_t delta;
-            if (UCASE_GET_TYPE(props) != UCASE_LOWER || (delta = UCASE_GET_DELTA(props)) == 0) {
-                continue;
+            ఒకవేళ (UCASE_GET_TYPE(props) != UCASE_క్రింది || (delta = UCASE_GET_DELTA(props)) == 0) {
+                కొనసాగు;
             }
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
-                                          sink, options, edits, errorCode);
-            ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
-            prev = srcIndex;
+            ByteSinkUtil::appendUnchanged(src + prev, cp_ప్రారంభం - prev,
+                                          sink, options, edits, error_సంకేతం);
+            ByteSinkUtil::append_సంకేతం_బిందువు(src_సూచీ - cp_ప్రారంభం, c + delta, sink, edits);
+            prev = src_సూచీ;
         }
-        if (c < 0) {
-            break;
+        ఒకవేళ (c < 0) {
+            ఆపు;
         }
         // slow path
-        csc->cpStart = cpStart;
-        csc->cpLimit = srcIndex;
-        const char16_t *s;
-        c = ucase_toFullUpper(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        if (c >= 0) {
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
-                                          sink, options, edits, errorCode);
-            appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
-            prev = srcIndex;
+        csc->cp_ప్రారంభం = cp_ప్రారంభం;
+        csc->cp_హద్దు = src_సూచీ;
+        స్థిరరాశి char16_t *s;
+        c = ucase_గమ్యం_నిండిన_పై(c, utf8_caseContextIterator, csc, &s, caseLocale);
+        ఒకవేళ (c >= 0) {
+            ByteSinkUtil::appendUnchanged(src + prev, cp_ప్రారంభం - prev,
+                                          sink, options, edits, error_సంకేతం);
+            append_ఫలితం(src_సూచీ - cp_ప్రారంభం, c, s, sink, options, edits, error_సంకేతం);
+            prev = src_సూచీ;
         }
     }
-    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - prev,
-                                  sink, options, edits, errorCode);
+    ByteSinkUtil::appendUnchanged(src + prev, src_సూచీ - prev,
+                                  sink, options, edits, error_సంకేతం);
 }
 
 }  // namespace
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-namespace {
+నామాకాశ {
 
 constexpr uint8_t ACUTE_BYTE0 = u8"\u0301"[0];
 
@@ -444,111 +444,111 @@ constexpr uint8_t ACUTE_BYTE1 = u8"\u0301"[1];
  *
  * @return the src index after the titlecased sequence, or the start index if no Dutch IJ
  */
-int32_t maybeTitleDutchIJ(const uint8_t *src, UChar32 c, int32_t start, int32_t segmentLimit,
-                          ByteSink &sink, uint32_t options, icu::Edits *edits, UErrorCode &errorCode) {
-    U_ASSERT(start < segmentLimit);
+int32_t maybeTitleDutchIJ(స్థిరరాశి uint8_t *src, UChar32 c, int32_t ప్రారంభం, int32_t segment_హద్దు,
+                          ByteSink &sink, uint32_t options, icu::Edits *edits, UError_సంకేతం &error_సంకేతం) {
+    U_ASSERT(ప్రారంభం < segment_హద్దు);
 
-    int32_t index = start;
-    bool withAcute = false;
+    int32_t సూచీ = ప్రారంభం;
+    తార్కిక withAcute = అబద్ధం;
 
     // If the conditions are met, then the following variables tell us what to output.
     int32_t unchanged1 = 0;  // code units before the j, or the whole sequence (0..3)
-    bool doTitleJ = false;  // true if the j needs to be titlecased
+    తార్కిక doTitleJ = అబద్ధం;  // true if the j needs to be titlecased
     int32_t unchanged2 = 0;  // after the j (0 or 1)
 
     // next character after the first letter
     UChar32 c2;
-    c2 = src[index++];
+    c2 = src[సూచీ++];
 
     // Is the first letter an i/I with accent?
-    if (c == u'I') {
-        if (c2 == ACUTE_BYTE0 && index < segmentLimit && src[index++] == ACUTE_BYTE1) {
-            withAcute = true;
+    ఒకవేళ (c == u'I') {
+        ఒకవేళ (c2 == ACUTE_BYTE0 && సూచీ < segment_హద్దు && src[సూచీ++] == ACUTE_BYTE1) {
+            withAcute = నిజం;
             unchanged1 = 2;  // ACUTE is 2 code units in UTF-8
-            if (index == segmentLimit) { return start; }
-            c2 = src[index++];
+            ఒకవేళ (సూచీ == segment_హద్దు) { తిరిగి ప్రారంభం; }
+            c2 = src[సూచీ++];
         }
-    } else {  // Í
-        withAcute = true;
+    } లేకపోతే {  // Í
+        withAcute = నిజం;
     }
 
     // Is the next character a j/J?
-    if (c2 == u'j') {
-        doTitleJ = true;
-    } else if (c2 == u'J') {
+    ఒకవేళ (c2 == u'j') {
+        doTitleJ = నిజం;
+    } లేకపోతే ఒకవేళ (c2 == u'J') {
         ++unchanged1;
-    } else {
-        return start;
+    } లేకపోతే {
+        తిరిగి ప్రారంభం;
     }
 
     // A plain i/I must be followed by a plain j/J.
     // An i/I with acute must be followed by a j/J with acute.
-    if (withAcute) {
-        if ((index + 1) >= segmentLimit || src[index++] != ACUTE_BYTE0 || src[index++] != ACUTE_BYTE1) {
-            return start;
+    ఒకవేళ (withAcute) {
+        ఒకవేళ ((సూచీ + 1) >= segment_హద్దు || src[సూచీ++] != ACUTE_BYTE0 || src[సూచీ++] != ACUTE_BYTE1) {
+            తిరిగి ప్రారంభం;
         }
-        if (doTitleJ) {
+        ఒకవేళ (doTitleJ) {
             unchanged2 = 2;  // ACUTE is 2 code units in UTF-8
-        } else {
+        } లేకపోతే {
             unchanged1 = unchanged1 + 2;    // ACUTE is 2 code units in UTF-8
         }
     }
 
     // There must not be another combining mark.
-    if (index < segmentLimit) {
+    ఒకవేళ (సూచీ < segment_హద్దు) {
         int32_t cp;
-        int32_t i = index;
-        U8_NEXT(src, i, segmentLimit, cp);
-        uint32_t typeMask = U_GET_GC_MASK(cp);
-        if ((typeMask & U_GC_M_MASK) != 0) {
-            return start;
+        int32_t i = సూచీ;
+        U8_తదుపరి(src, i, segment_హద్దు, cp);
+        uint32_t type_ముసుగు = U_GET_GC_ముసుగు(cp);
+        ఒకవేళ ((type_ముసుగు & U_GC_M_ముసుగు) != 0) {
+            తిరిగి ప్రారంభం;
         }
     }
 
     // Output the rest of the Dutch IJ.
-    ByteSinkUtil::appendUnchanged(src + start, unchanged1, sink, options, edits, errorCode);
-    start += unchanged1;
-    if (doTitleJ) {
-        ByteSinkUtil::appendCodePoint(1, u'J', sink, edits);
-        ++start;
+    ByteSinkUtil::appendUnchanged(src + ప్రారంభం, unchanged1, sink, options, edits, error_సంకేతం);
+    ప్రారంభం += unchanged1;
+    ఒకవేళ (doTitleJ) {
+        ByteSinkUtil::append_సంకేతం_బిందువు(1, u'J', sink, edits);
+        ++ప్రారంభం;
     }
-    ByteSinkUtil::appendUnchanged(src + start, unchanged2, sink, options, edits, errorCode);
+    ByteSinkUtil::appendUnchanged(src + ప్రారంభం, unchanged2, sink, options, edits, error_సంకేతం);
 
-    U_ASSERT(start + unchanged2 == index);
-    return index;
+    U_ASSERT(ప్రారంభం + unchanged2 == సూచీ);
+    తిరిగి సూచీ;
 }
 
 }  // namespace
 
-U_CFUNC void U_CALLCONV
-ucasemap_internalUTF8ToTitle(
+U_CFUNC శూన్య U_CALLCONV
+ucasemap_అంతర్గత_UTF8_గమ్యం_Title(
         int32_t caseLocale, uint32_t options, BreakIterator *iter,
-        const uint8_t *src, int32_t srcLength,
+        స్థిరరాశి uint8_t *src, int32_t src_నిడివి,
         ByteSink &sink, icu::Edits *edits,
-        UErrorCode &errorCode) {
-    if (!ustrcase_checkTitleAdjustmentOptions(options, errorCode)) {
-        return;
+        UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (!ustrcase_checkTitleAdjustmentOptions(options, error_సంకేతం)) {
+        తిరిగి;
     }
 
     /* set up local variables */
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
-    csc.limit=srcLength;
+    csc.p=(శూన్య *)src;
+    csc.హద్దు=src_నిడివి;
     int32_t prev=0;
-    UBool isFirstIndex=true;
+    UBool is_మొదటి_సూచీ=నిజం;
 
     /* titlecasing loop */
-    while(prev<srcLength) {
+    అయితే(prev<src_నిడివి) {
         /* find next index where to titlecase */
-        int32_t index;
-        if(isFirstIndex) {
-            isFirstIndex=false;
-            index=iter->first();
-        } else {
-            index=iter->next();
+        int32_t సూచీ;
+        ఒకవేళ(is_మొదటి_సూచీ) {
+            is_మొదటి_సూచీ=అబద్ధం;
+            సూచీ=iter->first();
+        } లేకపోతే {
+            సూచీ=iter->next();
         }
-        if(index==UBRK_DONE || index>srcLength) {
-            index=srcLength;
+        ఒకవేళ(సూచీ==UBRK_పూర్తి || సూచీ>src_నిడివి) {
+            సూచీ=src_నిడివి;
         }
 
         /*
@@ -557,499 +557,499 @@ ucasemap_internalUTF8ToTitle(
          * b) first letter (titlecase)              [titleStart..titleLimit[
          * c) subsequent characters (lowercase)                 [titleLimit..index[
          */
-        if(prev<index) {
+        ఒకవేళ(prev<సూచీ) {
             /* find and copy skipped characters [prev..titleStart[ */
-            int32_t titleStart=prev;
-            int32_t titleLimit=prev;
+            int32_t title_ప్రారంభం=prev;
+            int32_t title_హద్దు=prev;
             UChar32 c;
-            U8_NEXT(src, titleLimit, index, c);
-            if ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
+            U8_తదుపరి(src, title_హద్దు, సూచీ, c);
+            ఒకవేళ ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
                 // Adjust the titlecasing index to the next cased character,
                 // or to the next letter/number/symbol/private use.
                 // Stop with titleStart<titleLimit<=index
                 // if there is a character to be titlecased,
                 // or else stop with titleStart==titleLimit==index.
-                UBool toCased = (options&U_TITLECASE_ADJUST_TO_CASED) != 0;
-                while (toCased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
-                    titleStart=titleLimit;
-                    if(titleLimit==index) {
-                        break;
+                UBool గమ్యం_Cased = (options&U_TITLECASE_ADJUST_గమ్యం_CASED) != 0;
+                అయితే (గమ్యం_Cased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
+                    title_ప్రారంభం=title_హద్దు;
+                    ఒకవేళ(title_హద్దు==సూచీ) {
+                        ఆపు;
                     }
-                    U8_NEXT(src, titleLimit, index, c);
+                    U8_తదుపరి(src, title_హద్దు, సూచీ, c);
                 }
-                if (prev < titleStart) {
-                    if (!ByteSinkUtil::appendUnchanged(src+prev, titleStart-prev,
-                                                       sink, options, edits, errorCode)) {
-                        return;
+                ఒకవేళ (prev < title_ప్రారంభం) {
+                    ఒకవేళ (!ByteSinkUtil::appendUnchanged(src+prev, title_ప్రారంభం-prev,
+                                                       sink, options, edits, error_సంకేతం)) {
+                        తిరిగి;
                     }
                 }
             }
 
-            if(titleStart<titleLimit) {
+            ఒకవేళ(title_ప్రారంభం<title_హద్దు) {
                 /* titlecase c which is from [titleStart..titleLimit[ */
-                if(c>=0) {
-                    csc.cpStart=titleStart;
-                    csc.cpLimit=titleLimit;
-                    const char16_t *s;
-                    c=ucase_toFullTitle(c, utf8_caseContextIterator, &csc, &s, caseLocale);
-                    if (!appendResult(titleLimit-titleStart, c, s, sink, options, edits, errorCode)) {
-                        return;
+                ఒకవేళ(c>=0) {
+                    csc.cp_ప్రారంభం=title_ప్రారంభం;
+                    csc.cp_హద్దు=title_హద్దు;
+                    స్థిరరాశి char16_t *s;
+                    c=ucase_గమ్యం_నిండిన_Title(c, utf8_caseContextIterator, &csc, &s, caseLocale);
+                    ఒకవేళ (!append_ఫలితం(title_హద్దు-title_ప్రారంభం, c, s, sink, options, edits, error_సంకేతం)) {
+                        తిరిగి;
                     }
-                } else {
+                } లేకపోతే {
                     // Malformed UTF-8.
-                    if (!ByteSinkUtil::appendUnchanged(src+titleStart, titleLimit-titleStart,
-                                                       sink, options, edits, errorCode)) {
-                        return;
+                    ఒకవేళ (!ByteSinkUtil::appendUnchanged(src+title_ప్రారంభం, title_హద్దు-title_ప్రారంభం,
+                                                       sink, options, edits, error_సంకేతం)) {
+                        తిరిగి;
                     }
                 }
 
                 /* Special case Dutch IJ titlecasing */
-                if (titleLimit < index &&
+                ఒకవేళ (title_హద్దు < సూచీ &&
                     caseLocale == UCASE_LOC_DUTCH) {
-                    if (c < 0) {
+                    ఒకవేళ (c < 0) {
                         c = ~c;
                     }
 
-                    if (c == u'I' || c == u'Í') {
-                        titleLimit = maybeTitleDutchIJ(src, c, titleLimit, index, sink, options, edits, errorCode);
+                    ఒకవేళ (c == u'I' || c == u'Í') {
+                        title_హద్దు = maybeTitleDutchIJ(src, c, title_హద్దు, సూచీ, sink, options, edits, error_సంకేతం);
                     }
                 }
 
                 /* lowercase [titleLimit..index[ */
-                if(titleLimit<index) {
-                    if((options&U_TITLECASE_NO_LOWERCASE)==0) {
+                ఒకవేళ(title_హద్దు<సూచీ) {
+                    ఒకవేళ((options&U_TITLECASE_NO_LOWERCASE)==0) {
                         /* Normal operation: Lowercase the rest of the word. */
-                        toLower(caseLocale, options,
-                                src, &csc, titleLimit, index,
-                                sink, edits, errorCode);
-                        if(U_FAILURE(errorCode)) {
-                            return;
+                        గమ్యం_క్రింది(caseLocale, options,
+                                src, &csc, title_హద్దు, సూచీ,
+                                sink, edits, error_సంకేతం);
+                        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+                            తిరిగి;
                         }
-                    } else {
+                    } లేకపోతే {
                         /* Optionally just copy the rest of the word unchanged. */
-                        if (!ByteSinkUtil::appendUnchanged(src+titleLimit, index-titleLimit,
-                                                           sink, options, edits, errorCode)) {
-                            return;
+                        ఒకవేళ (!ByteSinkUtil::appendUnchanged(src+title_హద్దు, సూచీ-title_హద్దు,
+                                                           sink, options, edits, error_సంకేతం)) {
+                            తిరిగి;
                         }
                     }
                 }
             }
         }
 
-        prev=index;
+        prev=సూచీ;
     }
 }
 
-#endif
+#అయితే_ముగింపు
 
 U_NAMESPACE_BEGIN
-namespace GreekUpper {
+నామాకాశ Greek_పై {
 
-UBool isFollowedByCasedLetter(const uint8_t *s, int32_t i, int32_t length) {
-    while (i < length) {
+UBool isFollowedByCasedLetter(స్థిరరాశి uint8_t *s, int32_t i, int32_t length) {
+    అయితే (i < length) {
         UChar32 c;
-        U8_NEXT(s, i, length, c);
+        U8_తదుపరి(s, i, length, c);
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        ఒకవేళ ((type & UCASE_IGNORABLE) != 0) {
             // Case-ignorable, continue with the loop.
-        } else if (type != UCASE_NONE) {
-            return true;  // Followed by cased letter.
-        } else {
-            return false;  // Uncased and not case-ignorable.
+        } లేకపోతే ఒకవేళ (type != UCASE_NONE) {
+            తిరిగి నిజం;  // Followed by cased letter.
+        } లేకపోతే {
+            తిరిగి అబద్ధం;  // Uncased and not case-ignorable.
         }
     }
-    return false;  // Not followed by cased letter.
+    తిరిగి అబద్ధం;  // Not followed by cased letter.
 }
 
 // Keep this consistent with the UTF-16 version in ustrcase.cpp and the Java version in CaseMap.java.
-void toUpper(uint32_t options,
-             const uint8_t *src, int32_t srcLength,
+శూన్య గమ్యం_పై(uint32_t options,
+             స్థిరరాశి uint8_t *src, int32_t src_నిడివి,
              ByteSink &sink, Edits *edits,
-             UErrorCode &errorCode) {
+             UError_సంకేతం &error_సంకేతం) {
     uint32_t state = 0;
-    for (int32_t i = 0; i < srcLength;) {
-        int32_t nextIndex = i;
+    కొరకు (int32_t i = 0; i < src_నిడివి;) {
+        int32_t తదుపరి_సూచీ = i;
         UChar32 c;
-        U8_NEXT(src, nextIndex, srcLength, c);
-        uint32_t nextState = 0;
+        U8_తదుపరి(src, తదుపరి_సూచీ, src_నిడివి, c);
+        uint32_t తదుపరి_State = 0;
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        ఒకవేళ ((type & UCASE_IGNORABLE) != 0) {
             // c is case-ignorable
-            nextState |= (state & AFTER_CASED);
-        } else if (type != UCASE_NONE) {
+            తదుపరి_State |= (state & AFTER_CASED);
+        } లేకపోతే ఒకవేళ (type != UCASE_NONE) {
             // c is cased
-            nextState |= AFTER_CASED;
+            తదుపరి_State |= AFTER_CASED;
         }
-        uint32_t data = getLetterData(c);
-        if (data > 0) {
-            uint32_t upper = data & UPPER_MASK;
+        uint32_t దత్తాంశం = get_Letter_దత్తాంశం(c);
+        ఒకవేళ (దత్తాంశం > 0) {
+            uint32_t upper = దత్తాంశం & పై_ముసుగు;
             // Add a dialytika to this iota or ypsilon vowel
             // if we removed a tonos from the previous vowel,
             // and that previous vowel did not also have (or gain) a dialytika.
             // Adding one only to the final vowel in a longer sequence
             // (which does not occur in normal writing) would require lookahead.
             // Set the same flag as for preserving an existing dialytika.
-            if ((data & HAS_VOWEL) != 0 &&
+            ఒకవేళ ((దత్తాంశం & HAS_VOWEL) != 0 &&
                 (state & (AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT | AFTER_VOWEL_WITH_COMBINING_ACCENT)) !=
                     0 &&
                 (upper == 0x399 || upper == 0x3A5)) {
-                data |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) != 0 ? HAS_DIALYTIKA
+                దత్తాంశం |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) != 0 ? HAS_DIALYTIKA
                                                                            : HAS_COMBINING_DIALYTIKA;
             }
-            int32_t numYpogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
-            if ((data & HAS_YPOGEGRAMMENI) != 0) {
-                numYpogegrammeni = 1;
+            int32_t అంకె_Ypogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
+            ఒకవేళ ((దత్తాంశం & HAS_YPOGEGRAMMENI) != 0) {
+                అంకె_Ypogegrammeni = 1;
             }
-            const UBool hasPrecomposedAccent = (data & HAS_ACCENT) != 0;
+            స్థిరరాశి UBool hasPrecomposedAccent = (దత్తాంశం & HAS_ACCENT) != 0;
             // Skip combining diacritics after this Greek letter.
-            int32_t nextNextIndex = nextIndex;
-            while (nextIndex < srcLength) {
+            int32_t తదుపరి_తదుపరి_సూచీ = తదుపరి_సూచీ;
+            అయితే (తదుపరి_సూచీ < src_నిడివి) {
                 UChar32 c2;
-                U8_NEXT(src, nextNextIndex, srcLength, c2);
-                uint32_t diacriticData = getDiacriticData(c2);
-                if (diacriticData != 0) {
-                    data |= diacriticData;
-                    if ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
-                        ++numYpogegrammeni;
+                U8_తదుపరి(src, తదుపరి_తదుపరి_సూచీ, src_నిడివి, c2);
+                uint32_t diacritic_దత్తాంశం = get_Diacritic_దత్తాంశం(c2);
+                ఒకవేళ (diacritic_దత్తాంశం != 0) {
+                    దత్తాంశం |= diacritic_దత్తాంశం;
+                    ఒకవేళ ((diacritic_దత్తాంశం & HAS_YPOGEGRAMMENI) != 0) {
+                        ++అంకె_Ypogegrammeni;
                     }
-                    nextIndex = nextNextIndex;
-                } else {
-                    break;  // not a Greek diacritic
+                    తదుపరి_సూచీ = తదుపరి_తదుపరి_సూచీ;
+                } లేకపోతే {
+                    ఆపు;  // not a Greek diacritic
                 }
             }
-            if ((data & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
-                nextState |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
+            ఒకవేళ ((దత్తాంశం & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
+                తదుపరి_State |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
                                                   : AFTER_VOWEL_WITH_COMBINING_ACCENT;
             }
             // Map according to Greek rules.
-            UBool addTonos = false;
-            if (upper == 0x397 &&
-                    (data & HAS_ACCENT) != 0 &&
-                    numYpogegrammeni == 0 &&
+            UBool కూడు_Tonos = అబద్ధం;
+            ఒకవేళ (upper == 0x397 &&
+                    (దత్తాంశం & HAS_ACCENT) != 0 &&
+                    అంకె_Ypogegrammeni == 0 &&
                     (state & AFTER_CASED) == 0 &&
-                    !isFollowedByCasedLetter(src, nextIndex, srcLength)) {
+                    !isFollowedByCasedLetter(src, తదుపరి_సూచీ, src_నిడివి)) {
                 // Keep disjunctive "or" with (only) a tonos.
                 // We use the same "word boundary" conditions as for the Final_Sigma test.
-                if (hasPrecomposedAccent) {
+                ఒకవేళ (hasPrecomposedAccent) {
                     upper = 0x389;  // Preserve the precomposed form.
-                } else {
-                    addTonos = true;
+                } లేకపోతే {
+                    కూడు_Tonos = నిజం;
                 }
-            } else if ((data & HAS_DIALYTIKA) != 0) {
+            } లేకపోతే ఒకవేళ ((దత్తాంశం & HAS_DIALYTIKA) != 0) {
                 // Preserve a vowel with dialytika in precomposed form if it exists.
-                if (upper == 0x399) {
+                ఒకవేళ (upper == 0x399) {
                     upper = 0x3AA;
-                    data &= ~HAS_EITHER_DIALYTIKA;
-                } else if (upper == 0x3A5) {
+                    దత్తాంశం &= ~HAS_EITHER_DIALYTIKA;
+                } లేకపోతే ఒకవేళ (upper == 0x3A5) {
                     upper = 0x3AB;
-                    data &= ~HAS_EITHER_DIALYTIKA;
+                    దత్తాంశం &= ~HAS_EITHER_DIALYTIKA;
                 }
             }
 
             UBool change;
-            if (edits == nullptr && (options & U_OMIT_UNCHANGED_TEXT) == 0) {
-                change = true;  // common, simple usage
-            } else {
+            ఒకవేళ (edits == శూన్యసూచిక && (options & U_OMIT_UNCHANGED_పాఠ్యం) == 0) {
+                change = నిజం;  // common, simple usage
+            } లేకపోతే {
                 // Find out first whether we are changing the text.
                 U_ASSERT(0x370 <= upper && upper <= 0x3ff);  // 2-byte UTF-8, main Greek block
-                change = (i + 2) > nextIndex ||
+                change = (i + 2) > తదుపరి_సూచీ ||
                         src[i] != getTwoByteLead(upper) || src[i + 1] != getTwoByteTrail(upper) ||
-                        numYpogegrammeni > 0;
+                        అంకె_Ypogegrammeni > 0;
                 int32_t i2 = i + 2;
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
-                    change |= (i2 + 2) > nextIndex ||
+                ఒకవేళ ((దత్తాంశం & HAS_EITHER_DIALYTIKA) != 0) {
+                    change |= (i2 + 2) > తదుపరి_సూచీ ||
                             src[i2] != static_cast<uint8_t>(u8"\u0308"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0308"[1]);
                     i2 += 2;
                 }
-                if (addTonos) {
-                    change |= (i2 + 2) > nextIndex ||
+                ఒకవేళ (కూడు_Tonos) {
+                    change |= (i2 + 2) > తదుపరి_సూచీ ||
                             src[i2] != static_cast<uint8_t>(u8"\u0301"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0301"[1]);
                     i2 += 2;
                 }
-                int32_t oldLength = nextIndex - i;
-                int32_t newLength = (i2 - i) + numYpogegrammeni * 2;  // 2 bytes per U+0399
-                change |= oldLength != newLength;
-                if (change) {
-                    if (edits != nullptr) {
-                        edits->addReplace(oldLength, newLength);
+                int32_t old_నిడివి = తదుపరి_సూచీ - i;
+                int32_t new_నిడివి = (i2 - i) + అంకె_Ypogegrammeni * 2;  // 2 bytes per U+0399
+                change |= old_నిడివి != new_నిడివి;
+                ఒకవేళ (change) {
+                    ఒకవేళ (edits != శూన్యసూచిక) {
+                        edits->కూడు_Replace(old_నిడివి, new_నిడివి);
                     }
-                } else {
-                    if (edits != nullptr) {
-                        edits->addUnchanged(oldLength);
+                } లేకపోతే {
+                    ఒకవేళ (edits != శూన్యసూచిక) {
+                        edits->కూడు_Unchanged(old_నిడివి);
                     }
                     // Write unchanged text?
-                    change = (options & U_OMIT_UNCHANGED_TEXT) == 0;
+                    change = (options & U_OMIT_UNCHANGED_పాఠ్యం) == 0;
                 }
             }
 
-            if (change) {
-                ByteSinkUtil::appendTwoBytes(upper, sink);
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
+            ఒకవేళ (change) {
+                ByteSinkUtil::append_Two_బైట్లు(upper, sink);
+                ఒకవేళ ((దత్తాంశం & HAS_EITHER_DIALYTIKA) != 0) {
                     sink.AppendU8(u8"\u0308", 2);  // restore or add a dialytika
                 }
-                if (addTonos) {
+                ఒకవేళ (కూడు_Tonos) {
                     sink.AppendU8(u8"\u0301", 2);
                 }
-                while (numYpogegrammeni > 0) {
+                అయితే (అంకె_Ypogegrammeni > 0) {
                     sink.AppendU8(u8"\u0399", 2);
-                    --numYpogegrammeni;
+                    --అంకె_Ypogegrammeni;
                 }
             }
-        } else if(c>=0) {
-            const char16_t *s;
-            c=ucase_toFullUpper(c, nullptr, nullptr, &s, UCASE_LOC_GREEK);
-            if (!appendResult(nextIndex - i, c, s, sink, options, edits, errorCode)) {
-                return;
+        } లేకపోతే ఒకవేళ(c>=0) {
+            స్థిరరాశి char16_t *s;
+            c=ucase_గమ్యం_నిండిన_పై(c, శూన్యసూచిక, శూన్యసూచిక, &s, UCASE_LOC_GREEK);
+            ఒకవేళ (!append_ఫలితం(తదుపరి_సూచీ - i, c, s, sink, options, edits, error_సంకేతం)) {
+                తిరిగి;
             }
-        } else {
+        } లేకపోతే {
             // Malformed UTF-8.
-            if (!ByteSinkUtil::appendUnchanged(src+i, nextIndex-i,
-                                               sink, options, edits, errorCode)) {
-                return;
+            ఒకవేళ (!ByteSinkUtil::appendUnchanged(src+i, తదుపరి_సూచీ-i,
+                                               sink, options, edits, error_సంకేతం)) {
+                తిరిగి;
             }
         }
-        i = nextIndex;
-        state = nextState;
+        i = తదుపరి_సూచీ;
+        state = తదుపరి_State;
     }
 }
 
 }  // namespace GreekUpper
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-static void U_CALLCONV
-ucasemap_internalUTF8ToLower(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                             const uint8_t *src, int32_t srcLength,
+స్థిర శూన్య U_CALLCONV
+ucasemap_అంతర్గత_UTF8_గమ్యం_క్రింది(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_వాడని
+                             స్థిరరాశి uint8_t *src, int32_t src_నిడివి,
                              icu::ByteSink &sink, icu::Edits *edits,
-                             UErrorCode &errorCode) {
+                             UError_సంకేతం &error_సంకేతం) {
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
-    csc.limit=srcLength;
-    toLower(
+    csc.p=(శూన్య *)src;
+    csc.హద్దు=src_నిడివి;
+    గమ్యం_క్రింది(
         caseLocale, options,
-        src, &csc, 0, srcLength,
-        sink, edits, errorCode);
+        src, &csc, 0, src_నిడివి,
+        sink, edits, error_సంకేతం);
 }
 
-static void U_CALLCONV
-ucasemap_internalUTF8ToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                             const uint8_t *src, int32_t srcLength,
+స్థిర శూన్య U_CALLCONV
+ucasemap_అంతర్గత_UTF8_గమ్యం_పై(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_వాడని
+                             స్థిరరాశి uint8_t *src, int32_t src_నిడివి,
                              icu::ByteSink &sink, icu::Edits *edits,
-                             UErrorCode &errorCode) {
-    if (caseLocale == UCASE_LOC_GREEK) {
-        GreekUpper::toUpper(options, src, srcLength, sink, edits, errorCode);
-    } else {
+                             UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (caseLocale == UCASE_LOC_GREEK) {
+        Greek_పై::గమ్యం_పై(options, src, src_నిడివి, sink, edits, error_సంకేతం);
+    } లేకపోతే {
         UCaseContext csc=UCASECONTEXT_INITIALIZER;
-        csc.p=(void *)src;
-        csc.limit=srcLength;
-        toUpper(
+        csc.p=(శూన్య *)src;
+        csc.హద్దు=src_నిడివి;
+        గమ్యం_పై(
             caseLocale, options,
-            src, &csc, srcLength,
-            sink, edits, errorCode);
+            src, &csc, src_నిడివి,
+            sink, edits, error_సంకేతం);
     }
 }
 
-static void U_CALLCONV
-ucasemap_internalUTF8Fold(int32_t /* caseLocale */, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                          const uint8_t *src, int32_t srcLength,
+స్థిర శూన్య U_CALLCONV
+ucasemap_అంతర్గత_UTF8_Fold(int32_t /* caseLocale */, uint32_t options, UCASEMAP_BREAK_ITERATOR_వాడని
+                          స్థిరరాశి uint8_t *src, int32_t src_నిడివి,
                           icu::ByteSink &sink, icu::Edits *edits,
-                          UErrorCode &errorCode) {
-    toLower(
+                          UError_సంకేతం &error_సంకేతం) {
+    గమ్యం_క్రింది(
         -1, options,
-        src, nullptr, 0, srcLength,
-        sink, edits, errorCode);
+        src, శూన్యసూచిక, 0, src_నిడివి,
+        sink, edits, error_సంకేతం);
 }
 
-void
+శూన్య
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 const char *src, int32_t srcLength,
+                 స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::ByteSink &sink, icu::Edits *edits,
-                 UErrorCode &errorCode) {
+                 UError_సంకేతం &error_సంకేతం) {
     /* check argument values */
-    if (U_FAILURE(errorCode)) {
-        return;
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
-    if ((src == nullptr && srcLength != 0) || srcLength < -1) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ ((src == శూన్యసూచిక && src_నిడివి != 0) || src_నిడివి < -1) {
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
     // Get the string length.
-    if (srcLength == -1) {
-        srcLength = static_cast<int32_t>(uprv_strlen(src));
+    ఒకవేళ (src_నిడివి == -1) {
+        src_నిడివి = static_cast<int32_t>(uprv_strlen(src));
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    ఒకవేళ (edits != శూన్యసూచిక && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                     reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, errorCode);
+                     reinterpret_cast<స్థిరరాశి uint8_t*>(src), src_నిడివి, sink, edits, error_సంకేతం);
     sink.Flush();
-    if (U_SUCCESS(errorCode)) {
-        if (edits != nullptr) {
-            edits->copyErrorTo(errorCode);
+    ఒకవేళ (U_SUCCESS(error_సంకేతం)) {
+        ఒకవేళ (edits != శూన్యసూచిక) {
+            edits->copy_Error_గమ్యం(error_సంకేతం);
         }
     }
 }
 
 int32_t
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 char *dest, int32_t destCapacity,
-                 const char *src, int32_t srcLength,
+                 అక్షరం *dest, int32_t dest_సామర్థ్యం,
+                 స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::Edits *edits,
-                 UErrorCode &errorCode) {
+                 UError_సంకేతం &error_సంకేతం) {
     /* check argument values */
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if( destCapacity<0 ||
-        (dest==nullptr && destCapacity>0) ||
-        (src==nullptr && srcLength!=0) || srcLength<-1
+    ఒకవేళ( dest_సామర్థ్యం<0 ||
+        (dest==శూన్యసూచిక && dest_సామర్థ్యం>0) ||
+        (src==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి<-1
     ) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* get the string length */
-    if(srcLength==-1) {
-        srcLength = static_cast<int32_t>(uprv_strlen(src));
+    ఒకవేళ(src_నిడివి==-1) {
+        src_నిడివి = static_cast<int32_t>(uprv_strlen(src));
     }
 
     /* check for overlapping source and destination */
-    if( dest!=nullptr &&
-        ((src>=dest && src<(dest+destCapacity)) ||
-         (dest>=src && dest<(src+srcLength)))
+    ఒకవేళ( dest!=శూన్యసూచిక &&
+        ((src>=dest && src<(dest+dest_సామర్థ్యం)) ||
+         (dest>=src && dest<(src+src_నిడివి)))
     ) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    ఒకవేళ (edits != శూన్యసూచిక && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
-    int32_t reslen = ByteSinkUtil::viaByteSinkToTerminatedChars(
-        dest, destCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    int32_t reslen = ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        dest, dest_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                             reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, status);
+                             reinterpret_cast<స్థిరరాశి uint8_t*>(src), src_నిడివి, sink, edits, స్థితి_2);
         },
-        errorCode);
-    if (U_SUCCESS(errorCode) && edits != nullptr) {
-        edits->copyErrorTo(errorCode);
+        error_సంకేతం);
+    ఒకవేళ (U_SUCCESS(error_సంకేతం) && edits != శూన్యసూచిక) {
+        edits->copy_Error_గమ్యం(error_సంకేతం);
     }
-    return reslen;
+    తిరిగి reslen;
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToLower(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
-                     UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+ucasemap_utf8_గమ్యం_క్రింది(స్థిరరాశి UCaseMap *csm,
+                     అక్షరం *dest, int32_t dest_సామర్థ్యం,
+                     స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+                     UError_సంకేతం *p_Error_సంకేతం) {
+    స్వయంచాలక *impl = reinterpret_cast<స్థిరరాశి UCaseMapImpl *>(csm);
+    తిరిగి ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToLower, nullptr, *pErrorCode);
+        dest, dest_సామర్థ్యం,
+        src, src_నిడివి,
+        ucasemap_అంతర్గత_UTF8_గమ్యం_క్రింది, శూన్యసూచిక, *p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToUpper(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
-                     UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+ucasemap_utf8_గమ్యం_పై(స్థిరరాశి UCaseMap *csm,
+                     అక్షరం *dest, int32_t dest_సామర్థ్యం,
+                     స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+                     UError_సంకేతం *p_Error_సంకేతం) {
+    స్వయంచాలక *impl = reinterpret_cast<స్థిరరాశి UCaseMapImpl *>(csm);
+    తిరిగి ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToUpper, nullptr, *pErrorCode);
+        dest, dest_సామర్థ్యం,
+        src, src_నిడివి,
+        ucasemap_అంతర్గత_UTF8_గమ్యం_పై, శూన్యసూచిక, *p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8FoldCase(const UCaseMap *csm,
-                      char *dest, int32_t destCapacity,
-                      const char *src, int32_t srcLength,
-                      UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8Fold, nullptr, *pErrorCode);
+ucasemap_utf8FoldCase(స్థిరరాశి UCaseMap *csm,
+                      అక్షరం *dest, int32_t dest_సామర్థ్యం,
+                      స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+                      UError_సంకేతం *p_Error_సంకేతం) {
+    స్వయంచాలక *impl = reinterpret_cast<స్థిరరాశి UCaseMapImpl *>(csm);
+    తిరిగి ucasemap_mapUTF8(
+        UCASE_LOC_మూలం, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
+        dest, dest_సామర్థ్యం,
+        src, src_నిడివి,
+        ucasemap_అంతర్గత_UTF8_Fold, శూన్యసూచిక, *p_Error_సంకేతం);
 }
 
 U_NAMESPACE_BEGIN
 
-void CaseMap::utf8ToLower(
-        const char *locale, uint32_t options,
+శూన్య CaseMap::utf8_గమ్యం_క్రింది(
+        స్థిరరాశి అక్షరం *locale, uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
-        UErrorCode &errorCode) {
+        UError_సంకేతం &error_సంకేతం) {
     ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        src.data(), src.length(),
-        ucasemap_internalUTF8ToLower, sink, edits, errorCode);
+        src.దత్తాంశం(), src.length(),
+        ucasemap_అంతర్గత_UTF8_గమ్యం_క్రింది, sink, edits, error_సంకేతం);
 }
 
-void CaseMap::utf8ToUpper(
-        const char *locale, uint32_t options,
+శూన్య CaseMap::utf8_గమ్యం_పై(
+        స్థిరరాశి అక్షరం *locale, uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
-        UErrorCode &errorCode) {
+        UError_సంకేతం &error_సంకేతం) {
     ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        src.data(), src.length(),
-        ucasemap_internalUTF8ToUpper, sink, edits, errorCode);
+        src.దత్తాంశం(), src.length(),
+        ucasemap_అంతర్గత_UTF8_గమ్యం_పై, sink, edits, error_సంకేతం);
 }
 
-void CaseMap::utf8Fold(
+శూన్య CaseMap::utf8Fold(
         uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
-        UErrorCode &errorCode) {
+        UError_సంకేతం &error_సంకేతం) {
     ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
-        src.data(), src.length(),
-        ucasemap_internalUTF8Fold, sink, edits, errorCode);
+        UCASE_LOC_మూలం, options, UCASEMAP_BREAK_ITERATOR_NULL
+        src.దత్తాంశం(), src.length(),
+        ucasemap_అంతర్గత_UTF8_Fold, sink, edits, error_సంకేతం);
 }
 
-int32_t CaseMap::utf8ToLower(
-        const char *locale, uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+int32_t CaseMap::utf8_గమ్యం_క్రింది(
+        స్థిరరాశి అక్షరం *locale, uint32_t options,
+        స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+        అక్షరం *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+        UError_సంకేతం &error_సంకేతం) {
+    తిరిగి ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToLower, edits, errorCode);
+        dest, dest_సామర్థ్యం,
+        src, src_నిడివి,
+        ucasemap_అంతర్గత_UTF8_గమ్యం_క్రింది, edits, error_సంకేతం);
 }
 
-int32_t CaseMap::utf8ToUpper(
-        const char *locale, uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+int32_t CaseMap::utf8_గమ్యం_పై(
+        స్థిరరాశి అక్షరం *locale, uint32_t options,
+        స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+        అక్షరం *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+        UError_సంకేతం &error_సంకేతం) {
+    తిరిగి ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToUpper, edits, errorCode);
+        dest, dest_సామర్థ్యం,
+        src, src_నిడివి,
+        ucasemap_అంతర్గత_UTF8_గమ్యం_పై, edits, error_సంకేతం);
 }
 
 int32_t CaseMap::utf8Fold(
         uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8Fold, edits, errorCode);
+        స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+        అక్షరం *dest, int32_t dest_సామర్థ్యం, Edits *edits,
+        UError_సంకేతం &error_సంకేతం) {
+    తిరిగి ucasemap_mapUTF8(
+        UCASE_LOC_మూలం, options, UCASEMAP_BREAK_ITERATOR_NULL
+        dest, dest_సామర్థ్యం,
+        src, src_నిడివి,
+        ucasemap_అంతర్గత_UTF8_Fold, edits, error_సంకేతం);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

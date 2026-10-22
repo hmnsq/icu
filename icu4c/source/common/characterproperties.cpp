@@ -4,49 +4,49 @@
 // characterproperties.cpp
 // created: 2018sep03 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/localpointer.h"
-#include "unicode/uchar.h"
-#include "unicode/ucpmap.h"
-#include "unicode/ucptrie.h"
-#include "unicode/umutablecptrie.h"
-#include "unicode/uniset.h"
-#include "unicode/uscript.h"
-#include "unicode/uset.h"
-#include "cmemory.h"
-#include "emojiprops.h"
-#include "mutex.h"
-#include "normalizer2impl.h"
-#include "uassert.h"
-#include "ubidi_props.h"
-#include "ucase.h"
-#include "ucln_cmn.h"
-#include "umutex.h"
-#include "uprops.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/localpointer.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/ucpmap.h"
+#అన్తర్భావ "unicode/ucptrie.h"
+#అన్తర్భావ "unicode/umutablecptrie.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/uscript.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "emojiprops.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "normalizer2impl.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ubidi_props.h"
+#అన్తర్భావ "ucase.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "uprops.h"
 
-using icu::LocalPointer;
-#if !UCONFIG_NO_NORMALIZATION
-using icu::Normalizer2Factory;
-using icu::Normalizer2Impl;
-#endif
-using icu::UInitOnce;
-using icu::UnicodeSet;
+ఉపయోగించి icu::Local_సూచిక;
+#ఒకవేళ !UCONFIG_NO_NORMALIZATION
+ఉపయోగించి icu::Normalizer2Factory;
+ఉపయోగించి icu::Normalizer2Impl;
+#అయితే_ముగింపు
+ఉపయోగించి icu::UInitOnce;
+ఉపయోగించి icu::Unicode_సమితి;
 
-namespace {
+నామాకాశ {
 
 UBool U_CALLCONV characterproperties_cleanup();
 
-constexpr int32_t NUM_INCLUSIONS = UPROPS_SRC_COUNT + (UCHAR_INT_LIMIT - UCHAR_INT_START);
+constexpr int32_t అంకె_INCLUSIONS = UPROPS_SRC_లెక్క + (UCHAR_INT_హద్దు - UCHAR_INT_ప్రారంభం);
 
-struct Inclusion {
-    UnicodeSet  *fSet = nullptr;
+నిర్మాణం Inclusion {
+    Unicode_సమితి  *f_సమితి = శూన్యసూచిక;
     UInitOnce    fInitOnce {};
 };
-Inclusion gInclusions[NUM_INCLUSIONS]; // cached getInclusions()
+Inclusion gInclusions[అంకె_INCLUSIONS]; // cached getInclusions()
 
-UnicodeSet *sets[UCHAR_BINARY_LIMIT] = {};
+Unicode_సమితి *sets[UCHAR_ద్విమాన_హద్దు] = {};
 
-UCPMap *maps[UCHAR_INT_LIMIT - UCHAR_INT_START] = {};
+UCPMap *maps[UCHAR_INT_హద్దు - UCHAR_INT_ప్రారంభం] = {};
 
 icu::UMutex cpMutex;
 
@@ -56,376 +56,376 @@ icu::UMutex cpMutex;
 
 // USetAdder implementation
 // Does not use uset.h to reduce code dependencies
-void U_CALLCONV
-_set_add(USet *set, UChar32 c) {
-    reinterpret_cast<UnicodeSet*>(set)->add(c);
+శూన్య U_CALLCONV
+సమితి_కూడు(USet *సమితి, UChar32 c) {
+    reinterpret_cast<Unicode_సమితి*>(సమితి)->కూడు(c);
 }
 
-void U_CALLCONV
-_set_addRange(USet *set, UChar32 start, UChar32 end) {
-    reinterpret_cast<UnicodeSet*>(set)->add(start, end);
+శూన్య U_CALLCONV
+సమితి_కూడు_Range(USet *సమితి, UChar32 ప్రారంభం, UChar32 చివర) {
+    reinterpret_cast<Unicode_సమితి*>(సమితి)->కూడు(ప్రారంభం, చివర);
 }
 
-void U_CALLCONV
-_set_addString(USet *set, const char16_t *str, int32_t length) {
-    reinterpret_cast<UnicodeSet*>(set)->add(icu::UnicodeString(static_cast<UBool>(length < 0), str, length));
+శూన్య U_CALLCONV
+సమితి_కూడు_String(USet *సమితి, స్థిరరాశి char16_t *str, int32_t length) {
+    reinterpret_cast<Unicode_సమితి*>(సమితి)->కూడు(icu::UnicodeString(static_cast<UBool>(length < 0), str, length));
 }
 
 UBool U_CALLCONV characterproperties_cleanup() {
-    for (Inclusion &in: gInclusions) {
-        delete in.fSet;
-        in.fSet = nullptr;
+    కొరకు (Inclusion &in: gInclusions) {
+        తొలగించు in.f_సమితి;
+        in.f_సమితి = శూన్యసూచిక;
         in.fInitOnce.reset();
     }
-    for (int32_t i = 0; i < UPRV_LENGTHOF(sets); ++i) {
-        delete sets[i];
-        sets[i] = nullptr;
+    కొరకు (int32_t i = 0; i < UPRV_LENGTHOF(sets); ++i) {
+        తొలగించు sets[i];
+        sets[i] = శూన్యసూచిక;
     }
-    for (int32_t i = 0; i < UPRV_LENGTHOF(maps); ++i) {
+    కొరకు (int32_t i = 0; i < UPRV_LENGTHOF(maps); ++i) {
         ucptrie_close(reinterpret_cast<UCPTrie *>(maps[i]));
-        maps[i] = nullptr;
+        maps[i] = శూన్యసూచిక;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
+శూన్య U_CALLCONV initInclusion(UProperty_ఆధారం src, UError_సంకేతం &error_సంకేతం) {
     // This function is invoked only via umtx_initOnce().
-    U_ASSERT(0 <= src && src < UPROPS_SRC_COUNT);
-    if (src == UPROPS_SRC_NONE) {
-        errorCode = U_INTERNAL_PROGRAM_ERROR;
-        return;
+    U_ASSERT(0 <= src && src < UPROPS_SRC_లెక్క);
+    ఒకవేళ (src == UPROPS_SRC_NONE) {
+        error_సంకేతం = U_అంతర్గత_కార్యక్రమం_ERROR;
+        తిరిగి;
     }
-    U_ASSERT(gInclusions[src].fSet == nullptr);
+    U_ASSERT(gInclusions[src].f_సమితి == శూన్యసూచిక);
 
-    LocalPointer<UnicodeSet> incl(new UnicodeSet());
-    if (incl.isNull()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    Local_సూచిక<Unicode_సమితి> incl(కొత్త Unicode_సమితి());
+    ఒకవేళ (incl.isNull()) {
+        error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
     USetAdder sa = {
         reinterpret_cast<USet*>(incl.getAlias()),
-        _set_add,
-        _set_addRange,
-        _set_addString,
-        nullptr, // don't need remove()
-        nullptr // don't need removeRange()
+        సమితి_కూడు,
+        సమితి_కూడు_Range,
+        సమితి_కూడు_String,
+        శూన్యసూచిక, // don't need remove()
+        శూన్యసూచిక // don't need removeRange()
     };
 
-    switch(src) {
-    case UPROPS_SRC_CHAR:
-        uchar_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_PROPSVEC:
-        upropsvec_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_CHAR_AND_PROPSVEC:
-        uchar_addPropertyStarts(&sa, &errorCode);
-        upropsvec_addPropertyStarts(&sa, &errorCode);
-        break;
-#if !UCONFIG_NO_NORMALIZATION
-    case UPROPS_SRC_CASE_AND_NORM: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addPropertyStarts(&sa, errorCode);
+    ఎంపిక(src) {
+    స్థితి UPROPS_SRC_CHAR:
+        uchar_కూడు_Property_Starts(&sa, &error_సంకేతం);
+        ఆపు;
+    స్థితి UPROPS_SRC_PROPSVEC:
+        upropsvec_కూడు_Property_Starts(&sa, &error_సంకేతం);
+        ఆపు;
+    స్థితి UPROPS_SRC_CHAR_AND_PROPSVEC:
+        uchar_కూడు_Property_Starts(&sa, &error_సంకేతం);
+        upropsvec_కూడు_Property_Starts(&sa, &error_సంకేతం);
+        ఆపు;
+#ఒకవేళ !UCONFIG_NO_NORMALIZATION
+    స్థితి UPROPS_SRC_CASE_AND_NORM: {
+        స్థిరరాశి Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(error_సంకేతం);
+        ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+            impl->కూడు_Property_Starts(&sa, error_సంకేతం);
         }
-        ucase_addPropertyStarts(&sa, &errorCode);
-        break;
+        ucase_కూడు_Property_Starts(&sa, &error_సంకేతం);
+        ఆపు;
     }
-    case UPROPS_SRC_NFC: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addPropertyStarts(&sa, errorCode);
+    స్థితి UPROPS_SRC_NFC: {
+        స్థిరరాశి Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(error_సంకేతం);
+        ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+            impl->కూడు_Property_Starts(&sa, error_సంకేతం);
         }
-        break;
+        ఆపు;
     }
-    case UPROPS_SRC_NFKC: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFKCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addPropertyStarts(&sa, errorCode);
+    స్థితి UPROPS_SRC_NFKC: {
+        స్థిరరాశి Normalizer2Impl *impl=Normalizer2Factory::getNFKCImpl(error_సంకేతం);
+        ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+            impl->కూడు_Property_Starts(&sa, error_సంకేతం);
         }
-        break;
+        ఆపు;
     }
-    case UPROPS_SRC_NFKC_CF: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFKC_CFImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addPropertyStarts(&sa, errorCode);
+    స్థితి UPROPS_SRC_NFKC_CF: {
+        స్థిరరాశి Normalizer2Impl *impl=Normalizer2Factory::getNFKC_CFImpl(error_సంకేతం);
+        ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+            impl->కూడు_Property_Starts(&sa, error_సంకేతం);
         }
-        break;
+        ఆపు;
     }
-    case UPROPS_SRC_NFC_CANON_ITER: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
-            impl->addCanonIterPropertyStarts(&sa, errorCode);
+    స్థితి UPROPS_SRC_NFC_CANON_ITER: {
+        స్థిరరాశి Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(error_సంకేతం);
+        ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+            impl->కూడు_Canon_Iter_Property_Starts(&sa, error_సంకేతం);
         }
-        break;
+        ఆపు;
     }
-#endif
-    case UPROPS_SRC_CASE:
-        ucase_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_BIDI:
-        ubidi_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_INPC:
-    case UPROPS_SRC_INSC:
-    case UPROPS_SRC_VO:
-        uprops_addPropertyStarts(src, &sa, &errorCode);
-        break;
-    case UPROPS_SRC_EMOJI: {
-        const icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
-        if (U_SUCCESS(errorCode)) {
-            ep->addPropertyStarts(&sa, errorCode);
+#అయితే_ముగింపు
+    స్థితి UPROPS_SRC_CASE:
+        ucase_కూడు_Property_Starts(&sa, &error_సంకేతం);
+        ఆపు;
+    స్థితి UPROPS_SRC_BIDI:
+        ubidi_కూడు_Property_Starts(&sa, &error_సంకేతం);
+        ఆపు;
+    స్థితి UPROPS_SRC_INPC:
+    స్థితి UPROPS_SRC_INSC:
+    స్థితి UPROPS_SRC_VO:
+        uprops_కూడు_Property_Starts(src, &sa, &error_సంకేతం);
+        ఆపు;
+    స్థితి UPROPS_SRC_EMOJI: {
+        స్థిరరాశి icu::EmojiProps *ep = icu::EmojiProps::getSingleton(error_సంకేతం);
+        ఒకవేళ (U_SUCCESS(error_సంకేతం)) {
+            ep->కూడు_Property_Starts(&sa, error_సంకేతం);
         }
-        break;
+        ఆపు;
     }
-    case UPROPS_SRC_IDSU:
+    స్థితి UPROPS_SRC_IDSU:
         // New in Unicode 15.1 for just two characters.
-        sa.add(sa.set, 0x2FFE);
-        sa.add(sa.set, 0x2FFF + 1);
-        break;
-    case UPROPS_SRC_ID_COMPAT_MATH:
-    case UPROPS_SRC_MCM:
-        uprops_addPropertyStarts(src, &sa, &errorCode);
-        break;
-    case UPROPS_SRC_BLOCK:
-        ublock_addPropertyStarts(&sa, errorCode);
-        break;
-    default:
-        errorCode = U_INTERNAL_PROGRAM_ERROR;
-        break;
+        sa.కూడు(sa.సమితి, 0x2FFE);
+        sa.కూడు(sa.సమితి, 0x2FFF + 1);
+        ఆపు;
+    స్థితి UPROPS_SRC_ID_COMPAT_MATH:
+    స్థితి UPROPS_SRC_MCM:
+        uprops_కూడు_Property_Starts(src, &sa, &error_సంకేతం);
+        ఆపు;
+    స్థితి UPROPS_SRC_ఖండం:
+        ublock_కూడు_Property_Starts(&sa, error_సంకేతం);
+        ఆపు;
+    అప్రమేయ:
+        error_సంకేతం = U_అంతర్గత_కార్యక్రమం_ERROR;
+        ఆపు;
     }
 
-    if (U_FAILURE(errorCode)) {
-        return;
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
-    if (incl->isBogus()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    ఒకవేళ (incl->isBogus()) {
+        error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
     // Compact for caching.
     incl->compact();
-    gInclusions[src].fSet = incl.orphan();
-    ucln_common_registerCleanup(UCLN_COMMON_CHARACTERPROPERTIES, characterproperties_cleanup);
+    gInclusions[src].f_సమితి = incl.orphan();
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_CHARACTERPROPERTIES, characterproperties_cleanup);
 }
 
-const UnicodeSet *getInclusionsForSource(UPropertySource src, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (src < 0 || UPROPS_SRC_COUNT <= src) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+స్థిరరాశి Unicode_సమితి *get_Inclusions_For_ఆధారం(UProperty_ఆధారం src, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    ఒకవేళ (src < 0 || UPROPS_SRC_లెక్క <= src) {
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
     Inclusion &i = gInclusions[src];
-    umtx_initOnce(i.fInitOnce, &initInclusion, src, errorCode);
-    return i.fSet;
+    umtx_initOnce(i.fInitOnce, &initInclusion, src, error_సంకేతం);
+    తిరిగి i.f_సమితి;
 }
 
-void U_CALLCONV initIntPropInclusion(UProperty prop, UErrorCode &errorCode) {
+శూన్య U_CALLCONV initIntPropInclusion(UProperty prop, UError_సంకేతం &error_సంకేతం) {
     // This function is invoked only via umtx_initOnce().
-    U_ASSERT(UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT);
-    int32_t inclIndex = UPROPS_SRC_COUNT + (prop - UCHAR_INT_START);
-    U_ASSERT(gInclusions[inclIndex].fSet == nullptr);
-    UPropertySource src = uprops_getSource(prop);
-    const UnicodeSet *incl = getInclusionsForSource(src, errorCode);
-    if (U_FAILURE(errorCode)) {
-        return;
+    U_ASSERT(UCHAR_INT_ప్రారంభం <= prop && prop < UCHAR_INT_హద్దు);
+    int32_t incl_సూచీ = UPROPS_SRC_లెక్క + (prop - UCHAR_INT_ప్రారంభం);
+    U_ASSERT(gInclusions[incl_సూచీ].f_సమితి == శూన్యసూచిక);
+    UProperty_ఆధారం src = uprops_get_ఆధారం(prop);
+    స్థిరరాశి Unicode_సమితి *incl = get_Inclusions_For_ఆధారం(src, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
 
-    LocalPointer<UnicodeSet> intPropIncl(new UnicodeSet(0, 0));
-    if (intPropIncl.isNull()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    Local_సూచిక<Unicode_సమితి> intPropIncl(కొత్త Unicode_సమితి(0, 0));
+    ఒకవేళ (intPropIncl.isNull()) {
+        error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    int32_t numRanges = incl->getRangeCount();
-    int32_t prevValue = 0;
-    for (int32_t i = 0; i < numRanges; ++i) {
-        UChar32 rangeEnd = incl->getRangeEnd(i);
-        for (UChar32 c = incl->getRangeStart(i); c <= rangeEnd; ++c) {
+    int32_t అంకె_Ranges = incl->get_Range_లెక్క();
+    int32_t prev_విలువ = 0;
+    కొరకు (int32_t i = 0; i < అంకె_Ranges; ++i) {
+        UChar32 range_చివర = incl->get_Range_చివర(i);
+        కొరకు (UChar32 c = incl->get_Range_ప్రారంభం(i); c <= range_చివర; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
-            int32_t value = u_getIntPropertyValue(c, prop);
-            if (value != prevValue) {
-                intPropIncl->add(c);
-                prevValue = value;
+            int32_t value = u_get_Int_Property_విలువ(c, prop);
+            ఒకవేళ (value != prev_విలువ) {
+                intPropIncl->కూడు(c);
+                prev_విలువ = value;
             }
         }
     }
 
-    if (intPropIncl->isBogus()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    ఒకవేళ (intPropIncl->isBogus()) {
+        error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
     // Compact for caching.
     intPropIncl->compact();
-    gInclusions[inclIndex].fSet = intPropIncl.orphan();
-    ucln_common_registerCleanup(UCLN_COMMON_CHARACTERPROPERTIES, characterproperties_cleanup);
+    gInclusions[incl_సూచీ].f_సమితి = intPropIncl.orphan();
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_CHARACTERPROPERTIES, characterproperties_cleanup);
 }
 
 }  // namespace
 
 U_NAMESPACE_BEGIN
 
-const UnicodeSet *CharacterProperties::getInclusionsForProperty(
-        UProperty prop, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
-        int32_t inclIndex = UPROPS_SRC_COUNT + (prop - UCHAR_INT_START);
-        Inclusion &i = gInclusions[inclIndex];
-        umtx_initOnce(i.fInitOnce, &initIntPropInclusion, prop, errorCode);
-        return i.fSet;
-    } else {
-        UPropertySource src = uprops_getSource(prop);
-        return getInclusionsForSource(src, errorCode);
+స్థిరరాశి Unicode_సమితి *CharacterProperties::getInclusionsForProperty(
+        UProperty prop, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    ఒకవేళ (UCHAR_INT_ప్రారంభం <= prop && prop < UCHAR_INT_హద్దు) {
+        int32_t incl_సూచీ = UPROPS_SRC_లెక్క + (prop - UCHAR_INT_ప్రారంభం);
+        Inclusion &i = gInclusions[incl_సూచీ];
+        umtx_initOnce(i.fInitOnce, &initIntPropInclusion, prop, error_సంకేతం);
+        తిరిగి i.f_సమితి;
+    } లేకపోతే {
+        UProperty_ఆధారం src = uprops_get_ఆధారం(prop);
+        తిరిగి get_Inclusions_For_ఆధారం(src, error_సంకేతం);
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-namespace {
+నామాకాశ {
 
-UnicodeSet *makeSet(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    LocalPointer<UnicodeSet> set(new UnicodeSet());
-    if (set.isNull()) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+Unicode_సమితి *make_సమితి(UProperty property, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    Local_సూచిక<Unicode_సమితి> సమితి(కొత్త Unicode_సమితి());
+    ఒకవేళ (సమితి.isNull()) {
+        error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    if (UCHAR_BASIC_EMOJI <= property && property <= UCHAR_RGI_EMOJI) {
+    ఒకవేళ (UCHAR_BASIC_EMOJI <= property && property <= UCHAR_RGI_EMOJI) {
         // property of strings
-        const icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
-        if (U_FAILURE(errorCode)) { return nullptr; }
+        స్థిరరాశి icu::EmojiProps *ep = icu::EmojiProps::getSingleton(error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
         USetAdder sa = {
-            reinterpret_cast<USet*>(set.getAlias()),
-            _set_add,
-            _set_addRange,
-            _set_addString,
-            nullptr, // don't need remove()
-            nullptr // don't need removeRange()
+            reinterpret_cast<USet*>(సమితి.getAlias()),
+            సమితి_కూడు,
+            సమితి_కూడు_Range,
+            సమితి_కూడు_String,
+            శూన్యసూచిక, // don't need remove()
+            శూన్యసూచిక // don't need removeRange()
         };
-        ep->addStrings(&sa, property, errorCode);
-        if (property != UCHAR_BASIC_EMOJI && property != UCHAR_RGI_EMOJI) {
+        ep->కూడు_అక్షరశ్రేణులు(&sa, property, error_సంకేతం);
+        ఒకవేళ (property != UCHAR_BASIC_EMOJI && property != UCHAR_RGI_EMOJI) {
             // property of _only_ strings
-            set->freeze();
-            return set.orphan();
+            సమితి->freeze();
+            తిరిగి సమితి.orphan();
         }
     }
 
-    const UnicodeSet *inclusions =
-        icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    int32_t numRanges = inclusions->getRangeCount();
-    UChar32 startHasProperty = -1;
+    స్థిరరాశి Unicode_సమితి *inclusions =
+        icu::CharacterProperties::getInclusionsForProperty(property, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    int32_t అంకె_Ranges = inclusions->get_Range_లెక్క();
+    UChar32 ప్రారంభం_Has_Property = -1;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
-        UChar32 rangeEnd = inclusions->getRangeEnd(i);
-        for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
+    కొరకు (int32_t i = 0; i < అంకె_Ranges; ++i) {
+        UChar32 range_చివర = inclusions->get_Range_చివర(i);
+        కొరకు (UChar32 c = inclusions->get_Range_ప్రారంభం(i); c <= range_చివర; ++c) {
             // TODO: Get a UCharacterProperty.BinaryProperty to avoid the property dispatch.
-            if (u_hasBinaryProperty(c, property)) {
-                if (startHasProperty < 0) {
+            ఒకవేళ (u_has_ద్విమాన_Property(c, property)) {
+                ఒకవేళ (ప్రారంభం_Has_Property < 0) {
                     // Transition from false to true.
-                    startHasProperty = c;
+                    ప్రారంభం_Has_Property = c;
                 }
-            } else if (startHasProperty >= 0) {
+            } లేకపోతే ఒకవేళ (ప్రారంభం_Has_Property >= 0) {
                 // Transition from true to false.
-                set->add(startHasProperty, c - 1);
-                startHasProperty = -1;
+                సమితి->కూడు(ప్రారంభం_Has_Property, c - 1);
+                ప్రారంభం_Has_Property = -1;
             }
         }
     }
-    if (startHasProperty >= 0) {
-        set->add(startHasProperty, 0x10FFFF);
+    ఒకవేళ (ప్రారంభం_Has_Property >= 0) {
+        సమితి->కూడు(ప్రారంభం_Has_Property, 0x10FFFF);
     }
-    set->freeze();
-    return set.orphan();
+    సమితి->freeze();
+    తిరిగి సమితి.orphan();
 }
 
-UCPMap *makeMap(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    uint32_t nullValue = property == UCHAR_SCRIPT ? USCRIPT_UNKNOWN : 0;
-    icu::LocalUMutableCPTriePointer mutableTrie(
-        umutablecptrie_open(nullValue, nullValue, &errorCode));
-    const UnicodeSet *inclusions =
-        icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    int32_t numRanges = inclusions->getRangeCount();
-    UChar32 start = 0;
-    uint32_t value = nullValue;
+UCPMap *makeMap(UProperty property, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    uint32_t null_విలువ = property == UCHAR_SCRIPT ? USCRIPT_UNKNOWN : 0;
+    icu::Local_UMutable_CPTrie_సూచిక mutableTrie(
+        umutablecptrie_open(null_విలువ, null_విలువ, &error_సంకేతం));
+    స్థిరరాశి Unicode_సమితి *inclusions =
+        icu::CharacterProperties::getInclusionsForProperty(property, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    int32_t అంకె_Ranges = inclusions->get_Range_లెక్క();
+    UChar32 ప్రారంభం = 0;
+    uint32_t value = null_విలువ;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
-        UChar32 rangeEnd = inclusions->getRangeEnd(i);
-        for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
+    కొరకు (int32_t i = 0; i < అంకె_Ranges; ++i) {
+        UChar32 range_చివర = inclusions->get_Range_చివర(i);
+        కొరకు (UChar32 c = inclusions->get_Range_ప్రారంభం(i); c <= range_చివర; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
-            uint32_t nextValue = u_getIntPropertyValue(c, property);
-            if (value != nextValue) {
-                if (value != nullValue) {
-                    umutablecptrie_setRange(mutableTrie.getAlias(), start, c - 1, value, &errorCode);
+            uint32_t తదుపరి_విలువ = u_get_Int_Property_విలువ(c, property);
+            ఒకవేళ (value != తదుపరి_విలువ) {
+                ఒకవేళ (value != null_విలువ) {
+                    umutablecptrie_సమితి_Range(mutableTrie.getAlias(), ప్రారంభం, c - 1, value, &error_సంకేతం);
                 }
-                start = c;
-                value = nextValue;
+                ప్రారంభం = c;
+                value = తదుపరి_విలువ;
             }
         }
     }
-    if (value != 0) {
-        umutablecptrie_setRange(mutableTrie.getAlias(), start, 0x10FFFF, value, &errorCode);
+    ఒకవేళ (value != 0) {
+        umutablecptrie_సమితి_Range(mutableTrie.getAlias(), ప్రారంభం, 0x10FFFF, value, &error_సంకేతం);
     }
 
     UCPTrieType type;
-    if (property == UCHAR_BIDI_CLASS || property == UCHAR_GENERAL_CATEGORY) {
+    ఒకవేళ (property == UCHAR_BIDI_CLASS || property == UCHAR_GENERAL_CATEGORY) {
         type = UCPTRIE_TYPE_FAST;
-    } else {
+    } లేకపోతే {
         type = UCPTRIE_TYPE_SMALL;
     }
-    UCPTrieValueWidth valueWidth;
+    UCPTrie_విలువ_వెడల్పు విలువ_వెడల్పు;
     // TODO: UCharacterProperty.IntProperty
-    int32_t max = u_getIntPropertyMaxValue(property);
-    if (max <= 0xff) {
-        valueWidth = UCPTRIE_VALUE_BITS_8;
-    } else if (max <= 0xffff) {
-        valueWidth = UCPTRIE_VALUE_BITS_16;
-    } else {
-        valueWidth = UCPTRIE_VALUE_BITS_32;
+    int32_t max = u_get_Int_Property_Max_విలువ(property);
+    ఒకవేళ (max <= 0xff) {
+        విలువ_వెడల్పు = UCPTRIE_విలువ_బిట్లు_8;
+    } లేకపోతే ఒకవేళ (max <= 0xffff) {
+        విలువ_వెడల్పు = UCPTRIE_విలువ_బిట్లు_16;
+    } లేకపోతే {
+        విలువ_వెడల్పు = UCPTRIE_విలువ_బిట్లు_32;
     }
-    return reinterpret_cast<UCPMap *>(
-        umutablecptrie_buildImmutable(mutableTrie.getAlias(), type, valueWidth, &errorCode));
+    తిరిగి reinterpret_cast<UCPMap *>(
+        umutablecptrie_buildImmutable(mutableTrie.getAlias(), type, విలువ_వెడల్పు, &error_సంకేతం));
 }
 
 }  // namespace
 
 U_NAMESPACE_BEGIN
 
-const UnicodeSet *CharacterProperties::getBinaryPropertySet(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (property < 0 || UCHAR_BINARY_LIMIT <= property) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+స్థిరరాశి Unicode_సమితి *CharacterProperties::get_ద్విమాన_Property_సమితి(UProperty property, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    ఒకవేళ (property < 0 || UCHAR_ద్విమాన_హద్దు <= property) {
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
     Mutex m(&cpMutex);
-    UnicodeSet *set = sets[property];
-    if (set == nullptr) {
-        sets[property] = set = makeSet(property, errorCode);
+    Unicode_సమితి *సమితి = sets[property];
+    ఒకవేళ (సమితి == శూన్యసూచిక) {
+        sets[property] = సమితి = make_సమితి(property, error_సంకేతం);
     }
-    return set;
+    తిరిగి సమితి;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 U_NAMESPACE_USE
 
-U_CAPI const USet * U_EXPORT2
-u_getBinaryPropertySet(UProperty property, UErrorCode *pErrorCode) {
-    const UnicodeSet *set = CharacterProperties::getBinaryPropertySet(property, *pErrorCode);
-    return U_SUCCESS(*pErrorCode) ? set->toUSet() : nullptr;
+U_CAPI స్థిరరాశి USet * U_EXPORT2
+u_get_ద్విమాన_Property_సమితి(UProperty property, UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి Unicode_సమితి *సమితి = CharacterProperties::get_ద్విమాన_Property_సమితి(property, *p_Error_సంకేతం);
+    తిరిగి U_SUCCESS(*p_Error_సంకేతం) ? సమితి->గమ్యం_USet() : శూన్యసూచిక;
 }
 
-U_CAPI const UCPMap * U_EXPORT2
-u_getIntPropertyMap(UProperty property, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) { return nullptr; }
-    if (property < UCHAR_INT_START || UCHAR_INT_LIMIT <= property) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+U_CAPI స్థిరరాశి UCPMap * U_EXPORT2
+u_getIntPropertyMap(UProperty property, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    ఒకవేళ (property < UCHAR_INT_ప్రారంభం || UCHAR_INT_హద్దు <= property) {
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
     Mutex m(&cpMutex);
-    UCPMap *map = maps[property - UCHAR_INT_START];
-    if (map == nullptr) {
-        maps[property - UCHAR_INT_START] = map = makeMap(property, *pErrorCode);
+    UCPMap *map = maps[property - UCHAR_INT_ప్రారంభం];
+    ఒకవేళ (map == శూన్యసూచిక) {
+        maps[property - UCHAR_INT_ప్రారంభం] = map = makeMap(property, *p_Error_సంకేతం);
     }
-    return map;
+    తిరిగి map;
 }

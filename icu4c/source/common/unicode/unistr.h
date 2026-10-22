@@ -20,45 +20,45 @@
 ******************************************************************************
 */
 
-#ifndef UNISTR_H
-#define UNISTR_H
+#నిర్వచితం_కాకపోతే UNISTR_H
+#నిర్వచించు UNISTR_H
 
 /**
  * \file
  * \brief C++ API: Unicode String
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include <cstddef>
-#include <string_view>
-#include "unicode/char16ptr.h"
-#include "unicode/rep.h"
-#include "unicode/std_string.h"
-#include "unicode/stringpiece.h"
-#include "unicode/bytestream.h"
+#అన్తర్భావ <cstddef>
+#అన్తర్భావ <string_view>
+#అన్తర్భావ "unicode/char16ptr.h"
+#అన్తర్భావ "unicode/rep.h"
+#అన్తర్భావ "unicode/std_string.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/bytestream.h"
 
-struct UConverter;          // unicode/ucnv.h
+నిర్మాణం UConverter;          // unicode/ucnv.h
 
-#ifndef USTRING_H
+#నిర్వచితం_కాకపోతే USTRING_H
 /**
  * \ingroup ustring_ustrlen
  * @param s Pointer to sequence of UChars.
  * @return Length of sequence.
  */
-U_CAPI int32_t U_EXPORT2 u_strlen(const UChar *s);
-#endif
+U_CAPI int32_t U_EXPORT2 u_strlen(స్థిరరాశి UChar *s);
+#అయితే_ముగింపు
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 class BreakIterator;        // unicode/brkiter.h
-#endif
+#అయితే_ముగింపు
 class Edits;
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 // Not #ifndef U_HIDE_INTERNAL_API because UnicodeString needs the UStringCaseMapper.
 /**
@@ -67,15 +67,15 @@ U_NAMESPACE_END
  * src and dest must not overlap.
  * @internal
  */
-typedef int32_t U_CALLCONV
+రకనిర్వచనం int32_t U_CALLCONV
 UStringCaseMapper(int32_t caseLocale, uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
                   icu::BreakIterator *iter,
-#endif
-                  char16_t *dest, int32_t destCapacity,
-                  const char16_t *src, int32_t srcLength,
+#అయితే_ముగింపు
+                  char16_t *dest, int32_t dest_సామర్థ్యం,
+                  స్థిరరాశి char16_t *src, int32_t src_నిడివి,
                   icu::Edits *edits,
-                  UErrorCode &errorCode);
+                  UError_సంకేతం &error_సంకేతం);
 
 U_NAMESPACE_BEGIN
 
@@ -95,7 +95,7 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  *
  * @stable ICU 3.2
  */
-#define US_INV icu::UnicodeString::kInvariant
+#నిర్వచించు US_INV icu::UnicodeString::kInvariant
 
 /**
  * \def UNICODE_STRING
@@ -117,11 +117,11 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * `NUL`, must be specified as a constant.
  * @stable ICU 2.0
  */
-#if !U_CHAR16_IS_TYPEDEF
-# define UNICODE_STRING(cs, _length) icu::UnicodeString(true, u ## cs, _length)
-#else
-# define UNICODE_STRING(cs, _length) icu::UnicodeString(true, (const char16_t*)u ## cs, _length)
-#endif
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF
+# define UNICODE_STRING(cs, నిడివి_4) icu::UnicodeString(true, u ## cs, నిడివి_4)
+#లేకపోతే
+# define UNICODE_STRING(cs, నిడివి_4) icu::UnicodeString(true, (స్థిరరాశి char16_t*)u ## cs, నిడివి_4)
+#అయితే_ముగింపు
 
 /**
  * Unicode String literals in C++.
@@ -132,7 +132,7 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @stable ICU 2.0
  * @see UNICODE_STRING
  */
-#define UNICODE_STRING_SIMPLE(cs) UNICODE_STRING(cs, -1)
+#నిర్వచించు UNICODE_STRING_SIMPLE(cs) UNICODE_STRING(cs, -1)
 
 /**
  * \def UNISTR_FROM_CHAR_EXPLICIT
@@ -141,15 +141,15 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * constructors are marked as explicit, preventing their inadvertent use.
  * @stable ICU 49
  */
-#ifndef UNISTR_FROM_CHAR_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+#నిర్వచితం_కాకపోతే UNISTR_FROM_CHAR_EXPLICIT
+# ఒకవేళ defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_CHAR_EXPLICIT explicit
-# else
+# లేకపోతే
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_CHAR_EXPLICIT
 # endif
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UNISTR_FROM_STRING_EXPLICIT
@@ -161,15 +161,15 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * by passing a string literal into an API with a const UnicodeString & parameter.
  * @stable ICU 49
  */
-#ifndef UNISTR_FROM_STRING_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+#నిర్వచితం_కాకపోతే UNISTR_FROM_STRING_EXPLICIT
+# ఒకవేళ defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_STRING_EXPLICIT explicit
-# else
+# లేకపోతే
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_STRING_EXPLICIT
 # endif
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def UNISTR_OBJECT_SIZE
@@ -204,9 +204,9 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @see U16_MAX_LENGTH
  * @stable ICU 56
  */
-#ifndef UNISTR_OBJECT_SIZE
-# define UNISTR_OBJECT_SIZE 64
-#endif
+#నిర్వచితం_కాకపోతే UNISTR_OBJECT_కొలత
+# define UNISTR_OBJECT_కొలత 64
+#అయితే_ముగింపు
 
 /**
  * UnicodeString is a string class that stores Unicode characters directly and provides
@@ -299,11 +299,11 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @see CharacterIterator
  * @stable ICU 2.0
  */
-class U_COMMON_API UnicodeString : public Replaceable
+class U_COMMON_API UnicodeString : బహిరంగ Replaceable
 {
-public:
+బహిరంగ:
   /** C++ boilerplate @internal */
-  using value_type = char16_t;
+  using విలువ_type = char16_t;
 
   /**
    * Constant to be used in the UnicodeString(char *, int32_t, EInvariant) constructor
@@ -313,7 +313,7 @@ public:
    * @see US_INV
    * @stable ICU 3.2
    */
-  enum EInvariant {
+  గణన EInvariant {
     /**
      * @see EInvariant
      * @stable ICU 3.2
@@ -334,7 +334,7 @@ public:
    * false otherwise.
    * @stable ICU 2.0
    */
-  inline bool operator== (const UnicodeString& text) const;
+  అంతఃవరుస bool క్రియాకారకం== (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Equality operator. Performs only bitwise comparison with `text`
@@ -351,11 +351,11 @@ public:
    * @return true if `text` contains the same characters as this one, false otherwise.
    * @stable ICU 76
    */
-  template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline bool operator==(const S &text) const {
-    std::u16string_view sv(internal::toU16StringView(text));
+  మూస<typename S, typename = std::enable_if_t<Convertible_గమ్యం_U16_String_View<S>>>
+  అంతఃవరుస bool క్రియాకారకం==(స్థిరరాశి S &పాఠ్యం) స్థిరరాశి {
+    std::u16string_view sv(అంతర్గత_2::గమ్యం_U16_String_View(పాఠ్యం));
     uint32_t len;  // unsigned to avoid a compiler warning
-    return !isBogus() && (len = length()) == sv.length() && doEquals(sv.data(), len);
+    తిరిగి !isBogus() && (len = నిడివి()) == sv.నిడివి() && doEquals(sv.దత్తాంశం(), len);
   }
 
   /**
@@ -365,7 +365,7 @@ public:
    * true otherwise.
    * @stable ICU 2.0
    */
-  inline bool operator!= (const UnicodeString& text) const;
+  అంతఃవరుస bool క్రియాకారకం!= (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Inequality operator. Performs only bitwise comparison with `text`
@@ -384,9 +384,9 @@ public:
    * @return false if `text` contains the same characters as this one, true otherwise.
    * @stable ICU 76
    */
-  template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline bool operator!=(const S &text) const {
-    return !operator==(text);
+  మూస<typename S, typename = std::enable_if_t<Convertible_గమ్యం_U16_String_View<S>>>
+  అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి S &పాఠ్యం) స్థిరరాశి {
+    తిరిగి !క్రియాకారకం==(పాఠ్యం);
   }
 
   /**
@@ -396,7 +396,7 @@ public:
    * greater than the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator> (const UnicodeString& text) const;
+  అంతఃవరుస UBool క్రియాకారకం> (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Less than operator. Performs only bitwise comparison.
@@ -405,7 +405,7 @@ public:
    * less than the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator< (const UnicodeString& text) const;
+  అంతఃవరుస UBool క్రియాకారకం< (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Greater than or equal operator. Performs only bitwise comparison.
@@ -414,7 +414,7 @@ public:
    * greater than or equal to the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator>= (const UnicodeString& text) const;
+  అంతఃవరుస UBool క్రియాకారకం>= (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Less than or equal operator. Performs only bitwise comparison.
@@ -423,7 +423,7 @@ public:
    * less than or equal to the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator<= (const UnicodeString& text) const;
+  అంతఃవరుస UBool క్రియాకారకం<= (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Compare the characters bitwise in this UnicodeString to
@@ -436,7 +436,7 @@ public:
    * in `text`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(const UnicodeString& text) const;
+  అంతఃవరుస int8_t compare(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Compare the characters bitwise in the range
@@ -453,9 +453,9 @@ public:
    * in `text`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
-         int32_t length,
-         const UnicodeString& text) const;
+  అంతఃవరుస int8_t compare(int32_t ప్రారంభం,
+         int32_t నిడివి,
+         స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Compare the characters bitwise in the range
@@ -474,11 +474,11 @@ public:
    * in `srcText`.
    * @stable ICU 2.0
    */
-   inline int8_t compare(int32_t start,
-         int32_t length,
-         const UnicodeString& srcText,
-         int32_t srcStart,
-         int32_t srcLength) const;
+   అంతఃవరుస int8_t compare(int32_t ప్రారంభం,
+         int32_t నిడివి,
+         స్థిరరాశి UnicodeString& src_పాఠ్యం,
+         int32_t src_ప్రారంభం,
+         int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Compare the characters bitwise in this UnicodeString with the first
@@ -492,8 +492,8 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(ConstChar16Ptr srcChars,
-         int32_t srcLength) const;
+  అంతఃవరుస int8_t compare(ConstChar16Ptr srcChars,
+         int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Compare the characters bitwise in the range
@@ -509,9 +509,9 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars) const;
+  అంతఃవరుస int8_t compare(int32_t ప్రారంభం,
+         int32_t నిడివి,
+         స్థిరరాశి char16_t *srcChars) స్థిరరాశి;
 
   /**
    * Compare the characters bitwise in the range
@@ -530,11 +530,11 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars,
-         int32_t srcStart,
-         int32_t srcLength) const;
+  అంతఃవరుస int8_t compare(int32_t ప్రారంభం,
+         int32_t నిడివి,
+         స్థిరరాశి char16_t *srcChars,
+         int32_t src_ప్రారంభం,
+         int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Compare the characters bitwise in the range
@@ -553,11 +553,11 @@ public:
    * in `srcText`.
    * @stable ICU 2.0
    */
-  inline int8_t compareBetween(int32_t start,
-            int32_t limit,
-            const UnicodeString& srcText,
-            int32_t srcStart,
-            int32_t srcLimit) const;
+  అంతఃవరుస int8_t compareBetween(int32_t ప్రారంభం,
+            int32_t హద్దు,
+            స్థిరరాశి UnicodeString& src_పాఠ్యం,
+            int32_t src_ప్రారంభం,
+            int32_t src_హద్దు) స్థిరరాశి;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -576,7 +576,7 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(const UnicodeString& text) const;
+  అంతఃవరుస int8_t compare_సంకేతం_బిందువు_క్రమం(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -597,9 +597,9 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
-                                      int32_t length,
-                                      const UnicodeString& srcText) const;
+  అంతఃవరుస int8_t compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                      int32_t నిడివి,
+                                      స్థిరరాశి UnicodeString& src_పాఠ్యం) స్థిరరాశి;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -622,11 +622,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-   inline int8_t compareCodePointOrder(int32_t start,
-                                       int32_t length,
-                                       const UnicodeString& srcText,
-                                       int32_t srcStart,
-                                       int32_t srcLength) const;
+   అంతఃవరుస int8_t compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                       int32_t నిడివి,
+                                       స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                                       int32_t src_ప్రారంభం,
+                                       int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -646,8 +646,8 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(ConstChar16Ptr srcChars,
-                                      int32_t srcLength) const;
+  అంతఃవరుస int8_t compare_సంకేతం_బిందువు_క్రమం(ConstChar16Ptr srcChars,
+                                      int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -668,9 +668,9 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
-                                      int32_t length,
-                                      const char16_t *srcChars) const;
+  అంతఃవరుస int8_t compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                      int32_t నిడివి,
+                                      స్థిరరాశి char16_t *srcChars) స్థిరరాశి;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -693,11 +693,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
-                                      int32_t length,
-                                      const char16_t *srcChars,
-                                      int32_t srcStart,
-                                      int32_t srcLength) const;
+  అంతఃవరుస int8_t compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                      int32_t నిడివి,
+                                      స్థిరరాశి char16_t *srcChars,
+                                      int32_t src_ప్రారంభం,
+                                      int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -720,11 +720,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrderBetween(int32_t start,
-                                             int32_t limit,
-                                             const UnicodeString& srcText,
-                                             int32_t srcStart,
-                                             int32_t srcLimit) const;
+  అంతఃవరుస int8_t compare_సంకేతం_బిందువు_క్రమం_Between(int32_t ప్రారంభం,
+                                             int32_t హద్దు,
+                                             స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                                             int32_t src_ప్రారంభం,
+                                             int32_t src_హద్దు) స్థిరరాశి;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -744,7 +744,7 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(const UnicodeString& text, uint32_t options) const;
+  అంతఃవరుస int8_t caseCompare(స్థిరరాశి UnicodeString& పాఠ్యం, uint32_t options) స్థిరరాశి;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -766,10 +766,10 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const UnicodeString& srcText,
-         uint32_t options) const;
+  అంతఃవరుస int8_t caseCompare(int32_t ప్రారంభం,
+         int32_t నిడివి,
+         స్థిరరాశి UnicodeString& src_పాఠ్యం,
+         uint32_t options) స్థిరరాశి;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -793,12 +793,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const UnicodeString& srcText,
-         int32_t srcStart,
-         int32_t srcLength,
-         uint32_t options) const;
+  అంతఃవరుస int8_t caseCompare(int32_t ప్రారంభం,
+         int32_t నిడివి,
+         స్థిరరాశి UnicodeString& src_పాఠ్యం,
+         int32_t src_ప్రారంభం,
+         int32_t src_నిడివి,
+         uint32_t options) స్థిరరాశి;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -819,9 +819,9 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(ConstChar16Ptr srcChars,
-         int32_t srcLength,
-         uint32_t options) const;
+  అంతఃవరుస int8_t caseCompare(ConstChar16Ptr srcChars,
+         int32_t src_నిడివి,
+         uint32_t options) స్థిరరాశి;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -843,10 +843,10 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars,
-         uint32_t options) const;
+  అంతఃవరుస int8_t caseCompare(int32_t ప్రారంభం,
+         int32_t నిడివి,
+         స్థిరరాశి char16_t *srcChars,
+         uint32_t options) స్థిరరాశి;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -870,12 +870,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars,
-         int32_t srcStart,
-         int32_t srcLength,
-         uint32_t options) const;
+  అంతఃవరుస int8_t caseCompare(int32_t ప్రారంభం,
+         int32_t నిడివి,
+         స్థిరరాశి char16_t *srcChars,
+         int32_t src_ప్రారంభం,
+         int32_t src_నిడివి,
+         uint32_t options) స్థిరరాశి;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -899,12 +899,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompareBetween(int32_t start,
-            int32_t limit,
-            const UnicodeString& srcText,
-            int32_t srcStart,
-            int32_t srcLimit,
-            uint32_t options) const;
+  అంతఃవరుస int8_t caseCompareBetween(int32_t ప్రారంభం,
+            int32_t హద్దు,
+            స్థిరరాశి UnicodeString& src_పాఠ్యం,
+            int32_t src_ప్రారంభం,
+            int32_t src_హద్దు,
+            uint32_t options) స్థిరరాశి;
 
   /**
    * Determine if this starts with the characters in `text`
@@ -913,7 +913,7 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const UnicodeString& text) const;
+  అంతఃవరుస UBool startsWith(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Determine if this starts with the characters in `srcText`
@@ -925,9 +925,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const UnicodeString& srcText,
-            int32_t srcStart,
-            int32_t srcLength) const;
+  అంతఃవరుస UBool startsWith(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+            int32_t src_ప్రారంభం,
+            int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Determine if this starts with the characters in `srcChars`
@@ -937,8 +937,8 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(ConstChar16Ptr srcChars,
-            int32_t srcLength) const;
+  అంతఃవరుస UBool startsWith(ConstChar16Ptr srcChars,
+            int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -949,9 +949,9 @@ public:
    * @return true if this ends with the characters in `srcChars`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const char16_t *srcChars,
-            int32_t srcStart,
-            int32_t srcLength) const;
+  అంతఃవరుస UBool startsWith(స్థిరరాశి char16_t *srcChars,
+            int32_t src_ప్రారంభం,
+            int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Determine if this ends with the characters in `text`
@@ -960,7 +960,7 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const UnicodeString& text) const;
+  అంతఃవరుస UBool చివర్లు_With(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Determine if this ends with the characters in `srcText`
@@ -972,9 +972,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const UnicodeString& srcText,
-          int32_t srcStart,
-          int32_t srcLength) const;
+  అంతఃవరుస UBool చివర్లు_With(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+          int32_t src_ప్రారంభం,
+          int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -984,8 +984,8 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(ConstChar16Ptr srcChars,
-          int32_t srcLength) const;
+  అంతఃవరుస UBool చివర్లు_With(ConstChar16Ptr srcChars,
+          int32_t src_నిడివి) స్థిరరాశి;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -997,9 +997,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const char16_t *srcChars,
-          int32_t srcStart,
-          int32_t srcLength) const;
+  అంతఃవరుస UBool చివర్లు_With(స్థిరరాశి char16_t *srcChars,
+          int32_t src_ప్రారంభం,
+          int32_t src_నిడివి) స్థిరరాశి;
 
 
   /* Searching - bitwise only */
@@ -1012,7 +1012,7 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence of the characters in `text`
@@ -1023,8 +1023,8 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text,
-              int32_t start) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం,
+              int32_t ప్రారంభం) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1037,9 +1037,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1057,11 +1057,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+              int32_t src_ప్రారంభం,
+              int32_t src_నిడివి,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence of the characters in
@@ -1074,9 +1074,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const char16_t *srcChars,
-              int32_t srcLength,
-              int32_t start) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(స్థిరరాశి char16_t *srcChars,
+              int32_t src_నిడివి,
+              int32_t ప్రారంభం) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1090,10 +1090,10 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(ConstChar16Ptr srcChars,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(ConstChar16Ptr srcChars,
+              int32_t src_నిడివి,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1111,11 +1111,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  int32_t indexOf(const char16_t *srcChars,
-              int32_t srcStart,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  int32_t సూచీ_యొక్క(స్థిరరాశి char16_t *srcChars,
+              int32_t src_ప్రారంభం,
+              int32_t src_నిడివి,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`,
@@ -1124,7 +1124,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(char16_t c) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence of the code point `c`,
@@ -1134,7 +1134,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(UChar32 c) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`,
@@ -1144,8 +1144,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c,
-              int32_t start) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(char16_t c,
+              int32_t ప్రారంభం) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence of the code point `c`
@@ -1156,8 +1156,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c,
-              int32_t start) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(UChar32 c,
+              int32_t ప్రారంభం) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`
@@ -1169,9 +1169,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(char16_t c,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the first occurrence of the code point `c`
@@ -1184,9 +1184,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t సూచీ_యొక్క(UChar32 c,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence of the characters in `text`,
@@ -1196,7 +1196,7 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence of the characters in `text`
@@ -1207,8 +1207,8 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text,
-              int32_t start) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం,
+              int32_t ప్రారంభం) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1221,9 +1221,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1241,11 +1241,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+              int32_t src_ప్రారంభం,
+              int32_t src_నిడివి,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence of the characters in `srcChars`
@@ -1257,9 +1257,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const char16_t *srcChars,
-              int32_t srcLength,
-              int32_t start) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(స్థిరరాశి char16_t *srcChars,
+              int32_t src_నిడివి,
+              int32_t ప్రారంభం) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1273,10 +1273,10 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(ConstChar16Ptr srcChars,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(ConstChar16Ptr srcChars,
+              int32_t src_నిడివి,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1294,11 +1294,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  int32_t lastIndexOf(const char16_t *srcChars,
-              int32_t srcStart,
-              int32_t srcLength,
-              int32_t start,
-              int32_t length) const;
+  int32_t చివరి_సూచీ_యొక్క(స్థిరరాశి char16_t *srcChars,
+              int32_t src_ప్రారంభం,
+              int32_t src_నిడివి,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`,
@@ -1307,7 +1307,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(char16_t c) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence of the code point `c`,
@@ -1317,7 +1317,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(UChar32 c) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`
@@ -1327,8 +1327,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c,
-              int32_t start) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(char16_t c,
+              int32_t ప్రారంభం) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence of the code point `c`
@@ -1339,8 +1339,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c,
-              int32_t start) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(UChar32 c,
+              int32_t ప్రారంభం) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`
@@ -1352,9 +1352,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(char16_t c,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
   /**
    * Locate in this the last occurrence of the code point `c`
@@ -1367,9 +1367,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c,
-              int32_t start,
-              int32_t length) const;
+  అంతఃవరుస int32_t చివరి_సూచీ_యొక్క(UChar32 c,
+              int32_t ప్రారంభం,
+              int32_t నిడివి) స్థిరరాశి;
 
 
   /* Character access */
@@ -1382,7 +1382,7 @@ public:
    *         or 0xffff if the offset is not valid for this string
    * @stable ICU 2.0
    */
-  inline char16_t charAt(int32_t offset) const;
+  అంతఃవరుస char16_t charAt(int32_t స్థానభ్రంశం) స్థిరరాశి;
 
   /**
    * Return the code unit at offset `offset`.
@@ -1391,7 +1391,7 @@ public:
    * @return the code unit at offset `offset`
    * @stable ICU 2.0
    */
-  inline char16_t operator[] (int32_t offset) const;
+  అంతఃవరుస char16_t క్రియాకారకం[] (int32_t స్థానభ్రంశం) స్థిరరాశి;
 
   /**
    * Return the code point that contains the code unit
@@ -1404,7 +1404,7 @@ public:
    *         or 0xffff if the offset is not valid for this string
    * @stable ICU 2.0
    */
-  UChar32 char32At(int32_t offset) const;
+  UChar32 char32At(int32_t స్థానభ్రంశం) స్థిరరాశి;
 
   /**
    * Adjust a random-access offset so that
@@ -1421,7 +1421,7 @@ public:
    * @see U16_SET_CP_START
    * @stable ICU 2.0
    */
-  int32_t getChar32Start(int32_t offset) const;
+  int32_t get_Char32_ప్రారంభం(int32_t స్థానభ్రంశం) స్థిరరాశి;
 
   /**
    * Adjust a random-access offset so that
@@ -1439,7 +1439,7 @@ public:
    * @see U16_SET_CP_LIMIT
    * @stable ICU 2.0
    */
-  int32_t getChar32Limit(int32_t offset) const;
+  int32_t get_Char32_హద్దు(int32_t స్థానభ్రంశం) స్థిరరాశి;
 
   /**
    * Move the code unit index along the string by delta code points.
@@ -1491,7 +1491,7 @@ public:
    * @return the resulting code unit index
    * @stable ICU 2.0
    */
-  int32_t moveIndex32(int32_t index, int32_t delta) const;
+  int32_t moveIndex32(int32_t సూచీ, int32_t delta) స్థిరరాశి;
 
   /* Substring extraction */
 
@@ -1510,10 +1510,10 @@ public:
    * will be extracted
    * @stable ICU 2.0
    */
-  inline void extract(int32_t start,
-           int32_t length,
+  అంతఃవరుస శూన్య వెలికితీయి(int32_t ప్రారంభం,
+           int32_t నిడివి,
            Char16Ptr dst,
-           int32_t dstStart = 0) const;
+           int32_t dst_ప్రారంభం = 0) స్థిరరాశి;
 
   /**
    * Copy the contents of the string into dest.
@@ -1537,8 +1537,8 @@ public:
    * @stable ICU 2.0
    */
   int32_t
-  extract(Char16Ptr dest, int32_t destCapacity,
-          UErrorCode &errorCode) const;
+  వెలికితీయి(Char16Ptr dest, int32_t dest_సామర్థ్యం,
+          UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
   /**
    * Copy the characters in the range
@@ -1549,9 +1549,9 @@ public:
    * @param target UnicodeString into which to copy characters.
    * @stable ICU 2.0
    */
-  inline void extract(int32_t start,
-           int32_t length,
-           UnicodeString& target) const;
+  అంతఃవరుస శూన్య వెలికితీయి(int32_t ప్రారంభం,
+           int32_t నిడివి,
+           UnicodeString& లక్ష్యం) స్థిరరాశి;
 
   /**
    * Copy the characters in the range [`start`, `limit`)
@@ -1564,10 +1564,10 @@ public:
    * will be extracted
    * @stable ICU 2.0
    */
-  inline void extractBetween(int32_t start,
-              int32_t limit,
+  అంతఃవరుస శూన్య వెలికితీయి_Between(int32_t ప్రారంభం,
+              int32_t హద్దు,
               char16_t *dst,
-              int32_t dstStart = 0) const;
+              int32_t dst_ప్రారంభం = 0) స్థిరరాశి;
 
   /**
    * Copy the characters in the range [`start`, `limit`)
@@ -1577,9 +1577,9 @@ public:
    * @param target UnicodeString into which to copy characters.
    * @stable ICU 2.0
    */
-  virtual void extractBetween(int32_t start,
-              int32_t limit,
-              UnicodeString& target) const override;
+  మాయా శూన్య వెలికితీయి_Between(int32_t ప్రారంభం,
+              int32_t హద్దు,
+              UnicodeString& లక్ష్యం) స్థిరరాశి override;
 
   /**
    * Copy the characters in the range
@@ -1602,13 +1602,13 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 3.2
    */
-  int32_t extract(int32_t start,
-           int32_t startLength,
-           char *target,
-           int32_t targetCapacity,
-           enum EInvariant inv) const;
+  int32_t వెలికితీయి(int32_t ప్రారంభం,
+           int32_t ప్రారంభం_నిడివి,
+           అక్షరం *లక్ష్యం,
+           int32_t లక్ష్యం_సామర్థ్యం,
+           గణన EInvariant inv) స్థిరరాశి;
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#ఒకవేళ U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1629,14 +1629,14 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 2.0
    */
-  int32_t extract(int32_t start,
-           int32_t startLength,
-           char *target,
-           uint32_t targetLength) const;
+  int32_t వెలికితీయి(int32_t ప్రారంభం,
+           int32_t ప్రారంభం_నిడివి,
+           అక్షరం *లక్ష్యం,
+           uint32_t లక్ష్యం_నిడివి) స్థిరరాశి;
 
-#endif
+#అయితే_ముగింపు
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1663,10 +1663,10 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 2.0
    */
-  inline int32_t extract(int32_t start,
-                         int32_t startLength,
-                         char* target,
-                         const char* codepage = nullptr) const;
+  అంతఃవరుస int32_t వెలికితీయి(int32_t ప్రారంభం,
+                         int32_t ప్రారంభం_నిడివి,
+                         అక్షరం* లక్ష్యం,
+                         స్థిరరాశి అక్షరం* codepage = nullptr) స్థిరరాశి;
 
   /**
    * Copy the characters in the range
@@ -1697,11 +1697,11 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 2.0
    */
-  int32_t extract(int32_t start,
-           int32_t startLength,
-           char *target,
-           uint32_t targetLength,
-           const char *codepage) const;
+  int32_t వెలికితీయి(int32_t ప్రారంభం,
+           int32_t ప్రారంభం_నిడివి,
+           అక్షరం *లక్ష్యం,
+           uint32_t లక్ష్యం_నిడివి,
+           స్థిరరాశి అక్షరం *codepage) స్థిరరాశి;
 
   /**
    * Convert the UnicodeString into a codepage string using an existing UConverter.
@@ -1720,11 +1720,11 @@ public:
    *         and a buffer of the indicated length would need to be passed in
    * @stable ICU 2.0
    */
-  int32_t extract(char *dest, int32_t destCapacity,
+  int32_t వెలికితీయి(అక్షరం *dest, int32_t dest_సామర్థ్యం,
                   UConverter *cnv,
-                  UErrorCode &errorCode) const;
+                  UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
-#endif
+#అయితే_ముగింపు
 
   /**
    * Create a temporary substring for the specified range.
@@ -1739,7 +1739,7 @@ public:
    * @return a read-only alias UnicodeString object for the substring
    * @stable ICU 4.4
    */
-  UnicodeString tempSubString(int32_t start=0, int32_t length=INT32_MAX) const U_LIFETIME_BOUND;
+  UnicodeString తాత్కాలిక_Sub_String(int32_t ప్రారంభం=0, int32_t నిడివి=INT32_MAX) స్థిరరాశి U_LIFETIME_BOUND;
 
   /**
    * Create a temporary substring for the specified range.
@@ -1751,8 +1751,8 @@ public:
    * @return a read-only alias UnicodeString object for the substring
    * @stable ICU 4.4
    */
-  inline UnicodeString tempSubStringBetween(int32_t start,
-                                            int32_t limit = INT32_MAX) const U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString తాత్కాలిక_Sub_String_Between(int32_t ప్రారంభం,
+                                            int32_t హద్దు = INT32_MAX) స్థిరరాశి U_LIFETIME_BOUND;
 
   /**
    * Convert the UnicodeString to UTF-8 and write the result
@@ -1765,7 +1765,7 @@ public:
    * @stable ICU 4.2
    * @see toUTF8String
    */
-  void toUTF8(ByteSink &sink) const;
+  శూన్య గమ్యం_UTF8(ByteSink &sink) స్థిరరాశి;
 
   /**
    * Convert the UnicodeString to UTF-8 and append the result
@@ -1780,14 +1780,14 @@ public:
    * @stable ICU 4.2
    * @see toUTF8
    */
-  template <typename StringClass>
-  StringClass& toUTF8String(StringClass& result U_LIFETIME_BOUND) const {
-    StringByteSink<StringClass> sbs(&result, length());
-    toUTF8(sbs);
-    return result;
+  మూస <typename StringClass>
+  StringClass& గమ్యం_UTF8_String(StringClass& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    StringByteSink<StringClass> sbs(&ఫలితం, నిడివి());
+    గమ్యం_UTF8(sbs);
+    తిరిగి ఫలితం;
   }
 
-#ifndef U_HIDE_DRAFT_API
+#నిర్వచితం_కాకపోతే U_HIDE_DRAFT_API
   /**
    * Convert the UnicodeString to a UTF-8 string.
    * Unpaired surrogates are replaced with U+FFFD.
@@ -1799,14 +1799,14 @@ public:
    * @draft ICU 78
    * @see toUTF8
    */
-  template<typename StringClass>
-  StringClass toUTF8String() const {
-    StringClass result;
-    StringByteSink<StringClass> sbs(&result, length());
-    toUTF8(sbs);
-    return result;
+  మూస<typename StringClass>
+  StringClass గమ్యం_UTF8_String() స్థిరరాశి {
+    StringClass ఫలితం;
+    StringByteSink<StringClass> sbs(&ఫలితం, నిడివి());
+    గమ్యం_UTF8(sbs);
+    తిరిగి ఫలితం;
   }
-#endif  // U_HIDE_DRAFT_API
+#అయితే_ముగింపు  // U_HIDE_DRAFT_API
 
   /**
    * Convert the UnicodeString to UTF-32.
@@ -1823,7 +1823,7 @@ public:
    * @see fromUTF32
    * @stable ICU 4.2
    */
-  int32_t toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) const;
+  int32_t గమ్యం_UTF32(UChar32 *utf32, int32_t సామర్థ్యం, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
   /* Length operations */
 
@@ -1835,7 +1835,7 @@ public:
    * @see countChar32
    * @stable ICU 2.0
    */
-  inline int32_t length() const;
+  అంతఃవరుస int32_t నిడివి() స్థిరరాశి;
 
   /**
    * Count Unicode code points in the length char16_t code units of the string.
@@ -1851,7 +1851,7 @@ public:
    * @stable ICU 2.0
    */
   int32_t
-  countChar32(int32_t start=0, int32_t length=INT32_MAX) const;
+  లెక్క_Char32(int32_t ప్రారంభం=0, int32_t నిడివి=INT32_MAX) స్థిరరాశి;
 
   /**
    * Check if the length char16_t code units of the string
@@ -1877,14 +1877,14 @@ public:
    * @stable ICU 2.4
    */
   UBool
-  hasMoreChar32Than(int32_t start, int32_t length, int32_t number) const;
+  has_మరిన్ని_Char32_Than(int32_t ప్రారంభం, int32_t నిడివి, int32_t సంఖ్య) స్థిరరాశి;
 
   /**
    * Determine if this string is empty.
    * @return true if this string contains 0 characters, false otherwise.
    * @stable ICU 2.0
    */
-  inline UBool isEmpty() const;
+  అంతఃవరుస UBool is_ఖాళీలు() స్థిరరాశి;
 
   /**
    * Return the capacity of the internal buffer of the UnicodeString object.
@@ -1895,7 +1895,7 @@ public:
    * @see getBuffer
    * @stable ICU 2.0
    */
-  inline int32_t getCapacity() const;
+  అంతఃవరుస int32_t get_సామర్థ్యం() స్థిరరాశి;
 
   /* Other operations */
 
@@ -1904,7 +1904,7 @@ public:
    * @return The hash code of this UnicodeString.
    * @stable ICU 2.0
    */
-  inline int32_t hashCode() const;
+  అంతఃవరుస int32_t hash_సంకేతం() స్థిరరాశి;
 
   /**
    * Determine if this object contains a valid string.
@@ -1918,43 +1918,43 @@ public:
    * @see setToBogus()
    * @stable ICU 2.0
    */
-  inline UBool isBogus() const;
+  అంతఃవరుస UBool isBogus() స్థిరరాశి;
 
-#ifndef U_HIDE_DRAFT_API
-private:
+#నిర్వచితం_కాకపోతే U_HIDE_DRAFT_API
+అంతరంగ:
   // These type aliases are private; there is no guarantee that they will remain
   // aliases to the same types in subsequent versions of ICU.
   // Note that whether `std::u16string_view::const_iterator` is a pointer or a
   // class that models contiguous_iterator is platform-dependent.
   using unspecified_iterator = std::u16string_view::const_iterator;
-  using unspecified_reverse_iterator = std::u16string_view::const_reverse_iterator;
+  using unspecified_తిరగేయి_iterator = std::u16string_view::const_తిరగేయి_iterator;
 
-public:
+బహిరంగ:
   /**
    * @return an iterator to the first code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator begin() const { return std::u16string_view(*this).begin(); }
+  unspecified_iterator begin() స్థిరరాశి { తిరిగి std::u16string_view(*this).begin(); }
   /**
    * @return an iterator to just past the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator end() const { return std::u16string_view(*this).end(); }
+  unspecified_iterator చివర() స్థిరరాశి { తిరిగి std::u16string_view(*this).చివర(); }
   /**
    * @return a reverse iterator to the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rbegin() const { return std::u16string_view(*this).rbegin(); }
+  unspecified_తిరగేయి_iterator rbegin() స్థిరరాశి { తిరిగి std::u16string_view(*this).rbegin(); }
   /**
    * @return a reverse iterator to just before the first code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rend() const { return std::u16string_view(*this).rend(); }
-#endif  // U_HIDE_DRAFT_API
+  unspecified_తిరగేయి_iterator rend() స్థిరరాశి { తిరిగి std::u16string_view(*this).rend(); }
+#అయితే_ముగింపు  // U_HIDE_DRAFT_API
 
   //========================================
   // Write operations
@@ -1980,7 +1980,7 @@ public:
    * @stable ICU 2.0
    * @see fastCopyFrom
    */
-  UnicodeString& operator=(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  UnicodeString& క్రియాకారకం=(స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND;
 
   /**
    * Almost the same as the assignment operator.
@@ -2007,7 +2007,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.4
    */
-  UnicodeString& fastCopyFrom(const UnicodeString& src) U_LIFETIME_BOUND;
+  UnicodeString& fastCopyFrom(స్థిరరాశి UnicodeString& src) U_LIFETIME_BOUND;
 
   /**
    * Assignment operator. Replaces the characters in this UnicodeString
@@ -2019,10 +2019,10 @@ public:
    * @return a reference to this
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& operator=(const S& src) U_LIFETIME_BOUND {
+  మూస <typename S, typename = std::enable_if_t<Convertible_గమ్యం_U16_String_View<S>>>
+  అంతఃవరుస UnicodeString& క్రియాకారకం=(స్థిరరాశి S& src) U_LIFETIME_BOUND {
     unBogus();
-    return doReplace(0, length(), internal::toU16StringView(src));
+    తిరిగి doReplace(0, నిడివి(), అంతర్గత_2::గమ్యం_U16_String_View(src));
   }
 
   /**
@@ -2033,14 +2033,14 @@ public:
    * @return *this
    * @stable ICU 56
    */
-  UnicodeString& operator=(UnicodeString&& src) noexcept U_LIFETIME_BOUND;
+  UnicodeString& క్రియాకారకం=(UnicodeString&& src) noexcept U_LIFETIME_BOUND;
 
   /**
    * Swap strings.
    * @param other other string
    * @stable ICU 56
    */
-  void swap(UnicodeString &other) noexcept;
+  శూన్య మార్పిడి(UnicodeString &other) noexcept;
 
   /**
    * Non-member UnicodeString swap function.
@@ -2048,9 +2048,9 @@ public:
    * @param s2 will get s1's contents and state
    * @stable ICU 56
    */
-  friend inline void U_EXPORT2
-  swap(UnicodeString &s1, UnicodeString &s2) noexcept {
-    s1.swap(s2);
+  మిత్ర అంతఃవరుస శూన్య U_EXPORT2
+  మార్పిడి(UnicodeString &s1, UnicodeString &s2) noexcept {
+    s1.మార్పిడి(s2);
   }
 
   /**
@@ -2060,7 +2060,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator=(char16_t ch) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& క్రియాకారకం=(char16_t ch) U_LIFETIME_BOUND;
 
   /**
    * Assignment operator.  Replace the characters in this UnicodeString
@@ -2069,7 +2069,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator=(UChar32 ch) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& క్రియాకారకం=(UChar32 ch) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters
@@ -2082,7 +2082,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.2
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText, int32_t srcStart) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& సమితి_గమ్యం(స్థిరరాశి UnicodeString& src_పాఠ్యం, int32_t src_ప్రారంభం) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters
@@ -2097,9 +2097,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText,
-                              int32_t srcStart,
-                              int32_t srcLength) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& సమితి_గమ్యం(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                              int32_t src_ప్రారంభం,
+                              int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters in
@@ -2109,7 +2109,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& సమితి_గమ్యం(స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the characters
@@ -2119,7 +2119,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const char16_t* srcChars, int32_t srcLength) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& సమితి_గమ్యం(స్థిరరాశి char16_t* srcChars, int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the code unit
@@ -2129,7 +2129,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(char16_t srcChar) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& సమితి_గమ్యం(char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the code point
@@ -2139,7 +2139,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(UChar32 srcChar) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& సమితి_గమ్యం(UChar32 srcChar) U_LIFETIME_BOUND;
 
   /**
    * Aliasing setTo() function, analogous to the readonly-aliasing char16_t* constructor.
@@ -2164,9 +2164,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& setTo(UBool isTerminated,
-                       ConstChar16Ptr text U_LIFETIME_BOUND,
-                       int32_t textLength) U_LIFETIME_BOUND;
+  UnicodeString& సమితి_గమ్యం(UBool isTerminated,
+                       ConstChar16Ptr పాఠ్యం U_LIFETIME_BOUND,
+                       int32_t పాఠ్యం_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Aliasing setTo() function, analogous to the writable-aliasing char16_t* constructor.
@@ -2187,9 +2187,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& setTo(char16_t* buffer U_LIFETIME_BOUND,
-                       int32_t buffLength,
-                       int32_t buffCapacity) U_LIFETIME_BOUND;
+  UnicodeString& సమితి_గమ్యం(char16_t* బఫరు U_LIFETIME_BOUND,
+                       int32_t buff_నిడివి,
+                       int32_t buff_సామర్థ్యం) U_LIFETIME_BOUND;
 
   /**
    * Make this UnicodeString object invalid.
@@ -2230,7 +2230,7 @@ public:
    * @see isBogus()
    * @stable ICU 2.0
    */
-  void setToBogus();
+  శూన్య సమితి_గమ్యం_Bogus();
 
   /**
    * Set the character at the specified offset to the specified character.
@@ -2239,7 +2239,7 @@ public:
    * @return A reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& setCharAt(int32_t offset, char16_t ch) U_LIFETIME_BOUND;
+  UnicodeString& సమితి_Char_At(int32_t స్థానభ్రంశం, char16_t ch) U_LIFETIME_BOUND;
 
   /* Append operations */
 
@@ -2250,7 +2250,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(char16_t ch) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& క్రియాకారకం+=(char16_t ch) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Append the code point `ch` to the UnicodeString
@@ -2259,7 +2259,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(UChar32 ch) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& క్రియాకారకం+=(UChar32 ch) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Append the characters in `srcText` to the
@@ -2268,7 +2268,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& క్రియాకారకం+=(స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Appends the characters in `src`
@@ -2280,9 +2280,9 @@ public:
    * @return a reference to this
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& operator+=(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+  మూస <typename S, typename = std::enable_if_t<Convertible_గమ్యం_U16_String_View<S>>>
+  అంతఃవరుస UnicodeString& క్రియాకారకం+=(స్థిరరాశి S& src) U_LIFETIME_BOUND {
+    తిరిగి doAppend(అంతర్గత_2::గమ్యం_U16_String_View(src));
   }
 
   /**
@@ -2299,9 +2299,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const UnicodeString& srcText,
-                               int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& append(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                               int32_t src_ప్రారంభం,
+                               int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcText` to the UnicodeString object.
@@ -2310,7 +2310,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& append(స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcChars` in the range
@@ -2325,9 +2325,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const char16_t* srcChars,
-                               int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& append(స్థిరరాశి char16_t* srcChars,
+                               int32_t src_ప్రారంభం,
+                               int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcChars` to the UnicodeString object.
@@ -2338,7 +2338,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(ConstChar16Ptr srcChars, int32_t srcLength) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& append(ConstChar16Ptr srcChars, int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Appends the characters in `src`
@@ -2350,9 +2350,9 @@ public:
    * @return a reference to this
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& append(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+  మూస <typename S, typename = std::enable_if_t<Convertible_గమ్యం_U16_String_View<S>>>
+  అంతఃవరుస UnicodeString& append(స్థిరరాశి S& src) U_LIFETIME_BOUND {
+    తిరిగి doAppend(అంతర్గత_2::గమ్యం_U16_String_View(src));
   }
 
   /**
@@ -2361,7 +2361,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(char16_t srcChar) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& append(char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Append the code point `srcChar` to the UnicodeString object.
@@ -2371,7 +2371,7 @@ public:
    */
   UnicodeString& append(UChar32 srcChar) U_LIFETIME_BOUND;
 
-#ifndef U_HIDE_DRAFT_API
+#నిర్వచితం_కాకపోతే U_HIDE_DRAFT_API
   /**
    * Appends the code unit `c` to the UnicodeString object.
    * Same as append(c) except does not return *this.
@@ -2379,8 +2379,8 @@ public:
    * @param c the code unit to append
    * @draft ICU 78
    */
-  inline void push_back(char16_t c) { append(c); }
-#endif  // U_HIDE_DRAFT_API
+  అంతఃవరుస శూన్య నెట్టు_వెనుక(char16_t c) { append(c); }
+#అయితే_ముగింపు  // U_HIDE_DRAFT_API
 
   /* Insert operations */
 
@@ -2397,10 +2397,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
-                               const UnicodeString& srcText,
-                               int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& చొప్పించు(int32_t ప్రారంభం,
+                               స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                               int32_t src_ప్రారంభం,
+                               int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcText` into the UnicodeString object
@@ -2410,7 +2410,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, const UnicodeString& srcText) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& చొప్పించు(int32_t ప్రారంభం, స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcChars` in the range
@@ -2425,10 +2425,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
-                               const char16_t* srcChars,
-                               int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& చొప్పించు(int32_t ప్రారంభం,
+                               స్థిరరాశి char16_t* srcChars,
+                               int32_t src_ప్రారంభం,
+                               int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcChars` into the UnicodeString object
@@ -2439,9 +2439,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
+  అంతఃవరుస UnicodeString& చొప్పించు(int32_t ప్రారంభం,
                                ConstChar16Ptr srcChars,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+                               int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Insert the code unit `srcChar` into the UnicodeString object at
@@ -2451,7 +2451,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, char16_t srcChar) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& చొప్పించు(int32_t ప్రారంభం, char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Insert the code point `srcChar` into the UnicodeString object at
@@ -2461,7 +2461,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, UChar32 srcChar) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& చొప్పించు(int32_t ప్రారంభం, UChar32 srcChar) U_LIFETIME_BOUND;
 
   /* Replace operations */
 
@@ -2482,11 +2482,11 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
-                                const UnicodeString& srcText,
-                                int32_t srcStart,
-                                int32_t srcLength) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& replace(int32_t ప్రారంభం,
+                                int32_t నిడివి,
+                                స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                                int32_t src_ప్రారంభం,
+                                int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2500,9 +2500,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
-                                const UnicodeString& srcText) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& replace(int32_t ప్రారంభం,
+                                int32_t నిడివి,
+                                స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2521,11 +2521,11 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
-                                const char16_t* srcChars,
-                                int32_t srcStart,
-                                int32_t srcLength) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& replace(int32_t ప్రారంభం,
+                                int32_t నిడివి,
+                                స్థిరరాశి char16_t* srcChars,
+                                int32_t src_ప్రారంభం,
+                                int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2539,10 +2539,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
+  అంతఃవరుస UnicodeString& replace(int32_t ప్రారంభం,
+                                int32_t నిడివి,
                                 ConstChar16Ptr srcChars,
-                                int32_t srcLength) U_LIFETIME_BOUND;
+                                int32_t src_నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2555,7 +2555,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start, int32_t length, char16_t srcChar) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& replace(int32_t ప్రారంభం, int32_t నిడివి, char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2568,7 +2568,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& replace(int32_t start, int32_t length, UChar32 srcChar) U_LIFETIME_BOUND;
+  UnicodeString& replace(int32_t ప్రారంభం, int32_t నిడివి, UChar32 srcChar) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range [`start`, `limit`)
@@ -2579,9 +2579,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replaceBetween(int32_t start,
-                                       int32_t limit,
-                                       const UnicodeString& srcText) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& replaceBetween(int32_t ప్రారంభం,
+                                       int32_t హద్దు,
+                                       స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range [`start`, `limit`)
@@ -2597,11 +2597,11 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replaceBetween(int32_t start,
-                                       int32_t limit,
-                                       const UnicodeString& srcText,
-                                       int32_t srcStart,
-                                       int32_t srcLimit) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& replaceBetween(int32_t ప్రారంభం,
+                                       int32_t హద్దు,
+                                       స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                                       int32_t src_ప్రారంభం,
+                                       int32_t src_హద్దు) U_LIFETIME_BOUND;
 
   /**
    * Replace a substring of this object with the given text.
@@ -2610,16 +2610,16 @@ public:
    * @param text the text to replace characters `start` to `limit - 1`
    * @stable ICU 2.0
    */
-  virtual void handleReplaceBetween(int32_t start,
-                                    int32_t limit,
-                                    const UnicodeString& text) override;
+  మాయా శూన్య handleReplaceBetween(int32_t ప్రారంభం,
+                                    int32_t హద్దు,
+                                    స్థిరరాశి UnicodeString& పాఠ్యం) override;
 
   /**
    * Replaceable API
    * @return true if it has MetaData
    * @stable ICU 2.4
    */
-  virtual UBool hasMetaData() const override;
+  మాయా UBool has_Meta_దత్తాంశం() స్థిరరాశి override;
 
   /**
    * Copy a substring of this object, retaining attribute (out-of-band)
@@ -2634,7 +2634,7 @@ public:
    * dest >= limit`.
    * @stable ICU 2.0
    */
-  virtual void copy(int32_t start, int32_t limit, int32_t dest) override;
+  మాయా శూన్య copy(int32_t ప్రారంభం, int32_t హద్దు, int32_t dest) override;
 
   /* Search and replace operations */
 
@@ -2646,8 +2646,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& findAndReplace(const UnicodeString& oldText,
-                                       const UnicodeString& newText) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& కనుగొను_And_Replace(స్థిరరాశి UnicodeString& old_పాఠ్యం,
+                                       స్థిరరాశి UnicodeString& new_పాఠ్యం) U_LIFETIME_BOUND;
 
   /**
    * Replace all occurrences of characters in oldText with characters
@@ -2660,10 +2660,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& findAndReplace(int32_t start,
-                                       int32_t length,
-                                       const UnicodeString& oldText,
-                                       const UnicodeString& newText) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& కనుగొను_And_Replace(int32_t ప్రారంభం,
+                                       int32_t నిడివి,
+                                       స్థిరరాశి UnicodeString& old_పాఠ్యం,
+                                       స్థిరరాశి UnicodeString& new_పాఠ్యం) U_LIFETIME_BOUND;
 
   /**
    * Replace all occurrences of characters in oldText in the range
@@ -2682,14 +2682,14 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& findAndReplace(int32_t start,
-                                int32_t length,
-                                const UnicodeString& oldText,
-                                int32_t oldStart,
-                                int32_t oldLength,
-                                const UnicodeString& newText,
-                                int32_t newStart,
-                                int32_t newLength) U_LIFETIME_BOUND;
+  UnicodeString& కనుగొను_And_Replace(int32_t ప్రారంభం,
+                                int32_t నిడివి,
+                                స్థిరరాశి UnicodeString& old_పాఠ్యం,
+                                int32_t old_ప్రారంభం,
+                                int32_t old_నిడివి,
+                                స్థిరరాశి UnicodeString& new_పాఠ్యం,
+                                int32_t new_ప్రారంభం,
+                                int32_t new_నిడివి) U_LIFETIME_BOUND;
 
 
   /* Remove operations */
@@ -2702,7 +2702,7 @@ public:
    * @see setToBogus
    * @stable ICU 2.0
    */
-  inline UnicodeString& remove() U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& remove() U_LIFETIME_BOUND;
 
   /**
    * Remove the characters in the range
@@ -2712,8 +2712,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& remove(int32_t start,
-                               int32_t length = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& remove(int32_t ప్రారంభం,
+                               int32_t నిడివి = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
 
   /**
    * Remove the characters in the range
@@ -2723,8 +2723,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString&
-  removeBetween(int32_t start, int32_t limit = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString&
+  removeBetween(int32_t ప్రారంభం, int32_t హద్దు = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
 
   /**
    * Retain only the characters in the range
@@ -2735,7 +2735,7 @@ public:
    * @return a reference to this
    * @stable ICU 4.4
    */
-  inline UnicodeString& retainBetween(int32_t start, int32_t limit = INT32_MAX) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& retainBetween(int32_t ప్రారంభం, int32_t హద్దు = INT32_MAX) U_LIFETIME_BOUND;
 
   /* Length operations */
 
@@ -2750,7 +2750,7 @@ public:
    * @return true if the text was padded, false otherwise.
    * @stable ICU 2.0
    */
-  UBool padLeading(int32_t targetLength,
+  UBool padLeading(int32_t లక్ష్యం_నిడివి,
                     char16_t padChar = 0x0020);
 
   /**
@@ -2764,7 +2764,7 @@ public:
    * @return true if the text was padded, false otherwise.
    * @stable ICU 2.0
    */
-  UBool padTrailing(int32_t targetLength,
+  UBool padTrailing(int32_t లక్ష్యం_నిడివి,
                      char16_t padChar = 0x0020);
 
   /**
@@ -2773,7 +2773,7 @@ public:
    * @return true if the text was truncated, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool truncate(int32_t targetLength);
+  అంతఃవరుస UBool truncate(int32_t లక్ష్యం_నిడివి);
 
   /**
    * Trims leading and trailing whitespace from this UnicodeString.
@@ -2789,7 +2789,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& reverse() U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& తిరగేయి() U_LIFETIME_BOUND;
 
   /**
    * Reverse the range [`start`, `start + length`) in
@@ -2799,7 +2799,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& reverse(int32_t start, int32_t length) U_LIFETIME_BOUND;
+  అంతఃవరుస UnicodeString& తిరగేయి(int32_t ప్రారంభం, int32_t నిడివి) U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to UPPER CASE following the conventions of
@@ -2807,7 +2807,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toUpper() U_LIFETIME_BOUND;
+  UnicodeString& గమ్యం_పై() U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to UPPER CASE following the conventions of
@@ -2816,7 +2816,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toUpper(const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& గమ్యం_పై(స్థిరరాశి Locale& locale) U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to lower case following the conventions of
@@ -2824,7 +2824,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toLower() U_LIFETIME_BOUND;
+  UnicodeString& గమ్యం_క్రింది() U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to lower case following the conventions of
@@ -2833,9 +2833,9 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toLower(const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& గమ్యం_క్రింది(స్థిరరాశి Locale& locale) U_LIFETIME_BOUND;
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
   /**
    * Titlecase this string, convenience function using the default locale.
@@ -2863,7 +2863,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.1
    */
-  UnicodeString& toTitle(BreakIterator* titleIter) U_LIFETIME_BOUND;
+  UnicodeString& గమ్యం_Title(BreakIterator* titleIter) U_LIFETIME_BOUND;
 
   /**
    * Titlecase this string.
@@ -2892,7 +2892,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.1
    */
-  UnicodeString& toTitle(BreakIterator* titleIter, const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& గమ్యం_Title(BreakIterator* titleIter, స్థిరరాశి Locale& locale) U_LIFETIME_BOUND;
 
   /**
    * Titlecase this string, with options.
@@ -2924,11 +2924,11 @@ public:
    * @return A reference to this.
    * @stable ICU 3.8
    */
-  UnicodeString& toTitle(BreakIterator* titleIter,
-                         const Locale& locale,
+  UnicodeString& గమ్యం_Title(BreakIterator* titleIter,
+                         స్థిరరాశి Locale& locale,
                          uint32_t options) U_LIFETIME_BOUND;
 
-#endif
+#అయితే_ముగింపు
 
   /**
    * Case-folds the characters in this string.
@@ -2992,7 +2992,7 @@ public:
    * @see getTerminatedBuffer()
    * @stable ICU 2.0
    */
-  char16_t* getBuffer(int32_t minCapacity) U_LIFETIME_BOUND;
+  char16_t* get_బఫరు(int32_t min_సామర్థ్యం) U_LIFETIME_BOUND;
 
   /**
    * Release a read/write buffer on a UnicodeString object with an
@@ -3014,7 +3014,7 @@ public:
    * @see getBuffer(int32_t minCapacity)
    * @stable ICU 2.0
    */
-  void releaseBuffer(int32_t newLength=-1);
+  శూన్య release_బఫరు(int32_t new_నిడివి=-1);
 
   /**
    * Get a read-only pointer to the internal buffer.
@@ -3046,7 +3046,7 @@ public:
    * @see getTerminatedBuffer()
    * @stable ICU 2.0
    */
-  inline const char16_t* getBuffer() const U_LIFETIME_BOUND;
+  అంతఃవరుస స్థిరరాశి char16_t* get_బఫరు() స్థిరరాశి U_LIFETIME_BOUND;
 
   /**
    * Get a read-only pointer to the internal buffer,
@@ -3081,7 +3081,7 @@ public:
    * @see getBuffer()
    * @stable ICU 2.2
    */
-  const char16_t* getTerminatedBuffer() U_LIFETIME_BOUND;
+  స్థిరరాశి char16_t* get_Terminated_బఫరు() U_LIFETIME_BOUND;
 
   /**
    * Converts to a std::u16string_view.
@@ -3089,11 +3089,11 @@ public:
    * @return a string view of the contents of this string
    * @stable ICU 76
    */
-  inline operator std::u16string_view() const {
-    return {getBuffer(), static_cast<std::u16string_view::size_type>(length())};
+  అంతఃవరుస క్రియాకారకం std::u16string_view() స్థిరరాశి {
+    తిరిగి {get_బఫరు(), static_cast<std::u16string_view::కొలత_type>(నిడివి())};
   }
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#ఒకవేళ U_SIZEOF_WCHAR_T==2 || defined(U_లోపల_DOXYGEN)
   /**
    * Converts to a std::wstring_view.
    *
@@ -3103,14 +3103,14 @@ public:
    * @return a string view of the contents of this string
    * @stable ICU 76
    */
-  inline operator std::wstring_view() const {
-    const char16_t *p = getBuffer();
-#ifdef U_ALIASING_BARRIER
+  అంతఃవరుస క్రియాకారకం std::wstring_view() స్థిరరాశి {
+    స్థిరరాశి char16_t *p = get_బఫరు();
+#నిర్వచితమైతే U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return { reinterpret_cast<const wchar_t *>(p), (std::wstring_view::size_type)length() };
+#అయితే_ముగింపు
+    తిరిగి { reinterpret_cast<స్థిరరాశి wchar_t *>(p), (std::wstring_view::కొలత_type)నిడివి() };
   }
-#endif  // U_SIZEOF_WCHAR_T
+#అయితే_ముగింపు  // U_SIZEOF_WCHAR_T
 
   //========================================
   // Constructors
@@ -3119,7 +3119,7 @@ public:
   /** Construct an empty UnicodeString.
    * @stable ICU 2.0
    */
-  inline UnicodeString();
+  అంతఃవరుస UnicodeString();
 
   /**
    * Construct a UnicodeString with capacity to hold `capacity` char16_ts
@@ -3132,7 +3132,7 @@ public:
    *              string
    * @stable ICU 2.0
    */
-  UnicodeString(int32_t capacity, UChar32 c, int32_t count);
+  UnicodeString(int32_t సామర్థ్యం, UChar32 c, int32_t లెక్క);
 
   /**
    * Single char16_t (code unit) constructor.
@@ -3156,7 +3156,7 @@ public:
    */
   UNISTR_FROM_CHAR_EXPLICIT UnicodeString(UChar32 ch);
 
-#ifdef U_HIDE_DRAFT_API
+#నిర్వచితమైతే U_HIDE_DRAFT_API
   /**
    * char16_t* constructor.
    *
@@ -3176,12 +3176,12 @@ public:
    * must be NUL (U+0000) terminated.
    * @stable ICU 2.0
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const char16_t *text) :
-      UnicodeString(text, -1) {}
-#endif  // U_HIDE_DRAFT_API
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(స్థిరరాశి char16_t *పాఠ్యం) :
+      UnicodeString(పాఠ్యం, -1) {}
+#అయితే_ముగింపు  // U_HIDE_DRAFT_API
 
-#if !U_CHAR16_IS_TYPEDEF && \
-    (defined(U_HIDE_DRAFT_API) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION >= 180000))
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF && \
+    (defined(U_HIDE_DRAFT_API) || (defined(LIBCPP_సంస్కరణ) && LIBCPP_సంస్కరణ >= 180000))
   /**
    * uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *).
@@ -3201,11 +3201,11 @@ public:
    * @param text NUL-terminated UTF-16 string
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const uint16_t *text) :
-      UnicodeString(ConstChar16Ptr(text), -1) {}
-#endif
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(స్థిరరాశి uint16_t *పాఠ్యం) :
+      UnicodeString(ConstChar16Ptr(పాఠ్యం), -1) {}
+#అయితే_ముగింపు
 
-#if defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN))
+#ఒకవేళ defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_లోపల_DOXYGEN))
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3226,9 +3226,9 @@ public:
    * @param text NUL-terminated UTF-16 string
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const wchar_t *text) :
-      UnicodeString(ConstChar16Ptr(text), -1) {}
-#endif
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(స్థిరరాశి wchar_t *పాఠ్యం) :
+      UnicodeString(ConstChar16Ptr(పాఠ్యం), -1) {}
+#అయితే_ముగింపు
 
   /**
    * nullptr_t constructor.
@@ -3240,7 +3240,7 @@ public:
    * @param text nullptr
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT inline UnicodeString(const std::nullptr_t text);
+  UNISTR_FROM_STRING_EXPLICIT అంతఃవరుస UnicodeString(స్థిరరాశి std::nullptr_t పాఠ్యం);
 
   /**
    * char16_t* constructor.
@@ -3258,10 +3258,10 @@ public:
    * to copy.
    * @stable ICU 2.0
    */
-  UnicodeString(const char16_t *text,
-        int32_t textLength);
+  UnicodeString(స్థిరరాశి char16_t *పాఠ్యం,
+        int32_t పాఠ్యం_నిడివి);
 
-#if !U_CHAR16_IS_TYPEDEF
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF
   /**
    * uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t).
@@ -3278,11 +3278,11 @@ public:
    * @param textLength string length
    * @stable ICU 59
    */
-  UnicodeString(const uint16_t *text, int32_t textLength) :
-      UnicodeString(ConstChar16Ptr(text), textLength) {}
-#endif
+  UnicodeString(స్థిరరాశి uint16_t *పాఠ్యం, int32_t పాఠ్యం_నిడివి) :
+      UnicodeString(ConstChar16Ptr(పాఠ్యం), పాఠ్యం_నిడివి) {}
+#అయితే_ముగింపు
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#ఒకవేళ U_SIZEOF_WCHAR_T==2 || defined(U_లోపల_DOXYGEN)
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3300,9 +3300,9 @@ public:
    * @param textLength string length
    * @stable ICU 59
    */
-  UnicodeString(const wchar_t *text, int32_t textLength) :
-      UnicodeString(ConstChar16Ptr(text), textLength) {}
-#endif
+  UnicodeString(స్థిరరాశి wchar_t *పాఠ్యం, int32_t పాఠ్యం_నిడివి) :
+      UnicodeString(ConstChar16Ptr(పాఠ్యం), పాఠ్యం_నిడివి) {}
+#అయితే_ముగింపు
 
   /**
    * nullptr_t constructor.
@@ -3311,7 +3311,7 @@ public:
    * @param textLength ignored
    * @stable ICU 59
    */
-  inline UnicodeString(const std::nullptr_t text, int32_t textLength);
+  అంతఃవరుస UnicodeString(స్థిరరాశి std::nullptr_t పాఠ్యం, int32_t పాఠ్యం_నిడివి);
 
   /**
    * Constructor from `text`
@@ -3325,10 +3325,10 @@ public:
    * @param text UTF-16 string
    * @stable ICU 76
    */
-  template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const S &text) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    doAppend(internal::toU16StringViewNullable(text));
+  మూస<typename S, typename = std::enable_if_t<Convertible_గమ్యం_U16_String_View<S>>>
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(స్థిరరాశి S &పాఠ్యం) {
+    fUnion.fFields.f_నిడివి_And_Flags = kShortString;
+    doAppend(అంతర్గత_2::గమ్యం_U16_String_View_Nullable(పాఠ్యం));
   }
 
   /**
@@ -3362,8 +3362,8 @@ public:
    * @stable ICU 2.0
    */
   UnicodeString(UBool isTerminated,
-                ConstChar16Ptr text U_LIFETIME_BOUND,
-                int32_t textLength);
+                ConstChar16Ptr పాఠ్యం U_LIFETIME_BOUND,
+                int32_t పాఠ్యం_నిడివి);
 
   /**
    * Writable-aliasing char16_t* constructor.
@@ -3383,9 +3383,9 @@ public:
    * @param buffCapacity The size of `buffer` in char16_ts.
    * @stable ICU 2.0
    */
-  UnicodeString(char16_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity);
+  UnicodeString(char16_t* బఫరు U_LIFETIME_BOUND, int32_t buff_నిడివి, int32_t buff_సామర్థ్యం);
 
-#if !U_CHAR16_IS_TYPEDEF
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF
   /**
    * Writable-aliasing uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t, int32_t).
@@ -3394,11 +3394,11 @@ public:
    * @param buffCapacity buffer capacity
    * @stable ICU 59
    */
-  UnicodeString(uint16_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity) :
-      UnicodeString(Char16Ptr(buffer), buffLength, buffCapacity) {}
-#endif
+  UnicodeString(uint16_t* బఫరు U_LIFETIME_BOUND, int32_t buff_నిడివి, int32_t buff_సామర్థ్యం) :
+      UnicodeString(Char16Ptr(బఫరు), buff_నిడివి, buff_సామర్థ్యం) {}
+#అయితే_ముగింపు
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#ఒకవేళ U_SIZEOF_WCHAR_T==2 || defined(U_లోపల_DOXYGEN)
   /**
    * Writable-aliasing wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3408,9 +3408,9 @@ public:
    * @param buffCapacity buffer capacity
    * @stable ICU 59
    */
-  UnicodeString(wchar_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity) :
-      UnicodeString(Char16Ptr(buffer), buffLength, buffCapacity) {}
-#endif
+  UnicodeString(wchar_t* బఫరు U_LIFETIME_BOUND, int32_t buff_నిడివి, int32_t buff_సామర్థ్యం) :
+      UnicodeString(Char16Ptr(బఫరు), buff_నిడివి, buff_సామర్థ్యం) {}
+#అయితే_ముగింపు
 
   /**
    * Writable-aliasing nullptr_t constructor.
@@ -3420,9 +3420,9 @@ public:
    * @param buffCapacity ignored
    * @stable ICU 59
    */
-  inline UnicodeString(std::nullptr_t buffer, int32_t buffLength, int32_t buffCapacity);
+  అంతఃవరుస UnicodeString(std::nullptr_t బఫరు, int32_t buff_నిడివి, int32_t buff_సామర్థ్యం);
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#ఒకవేళ U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3447,7 +3447,7 @@ public:
    *                     in the platform's default codepage.
    * @stable ICU 2.0
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const char *codepageData);
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(స్థిరరాశి అక్షరం *codepage_దత్తాంశం);
 
   /**
    * char* constructor.
@@ -3457,11 +3457,11 @@ public:
    * @param dataLength The number of bytes in `codepageData`.
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, int32_t dataLength);
+  UnicodeString(స్థిరరాశి అక్షరం *codepage_దత్తాంశం, int32_t దత్తాంశం_నిడివి);
 
-#endif
+#అయితే_ముగింపు
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3480,7 +3480,7 @@ public:
    *
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, const char *codepage);
+  UnicodeString(స్థిరరాశి అక్షరం *codepage_దత్తాంశం, స్థిరరాశి అక్షరం *codepage);
 
   /**
    * char* constructor.
@@ -3499,7 +3499,7 @@ public:
    *
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, int32_t dataLength, const char *codepage);
+  UnicodeString(స్థిరరాశి అక్షరం *codepage_దత్తాంశం, int32_t దత్తాంశం_నిడివి, స్థిరరాశి అక్షరం *codepage);
 
   /**
    * char * / UConverter constructor.
@@ -3523,11 +3523,11 @@ public:
    * @stable ICU 2.0
    */
   UnicodeString(
-        const char *src, int32_t srcLength,
+        స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
         UConverter *cnv,
-        UErrorCode &errorCode);
+        UError_సంకేతం &error_సంకేతం);
 
-#endif
+#అయితే_ముగింపు
 
   /**
    * Constructs a Unicode string from an invariant-character char * string.
@@ -3561,7 +3561,7 @@ public:
    * @see US_INV
    * @stable ICU 3.2
    */
-  UnicodeString(const char *src, int32_t textLength, enum EInvariant inv);
+  UnicodeString(స్థిరరాశి అక్షరం *src, int32_t పాఠ్యం_నిడివి, గణన EInvariant inv);
 
 
   /**
@@ -3580,7 +3580,7 @@ public:
    * @stable ICU 2.0
    * @see fastCopyFrom
    */
-  UnicodeString(const UnicodeString& that);
+  UnicodeString(స్థిరరాశి UnicodeString& that);
 
   /**
    * Move constructor; might leave src in bogus state.
@@ -3596,7 +3596,7 @@ public:
    * @param srcStart The offset into `src` at which to start copying.
    * @stable ICU 2.2
    */
-  UnicodeString(const UnicodeString& src, int32_t srcStart);
+  UnicodeString(స్థిరరాశి UnicodeString& src, int32_t src_ప్రారంభం);
 
   /**
    * 'Substring' constructor from subrange of source string.
@@ -3605,7 +3605,7 @@ public:
    * @param srcLength The number of characters from `src` to copy.
    * @stable ICU 2.2
    */
-  UnicodeString(const UnicodeString& src, int32_t srcStart, int32_t srcLength);
+  UnicodeString(స్థిరరాశి UnicodeString& src, int32_t src_ప్రారంభం, int32_t src_నిడివి);
 
   /**
    * Clone this object, an instance of a subclass of Replaceable.
@@ -3620,12 +3620,12 @@ public:
    * @see getDynamicClassID
    * @stable ICU 2.6
    */
-  virtual UnicodeString *clone() const override;
+  మాయా UnicodeString *clone() స్థిరరాశి override;
 
   /** Destructor.
    * @stable ICU 2.0
    */
-  virtual ~UnicodeString();
+  మాయా ~UnicodeString();
 
   /**
    * Readonly-aliasing factory method.
@@ -3649,9 +3649,9 @@ public:
    * @param text The string view to alias for the UnicodeString.
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  static inline UnicodeString readOnlyAlias(const S& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromU16StringView(internal::toU16StringView(text));
+  మూస <typename S, typename = std::enable_if_t<Convertible_గమ్యం_U16_String_View<S>>>
+  స్థిర అంతఃవరుస UnicodeString readOnlyAlias(స్థిరరాశి S& పాఠ్యం U_LIFETIME_BOUND) {
+    తిరిగి readOnlyAliasFromU16StringView(అంతర్గత_2::గమ్యం_U16_String_View(పాఠ్యం));
   }
 
   /**
@@ -3673,8 +3673,8 @@ public:
    * @param text The UnicodeString to alias.
    * @stable ICU 76
    */
-  static inline UnicodeString readOnlyAlias(const UnicodeString& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromUnicodeString(text);
+  స్థిర అంతఃవరుస UnicodeString readOnlyAlias(స్థిరరాశి UnicodeString& పాఠ్యం U_LIFETIME_BOUND) {
+    తిరిగి readOnlyAliasFromUnicodeString(పాఠ్యం);
   }
 
   /**
@@ -3690,7 +3690,7 @@ public:
    * @see toUTF8String
    * @stable ICU 4.2
    */
-  static UnicodeString fromUTF8(StringPiece utf8);
+  స్థిర UnicodeString fromUTF8(StringPiece utf8);
 
   /**
    * Create a UnicodeString from a UTF-32 string.
@@ -3703,7 +3703,7 @@ public:
    * @see toUTF32
    * @stable ICU 4.2
    */
-  static UnicodeString fromUTF32(const UChar32 *utf32, int32_t length);
+  స్థిర UnicodeString fromUTF32(స్థిరరాశి UChar32 *utf32, int32_t నిడివి);
 
   /* Miscellaneous operations */
 
@@ -3741,7 +3741,7 @@ public:
    * @see u_unescapeAt()
    * @stable ICU 2.0
    */
-  UnicodeString unescape() const;
+  UnicodeString unescape() స్థిరరాశి;
 
   /**
    * Unescape a single escape sequence and return the represented
@@ -3762,232 +3762,232 @@ public:
    * @see u_unescapeAt()
    * @stable ICU 2.0
    */
-  UChar32 unescapeAt(int32_t &offset) const;
+  UChar32 unescapeAt(int32_t &స్థానభ్రంశం) స్థిరరాశి;
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for this class.
    *
    * @stable ICU 2.2
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  స్థిర UClassID U_EXPORT2 getStaticClassID();
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for the actual class.
    *
    * @stable ICU 2.2
    */
-  virtual UClassID getDynamicClassID() const override;
+  మాయా UClassID getDynamicClassID() స్థిరరాశి override;
 
   //========================================
   // Implementation methods
   //========================================
 
-protected:
+రక్షిత:
   /**
    * Implement Replaceable::getLength() (see jitterbug 1027).
    * @stable ICU 2.4
    */
-  virtual int32_t getLength() const override;
+  మాయా int32_t get_నిడివి() స్థిరరాశి override;
 
   /**
    * The change in Replaceable to use virtual getCharAt() allows
    * UnicodeString::charAt() to be inline again (see jitterbug 709).
    * @stable ICU 2.4
    */
-  virtual char16_t getCharAt(int32_t offset) const override;
+  మాయా char16_t getCharAt(int32_t స్థానభ్రంశం) స్థిరరాశి override;
 
   /**
    * The change in Replaceable to use virtual getChar32At() allows
    * UnicodeString::char32At() to be inline again (see jitterbug 709).
    * @stable ICU 2.4
    */
-  virtual UChar32 getChar32At(int32_t offset) const override;
+  మాయా UChar32 getChar32At(int32_t స్థానభ్రంశం) స్థిరరాశి override;
 
-private:
-  static UnicodeString readOnlyAliasFromU16StringView(std::u16string_view text U_LIFETIME_BOUND);
-  static UnicodeString readOnlyAliasFromUnicodeString(const UnicodeString& text U_LIFETIME_BOUND);
+అంతరంగ:
+  స్థిర UnicodeString readOnlyAliasFromU16StringView(std::u16string_view పాఠ్యం U_LIFETIME_BOUND);
+  స్థిర UnicodeString readOnlyAliasFromUnicodeString(స్థిరరాశి UnicodeString& పాఠ్యం U_LIFETIME_BOUND);
 
   // For char* constructors. Could be made public.
-  UnicodeString& setToUTF8(StringPiece utf8) U_LIFETIME_BOUND;
+  UnicodeString& సమితి_గమ్యం_UTF8(StringPiece utf8) U_LIFETIME_BOUND;
   // For extract(char*).
   // We could make a toUTF8(target, capacity, errorCode) public but not
   // this version: New API will be cleaner if we make callers create substrings
   // rather than having start+length on every method,
   // and it should take a UErrorCode&.
   int32_t
-  toUTF8(int32_t start, int32_t len,
-         char *target, int32_t capacity) const;
+  గమ్యం_UTF8(int32_t ప్రారంభం, int32_t len,
+         అక్షరం *లక్ష్యం, int32_t సామర్థ్యం) స్థిరరాశి;
 
   /**
    * Internal string contents comparison, called by operator==.
    * Requires: this & text not bogus and have same lengths.
    */
-  inline UBool doEquals(const UnicodeString &text, int32_t len) const {
-    return doEquals(text.getArrayStart(), len);
+  అంతఃవరుస UBool doEquals(స్థిరరాశి UnicodeString &పాఠ్యం, int32_t len) స్థిరరాశి {
+    తిరిగి doEquals(పాఠ్యం.get_Array_ప్రారంభం(), len);
   }
-  UBool doEquals(const char16_t *text, int32_t len) const;
+  UBool doEquals(స్థిరరాశి char16_t *పాఠ్యం, int32_t len) స్థిరరాశి;
 
-  inline UBool
-  doEqualsSubstring(int32_t start,
-           int32_t length,
-           const UnicodeString& srcText,
-           int32_t srcStart,
-           int32_t srcLength) const;
+  అంతఃవరుస UBool
+  doEqualsSubstring(int32_t ప్రారంభం,
+           int32_t నిడివి,
+           స్థిరరాశి UnicodeString& src_పాఠ్యం,
+           int32_t src_ప్రారంభం,
+           int32_t src_నిడివి) స్థిరరాశి;
 
-  UBool doEqualsSubstring(int32_t start,
-           int32_t length,
-           const char16_t *srcChars,
-           int32_t srcStart,
-           int32_t srcLength) const;
+  UBool doEqualsSubstring(int32_t ప్రారంభం,
+           int32_t నిడివి,
+           స్థిరరాశి char16_t *srcChars,
+           int32_t src_ప్రారంభం,
+           int32_t src_నిడివి) స్థిరరాశి;
 
-  inline int8_t
-  doCompare(int32_t start,
-           int32_t length,
-           const UnicodeString& srcText,
-           int32_t srcStart,
-           int32_t srcLength) const;
+  అంతఃవరుస int8_t
+  doCompare(int32_t ప్రారంభం,
+           int32_t నిడివి,
+           స్థిరరాశి UnicodeString& src_పాఠ్యం,
+           int32_t src_ప్రారంభం,
+           int32_t src_నిడివి) స్థిరరాశి;
 
-  int8_t doCompare(int32_t start,
-           int32_t length,
-           const char16_t *srcChars,
-           int32_t srcStart,
-           int32_t srcLength) const;
+  int8_t doCompare(int32_t ప్రారంభం,
+           int32_t నిడివి,
+           స్థిరరాశి char16_t *srcChars,
+           int32_t src_ప్రారంభం,
+           int32_t src_నిడివి) స్థిరరాశి;
 
-  inline int8_t
-  doCompareCodePointOrder(int32_t start,
-                          int32_t length,
-                          const UnicodeString& srcText,
-                          int32_t srcStart,
-                          int32_t srcLength) const;
+  అంతఃవరుస int8_t
+  do_Compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                          int32_t నిడివి,
+                          స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                          int32_t src_ప్రారంభం,
+                          int32_t src_నిడివి) స్థిరరాశి;
 
-  int8_t doCompareCodePointOrder(int32_t start,
-                                 int32_t length,
-                                 const char16_t *srcChars,
-                                 int32_t srcStart,
-                                 int32_t srcLength) const;
+  int8_t do_Compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                 int32_t నిడివి,
+                                 స్థిరరాశి char16_t *srcChars,
+                                 int32_t src_ప్రారంభం,
+                                 int32_t src_నిడివి) స్థిరరాశి;
 
-  inline int8_t
-  doCaseCompare(int32_t start,
-                int32_t length,
-                const UnicodeString &srcText,
-                int32_t srcStart,
-                int32_t srcLength,
-                uint32_t options) const;
+  అంతఃవరుస int8_t
+  doCaseCompare(int32_t ప్రారంభం,
+                int32_t నిడివి,
+                స్థిరరాశి UnicodeString &src_పాఠ్యం,
+                int32_t src_ప్రారంభం,
+                int32_t src_నిడివి,
+                uint32_t options) స్థిరరాశి;
 
   int8_t
-  doCaseCompare(int32_t start,
-                int32_t length,
-                const char16_t *srcChars,
-                int32_t srcStart,
-                int32_t srcLength,
-                uint32_t options) const;
+  doCaseCompare(int32_t ప్రారంభం,
+                int32_t నిడివి,
+                స్థిరరాశి char16_t *srcChars,
+                int32_t src_ప్రారంభం,
+                int32_t src_నిడివి,
+                uint32_t options) స్థిరరాశి;
 
-  int32_t doIndexOf(char16_t c,
-            int32_t start,
-            int32_t length) const;
+  int32_t do_సూచీ_యొక్క(char16_t c,
+            int32_t ప్రారంభం,
+            int32_t నిడివి) స్థిరరాశి;
 
-  int32_t doIndexOf(UChar32 c,
-                        int32_t start,
-                        int32_t length) const;
+  int32_t do_సూచీ_యొక్క(UChar32 c,
+                        int32_t ప్రారంభం,
+                        int32_t నిడివి) స్థిరరాశి;
 
-  int32_t doLastIndexOf(char16_t c,
-                int32_t start,
-                int32_t length) const;
+  int32_t do_చివరి_సూచీ_యొక్క(char16_t c,
+                int32_t ప్రారంభం,
+                int32_t నిడివి) స్థిరరాశి;
 
-  int32_t doLastIndexOf(UChar32 c,
-                            int32_t start,
-                            int32_t length) const;
+  int32_t do_చివరి_సూచీ_యొక్క(UChar32 c,
+                            int32_t ప్రారంభం,
+                            int32_t నిడివి) స్థిరరాశి;
 
-  void doExtract(int32_t start,
-         int32_t length,
+  శూన్య do_వెలికితీయి(int32_t ప్రారంభం,
+         int32_t నిడివి,
          char16_t *dst,
-         int32_t dstStart) const;
+         int32_t dst_ప్రారంభం) స్థిరరాశి;
 
-  inline void doExtract(int32_t start,
-         int32_t length,
-         UnicodeString& target) const;
+  అంతఃవరుస శూన్య do_వెలికితీయి(int32_t ప్రారంభం,
+         int32_t నిడివి,
+         UnicodeString& లక్ష్యం) స్థిరరాశి;
 
-  inline char16_t doCharAt(int32_t offset)  const;
+  అంతఃవరుస char16_t doCharAt(int32_t స్థానభ్రంశం)  స్థిరరాశి;
 
-  UnicodeString& doReplace(int32_t start,
-                           int32_t length,
-                           const UnicodeString& srcText,
-                           int32_t srcStart,
-                           int32_t srcLength) U_LIFETIME_BOUND;
+  UnicodeString& doReplace(int32_t ప్రారంభం,
+                           int32_t నిడివి,
+                           స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                           int32_t src_ప్రారంభం,
+                           int32_t src_నిడివి) U_LIFETIME_BOUND;
 
-  UnicodeString& doReplace(int32_t start,
-                           int32_t length,
-                           const char16_t* srcChars,
-                           int32_t srcStart,
-                           int32_t srcLength) U_LIFETIME_BOUND;
-  UnicodeString& doReplace(int32_t start, int32_t length, std::u16string_view src) U_LIFETIME_BOUND;
+  UnicodeString& doReplace(int32_t ప్రారంభం,
+                           int32_t నిడివి,
+                           స్థిరరాశి char16_t* srcChars,
+                           int32_t src_ప్రారంభం,
+                           int32_t src_నిడివి) U_LIFETIME_BOUND;
+  UnicodeString& doReplace(int32_t ప్రారంభం, int32_t నిడివి, std::u16string_view src) U_LIFETIME_BOUND;
 
-  UnicodeString& doAppend(const UnicodeString& src,
-                          int32_t srcStart,
-                          int32_t srcLength) U_LIFETIME_BOUND;
-  UnicodeString& doAppend(const char16_t* srcChars,
-                          int32_t srcStart,
-                          int32_t srcLength) U_LIFETIME_BOUND;
+  UnicodeString& doAppend(స్థిరరాశి UnicodeString& src,
+                          int32_t src_ప్రారంభం,
+                          int32_t src_నిడివి) U_LIFETIME_BOUND;
+  UnicodeString& doAppend(స్థిరరాశి char16_t* srcChars,
+                          int32_t src_ప్రారంభం,
+                          int32_t src_నిడివి) U_LIFETIME_BOUND;
   UnicodeString& doAppend(std::u16string_view src) U_LIFETIME_BOUND;
 
-  UnicodeString& doReverse(int32_t start, int32_t length) U_LIFETIME_BOUND;
+  UnicodeString& do_తిరగేయి(int32_t ప్రారంభం, int32_t నిడివి) U_LIFETIME_BOUND;
 
   // calculate hash code
-  int32_t doHashCode() const;
+  int32_t do_Hash_సంకేతం() స్థిరరాశి;
 
   // get pointer to start of array
   // these do not check for kOpenGetBuffer, unlike the public getBuffer() function
-  inline char16_t* getArrayStart() U_LIFETIME_BOUND;
-  inline const char16_t* getArrayStart() const U_LIFETIME_BOUND;
+  అంతఃవరుస char16_t* get_Array_ప్రారంభం() U_LIFETIME_BOUND;
+  అంతఃవరుస స్థిరరాశి char16_t* get_Array_ప్రారంభం() స్థిరరాశి U_LIFETIME_BOUND;
 
-  inline UBool hasShortLength() const;
-  inline int32_t getShortLength() const;
+  అంతఃవరుస UBool has_Short_నిడివి() స్థిరరాశి;
+  అంతఃవరుస int32_t get_Short_నిడివి() స్థిరరాశి;
 
   // A UnicodeString object (not necessarily its current buffer)
   // is writable unless it isBogus() or it has an "open" getBuffer(minCapacity).
-  inline UBool isWritable() const;
+  అంతఃవరుస UBool isWritable() స్థిరరాశి;
 
   // Is the current buffer writable?
-  inline UBool isBufferWritable() const;
+  అంతఃవరుస UBool is_బఫరు_Writable() స్థిరరాశి;
 
   // None of the following does releaseArray().
-  inline void setZeroLength();
-  inline void setShortLength(int32_t len);
-  inline void setLength(int32_t len);
-  inline void setToEmpty();
-  inline void setArray(char16_t *array, int32_t len, int32_t capacity); // sets length but not flags
+  అంతఃవరుస శూన్య సమితి_Zero_నిడివి();
+  అంతఃవరుస శూన్య సమితి_Short_నిడివి(int32_t len);
+  అంతఃవరుస శూన్య సమితి_నిడివి(int32_t len);
+  అంతఃవరుస శూన్య సమితి_గమ్యం_ఖాళీలు();
+  అంతఃవరుస శూన్య సమితి_Array(char16_t *array, int32_t len, int32_t సామర్థ్యం); // sets length but not flags
 
   // allocate the array; result may be the stack buffer
   // sets refCount to 1 if appropriate
   // sets fArray, fCapacity, and flags
   // sets length to 0
   // returns boolean for success or failure
-  UBool allocate(int32_t capacity);
+  UBool allocate(int32_t సామర్థ్యం);
 
   // release the array if owned
-  void releaseArray();
+  శూన్య releaseArray();
 
   // turn a bogus string into an empty one
-  void unBogus();
+  శూన్య unBogus();
 
   // implements assignment operator, copy constructor, and fastCopyFrom()
-  UnicodeString& copyFrom(const UnicodeString& src, UBool fastCopy = false) U_LIFETIME_BOUND;
+  UnicodeString& copyFrom(స్థిరరాశి UnicodeString& src, UBool fastCopy = false) U_LIFETIME_BOUND;
 
   // Copies just the fields without memory management.
-  void copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept;
+  శూన్య copyFieldsFrom(UnicodeString &src, UBool సమితి_Src_గమ్యం_Bogus) noexcept;
 
   // Pin start and limit to acceptable values.
-  inline void pinIndex(int32_t& start) const;
-  inline void pinIndices(int32_t& start,
-                         int32_t& length) const;
+  అంతఃవరుస శూన్య pin_సూచీ(int32_t& ప్రారంభం) స్థిరరాశి;
+  అంతఃవరుస శూన్య pinIndices(int32_t& ప్రారంభం,
+                         int32_t& నిడివి) స్థిరరాశి;
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
   /* Internal extract() using UConverter. */
-  int32_t doExtract(int32_t start, int32_t length,
-                    char *dest, int32_t destCapacity,
+  int32_t do_వెలికితీయి(int32_t ప్రారంభం, int32_t నిడివి,
+                    అక్షరం *dest, int32_t dest_సామర్థ్యం,
                     UConverter *cnv,
-                    UErrorCode &errorCode) const;
+                    UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
   /*
    * Real constructor for converting from codepage data.
@@ -3999,21 +3999,21 @@ private:
    * then a simple conversion is performed on the codepage-invariant
    * subset ("invariant characters") of the platform encoding. See utypes.h.
    */
-  void doCodepageCreate(const char *codepageData,
-                        int32_t dataLength,
-                        const char *codepage);
+  శూన్య doCodepageCreate(స్థిరరాశి అక్షరం *codepage_దత్తాంశం,
+                        int32_t దత్తాంశం_నిడివి,
+                        స్థిరరాశి అక్షరం *codepage);
 
   /*
    * Worker function for creating a UnicodeString from
    * a codepage string using a UConverter.
    */
-  void
-  doCodepageCreate(const char *codepageData,
-                   int32_t dataLength,
+  శూన్య
+  doCodepageCreate(స్థిరరాశి అక్షరం *codepage_దత్తాంశం,
+                   int32_t దత్తాంశం_నిడివి,
                    UConverter *converter,
-                   UErrorCode &status);
+                   UError_సంకేతం &స్థితి_2);
 
-#endif
+#అయితే_ముగింపు
 
   /*
    * This function is called when write access to the array
@@ -4026,10 +4026,10 @@ private:
    *
    * Return false if memory could not be allocated.
    */
-  UBool cloneArrayIfNeeded(int32_t newCapacity = -1,
-                           int32_t growCapacity = -1,
+  UBool cloneArrayIfNeeded(int32_t new_సామర్థ్యం = -1,
+                           int32_t grow_సామర్థ్యం = -1,
                            UBool doCopyArray = true,
-                           int32_t** pBufferToDelete = nullptr,
+                           int32_t** p_బఫరు_గమ్యం_Delete = nullptr,
                            UBool forceClone = false);
 
   /**
@@ -4039,53 +4039,53 @@ private:
    */
   UnicodeString& caseMap(int32_t caseLocale,
                          uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
                          BreakIterator* iter,
-#endif
+#అయితే_ముగింపు
                          UStringCaseMapper* stringCaseMapper) U_LIFETIME_BOUND;
 
   // ref counting
-  void addRef();
+  శూన్య కూడు_Ref();
   int32_t removeRef();
-  int32_t refCount() const;
+  int32_t ref_లెక్క() స్థిరరాశి;
 
   // constants
-  enum {
+  గణన {
     /**
      * Size of stack buffer for short strings.
      * Must be at least U16_MAX_LENGTH for the single-code point constructor to work.
      * @see UNISTR_OBJECT_SIZE
      */
-    US_STACKBUF_SIZE = static_cast<int32_t>(UNISTR_OBJECT_SIZE - sizeof(void*) - 2) / U_SIZEOF_UCHAR,
+    US_STACKBUF_కొలత = static_cast<int32_t>(UNISTR_OBJECT_కొలత - పరిమాణం(శూన్య*) - 2) / U_SIZEOF_UCHAR,
     kInvalidUChar=0xffff, // U+FFFF returned by charAt(invalid index)
-    kInvalidHashCode=0, // invalid hash code
-    kEmptyHashCode=1, // hash code for empty string
+    k_Invalid_Hash_సంకేతం=0, // invalid hash code
+    k_ఖాళీలు_Hash_సంకేతం=1, // hash code for empty string
 
     // bit flag values for fLengthAndFlags
     kIsBogus=1,         // this string is bogus, i.e., not valid or nullptr
-    kUsingStackBuffer=2,// using fUnion.fStackFields instead of fUnion.fFields
+    k_Using_దొంతర_బఫరు=2,// using fUnion.fStackFields instead of fUnion.fFields
     kRefCounted=4,      // there is a refCount field before the characters in fArray
-    kBufferIsReadonly=8,// do not write to this buffer
-    kOpenGetBuffer=16,  // getBuffer(minCapacity) was called (is "open"),
+    k_బఫరు_Is_Readonly=8,// do not write to this buffer
+    k_Open_Get_బఫరు=16,  // getBuffer(minCapacity) was called (is "open"),
                         // and releaseBuffer(newLength) must be called
     kAllStorageFlags=0x1f,
 
-    kLengthShift=5,     // remaining 11 bits for non-negative short length, or negative if long
-    kLength1=1<<kLengthShift,
-    kMaxShortLength=0x3ff,  // max non-negative short length (leaves top bit 0)
-    kLengthIsLarge=0xffe0,  // short length < 0, real length is in fUnion.fFields.fLength
+    k_నిడివి_జరుపు=5,     // remaining 11 bits for non-negative short length, or negative if long
+    kLength1=1<<k_నిడివి_జరుపు,
+    k_Max_Short_నిడివి=0x3ff,  // max non-negative short length (leaves top bit 0)
+    k_నిడివి_Is_Large=0xffe0,  // short length < 0, real length is in fUnion.fFields.fLength
 
     // combined values for convenience
-    kShortString=kUsingStackBuffer,
+    kShortString=k_Using_దొంతర_బఫరు,
     kLongString=kRefCounted,
-    kReadonlyAlias=kBufferIsReadonly,
+    kReadonlyAlias=k_బఫరు_Is_Readonly,
     kWritableAlias=0
   };
 
-  friend class UnicodeStringAppendable;
+  మిత్ర class UnicodeStringAppendable;
 
-  union StackBufferOrFields;        // forward declaration necessary before friend declaration
-  friend union StackBufferOrFields; // make US_STACKBUF_SIZE visible inside fUnion
+  సంఘం దొంతర_బఫరు_Or_Fields;        // forward declaration necessary before friend declaration
+  మిత్ర సంఘం దొంతర_బఫరు_Or_Fields; // make US_STACKBUF_SIZE visible inside fUnion
 
   /*
    * The following are all the class fields that are stored
@@ -4128,17 +4128,17 @@ private:
    * - ICU ticket #8322 "why is sizeof(UnicodeString)==48?"
    */
   // (implicit) *vtable;
-  union StackBufferOrFields {
+  సంఘం దొంతర_బఫరు_Or_Fields {
     // fStackFields is used iff (fLengthAndFlags&kUsingStackBuffer) else fFields is used.
     // Each struct of the union must begin with fLengthAndFlags.
-    struct {
-      int16_t fLengthAndFlags;          // bit fields: see constants above
-      char16_t fBuffer[US_STACKBUF_SIZE];  // buffer for short strings
-    } fStackFields;
-    struct {
-      int16_t fLengthAndFlags;          // bit fields: see constants above
-      int32_t fLength;    // number of characters in fArray if >127; else undefined
-      int32_t fCapacity;  // capacity of fArray (in char16_ts)
+    నిర్మాణం {
+      int16_t f_నిడివి_And_Flags;          // bit fields: see constants above
+      char16_t f_బఫరు[US_STACKBUF_కొలత];  // buffer for short strings
+    } f_దొంతర_Fields;
+    నిర్మాణం {
+      int16_t f_నిడివి_And_Flags;          // bit fields: see constants above
+      int32_t f_నిడివి;    // number of characters in fArray if >127; else undefined
+      int32_t f_సామర్థ్యం;  // capacity of fArray (in char16_ts)
       // array pointer last to minimize padding for machines with P128 data model
       // or pointer sizes that are not a power of 2
       char16_t   *fArray;    // the Unicode data
@@ -4155,7 +4155,7 @@ private:
  * @stable ICU 2.8
  */
 U_COMMON_API UnicodeString U_EXPORT2
-operator+ (const UnicodeString &s1, const UnicodeString &s2);
+క్రియాకారకం+ (స్థిరరాశి UnicodeString &s1, స్థిరరాశి UnicodeString &s2);
 
 /**
  * Creates a new UnicodeString from the concatenation of a UnicodeString and `s2`
@@ -4167,18 +4167,18 @@ operator+ (const UnicodeString &s1, const UnicodeString &s2);
  * @return UnicodeString(s1).append(s2)
  * @stable ICU 76
  */
-template<
+మూస<
     typename US, typename S,
-    typename = std::enable_if_t<ConvertibleToU16StringView<S> && std::is_same_v<US, UnicodeString>>>
-inline UnicodeString operator+(const US &s1, const S &s2) {
-  return unistr_internalConcat(s1, internal::toU16StringView(s2));
+    typename = std::enable_if_t<Convertible_గమ్యం_U16_String_View<S> && std::is_same_v<US, UnicodeString>>>
+అంతఃవరుస UnicodeString క్రియాకారకం+(స్థిరరాశి US &s1, స్థిరరాశి S &s2) {
+  తిరిగి unistr_అంతర్గత_Concat(s1, అంతర్గత_2::గమ్యం_U16_String_View(s2));
 }
 
-#ifndef U_FORCE_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_FORCE_HIDE_అంతర్గత_API
 /** @internal */
 U_COMMON_API UnicodeString U_EXPORT2
-unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2);
-#endif
+unistr_అంతర్గత_Concat(స్థిరరాశి UnicodeString &s1, std::u16string_view s2);
+#అయితే_ముగింపు
 
 //========================================
 // Inline members
@@ -4188,963 +4188,963 @@ unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2);
 // Privates
 //========================================
 
-inline void
-UnicodeString::pinIndex(int32_t& start) const
+అంతఃవరుస శూన్య
+UnicodeString::pin_సూచీ(int32_t& ప్రారంభం) స్థిరరాశి
 {
   // pin index
-  if(start < 0) {
-    start = 0;
-  } else if(start > length()) {
-    start = length();
+  ఒకవేళ(ప్రారంభం < 0) {
+    ప్రారంభం = 0;
+  } లేకపోతే ఒకవేళ(ప్రారంభం > నిడివి()) {
+    ప్రారంభం = నిడివి();
   }
 }
 
-inline void
-UnicodeString::pinIndices(int32_t& start,
-                          int32_t& _length) const
+అంతఃవరుస శూన్య
+UnicodeString::pinIndices(int32_t& ప్రారంభం,
+                          int32_t& నిడివి_4) స్థిరరాశి
 {
   // pin indices
-  int32_t len = length();
-  if(start < 0) {
-    start = 0;
-  } else if(start > len) {
-    start = len;
+  int32_t len = నిడివి();
+  ఒకవేళ(ప్రారంభం < 0) {
+    ప్రారంభం = 0;
+  } లేకపోతే ఒకవేళ(ప్రారంభం > len) {
+    ప్రారంభం = len;
   }
-  if(_length < 0) {
-    _length = 0;
-  } else if(_length > (len - start)) {
-    _length = (len - start);
+  ఒకవేళ(నిడివి_4 < 0) {
+    నిడివి_4 = 0;
+  } లేకపోతే ఒకవేళ(నిడివి_4 > (len - ప్రారంభం)) {
+    నిడివి_4 = (len - ప్రారంభం);
   }
 }
 
-inline char16_t*
-UnicodeString::getArrayStart() U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+అంతఃవరుస char16_t*
+UnicodeString::get_Array_ప్రారంభం() U_LIFETIME_BOUND {
+  తిరిగి (fUnion.fFields.f_నిడివి_And_Flags&k_Using_దొంతర_బఫరు) ?
+    fUnion.f_దొంతర_Fields.f_బఫరు : fUnion.fFields.fArray;
 }
 
-inline const char16_t*
-UnicodeString::getArrayStart() const U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+అంతఃవరుస స్థిరరాశి char16_t*
+UnicodeString::get_Array_ప్రారంభం() స్థిరరాశి U_LIFETIME_BOUND {
+  తిరిగి (fUnion.fFields.f_నిడివి_And_Flags&k_Using_దొంతర_బఫరు) ?
+    fUnion.f_దొంతర_Fields.f_బఫరు : fUnion.fFields.fArray;
 }
 
 //========================================
 // Default constructor
 //========================================
 
-inline
+అంతఃవరుస
 UnicodeString::UnicodeString() {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+  fUnion.f_దొంతర_Fields.f_నిడివి_And_Flags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+అంతఃవరుస UnicodeString::UnicodeString(స్థిరరాశి std::nullptr_t /*పాఠ్యం*/) {
+  fUnion.f_దొంతర_Fields.f_నిడివి_And_Flags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/, int32_t /*length*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+అంతఃవరుస UnicodeString::UnicodeString(స్థిరరాశి std::nullptr_t /*పాఠ్యం*/, int32_t /*నిడివి*/) {
+  fUnion.f_దొంతర_Fields.f_నిడివి_And_Flags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(std::nullptr_t /*buffer*/, int32_t /*buffLength*/, int32_t /*buffCapacity*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+అంతఃవరుస UnicodeString::UnicodeString(std::nullptr_t /*బఫరు*/, int32_t /*buffLength*/, int32_t /*buffCapacity*/) {
+  fUnion.f_దొంతర_Fields.f_నిడివి_And_Flags=kShortString;
 }
 
 //========================================
 // Read-only implementation methods
 //========================================
-inline UBool
-UnicodeString::hasShortLength() const {
-  return fUnion.fFields.fLengthAndFlags>=0;
+అంతఃవరుస UBool
+UnicodeString::has_Short_నిడివి() స్థిరరాశి {
+  తిరిగి fUnion.fFields.f_నిడివి_And_Flags>=0;
 }
 
-inline int32_t
-UnicodeString::getShortLength() const {
+అంతఃవరుస int32_t
+UnicodeString::get_Short_నిడివి() స్థిరరాశి {
   // fLengthAndFlags must be non-negative -> short length >= 0
   // and arithmetic or logical shift does not matter.
-  return fUnion.fFields.fLengthAndFlags>>kLengthShift;
+  తిరిగి fUnion.fFields.f_నిడివి_And_Flags>>k_నిడివి_జరుపు;
 }
 
-inline int32_t
-UnicodeString::length() const {
-  return hasShortLength() ? getShortLength() : fUnion.fFields.fLength;
+అంతఃవరుస int32_t
+UnicodeString::నిడివి() స్థిరరాశి {
+  తిరిగి has_Short_నిడివి() ? get_Short_నిడివి() : fUnion.fFields.f_నిడివి;
 }
 
-inline int32_t
-UnicodeString::getCapacity() const {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    US_STACKBUF_SIZE : fUnion.fFields.fCapacity;
+అంతఃవరుస int32_t
+UnicodeString::get_సామర్థ్యం() స్థిరరాశి {
+  తిరిగి (fUnion.fFields.f_నిడివి_And_Flags&k_Using_దొంతర_బఫరు) ?
+    US_STACKBUF_కొలత : fUnion.fFields.f_సామర్థ్యం;
 }
 
-inline int32_t
-UnicodeString::hashCode() const
-{ return doHashCode(); }
+అంతఃవరుస int32_t
+UnicodeString::hash_సంకేతం() స్థిరరాశి
+{ తిరిగి do_Hash_సంకేతం(); }
 
-inline UBool
-UnicodeString::isBogus() const
-{ return fUnion.fFields.fLengthAndFlags & kIsBogus; }
+అంతఃవరుస UBool
+UnicodeString::isBogus() స్థిరరాశి
+{ తిరిగి fUnion.fFields.f_నిడివి_And_Flags & kIsBogus; }
 
-inline UBool
-UnicodeString::isWritable() const
-{ return !(fUnion.fFields.fLengthAndFlags & (kOpenGetBuffer | kIsBogus)); }
+అంతఃవరుస UBool
+UnicodeString::isWritable() స్థిరరాశి
+{ తిరిగి !(fUnion.fFields.f_నిడివి_And_Flags & (k_Open_Get_బఫరు | kIsBogus)); }
 
-inline UBool
-UnicodeString::isBufferWritable() const
+అంతఃవరుస UBool
+UnicodeString::is_బఫరు_Writable() స్థిరరాశి
 {
-  return
-      !(fUnion.fFields.fLengthAndFlags&(kOpenGetBuffer|kIsBogus|kBufferIsReadonly)) &&
-      (!(fUnion.fFields.fLengthAndFlags&kRefCounted) || refCount()==1);
+  తిరిగి
+      !(fUnion.fFields.f_నిడివి_And_Flags&(k_Open_Get_బఫరు|kIsBogus|k_బఫరు_Is_Readonly)) &&
+      (!(fUnion.fFields.f_నిడివి_And_Flags&kRefCounted) || ref_లెక్క()==1);
 }
 
-inline const char16_t *
-UnicodeString::getBuffer() const U_LIFETIME_BOUND {
-  if(fUnion.fFields.fLengthAndFlags&(kIsBogus|kOpenGetBuffer)) {
-    return nullptr;
-  } else if(fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) {
-    return fUnion.fStackFields.fBuffer;
-  } else {
-    return fUnion.fFields.fArray;
+అంతఃవరుస స్థిరరాశి char16_t *
+UnicodeString::get_బఫరు() స్థిరరాశి U_LIFETIME_BOUND {
+  ఒకవేళ(fUnion.fFields.f_నిడివి_And_Flags&(kIsBogus|k_Open_Get_బఫరు)) {
+    తిరిగి nullptr;
+  } లేకపోతే ఒకవేళ(fUnion.fFields.f_నిడివి_And_Flags&k_Using_దొంతర_బఫరు) {
+    తిరిగి fUnion.f_దొంతర_Fields.f_బఫరు;
+  } లేకపోతే {
+    తిరిగి fUnion.fFields.fArray;
   }
 }
 
 //========================================
 // Read-only alias methods
 //========================================
-inline int8_t
-UnicodeString::doCompare(int32_t start,
-              int32_t thisLength,
-              const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength) const
+అంతఃవరుస int8_t
+UnicodeString::doCompare(int32_t ప్రారంభం,
+              int32_t this_నిడివి,
+              స్థిరరాశి UnicodeString& src_పాఠ్యం,
+              int32_t src_ప్రారంభం,
+              int32_t src_నిడివి) స్థిరరాశి
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return doCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+  ఒకవేళ(src_పాఠ్యం.isBogus()) {
+    తిరిగి static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } లేకపోతే {
+    src_పాఠ్యం.pinIndices(src_ప్రారంభం, src_నిడివి);
+    తిరిగి doCompare(ప్రారంభం, this_నిడివి, src_పాఠ్యం.get_Array_ప్రారంభం(), src_ప్రారంభం, src_నిడివి);
   }
 }
 
-inline UBool
-UnicodeString::doEqualsSubstring(int32_t start,
-              int32_t thisLength,
-              const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength) const
+అంతఃవరుస UBool
+UnicodeString::doEqualsSubstring(int32_t ప్రారంభం,
+              int32_t this_నిడివి,
+              స్థిరరాశి UnicodeString& src_పాఠ్యం,
+              int32_t src_ప్రారంభం,
+              int32_t src_నిడివి) స్థిరరాశి
 {
-  if(srcText.isBogus()) {
-    return isBogus();
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return !isBogus() && doEqualsSubstring(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+  ఒకవేళ(src_పాఠ్యం.isBogus()) {
+    తిరిగి isBogus();
+  } లేకపోతే {
+    src_పాఠ్యం.pinIndices(src_ప్రారంభం, src_నిడివి);
+    తిరిగి !isBogus() && doEqualsSubstring(ప్రారంభం, this_నిడివి, src_పాఠ్యం.get_Array_ప్రారంభం(), src_ప్రారంభం, src_నిడివి);
   }
 }
 
-inline bool
-UnicodeString::operator== (const UnicodeString& text) const
+అంతఃవరుస bool
+UnicodeString::క్రియాకారకం== (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
 {
-  if(isBogus()) {
-    return text.isBogus();
-  } else {
-    int32_t len = length(), textLength = text.length();
-    return !text.isBogus() && len == textLength && doEquals(text, len);
+  ఒకవేళ(isBogus()) {
+    తిరిగి పాఠ్యం.isBogus();
+  } లేకపోతే {
+    int32_t len = నిడివి(), పాఠ్యం_నిడివి = పాఠ్యం.నిడివి();
+    తిరిగి !పాఠ్యం.isBogus() && len == పాఠ్యం_నిడివి && doEquals(పాఠ్యం, len);
   }
 }
 
-inline bool
-UnicodeString::operator!= (const UnicodeString& text) const
-{ return (! operator==(text)); }
+అంతఃవరుస bool
+UnicodeString::క్రియాకారకం!= (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి (! క్రియాకారకం==(పాఠ్యం)); }
 
-inline UBool
-UnicodeString::operator> (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == 1; }
+అంతఃవరుస UBool
+UnicodeString::క్రియాకారకం> (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి doCompare(0, నిడివి(), పాఠ్యం, 0, పాఠ్యం.నిడివి()) == 1; }
 
-inline UBool
-UnicodeString::operator< (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == -1; }
+అంతఃవరుస UBool
+UnicodeString::క్రియాకారకం< (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి doCompare(0, నిడివి(), పాఠ్యం, 0, పాఠ్యం.నిడివి()) == -1; }
 
-inline UBool
-UnicodeString::operator>= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != -1; }
+అంతఃవరుస UBool
+UnicodeString::క్రియాకారకం>= (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి doCompare(0, నిడివి(), పాఠ్యం, 0, పాఠ్యం.నిడివి()) != -1; }
 
-inline UBool
-UnicodeString::operator<= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != 1; }
+అంతఃవరుస UBool
+UnicodeString::క్రియాకారకం<= (స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి doCompare(0, నిడివి(), పాఠ్యం, 0, పాఠ్యం.నిడివి()) != 1; }
 
-inline int8_t
-UnicodeString::compare(const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()); }
+అంతఃవరుస int8_t
+UnicodeString::compare(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి doCompare(0, నిడివి(), పాఠ్యం, 0, పాఠ్యం.నిడివి()); }
 
-inline int8_t
-UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const UnicodeString& srcText) const
-{ return doCompare(start, _length, srcText, 0, srcText.length()); }
+అంతఃవరుస int8_t
+UnicodeString::compare(int32_t ప్రారంభం,
+               int32_t నిడివి_4,
+               స్థిరరాశి UnicodeString& src_పాఠ్యం) స్థిరరాశి
+{ తిరిగి doCompare(ప్రారంభం, నిడివి_4, src_పాఠ్యం, 0, src_పాఠ్యం.నిడివి()); }
 
-inline int8_t
+అంతఃవరుస int8_t
 UnicodeString::compare(ConstChar16Ptr srcChars,
-               int32_t srcLength) const
-{ return doCompare(0, length(), srcChars, 0, srcLength); }
+               int32_t src_నిడివి) స్థిరరాశి
+{ తిరిగి doCompare(0, నిడివి(), srcChars, 0, src_నిడివి); }
 
-inline int8_t
-UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const UnicodeString& srcText,
-               int32_t srcStart,
-               int32_t srcLength) const
-{ return doCompare(start, _length, srcText, srcStart, srcLength); }
+అంతఃవరుస int8_t
+UnicodeString::compare(int32_t ప్రారంభం,
+               int32_t నిడివి_4,
+               స్థిరరాశి UnicodeString& src_పాఠ్యం,
+               int32_t src_ప్రారంభం,
+               int32_t src_నిడివి) స్థిరరాశి
+{ తిరిగి doCompare(ప్రారంభం, నిడివి_4, src_పాఠ్యం, src_ప్రారంభం, src_నిడివి); }
 
-inline int8_t
-UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const char16_t *srcChars) const
-{ return doCompare(start, _length, srcChars, 0, _length); }
+అంతఃవరుస int8_t
+UnicodeString::compare(int32_t ప్రారంభం,
+               int32_t నిడివి_4,
+               స్థిరరాశి char16_t *srcChars) స్థిరరాశి
+{ తిరిగి doCompare(ప్రారంభం, నిడివి_4, srcChars, 0, నిడివి_4); }
 
-inline int8_t
-UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const char16_t *srcChars,
-               int32_t srcStart,
-               int32_t srcLength) const
-{ return doCompare(start, _length, srcChars, srcStart, srcLength); }
+అంతఃవరుస int8_t
+UnicodeString::compare(int32_t ప్రారంభం,
+               int32_t నిడివి_4,
+               స్థిరరాశి char16_t *srcChars,
+               int32_t src_ప్రారంభం,
+               int32_t src_నిడివి) స్థిరరాశి
+{ తిరిగి doCompare(ప్రారంభం, నిడివి_4, srcChars, src_ప్రారంభం, src_నిడివి); }
 
-inline int8_t
-UnicodeString::compareBetween(int32_t start,
-                  int32_t limit,
-                  const UnicodeString& srcText,
-                  int32_t srcStart,
-                  int32_t srcLimit) const
-{ return doCompare(start, limit - start,
-           srcText, srcStart, srcLimit - srcStart); }
+అంతఃవరుస int8_t
+UnicodeString::compareBetween(int32_t ప్రారంభం,
+                  int32_t హద్దు,
+                  స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                  int32_t src_ప్రారంభం,
+                  int32_t src_హద్దు) స్థిరరాశి
+{ తిరిగి doCompare(ప్రారంభం, హద్దు - ప్రారంభం,
+           src_పాఠ్యం, src_ప్రారంభం, src_హద్దు - src_ప్రారంభం); }
 
-inline int8_t
-UnicodeString::doCompareCodePointOrder(int32_t start,
-                                       int32_t thisLength,
-                                       const UnicodeString& srcText,
-                                       int32_t srcStart,
-                                       int32_t srcLength) const
+అంతఃవరుస int8_t
+UnicodeString::do_Compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                       int32_t this_నిడివి,
+                                       స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                                       int32_t src_ప్రారంభం,
+                                       int32_t src_నిడివి) స్థిరరాశి
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return doCompareCodePointOrder(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+  ఒకవేళ(src_పాఠ్యం.isBogus()) {
+    తిరిగి static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } లేకపోతే {
+    src_పాఠ్యం.pinIndices(src_ప్రారంభం, src_నిడివి);
+    తిరిగి do_Compare_సంకేతం_బిందువు_క్రమం(ప్రారంభం, this_నిడివి, src_పాఠ్యం.get_Array_ప్రారంభం(), src_ప్రారంభం, src_నిడివి);
   }
 }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(const UnicodeString& text) const
-{ return doCompareCodePointOrder(0, length(), text, 0, text.length()); }
+అంతఃవరుస int8_t
+UnicodeString::compare_సంకేతం_బిందువు_క్రమం(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి do_Compare_సంకేతం_బిందువు_క్రమం(0, నిడివి(), పాఠ్యం, 0, పాఠ్యం.నిడివి()); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const UnicodeString& srcText) const
-{ return doCompareCodePointOrder(start, _length, srcText, 0, srcText.length()); }
+అంతఃవరుస int8_t
+UnicodeString::compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                     int32_t నిడివి_4,
+                                     స్థిరరాశి UnicodeString& src_పాఠ్యం) స్థిరరాశి
+{ తిరిగి do_Compare_సంకేతం_బిందువు_క్రమం(ప్రారంభం, నిడివి_4, src_పాఠ్యం, 0, src_పాఠ్యం.నిడివి()); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(ConstChar16Ptr srcChars,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(0, length(), srcChars, 0, srcLength); }
+అంతఃవరుస int8_t
+UnicodeString::compare_సంకేతం_బిందువు_క్రమం(ConstChar16Ptr srcChars,
+                                     int32_t src_నిడివి) స్థిరరాశి
+{ తిరిగి do_Compare_సంకేతం_బిందువు_క్రమం(0, నిడివి(), srcChars, 0, src_నిడివి); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const UnicodeString& srcText,
-                                     int32_t srcStart,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcText, srcStart, srcLength); }
+అంతఃవరుస int8_t
+UnicodeString::compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                     int32_t నిడివి_4,
+                                     స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                                     int32_t src_ప్రారంభం,
+                                     int32_t src_నిడివి) స్థిరరాశి
+{ తిరిగి do_Compare_సంకేతం_బిందువు_క్రమం(ప్రారంభం, నిడివి_4, src_పాఠ్యం, src_ప్రారంభం, src_నిడివి); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const char16_t *srcChars) const
-{ return doCompareCodePointOrder(start, _length, srcChars, 0, _length); }
+అంతఃవరుస int8_t
+UnicodeString::compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                     int32_t నిడివి_4,
+                                     స్థిరరాశి char16_t *srcChars) స్థిరరాశి
+{ తిరిగి do_Compare_సంకేతం_బిందువు_క్రమం(ప్రారంభం, నిడివి_4, srcChars, 0, నిడివి_4); }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const char16_t *srcChars,
-                                     int32_t srcStart,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcChars, srcStart, srcLength); }
+అంతఃవరుస int8_t
+UnicodeString::compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
+                                     int32_t నిడివి_4,
+                                     స్థిరరాశి char16_t *srcChars,
+                                     int32_t src_ప్రారంభం,
+                                     int32_t src_నిడివి) స్థిరరాశి
+{ తిరిగి do_Compare_సంకేతం_బిందువు_క్రమం(ప్రారంభం, నిడివి_4, srcChars, src_ప్రారంభం, src_నిడివి); }
 
-inline int8_t
-UnicodeString::compareCodePointOrderBetween(int32_t start,
-                                            int32_t limit,
-                                            const UnicodeString& srcText,
-                                            int32_t srcStart,
-                                            int32_t srcLimit) const
-{ return doCompareCodePointOrder(start, limit - start,
-           srcText, srcStart, srcLimit - srcStart); }
+అంతఃవరుస int8_t
+UnicodeString::compare_సంకేతం_బిందువు_క్రమం_Between(int32_t ప్రారంభం,
+                                            int32_t హద్దు,
+                                            స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                                            int32_t src_ప్రారంభం,
+                                            int32_t src_హద్దు) స్థిరరాశి
+{ తిరిగి do_Compare_సంకేతం_బిందువు_క్రమం(ప్రారంభం, హద్దు - ప్రారంభం,
+           src_పాఠ్యం, src_ప్రారంభం, src_హద్దు - src_ప్రారంభం); }
 
-inline int8_t
-UnicodeString::doCaseCompare(int32_t start,
-                             int32_t thisLength,
-                             const UnicodeString &srcText,
-                             int32_t srcStart,
-                             int32_t srcLength,
-                             uint32_t options) const
+అంతఃవరుస int8_t
+UnicodeString::doCaseCompare(int32_t ప్రారంభం,
+                             int32_t this_నిడివి,
+                             స్థిరరాశి UnicodeString &src_పాఠ్యం,
+                             int32_t src_ప్రారంభం,
+                             int32_t src_నిడివి,
+                             uint32_t options) స్థిరరాశి
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return doCaseCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength, options);
+  ఒకవేళ(src_పాఠ్యం.isBogus()) {
+    తిరిగి static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } లేకపోతే {
+    src_పాఠ్యం.pinIndices(src_ప్రారంభం, src_నిడివి);
+    తిరిగి doCaseCompare(ప్రారంభం, this_నిడివి, src_పాఠ్యం.get_Array_ప్రారంభం(), src_ప్రారంభం, src_నిడివి, options);
   }
 }
 
-inline int8_t
-UnicodeString::caseCompare(const UnicodeString &text, uint32_t options) const {
-  return doCaseCompare(0, length(), text, 0, text.length(), options);
+అంతఃవరుస int8_t
+UnicodeString::caseCompare(స్థిరరాశి UnicodeString &పాఠ్యం, uint32_t options) స్థిరరాశి {
+  తిరిగి doCaseCompare(0, నిడివి(), పాఠ్యం, 0, పాఠ్యం.నిడివి(), options);
 }
 
-inline int8_t
-UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const UnicodeString &srcText,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, 0, srcText.length(), options);
+అంతఃవరుస int8_t
+UnicodeString::caseCompare(int32_t ప్రారంభం,
+                           int32_t నిడివి_4,
+                           స్థిరరాశి UnicodeString &src_పాఠ్యం,
+                           uint32_t options) స్థిరరాశి {
+  తిరిగి doCaseCompare(ప్రారంభం, నిడివి_4, src_పాఠ్యం, 0, src_పాఠ్యం.నిడివి(), options);
 }
 
-inline int8_t
+అంతఃవరుస int8_t
 UnicodeString::caseCompare(ConstChar16Ptr srcChars,
-                           int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(0, length(), srcChars, 0, srcLength, options);
+                           int32_t src_నిడివి,
+                           uint32_t options) స్థిరరాశి {
+  తిరిగి doCaseCompare(0, నిడివి(), srcChars, 0, src_నిడివి, options);
 }
 
-inline int8_t
-UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const UnicodeString &srcText,
-                           int32_t srcStart,
-                           int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, srcStart, srcLength, options);
+అంతఃవరుస int8_t
+UnicodeString::caseCompare(int32_t ప్రారంభం,
+                           int32_t నిడివి_4,
+                           స్థిరరాశి UnicodeString &src_పాఠ్యం,
+                           int32_t src_ప్రారంభం,
+                           int32_t src_నిడివి,
+                           uint32_t options) స్థిరరాశి {
+  తిరిగి doCaseCompare(ప్రారంభం, నిడివి_4, src_పాఠ్యం, src_ప్రారంభం, src_నిడివి, options);
 }
 
-inline int8_t
-UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const char16_t *srcChars,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, 0, _length, options);
+అంతఃవరుస int8_t
+UnicodeString::caseCompare(int32_t ప్రారంభం,
+                           int32_t నిడివి_4,
+                           స్థిరరాశి char16_t *srcChars,
+                           uint32_t options) స్థిరరాశి {
+  తిరిగి doCaseCompare(ప్రారంభం, నిడివి_4, srcChars, 0, నిడివి_4, options);
 }
 
-inline int8_t
-UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const char16_t *srcChars,
-                           int32_t srcStart,
-                           int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, srcStart, srcLength, options);
+అంతఃవరుస int8_t
+UnicodeString::caseCompare(int32_t ప్రారంభం,
+                           int32_t నిడివి_4,
+                           స్థిరరాశి char16_t *srcChars,
+                           int32_t src_ప్రారంభం,
+                           int32_t src_నిడివి,
+                           uint32_t options) స్థిరరాశి {
+  తిరిగి doCaseCompare(ప్రారంభం, నిడివి_4, srcChars, src_ప్రారంభం, src_నిడివి, options);
 }
 
-inline int8_t
-UnicodeString::caseCompareBetween(int32_t start,
-                                  int32_t limit,
-                                  const UnicodeString &srcText,
-                                  int32_t srcStart,
-                                  int32_t srcLimit,
-                                  uint32_t options) const {
-  return doCaseCompare(start, limit - start, srcText, srcStart, srcLimit - srcStart, options);
+అంతఃవరుస int8_t
+UnicodeString::caseCompareBetween(int32_t ప్రారంభం,
+                                  int32_t హద్దు,
+                                  స్థిరరాశి UnicodeString &src_పాఠ్యం,
+                                  int32_t src_ప్రారంభం,
+                                  int32_t src_హద్దు,
+                                  uint32_t options) స్థిరరాశి {
+  తిరిగి doCaseCompare(ప్రారంభం, హద్దు - ప్రారంభం, src_పాఠ్యం, src_ప్రారంభం, src_హద్దు - src_ప్రారంభం, options);
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& srcText,
-               int32_t srcStart,
-               int32_t srcLength,
-               int32_t start,
-               int32_t _length) const
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+               int32_t src_ప్రారంభం,
+               int32_t src_నిడివి,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి
 {
-  if(!srcText.isBogus()) {
-    srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return indexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+  ఒకవేళ(!src_పాఠ్యం.isBogus()) {
+    src_పాఠ్యం.pinIndices(src_ప్రారంభం, src_నిడివి);
+    ఒకవేళ(src_నిడివి > 0) {
+      తిరిగి సూచీ_యొక్క(src_పాఠ్యం.get_Array_ప్రారంభం(), src_ప్రారంభం, src_నిడివి, ప్రారంభం, నిడివి_4);
     }
   }
-  return -1;
+  తిరిగి -1;
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text) const
-{ return indexOf(text, 0, text.length(), 0, length()); }
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి సూచీ_యొక్క(పాఠ్యం, 0, పాఠ్యం.నిడివి(), 0, నిడివి()); }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text,
-               int32_t start) const {
-  pinIndex(start);
-  return indexOf(text, 0, text.length(), start, length() - start);
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం,
+               int32_t ప్రారంభం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  తిరిగి సూచీ_యొక్క(పాఠ్యం, 0, పాఠ్యం.నిడివి(), ప్రారంభం, నిడివి() - ప్రారంభం);
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text,
-               int32_t start,
-               int32_t _length) const
-{ return indexOf(text, 0, text.length(), start, _length); }
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి
+{ తిరిగి సూచీ_యొక్క(పాఠ్యం, 0, పాఠ్యం.నిడివి(), ప్రారంభం, నిడివి_4); }
 
-inline int32_t
-UnicodeString::indexOf(const char16_t *srcChars,
-               int32_t srcLength,
-               int32_t start) const {
-  pinIndex(start);
-  return indexOf(srcChars, 0, srcLength, start, length() - start);
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(స్థిరరాశి char16_t *srcChars,
+               int32_t src_నిడివి,
+               int32_t ప్రారంభం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  తిరిగి సూచీ_యొక్క(srcChars, 0, src_నిడివి, ప్రారంభం, నిడివి() - ప్రారంభం);
 }
 
-inline int32_t
-UnicodeString::indexOf(ConstChar16Ptr srcChars,
-               int32_t srcLength,
-               int32_t start,
-               int32_t _length) const
-{ return indexOf(srcChars, 0, srcLength, start, _length); }
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(ConstChar16Ptr srcChars,
+               int32_t src_నిడివి,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి
+{ తిరిగి సూచీ_యొక్క(srcChars, 0, src_నిడివి, ప్రారంభం, నిడివి_4); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c,
-               int32_t start,
-               int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(char16_t c,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి
+{ తిరిగి do_సూచీ_యొక్క(c, ప్రారంభం, నిడివి_4); }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c,
-               int32_t start,
-               int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(UChar32 c,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి
+{ తిరిగి do_సూచీ_యొక్క(c, ప్రారంభం, నిడివి_4); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c) const
-{ return doIndexOf(c, 0, length()); }
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(char16_t c) స్థిరరాశి
+{ తిరిగి do_సూచీ_యొక్క(c, 0, నిడివి()); }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c) const
-{ return indexOf(c, 0, length()); }
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(UChar32 c) స్థిరరాశి
+{ తిరిగి సూచీ_యొక్క(c, 0, నిడివి()); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c,
-               int32_t start) const {
-  pinIndex(start);
-  return doIndexOf(c, start, length() - start);
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(char16_t c,
+               int32_t ప్రారంభం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  తిరిగి do_సూచీ_యొక్క(c, ప్రారంభం, నిడివి() - ప్రారంభం);
 }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c,
-               int32_t start) const {
-  pinIndex(start);
-  return indexOf(c, start, length() - start);
+అంతఃవరుస int32_t
+UnicodeString::సూచీ_యొక్క(UChar32 c,
+               int32_t ప్రారంభం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  తిరిగి సూచీ_యొక్క(c, ప్రారంభం, నిడివి() - ప్రారంభం);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(ConstChar16Ptr srcChars,
-               int32_t srcLength,
-               int32_t start,
-               int32_t _length) const
-{ return lastIndexOf(srcChars, 0, srcLength, start, _length); }
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(ConstChar16Ptr srcChars,
+               int32_t src_నిడివి,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి
+{ తిరిగి చివరి_సూచీ_యొక్క(srcChars, 0, src_నిడివి, ప్రారంభం, నిడివి_4); }
 
-inline int32_t
-UnicodeString::lastIndexOf(const char16_t *srcChars,
-               int32_t srcLength,
-               int32_t start) const {
-  pinIndex(start);
-  return lastIndexOf(srcChars, 0, srcLength, start, length() - start);
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(స్థిరరాశి char16_t *srcChars,
+               int32_t src_నిడివి,
+               int32_t ప్రారంభం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  తిరిగి చివరి_సూచీ_యొక్క(srcChars, 0, src_నిడివి, ప్రారంభం, నిడివి() - ప్రారంభం);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& srcText,
-               int32_t srcStart,
-               int32_t srcLength,
-               int32_t start,
-               int32_t _length) const
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+               int32_t src_ప్రారంభం,
+               int32_t src_నిడివి,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి
 {
-  if(!srcText.isBogus()) {
-    srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return lastIndexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+  ఒకవేళ(!src_పాఠ్యం.isBogus()) {
+    src_పాఠ్యం.pinIndices(src_ప్రారంభం, src_నిడివి);
+    ఒకవేళ(src_నిడివి > 0) {
+      తిరిగి చివరి_సూచీ_యొక్క(src_పాఠ్యం.get_Array_ప్రారంభం(), src_ప్రారంభం, src_నిడివి, ప్రారంభం, నిడివి_4);
     }
   }
-  return -1;
+  తిరిగి -1;
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text,
-               int32_t start,
-               int32_t _length) const
-{ return lastIndexOf(text, 0, text.length(), start, _length); }
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి
+{ తిరిగి చివరి_సూచీ_యొక్క(పాఠ్యం, 0, పాఠ్యం.నిడివి(), ప్రారంభం, నిడివి_4); }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text,
-               int32_t start) const {
-  pinIndex(start);
-  return lastIndexOf(text, 0, text.length(), start, length() - start);
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం,
+               int32_t ప్రారంభం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  తిరిగి చివరి_సూచీ_యొక్క(పాఠ్యం, 0, పాఠ్యం.నిడివి(), ప్రారంభం, నిడివి() - ప్రారంభం);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text) const
-{ return lastIndexOf(text, 0, text.length(), 0, length()); }
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి చివరి_సూచీ_యొక్క(పాఠ్యం, 0, పాఠ్యం.నిడివి(), 0, నిడివి()); }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c,
-               int32_t start,
-               int32_t _length) const
-{ return doLastIndexOf(c, start, _length); }
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(char16_t c,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి
+{ తిరిగి do_చివరి_సూచీ_యొక్క(c, ప్రారంభం, నిడివి_4); }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c,
-               int32_t start,
-               int32_t _length) const {
-  return doLastIndexOf(c, start, _length);
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(UChar32 c,
+               int32_t ప్రారంభం,
+               int32_t నిడివి_4) స్థిరరాశి {
+  తిరిగి do_చివరి_సూచీ_యొక్క(c, ప్రారంభం, నిడివి_4);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c) const
-{ return doLastIndexOf(c, 0, length()); }
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(char16_t c) స్థిరరాశి
+{ తిరిగి do_చివరి_సూచీ_యొక్క(c, 0, నిడివి()); }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c) const {
-  return lastIndexOf(c, 0, length());
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(UChar32 c) స్థిరరాశి {
+  తిరిగి చివరి_సూచీ_యొక్క(c, 0, నిడివి());
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c,
-               int32_t start) const {
-  pinIndex(start);
-  return doLastIndexOf(c, start, length() - start);
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(char16_t c,
+               int32_t ప్రారంభం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  తిరిగి do_చివరి_సూచీ_యొక్క(c, ప్రారంభం, నిడివి() - ప్రారంభం);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c,
-               int32_t start) const {
-  pinIndex(start);
-  return lastIndexOf(c, start, length() - start);
+అంతఃవరుస int32_t
+UnicodeString::చివరి_సూచీ_యొక్క(UChar32 c,
+               int32_t ప్రారంభం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  తిరిగి చివరి_సూచీ_యొక్క(c, ప్రారంభం, నిడివి() - ప్రారంభం);
 }
 
-inline UBool
-UnicodeString::startsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(0, text.length(), text, 0, text.length()); }
+అంతఃవరుస UBool
+UnicodeString::startsWith(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి doEqualsSubstring(0, పాఠ్యం.నిడివి(), పాఠ్యం, 0, పాఠ్యం.నిడివి()); }
 
-inline UBool
-UnicodeString::startsWith(const UnicodeString& srcText,
-              int32_t srcStart,
-              int32_t srcLength) const
-{ return doEqualsSubstring(0, srcLength, srcText, srcStart, srcLength); }
+అంతఃవరుస UBool
+UnicodeString::startsWith(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+              int32_t src_ప్రారంభం,
+              int32_t src_నిడివి) స్థిరరాశి
+{ తిరిగి doEqualsSubstring(0, src_నిడివి, src_పాఠ్యం, src_ప్రారంభం, src_నిడివి); }
 
-inline UBool
-UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars));
+అంతఃవరుస UBool
+UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t src_నిడివి) స్థిరరాశి {
+  ఒకవేళ(src_నిడివి < 0) {
+    src_నిడివి = u_strlen(గమ్యం_UChar_Ptr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, 0, srcLength);
+  తిరిగి doEqualsSubstring(0, src_నిడివి, srcChars, 0, src_నిడివి);
 }
 
-inline UBool
-UnicodeString::startsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars));
+అంతఃవరుస UBool
+UnicodeString::startsWith(స్థిరరాశి char16_t *srcChars, int32_t src_ప్రారంభం, int32_t src_నిడివి) స్థిరరాశి {
+  ఒకవేళ(src_నిడివి < 0) {
+    src_నిడివి = u_strlen(గమ్యం_UChar_Ptr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, srcStart, srcLength);
+  తిరిగి doEqualsSubstring(0, src_నిడివి, srcChars, src_ప్రారంభం, src_నిడివి);
 }
 
-inline UBool
-UnicodeString::endsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(length() - text.length(), text.length(),
-           text, 0, text.length()); }
+అంతఃవరుస UBool
+UnicodeString::చివర్లు_With(స్థిరరాశి UnicodeString& పాఠ్యం) స్థిరరాశి
+{ తిరిగి doEqualsSubstring(నిడివి() - పాఠ్యం.నిడివి(), పాఠ్యం.నిడివి(),
+           పాఠ్యం, 0, పాఠ్యం.నిడివి()); }
 
-inline UBool
-UnicodeString::endsWith(const UnicodeString& srcText,
-            int32_t srcStart,
-            int32_t srcLength) const {
-  srcText.pinIndices(srcStart, srcLength);
-  return doEqualsSubstring(length() - srcLength, srcLength,
-                   srcText, srcStart, srcLength);
+అంతఃవరుస UBool
+UnicodeString::చివర్లు_With(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+            int32_t src_ప్రారంభం,
+            int32_t src_నిడివి) స్థిరరాశి {
+  src_పాఠ్యం.pinIndices(src_ప్రారంభం, src_నిడివి);
+  తిరిగి doEqualsSubstring(నిడివి() - src_నిడివి, src_నిడివి,
+                   src_పాఠ్యం, src_ప్రారంభం, src_నిడివి);
 }
 
-inline UBool
-UnicodeString::endsWith(ConstChar16Ptr srcChars,
-            int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars));
+అంతఃవరుస UBool
+UnicodeString::చివర్లు_With(ConstChar16Ptr srcChars,
+            int32_t src_నిడివి) స్థిరరాశి {
+  ఒకవేళ(src_నిడివి < 0) {
+    src_నిడివి = u_strlen(గమ్యం_UChar_Ptr(srcChars));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength, srcChars, 0, srcLength);
+  తిరిగి doEqualsSubstring(నిడివి() - src_నిడివి, src_నిడివి, srcChars, 0, src_నిడివి);
 }
 
-inline UBool
-UnicodeString::endsWith(const char16_t *srcChars,
-            int32_t srcStart,
-            int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars + srcStart));
+అంతఃవరుస UBool
+UnicodeString::చివర్లు_With(స్థిరరాశి char16_t *srcChars,
+            int32_t src_ప్రారంభం,
+            int32_t src_నిడివి) స్థిరరాశి {
+  ఒకవేళ(src_నిడివి < 0) {
+    src_నిడివి = u_strlen(గమ్యం_UChar_Ptr(srcChars + src_ప్రారంభం));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength,
-                   srcChars, srcStart, srcLength);
+  తిరిగి doEqualsSubstring(నిడివి() - src_నిడివి, src_నిడివి,
+                   srcChars, src_ప్రారంభం, src_నిడివి);
 }
 
 //========================================
 // replace
 //========================================
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
-                       const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, 0, srcText.length()); }
+అంతఃవరుస UnicodeString&
+UnicodeString::replace(int32_t ప్రారంభం,
+                       int32_t నిడివి_4,
+                       స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, నిడివి_4, src_పాఠ్యం, 0, src_పాఠ్యం.నిడివి()); }
 
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
-                       const UnicodeString& srcText,
-                       int32_t srcStart,
-                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, srcStart, srcLength); }
+అంతఃవరుస UnicodeString&
+UnicodeString::replace(int32_t ప్రారంభం,
+                       int32_t నిడివి_4,
+                       స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                       int32_t src_ప్రారంభం,
+                       int32_t src_నిడివి) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, నిడివి_4, src_పాఠ్యం, src_ప్రారంభం, src_నిడివి); }
 
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
+అంతఃవరుస UnicodeString&
+UnicodeString::replace(int32_t ప్రారంభం,
+                       int32_t నిడివి_4,
                        ConstChar16Ptr srcChars,
-                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, 0, srcLength); }
+                       int32_t src_నిడివి) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, నిడివి_4, srcChars, 0, src_నిడివి); }
 
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
-                       const char16_t* srcChars,
-                       int32_t srcStart,
-                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, srcStart, srcLength); }
+అంతఃవరుస UnicodeString&
+UnicodeString::replace(int32_t ప్రారంభం,
+                       int32_t నిడివి_4,
+                       స్థిరరాశి char16_t* srcChars,
+                       int32_t src_ప్రారంభం,
+                       int32_t src_నిడివి) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, నిడివి_4, srcChars, src_ప్రారంభం, src_నిడివి); }
 
-inline UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
+అంతఃవరుస UnicodeString&
+UnicodeString::replace(int32_t ప్రారంభం,
+                       int32_t నిడివి_4,
                        char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, _length, &srcChar, 0, 1); }
+{ తిరిగి doReplace(ప్రారంభం, నిడివి_4, &srcChar, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::replaceBetween(int32_t start,
-                              int32_t limit,
-                              const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, 0, srcText.length()); }
+అంతఃవరుస UnicodeString&
+UnicodeString::replaceBetween(int32_t ప్రారంభం,
+                              int32_t హద్దు,
+                              స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, హద్దు - ప్రారంభం, src_పాఠ్యం, 0, src_పాఠ్యం.నిడివి()); }
 
-inline UnicodeString&
-UnicodeString::replaceBetween(int32_t start,
-                              int32_t limit,
-                              const UnicodeString& srcText,
-                              int32_t srcStart,
-                              int32_t srcLimit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, srcStart, srcLimit - srcStart); }
+అంతఃవరుస UnicodeString&
+UnicodeString::replaceBetween(int32_t ప్రారంభం,
+                              int32_t హద్దు,
+                              స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                              int32_t src_ప్రారంభం,
+                              int32_t src_హద్దు) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, హద్దు - ప్రారంభం, src_పాఠ్యం, src_ప్రారంభం, src_హద్దు - src_ప్రారంభం); }
 
-inline UnicodeString&
-UnicodeString::findAndReplace(const UnicodeString& oldText,
-                              const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(0, length(), oldText, 0, oldText.length(),
-            newText, 0, newText.length()); }
+అంతఃవరుస UnicodeString&
+UnicodeString::కనుగొను_And_Replace(స్థిరరాశి UnicodeString& old_పాఠ్యం,
+                              స్థిరరాశి UnicodeString& new_పాఠ్యం) U_LIFETIME_BOUND
+{ తిరిగి కనుగొను_And_Replace(0, నిడివి(), old_పాఠ్యం, 0, old_పాఠ్యం.నిడివి(),
+            new_పాఠ్యం, 0, new_పాఠ్యం.నిడివి()); }
 
-inline UnicodeString&
-UnicodeString::findAndReplace(int32_t start,
-                              int32_t _length,
-                              const UnicodeString& oldText,
-                              const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(start, _length, oldText, 0, oldText.length(),
-            newText, 0, newText.length()); }
+అంతఃవరుస UnicodeString&
+UnicodeString::కనుగొను_And_Replace(int32_t ప్రారంభం,
+                              int32_t నిడివి_4,
+                              స్థిరరాశి UnicodeString& old_పాఠ్యం,
+                              స్థిరరాశి UnicodeString& new_పాఠ్యం) U_LIFETIME_BOUND
+{ తిరిగి కనుగొను_And_Replace(ప్రారంభం, నిడివి_4, old_పాఠ్యం, 0, old_పాఠ్యం.నిడివి(),
+            new_పాఠ్యం, 0, new_పాఠ్యం.నిడివి()); }
 
 // ============================
-// extract
+//వెలికితీయి
 // ============================
-inline void
-UnicodeString::doExtract(int32_t start,
-             int32_t _length,
-             UnicodeString& target) const
-{ target.replace(0, target.length(), *this, start, _length); }
+అంతఃవరుస శూన్య
+UnicodeString::do_వెలికితీయి(int32_t ప్రారంభం,
+             int32_t నిడివి_4,
+             UnicodeString& లక్ష్యం) స్థిరరాశి
+{ లక్ష్యం.replace(0, లక్ష్యం.నిడివి(), *this, ప్రారంభం, నిడివి_4); }
 
-inline void
-UnicodeString::extract(int32_t start,
-               int32_t _length,
-               Char16Ptr target,
-               int32_t targetStart) const
-{ doExtract(start, _length, target, targetStart); }
+అంతఃవరుస శూన్య
+UnicodeString::వెలికితీయి(int32_t ప్రారంభం,
+               int32_t నిడివి_4,
+               Char16Ptr లక్ష్యం,
+               int32_t లక్ష్యం_ప్రారంభం) స్థిరరాశి
+{ do_వెలికితీయి(ప్రారంభం, నిడివి_4, లక్ష్యం, లక్ష్యం_ప్రారంభం); }
 
-inline void
-UnicodeString::extract(int32_t start,
-               int32_t _length,
-               UnicodeString& target) const
-{ doExtract(start, _length, target); }
+అంతఃవరుస శూన్య
+UnicodeString::వెలికితీయి(int32_t ప్రారంభం,
+               int32_t నిడివి_4,
+               UnicodeString& లక్ష్యం) స్థిరరాశి
+{ do_వెలికితీయి(ప్రారంభం, నిడివి_4, లక్ష్యం); }
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-inline int32_t
-UnicodeString::extract(int32_t start,
-               int32_t _length,
-               char *dst,
-               const char *codepage) const
+అంతఃవరుస int32_t
+UnicodeString::వెలికితీయి(int32_t ప్రారంభం,
+               int32_t నిడివి_4,
+               అక్షరం *dst,
+               స్థిరరాశి అక్షరం *codepage) స్థిరరాశి
 
 {
   // This dstSize value will be checked explicitly
-  return extract(start, _length, dst, dst != nullptr ? 0xffffffff : 0, codepage);
+  తిరిగి వెలికితీయి(ప్రారంభం, నిడివి_4, dst, dst != nullptr ? 0xffffffff : 0, codepage);
 }
 
-#endif
+#అయితే_ముగింపు
 
-inline void
-UnicodeString::extractBetween(int32_t start,
-                  int32_t limit,
+అంతఃవరుస శూన్య
+UnicodeString::వెలికితీయి_Between(int32_t ప్రారంభం,
+                  int32_t హద్దు,
                   char16_t *dst,
-                  int32_t dstStart) const {
-  pinIndex(start);
-  pinIndex(limit);
-  doExtract(start, limit - start, dst, dstStart);
+                  int32_t dst_ప్రారంభం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  pin_సూచీ(హద్దు);
+  do_వెలికితీయి(ప్రారంభం, హద్దు - ప్రారంభం, dst, dst_ప్రారంభం);
 }
 
-inline UnicodeString
-UnicodeString::tempSubStringBetween(int32_t start, int32_t limit) const U_LIFETIME_BOUND {
-    return tempSubString(start, limit - start);
+అంతఃవరుస UnicodeString
+UnicodeString::తాత్కాలిక_Sub_String_Between(int32_t ప్రారంభం, int32_t హద్దు) స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి తాత్కాలిక_Sub_String(ప్రారంభం, హద్దు - ప్రారంభం);
 }
 
-inline char16_t
-UnicodeString::doCharAt(int32_t offset) const
+అంతఃవరుస char16_t
+UnicodeString::doCharAt(int32_t స్థానభ్రంశం) స్థిరరాశి
 {
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
-    return getArrayStart()[offset];
-  } else {
-    return kInvalidUChar;
+  ఒకవేళ (static_cast<uint32_t>(స్థానభ్రంశం) < static_cast<uint32_t>(నిడివి())) {
+    తిరిగి get_Array_ప్రారంభం()[స్థానభ్రంశం];
+  } లేకపోతే {
+    తిరిగి kInvalidUChar;
   }
 }
 
-inline char16_t
-UnicodeString::charAt(int32_t offset) const
-{ return doCharAt(offset); }
+అంతఃవరుస char16_t
+UnicodeString::charAt(int32_t స్థానభ్రంశం) స్థిరరాశి
+{ తిరిగి doCharAt(స్థానభ్రంశం); }
 
-inline char16_t
-UnicodeString::operator[] (int32_t offset) const
-{ return doCharAt(offset); }
+అంతఃవరుస char16_t
+UnicodeString::క్రియాకారకం[] (int32_t స్థానభ్రంశం) స్థిరరాశి
+{ తిరిగి doCharAt(స్థానభ్రంశం); }
 
-inline UBool
-UnicodeString::isEmpty() const {
+అంతఃవరుస UBool
+UnicodeString::is_ఖాళీలు() స్థిరరాశి {
   // Arithmetic or logical right shift does not matter: only testing for 0.
-  return (fUnion.fFields.fLengthAndFlags>>kLengthShift) == 0;
+  తిరిగి (fUnion.fFields.f_నిడివి_And_Flags>>k_నిడివి_జరుపు) == 0;
 }
 
 //========================================
 // Write implementation methods
 //========================================
-inline void
-UnicodeString::setZeroLength() {
-  fUnion.fFields.fLengthAndFlags &= kAllStorageFlags;
+అంతఃవరుస శూన్య
+UnicodeString::సమితి_Zero_నిడివి() {
+  fUnion.fFields.f_నిడివి_And_Flags &= kAllStorageFlags;
 }
 
-inline void
-UnicodeString::setShortLength(int32_t len) {
+అంతఃవరుస శూన్య
+UnicodeString::సమితి_Short_నిడివి(int32_t len) {
   // requires 0 <= len <= kMaxShortLength
-  fUnion.fFields.fLengthAndFlags =
-    static_cast<int16_t>((fUnion.fFields.fLengthAndFlags & kAllStorageFlags) | (len << kLengthShift));
+  fUnion.fFields.f_నిడివి_And_Flags =
+    static_cast<int16_t>((fUnion.fFields.f_నిడివి_And_Flags & kAllStorageFlags) | (len << k_నిడివి_జరుపు));
 }
 
-inline void
-UnicodeString::setLength(int32_t len) {
-  if(len <= kMaxShortLength) {
-    setShortLength(len);
-  } else {
-    fUnion.fFields.fLengthAndFlags |= kLengthIsLarge;
-    fUnion.fFields.fLength = len;
+అంతఃవరుస శూన్య
+UnicodeString::సమితి_నిడివి(int32_t len) {
+  ఒకవేళ(len <= k_Max_Short_నిడివి) {
+    సమితి_Short_నిడివి(len);
+  } లేకపోతే {
+    fUnion.fFields.f_నిడివి_And_Flags |= k_నిడివి_Is_Large;
+    fUnion.fFields.f_నిడివి = len;
   }
 }
 
-inline void
-UnicodeString::setToEmpty() {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+అంతఃవరుస శూన్య
+UnicodeString::సమితి_గమ్యం_ఖాళీలు() {
+  fUnion.fFields.f_నిడివి_And_Flags = kShortString;
 }
 
-inline void
-UnicodeString::setArray(char16_t *array, int32_t len, int32_t capacity) {
-  setLength(len);
+అంతఃవరుస శూన్య
+UnicodeString::సమితి_Array(char16_t *array, int32_t len, int32_t సామర్థ్యం) {
+  సమితి_నిడివి(len);
   fUnion.fFields.fArray = array;
-  fUnion.fFields.fCapacity = capacity;
+  fUnion.fFields.f_సామర్థ్యం = సామర్థ్యం;
 }
 
-inline UnicodeString&
-UnicodeString::operator=(char16_t ch) U_LIFETIME_BOUND
-{ return doReplace(0, length(), &ch, 0, 1); }
+అంతఃవరుస UnicodeString&
+UnicodeString::క్రియాకారకం=(char16_t ch) U_LIFETIME_BOUND
+{ తిరిగి doReplace(0, నిడివి(), &ch, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::operator=(UChar32 ch) U_LIFETIME_BOUND
-{ return replace(0, length(), ch); }
+అంతఃవరుస UnicodeString&
+UnicodeString::క్రియాకారకం=(UChar32 ch) U_LIFETIME_BOUND
+{ తిరిగి replace(0, నిడివి(), ch); }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText,
-                     int32_t srcStart,
-                     int32_t srcLength) U_LIFETIME_BOUND
+అంతఃవరుస UnicodeString&
+UnicodeString::సమితి_గమ్యం(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                     int32_t src_ప్రారంభం,
+                     int32_t src_నిడివి) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), srcText, srcStart, srcLength);
+  తిరిగి doReplace(0, నిడివి(), src_పాఠ్యం, src_ప్రారంభం, src_నిడివి);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText,
-                     int32_t srcStart) U_LIFETIME_BOUND
+అంతఃవరుస UnicodeString&
+UnicodeString::సమితి_గమ్యం(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                     int32_t src_ప్రారంభం) U_LIFETIME_BOUND
 {
   unBogus();
-  srcText.pinIndex(srcStart);
-  return doReplace(0, length(), srcText, srcStart, srcText.length() - srcStart);
+  src_పాఠ్యం.pin_సూచీ(src_ప్రారంభం);
+  తిరిగి doReplace(0, నిడివి(), src_పాఠ్యం, src_ప్రారంభం, src_పాఠ్యం.నిడివి() - src_ప్రారంభం);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText) U_LIFETIME_BOUND
+అంతఃవరుస UnicodeString&
+UnicodeString::సమితి_గమ్యం(స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND
 {
-  return copyFrom(srcText);
+  తిరిగి copyFrom(src_పాఠ్యం);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const char16_t* srcChars,
-                     int32_t srcLength) U_LIFETIME_BOUND
-{
-  unBogus();
-  return doReplace(0, length(), srcChars, 0, srcLength);
-}
-
-inline UnicodeString&
-UnicodeString::setTo(char16_t srcChar) U_LIFETIME_BOUND
+అంతఃవరుస UnicodeString&
+UnicodeString::సమితి_గమ్యం(స్థిరరాశి char16_t* srcChars,
+                     int32_t src_నిడివి) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), &srcChar, 0, 1);
+  తిరిగి doReplace(0, నిడివి(), srcChars, 0, src_నిడివి);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(UChar32 srcChar) U_LIFETIME_BOUND
+అంతఃవరుస UnicodeString&
+UnicodeString::సమితి_గమ్యం(char16_t srcChar) U_LIFETIME_BOUND
 {
   unBogus();
-  return replace(0, length(), srcChar);
+  తిరిగి doReplace(0, నిడివి(), &srcChar, 0, 1);
 }
 
-inline UnicodeString&
-UnicodeString::append(const UnicodeString& srcText,
-                      int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcText, srcStart, srcLength); }
+అంతఃవరుస UnicodeString&
+UnicodeString::సమితి_గమ్యం(UChar32 srcChar) U_LIFETIME_BOUND
+{
+  unBogus();
+  తిరిగి replace(0, నిడివి(), srcChar);
+}
 
-inline UnicodeString&
-UnicodeString::append(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+అంతఃవరుస UnicodeString&
+UnicodeString::append(స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                      int32_t src_ప్రారంభం,
+                      int32_t src_నిడివి) U_LIFETIME_BOUND
+{ తిరిగి doAppend(src_పాఠ్యం, src_ప్రారంభం, src_నిడివి); }
 
-inline UnicodeString&
-UnicodeString::append(const char16_t* srcChars,
-                      int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, srcStart, srcLength); }
+అంతఃవరుస UnicodeString&
+UnicodeString::append(స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND
+{ తిరిగి doAppend(src_పాఠ్యం, 0, src_పాఠ్యం.నిడివి()); }
 
-inline UnicodeString&
+అంతఃవరుస UnicodeString&
+UnicodeString::append(స్థిరరాశి char16_t* srcChars,
+                      int32_t src_ప్రారంభం,
+                      int32_t src_నిడివి) U_LIFETIME_BOUND
+{ తిరిగి doAppend(srcChars, src_ప్రారంభం, src_నిడివి); }
+
+అంతఃవరుస UnicodeString&
 UnicodeString::append(ConstChar16Ptr srcChars,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, 0, srcLength); }
+                      int32_t src_నిడివి) U_LIFETIME_BOUND
+{ తిరిగి doAppend(srcChars, 0, src_నిడివి); }
 
-inline UnicodeString&
+అంతఃవరుస UnicodeString&
 UnicodeString::append(char16_t srcChar) U_LIFETIME_BOUND
-{ return doAppend(&srcChar, 0, 1); }
+{ తిరిగి doAppend(&srcChar, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::operator+=(char16_t ch) U_LIFETIME_BOUND
-{ return doAppend(&ch, 0, 1); }
+అంతఃవరుస UnicodeString&
+UnicodeString::క్రియాకారకం+=(char16_t ch) U_LIFETIME_BOUND
+{ తిరిగి doAppend(&ch, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::operator+=(UChar32 ch) U_LIFETIME_BOUND {
-  return append(ch);
+అంతఃవరుస UnicodeString&
+UnicodeString::క్రియాకారకం+=(UChar32 ch) U_LIFETIME_BOUND {
+  తిరిగి append(ch);
 }
 
-inline UnicodeString&
-UnicodeString::operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+అంతఃవరుస UnicodeString&
+UnicodeString::క్రియాకారకం+=(స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND
+{ తిరిగి doAppend(src_పాఠ్యం, 0, src_పాఠ్యం.నిడివి()); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const UnicodeString& srcText,
-                      int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, srcStart, srcLength); }
+అంతఃవరుస UnicodeString&
+UnicodeString::చొప్పించు(int32_t ప్రారంభం,
+                      స్థిరరాశి UnicodeString& src_పాఠ్యం,
+                      int32_t src_ప్రారంభం,
+                      int32_t src_నిడివి) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, 0, src_పాఠ్యం, src_ప్రారంభం, src_నిడివి); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, 0, srcText.length()); }
+అంతఃవరుస UnicodeString&
+UnicodeString::చొప్పించు(int32_t ప్రారంభం,
+                      స్థిరరాశి UnicodeString& src_పాఠ్యం) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, 0, src_పాఠ్యం, 0, src_పాఠ్యం.నిడివి()); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const char16_t* srcChars,
-                      int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, srcStart, srcLength); }
+అంతఃవరుస UnicodeString&
+UnicodeString::చొప్పించు(int32_t ప్రారంభం,
+                      స్థిరరాశి char16_t* srcChars,
+                      int32_t src_ప్రారంభం,
+                      int32_t src_నిడివి) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, 0, srcChars, src_ప్రారంభం, src_నిడివి); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+అంతఃవరుస UnicodeString&
+UnicodeString::చొప్పించు(int32_t ప్రారంభం,
                       ConstChar16Ptr srcChars,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, 0, srcLength); }
+                      int32_t src_నిడివి) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, 0, srcChars, 0, src_నిడివి); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+అంతఃవరుస UnicodeString&
+UnicodeString::చొప్పించు(int32_t ప్రారంభం,
                       char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, 0, &srcChar, 0, 1); }
+{ తిరిగి doReplace(ప్రారంభం, 0, &srcChar, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+అంతఃవరుస UnicodeString&
+UnicodeString::చొప్పించు(int32_t ప్రారంభం,
                       UChar32 srcChar) U_LIFETIME_BOUND
-{ return replace(start, 0, srcChar); }
+{ తిరిగి replace(ప్రారంభం, 0, srcChar); }
 
 
-inline UnicodeString&
+అంతఃవరుస UnicodeString&
 UnicodeString::remove() U_LIFETIME_BOUND
 {
   // remove() of a bogus string makes the string empty and non-bogus
-  if(isBogus()) {
-    setToEmpty();
-  } else {
-    setZeroLength();
+  ఒకవేళ(isBogus()) {
+    సమితి_గమ్యం_ఖాళీలు();
+  } లేకపోతే {
+    సమితి_Zero_నిడివి();
   }
-  return *this;
+  తిరిగి *this;
 }
 
-inline UnicodeString&
-UnicodeString::remove(int32_t start,
-                      int32_t _length) U_LIFETIME_BOUND
+అంతఃవరుస UnicodeString&
+UnicodeString::remove(int32_t ప్రారంభం,
+                      int32_t నిడివి_4) U_LIFETIME_BOUND
 {
-    if(start <= 0 && _length == INT32_MAX) {
+    ఒకవేళ(ప్రారంభం <= 0 && నిడివి_4 == INT32_MAX) {
         // remove(guaranteed everything) of a bogus string makes the string empty and non-bogus
-        return remove();
+        తిరిగి remove();
     }
-    return doReplace(start, _length, nullptr, 0, 0);
+    తిరిగి doReplace(ప్రారంభం, నిడివి_4, nullptr, 0, 0);
 }
 
-inline UnicodeString&
-UnicodeString::removeBetween(int32_t start,
-                             int32_t limit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, nullptr, 0, 0); }
+అంతఃవరుస UnicodeString&
+UnicodeString::removeBetween(int32_t ప్రారంభం,
+                             int32_t హద్దు) U_LIFETIME_BOUND
+{ తిరిగి doReplace(ప్రారంభం, హద్దు - ప్రారంభం, nullptr, 0, 0); }
 
-inline UnicodeString&
-UnicodeString::retainBetween(int32_t start, int32_t limit) U_LIFETIME_BOUND {
-  truncate(limit);
-  return doReplace(0, start, nullptr, 0, 0);
+అంతఃవరుస UnicodeString&
+UnicodeString::retainBetween(int32_t ప్రారంభం, int32_t హద్దు) U_LIFETIME_BOUND {
+  truncate(హద్దు);
+  తిరిగి doReplace(0, ప్రారంభం, nullptr, 0, 0);
 }
 
-inline UBool
-UnicodeString::truncate(int32_t targetLength)
+అంతఃవరుస UBool
+UnicodeString::truncate(int32_t లక్ష్యం_నిడివి)
 {
-  if(isBogus() && targetLength == 0) {
+  ఒకవేళ(isBogus() && లక్ష్యం_నిడివి == 0) {
     // truncate(0) of a bogus string makes the string empty and non-bogus
     unBogus();
-    return false;
-  } else if (static_cast<uint32_t>(targetLength) < static_cast<uint32_t>(length())) {
-    setLength(targetLength);
-    return true;
-  } else {
-    return false;
+    తిరిగి false;
+  } లేకపోతే ఒకవేళ (static_cast<uint32_t>(లక్ష్యం_నిడివి) < static_cast<uint32_t>(నిడివి())) {
+    సమితి_నిడివి(లక్ష్యం_నిడివి);
+    తిరిగి true;
+  } లేకపోతే {
+    తిరిగి false;
   }
 }
 
-inline UnicodeString&
-UnicodeString::reverse() U_LIFETIME_BOUND
-{ return doReverse(0, length()); }
+అంతఃవరుస UnicodeString&
+UnicodeString::తిరగేయి() U_LIFETIME_BOUND
+{ తిరిగి do_తిరగేయి(0, నిడివి()); }
 
-inline UnicodeString&
-UnicodeString::reverse(int32_t start,
-                       int32_t _length) U_LIFETIME_BOUND
-{ return doReverse(start, _length); }
+అంతఃవరుస UnicodeString&
+UnicodeString::తిరగేయి(int32_t ప్రారంభం,
+                       int32_t నిడివి_4) U_LIFETIME_BOUND
+{ తిరిగి do_తిరగేయి(ప్రారంభం, నిడివి_4); }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#అయితే_ముగింపు

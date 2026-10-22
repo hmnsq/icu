@@ -18,40 +18,40 @@
 *   Swap collation binaries.
 */
 
-#include "unicode/udata.h" /* UDataInfo */
-#include "utrie.h"
-#include "utrie2.h"
-#include "udataswp.h"
-#include "cmemory.h"
-#include "ucol_data.h"
-#include "ucol_swp.h"
+#అన్తర్భావ "unicode/udata.h" /* UDataInfo */
+#అన్తర్భావ "utrie.h"
+#అన్తర్భావ "utrie2.h"
+#అన్తర్భావ "udataswp.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ucol_data.h"
+#అన్తర్భావ "ucol_swp.h"
 
 /* swapping ----------------------------------------------------------------- */
 
-#if !UCONFIG_NO_COLLATION
+#ఒకవేళ !UCONFIG_NO_COLLATION
 
 U_CAPI UBool U_EXPORT2
-ucol_looksLikeCollationBinary(const UDataSwapper *ds,
-                              const void *inData, int32_t length) {
-    if(ds==nullptr || inData==nullptr || length<-1) {
-        return false;
+ucol_looks_Like_Collation_ద్విమాన(స్థిరరాశి UDataSwapper *ds,
+                              స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length) {
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<-1) {
+        తిరిగి అబద్ధం;
     }
 
     // First check for format version 4+ which has a standard data header.
-    UErrorCode errorCode=U_ZERO_ERROR;
-    (void)udata_swapDataHeader(ds, inData, -1, nullptr, &errorCode);
-    if(U_SUCCESS(errorCode)) {
-        const UDataInfo &info=*(const UDataInfo *)((const char *)inData+4);
-        if(info.dataFormat[0]==0x55 &&   // dataFormat="UCol"
-                info.dataFormat[1]==0x43 &&
-                info.dataFormat[2]==0x6f &&
-                info.dataFormat[3]==0x6c) {
-            return true;
+    UError_సంకేతం error_సంకేతం=U_ZERO_ERROR;
+    (శూన్య)udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, -1, శూన్యసూచిక, &error_సంకేతం);
+    ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+        స్థిరరాశి UDataInfo &info=*(స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+4);
+        ఒకవేళ(info.దత్తాంశం_Format[0]==0x55 &&   // dataFormat="UCol"
+                info.దత్తాంశం_Format[1]==0x43 &&
+                info.దత్తాంశం_Format[2]==0x6f &&
+                info.దత్తాంశం_Format[3]==0x6c) {
+            తిరిగి నిజం;
         }
     }
 
     // Else check for format version 3.
-    const UCATableHeader *inHeader=(const UCATableHeader *)inData;
+    స్థిరరాశి UCATable_శీర్షిక *లోపల_శీర్షిక=(స్థిరరాశి UCATable_శీర్షిక *)లోపల_దత్తాంశం;
 
     /*
      * The collation binary must contain at least the UCATableHeader,
@@ -59,60 +59,60 @@ ucol_looksLikeCollationBinary(const UDataSwapper *ds,
      * sizeof(UCATableHeader)==42*4 in ICU 2.8
      * check the length against the header size before reading the size field
      */
-    UCATableHeader header;
-    uprv_memset(&header, 0, sizeof(header));
-    if(length<0) {
-        header.size=udata_readInt32(ds, inHeader->size);
-    } else if((length<(42*4) || length<(header.size=udata_readInt32(ds, inHeader->size)))) {
-        return false;
+    UCATable_శీర్షిక శీర్షిక;
+    uprv_memset(&శీర్షిక, 0, పరిమాణం(శీర్షిక));
+    ఒకవేళ(length<0) {
+        శీర్షిక.size=udata_readInt32(ds, లోపల_శీర్షిక->size);
+    } లేకపోతే ఒకవేళ((length<(42*4) || length<(శీర్షిక.size=udata_readInt32(ds, లోపల_శీర్షిక->size)))) {
+        తిరిగి అబద్ధం;
     }
 
-    header.magic=ds->readUInt32(inHeader->magic);
-    if(!(
-        header.magic==UCOL_HEADER_MAGIC &&
-        inHeader->formatVersion[0]==3 /*&&
+    శీర్షిక.magic=ds->readUInt32(లోపల_శీర్షిక->magic);
+    ఒకవేళ(!(
+        శీర్షిక.magic==UCOL_శీర్షిక_MAGIC &&
+        లోపల_శీర్షిక->format_సంస్కరణ[0]==3 /*&&
         inHeader->formatVersion[1]>=0*/
     )) {
-        return false;
+        తిరిగి అబద్ధం;
     }
 
-    if(inHeader->isBigEndian!=ds->inIsBigEndian || inHeader->charSetFamily!=ds->inCharset) {
-        return false;
+    ఒకవేళ(లోపల_శీర్షిక->isBigEndian!=ds->లోపల_Is_Big_Endian || లోపల_శీర్షిక->char_సమితి_Family!=ds->లోపల_Charset) {
+        తిరిగి అబద్ధం;
     }
 
-    return true;
+    తిరిగి నిజం;
 }
 
-namespace {
+నామాకాశ {
 
 /* swap a header-less collation formatVersion=3 binary, inside a resource bundle or ucadata.icu */
 int32_t
-swapFormatVersion3(const UDataSwapper *ds,
-                   const void *inData, int32_t length, void *outData,
-                   UErrorCode *pErrorCode) {
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+మార్పిడి_Format_Version3(స్థిరరాశి UDataSwapper *ds,
+                   స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                   UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి uint8_t *లోపల_బైట్లు;
+    uint8_t *బహిర్గతం_బైట్లు;
 
-    const UCATableHeader *inHeader;
-    UCATableHeader *outHeader;
-    UCATableHeader header;
+    స్థిరరాశి UCATable_శీర్షిక *లోపల_శీర్షిక;
+    UCATable_శీర్షిక *బహిర్గతం_శీర్షిక;
+    UCATable_శీర్షిక శీర్షిక;
 
     uint32_t count;
 
     /* argument checking in case we were not called from ucol_swap() */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<-1 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<-1 || (length>0 && బహిర్గతం_దత్తాంశం==శూన్యసూచిక)) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    inBytes = static_cast<const uint8_t*>(inData);
-    outBytes = static_cast<uint8_t*>(outData);
+    లోపల_బైట్లు = static_cast<స్థిరరాశి uint8_t*>(లోపల_దత్తాంశం);
+    బహిర్గతం_బైట్లు = static_cast<uint8_t*>(బహిర్గతం_దత్తాంశం);
 
-    inHeader = static_cast<const UCATableHeader*>(inData);
-    outHeader = static_cast<UCATableHeader*>(outData);
+    లోపల_శీర్షిక = static_cast<స్థిరరాశి UCATable_శీర్షిక*>(లోపల_దత్తాంశం);
+    బహిర్గతం_శీర్షిక = static_cast<UCATable_శీర్షిక*>(బహిర్గతం_దత్తాంశం);
 
     /*
      * The collation binary must contain at least the UCATableHeader,
@@ -120,151 +120,151 @@ swapFormatVersion3(const UDataSwapper *ds,
      * sizeof(UCATableHeader)==42*4 in ICU 2.8
      * check the length against the header size before reading the size field
      */
-    uprv_memset(&header, 0, sizeof(header));
-    if(length<0) {
-        header.size=udata_readInt32(ds, inHeader->size);
-    } else if((length<(42*4) || length<(header.size=udata_readInt32(ds, inHeader->size)))) {
+    uprv_memset(&శీర్షిక, 0, పరిమాణం(శీర్షిక));
+    ఒకవేళ(length<0) {
+        శీర్షిక.size=udata_readInt32(ds, లోపల_శీర్షిక->size);
+    } లేకపోతే ఒకవేళ((length<(42*4) || length<(శీర్షిక.size=udata_readInt32(ds, లోపల_శీర్షిక->size)))) {
         udata_printError(ds, "ucol_swap(formatVersion=3): too few bytes (%d after header) for collation data\n",
                          length);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
 
-    header.magic=ds->readUInt32(inHeader->magic);
-    if(!(
-        header.magic==UCOL_HEADER_MAGIC &&
-        inHeader->formatVersion[0]==3 /*&&
+    శీర్షిక.magic=ds->readUInt32(లోపల_శీర్షిక->magic);
+    ఒకవేళ(!(
+        శీర్షిక.magic==UCOL_శీర్షిక_MAGIC &&
+        లోపల_శీర్షిక->format_సంస్కరణ[0]==3 /*&&
         inHeader->formatVersion[1]>=0*/
     )) {
         udata_printError(ds, "ucol_swap(formatVersion=3): magic 0x%08x or format version %02x.%02x is not a collation binary\n",
-                         header.magic,
-                         inHeader->formatVersion[0], inHeader->formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         శీర్షిక.magic,
+                         లోపల_శీర్షిక->format_సంస్కరణ[0], లోపల_శీర్షిక->format_సంస్కరణ[1]);
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    if(inHeader->isBigEndian!=ds->inIsBigEndian || inHeader->charSetFamily!=ds->inCharset) {
+    ఒకవేళ(లోపల_శీర్షిక->isBigEndian!=ds->లోపల_Is_Big_Endian || లోపల_శీర్షిక->char_సమితి_Family!=ds->లోపల_Charset) {
         udata_printError(ds, "ucol_swap(formatVersion=3): endianness %d or charset %d does not match the swapper\n",
-                         inHeader->isBigEndian, inHeader->charSetFamily);
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+                         లోపల_శీర్షిక->isBigEndian, లోపల_శీర్షిక->char_సమితి_Family);
+        *p_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        తిరిగి 0;
     }
 
-    if(length>=0) {
+    ఒకవేళ(length>=0) {
         /* copy everything, takes care of data that needs no swapping */
-        if(inBytes!=outBytes) {
-            uprv_memcpy(outBytes, inBytes, header.size);
+        ఒకవేళ(లోపల_బైట్లు!=బహిర్గతం_బైట్లు) {
+            uprv_memcpy(బహిర్గతం_బైట్లు, లోపల_బైట్లు, శీర్షిక.size);
         }
 
         /* swap the necessary pieces in the order of their occurrence in the data */
 
         /* read more of the UCATableHeader (the size field was read above) */
-        header.options=                 ds->readUInt32(inHeader->options);
-        header.UCAConsts=               ds->readUInt32(inHeader->UCAConsts);
-        header.contractionUCACombos=    ds->readUInt32(inHeader->contractionUCACombos);
-        header.mappingPosition=         ds->readUInt32(inHeader->mappingPosition);
-        header.expansion=               ds->readUInt32(inHeader->expansion);
-        header.contractionIndex=        ds->readUInt32(inHeader->contractionIndex);
-        header.contractionCEs=          ds->readUInt32(inHeader->contractionCEs);
-        header.contractionSize=         ds->readUInt32(inHeader->contractionSize);
-        header.endExpansionCE=          ds->readUInt32(inHeader->endExpansionCE);
-        header.expansionCESize=         ds->readUInt32(inHeader->expansionCESize);
-        header.endExpansionCECount=     udata_readInt32(ds, inHeader->endExpansionCECount);
-        header.contractionUCACombosSize=udata_readInt32(ds, inHeader->contractionUCACombosSize);
-        header.scriptToLeadByte=        ds->readUInt32(inHeader->scriptToLeadByte);
-        header.leadByteToScript=        ds->readUInt32(inHeader->leadByteToScript);
+        శీర్షిక.options=                 ds->readUInt32(లోపల_శీర్షిక->options);
+        శీర్షిక.UCAConsts=               ds->readUInt32(లోపల_శీర్షిక->UCAConsts);
+        శీర్షిక.contractionUCACombos=    ds->readUInt32(లోపల_శీర్షిక->contractionUCACombos);
+        శీర్షిక.mappingPosition=         ds->readUInt32(లోపల_శీర్షిక->mappingPosition);
+        శీర్షిక.expansion=               ds->readUInt32(లోపల_శీర్షిక->expansion);
+        శీర్షిక.contraction_సూచీ=        ds->readUInt32(లోపల_శీర్షిక->contraction_సూచీ);
+        శీర్షిక.contractionCEs=          ds->readUInt32(లోపల_శీర్షిక->contractionCEs);
+        శీర్షిక.contraction_కొలత=         ds->readUInt32(లోపల_శీర్షిక->contraction_కొలత);
+        శీర్షిక.చివర_Expansion_CE=          ds->readUInt32(లోపల_శీర్షిక->చివర_Expansion_CE);
+        శీర్షిక.expansionCESize=         ds->readUInt32(లోపల_శీర్షిక->expansionCESize);
+        శీర్షిక.చివర_Expansion_CECount=     udata_readInt32(ds, లోపల_శీర్షిక->చివర_Expansion_CECount);
+        శీర్షిక.contraction_UCACombos_కొలత=udata_readInt32(ds, లోపల_శీర్షిక->contraction_UCACombos_కొలత);
+        శీర్షిక.script_గమ్యం_Lead_Byte=        ds->readUInt32(లోపల_శీర్షిక->script_గమ్యం_Lead_Byte);
+        శీర్షిక.lead_Byte_గమ్యం_Script=        ds->readUInt32(లోపల_శీర్షిక->lead_Byte_గమ్యం_Script);
         
         /* swap the 32-bit integers in the header */
-        ds->swapArray32(ds, inHeader, static_cast<int32_t>(reinterpret_cast<const char*>(&inHeader->jamoSpecial) - reinterpret_cast<const char*>(inHeader)),
-                           outHeader, pErrorCode);
-        ds->swapArray32(ds, &(inHeader->scriptToLeadByte), sizeof(header.scriptToLeadByte) + sizeof(header.leadByteToScript),
-                           &(outHeader->scriptToLeadByte), pErrorCode);
+        ds->మార్పిడి_Array32(ds, లోపల_శీర్షిక, static_cast<int32_t>(reinterpret_cast<స్థిరరాశి అక్షరం*>(&లోపల_శీర్షిక->jamoSpecial) - reinterpret_cast<స్థిరరాశి అక్షరం*>(లోపల_శీర్షిక)),
+                           బహిర్గతం_శీర్షిక, p_Error_సంకేతం);
+        ds->మార్పిడి_Array32(ds, &(లోపల_శీర్షిక->script_గమ్యం_Lead_Byte), పరిమాణం(శీర్షిక.script_గమ్యం_Lead_Byte) + పరిమాణం(శీర్షిక.lead_Byte_గమ్యం_Script),
+                           &(బహిర్గతం_శీర్షిక->script_గమ్యం_Lead_Byte), p_Error_సంకేతం);
         /* set the output platform properties */
-        outHeader->isBigEndian=ds->outIsBigEndian;
-        outHeader->charSetFamily=ds->outCharset;
+        బహిర్గతం_శీర్షిక->isBigEndian=ds->బహిర్గతం_Is_Big_Endian;
+        బహిర్గతం_శీర్షిక->char_సమితి_Family=ds->బహిర్గతం_Charset;
 
         /* swap the options */
-        if(header.options!=0) {
-            ds->swapArray32(ds, inBytes+header.options, header.expansion-header.options,
-                               outBytes+header.options, pErrorCode);
+        ఒకవేళ(శీర్షిక.options!=0) {
+            ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+శీర్షిక.options, శీర్షిక.expansion-శీర్షిక.options,
+                               బహిర్గతం_బైట్లు+శీర్షిక.options, p_Error_సంకేతం);
         }
 
         /* swap the expansions */
-        if(header.mappingPosition!=0 && header.expansion!=0) {
-            if(header.contractionIndex!=0) {
+        ఒకవేళ(శీర్షిక.mappingPosition!=0 && శీర్షిక.expansion!=0) {
+            ఒకవేళ(శీర్షిక.contraction_సూచీ!=0) {
                 /* expansions bounded by contractions */
-                count=header.contractionIndex-header.expansion;
-            } else {
+                count=శీర్షిక.contraction_సూచీ-శీర్షిక.expansion;
+            } లేకపోతే {
                 /* no contractions: expansions bounded by the main trie */
-                count=header.mappingPosition-header.expansion;
+                count=శీర్షిక.mappingPosition-శీర్షిక.expansion;
             }
-            ds->swapArray32(ds, inBytes + header.expansion, static_cast<int32_t>(count),
-                               outBytes+header.expansion, pErrorCode);
+            ds->మార్పిడి_Array32(ds, లోపల_బైట్లు + శీర్షిక.expansion, static_cast<int32_t>(count),
+                               బహిర్గతం_బైట్లు+శీర్షిక.expansion, p_Error_సంకేతం);
         }
 
         /* swap the contractions */
-        if(header.contractionSize!=0) {
+        ఒకవేళ(శీర్షిక.contraction_కొలత!=0) {
             /* contractionIndex: char16_t[] */
-            ds->swapArray16(ds, inBytes+header.contractionIndex, header.contractionSize*2,
-                               outBytes+header.contractionIndex, pErrorCode);
+            ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+శీర్షిక.contraction_సూచీ, శీర్షిక.contraction_కొలత*2,
+                               బహిర్గతం_బైట్లు+శీర్షిక.contraction_సూచీ, p_Error_సంకేతం);
 
             /* contractionCEs: CEs[] */
-            ds->swapArray32(ds, inBytes+header.contractionCEs, header.contractionSize*4,
-                               outBytes+header.contractionCEs, pErrorCode);
+            ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+శీర్షిక.contractionCEs, శీర్షిక.contraction_కొలత*4,
+                               బహిర్గతం_బైట్లు+శీర్షిక.contractionCEs, p_Error_సంకేతం);
         }
 
         /* swap the main trie */
-        if(header.mappingPosition!=0) {
-            count=header.endExpansionCE-header.mappingPosition;
-            utrie_swap(ds, inBytes + header.mappingPosition, static_cast<int32_t>(count),
-                          outBytes+header.mappingPosition, pErrorCode);
+        ఒకవేళ(శీర్షిక.mappingPosition!=0) {
+            count=శీర్షిక.చివర_Expansion_CE-శీర్షిక.mappingPosition;
+            utrie_మార్పిడి(ds, లోపల_బైట్లు + శీర్షిక.mappingPosition, static_cast<int32_t>(count),
+                          బహిర్గతం_బైట్లు+శీర్షిక.mappingPosition, p_Error_సంకేతం);
         }
 
         /* swap the max expansion table */
-        if(header.endExpansionCECount!=0) {
-            ds->swapArray32(ds, inBytes+header.endExpansionCE, header.endExpansionCECount*4,
-                               outBytes+header.endExpansionCE, pErrorCode);
+        ఒకవేళ(శీర్షిక.చివర_Expansion_CECount!=0) {
+            ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+శీర్షిక.చివర_Expansion_CE, శీర్షిక.చివర_Expansion_CECount*4,
+                               బహిర్గతం_బైట్లు+శీర్షిక.చివర_Expansion_CE, p_Error_సంకేతం);
         }
 
         /* expansionCESize, unsafeCP, contrEndCP: uint8_t[], no need to swap */
 
         /* swap UCA constants */
-        if(header.UCAConsts!=0) {
+        ఒకవేళ(శీర్షిక.UCAConsts!=0) {
             /*
              * if UCAConsts!=0 then contractionUCACombos because we are swapping
              * the UCA data file, and we know that the UCA contains contractions
              */
-            ds->swapArray32(ds, inBytes+header.UCAConsts, header.contractionUCACombos-header.UCAConsts,
-                               outBytes+header.UCAConsts, pErrorCode);
+            ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+శీర్షిక.UCAConsts, శీర్షిక.contractionUCACombos-శీర్షిక.UCAConsts,
+                               బహిర్గతం_బైట్లు+శీర్షిక.UCAConsts, p_Error_సంకేతం);
         }
 
         /* swap UCA contractions */
-        if(header.contractionUCACombosSize!=0) {
-            count=header.contractionUCACombosSize*inHeader->contractionUCACombosWidth*U_SIZEOF_UCHAR;
-            ds->swapArray16(ds, inBytes + header.contractionUCACombos, static_cast<int32_t>(count),
-                               outBytes+header.contractionUCACombos, pErrorCode);
+        ఒకవేళ(శీర్షిక.contraction_UCACombos_కొలత!=0) {
+            count=శీర్షిక.contraction_UCACombos_కొలత*లోపల_శీర్షిక->contraction_UCACombos_వెడల్పు*U_SIZEOF_UCHAR;
+            ds->మార్పిడి_Array16(ds, లోపల_బైట్లు + శీర్షిక.contractionUCACombos, static_cast<int32_t>(count),
+                               బహిర్గతం_బైట్లు+శీర్షిక.contractionUCACombos, p_Error_సంకేతం);
         }
         
         /* swap the script to lead bytes */
-        if(header.scriptToLeadByte!=0) {
-            int indexCount = ds->readUInt16(*((uint16_t*)(inBytes+header.scriptToLeadByte))); // each entry = 2 * uint16
-            int dataCount = ds->readUInt16(*((uint16_t*)(inBytes+header.scriptToLeadByte + 2))); // each entry = uint16
-            ds->swapArray16(ds, inBytes+header.scriptToLeadByte, 
-                                4 + (4 * indexCount) + (2 * dataCount),
-                                outBytes+header.scriptToLeadByte, pErrorCode);
+        ఒకవేళ(శీర్షిక.script_గమ్యం_Lead_Byte!=0) {
+            పూర్ణాంకం సూచీ_లెక్క = ds->readUInt16(*((uint16_t*)(లోపల_బైట్లు+శీర్షిక.script_గమ్యం_Lead_Byte))); // each entry = 2 * uint16
+            పూర్ణాంకం దత్తాంశం_లెక్క = ds->readUInt16(*((uint16_t*)(లోపల_బైట్లు+శీర్షిక.script_గమ్యం_Lead_Byte + 2))); // each entry = uint16
+            ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+శీర్షిక.script_గమ్యం_Lead_Byte, 
+                                4 + (4 * సూచీ_లెక్క) + (2 * దత్తాంశం_లెక్క),
+                                బహిర్గతం_బైట్లు+శీర్షిక.script_గమ్యం_Lead_Byte, p_Error_సంకేతం);
         }
         
         /* swap the lead byte to scripts */
-        if(header.leadByteToScript!=0) {
-            int indexCount = ds->readUInt16(*((uint16_t*)(inBytes+header.leadByteToScript))); // each entry = uint16
-            int dataCount = ds->readUInt16(*((uint16_t*)(inBytes+header.leadByteToScript + 2))); // each entry = uint16
-            ds->swapArray16(ds, inBytes+header.leadByteToScript, 
-                                4 + (2 * indexCount) + (2 * dataCount),
-                                outBytes+header.leadByteToScript, pErrorCode);
+        ఒకవేళ(శీర్షిక.lead_Byte_గమ్యం_Script!=0) {
+            పూర్ణాంకం సూచీ_లెక్క = ds->readUInt16(*((uint16_t*)(లోపల_బైట్లు+శీర్షిక.lead_Byte_గమ్యం_Script))); // each entry = uint16
+            పూర్ణాంకం దత్తాంశం_లెక్క = ds->readUInt16(*((uint16_t*)(లోపల_బైట్లు+శీర్షిక.lead_Byte_గమ్యం_Script + 2))); // each entry = uint16
+            ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+శీర్షిక.lead_Byte_గమ్యం_Script, 
+                                4 + (2 * సూచీ_లెక్క) + (2 * దత్తాంశం_లెక్క),
+                                బహిర్గతం_బైట్లు+శీర్షిక.lead_Byte_గమ్యం_Script, p_Error_సంకేతం);
         }
     }
 
-    return header.size;
+    తిరిగి శీర్షిక.size;
 }
 
 // swap formatVersion 4 or 5 ----------------------------------------------- ***
@@ -273,297 +273,297 @@ swapFormatVersion3(const UDataSwapper *ds,
 // for an awkward relocation of the i18n collationdatareader.h file into the common library.
 // Keep them in sync!
 
-enum {
-    IX_INDEXES_LENGTH,  // 0
+గణన {
+    IX_INDEXES_నిడివి,  // 0
     IX_OPTIONS,
     IX_RESERVED2,
     IX_RESERVED3,
 
-    IX_JAMO_CE32S_START,  // 4
-    IX_REORDER_CODES_OFFSET,
-    IX_REORDER_TABLE_OFFSET,
-    IX_TRIE_OFFSET,
+    IX_JAMO_CE32_S_ప్రారంభం,  // 4
+    IX_REORDER_CODES_స్థానభ్రంశం,
+    IX_REORDER_పట్టిక_స్థానభ్రంశం,
+    IX_TRIE_స్థానభ్రంశం,
 
-    IX_RESERVED8_OFFSET,  // 8
-    IX_CES_OFFSET,
-    IX_RESERVED10_OFFSET,
-    IX_CE32S_OFFSET,
+    IX_RESERVED8_స్థానభ్రంశం,  // 8
+    IX_CES_స్థానభ్రంశం,
+    IX_RESERVED10_స్థానభ్రంశం,
+    IX_CE32_S_స్థానభ్రంశం,
 
-    IX_ROOT_ELEMENTS_OFFSET,  // 12
-    IX_CONTEXTS_OFFSET,
-    IX_UNSAFE_BWD_OFFSET,
-    IX_FAST_LATIN_TABLE_OFFSET,
+    IX_మూలం_ELEMENTS_స్థానభ్రంశం,  // 12
+    IX_CONTEXTS_స్థానభ్రంశం,
+    IX_UNSAFE_BWD_స్థానభ్రంశం,
+    IX_FAST_LATIN_పట్టిక_స్థానభ్రంశం,
 
-    IX_SCRIPTS_OFFSET,  // 16
-    IX_COMPRESSIBLE_BYTES_OFFSET,
-    IX_RESERVED18_OFFSET,
-    IX_TOTAL_SIZE
+    IX_SCRIPTS_స్థానభ్రంశం,  // 16
+    IX_COMPRESSIBLE_బైట్లు_స్థానభ్రంశం,
+    IX_RESERVED18_స్థానభ్రంశం,
+    IX_మొత్తం_కొలత
 };
 
 int32_t
-swapFormatVersion4(const UDataSwapper *ds,
-                   const void *inData, int32_t length, void *outData,
-                   UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return 0; }
+మార్పిడి_Format_Version4(స్థిరరాశి UDataSwapper *ds,
+                   స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                   UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) { తిరిగి 0; }
 
-    const uint8_t* inBytes = static_cast<const uint8_t*>(inData);
-    uint8_t* outBytes = static_cast<uint8_t*>(outData);
+    స్థిరరాశి uint8_t* లోపల_బైట్లు = static_cast<స్థిరరాశి uint8_t*>(లోపల_దత్తాంశం);
+    uint8_t* బహిర్గతం_బైట్లు = static_cast<uint8_t*>(బహిర్గతం_దత్తాంశం);
 
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
-    int32_t indexes[IX_TOTAL_SIZE+1];
+    స్థిరరాశి int32_t* లోపల_Indexes = reinterpret_cast<స్థిరరాశి int32_t*>(లోపల_బైట్లు);
+    int32_t indexes[IX_మొత్తం_కొలత+1];
 
     // Need at least IX_INDEXES_LENGTH and IX_OPTIONS.
-    if(0<=length && length<8) {
+    ఒకవేళ(0<=length && length<8) {
         udata_printError(ds, "ucol_swap(formatVersion=4): too few bytes "
                          "(%d after header) for collation data\n",
                          length);
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
 
-    int32_t indexesLength=indexes[0]=udata_readInt32(ds, inIndexes[0]);
-    if(0<=length && length<(indexesLength*4)) {
+    int32_t indexes_నిడివి=indexes[0]=udata_readInt32(ds, లోపల_Indexes[0]);
+    ఒకవేళ(0<=length && length<(indexes_నిడివి*4)) {
         udata_printError(ds, "ucol_swap(formatVersion=4): too few bytes "
                          "(%d after header) for collation data\n",
                          length);
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
 
-    for(int32_t i=1; i<=IX_TOTAL_SIZE && i<indexesLength; ++i) {
-        indexes[i]=udata_readInt32(ds, inIndexes[i]);
+    కొరకు(int32_t i=1; i<=IX_మొత్తం_కొలత && i<indexes_నిడివి; ++i) {
+        indexes[i]=udata_readInt32(ds, లోపల_Indexes[i]);
     }
-    for(int32_t i=indexesLength; i<=IX_TOTAL_SIZE; ++i) {
+    కొరకు(int32_t i=indexes_నిడివి; i<=IX_మొత్తం_కొలత; ++i) {
         indexes[i]=-1;
     }
-    inIndexes=nullptr;  // Make sure we do not accidentally use these instead of indexes[].
+    లోపల_Indexes=శూన్యసూచిక;  // Make sure we do not accidentally use these instead of indexes[].
 
     // Get the total length of the data.
     int32_t size;
-    if(indexesLength>IX_TOTAL_SIZE) {
-        size=indexes[IX_TOTAL_SIZE];
-    } else if(indexesLength>IX_REORDER_CODES_OFFSET) {
-        size=indexes[indexesLength-1];
-    } else {
-        size=indexesLength*4;
+    ఒకవేళ(indexes_నిడివి>IX_మొత్తం_కొలత) {
+        size=indexes[IX_మొత్తం_కొలత];
+    } లేకపోతే ఒకవేళ(indexes_నిడివి>IX_REORDER_CODES_స్థానభ్రంశం) {
+        size=indexes[indexes_నిడివి-1];
+    } లేకపోతే {
+        size=indexes_నిడివి*4;
     }
-    if(length<0) { return size; }
+    ఒకవేళ(length<0) { తిరిగి size; }
 
-    if(length<size) {
+    ఒకవేళ(length<size) {
         udata_printError(ds, "ucol_swap(formatVersion=4): too few bytes "
                          "(%d after header) for collation data\n",
                          length);
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
 
     // Copy the data for inaccessible bytes and arrays of bytes.
-    if(inBytes!=outBytes) {
-        uprv_memcpy(outBytes, inBytes, size);
+    ఒకవేళ(లోపల_బైట్లు!=బహిర్గతం_బైట్లు) {
+        uprv_memcpy(బహిర్గతం_బైట్లు, లోపల_బైట్లు, size);
     }
 
     // Swap the int32_t indexes[].
-    ds->swapArray32(ds, inBytes, indexesLength * 4, outBytes, &errorCode);
+    ds->మార్పిడి_Array32(ds, లోపల_బైట్లు, indexes_నిడివి * 4, బహిర్గతం_బైట్లు, &error_సంకేతం);
 
     // The following is a modified version of CollationDataReader::read().
     // Here we use indexes[] not inIndexes[] because
     // the inIndexes[] may not be in this machine's endianness.
-    int32_t index;  // one of the indexes[] slots
-    int32_t offset;  // byte offset for the index part
+    int32_t సూచీ;  // one of the indexes[] slots
+    int32_t స్థానభ్రంశం;  // byte offset for the index part
     // int32_t length;  // number of bytes in the index part
 
-    index = IX_REORDER_CODES_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray32(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    సూచీ = IX_REORDER_CODES_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు + స్థానభ్రంశం, length, బహిర్గతం_బైట్లు + స్థానభ్రంశం, &error_సంకేతం);
     }
 
     // Skip the IX_REORDER_TABLE_OFFSET byte array.
 
-    index = IX_TRIE_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        utrie2_swap(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    సూచీ = IX_TRIE_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
+        utrie2_మార్పిడి(ds, లోపల_బైట్లు + స్థానభ్రంశం, length, బహిర్గతం_బైట్లు + స్థానభ్రంశం, &error_సంకేతం);
     }
 
-    index = IX_RESERVED8_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
+    సూచీ = IX_RESERVED8_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
         udata_printError(ds, "ucol_swap(formatVersion=4): unknown data at IX_RESERVED8_OFFSET\n", length);
-        errorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        error_సంకేతం = U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    index = IX_CES_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray64(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    సూచీ = IX_CES_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
+        ds->మార్పిడి_Array64(ds, లోపల_బైట్లు + స్థానభ్రంశం, length, బహిర్గతం_బైట్లు + స్థానభ్రంశం, &error_సంకేతం);
     }
 
-    index = IX_RESERVED10_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
+    సూచీ = IX_RESERVED10_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
         udata_printError(ds, "ucol_swap(formatVersion=4): unknown data at IX_RESERVED10_OFFSET\n", length);
-        errorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        error_సంకేతం = U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    index = IX_CE32S_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray32(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    సూచీ = IX_CE32_S_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు + స్థానభ్రంశం, length, బహిర్గతం_బైట్లు + స్థానభ్రంశం, &error_సంకేతం);
     }
 
-    index = IX_ROOT_ELEMENTS_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray32(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    సూచీ = IX_మూలం_ELEMENTS_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు + స్థానభ్రంశం, length, బహిర్గతం_బైట్లు + స్థానభ్రంశం, &error_సంకేతం);
     }
 
-    index = IX_CONTEXTS_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    సూచీ = IX_CONTEXTS_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
+        ds->మార్పిడి_Array16(ds, లోపల_బైట్లు + స్థానభ్రంశం, length, బహిర్గతం_బైట్లు + స్థానభ్రంశం, &error_సంకేతం);
     }
 
-    index = IX_UNSAFE_BWD_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    సూచీ = IX_UNSAFE_BWD_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
+        ds->మార్పిడి_Array16(ds, లోపల_బైట్లు + స్థానభ్రంశం, length, బహిర్గతం_బైట్లు + స్థానభ్రంశం, &error_సంకేతం);
     }
 
-    index = IX_FAST_LATIN_TABLE_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    సూచీ = IX_FAST_LATIN_పట్టిక_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
+        ds->మార్పిడి_Array16(ds, లోపల_బైట్లు + స్థానభ్రంశం, length, బహిర్గతం_బైట్లు + స్థానభ్రంశం, &error_సంకేతం);
     }
 
-    index = IX_SCRIPTS_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
-        ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
+    సూచీ = IX_SCRIPTS_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
+        ds->మార్పిడి_Array16(ds, లోపల_బైట్లు + స్థానభ్రంశం, length, బహిర్గతం_బైట్లు + స్థానభ్రంశం, &error_సంకేతం);
     }
 
     // Skip the  IX_COMPRESSIBLE_BYTES_OFFSET byte array.
 
-    index = IX_RESERVED18_OFFSET;
-    offset = indexes[index];
-    length = indexes[index + 1] - offset;
-    if(length > 0) {
+    సూచీ = IX_RESERVED18_స్థానభ్రంశం;
+    స్థానభ్రంశం = indexes[సూచీ];
+    length = indexes[సూచీ + 1] - స్థానభ్రంశం;
+    ఒకవేళ(length > 0) {
         udata_printError(ds, "ucol_swap(formatVersion=4): unknown data at IX_RESERVED18_OFFSET\n", length);
-        errorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        error_సంకేతం = U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    return size;
+    తిరిగి size;
 }
 
 }  // namespace
 
 /* swap ICU collation data like ucadata.icu */
 U_CAPI int32_t U_EXPORT2
-ucol_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) { return 0; }
+ucol_మార్పిడి(స్థిరరాశి UDataSwapper *ds,
+          స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+          UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) { తిరిగి 0; }
 
     /* udata_swapDataHeader checks the arguments */
-    int32_t headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    int32_t శీర్షిక_కొలత=udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
         // Try to swap the old format version which did not have a standard data header.
-        *pErrorCode=U_ZERO_ERROR;
-        return swapFormatVersion3(ds, inData, length, outData, pErrorCode);
+        *p_Error_సంకేతం=U_ZERO_ERROR;
+        తిరిగి మార్పిడి_Format_Version3(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
     }
 
     /* check data format and format version */
-    const UDataInfo &info=*(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        info.dataFormat[0]==0x55 &&   // dataFormat="UCol"
-        info.dataFormat[1]==0x43 &&
-        info.dataFormat[2]==0x6f &&
-        info.dataFormat[3]==0x6c &&
-        (3<=info.formatVersion[0] && info.formatVersion[0]<=5)
+    స్థిరరాశి UDataInfo &info=*(స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+4);
+    ఒకవేళ(!(
+        info.దత్తాంశం_Format[0]==0x55 &&   // dataFormat="UCol"
+        info.దత్తాంశం_Format[1]==0x43 &&
+        info.దత్తాంశం_Format[2]==0x6f &&
+        info.దత్తాంశం_Format[3]==0x6c &&
+        (3<=info.format_సంస్కరణ[0] && info.format_సంస్కరణ[0]<=5)
     )) {
         udata_printError(ds, "ucol_swap(): data format %02x.%02x.%02x.%02x "
                          "(format version %02x.%02x) is not recognized as collation data\n",
-                         info.dataFormat[0], info.dataFormat[1],
-                         info.dataFormat[2], info.dataFormat[3],
-                         info.formatVersion[0], info.formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         info.దత్తాంశం_Format[0], info.దత్తాంశం_Format[1],
+                         info.దత్తాంశం_Format[2], info.దత్తాంశం_Format[3],
+                         info.format_సంస్కరణ[0], info.format_సంస్కరణ[1]);
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    inData=(const char *)inData+headerSize;
-    if(length>=0) { length-=headerSize; }
-    outData=(outData == nullptr) ? nullptr : (char *)outData+headerSize;
-    int32_t collationSize;
-    if(info.formatVersion[0]>=4) {
-        collationSize=swapFormatVersion4(ds, inData, length, outData, *pErrorCode);
-    } else {
-        collationSize=swapFormatVersion3(ds, inData, length, outData, pErrorCode);
+    లోపల_దత్తాంశం=(స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+శీర్షిక_కొలత;
+    ఒకవేళ(length>=0) { length-=శీర్షిక_కొలత; }
+    బహిర్గతం_దత్తాంశం=(బహిర్గతం_దత్తాంశం == శూన్యసూచిక) ? శూన్యసూచిక : (అక్షరం *)బహిర్గతం_దత్తాంశం+శీర్షిక_కొలత;
+    int32_t collation_కొలత;
+    ఒకవేళ(info.format_సంస్కరణ[0]>=4) {
+        collation_కొలత=మార్పిడి_Format_Version4(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, *p_Error_సంకేతం);
+    } లేకపోతే {
+        collation_కొలత=మార్పిడి_Format_Version3(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
     }
-    if(U_SUCCESS(*pErrorCode)) {
-        return headerSize+collationSize;
-    } else {
-        return 0;
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం)) {
+        తిరిగి శీర్షిక_కొలత+collation_కొలత;
+    } లేకపోతే {
+        తిరిగి 0;
     }
 }
 
 /* swap inverse UCA collation data (invuca.icu) */
 U_CAPI int32_t U_EXPORT2
-ucol_swapInverseUCA(const UDataSwapper *ds,
-                    const void *inData, int32_t length, void *outData,
-                    UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+ucol_మార్పిడి_Inverse_UCA(స్థిరరాశి UDataSwapper *ds,
+                    స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                    UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి UDataInfo *pInfo;
+    int32_t శీర్షిక_కొలత;
 
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+    స్థిరరాశి uint8_t *లోపల_బైట్లు;
+    uint8_t *బహిర్గతం_బైట్లు;
 
-    const InverseUCATableHeader *inHeader;
-    InverseUCATableHeader *outHeader;
-    InverseUCATableHeader header={ 0,0,0,0,0,{0,0,0,0},{0,0,0,0,0,0,0,0} };
+    స్థిరరాశి Inverse_UCATable_శీర్షిక *లోపల_శీర్షిక;
+    Inverse_UCATable_శీర్షిక *బహిర్గతం_శీర్షిక;
+    Inverse_UCATable_శీర్షిక శీర్షిక={ 0,0,0,0,0,{0,0,0,0},{0,0,0,0,0,0,0,0} };
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    శీర్షిక_కొలత=udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x49 &&   /* dataFormat="InvC" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x76 &&
-        pInfo->dataFormat[3]==0x43 &&
-        pInfo->formatVersion[0]==2 &&
-        pInfo->formatVersion[1]>=1
+    pInfo=(స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+4);
+    ఒకవేళ(!(
+        pInfo->దత్తాంశం_Format[0]==0x49 &&   /* dataFormat="InvC" */
+        pInfo->దత్తాంశం_Format[1]==0x6e &&
+        pInfo->దత్తాంశం_Format[2]==0x76 &&
+        pInfo->దత్తాంశం_Format[3]==0x43 &&
+        pInfo->format_సంస్కరణ[0]==2 &&
+        pInfo->format_సంస్కరణ[1]>=1
     )) {
         udata_printError(ds, "ucol_swapInverseUCA(): data format %02x.%02x.%02x.%02x (format version %02x.%02x) is not an inverse UCA collation file\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0], pInfo->formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->దత్తాంశం_Format[0], pInfo->దత్తాంశం_Format[1],
+                         pInfo->దత్తాంశం_Format[2], pInfo->దత్తాంశం_Format[3],
+                         pInfo->format_సంస్కరణ[0], pInfo->format_సంస్కరణ[1]);
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes=(uint8_t *)outData+headerSize;
+    లోపల_బైట్లు=(స్థిరరాశి uint8_t *)లోపల_దత్తాంశం+శీర్షిక_కొలత;
+    బహిర్గతం_బైట్లు=(uint8_t *)బహిర్గతం_దత్తాంశం+శీర్షిక_కొలత;
 
-    inHeader=(const InverseUCATableHeader *)inBytes;
-    outHeader=(InverseUCATableHeader *)outBytes;
+    లోపల_శీర్షిక=(స్థిరరాశి Inverse_UCATable_శీర్షిక *)లోపల_బైట్లు;
+    బహిర్గతం_శీర్షిక=(Inverse_UCATable_శీర్షిక *)బహిర్గతం_బైట్లు;
 
     /*
      * The inverse UCA collation binary must contain at least the InverseUCATableHeader,
@@ -571,45 +571,45 @@ ucol_swapInverseUCA(const UDataSwapper *ds,
      * sizeof(UCATableHeader)==8*4 in ICU 2.8
      * check the length against the header size before reading the size field
      */
-    if(length<0) {
-        header.byteSize=udata_readInt32(ds, inHeader->byteSize);
-    } else if(
-        ((length-headerSize)<(8*4) ||
-         (uint32_t)(length-headerSize)<(header.byteSize=udata_readInt32(ds, inHeader->byteSize)))
+    ఒకవేళ(length<0) {
+        శీర్షిక.byte_కొలత=udata_readInt32(ds, లోపల_శీర్షిక->byte_కొలత);
+    } లేకపోతే ఒకవేళ(
+        ((length-శీర్షిక_కొలత)<(8*4) ||
+         (uint32_t)(length-శీర్షిక_కొలత)<(శీర్షిక.byte_కొలత=udata_readInt32(ds, లోపల_శీర్షిక->byte_కొలత)))
     ) {
         udata_printError(ds, "ucol_swapInverseUCA(): too few bytes (%d after header) for inverse UCA collation data\n",
                          length);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
 
-    if(length>=0) {
+    ఒకవేళ(length>=0) {
         /* copy everything, takes care of data that needs no swapping */
-        if(inBytes!=outBytes) {
-            uprv_memcpy(outBytes, inBytes, header.byteSize);
+        ఒకవేళ(లోపల_బైట్లు!=బహిర్గతం_బైట్లు) {
+            uprv_memcpy(బహిర్గతం_బైట్లు, లోపల_బైట్లు, శీర్షిక.byte_కొలత);
         }
 
         /* swap the necessary pieces in the order of their occurrence in the data */
 
         /* read more of the InverseUCATableHeader (the byteSize field was read above) */
-        header.tableSize=   ds->readUInt32(inHeader->tableSize);
-        header.contsSize=   ds->readUInt32(inHeader->contsSize);
-        header.table=       ds->readUInt32(inHeader->table);
-        header.conts=       ds->readUInt32(inHeader->conts);
+        శీర్షిక.పట్టిక_కొలత=   ds->readUInt32(లోపల_శీర్షిక->పట్టిక_కొలత);
+        శీర్షిక.conts_కొలత=   ds->readUInt32(లోపల_శీర్షిక->conts_కొలత);
+        శీర్షిక.పట్టిక=       ds->readUInt32(లోపల_శీర్షిక->పట్టిక);
+        శీర్షిక.conts=       ds->readUInt32(లోపల_శీర్షిక->conts);
 
         /* swap the 32-bit integers in the header */
-        ds->swapArray32(ds, inHeader, 5*4, outHeader, pErrorCode);
+        ds->మార్పిడి_Array32(ds, లోపల_శీర్షిక, 5*4, బహిర్గతం_శీర్షిక, p_Error_సంకేతం);
 
         /* swap the inverse table; tableSize counts uint32_t[3] rows */
-        ds->swapArray32(ds, inBytes+header.table, header.tableSize*3*4,
-                           outBytes+header.table, pErrorCode);
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+శీర్షిక.పట్టిక, శీర్షిక.పట్టిక_కొలత*3*4,
+                           బహిర్గతం_బైట్లు+శీర్షిక.పట్టిక, p_Error_సంకేతం);
 
         /* swap the continuation table; contsSize counts UChars */
-        ds->swapArray16(ds, inBytes+header.conts, header.contsSize*U_SIZEOF_UCHAR,
-                           outBytes+header.conts, pErrorCode);
+        ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+శీర్షిక.conts, శీర్షిక.conts_కొలత*U_SIZEOF_UCHAR,
+                           బహిర్గతం_బైట్లు+శీర్షిక.conts, p_Error_సంకేతం);
     }
 
-    return headerSize+header.byteSize;
+    తిరిగి శీర్షిక_కొలత+శీర్షిక.byte_కొలత;
 }
 
-#endif /* #if !UCONFIG_NO_COLLATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_COLLATION */

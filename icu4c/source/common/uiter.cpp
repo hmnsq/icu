@@ -16,67 +16,67 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/chariter.h"
-#include "unicode/rep.h"
-#include "unicode/uiter.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cstring.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/chariter.h"
+#అన్తర్భావ "unicode/rep.h"
+#అన్తర్భావ "unicode/uiter.h"
+#అన్తర్భావ "unicode/utf.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "cstring.h"
 
 U_NAMESPACE_USE
 
-#define IS_EVEN(n) (((n)&1)==0)
-#define IS_POINTER_EVEN(p) IS_EVEN((size_t)p)
+#నిర్వచించు IS_EVEN(n) (((n)&1)==0)
+#నిర్వచించు IS_సూచిక_EVEN(p) IS_EVEN((size_t)p)
 
 U_CDECL_BEGIN
 
 /* No-Op UCharIterator implementation for illegal input --------------------- */
 
-static int32_t U_CALLCONV
-noopGetIndex(UCharIterator * /*iter*/, UCharIteratorOrigin /*origin*/) {
-    return 0;
+స్థిర int32_t U_CALLCONV
+noop_Get_సూచీ(UCharIterator * /*iter*/, UCharIteratorOrigin /*origin*/) {
+    తిరిగి 0;
 }
 
-static int32_t U_CALLCONV
+స్థిర int32_t U_CALLCONV
 noopMove(UCharIterator * /*iter*/, int32_t /*delta*/, UCharIteratorOrigin /*origin*/) {
-    return 0;
+    తిరిగి 0;
 }
 
-static UBool U_CALLCONV
-noopHasNext(UCharIterator * /*iter*/) {
-    return false;
+స్థిర UBool U_CALLCONV
+noop_Has_తదుపరి(UCharIterator * /*iter*/) {
+    తిరిగి అబద్ధం;
 }
 
-static UChar32 U_CALLCONV
+స్థిర UChar32 U_CALLCONV
 noopCurrent(UCharIterator * /*iter*/) {
-    return U_SENTINEL;
+    తిరిగి U_SENTINEL;
 }
 
-static uint32_t U_CALLCONV
-noopGetState(const UCharIterator * /*iter*/) {
-    return UITER_NO_STATE;
+స్థిర uint32_t U_CALLCONV
+noopGetState(స్థిరరాశి UCharIterator * /*iter*/) {
+    తిరిగి UITER_NO_STATE;
 }
 
-static void U_CALLCONV
-noopSetState(UCharIterator * /*iter*/, uint32_t /*state*/, UErrorCode *pErrorCode) {
-    *pErrorCode=U_UNSUPPORTED_ERROR;
+స్థిర శూన్య U_CALLCONV
+noop_సమితి_State(UCharIterator * /*iter*/, uint32_t /*state*/, UError_సంకేతం *p_Error_సంకేతం) {
+    *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
 }
 
-static const UCharIterator noopIterator={
-    nullptr, 0, 0, 0, 0, 0,
-    noopGetIndex,
+స్థిర స్థిరరాశి UCharIterator noopIterator={
+    శూన్యసూచిక, 0, 0, 0, 0, 0,
+    noop_Get_సూచీ,
     noopMove,
-    noopHasNext,
-    noopHasNext,
+    noop_Has_తదుపరి,
+    noop_Has_తదుపరి,
     noopCurrent,
     noopCurrent,
     noopCurrent,
-    nullptr,
+    శూన్యసూచిక,
     noopGetState,
-    noopSetState
+    noop_సమితి_State
 };
 
 /* UCharIterator implementation for simple strings -------------------------- */
@@ -88,141 +88,141 @@ static const UCharIterator noopIterator={
  * The UCharIterator.context field holds a pointer to the string.
  */
 
-static int32_t U_CALLCONV
-stringIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    switch(origin) {
-    case UITER_ZERO:
-        return 0;
-    case UITER_START:
-        return iter->start;
-    case UITER_CURRENT:
-        return iter->index;
-    case UITER_LIMIT:
-        return iter->limit;
-    case UITER_LENGTH:
-        return iter->length;
-    default:
+స్థిర int32_t U_CALLCONV
+string_Iterator_Get_సూచీ(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
+    ఎంపిక(origin) {
+    స్థితి UITER_ZERO:
+        తిరిగి 0;
+    స్థితి UITER_ప్రారంభం:
+        తిరిగి iter->ప్రారంభం;
+    స్థితి UITER_CURRENT:
+        తిరిగి iter->సూచీ;
+    స్థితి UITER_హద్దు:
+        తిరిగి iter->హద్దు;
+    స్థితి UITER_నిడివి:
+        తిరిగి iter->length;
+    అప్రమేయ:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        తిరిగి -1;
     }
 }
 
-static int32_t U_CALLCONV
+స్థిర int32_t U_CALLCONV
 stringIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
     int32_t pos;
 
-    switch(origin) {
-    case UITER_ZERO:
+    ఎంపిక(origin) {
+    స్థితి UITER_ZERO:
         pos=delta;
-        break;
-    case UITER_START:
-        pos=iter->start+delta;
-        break;
-    case UITER_CURRENT:
-        pos=iter->index+delta;
-        break;
-    case UITER_LIMIT:
-        pos=iter->limit+delta;
-        break;
-    case UITER_LENGTH:
+        ఆపు;
+    స్థితి UITER_ప్రారంభం:
+        pos=iter->ప్రారంభం+delta;
+        ఆపు;
+    స్థితి UITER_CURRENT:
+        pos=iter->సూచీ+delta;
+        ఆపు;
+    స్థితి UITER_హద్దు:
+        pos=iter->హద్దు+delta;
+        ఆపు;
+    స్థితి UITER_నిడివి:
         pos=iter->length+delta;
-        break;
-    default:
-        return -1;  /* Error */
+        ఆపు;
+    అప్రమేయ:
+        తిరిగి -1;  /* Error */
     }
 
-    if(pos<iter->start) {
-        pos=iter->start;
-    } else if(pos>iter->limit) {
-        pos=iter->limit;
+    ఒకవేళ(pos<iter->ప్రారంభం) {
+        pos=iter->ప్రారంభం;
+    } లేకపోతే ఒకవేళ(pos>iter->హద్దు) {
+        pos=iter->హద్దు;
     }
 
-    return iter->index=pos;
+    తిరిగి iter->సూచీ=pos;
 }
 
-static UBool U_CALLCONV
-stringIteratorHasNext(UCharIterator *iter) {
-    return iter->index<iter->limit;
+స్థిర UBool U_CALLCONV
+string_Iterator_Has_తదుపరి(UCharIterator *iter) {
+    తిరిగి iter->సూచీ<iter->హద్దు;
 }
 
-static UBool U_CALLCONV
-stringIteratorHasPrevious(UCharIterator *iter) {
-    return iter->index>iter->start;
+స్థిర UBool U_CALLCONV
+string_Iterator_Has_మునుపటి(UCharIterator *iter) {
+    తిరిగి iter->సూచీ>iter->ప్రారంభం;
 }
 
-static UChar32 U_CALLCONV
+స్థిర UChar32 U_CALLCONV
 stringIteratorCurrent(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((const char16_t *)(iter->context))[iter->index];
-    } else {
-        return U_SENTINEL;
+    ఒకవేళ(iter->సూచీ<iter->హద్దు) {
+        తిరిగి ((స్థిరరాశి char16_t *)(iter->context))[iter->సూచీ];
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-stringIteratorNext(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((const char16_t *)(iter->context))[iter->index++];
-    } else {
-        return U_SENTINEL;
+స్థిర UChar32 U_CALLCONV
+string_Iterator_తదుపరి(UCharIterator *iter) {
+    ఒకవేళ(iter->సూచీ<iter->హద్దు) {
+        తిరిగి ((స్థిరరాశి char16_t *)(iter->context))[iter->సూచీ++];
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-stringIteratorPrevious(UCharIterator *iter) {
-    if(iter->index>iter->start) {
-        return ((const char16_t *)(iter->context))[--iter->index];
-    } else {
-        return U_SENTINEL;
+స్థిర UChar32 U_CALLCONV
+string_Iterator_మునుపటి(UCharIterator *iter) {
+    ఒకవేళ(iter->సూచీ>iter->ప్రారంభం) {
+        తిరిగి ((స్థిరరాశి char16_t *)(iter->context))[--iter->సూచీ];
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static uint32_t U_CALLCONV
-stringIteratorGetState(const UCharIterator *iter) {
-    return (uint32_t)iter->index;
+స్థిర uint32_t U_CALLCONV
+stringIteratorGetState(స్థిరరాశి UCharIterator *iter) {
+    తిరిగి (uint32_t)iter->సూచీ;
 }
 
-static void U_CALLCONV
-stringIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+స్థిర శూన్య U_CALLCONV
+string_Iterator_సమితి_State(UCharIterator *iter, uint32_t state, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
         /* do nothing */
-    } else if(iter==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if((int32_t)state<iter->start || iter->limit<(int32_t)state) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    } else {
-        iter->index=(int32_t)state;
+    } లేకపోతే ఒకవేళ(iter==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+    } లేకపోతే ఒకవేళ((int32_t)state<iter->ప్రారంభం || iter->హద్దు<(int32_t)state) {
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+    } లేకపోతే {
+        iter->సూచీ=(int32_t)state;
     }
 }
 
-static const UCharIterator stringIterator={
-    nullptr, 0, 0, 0, 0, 0,
-    stringIteratorGetIndex,
+స్థిర స్థిరరాశి UCharIterator stringIterator={
+    శూన్యసూచిక, 0, 0, 0, 0, 0,
+    string_Iterator_Get_సూచీ,
     stringIteratorMove,
-    stringIteratorHasNext,
-    stringIteratorHasPrevious,
+    string_Iterator_Has_తదుపరి,
+    string_Iterator_Has_మునుపటి,
     stringIteratorCurrent,
-    stringIteratorNext,
-    stringIteratorPrevious,
-    nullptr,
+    string_Iterator_తదుపరి,
+    string_Iterator_మునుపటి,
+    శూన్యసూచిక,
     stringIteratorGetState,
-    stringIteratorSetState
+    string_Iterator_సమితి_State
 };
 
-U_CAPI void U_EXPORT2
-uiter_setString(UCharIterator *iter, const char16_t *s, int32_t length) {
-    if (iter != nullptr) {
-        if (s != nullptr && length >= -1) {
+U_CAPI శూన్య U_EXPORT2
+uiter_సమితి_String(UCharIterator *iter, స్థిరరాశి char16_t *s, int32_t length) {
+    ఒకవేళ (iter != శూన్యసూచిక) {
+        ఒకవేళ (s != శూన్యసూచిక && length >= -1) {
             *iter=stringIterator;
             iter->context=s;
-            if(length>=0) {
+            ఒకవేళ(length>=0) {
                 iter->length=length;
-            } else {
+            } లేకపోతే {
                 iter->length=u_strlen(s);
             }
-            iter->limit=iter->length;
-        } else {
+            iter->హద్దు=iter->length;
+        } లేకపోతే {
             *iter=noopIterator;
         }
     }
@@ -241,59 +241,59 @@ uiter_setString(UCharIterator *iter, const char16_t *s, int32_t length) {
  */
 
 /* internal helper function */
-static inline UChar32
-utf16BEIteratorGet(UCharIterator *iter, int32_t index) {
-    const uint8_t *p=(const uint8_t *)iter->context;
-    return ((char16_t)p[2*index]<<8)|(char16_t)p[2*index+1];
+స్థిర అంతఃవరుస UChar32
+utf16BEIteratorGet(UCharIterator *iter, int32_t సూచీ) {
+    స్థిరరాశి uint8_t *p=(స్థిరరాశి uint8_t *)iter->context;
+    తిరిగి ((char16_t)p[2*సూచీ]<<8)|(char16_t)p[2*సూచీ+1];
 }
 
-static UChar32 U_CALLCONV
+స్థిర UChar32 U_CALLCONV
 utf16BEIteratorCurrent(UCharIterator *iter) {
-    int32_t index;
+    int32_t సూచీ;
 
-    if((index=iter->index)<iter->limit) {
-        return utf16BEIteratorGet(iter, index);
-    } else {
-        return U_SENTINEL;
+    ఒకవేళ((సూచీ=iter->సూచీ)<iter->హద్దు) {
+        తిరిగి utf16BEIteratorGet(iter, సూచీ);
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-utf16BEIteratorNext(UCharIterator *iter) {
-    int32_t index;
+స్థిర UChar32 U_CALLCONV
+utf16_BEIterator_తదుపరి(UCharIterator *iter) {
+    int32_t సూచీ;
 
-    if((index=iter->index)<iter->limit) {
-        iter->index=index+1;
-        return utf16BEIteratorGet(iter, index);
-    } else {
-        return U_SENTINEL;
+    ఒకవేళ((సూచీ=iter->సూచీ)<iter->హద్దు) {
+        iter->సూచీ=సూచీ+1;
+        తిరిగి utf16BEIteratorGet(iter, సూచీ);
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-utf16BEIteratorPrevious(UCharIterator *iter) {
-    int32_t index;
+స్థిర UChar32 U_CALLCONV
+utf16_BEIterator_మునుపటి(UCharIterator *iter) {
+    int32_t సూచీ;
 
-    if((index=iter->index)>iter->start) {
-        iter->index=--index;
-        return utf16BEIteratorGet(iter, index);
-    } else {
-        return U_SENTINEL;
+    ఒకవేళ((సూచీ=iter->సూచీ)>iter->ప్రారంభం) {
+        iter->సూచీ=--సూచీ;
+        తిరిగి utf16BEIteratorGet(iter, సూచీ);
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static const UCharIterator utf16BEIterator={
-    nullptr, 0, 0, 0, 0, 0,
-    stringIteratorGetIndex,
+స్థిర స్థిరరాశి UCharIterator utf16BEIterator={
+    శూన్యసూచిక, 0, 0, 0, 0, 0,
+    string_Iterator_Get_సూచీ,
     stringIteratorMove,
-    stringIteratorHasNext,
-    stringIteratorHasPrevious,
+    string_Iterator_Has_తదుపరి,
+    string_Iterator_Has_మునుపటి,
     utf16BEIteratorCurrent,
-    utf16BEIteratorNext,
-    utf16BEIteratorPrevious,
-    nullptr,
+    utf16_BEIterator_తదుపరి,
+    utf16_BEIterator_మునుపటి,
+    శూన్యసూచిక,
     stringIteratorGetState,
-    stringIteratorSetState
+    string_Iterator_సమితి_State
 };
 
 /*
@@ -301,49 +301,49 @@ static const UCharIterator utf16BEIterator={
  * i.e., before a pair of 0 bytes where the first 0 byte is at an even
  * offset from s.
  */
-static int32_t
-utf16BE_strlen(const char *s) {
-    if(IS_POINTER_EVEN(s)) {
+స్థిర int32_t
+utf16BE_strlen(స్థిరరాశి అక్షరం *s) {
+    ఒకవేళ(IS_సూచిక_EVEN(s)) {
         /*
          * even-aligned, call u_strlen(s)
          * we are probably on a little-endian machine, but searching for char16_t NUL
          * does not care about endianness
          */
-        return u_strlen((const char16_t *)s);
-    } else {
+        తిరిగి u_strlen((స్థిరరాశి char16_t *)s);
+    } లేకపోతే {
         /* odd-aligned, search for pair of 0 bytes */
-        const char *p=s;
+        స్థిరరాశి అక్షరం *p=s;
 
-        while(!(*p==0 && p[1]==0)) {
+        అయితే(!(*p==0 && p[1]==0)) {
             p+=2;
         }
-        return (int32_t)((p-s)/2);
+        తిరిగి (int32_t)((p-s)/2);
     }
 }
 
-U_CAPI void U_EXPORT2
-uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length) {
-    if(iter!=nullptr) {
+U_CAPI శూన్య U_EXPORT2
+uiter_సమితి_UTF16_BE(UCharIterator *iter, స్థిరరాశి అక్షరం *s, int32_t length) {
+    ఒకవేళ(iter!=శూన్యసూచిక) {
         /* allow only even-length strings (the input length counts bytes) */
-        if(s!=nullptr && (length==-1 || (length>=0 && IS_EVEN(length)))) {
+        ఒకవేళ(s!=శూన్యసూచిక && (length==-1 || (length>=0 && IS_EVEN(length)))) {
             /* length/=2, except that >>=1 also works for -1 (-1/2==0, -1>>1==-1) */
             length>>=1;
 
-            if(U_IS_BIG_ENDIAN && IS_POINTER_EVEN(s)) {
+            ఒకవేళ(U_IS_BIG_ENDIAN && IS_సూచిక_EVEN(s)) {
                 /* big-endian machine and 2-aligned UTF-16BE string: use normal char16_t iterator */
-                uiter_setString(iter, (const char16_t *)s, length);
-                return;
+                uiter_సమితి_String(iter, (స్థిరరాశి char16_t *)s, length);
+                తిరిగి;
             }
 
             *iter=utf16BEIterator;
             iter->context=s;
-            if(length>=0) {
+            ఒకవేళ(length>=0) {
                 iter->length=length;
-            } else {
+            } లేకపోతే {
                 iter->length=utf16BE_strlen(s);
             }
-            iter->limit=iter->length;
-        } else {
+            iter->హద్దు=iter->length;
+        } లేకపోతే {
             *iter=noopIterator;
         }
     }
@@ -358,125 +358,125 @@ uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length) {
  * The UCharIterator.context field holds a pointer to the CharacterIterator.
  */
 
-static int32_t U_CALLCONV
-characterIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    switch(origin) {
-    case UITER_ZERO:
-        return 0;
-    case UITER_START:
-        return ((CharacterIterator *)(iter->context))->startIndex();
-    case UITER_CURRENT:
-        return ((CharacterIterator *)(iter->context))->getIndex();
-    case UITER_LIMIT:
-        return ((CharacterIterator *)(iter->context))->endIndex();
-    case UITER_LENGTH:
-        return ((CharacterIterator *)(iter->context))->getLength();
-    default:
+స్థిర int32_t U_CALLCONV
+character_Iterator_Get_సూచీ(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
+    ఎంపిక(origin) {
+    స్థితి UITER_ZERO:
+        తిరిగి 0;
+    స్థితి UITER_ప్రారంభం:
+        తిరిగి ((CharacterIterator *)(iter->context))->ప్రారంభం_సూచీ();
+    స్థితి UITER_CURRENT:
+        తిరిగి ((CharacterIterator *)(iter->context))->get_సూచీ();
+    స్థితి UITER_హద్దు:
+        తిరిగి ((CharacterIterator *)(iter->context))->చివర_సూచీ();
+    స్థితి UITER_నిడివి:
+        తిరిగి ((CharacterIterator *)(iter->context))->get_నిడివి();
+    అప్రమేయ:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        తిరిగి -1;
     }
 }
 
-static int32_t U_CALLCONV
+స్థిర int32_t U_CALLCONV
 characterIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    switch(origin) {
-    case UITER_ZERO:
-        ((CharacterIterator *)(iter->context))->setIndex(delta);
-        return ((CharacterIterator *)(iter->context))->getIndex();
-    case UITER_START:
-    case UITER_CURRENT:
-    case UITER_LIMIT:
-        return ((CharacterIterator *)(iter->context))->move(delta, (CharacterIterator::EOrigin)origin);
-    case UITER_LENGTH:
-        ((CharacterIterator *)(iter->context))->setIndex(((CharacterIterator *)(iter->context))->getLength()+delta);
-        return ((CharacterIterator *)(iter->context))->getIndex();
-    default:
+    ఎంపిక(origin) {
+    స్థితి UITER_ZERO:
+        ((CharacterIterator *)(iter->context))->సమితి_సూచీ(delta);
+        తిరిగి ((CharacterIterator *)(iter->context))->get_సూచీ();
+    స్థితి UITER_ప్రారంభం:
+    స్థితి UITER_CURRENT:
+    స్థితి UITER_హద్దు:
+        తిరిగి ((CharacterIterator *)(iter->context))->move(delta, (CharacterIterator::EOrigin)origin);
+    స్థితి UITER_నిడివి:
+        ((CharacterIterator *)(iter->context))->సమితి_సూచీ(((CharacterIterator *)(iter->context))->get_నిడివి()+delta);
+        తిరిగి ((CharacterIterator *)(iter->context))->get_సూచీ();
+    అప్రమేయ:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        తిరిగి -1;
     }
 }
 
-static UBool U_CALLCONV
-characterIteratorHasNext(UCharIterator *iter) {
-    return ((CharacterIterator *)(iter->context))->hasNext();
+స్థిర UBool U_CALLCONV
+character_Iterator_Has_తదుపరి(UCharIterator *iter) {
+    తిరిగి ((CharacterIterator *)(iter->context))->has_తదుపరి();
 }
 
-static UBool U_CALLCONV
-characterIteratorHasPrevious(UCharIterator *iter) {
-    return ((CharacterIterator *)(iter->context))->hasPrevious();
+స్థిర UBool U_CALLCONV
+character_Iterator_Has_మునుపటి(UCharIterator *iter) {
+    తిరిగి ((CharacterIterator *)(iter->context))->has_మునుపటి();
 }
 
-static UChar32 U_CALLCONV
+స్థిర UChar32 U_CALLCONV
 characterIteratorCurrent(UCharIterator *iter) {
     UChar32 c;
 
     c=((CharacterIterator *)(iter->context))->current();
-    if(c!=0xffff || ((CharacterIterator *)(iter->context))->hasNext()) {
-        return c;
-    } else {
-        return U_SENTINEL;
+    ఒకవేళ(c!=0xffff || ((CharacterIterator *)(iter->context))->has_తదుపరి()) {
+        తిరిగి c;
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-characterIteratorNext(UCharIterator *iter) {
-    if(((CharacterIterator *)(iter->context))->hasNext()) {
-        return ((CharacterIterator *)(iter->context))->nextPostInc();
-    } else {
-        return U_SENTINEL;
+స్థిర UChar32 U_CALLCONV
+character_Iterator_తదుపరి(UCharIterator *iter) {
+    ఒకవేళ(((CharacterIterator *)(iter->context))->has_తదుపరి()) {
+        తిరిగి ((CharacterIterator *)(iter->context))->తదుపరి_Post_Inc();
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-characterIteratorPrevious(UCharIterator *iter) {
-    if(((CharacterIterator *)(iter->context))->hasPrevious()) {
-        return ((CharacterIterator *)(iter->context))->previous();
-    } else {
-        return U_SENTINEL;
+స్థిర UChar32 U_CALLCONV
+character_Iterator_మునుపటి(UCharIterator *iter) {
+    ఒకవేళ(((CharacterIterator *)(iter->context))->has_మునుపటి()) {
+        తిరిగి ((CharacterIterator *)(iter->context))->మునుపటి();
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static uint32_t U_CALLCONV
-characterIteratorGetState(const UCharIterator *iter) {
-    return ((CharacterIterator *)(iter->context))->getIndex();
+స్థిర uint32_t U_CALLCONV
+characterIteratorGetState(స్థిరరాశి UCharIterator *iter) {
+    తిరిగి ((CharacterIterator *)(iter->context))->get_సూచీ();
 }
 
-static void U_CALLCONV
-characterIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+స్థిర శూన్య U_CALLCONV
+character_Iterator_సమితి_State(UCharIterator *iter, uint32_t state, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
         /* do nothing */
-    } else if(iter==nullptr || iter->context==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if((int32_t)state<((CharacterIterator *)(iter->context))->startIndex() || ((CharacterIterator *)(iter->context))->endIndex()<(int32_t)state) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    } else {
-        ((CharacterIterator *)(iter->context))->setIndex((int32_t)state);
+    } లేకపోతే ఒకవేళ(iter==శూన్యసూచిక || iter->context==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+    } లేకపోతే ఒకవేళ((int32_t)state<((CharacterIterator *)(iter->context))->ప్రారంభం_సూచీ() || ((CharacterIterator *)(iter->context))->చివర_సూచీ()<(int32_t)state) {
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+    } లేకపోతే {
+        ((CharacterIterator *)(iter->context))->సమితి_సూచీ((int32_t)state);
     }
 }
 
-static const UCharIterator characterIteratorWrapper={
-    nullptr, 0, 0, 0, 0, 0,
-    characterIteratorGetIndex,
+స్థిర స్థిరరాశి UCharIterator characterIteratorWrapper={
+    శూన్యసూచిక, 0, 0, 0, 0, 0,
+    character_Iterator_Get_సూచీ,
     characterIteratorMove,
-    characterIteratorHasNext,
-    characterIteratorHasPrevious,
+    character_Iterator_Has_తదుపరి,
+    character_Iterator_Has_మునుపటి,
     characterIteratorCurrent,
-    characterIteratorNext,
-    characterIteratorPrevious,
-    nullptr,
+    character_Iterator_తదుపరి,
+    character_Iterator_మునుపటి,
+    శూన్యసూచిక,
     characterIteratorGetState,
-    characterIteratorSetState
+    character_Iterator_సమితి_State
 };
 
-U_CAPI void U_EXPORT2
-uiter_setCharacterIterator(UCharIterator *iter, CharacterIterator *charIter) {
-    if (iter != nullptr) {
-        if (charIter != nullptr) {
+U_CAPI శూన్య U_EXPORT2
+uiter_సమితి_Character_Iterator(UCharIterator *iter, CharacterIterator *charIter) {
+    ఒకవేళ (iter != శూన్యసూచిక) {
+        ఒకవేళ (charIter != శూన్యసూచిక) {
             *iter=characterIteratorWrapper;
             iter->context=charIter;
-        } else {
+        } లేకపోతే {
             *iter=noopIterator;
         }
     }
@@ -493,55 +493,55 @@ uiter_setCharacterIterator(UCharIterator *iter, CharacterIterator *charIter) {
  * and the iteration index.
  */
 
-static UChar32 U_CALLCONV
+స్థిర UChar32 U_CALLCONV
 replaceableIteratorCurrent(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((Replaceable *)(iter->context))->charAt(iter->index);
-    } else {
-        return U_SENTINEL;
+    ఒకవేళ(iter->సూచీ<iter->హద్దు) {
+        తిరిగి ((Replaceable *)(iter->context))->charAt(iter->సూచీ);
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-replaceableIteratorNext(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((Replaceable *)(iter->context))->charAt(iter->index++);
-    } else {
-        return U_SENTINEL;
+స్థిర UChar32 U_CALLCONV
+replaceable_Iterator_తదుపరి(UCharIterator *iter) {
+    ఒకవేళ(iter->సూచీ<iter->హద్దు) {
+        తిరిగి ((Replaceable *)(iter->context))->charAt(iter->సూచీ++);
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-replaceableIteratorPrevious(UCharIterator *iter) {
-    if(iter->index>iter->start) {
-        return ((Replaceable *)(iter->context))->charAt(--iter->index);
-    } else {
-        return U_SENTINEL;
+స్థిర UChar32 U_CALLCONV
+replaceable_Iterator_మునుపటి(UCharIterator *iter) {
+    ఒకవేళ(iter->సూచీ>iter->ప్రారంభం) {
+        తిరిగి ((Replaceable *)(iter->context))->charAt(--iter->సూచీ);
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static const UCharIterator replaceableIterator={
-    nullptr, 0, 0, 0, 0, 0,
-    stringIteratorGetIndex,
+స్థిర స్థిరరాశి UCharIterator replaceableIterator={
+    శూన్యసూచిక, 0, 0, 0, 0, 0,
+    string_Iterator_Get_సూచీ,
     stringIteratorMove,
-    stringIteratorHasNext,
-    stringIteratorHasPrevious,
+    string_Iterator_Has_తదుపరి,
+    string_Iterator_Has_మునుపటి,
     replaceableIteratorCurrent,
-    replaceableIteratorNext,
-    replaceableIteratorPrevious,
-    nullptr,
+    replaceable_Iterator_తదుపరి,
+    replaceable_Iterator_మునుపటి,
+    శూన్యసూచిక,
     stringIteratorGetState,
-    stringIteratorSetState
+    string_Iterator_సమితి_State
 };
 
-U_CAPI void U_EXPORT2
-uiter_setReplaceable(UCharIterator *iter, const Replaceable *rep) {
-    if (iter != nullptr) {
-        if (rep != nullptr) {
+U_CAPI శూన్య U_EXPORT2
+uiter_సమితి_Replaceable(UCharIterator *iter, స్థిరరాశి Replaceable *rep) {
+    ఒకవేళ (iter != శూన్యసూచిక) {
+        ఒకవేళ (rep != శూన్యసూచిక) {
             *iter=replaceableIterator;
             iter->context=rep;
-            iter->limit=iter->length=rep->length();
-        } else {
+            iter->హద్దు=iter->length=rep->length();
+        } లేకపోతే {
             *iter=noopIterator;
         }
     }
@@ -557,7 +557,7 @@ uiter_setReplaceable(UCharIterator *iter, const Replaceable *rep) {
  * to introduce a uiter_close(iter).
  */
 
-#define UITER_CNV_CAPACITY 16
+#నిర్వచించు UITER_CNV_సామర్థ్యం 16
 
 /*
  * Minimal implementation:
@@ -585,434 +585,434 @@ uiter_setReplaceable(UCharIterator *iter, const Replaceable *rep) {
  * Add implementations that do not call strlen() for iteration but check for NUL.
  */
 
-static int32_t U_CALLCONV
-utf8IteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    switch(origin) {
-    case UITER_ZERO:
-    case UITER_START:
-        return 0;
-    case UITER_CURRENT:
-        if(iter->index<0) {
+స్థిర int32_t U_CALLCONV
+utf8_Iterator_Get_సూచీ(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
+    ఎంపిక(origin) {
+    స్థితి UITER_ZERO:
+    స్థితి UITER_ప్రారంభం:
+        తిరిగి 0;
+    స్థితి UITER_CURRENT:
+        ఒకవేళ(iter->సూచీ<0) {
             /* the current UTF-16 index is unknown after setState(), count from the beginning */
-            const uint8_t *s;
+            స్థిరరాశి uint8_t *s;
             UChar32 c;
-            int32_t i, limit, index;
+            int32_t i, హద్దు, సూచీ;
 
-            s=(const uint8_t *)iter->context;
-            i=index=0;
-            limit=iter->start; /* count up to the UTF-8 index */
-            while(i<limit) {
-                U8_NEXT_OR_FFFD(s, i, limit, c);
-                index+=U16_LENGTH(c);
+            s=(స్థిరరాశి uint8_t *)iter->context;
+            i=సూచీ=0;
+            హద్దు=iter->ప్రారంభం; /* count up to the UTF-8 index */
+            అయితే(i<హద్దు) {
+                U8_తదుపరి_OR_FFFD(s, i, హద్దు, c);
+                సూచీ+=U16_నిడివి(c);
             }
 
-            iter->start=i; /* just in case setState() did not get us to a code point boundary */
-            if(i==iter->limit) {
-                iter->length=index; /* in case it was <0 or wrong */
+            iter->ప్రారంభం=i; /* just in case setState() did not get us to a code point boundary */
+            ఒకవేళ(i==iter->హద్దు) {
+                iter->length=సూచీ; /* in case it was <0 or wrong */
             }
-            if(iter->reservedField!=0) {
-                --index; /* we are in the middle of a supplementary code point */
+            ఒకవేళ(iter->reserved_క్షేత్రం!=0) {
+                --సూచీ; /* we are in the middle of a supplementary code point */
             }
-            iter->index=index;
+            iter->సూచీ=సూచీ;
         }
-        return iter->index;
-    case UITER_LIMIT:
-    case UITER_LENGTH:
-        if(iter->length<0) {
-            const uint8_t *s;
+        తిరిగి iter->సూచీ;
+    స్థితి UITER_హద్దు:
+    స్థితి UITER_నిడివి:
+        ఒకవేళ(iter->length<0) {
+            స్థిరరాశి uint8_t *s;
             UChar32 c;
-            int32_t i, limit, length;
+            int32_t i, హద్దు, length;
 
-            s=(const uint8_t *)iter->context;
-            if(iter->index<0) {
+            s=(స్థిరరాశి uint8_t *)iter->context;
+            ఒకవేళ(iter->సూచీ<0) {
                 /*
                  * the current UTF-16 index is unknown after setState(),
                  * we must first count from the beginning to here
                  */
                 i=length=0;
-                limit=iter->start;
+                హద్దు=iter->ప్రారంభం;
 
                 /* count from the beginning to the current index */
-                while(i<limit) {
-                    U8_NEXT_OR_FFFD(s, i, limit, c);
-                    length+=U16_LENGTH(c);
+                అయితే(i<హద్దు) {
+                    U8_తదుపరి_OR_FFFD(s, i, హద్దు, c);
+                    length+=U16_నిడివి(c);
                 }
 
                 /* assume i==limit==iter->start, set the UTF-16 index */
-                iter->start=i; /* just in case setState() did not get us to a code point boundary */
-                iter->index= iter->reservedField!=0 ? length-1 : length;
-            } else {
-                i=iter->start;
-                length=iter->index;
-                if(iter->reservedField!=0) {
+                iter->ప్రారంభం=i; /* just in case setState() did not get us to a code point boundary */
+                iter->సూచీ= iter->reserved_క్షేత్రం!=0 ? length-1 : length;
+            } లేకపోతే {
+                i=iter->ప్రారంభం;
+                length=iter->సూచీ;
+                ఒకవేళ(iter->reserved_క్షేత్రం!=0) {
                     ++length;
                 }
             }
 
             /* count from the current index to the end */
-            limit=iter->limit;
-            while(i<limit) {
-                U8_NEXT_OR_FFFD(s, i, limit, c);
-                length+=U16_LENGTH(c);
+            హద్దు=iter->హద్దు;
+            అయితే(i<హద్దు) {
+                U8_తదుపరి_OR_FFFD(s, i, హద్దు, c);
+                length+=U16_నిడివి(c);
             }
             iter->length=length;
         }
-        return iter->length;
-    default:
+        తిరిగి iter->length;
+    అప్రమేయ:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        తిరిగి -1;
     }
 }
 
-static int32_t U_CALLCONV
+స్థిర int32_t U_CALLCONV
 utf8IteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
-    const uint8_t *s;
+    స్థిరరాశి uint8_t *s;
     UChar32 c;
     int32_t pos; /* requested UTF-16 index */
     int32_t i; /* UTF-8 index */
     UBool havePos;
 
     /* calculate the requested UTF-16 index */
-    switch(origin) {
-    case UITER_ZERO:
-    case UITER_START:
+    ఎంపిక(origin) {
+    స్థితి UITER_ZERO:
+    స్థితి UITER_ప్రారంభం:
         pos=delta;
-        havePos=true;
+        havePos=నిజం;
         /* iter->index<0 (unknown) is possible */
-        break;
-    case UITER_CURRENT:
-        if(iter->index>=0) {
-            pos=iter->index+delta;
-            havePos=true;
-        } else {
+        ఆపు;
+    స్థితి UITER_CURRENT:
+        ఒకవేళ(iter->సూచీ>=0) {
+            pos=iter->సూచీ+delta;
+            havePos=నిజం;
+        } లేకపోతే {
             /* the current UTF-16 index is unknown after setState(), use only delta */
             pos=0;
-            havePos=false;
+            havePos=అబద్ధం;
         }
-        break;
-    case UITER_LIMIT:
-    case UITER_LENGTH:
-        if(iter->length>=0) {
+        ఆపు;
+    స్థితి UITER_హద్దు:
+    స్థితి UITER_నిడివి:
+        ఒకవేళ(iter->length>=0) {
             pos=iter->length+delta;
-            havePos=true;
-        } else {
+            havePos=నిజం;
+        } లేకపోతే {
             /* pin to the end, avoid counting the length */
-            iter->index=-1;
-            iter->start=iter->limit;
-            iter->reservedField=0;
-            if(delta>=0) {
-                return UITER_UNKNOWN_INDEX;
-            } else {
+            iter->సూచీ=-1;
+            iter->ప్రారంభం=iter->హద్దు;
+            iter->reserved_క్షేత్రం=0;
+            ఒకవేళ(delta>=0) {
+                తిరిగి UITER_UNKNOWN_సూచీ;
+            } లేకపోతే {
                 /* the current UTF-16 index is unknown, use only delta */
                 pos=0;
-                havePos=false;
+                havePos=అబద్ధం;
             }
         }
-        break;
-    default:
-        return -1;  /* Error */
+        ఆపు;
+    అప్రమేయ:
+        తిరిగి -1;  /* Error */
     }
 
-    if(havePos) {
+    ఒకవేళ(havePos) {
         /* shortcuts: pinning to the edges of the string */
-        if(pos<=0) {
-            iter->index=iter->start=iter->reservedField=0;
-            return 0;
-        } else if(iter->length>=0 && pos>=iter->length) {
-            iter->index=iter->length;
-            iter->start=iter->limit;
-            iter->reservedField=0;
-            return iter->index;
+        ఒకవేళ(pos<=0) {
+            iter->సూచీ=iter->ప్రారంభం=iter->reserved_క్షేత్రం=0;
+            తిరిగి 0;
+        } లేకపోతే ఒకవేళ(iter->length>=0 && pos>=iter->length) {
+            iter->సూచీ=iter->length;
+            iter->ప్రారంభం=iter->హద్దు;
+            iter->reserved_క్షేత్రం=0;
+            తిరిగి iter->సూచీ;
         }
 
         /* minimize the number of U8_NEXT/PREV operations */
-        if(iter->index<0 || pos<iter->index/2) {
+        ఒకవేళ(iter->సూచీ<0 || pos<iter->సూచీ/2) {
             /* go forward from the start instead of backward from the current index */
-            iter->index=iter->start=iter->reservedField=0;
-        } else if(iter->length>=0 && (iter->length-pos)<(pos-iter->index)) {
+            iter->సూచీ=iter->ప్రారంభం=iter->reserved_క్షేత్రం=0;
+        } లేకపోతే ఒకవేళ(iter->length>=0 && (iter->length-pos)<(pos-iter->సూచీ)) {
             /*
              * if we have the UTF-16 index and length and the new position is
              * closer to the end than the current index,
              * then go backward from the end instead of forward from the current index
              */
-            iter->index=iter->length;
-            iter->start=iter->limit;
-            iter->reservedField=0;
+            iter->సూచీ=iter->length;
+            iter->ప్రారంభం=iter->హద్దు;
+            iter->reserved_క్షేత్రం=0;
         }
 
-        delta=pos-iter->index;
-        if(delta==0) {
-            return iter->index; /* nothing to do */
+        delta=pos-iter->సూచీ;
+        ఒకవేళ(delta==0) {
+            తిరిగి iter->సూచీ; /* nothing to do */
         }
-    } else {
+    } లేకపోతే {
         /* move relative to unknown UTF-16 index */
-        if(delta==0) {
-            return UITER_UNKNOWN_INDEX; /* nothing to do */
-        } else if(-delta>=iter->start) {
+        ఒకవేళ(delta==0) {
+            తిరిగి UITER_UNKNOWN_సూచీ; /* nothing to do */
+        } లేకపోతే ఒకవేళ(-delta>=iter->ప్రారంభం) {
             /* moving backwards by more UChars than there are UTF-8 bytes, pin to 0 */
-            iter->index=iter->start=iter->reservedField=0;
-            return 0;
-        } else if(delta>=(iter->limit-iter->start)) {
+            iter->సూచీ=iter->ప్రారంభం=iter->reserved_క్షేత్రం=0;
+            తిరిగి 0;
+        } లేకపోతే ఒకవేళ(delta>=(iter->హద్దు-iter->ప్రారంభం)) {
             /* moving forward by more UChars than the remaining UTF-8 bytes, pin to the end */
-            iter->index=iter->length; /* may or may not be <0 (unknown) */
-            iter->start=iter->limit;
-            iter->reservedField=0;
-            return iter->index>=0 ? iter->index : (int32_t)UITER_UNKNOWN_INDEX;
+            iter->సూచీ=iter->length; /* may or may not be <0 (unknown) */
+            iter->ప్రారంభం=iter->హద్దు;
+            iter->reserved_క్షేత్రం=0;
+            తిరిగి iter->సూచీ>=0 ? iter->సూచీ : (int32_t)UITER_UNKNOWN_సూచీ;
         }
     }
 
     /* delta!=0 */
 
     /* move towards the requested position, pin to the edges of the string */
-    s=(const uint8_t *)iter->context;
-    pos=iter->index; /* could be <0 (unknown) */
-    i=iter->start;
-    if(delta>0) {
+    s=(స్థిరరాశి uint8_t *)iter->context;
+    pos=iter->సూచీ; /* could be <0 (unknown) */
+    i=iter->ప్రారంభం;
+    ఒకవేళ(delta>0) {
         /* go forward */
-        int32_t limit=iter->limit;
-        if(iter->reservedField!=0) {
-            iter->reservedField=0;
+        int32_t హద్దు=iter->హద్దు;
+        ఒకవేళ(iter->reserved_క్షేత్రం!=0) {
+            iter->reserved_క్షేత్రం=0;
             ++pos;
             --delta;
         }
-        while(delta>0 && i<limit) {
-            U8_NEXT_OR_FFFD(s, i, limit, c);
-            if(c<=0xffff) {
+        అయితే(delta>0 && i<హద్దు) {
+            U8_తదుపరి_OR_FFFD(s, i, హద్దు, c);
+            ఒకవేళ(c<=0xffff) {
                 ++pos;
                 --delta;
-            } else if(delta>=2) {
+            } లేకపోతే ఒకవేళ(delta>=2) {
                 pos+=2;
                 delta-=2;
-            } else /* delta==1 */ {
+            } లేకపోతే /* delta==1 */ {
                 /* stop in the middle of a supplementary code point */
-                iter->reservedField=c;
+                iter->reserved_క్షేత్రం=c;
                 ++pos;
-                break; /* delta=0; */
+                ఆపు; /* delta=0; */
             }
         }
-        if(i==limit) {
-            if(iter->length<0 && iter->index>=0) {
-                iter->length= iter->reservedField==0 ? pos : pos+1;
-            } else if(iter->index<0 && iter->length>=0) {
-                iter->index= iter->reservedField==0 ? iter->length : iter->length-1;
+        ఒకవేళ(i==హద్దు) {
+            ఒకవేళ(iter->length<0 && iter->సూచీ>=0) {
+                iter->length= iter->reserved_క్షేత్రం==0 ? pos : pos+1;
+            } లేకపోతే ఒకవేళ(iter->సూచీ<0 && iter->length>=0) {
+                iter->సూచీ= iter->reserved_క్షేత్రం==0 ? iter->length : iter->length-1;
             }
         }
-    } else /* delta<0 */ {
+    } లేకపోతే /* delta<0 */ {
         /* go backward */
-        if(iter->reservedField!=0) {
-            iter->reservedField=0;
+        ఒకవేళ(iter->reserved_క్షేత్రం!=0) {
+            iter->reserved_క్షేత్రం=0;
             i-=4; /* we stayed behind the supplementary code point; go before it now */
             --pos;
             ++delta;
         }
-        while(delta<0 && i>0) {
+        అయితే(delta<0 && i>0) {
             U8_PREV_OR_FFFD(s, 0, i, c);
-            if(c<=0xffff) {
+            ఒకవేళ(c<=0xffff) {
                 --pos;
                 ++delta;
-            } else if(delta<=-2) {
+            } లేకపోతే ఒకవేళ(delta<=-2) {
                 pos-=2;
                 delta+=2;
-            } else /* delta==-1 */ {
+            } లేకపోతే /* delta==-1 */ {
                 /* stop in the middle of a supplementary code point */
                 i+=4; /* back to behind this supplementary code point for consistent state */
-                iter->reservedField=c;
+                iter->reserved_క్షేత్రం=c;
                 --pos;
-                break; /* delta=0; */
+                ఆపు; /* delta=0; */
             }
         }
     }
 
-    iter->start=i;
-    if(iter->index>=0) {
-        return iter->index=pos;
-    } else {
+    iter->ప్రారంభం=i;
+    ఒకవేళ(iter->సూచీ>=0) {
+        తిరిగి iter->సూచీ=pos;
+    } లేకపోతే {
         /* we started with index<0 (unknown) so pos is bogus */
-        if(i<=1) {
-            return iter->index=i; /* reached the beginning */
-        } else {
+        ఒకవేళ(i<=1) {
+            తిరిగి iter->సూచీ=i; /* reached the beginning */
+        } లేకపోతే {
             /* we still don't know the UTF-16 index */
-            return UITER_UNKNOWN_INDEX;
+            తిరిగి UITER_UNKNOWN_సూచీ;
         }
     }
 }
 
-static UBool U_CALLCONV
-utf8IteratorHasNext(UCharIterator *iter) {
-    return iter->start<iter->limit || iter->reservedField!=0;
+స్థిర UBool U_CALLCONV
+utf8_Iterator_Has_తదుపరి(UCharIterator *iter) {
+    తిరిగి iter->ప్రారంభం<iter->హద్దు || iter->reserved_క్షేత్రం!=0;
 }
 
-static UBool U_CALLCONV
-utf8IteratorHasPrevious(UCharIterator *iter) {
-    return iter->start>0;
+స్థిర UBool U_CALLCONV
+utf8_Iterator_Has_మునుపటి(UCharIterator *iter) {
+    తిరిగి iter->ప్రారంభం>0;
 }
 
-static UChar32 U_CALLCONV
+స్థిర UChar32 U_CALLCONV
 utf8IteratorCurrent(UCharIterator *iter) {
-    if(iter->reservedField!=0) {
-        return U16_TRAIL(iter->reservedField);
-    } else if(iter->start<iter->limit) {
-        const uint8_t *s=(const uint8_t *)iter->context;
+    ఒకవేళ(iter->reserved_క్షేత్రం!=0) {
+        తిరిగి U16_TRAIL(iter->reserved_క్షేత్రం);
+    } లేకపోతే ఒకవేళ(iter->ప్రారంభం<iter->హద్దు) {
+        స్థిరరాశి uint8_t *s=(స్థిరరాశి uint8_t *)iter->context;
         UChar32 c;
-        int32_t i=iter->start;
+        int32_t i=iter->ప్రారంభం;
 
-        U8_NEXT_OR_FFFD(s, i, iter->limit, c);
-        if(c<=0xffff) {
-            return c;
-        } else {
-            return U16_LEAD(c);
+        U8_తదుపరి_OR_FFFD(s, i, iter->హద్దు, c);
+        ఒకవేళ(c<=0xffff) {
+            తిరిగి c;
+        } లేకపోతే {
+            తిరిగి U16_LEAD(c);
         }
-    } else {
-        return U_SENTINEL;
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-utf8IteratorNext(UCharIterator *iter) {
-    int32_t index;
+స్థిర UChar32 U_CALLCONV
+utf8_Iterator_తదుపరి(UCharIterator *iter) {
+    int32_t సూచీ;
 
-    if(iter->reservedField!=0) {
-        char16_t trail=U16_TRAIL(iter->reservedField);
-        iter->reservedField=0;
-        if((index=iter->index)>=0) {
-            iter->index=index+1;
+    ఒకవేళ(iter->reserved_క్షేత్రం!=0) {
+        char16_t trail=U16_TRAIL(iter->reserved_క్షేత్రం);
+        iter->reserved_క్షేత్రం=0;
+        ఒకవేళ((సూచీ=iter->సూచీ)>=0) {
+            iter->సూచీ=సూచీ+1;
         }
-        return trail;
-    } else if(iter->start<iter->limit) {
-        const uint8_t *s=(const uint8_t *)iter->context;
+        తిరిగి trail;
+    } లేకపోతే ఒకవేళ(iter->ప్రారంభం<iter->హద్దు) {
+        స్థిరరాశి uint8_t *s=(స్థిరరాశి uint8_t *)iter->context;
         UChar32 c;
 
-        U8_NEXT_OR_FFFD(s, iter->start, iter->limit, c);
-        if((index=iter->index)>=0) {
-            iter->index=++index;
-            if(iter->length<0 && iter->start==iter->limit) {
-                iter->length= c<=0xffff ? index : index+1;
+        U8_తదుపరి_OR_FFFD(s, iter->ప్రారంభం, iter->హద్దు, c);
+        ఒకవేళ((సూచీ=iter->సూచీ)>=0) {
+            iter->సూచీ=++సూచీ;
+            ఒకవేళ(iter->length<0 && iter->ప్రారంభం==iter->హద్దు) {
+                iter->length= c<=0xffff ? సూచీ : సూచీ+1;
             }
-        } else if(iter->start==iter->limit && iter->length>=0) {
-            iter->index= c<=0xffff ? iter->length : iter->length-1;
+        } లేకపోతే ఒకవేళ(iter->ప్రారంభం==iter->హద్దు && iter->length>=0) {
+            iter->సూచీ= c<=0xffff ? iter->length : iter->length-1;
         }
-        if(c<=0xffff) {
-            return c;
-        } else {
-            iter->reservedField=c;
-            return U16_LEAD(c);
+        ఒకవేళ(c<=0xffff) {
+            తిరిగి c;
+        } లేకపోతే {
+            iter->reserved_క్షేత్రం=c;
+            తిరిగి U16_LEAD(c);
         }
-    } else {
-        return U_SENTINEL;
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static UChar32 U_CALLCONV
-utf8IteratorPrevious(UCharIterator *iter) {
-    int32_t index;
+స్థిర UChar32 U_CALLCONV
+utf8_Iterator_మునుపటి(UCharIterator *iter) {
+    int32_t సూచీ;
 
-    if(iter->reservedField!=0) {
-        char16_t lead=U16_LEAD(iter->reservedField);
-        iter->reservedField=0;
-        iter->start-=4; /* we stayed behind the supplementary code point; go before it now */
-        if((index=iter->index)>0) {
-            iter->index=index-1;
+    ఒకవేళ(iter->reserved_క్షేత్రం!=0) {
+        char16_t lead=U16_LEAD(iter->reserved_క్షేత్రం);
+        iter->reserved_క్షేత్రం=0;
+        iter->ప్రారంభం-=4; /* we stayed behind the supplementary code point; go before it now */
+        ఒకవేళ((సూచీ=iter->సూచీ)>0) {
+            iter->సూచీ=సూచీ-1;
         }
-        return lead;
-    } else if(iter->start>0) {
-        const uint8_t *s=(const uint8_t *)iter->context;
+        తిరిగి lead;
+    } లేకపోతే ఒకవేళ(iter->ప్రారంభం>0) {
+        స్థిరరాశి uint8_t *s=(స్థిరరాశి uint8_t *)iter->context;
         UChar32 c;
 
-        U8_PREV_OR_FFFD(s, 0, iter->start, c);
-        if((index=iter->index)>0) {
-            iter->index=index-1;
-        } else if(iter->start<=1) {
-            iter->index= c<=0xffff ? iter->start : iter->start+1;
+        U8_PREV_OR_FFFD(s, 0, iter->ప్రారంభం, c);
+        ఒకవేళ((సూచీ=iter->సూచీ)>0) {
+            iter->సూచీ=సూచీ-1;
+        } లేకపోతే ఒకవేళ(iter->ప్రారంభం<=1) {
+            iter->సూచీ= c<=0xffff ? iter->ప్రారంభం : iter->ప్రారంభం+1;
         }
-        if(c<=0xffff) {
-            return c;
-        } else {
-            iter->start+=4; /* back to behind this supplementary code point for consistent state */
-            iter->reservedField=c;
-            return U16_TRAIL(c);
+        ఒకవేళ(c<=0xffff) {
+            తిరిగి c;
+        } లేకపోతే {
+            iter->ప్రారంభం+=4; /* back to behind this supplementary code point for consistent state */
+            iter->reserved_క్షేత్రం=c;
+            తిరిగి U16_TRAIL(c);
         }
-    } else {
-        return U_SENTINEL;
+    } లేకపోతే {
+        తిరిగి U_SENTINEL;
     }
 }
 
-static uint32_t U_CALLCONV
-utf8IteratorGetState(const UCharIterator *iter) {
-    uint32_t state=(uint32_t)(iter->start<<1);
-    if(iter->reservedField!=0) {
+స్థిర uint32_t U_CALLCONV
+utf8IteratorGetState(స్థిరరాశి UCharIterator *iter) {
+    uint32_t state=(uint32_t)(iter->ప్రారంభం<<1);
+    ఒకవేళ(iter->reserved_క్షేత్రం!=0) {
         state|=1;
     }
-    return state;
+    తిరిగి state;
 }
 
-static void U_CALLCONV
-utf8IteratorSetState(UCharIterator *iter,
+స్థిర శూన్య U_CALLCONV
+utf8_Iterator_సమితి_State(UCharIterator *iter,
                      uint32_t state,
-                     UErrorCode *pErrorCode)
+                     UError_సంకేతం *p_Error_సంకేతం)
 {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
         /* do nothing */
-    } else if(iter==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if(state==utf8IteratorGetState(iter)) {
+    } లేకపోతే ఒకవేళ(iter==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+    } లేకపోతే ఒకవేళ(state==utf8IteratorGetState(iter)) {
         /* setting to the current state: no-op */
-    } else {
-        int32_t index=(int32_t)(state>>1); /* UTF-8 index */
+    } లేకపోతే {
+        int32_t సూచీ=(int32_t)(state>>1); /* UTF-8 index */
         state&=1; /* 1 if in surrogate pair, must be index>=4 */
 
-        if((state==0 ? index<0 : index<4) || iter->limit<index) {
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        } else {
-            iter->start=index; /* restore UTF-8 byte index */
-            if(index<=1) {
-                iter->index=index;
-            } else {
-                iter->index=-1; /* unknown UTF-16 index */
+        ఒకవేళ((state==0 ? సూచీ<0 : సూచీ<4) || iter->హద్దు<సూచీ) {
+            *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        } లేకపోతే {
+            iter->ప్రారంభం=సూచీ; /* restore UTF-8 byte index */
+            ఒకవేళ(సూచీ<=1) {
+                iter->సూచీ=సూచీ;
+            } లేకపోతే {
+                iter->సూచీ=-1; /* unknown UTF-16 index */
             }
-            if(state==0) {
-                iter->reservedField=0;
-            } else {
+            ఒకవేళ(state==0) {
+                iter->reserved_క్షేత్రం=0;
+            } లేకపోతే {
                 /* verified index>=4 above */
                 UChar32 c;
-                U8_PREV_OR_FFFD((const uint8_t *)iter->context, 0, index, c);
-                if(c<=0xffff) {
-                    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                } else {
-                    iter->reservedField=c;
+                U8_PREV_OR_FFFD((స్థిరరాశి uint8_t *)iter->context, 0, సూచీ, c);
+                ఒకవేళ(c<=0xffff) {
+                    *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+                } లేకపోతే {
+                    iter->reserved_క్షేత్రం=c;
                 }
             }
         }
     }
 }
 
-static const UCharIterator utf8Iterator={
-    nullptr, 0, 0, 0, 0, 0,
-    utf8IteratorGetIndex,
+స్థిర స్థిరరాశి UCharIterator utf8Iterator={
+    శూన్యసూచిక, 0, 0, 0, 0, 0,
+    utf8_Iterator_Get_సూచీ,
     utf8IteratorMove,
-    utf8IteratorHasNext,
-    utf8IteratorHasPrevious,
+    utf8_Iterator_Has_తదుపరి,
+    utf8_Iterator_Has_మునుపటి,
     utf8IteratorCurrent,
-    utf8IteratorNext,
-    utf8IteratorPrevious,
-    nullptr,
+    utf8_Iterator_తదుపరి,
+    utf8_Iterator_మునుపటి,
+    శూన్యసూచిక,
     utf8IteratorGetState,
-    utf8IteratorSetState
+    utf8_Iterator_సమితి_State
 };
 
-U_CAPI void U_EXPORT2
-uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length) {
-    if (iter != nullptr) {
-        if (s != nullptr && length >= -1) {
+U_CAPI శూన్య U_EXPORT2
+uiter_సమితి_UTF8(UCharIterator *iter, స్థిరరాశి అక్షరం *s, int32_t length) {
+    ఒకవేళ (iter != శూన్యసూచిక) {
+        ఒకవేళ (s != శూన్యసూచిక && length >= -1) {
             *iter=utf8Iterator;
             iter->context=s;
-            if(length>=0) {
-                iter->limit=length;
-            } else {
-                iter->limit=(int32_t)uprv_strlen(s);
+            ఒకవేళ(length>=0) {
+                iter->హద్దు=length;
+            } లేకపోతే {
+                iter->హద్దు=(int32_t)uprv_strlen(s);
             }
-            iter->length= iter->limit<=1 ? iter->limit : -1;
-        } else {
+            iter->length= iter->హద్దు<=1 ? iter->హద్దు : -1;
+        } లేకపోతే {
             *iter=noopIterator;
         }
     }
@@ -1025,30 +1025,30 @@ uiter_current32(UCharIterator *iter) {
     UChar32 c, c2;
 
     c=iter->current(iter);
-    if(U16_IS_SURROGATE(c)) {
-        if(U16_IS_SURROGATE_LEAD(c)) {
+    ఒకవేళ(U16_IS_SURROGATE(c)) {
+        ఒకవేళ(U16_IS_SURROGATE_LEAD(c)) {
             /*
              * go to the next code unit
              * we know that we are not at the limit because c!=U_SENTINEL
              */
             iter->move(iter, 1, UITER_CURRENT);
-            if(U16_IS_TRAIL(c2=iter->current(iter))) {
+            ఒకవేళ(U16_IS_TRAIL(c2=iter->current(iter))) {
                 c=U16_GET_SUPPLEMENTARY(c, c2);
             }
 
             /* undo index movement */
             iter->move(iter, -1, UITER_CURRENT);
-        } else {
-            if(U16_IS_LEAD(c2=iter->previous(iter))) {
+        } లేకపోతే {
+            ఒకవేళ(U16_IS_LEAD(c2=iter->మునుపటి(iter))) {
                 c=U16_GET_SUPPLEMENTARY(c2, c);
             }
-            if(c2>=0) {
+            ఒకవేళ(c2>=0) {
                 /* undo index movement */
                 iter->move(iter, 1, UITER_CURRENT);
             }
         }
     }
-    return c;
+    తిరిగి c;
 }
 
 U_CAPI UChar32 U_EXPORT2
@@ -1056,53 +1056,53 @@ uiter_next32(UCharIterator *iter) {
     UChar32 c, c2;
 
     c=iter->next(iter);
-    if(U16_IS_LEAD(c)) {
-        if(U16_IS_TRAIL(c2=iter->next(iter))) {
+    ఒకవేళ(U16_IS_LEAD(c)) {
+        ఒకవేళ(U16_IS_TRAIL(c2=iter->next(iter))) {
             c=U16_GET_SUPPLEMENTARY(c, c2);
-        } else if(c2>=0) {
+        } లేకపోతే ఒకవేళ(c2>=0) {
             /* unmatched first surrogate, undo index movement */
             iter->move(iter, -1, UITER_CURRENT);
         }
     }
-    return c;
+    తిరిగి c;
 }
 
 U_CAPI UChar32 U_EXPORT2
 uiter_previous32(UCharIterator *iter) {
     UChar32 c, c2;
 
-    c=iter->previous(iter);
-    if(U16_IS_TRAIL(c)) {
-        if(U16_IS_LEAD(c2=iter->previous(iter))) {
+    c=iter->మునుపటి(iter);
+    ఒకవేళ(U16_IS_TRAIL(c)) {
+        ఒకవేళ(U16_IS_LEAD(c2=iter->మునుపటి(iter))) {
             c=U16_GET_SUPPLEMENTARY(c2, c);
-        } else if(c2>=0) {
+        } లేకపోతే ఒకవేళ(c2>=0) {
             /* unmatched second surrogate, undo index movement */
             iter->move(iter, 1, UITER_CURRENT);
         }
     }
-    return c;
+    తిరిగి c;
 }
 
 U_CAPI uint32_t U_EXPORT2
-uiter_getState(const UCharIterator *iter) {
-    if(iter==nullptr || iter->getState==nullptr) {
-        return UITER_NO_STATE;
-    } else {
-        return iter->getState(iter);
+uiter_getState(స్థిరరాశి UCharIterator *iter) {
+    ఒకవేళ(iter==శూన్యసూచిక || iter->getState==శూన్యసూచిక) {
+        తిరిగి UITER_NO_STATE;
+    } లేకపోతే {
+        తిరిగి iter->getState(iter);
     }
 }
 
-U_CAPI void U_EXPORT2
-uiter_setState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+U_CAPI శూన్య U_EXPORT2
+uiter_సమితి_State(UCharIterator *iter, uint32_t state, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
         /* do nothing */
-    } else if(iter==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if(iter->setState==nullptr) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-    } else {
-        iter->setState(iter, state, pErrorCode);
+    } లేకపోతే ఒకవేళ(iter==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+    } లేకపోతే ఒకవేళ(iter->సమితి_State==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+    } లేకపోతే {
+        iter->సమితి_State(iter, state, p_Error_సంకేతం);
     }
 }
 
-U_CDECL_END
+U_CDECL_చివర

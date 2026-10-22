@@ -19,112 +19,112 @@
 *   stored in uprops.icu.
 */
 
-#ifndef __UPROPS_H__
-#define __UPROPS_H__
+#నిర్వచితం_కాకపోతే __UPROPS_H__
+#నిర్వచించు __UPROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "uset_imp.h"
-#include "udataswp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "uset_imp.h"
+#అన్తర్భావ "udataswp.h"
 
 /* indexes[] entries */
-enum {
-    UPROPS_PROPS32_INDEX,
-    UPROPS_EXCEPTIONS_INDEX,
-    UPROPS_EXCEPTIONS_TOP_INDEX,
+గణన {
+    UPROPS_PROPS32_సూచీ,
+    UPROPS_EXCEPTIONS_సూచీ,
+    UPROPS_EXCEPTIONS_శిఖరం_సూచీ,
 
-    UPROPS_ADDITIONAL_TRIE_INDEX,
-    UPROPS_ADDITIONAL_VECTORS_INDEX,
-    UPROPS_ADDITIONAL_VECTORS_COLUMNS_INDEX,
+    UPROPS_ADDITIONAL_TRIE_సూచీ,
+    UPROPS_ADDITIONAL_VECTORS_సూచీ,
+    UPROPS_ADDITIONAL_VECTORS_COLUMNS_సూచీ,
 
-    UPROPS_SCRIPT_EXTENSIONS_INDEX,
+    UPROPS_SCRIPT_EXTENSIONS_సూచీ,
 
-    UPROPS_BLOCK_TRIE_INDEX,
-    UPROPS_RESERVED_INDEX_8,
+    UPROPS_ఖండం_TRIE_సూచీ,
+    UPROPS_RESERVED_సూచీ_8,
 
     /** size of the data file (number of 32-bit units after the header) */
-    UPROPS_DATA_TOP_INDEX,
+    UPROPS_దత్తాంశం_శిఖరం_సూచీ,
 
     /** maximum values for code values in vector word 0 */
-    UPROPS_MAX_VALUES_INDEX=10,
+    UPROPS_MAX_విలువలు_సూచీ=10,
     /** maximum values for code values in vector word 2 */
-    UPROPS_MAX_VALUES_2_INDEX,
+    UPROPS_MAX_విలువలు_2_సూచీ,
     /** maximum values for other code values */
-    UPROPS_MAX_VALUES_OTHER_INDEX,
+    UPROPS_MAX_విలువలు_OTHER_సూచీ,
 
-    UPROPS_INDEX_COUNT=16
+    UPROPS_సూచీ_లెక్క=16
 };
 
 /* definitions for the main properties words */
-enum {
+గణన {
     /* general category shift==0                                0 (5 bits) */
     /* reserved                                                 5 (1 bit) */
-    UPROPS_NUMERIC_TYPE_VALUE_SHIFT=6                       /*  6 (10 bits) */
+    UPROPS_NUMERIC_TYPE_విలువ_జరుపు=6                       /*  6 (10 bits) */
 };
 
-#define GET_CATEGORY(props) ((props)&0x1f)
-#define CAT_MASK(props) U_MASK(GET_CATEGORY(props))
+#నిర్వచించు GET_CATEGORY(props) ((props)&0x1f)
+#నిర్వచించు CAT_ముసుగు(props) U_ముసుగు(GET_CATEGORY(props))
 
-#define GET_NUMERIC_TYPE_VALUE(props) ((props)>>UPROPS_NUMERIC_TYPE_VALUE_SHIFT)
+#నిర్వచించు GET_NUMERIC_TYPE_విలువ(props) ((props)>>UPROPS_NUMERIC_TYPE_విలువ_జరుపు)
 
 /* constants for the storage form of numeric types and values */
-enum {
+గణన {
     /** No numeric value. */
     UPROPS_NTV_NONE=0,
     /** Decimal digits: nv=0..9 */
-    UPROPS_NTV_DECIMAL_START=1,
+    UPROPS_NTV_DECIMAL_ప్రారంభం=1,
     /** Other digits: nv=0..9 */
-    UPROPS_NTV_DIGIT_START=11,
+    UPROPS_NTV_DIGIT_ప్రారంభం=11,
     /** Small integers: nv=0..154 */
-    UPROPS_NTV_NUMERIC_START=21,
+    UPROPS_NTV_NUMERIC_ప్రారంభం=21,
     /** Fractions: ((ntv>>4)-12) / ((ntv&0xf)+1) = -1..17 / 1..16 */
-    UPROPS_NTV_FRACTION_START=0xb0,
+    UPROPS_NTV_FRACTION_ప్రారంభం=0xb0,
     /**
      * Large integers:
      * ((ntv>>5)-14) * 10^((ntv&0x1f)+2) = (1..9)*(10^2..10^33)
      * (only one significant decimal digit)
      */
-    UPROPS_NTV_LARGE_START=0x1e0,
+    UPROPS_NTV_LARGE_ప్రారంభం=0x1e0,
     /**
      * Sexagesimal numbers:
      * ((ntv>>2)-0xbf) * 60^((ntv&3)+1) = (1..9)*(60^1..60^4)
      */
-    UPROPS_NTV_BASE60_START=0x300,
+    UPROPS_NTV_BASE60_ప్రారంభం=0x300,
     /**
      * Fraction-20 values:
      * frac20 = ntv-0x324 = 0..0x17 -> 1|3|5|7 / 20|40|80|160|320|640
      * numerator: num = 2*(frac20&3)+1
      * denominator: den = 20<<(frac20>>2)
      */
-    UPROPS_NTV_FRACTION20_START=UPROPS_NTV_BASE60_START+36,  // 0x300+9*4=0x324
+    UPROPS_NTV_FRACTION20_ప్రారంభం=UPROPS_NTV_BASE60_ప్రారంభం+36,  // 0x300+9*4=0x324
     /**
      * Fraction-32 values:
      * frac32 = ntv-0x34c = 0..15 -> 1|3|5|7 / 32|64|128|256
      * numerator: num = 2*(frac32&3)+1
      * denominator: den = 32<<(frac32>>2)
      */
-    UPROPS_NTV_FRACTION32_START=UPROPS_NTV_FRACTION20_START+24,  // 0x324+6*4=0x34c
+    UPROPS_NTV_FRACTION32_ప్రారంభం=UPROPS_NTV_FRACTION20_ప్రారంభం+24,  // 0x324+6*4=0x34c
     /** No numeric value (yet). */
-    UPROPS_NTV_RESERVED_START=UPROPS_NTV_FRACTION32_START+16,  // 0x34c+4*4=0x35c
+    UPROPS_NTV_RESERVED_ప్రారంభం=UPROPS_NTV_FRACTION32_ప్రారంభం+16,  // 0x34c+4*4=0x35c
 
-    UPROPS_NTV_MAX_SMALL_INT=UPROPS_NTV_FRACTION_START-UPROPS_NTV_NUMERIC_START-1
+    UPROPS_NTV_MAX_SMALL_INT=UPROPS_NTV_FRACTION_ప్రారంభం-UPROPS_NTV_NUMERIC_ప్రారంభం-1
 };
 
-#define UPROPS_NTV_GET_TYPE(ntv) \
+#నిర్వచించు UPROPS_NTV_GET_TYPE(ntv) \
     ((ntv==UPROPS_NTV_NONE) ? U_NT_NONE : \
-    (ntv<UPROPS_NTV_DIGIT_START) ?  U_NT_DECIMAL : \
-    (ntv<UPROPS_NTV_NUMERIC_START) ? U_NT_DIGIT : \
+    (ntv<UPROPS_NTV_DIGIT_ప్రారంభం) ?  U_NT_DECIMAL : \
+    (ntv<UPROPS_NTV_NUMERIC_ప్రారంభం) ? U_NT_DIGIT : \
     U_NT_NUMERIC)
 
 /* number of properties vector words */
-#define UPROPS_VECTOR_WORDS     3
+#నిర్వచించు UPROPS_సదిశ_పదాలు     3
 
-#ifdef __cplusplus
+#నిర్వచితమైతే __cplusplus
 
 namespace {
 
 // Properties in vector word 0
-// Bits
+//బిట్లు
 // 31..26   Age major version (major=0..63)
 // 25..24   Age minor version (minor=0..3)
 // 23..17   reserved
@@ -150,26 +150,26 @@ namespace {
 // new characters are similar to old ones.)
 // See https://github.com/unicode-org/icu/pull/3025 for details.
 
-inline constexpr uint32_t UPROPS_AGE_MASK = 0xff000000;
-inline constexpr int32_t UPROPS_AGE_SHIFT = 24;
+అంతఃవరుస constexpr uint32_t UPROPS_AGE_ముసుగు = 0xff000000;
+అంతఃవరుస constexpr int32_t UPROPS_AGE_జరుపు = 24;
 
-inline constexpr uint8_t UPROPS_AGE_MAJOR_MAX = 63;
-inline constexpr uint8_t UPROPS_AGE_MINOR_MAX = 3;
+అంతఃవరుస constexpr uint8_t UPROPS_AGE_MAJOR_MAX = 63;
+అంతఃవరుస constexpr uint8_t UPROPS_AGE_MINOR_MAX = 3;
 
-inline constexpr uint32_t UPROPS_EA_MASK = 0x00007000;
-inline constexpr int32_t UPROPS_EA_SHIFT = 12;
+అంతఃవరుస constexpr uint32_t UPROPS_EA_ముసుగు = 0x00007000;
+అంతఃవరుస constexpr int32_t UPROPS_EA_జరుపు = 12;
 
-inline constexpr uint32_t UPROPS_INCB_MASK = 0x00018000;
-inline constexpr int32_t UPROPS_INCB_SHIFT = 15;
+అంతఃవరుస constexpr uint32_t UPROPS_INCB_ముసుగు = 0x00018000;
+అంతఃవరుస constexpr int32_t UPROPS_INCB_జరుపు = 15;
 
 /** Script_Extensions: mask includes Script */
-inline constexpr uint32_t UPROPS_SCRIPT_X_MASK = 0x00000fff;
+అంతఃవరుస constexpr uint32_t UPROPS_SCRIPT_X_ముసుగు = 0x00000fff;
 
 // UPROPS_SCRIPT_X_WITH_COMMON must be the lowest value that involves Script_Extensions.
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_OTHER = 0xc00;
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_INHERITED = 0x800;
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_COMMON = 0x400;
-inline constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
+అంతఃవరుస constexpr uint32_t UPROPS_SCRIPT_X_WITH_OTHER = 0xc00;
+అంతఃవరుస constexpr uint32_t UPROPS_SCRIPT_X_WITH_INHERITED = 0x800;
+అంతఃవరుస constexpr uint32_t UPROPS_SCRIPT_X_WITH_COMMON = 0x400;
+అంతఃవరుస constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
 
 /*
  * Properties in vector word 1
@@ -182,7 +182,7 @@ inline constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
  *
  * ICU 2.6/uprops format version 3.2 stores full properties instead of "Other_".
  */
-enum {
+గణన {
     UPROPS_WHITE_SPACE,
     UPROPS_DASH,
     UPROPS_HYPHEN,
@@ -195,27 +195,27 @@ enum {
     UPROPS_IDEOGRAPHIC,
     UPROPS_DIACRITIC,
     UPROPS_EXTENDER,
-    UPROPS_NONCHARACTER_CODE_POINT,
+    UPROPS_NONCHARACTER_సంకేతం_బిందువు,
     UPROPS_GRAPHEME_EXTEND,
     UPROPS_GRAPHEME_LINK,
-    UPROPS_IDS_BINARY_OPERATOR,
+    UPROPS_IDS_ద్విమాన_OPERATOR,
     UPROPS_IDS_TRINARY_OPERATOR,
     UPROPS_RADICAL,
     UPROPS_UNIFIED_IDEOGRAPH,
-    UPROPS_DEFAULT_IGNORABLE_CODE_POINT,
+    UPROPS_DEFAULT_IGNORABLE_సంకేతం_బిందువు,
     UPROPS_DEPRECATED,
-    UPROPS_LOGICAL_ORDER_EXCEPTION,
-    UPROPS_XID_START,
+    UPROPS_LOGICAL_క్రమం_EXCEPTION,
+    UPROPS_XID_ప్రారంభం,
     UPROPS_XID_CONTINUE,
-    UPROPS_ID_START,                            /* ICU 2.6, uprops format version 3.2 */
+    UPROPS_ID_ప్రారంభం,                            /* ICU 2.6, uprops format version 3.2 */
     UPROPS_ID_CONTINUE,
-    UPROPS_GRAPHEME_BASE,
-    UPROPS_S_TERM,                              /* new in ICU 3.0 and Unicode 4.0.1 */
+    UPROPS_GRAPHEME_పునాది,
+    UPROPS_S_పదం,                              /* new in ICU 3.0 and Unicode 4.0.1 */
     UPROPS_VARIATION_SELECTOR,
-    UPROPS_PATTERN_SYNTAX,                      /* new in ICU 3.4 and Unicode 4.1 */
-    UPROPS_PATTERN_WHITE_SPACE,
+    UPROPS_నమూనా_SYNTAX,                      /* new in ICU 3.4 and Unicode 4.1 */
+    UPROPS_నమూనా_WHITE_SPACE,
     UPROPS_PREPENDED_CONCATENATION_MARK,        // new in ICU 60 and Unicode 10
-    UPROPS_BINARY_1_TOP                         /* ==32 - full! */
+    UPROPS_ద్విమాన_1_శిఖరం                         /* ==32 - full! */
 };
 
 /*
@@ -242,12 +242,12 @@ enum {
 // We do not store separate data for Identifier_Status:
 // We can derive that from the encoded Identifier_Type via a simple range check.
 
-inline constexpr uint32_t UPROPS_2_ID_TYPE_MASK = 0xfc000000;
-inline constexpr int32_t UPROPS_2_ID_TYPE_SHIFT = 26;
+అంతఃవరుస constexpr uint32_t UPROPS_2_ID_TYPE_ముసుగు = 0xfc000000;
+అంతఃవరుస constexpr int32_t UPROPS_2_ID_TYPE_జరుపు = 26;
 
-enum {
+గణన {
     // A high bit for use in idTypeToEncoded[] but not used in the data
-    UPROPS_ID_TYPE_BIT = 0x80,
+    UPROPS_ID_TYPE_బిట్టు = 0x80,
 
     // Combinable bits
     UPROPS_ID_TYPE_EXCLUSION = 0x20,
@@ -276,49 +276,49 @@ enum {
  * When UPROPS_ID_TYPE_BIT is set, then use "&" to test whether the value bit is set.
  * When UPROPS_ID_TYPE_BIT is not set, then compare ("==") the array value with the data value.
  */
-inline constexpr uint8_t uprops_idTypeToEncoded[] = {
+అంతఃవరుస constexpr uint8_t uprops_id_Type_గమ్యం_Encoded[] = {
     UPROPS_ID_TYPE_NOT_CHARACTER,
     UPROPS_ID_TYPE_DEPRECATED,
     UPROPS_ID_TYPE_DEFAULT_IGNORABLE,
     UPROPS_ID_TYPE_NOT_NFKC,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_NOT_XID,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_EXCLUSION,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_OBSOLETE,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_TECHNICAL,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_UNCOMMON_USE,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_LIMITED_USE,
+    UPROPS_ID_TYPE_బిట్టు | UPROPS_ID_TYPE_NOT_XID,
+    UPROPS_ID_TYPE_బిట్టు | UPROPS_ID_TYPE_EXCLUSION,
+    UPROPS_ID_TYPE_బిట్టు | UPROPS_ID_TYPE_OBSOLETE,
+    UPROPS_ID_TYPE_బిట్టు | UPROPS_ID_TYPE_TECHNICAL,
+    UPROPS_ID_TYPE_బిట్టు | UPROPS_ID_TYPE_UNCOMMON_USE,
+    UPROPS_ID_TYPE_బిట్టు | UPROPS_ID_TYPE_LIMITED_USE,
     UPROPS_ID_TYPE_INCLUSION,
     UPROPS_ID_TYPE_RECOMMENDED
 };
 
 }  // namespace
 
-#endif  // __cplusplus
+#అయితే_ముగింపు  // __cplusplus
 
-#define UPROPS_LB_MASK          0x03f00000
-#define UPROPS_LB_SHIFT         20
+#నిర్వచించు UPROPS_LB_ముసుగు          0x03f00000
+#నిర్వచించు UPROPS_LB_జరుపు         20
 
-#define UPROPS_SB_MASK          0x000f8000
-#define UPROPS_SB_SHIFT         15
+#నిర్వచించు UPROPS_SB_ముసుగు          0x000f8000
+#నిర్వచించు UPROPS_SB_జరుపు         15
 
-#define UPROPS_WB_MASK          0x00007c00
-#define UPROPS_WB_SHIFT         10
+#నిర్వచించు UPROPS_WB_ముసుగు          0x00007c00
+#నిర్వచించు UPROPS_WB_జరుపు         10
 
-#define UPROPS_GCB_MASK         0x000003e0
-#define UPROPS_GCB_SHIFT        5
+#నిర్వచించు UPROPS_GCB_ముసుగు         0x000003e0
+#నిర్వచించు UPROPS_GCB_జరుపు        5
 
-#define UPROPS_DT_MASK          0x0000001f
+#నిర్వచించు UPROPS_DT_ముసుగు          0x0000001f
 
-#ifdef __cplusplus
+#నిర్వచితమైతే __cplusplus
 
 namespace {
 
 // Bits 9..0 in UPROPS_MAX_VALUES_OTHER_INDEX
-inline constexpr uint32_t UPROPS_MAX_BLOCK = 0x3ff;
+అంతఃవరుస constexpr uint32_t UPROPS_MAX_ఖండం = 0x3ff;
 
 }  // namespace
 
-#endif  // __cplusplus
+#అయితే_ముగింపు  // __cplusplus
 
 /**
  * Gets the main properties value for a code point.
@@ -333,7 +333,7 @@ u_getMainProperties(UChar32 c);
  * @return 0 if no data or illegal argument
  */
 U_CFUNC uint32_t
-u_getUnicodeProperties(UChar32 c, int32_t column);
+u_getUnicodeProperties(UChar32 c, int32_t స్తంభం);
 
 /**
  * Get the maximum values for some enum/int properties.
@@ -349,7 +349,7 @@ u_getUnicodeProperties(UChar32 c, int32_t column);
  * @internal
  */
 U_CFUNC int32_t
-uprv_getMaxValues(int32_t column);
+uprv_get_Max_విలువలు(int32_t స్తంభం);
 
 /**
  * Checks if c is alphabetic, or a decimal digit; implements UCHAR_POSIX_ALNUM.
@@ -377,7 +377,7 @@ U_CFUNC UBool
 u_isprintPOSIX(UChar32 c);
 
 /** Some code points. @internal */
-enum {
+గణన {
     TAB     =0x0009,
     LF      =0x000a,
     FF      =0x000c,
@@ -400,7 +400,7 @@ enum {
  * @return 0 if no character names available.
  */
 U_CAPI int32_t U_EXPORT2
-uprv_getMaxCharNameLength(void);
+uprv_get_Max_Char_Name_నిడివి(శూన్య);
 
 /**
  * Fills set with characters that are used in Unicode character names.
@@ -408,15 +408,15 @@ uprv_getMaxCharNameLength(void);
  * Just empties the set if no character names are available.
  * @param sa USetAdder to receive characters.
  */
-U_CAPI void U_EXPORT2
-uprv_getCharNameCharacters(const USetAdder *sa);
+U_CAPI శూన్య U_EXPORT2
+uprv_getCharNameCharacters(స్థిరరాశి USetAdder *sa);
 
 /**
  * Constants for which data and implementation files provide which properties.
  * Used by UnicodeSet for service-specific property enumeration.
  * @internal
  */
-enum UPropertySource {
+గణన UProperty_ఆధారం {
     /** No source, not a supported property. */
     UPROPS_SRC_NONE,
     /** From uchar.c/uprops.icu main trie */
@@ -424,7 +424,7 @@ enum UPropertySource {
     /** From uchar.c/uprops.icu properties vectors trie */
     UPROPS_SRC_PROPSVEC,
     /** From unames.c/unames.icu */
-    UPROPS_SRC_NAMES,
+    UPROPS_SRC_పేర్లు,
     /** From ucase.c/ucase.icu */
     UPROPS_SRC_CASE,
     /** From ubidi_props.c/ubidi.icu */
@@ -448,45 +448,45 @@ enum UPropertySource {
     UPROPS_SRC_EMOJI,
     UPROPS_SRC_IDSU,
     UPROPS_SRC_ID_COMPAT_MATH,
-    UPROPS_SRC_BLOCK,
+    UPROPS_SRC_ఖండం,
     UPROPS_SRC_MCM,
     /** One more than the highest UPropertySource (UPROPS_SRC_) constant. */
-    UPROPS_SRC_COUNT
+    UPROPS_SRC_లెక్క
 };
-typedef enum UPropertySource UPropertySource;
+రకనిర్వచనం గణన UProperty_ఆధారం UProperty_ఆధారం;
 
 /**
  * @see UPropertySource
  * @internal
  */
-U_CFUNC UPropertySource U_EXPORT2
-uprops_getSource(UProperty which);
+U_CFUNC UProperty_ఆధారం U_EXPORT2
+uprops_get_ఆధారం(UProperty which);
 
 /**
  * Enumerate uprops.icu's main data trie and add the
  * start of each range of same properties to the set.
  * @internal
  */
-U_CFUNC void U_EXPORT2
-uchar_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC శూన్య U_EXPORT2
+uchar_కూడు_Property_Starts(స్థిరరాశి USetAdder *sa, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Enumerate uprops.icu's properties vectors trie and add the
  * start of each range of same properties to the set.
  * @internal
  */
-U_CFUNC void U_EXPORT2
-upropsvec_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC శూన్య U_EXPORT2
+upropsvec_కూడు_Property_Starts(స్థిరరాశి USetAdder *sa, UError_సంకేతం *p_Error_సంకేతం);
 
-U_CFUNC void U_EXPORT2
-uprops_addPropertyStarts(UPropertySource src, const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC శూన్య U_EXPORT2
+uprops_కూడు_Property_Starts(UProperty_ఆధారం src, స్థిరరాశి USetAdder *sa, UError_సంకేతం *p_Error_సంకేతం);
 
-#ifdef __cplusplus
+#నిర్వచితమైతే __cplusplus
 
-U_CFUNC void U_EXPORT2
-ublock_addPropertyStarts(const USetAdder *sa, UErrorCode &errorCode);
+U_CFUNC శూన్య U_EXPORT2
+ublock_కూడు_Property_Starts(స్థిరరాశి USetAdder *sa, UError_సంకేతం &error_సంకేతం);
 
-#endif  // __cplusplus
+#అయితే_ముగింపు  // __cplusplus
 
 /**
  * Return a set of characters for property enumeration.
@@ -501,8 +501,8 @@ uprv_getInclusions(const USetAdder *sa, UErrorCode *pErrorCode);
 */
 
 /** @internal for icuexportdata */
-U_CAPI void U_EXPORT2
-uprv_addScriptExtensionsCodePoints(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CAPI శూన్య U_EXPORT2
+uprv_కూడు_Script_Extensions_సంకేతం_Points(స్థిరరాశి USetAdder *sa, UError_సంకేతం *p_Error_సంకేతం);
 
 // TODO: Move this into a different header file (udataswp.h? new unames.h?) so that uprops.h
 // need not be C-compatible any more.
@@ -511,29 +511,29 @@ uprv_addScriptExtensionsCodePoints(const USetAdder *sa, UErrorCode *pErrorCode);
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uchar_swapNames(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
-                UErrorCode *pErrorCode);
+uchar_మార్పిడి_పేర్లు(స్థిరరాశి UDataSwapper *ds,
+                స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+                UError_సంకేతం *p_Error_సంకేతం);
 
-#ifdef __cplusplus
+#నిర్వచితమైతే __cplusplus
 
 U_NAMESPACE_BEGIN
 
-class UnicodeSet;
+class Unicode_సమితి;
 
 class CharacterProperties {
-public:
+బహిరంగ:
     CharacterProperties() = delete;
-    static const UnicodeSet *getInclusionsForProperty(UProperty prop, UErrorCode &errorCode);
-    static const UnicodeSet *getBinaryPropertySet(UProperty property, UErrorCode &errorCode);
+    స్థిర స్థిరరాశి Unicode_సమితి *getInclusionsForProperty(UProperty prop, UError_సంకేతం &error_సంకేతం);
+    స్థిర స్థిరరాశి Unicode_సమితి *get_ద్విమాన_Property_సమితి(UProperty property, UError_సంకేతం &error_సంకేతం);
 };
 
 // implemented in uniset_props.cpp
-U_CFUNC UnicodeSet *
-uniset_getUnicode32Instance(UErrorCode &errorCode);
+U_CFUNC Unicode_సమితి *
+uniset_getUnicode32Instance(UError_సంకేతం &error_సంకేతం);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు

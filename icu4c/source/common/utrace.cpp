@@ -11,85 +11,85 @@
 *   indentation:4
 */
 
-#include "unicode/utrace.h"
-#include "utracimp.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
+#అన్తర్భావ "unicode/utrace.h"
+#అన్తర్భావ "utracimp.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucln_cmn.h"
 
 
-static UTraceEntry     *pTraceEntryFunc = nullptr;
-static UTraceExit      *pTraceExitFunc  = nullptr;
-static UTraceData      *pTraceDataFunc  = nullptr;
-static const void      *gTraceContext   = nullptr;
+స్థిర UTrace_నమోదు     *p_Trace_నమోదు_Func = శూన్యసూచిక;
+స్థిర UTraceExit      *pTraceExitFunc  = శూన్యసూచిక;
+స్థిర UTrace_దత్తాంశం      *p_Trace_దత్తాంశం_Func  = శూన్యసూచిక;
+స్థిర స్థిరరాశి శూన్య      *gTraceContext   = శూన్యసూచిక;
 
 /**
  * \var utrace_level
  * Trace level variable. Negative for "off".
  */
-static int32_t
+స్థిర int32_t
 utrace_level = UTRACE_ERROR;
 
-U_CAPI void U_EXPORT2
-utrace_entry(int32_t fnNumber) {
-    if (pTraceEntryFunc != nullptr) {
-        (*pTraceEntryFunc)(gTraceContext, fnNumber);
+U_CAPI శూన్య U_EXPORT2
+utrace_నమోదు(int32_t fn_సంఖ్య) {
+    ఒకవేళ (p_Trace_నమోదు_Func != శూన్యసూచిక) {
+        (*p_Trace_నమోదు_Func)(gTraceContext, fn_సంఖ్య);
     }
 }
 
 
-static const char gExitFmt[]             = "Returns.";
-static const char gExitFmtValue[]        = "Returns %d.";
-static const char gExitFmtStatus[]       = "Returns.  Status = %d.";
-static const char gExitFmtValueStatus[]  = "Returns %d.  Status = %d.";
-static const char gExitFmtPtrStatus[]    = "Returns %d.  Status = %p.";
+స్థిర స్థిరరాశి అక్షరం gExitFmt[]             = "Returns.";
+స్థిర స్థిరరాశి అక్షరం g_Exit_Fmt_విలువ[]        = "Returns %d.";
+స్థిర స్థిరరాశి అక్షరం g_Exit_Fmt_స్థితి[]       = "Returns.  Status = %d.";
+స్థిర స్థిరరాశి అక్షరం g_Exit_Fmt_విలువ_స్థితి[]  = "Returns %d.  Status = %d.";
+స్థిర స్థిరరాశి అక్షరం g_Exit_Fmt_Ptr_స్థితి[]    = "Returns %d.  Status = %p.";
 
-U_CAPI void U_EXPORT2
-utrace_exit(int32_t fnNumber, int32_t returnType, ...) {
-    if (pTraceExitFunc != nullptr) {
-        va_list     args;
-        const char *fmt;
+U_CAPI శూన్య U_EXPORT2
+utrace_exit(int32_t fn_సంఖ్య, int32_t returnType, ...) {
+    ఒకవేళ (pTraceExitFunc != శూన్యసూచిక) {
+        va_list     వాదనలు_2;
+        స్థిరరాశి అక్షరం *fmt;
 
-        switch (returnType) {
-        case 0:
+        ఎంపిక (returnType) {
+        స్థితి 0:
             fmt = gExitFmt;
-            break;
-        case UTRACE_EXITV_I32:
-            fmt = gExitFmtValue;
-            break;
-        case UTRACE_EXITV_STATUS:
-            fmt = gExitFmtStatus;
-            break;
-        case UTRACE_EXITV_I32 | UTRACE_EXITV_STATUS:
-            fmt = gExitFmtValueStatus;
-            break;
-        case UTRACE_EXITV_PTR | UTRACE_EXITV_STATUS:
-            fmt = gExitFmtPtrStatus;
-            break;
-        default:
+            ఆపు;
+        స్థితి UTRACE_EXITV_I32:
+            fmt = g_Exit_Fmt_విలువ;
+            ఆపు;
+        స్థితి UTRACE_EXITV_స్థితి:
+            fmt = g_Exit_Fmt_స్థితి;
+            ఆపు;
+        స్థితి UTRACE_EXITV_I32 | UTRACE_EXITV_స్థితి:
+            fmt = g_Exit_Fmt_విలువ_స్థితి;
+            ఆపు;
+        స్థితి UTRACE_EXITV_PTR | UTRACE_EXITV_స్థితి:
+            fmt = g_Exit_Fmt_Ptr_స్థితి;
+            ఆపు;
+        అప్రమేయ:
             UPRV_UNREACHABLE_EXIT;
         }
 
-        va_start(args, returnType);
-        (*pTraceExitFunc)(gTraceContext, fnNumber, fmt, args);
-        va_end(args);
+        va_start(వాదనలు_2, returnType);
+        (*pTraceExitFunc)(gTraceContext, fn_సంఖ్య, fmt, వాదనలు_2);
+        va_end(వాదనలు_2);
     }
 }
  
 
  
-U_CAPI void U_EXPORT2 
-utrace_data(int32_t fnNumber, int32_t level, const char *fmt, ...) {
-    if (pTraceDataFunc != nullptr) {
-           va_list args;
-           va_start(args, fmt ); 
-           (*pTraceDataFunc)(gTraceContext, fnNumber, level, fmt, args);
-           va_end(args);
+U_CAPI శూన్య U_EXPORT2 
+utrace_దత్తాంశం(int32_t fn_సంఖ్య, int32_t level, స్థిరరాశి అక్షరం *fmt, ...) {
+    ఒకవేళ (p_Trace_దత్తాంశం_Func != శూన్యసూచిక) {
+           va_list వాదనలు_2;
+           va_start(వాదనలు_2, fmt ); 
+           (*p_Trace_దత్తాంశం_Func)(gTraceContext, fn_సంఖ్య, level, fmt, వాదనలు_2);
+           va_end(వాదనలు_2);
     }
 }
 
 
-static void outputChar(char c, char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
+స్థిర శూన్య outputChar(అక్షరం c, అక్షరం *బహిర్గతం_Buf, int32_t *బహిర్గతం_Ix, int32_t capacity, int32_t indent) {
     int32_t i;
     /* Check whether a start of line indenting is needed.  Three cases:
      *   1.  At the start of the first line  (output index == 0).
@@ -100,324 +100,324 @@ static void outputChar(char c, char *outBuf, int32_t *outIx, int32_t capacity, i
      *       the preceding char was \n.  Meaning that we may overstimate the
      *       buffer size needed.  No harm done.
      */
-    if (*outIx==0 ||   /* case 1. */
-        (c!='\n' && c!=0 && *outIx < capacity && outBuf[(*outIx)-1]=='\n') ||  /* case 2. */
-        (c=='\n' && *outIx>=capacity))    /* case 3 */
+    ఒకవేళ (*బహిర్గతం_Ix==0 ||   /* case 1. */
+        (c!='\n' && c!=0 && *బహిర్గతం_Ix < capacity && బహిర్గతం_Buf[(*బహిర్గతం_Ix)-1]=='\n') ||  /* case 2. */
+        (c=='\n' && *బహిర్గతం_Ix>=capacity))    /* case 3 */
     {
         /* At the start of a line.  Indent. */
-        for(i=0; i<indent; i++) {
-            if (*outIx < capacity) {
-                outBuf[*outIx] = ' ';
+        కొరకు(i=0; i<indent; i++) {
+            ఒకవేళ (*బహిర్గతం_Ix < capacity) {
+                బహిర్గతం_Buf[*బహిర్గతం_Ix] = ' ';
             }
-            (*outIx)++;
+            (*బహిర్గతం_Ix)++;
         }
     }
 
-    if (*outIx < capacity) {
-        outBuf[*outIx] = c;
+    ఒకవేళ (*బహిర్గతం_Ix < capacity) {
+        బహిర్గతం_Buf[*బహిర్గతం_Ix] = c;
     }
-    if (c != 0) {
+    ఒకవేళ (c != 0) {
         /* NULs only appear as end-of-string terminators.  Move them to the output
          *  buffer, but do not update the length of the buffer, so that any
          *  following output will overwrite the NUL. */
-        (*outIx)++;
+        (*బహిర్గతం_Ix)++;
     }
 }
 
-static void outputHexBytes(int64_t val, int32_t charsToOutput,
-                           char *outBuf, int32_t *outIx, int32_t capacity) {
-    static const char gHexChars[] = "0123456789abcdef";
-    int32_t shiftCount;
-    for  (shiftCount=(charsToOutput-1)*4; shiftCount >= 0; shiftCount-=4) {
-        char c = gHexChars[(val >> shiftCount) & 0xf];
-        outputChar(c, outBuf, outIx, capacity, 0);
+స్థిర శూన్య output_Hex_బైట్లు(int64_t val, int32_t chars_గమ్యం_Output,
+                           అక్షరం *బహిర్గతం_Buf, int32_t *బహిర్గతం_Ix, int32_t capacity) {
+    స్థిర స్థిరరాశి అక్షరం gHexChars[] = "0123456789abcdef";
+    int32_t జరుపు_లెక్క;
+    కొరకు  (జరుపు_లెక్క=(chars_గమ్యం_Output-1)*4; జరుపు_లెక్క >= 0; జరుపు_లెక్క-=4) {
+        అక్షరం c = gHexChars[(val >> జరుపు_లెక్క) & 0xf];
+        outputChar(c, బహిర్గతం_Buf, బహిర్గతం_Ix, capacity, 0);
     }
 }
 
 /* Output a pointer value in hex.  Work with any size of pointer   */
-static void outputPtrBytes(void *val, char *outBuf, int32_t *outIx, int32_t capacity) {
+స్థిర శూన్య output_Ptr_బైట్లు(శూన్య *val, అక్షరం *బహిర్గతం_Buf, int32_t *బహిర్గతం_Ix, int32_t capacity) {
     uint32_t  i;
     int32_t  incVal = 1;              /* +1 for big endian, -1 for little endian          */
-    char* p = reinterpret_cast<char*>(&val); /* point to current byte to output in the ptr val  */
+    అక్షరం* p = reinterpret_cast<అక్షరం*>(&val); /* point to current byte to output in the ptr val  */
 
-#if !U_IS_BIG_ENDIAN
+#ఒకవేళ !U_IS_BIG_ENDIAN
     /* Little Endian.  Move p to most significant end of the value      */
     incVal = -1;
-    p += sizeof(void *) - 1;
-#endif
+    p += పరిమాణం(శూన్య *) - 1;
+#అయితే_ముగింపు
 
     /* Loop through the bytes of the ptr as it sits in memory, from 
      * most significant to least significant end                    */
-    for (i=0; i<sizeof(void *); i++) {
-        outputHexBytes(*p, 2, outBuf, outIx, capacity);
+    కొరకు (i=0; i<పరిమాణం(శూన్య *); i++) {
+        output_Hex_బైట్లు(*p, 2, బహిర్గతం_Buf, బహిర్గతం_Ix, capacity);
         p += incVal;
     }
 }
 
-static void outputString(const char *s, char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
+స్థిర శూన్య outputString(స్థిరరాశి అక్షరం *s, అక్షరం *బహిర్గతం_Buf, int32_t *బహిర్గతం_Ix, int32_t capacity, int32_t indent) {
     int32_t i = 0;
-    char    c;
-    if (s==nullptr) {
+    అక్షరం    c;
+    ఒకవేళ (s==శూన్యసూచిక) {
         s = "*NULL*";
     }
-    do {
+    చేయి {
         c = s[i++];
-        outputChar(c, outBuf, outIx, capacity, indent);
-    } while (c != 0);
+        outputChar(c, బహిర్గతం_Buf, బహిర్గతం_Ix, capacity, indent);
+    } అయితే (c != 0);
 }
         
 
 
-static void outputUString(const char16_t *s, int32_t len,
-                          char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
+స్థిర శూన్య outputUString(స్థిరరాశి char16_t *s, int32_t len,
+                          అక్షరం *బహిర్గతం_Buf, int32_t *బహిర్గతం_Ix, int32_t capacity, int32_t indent) {
     int32_t i = 0;
     char16_t   c;
-    if (s==nullptr) {
-        outputString(nullptr, outBuf, outIx, capacity, indent);
-        return;
+    ఒకవేళ (s==శూన్యసూచిక) {
+        outputString(శూన్యసూచిక, బహిర్గతం_Buf, బహిర్గతం_Ix, capacity, indent);
+        తిరిగి;
     }
 
-    for (i=0; i<len || len==-1; i++) {
+    కొరకు (i=0; i<len || len==-1; i++) {
         c = s[i];
-        outputHexBytes(c, 4, outBuf, outIx, capacity);
-        outputChar(' ', outBuf, outIx, capacity, indent);
-        if (len == -1 && c==0) {
-            break;
+        output_Hex_బైట్లు(c, 4, బహిర్గతం_Buf, బహిర్గతం_Ix, capacity);
+        outputChar(' ', బహిర్గతం_Buf, బహిర్గతం_Ix, capacity, indent);
+        ఒకవేళ (len == -1 && c==0) {
+            ఆపు;
         }
     }
 }
         
 U_CAPI int32_t U_EXPORT2
-utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, va_list args) {
-    int32_t   outIx  = 0;
+utrace_vformat(అక్షరం *బహిర్గతం_Buf, int32_t capacity, int32_t indent, స్థిరరాశి అక్షరం *fmt, va_list వాదనలు_2) {
+    int32_t   బహిర్గతం_Ix  = 0;
     int32_t   fmtIx  = 0;
-    char      fmtC;
-    char      c;
+    అక్షరం      fmtC;
+    అక్షరం      c;
     int32_t   intArg;
     int64_t   longArg = 0;
-    char      *ptrArg;
+    అక్షరం      *ptrArg;
 
     /*   Loop runs once for each character in the format string.
      */
-    for (;;) {
+    కొరకు (;;) {
         fmtC = fmt[fmtIx++];
-        if (fmtC != '%') {
+        ఒకవేళ (fmtC != '%') {
             /* Literal character, not part of a %sequence.  Just copy it to the output. */
-            outputChar(fmtC, outBuf, &outIx, capacity, indent);
-            if (fmtC == 0) {
+            outputChar(fmtC, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+            ఒకవేళ (fmtC == 0) {
                 /* We hit the NUL that terminates the format string.
                  * This is the normal (and only) exit from the loop that
                  * interprets the format
                  */
-                break;
+                ఆపు;
             }
-            continue;
+            కొనసాగు;
         }
 
         /* We encountered a '%'.  Pick up the following format char */
         fmtC = fmt[fmtIx++];
 
-        switch (fmtC) {
-        case 'c':
+        ఎంపిక (fmtC) {
+        స్థితి 'c':
             /* single 8 bit char   */
-            c = (char)va_arg(args, int32_t);
-            outputChar(c, outBuf, &outIx, capacity, indent);
-            break;
+            c = (అక్షరం)va_arg(వాదనలు_2, int32_t);
+            outputChar(c, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+            ఆపు;
 
-        case 's':
+        స్థితి 's':
             /* char * string, NUL terminated.  */
-            ptrArg = va_arg(args, char *);
-            outputString((const char *)ptrArg, outBuf, &outIx, capacity, indent);
-            break;
+            ptrArg = va_arg(వాదనలు_2, అక్షరం *);
+            outputString((స్థిరరాశి అక్షరం *)ptrArg, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+            ఆపు;
 
-        case 'S':
+        స్థితి 'S':
             /* char16_t * string, with length, len==-1 for NUL terminated. */
-            ptrArg = va_arg(args, char *);             /* Ptr    */
-            intArg = va_arg(args, int32_t);            /* Length */
-            outputUString((const char16_t *)ptrArg, intArg, outBuf, &outIx, capacity, indent);
-            break;
+            ptrArg = va_arg(వాదనలు_2, అక్షరం *);             /* Ptr    */
+            intArg = va_arg(వాదనలు_2, int32_t);            /* Length */
+            outputUString((స్థిరరాశి char16_t *)ptrArg, intArg, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+            ఆపు;
 
-        case 'b':
+        స్థితి 'b':
             /*  8 bit int  */
-            intArg = va_arg(args, int);
-            outputHexBytes(intArg, 2, outBuf, &outIx, capacity);
-            break;
+            intArg = va_arg(వాదనలు_2, పూర్ణాంకం);
+            output_Hex_బైట్లు(intArg, 2, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity);
+            ఆపు;
 
-        case 'h':
+        స్థితి 'h':
             /*  16 bit int  */
-            intArg = va_arg(args, int);
-            outputHexBytes(intArg, 4, outBuf, &outIx, capacity);
-            break;
+            intArg = va_arg(వాదనలు_2, పూర్ణాంకం);
+            output_Hex_బైట్లు(intArg, 4, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity);
+            ఆపు;
 
-        case 'd':
+        స్థితి 'd':
             /*  32 bit int  */
-            intArg = va_arg(args, int);
-            outputHexBytes(intArg, 8, outBuf, &outIx, capacity);
-            break;
+            intArg = va_arg(వాదనలు_2, పూర్ణాంకం);
+            output_Hex_బైట్లు(intArg, 8, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity);
+            ఆపు;
 
-        case 'l':
+        స్థితి 'l':
             /*  64 bit long  */
-            longArg = va_arg(args, int64_t);
-            outputHexBytes(longArg, 16, outBuf, &outIx, capacity);
-            break;
+            longArg = va_arg(వాదనలు_2, int64_t);
+            output_Hex_బైట్లు(longArg, 16, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity);
+            ఆపు;
             
-        case 'p':
+        స్థితి 'p':
             /*  Pointers.   */
-            ptrArg = va_arg(args, char *);
-            outputPtrBytes(ptrArg, outBuf, &outIx, capacity);
-            break;
+            ptrArg = va_arg(వాదనలు_2, అక్షరం *);
+            output_Ptr_బైట్లు(ptrArg, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity);
+            ఆపు;
 
-        case 0:
+        స్థితి 0:
             /* Single '%' at end of fmt string.  Output as literal '%'.   
              * Back up index into format string so that the terminating NUL will be
              * re-fetched in the outer loop, causing it to terminate.
              */
-            outputChar('%', outBuf, &outIx, capacity, indent);
+            outputChar('%', బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
             fmtIx--;
-            break;
+            ఆపు;
 
-        case 'v':
+        స్థితి 'v':
             {
                 /* Vector of values, e.g. %vh */
-                char     vectorType;
-                int32_t  vectorLen;
-                const char   *i8Ptr;
+                అక్షరం     సదిశ_Type;
+                int32_t  సదిశ_Len;
+                స్థిరరాశి అక్షరం   *i8Ptr;
                 int16_t  *i16Ptr;
                 int32_t  *i32Ptr;
                 int64_t  *i64Ptr;
-                void     **ptrPtr;
-                int32_t   charsToOutput = 0;
+                శూన్య     **ptrPtr;
+                int32_t   chars_గమ్యం_Output = 0;
                 int32_t   i;
                 
-                vectorType = fmt[fmtIx];    /* b, h, d, l, p, etc. */
-                if (vectorType != 0) {
+                సదిశ_Type = fmt[fmtIx];    /* b, h, d, l, p, etc. */
+                ఒకవేళ (సదిశ_Type != 0) {
                     fmtIx++;
                 }
-                i8Ptr = (const char *)va_arg(args, void*);
+                i8Ptr = (స్థిరరాశి అక్షరం *)va_arg(వాదనలు_2, శూన్య*);
                 i16Ptr = (int16_t *)i8Ptr;
                 i32Ptr = (int32_t *)i8Ptr;
                 i64Ptr = (int64_t *)i8Ptr;
-                ptrPtr = (void **)i8Ptr;
-                vectorLen = va_arg(args, int32_t);
-                if (ptrPtr == nullptr) {
-                    outputString("*NULL* ", outBuf, &outIx, capacity, indent);
-                } else {
-                    for (i=0; i<vectorLen || vectorLen==-1; i++) { 
-                        switch (vectorType) {
-                        case 'b':
-                            charsToOutput = 2;
+                ptrPtr = (శూన్య **)i8Ptr;
+                సదిశ_Len = va_arg(వాదనలు_2, int32_t);
+                ఒకవేళ (ptrPtr == శూన్యసూచిక) {
+                    outputString("*NULL* ", బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+                } లేకపోతే {
+                    కొరకు (i=0; i<సదిశ_Len || సదిశ_Len==-1; i++) { 
+                        ఎంపిక (సదిశ_Type) {
+                        స్థితి 'b':
+                            chars_గమ్యం_Output = 2;
                             longArg = *i8Ptr++;
-                            break;
-                        case 'h':
-                            charsToOutput = 4;
+                            ఆపు;
+                        స్థితి 'h':
+                            chars_గమ్యం_Output = 4;
                             longArg = *i16Ptr++;
-                            break;
-                        case 'd':
-                            charsToOutput = 8;
+                            ఆపు;
+                        స్థితి 'd':
+                            chars_గమ్యం_Output = 8;
                             longArg = *i32Ptr++;
-                            break;
-                        case 'l':
-                            charsToOutput = 16;
+                            ఆపు;
+                        స్థితి 'l':
+                            chars_గమ్యం_Output = 16;
                             longArg = *i64Ptr++;
-                            break;
-                        case 'p':
-                            charsToOutput = 0;
-                            outputPtrBytes(*ptrPtr, outBuf, &outIx, capacity);
-                            longArg = *ptrPtr==nullptr? 0: 1;    /* test for nullptr terminated array. */
+                            ఆపు;
+                        స్థితి 'p':
+                            chars_గమ్యం_Output = 0;
+                            output_Ptr_బైట్లు(*ptrPtr, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity);
+                            longArg = *ptrPtr==శూన్యసూచిక? 0: 1;    /* test for nullptr terminated array. */
                             ptrPtr++;
-                            break;
-                        case 'c':
-                            charsToOutput = 0;
-                            outputChar(*i8Ptr, outBuf, &outIx, capacity, indent);
+                            ఆపు;
+                        స్థితి 'c':
+                            chars_గమ్యం_Output = 0;
+                            outputChar(*i8Ptr, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
                             longArg = *i8Ptr;    /* for test for nullptr terminated array. */
                             i8Ptr++;
-                            break;
-                        case 's':
-                            charsToOutput = 0;
-                            outputString((const char *)*ptrPtr, outBuf, &outIx, capacity, indent);
-                            outputChar('\n', outBuf, &outIx, capacity, indent);
-                            longArg = *ptrPtr==nullptr? 0: 1;   /* for test for nullptr term. array. */
+                            ఆపు;
+                        స్థితి 's':
+                            chars_గమ్యం_Output = 0;
+                            outputString((స్థిరరాశి అక్షరం *)*ptrPtr, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+                            outputChar('\n', బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+                            longArg = *ptrPtr==శూన్యసూచిక? 0: 1;   /* for test for nullptr term. array. */
                             ptrPtr++;
-                            break;
+                            ఆపు;
 
-                        case 'S':
-                            charsToOutput = 0;
-                            outputUString((const char16_t *)*ptrPtr, -1, outBuf, &outIx, capacity, indent);
-                            outputChar('\n', outBuf, &outIx, capacity, indent);
-                            longArg = *ptrPtr==nullptr? 0: 1;   /* for test for nullptr term. array. */
+                        స్థితి 'S':
+                            chars_గమ్యం_Output = 0;
+                            outputUString((స్థిరరాశి char16_t *)*ptrPtr, -1, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+                            outputChar('\n', బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+                            longArg = *ptrPtr==శూన్యసూచిక? 0: 1;   /* for test for nullptr term. array. */
                             ptrPtr++;
-                            break;
+                            ఆపు;
 
                             
                         }
-                        if (charsToOutput > 0) {
-                            outputHexBytes(longArg, charsToOutput, outBuf, &outIx, capacity);
-                            outputChar(' ', outBuf, &outIx, capacity, indent);
+                        ఒకవేళ (chars_గమ్యం_Output > 0) {
+                            output_Hex_బైట్లు(longArg, chars_గమ్యం_Output, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity);
+                            outputChar(' ', బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
                         }
-                        if (vectorLen == -1 && longArg == 0) {
-                            break;
+                        ఒకవేళ (సదిశ_Len == -1 && longArg == 0) {
+                            ఆపు;
                         }
                     }
                 }
-                outputChar('[', outBuf, &outIx, capacity, indent);
-                outputHexBytes(vectorLen, 8, outBuf, &outIx, capacity);
-                outputChar(']', outBuf, &outIx, capacity, indent);
+                outputChar('[', బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
+                output_Hex_బైట్లు(సదిశ_Len, 8, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity);
+                outputChar(']', బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
             }
-            break;
+            ఆపు;
 
 
-        default:
+        అప్రమేయ:
             /* %. in format string, where . is some character not in the set
              *    of recognized format chars.  Just output it as if % wasn't there.
              *    (Covers "%%" outputting a single '%')
              */
-             outputChar(fmtC, outBuf, &outIx, capacity, indent);
+             outputChar(fmtC, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);
         }
     }
-    outputChar(0, outBuf, &outIx, capacity, indent);  /* Make sure that output is NUL terminated   */
-    return outIx + 1;     /* outIx + 1 because outIx does not increment when outputting final NUL. */
+    outputChar(0, బహిర్గతం_Buf, &బహిర్గతం_Ix, capacity, indent);  /* Make sure that output is NUL terminated   */
+    తిరిగి బహిర్గతం_Ix + 1;     /* outIx + 1 because outIx does not increment when outputting final NUL. */
 }
 
 
 
 
 U_CAPI int32_t U_EXPORT2
-utrace_format(char *outBuf, int32_t capacity,
-                int32_t indent, const char *fmt,  ...) {
+utrace_format(అక్షరం *బహిర్గతం_Buf, int32_t capacity,
+                int32_t indent, స్థిరరాశి అక్షరం *fmt,  ...) {
     int32_t retVal;
-    va_list args;
-    va_start(args, fmt ); 
-    retVal = utrace_vformat(outBuf, capacity, indent, fmt, args);
-    va_end(args);
-    return retVal;
+    va_list వాదనలు_2;
+    va_start(వాదనలు_2, fmt ); 
+    retVal = utrace_vformat(బహిర్గతం_Buf, capacity, indent, fmt, వాదనలు_2);
+    va_end(వాదనలు_2);
+    తిరిగి retVal;
 }
 
 
-U_CAPI void U_EXPORT2
-utrace_setFunctions(const void *context,
-                    UTraceEntry *e, UTraceExit *x, UTraceData *d) {
-    pTraceEntryFunc = e;
+U_CAPI శూన్య U_EXPORT2
+utrace_సమితి_Functions(స్థిరరాశి శూన్య *context,
+                    UTrace_నమోదు *e, UTraceExit *x, UTrace_దత్తాంశం *d) {
+    p_Trace_నమోదు_Func = e;
     pTraceExitFunc  = x;
-    pTraceDataFunc  = d;
+    p_Trace_దత్తాంశం_Func  = d;
     gTraceContext   = context;
 }
 
 
-U_CAPI void U_EXPORT2
-utrace_getFunctions(const void **context,
-                    UTraceEntry **e, UTraceExit **x, UTraceData **d) {
-    *e = pTraceEntryFunc;
+U_CAPI శూన్య U_EXPORT2
+utrace_getFunctions(స్థిరరాశి శూన్య **context,
+                    UTrace_నమోదు **e, UTraceExit **x, UTrace_దత్తాంశం **d) {
+    *e = p_Trace_నమోదు_Func;
     *x = pTraceExitFunc;
-    *d = pTraceDataFunc;
+    *d = p_Trace_దత్తాంశం_Func;
     *context = gTraceContext;
 }
 
-U_CAPI void U_EXPORT2
-utrace_setLevel(int32_t level) {
-    if (level < UTRACE_OFF) {
+U_CAPI శూన్య U_EXPORT2
+utrace_సమితి_Level(int32_t level) {
+    ఒకవేళ (level < UTRACE_OFF) {
         level = UTRACE_OFF;
     }
-    if (level > UTRACE_VERBOSE) {
+    ఒకవేళ (level > UTRACE_VERBOSE) {
         level = UTRACE_VERBOSE;
     }
     utrace_level = level;
@@ -425,31 +425,31 @@ utrace_setLevel(int32_t level) {
 
 U_CAPI int32_t U_EXPORT2
 utrace_getLevel() {
-    return utrace_level;
+    తిరిగి utrace_level;
 }
 
 
 U_CFUNC UBool 
 utrace_cleanup() {
-    pTraceEntryFunc = nullptr;
-    pTraceExitFunc  = nullptr;
-    pTraceDataFunc  = nullptr;
+    p_Trace_నమోదు_Func = శూన్యసూచిక;
+    pTraceExitFunc  = శూన్యసూచిక;
+    p_Trace_దత్తాంశం_Func  = శూన్యసూచిక;
     utrace_level    = UTRACE_OFF;
-    gTraceContext   = nullptr;
-    return true;
+    gTraceContext   = శూన్యసూచిక;
+    తిరిగి నిజం;
 }
 
 
-static const char * const
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి
 trFnName[] = {
     "u_init",
     "u_cleanup",
-    nullptr
+    శూన్యసూచిక
 };
 
 
-static const char * const
-trConvNames[] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి
+tr_Conv_పేర్లు[] = {
     "ucnv_open",
     "ucnv_openPackage",
     "ucnv_openAlgorithmic",
@@ -458,12 +458,12 @@ trConvNames[] = {
     "ucnv_flushCache",
     "ucnv_load",
     "ucnv_unload",
-    nullptr
+    శూన్యసూచిక
 };
 
     
-static const char * const
-trCollNames[] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి
+tr_Coll_పేర్లు[] = {
     "ucol_open",
     "ucol_close",
     "ucol_strcoll",
@@ -473,32 +473,32 @@ trCollNames[] = {
     "ucol_strcollIter",
     "ucol_openFromShortString",
     "ucol_strcollUTF8",
-    nullptr
+    శూన్యసూచిక
 };
 
 
-static const char* const
-trResDataNames[] = {
+స్థిర స్థిరరాశి అక్షరం* స్థిరరాశి
+tr_Res_దత్తాంశం_పేర్లు[] = {
     "resc",
     "bundle-open",
     "file-open",
     "res-open",
-    nullptr
+    శూన్యసూచిక
 };
 
                 
-U_CAPI const char * U_EXPORT2
-utrace_functionName(int32_t fnNumber) {
-    if(UTRACE_FUNCTION_START <= fnNumber && fnNumber < UTRACE_FUNCTION_LIMIT) {
-        return trFnName[fnNumber];
-    } else if(UTRACE_CONVERSION_START <= fnNumber && fnNumber < UTRACE_CONVERSION_LIMIT) {
-        return trConvNames[fnNumber - UTRACE_CONVERSION_START];
-    } else if(UTRACE_COLLATION_START <= fnNumber && fnNumber < UTRACE_COLLATION_LIMIT){
-        return trCollNames[fnNumber - UTRACE_COLLATION_START];
-    } else if(UTRACE_UDATA_START <= fnNumber && fnNumber < UTRACE_RES_DATA_LIMIT){
-        return trResDataNames[fnNumber - UTRACE_UDATA_START];
-    } else {
-        return "[BOGUS Trace Function Number]";
+U_CAPI స్థిరరాశి అక్షరం * U_EXPORT2
+utrace_functionName(int32_t fn_సంఖ్య) {
+    ఒకవేళ(UTRACE_FUNCTION_ప్రారంభం <= fn_సంఖ్య && fn_సంఖ్య < UTRACE_FUNCTION_హద్దు) {
+        తిరిగి trFnName[fn_సంఖ్య];
+    } లేకపోతే ఒకవేళ(UTRACE_CONVERSION_ప్రారంభం <= fn_సంఖ్య && fn_సంఖ్య < UTRACE_CONVERSION_హద్దు) {
+        తిరిగి tr_Conv_పేర్లు[fn_సంఖ్య - UTRACE_CONVERSION_ప్రారంభం];
+    } లేకపోతే ఒకవేళ(UTRACE_COLLATION_ప్రారంభం <= fn_సంఖ్య && fn_సంఖ్య < UTRACE_COLLATION_హద్దు){
+        తిరిగి tr_Coll_పేర్లు[fn_సంఖ్య - UTRACE_COLLATION_ప్రారంభం];
+    } లేకపోతే ఒకవేళ(UTRACE_UDATA_ప్రారంభం <= fn_సంఖ్య && fn_సంఖ్య < UTRACE_RES_దత్తాంశం_హద్దు){
+        తిరిగి tr_Res_దత్తాంశం_పేర్లు[fn_సంఖ్య - UTRACE_UDATA_ప్రారంభం];
+    } లేకపోతే {
+        తిరిగి "[BOGUS Trace Function Number]";
     }
 }
 

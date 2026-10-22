@@ -17,166 +17,166 @@
 *   06/29/2000  helena      Major rewrite of the callback APIs.
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "ucnv_cnv.h"
-#include "ucnv_bld.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/ucnv_err.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "cmemory.h"
 
-U_CFUNC void
-ucnv_getCompleteUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
-                   UConverterUnicodeSet which,
-                   UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0x10ffff);
+U_CFUNC శూన్య
+ucnv_get_Complete_Unicode_సమితి(స్థిరరాశి UConverter *cnv,
+                   స్థిరరాశి USetAdder *sa,
+                   UConverter_Unicode_సమితి which,
+                   UError_సంకేతం *p_Error_సంకేతం) {
+    (శూన్య)cnv;
+    (శూన్య)which;
+    (శూన్య)p_Error_సంకేతం;
+    sa->కూడు_Range(sa->సమితి, 0, 0x10ffff);
 }
 
-U_CFUNC void
-ucnv_getNonSurrogateUnicodeSet(const UConverter *cnv,
-                               const USetAdder *sa,
-                               UConverterUnicodeSet which,
-                               UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0xd7ff);
-    sa->addRange(sa->set, 0xe000, 0x10ffff);
+U_CFUNC శూన్య
+ucnv_get_Non_Surrogate_Unicode_సమితి(స్థిరరాశి UConverter *cnv,
+                               స్థిరరాశి USetAdder *sa,
+                               UConverter_Unicode_సమితి which,
+                               UError_సంకేతం *p_Error_సంకేతం) {
+    (శూన్య)cnv;
+    (శూన్య)which;
+    (శూన్య)p_Error_సంకేతం;
+    sa->కూడు_Range(sa->సమితి, 0, 0xd7ff);
+    sa->కూడు_Range(sa->సమితి, 0xe000, 0x10ffff);
 }
 
-U_CFUNC void
-ucnv_fromUWriteBytes(UConverter *cnv,
-                     const char *bytes, int32_t length,
-                     char **target, const char *targetLimit,
+U_CFUNC శూన్య
+ucnv_from_UWrite_బైట్లు(UConverter *cnv,
+                     స్థిరరాశి అక్షరం *బైట్లు, int32_t length,
+                     అక్షరం **లక్ష్యం, స్థిరరాశి అక్షరం *లక్ష్యం_హద్దు,
                      int32_t **offsets,
-                     int32_t sourceIndex,
-                     UErrorCode *pErrorCode) {
-    char *t=*target;
+                     int32_t ఆధారం_సూచీ,
+                     UError_సంకేతం *p_Error_సంకేతం) {
+    అక్షరం *t=*లక్ష్యం;
     int32_t *o;
 
     /* write bytes */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
-            *t++=*bytes++;
+    ఒకవేళ(offsets==శూన్యసూచిక || (o=*offsets)==శూన్యసూచిక) {
+        అయితే(length>0 && t<లక్ష్యం_హద్దు) {
+            *t++=*బైట్లు++;
             --length;
         }
-    } else {
+    } లేకపోతే {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
-            *t++=*bytes++;
-            *o++=sourceIndex;
+        అయితే(length>0 && t<లక్ష్యం_హద్దు) {
+            *t++=*బైట్లు++;
+            *o++=ఆధారం_సూచీ;
             --length;
         }
         *offsets=o;
     }
-    *target=t;
+    *లక్ష్యం=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
-            t=(char *)cnv->charErrorBuffer;
-            cnv->charErrorBufferLength=(int8_t)length;
-            do {
-                *t++=(uint8_t)*bytes++;
-            } while(--length>0);
+    ఒకవేళ(length>0) {
+        ఒకవేళ(cnv!=శూన్యసూచిక) {
+            t=(అక్షరం *)cnv->char_Error_బఫరు;
+            cnv->char_Error_బఫరు_నిడివి=(int8_t)length;
+            చేయి {
+                *t++=(uint8_t)*బైట్లు++;
+            } అయితే(--length>0);
         }
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
     }
 }
 
-U_CFUNC void
-ucnv_toUWriteUChars(UConverter *cnv,
-                    const char16_t *uchars, int32_t length,
-                    char16_t **target, const char16_t *targetLimit,
+U_CFUNC శూన్య
+ucnv_గమ్యం_UWrite_UChars(UConverter *cnv,
+                    స్థిరరాశి char16_t *uchars, int32_t length,
+                    char16_t **లక్ష్యం, స్థిరరాశి char16_t *లక్ష్యం_హద్దు,
                     int32_t **offsets,
-                    int32_t sourceIndex,
-                    UErrorCode *pErrorCode) {
-    char16_t *t=*target;
+                    int32_t ఆధారం_సూచీ,
+                    UError_సంకేతం *p_Error_సంకేతం) {
+    char16_t *t=*లక్ష్యం;
     int32_t *o;
 
     /* write UChars */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
+    ఒకవేళ(offsets==శూన్యసూచిక || (o=*offsets)==శూన్యసూచిక) {
+        అయితే(length>0 && t<లక్ష్యం_హద్దు) {
             *t++=*uchars++;
             --length;
         }
-    } else {
+    } లేకపోతే {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
+        అయితే(length>0 && t<లక్ష్యం_హద్దు) {
             *t++=*uchars++;
-            *o++=sourceIndex;
+            *o++=ఆధారం_సూచీ;
             --length;
         }
         *offsets=o;
     }
-    *target=t;
+    *లక్ష్యం=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
-            t=cnv->UCharErrorBuffer;
-            cnv->UCharErrorBufferLength=(int8_t)length;
-            do {
+    ఒకవేళ(length>0) {
+        ఒకవేళ(cnv!=శూన్యసూచిక) {
+            t=cnv->UChar_Error_బఫరు;
+            cnv->UChar_Error_బఫరు_నిడివి=(int8_t)length;
+            చేయి {
                 *t++=*uchars++;
-            } while(--length>0);
+            } అయితే(--length>0);
         }
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
     }
 }
 
-U_CFUNC void
-ucnv_toUWriteCodePoint(UConverter *cnv,
+U_CFUNC శూన్య
+ucnv_గమ్యం_UWrite_సంకేతం_బిందువు(UConverter *cnv,
                        UChar32 c,
-                       char16_t **target, const char16_t *targetLimit,
+                       char16_t **లక్ష్యం, స్థిరరాశి char16_t *లక్ష్యం_హద్దు,
                        int32_t **offsets,
-                       int32_t sourceIndex,
-                       UErrorCode *pErrorCode) {
+                       int32_t ఆధారం_సూచీ,
+                       UError_సంకేతం *p_Error_సంకేతం) {
     char16_t *t;
     int32_t *o;
 
-    t=*target;
+    t=*లక్ష్యం;
 
-    if(t<targetLimit) {
-        if(c<=0xffff) {
+    ఒకవేళ(t<లక్ష్యం_హద్దు) {
+        ఒకవేళ(c<=0xffff) {
             *t++=(char16_t)c;
             c=U_SENTINEL;
-        } else /* c is a supplementary code point */ {
+        } లేకపోతే /* c is a supplementary code point */ {
             *t++=U16_LEAD(c);
             c=U16_TRAIL(c);
-            if(t<targetLimit) {
+            ఒకవేళ(t<లక్ష్యం_హద్దు) {
                 *t++=(char16_t)c;
                 c=U_SENTINEL;
             }
         }
 
         /* write offsets */
-        if(offsets!=nullptr && (o=*offsets)!=nullptr) {
-            *o++=sourceIndex;
-            if((*target+1)<t) {
-                *o++=sourceIndex;
+        ఒకవేళ(offsets!=శూన్యసూచిక && (o=*offsets)!=శూన్యసూచిక) {
+            *o++=ఆధారం_సూచీ;
+            ఒకవేళ((*లక్ష్యం+1)<t) {
+                *o++=ఆధారం_సూచీ;
             }
             *offsets=o;
         }
     }
 
-    *target=t;
+    *లక్ష్యం=t;
 
     /* write overflow from c */
-    if(c>=0) {
-        if(cnv!=nullptr) {
+    ఒకవేళ(c>=0) {
+        ఒకవేళ(cnv!=శూన్యసూచిక) {
             int8_t i=0;
-            U16_APPEND_UNSAFE(cnv->UCharErrorBuffer, i, c);
-            cnv->UCharErrorBufferLength=i;
+            U16_APPEND_UNSAFE(cnv->UChar_Error_బఫరు, i, c);
+            cnv->UChar_Error_బఫరు_నిడివి=i;
         }
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
     }
 }
 
-#endif
+#అయితే_ముగింపు

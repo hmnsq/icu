@@ -7,13 +7,13 @@
 **********************************************************************
 */
 
-#ifndef _UCURR_IMP_H_
-#define _UCURR_IMP_H_
+#నిర్వచితం_కాకపోతే _UCURR_IMP_H_
+#నిర్వచించు _UCURR_IMP_H_
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/parsepos.h"
+#అన్తర్భావ "unicode/uniset.h"
 
 /**
  * Internal method.  Given a currency ISO code and a locale, return
@@ -25,9 +25,9 @@
  * This is used for backward compatibility with old currency logic in
  * DecimalFormat and DecimalFormatSymbols.
  */
-U_CAPI void
-uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
-                           icu::UnicodeString& result, UErrorCode& ec);
+U_CAPI శూన్య
+uprv_getStaticCurrencyName(స్థిరరాశి UChar* iso, స్థిరరాశి అక్షరం* loc,
+                           icu::UnicodeString& ఫలితం, UError_సంకేతం& ec);
 
 /**
  * Attempt to parse the given string as a currency, either as a
@@ -53,14 +53,14 @@ uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
  *
  * @internal
  */
-U_CAPI void
-uprv_parseCurrency(const char* locale,
-                   const icu::UnicodeString& text,
+U_CAPI శూన్య
+uprv_parseCurrency(స్థిరరాశి అక్షరం* locale,
+                   స్థిరరాశి icu::UnicodeString& పాఠ్యం,
                    icu::ParsePosition& pos,
                    int8_t type,
-                   int32_t* partialMatchLen,
-                   UChar* result,
-                   UErrorCode& ec);
+                   int32_t* partial_సరిపోలిక_Len,
+                   UChar* ఫలితం,
+                   UError_సంకేతం& ec);
 
 /**
  * Puts all possible first-characters of a currency into the
@@ -69,10 +69,10 @@ uprv_parseCurrency(const char* locale,
  * @param locale the locale of the display names of interest
  * @param result the UnicodeSet to which to add the starting characters
  */
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec);
+శూన్య uprv_currencyLeads(స్థిరరాశి అక్షరం* locale, icu::Unicode_సమితి& ఫలితం, UError_సంకేతం& ec);
 
 
 
-#endif /* #ifndef _UCURR_IMP_H_ */
+#అయితే_ముగింపు /* #ifndef _UCURR_IMP_H_ */
 
 //eof

@@ -4,158 +4,158 @@
 // bytesinkutil.cpp
 // created: 2017sep14 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/edits.h"
-#include "unicode/stringoptions.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/bytestream.h"
+#అన్తర్భావ "unicode/edits.h"
+#అన్తర్భావ "unicode/stringoptions.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "bytesinkutil.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
 UBool
-ByteSinkUtil::appendChange(int32_t length, const char16_t *s16, int32_t s16Length,
-                           ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    char scratch[200];
-    int32_t s8Length = 0;
-    for (int32_t i = 0; i < s16Length;) {
+ByteSinkUtil::appendChange(int32_t length, స్థిరరాశి char16_t *s16, int32_t s16_నిడివి,
+                           ByteSink &sink, Edits *edits, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి అబద్ధం; }
+    అక్షరం scratch[200];
+    int32_t s8_నిడివి = 0;
+    కొరకు (int32_t i = 0; i < s16_నిడివి;) {
         int32_t capacity;
-        int32_t desiredCapacity = s16Length - i;
-        if (desiredCapacity < (INT32_MAX / 3)) {
-            desiredCapacity *= 3;  // max 3 UTF-8 bytes per UTF-16 code unit
-        } else if (desiredCapacity < (INT32_MAX / 2)) {
-            desiredCapacity *= 2;
-        } else {
-            desiredCapacity = INT32_MAX;
+        int32_t desired_సామర్థ్యం = s16_నిడివి - i;
+        ఒకవేళ (desired_సామర్థ్యం < (INT32_MAX / 3)) {
+            desired_సామర్థ్యం *= 3;  // max 3 UTF-8 bytes per UTF-16 code unit
+        } లేకపోతే ఒకవేళ (desired_సామర్థ్యం < (INT32_MAX / 2)) {
+            desired_సామర్థ్యం *= 2;
+        } లేకపోతే {
+            desired_సామర్థ్యం = INT32_MAX;
         }
-        char *buffer = sink.GetAppendBuffer(U8_MAX_LENGTH, desiredCapacity,
+        అక్షరం *బఫరు = sink.Get_Append_బఫరు(U8_MAX_నిడివి, desired_సామర్థ్యం,
                                             scratch, UPRV_LENGTHOF(scratch), &capacity);
-        capacity -= U8_MAX_LENGTH - 1;
+        capacity -= U8_MAX_నిడివి - 1;
         int32_t j = 0;
-        for (; i < s16Length && j < capacity;) {
+        కొరకు (; i < s16_నిడివి && j < capacity;) {
             UChar32 c;
-            U16_NEXT_UNSAFE(s16, i, c);
-            U8_APPEND_UNSAFE(buffer, j, c);
+            U16_తదుపరి_UNSAFE(s16, i, c);
+            U8_APPEND_UNSAFE(బఫరు, j, c);
         }
-        if (j > (INT32_MAX - s8Length)) {
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return false;
+        ఒకవేళ (j > (INT32_MAX - s8_నిడివి)) {
+            error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి అబద్ధం;
         }
-        sink.Append(buffer, j);
-        s8Length += j;
+        sink.Append(బఫరు, j);
+        s8_నిడివి += j;
     }
-    if (edits != nullptr) {
-        edits->addReplace(length, s8Length);
+    ఒకవేళ (edits != శూన్యసూచిక) {
+        edits->కూడు_Replace(length, s8_నిడివి);
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 UBool
-ByteSinkUtil::appendChange(const uint8_t *s, const uint8_t *limit,
-                           const char16_t *s16, int32_t s16Length,
-                           ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+ByteSinkUtil::appendChange(స్థిరరాశి uint8_t *s, స్థిరరాశి uint8_t *హద్దు,
+                           స్థిరరాశి char16_t *s16, int32_t s16_నిడివి,
+                           ByteSink &sink, Edits *edits, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి అబద్ధం; }
+    ఒకవేళ ((హద్దు - s) > INT32_MAX) {
+        error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి అబద్ధం;
     }
-    return appendChange(static_cast<int32_t>(limit - s), s16, s16Length, sink, edits, errorCode);
+    తిరిగి appendChange(static_cast<int32_t>(హద్దు - s), s16, s16_నిడివి, sink, edits, error_సంకేతం);
 }
 
-void
-ByteSinkUtil::appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits) {
-    char s8[U8_MAX_LENGTH];
-    int32_t s8Length = 0;
-    U8_APPEND_UNSAFE(s8, s8Length, c);
-    if (edits != nullptr) {
-        edits->addReplace(length, s8Length);
+శూన్య
+ByteSinkUtil::append_సంకేతం_బిందువు(int32_t length, UChar32 c, ByteSink &sink, Edits *edits) {
+    అక్షరం s8[U8_MAX_నిడివి];
+    int32_t s8_నిడివి = 0;
+    U8_APPEND_UNSAFE(s8, s8_నిడివి, c);
+    ఒకవేళ (edits != శూన్యసూచిక) {
+        edits->కూడు_Replace(length, s8_నిడివి);
     }
-    sink.Append(s8, s8Length);
+    sink.Append(s8, s8_నిడివి);
 }
 
-namespace {
+నామాకాశ {
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+అంతఃవరుస uint8_t getTwoByteLead(UChar32 c) { తిరిగి static_cast<uint8_t>((c >> 6) | 0xc0); }
+అంతఃవరుస uint8_t getTwoByteTrail(UChar32 c) { తిరిగి static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 }  // namespace
 
-void
-ByteSinkUtil::appendTwoBytes(UChar32 c, ByteSink &sink) {
+శూన్య
+ByteSinkUtil::append_Two_బైట్లు(UChar32 c, ByteSink &sink) {
     U_ASSERT(0x80 <= c && c <= 0x7ff);  // 2-byte UTF-8
-    char s8[2] = {static_cast<char>(getTwoByteLead(c)), static_cast<char>(getTwoByteTrail(c))};
+    అక్షరం s8[2] = {static_cast<అక్షరం>(getTwoByteLead(c)), static_cast<అక్షరం>(getTwoByteTrail(c))};
     sink.Append(s8, 2);
 }
 
-void
-ByteSinkUtil::appendNonEmptyUnchanged(const uint8_t *s, int32_t length,
+శూన్య
+ByteSinkUtil::append_Non_ఖాళీలు_Unchanged(స్థిరరాశి uint8_t *s, int32_t length,
                                       ByteSink &sink, uint32_t options, Edits *edits) {
     U_ASSERT(length > 0);
-    if (edits != nullptr) {
-        edits->addUnchanged(length);
+    ఒకవేళ (edits != శూన్యసూచిక) {
+        edits->కూడు_Unchanged(length);
     }
-    if ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-        sink.Append(reinterpret_cast<const char *>(s), length);
+    ఒకవేళ ((options & U_OMIT_UNCHANGED_పాఠ్యం) == 0) {
+        sink.Append(reinterpret_cast<స్థిరరాశి అక్షరం *>(s), length);
     }
 }
 
 UBool
-ByteSinkUtil::appendUnchanged(const uint8_t *s, const uint8_t *limit,
+ByteSinkUtil::appendUnchanged(స్థిరరాశి uint8_t *s, స్థిరరాశి uint8_t *హద్దు,
                               ByteSink &sink, uint32_t options, Edits *edits,
-                              UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+                              UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి అబద్ధం; }
+    ఒకవేళ ((హద్దు - s) > INT32_MAX) {
+        error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి అబద్ధం;
     }
-    int32_t length = static_cast<int32_t>(limit - s);
-    if (length > 0) {
-        appendNonEmptyUnchanged(s, length, sink, options, edits);
+    int32_t length = static_cast<int32_t>(హద్దు - s);
+    ఒకవేళ (length > 0) {
+        append_Non_ఖాళీలు_Unchanged(s, length, sink, options, edits);
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 CharStringByteSink::CharStringByteSink(CharString* dest) : dest_(*dest) {
 }
 
-CharStringByteSink::~CharStringByteSink() = default;
+CharStringByteSink::~CharStringByteSink() = అప్రమేయ;
 
-void
-CharStringByteSink::Append(const char* bytes, int32_t n) {
-    UErrorCode status = U_ZERO_ERROR;
-    dest_.append(bytes, n, status);
+శూన్య
+CharStringByteSink::Append(స్థిరరాశి అక్షరం* బైట్లు, int32_t n) {
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    dest_.append(బైట్లు, n, స్థితి_2);
     // Any errors are silently ignored.
 }
 
-char*
-CharStringByteSink::GetAppendBuffer(int32_t min_capacity,
-                                    int32_t desired_capacity_hint,
-                                    char* scratch U_LIFETIME_BOUND,
-                                    int32_t scratch_capacity,
-                                    int32_t* result_capacity) U_LIFETIME_BOUND {
-    if (min_capacity < 1 || scratch_capacity < min_capacity) {
-        *result_capacity = 0;
-        return nullptr;
+అక్షరం*
+CharStringByteSink::Get_Append_బఫరు(int32_t min_సామర్థ్యం_2,
+                                    int32_t desired_సామర్థ్యం_hint,
+                                    అక్షరం* scratch U_LIFETIME_BOUND,
+                                    int32_t scratch_సామర్థ్యం_2,
+                                    int32_t* ఫలితం_సామర్థ్యం_2) U_LIFETIME_BOUND {
+    ఒకవేళ (min_సామర్థ్యం_2 < 1 || scratch_సామర్థ్యం_2 < min_సామర్థ్యం_2) {
+        *ఫలితం_సామర్థ్యం_2 = 0;
+        తిరిగి శూన్యసూచిక;
     }
 
-    UErrorCode status = U_ZERO_ERROR;
-    char* result = dest_.getAppendBuffer(
-            min_capacity,
-            desired_capacity_hint,
-            *result_capacity,
-            status);
-    if (U_SUCCESS(status)) {
-        return result;
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    అక్షరం* ఫలితం = dest_.get_Append_బఫరు(
+            min_సామర్థ్యం_2,
+            desired_సామర్థ్యం_hint,
+            *ఫలితం_సామర్థ్యం_2,
+            స్థితి_2);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        తిరిగి ఫలితం;
     }
 
-    *result_capacity = scratch_capacity;
-    return scratch;
+    *ఫలితం_సామర్థ్యం_2 = scratch_సామర్థ్యం_2;
+    తిరిగి scratch;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

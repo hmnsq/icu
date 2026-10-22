@@ -1,26 +1,26 @@
 // © 2021 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#ifndef LSTMBE_H
-#define LSTMBE_H
+#నిర్వచితం_కాకపోతే LSTMBE_H
+#నిర్వచించు LSTMBE_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uniset.h"
-#include "unicode/ures.h"
-#include "unicode/utext.h"
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "unicode/utext.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#include "brkeng.h"
-#include "dictbe.h"
-#include "uvectr32.h"
+#అన్తర్భావ "brkeng.h"
+#అన్తర్భావ "dictbe.h"
+#అన్తర్భావ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
 class Vectorizer;
-struct LSTMData;
+నిర్మాణం LSTMData;
 
 /*******************************************************************
  * LSTMBreakEngine
@@ -33,21 +33,21 @@ struct LSTMData;
  * <p>After it is constructed a LSTMBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class LSTMBreakEngine : public DictionaryBreakEngine {
-public:
+class LSTMBreakEngine : బహిరంగ DictionaryBreakEngine {
+బహిరంగ:
     /**
      * <p>Constructor.</p>
      */
-    LSTMBreakEngine(const LSTMData* data, const UnicodeSet& set, UErrorCode &status);
+    LSTMBreakEngine(స్థిరరాశి LSTMData* దత్తాంశం, స్థిరరాశి Unicode_సమితి& సమితి, UError_సంకేతం &స్థితి_2);
 
     /**
      * <p>Virtual destructor.</p>
      */
-    virtual ~LSTMBreakEngine();
+    మాయా ~LSTMBreakEngine();
 
-    virtual const char16_t* name() const;
+    మాయా స్థిరరాశి char16_t* name() స్థిరరాశి;
 
-protected:
+రక్షిత:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *
@@ -58,31 +58,31 @@ protected:
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
-     virtual int32_t divideUpDictionaryRange(UText *text,
-                                             int32_t rangeStart,
-                                             int32_t rangeEnd,
-                                             UVector32 &foundBreaks,
+     మాయా int32_t divide_పైకి_Dictionary_Range(UText *పాఠ్యం,
+                                             int32_t range_ప్రారంభం,
+                                             int32_t range_చివర,
+                                             UVector32 &దొరికింది_Breaks,
                                              UBool isPhraseBreaking,
-                                             UErrorCode& status) const override;
-private:
-    const LSTMData* fData;
-    const Vectorizer* fVectorizer;
+                                             UError_సంకేతం& స్థితి_2) స్థిరరాశి override;
+అంతరంగ:
+    స్థిరరాశి LSTMData* f_దత్తాంశం;
+    స్థిరరాశి Vectorizer* fVectorizer;
 };
 
-U_CAPI const LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
-    UScriptCode script, const LSTMData* data, UErrorCode& status);
+U_CAPI స్థిరరాశి LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
+    UScript_సంకేతం script, స్థిరరాశి LSTMData* దత్తాంశం, UError_సంకేతం& స్థితి_2);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMData(
-    UResourceBundle* rb, UErrorCode& status);
+U_CAPI స్థిరరాశి LSTMData* U_EXPORT2 CreateLSTMData(
+    UResourceBundle* rb, UError_సంకేతం& స్థితి_2);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMDataForScript(
-    UScriptCode script, UErrorCode& status);
+U_CAPI స్థిరరాశి LSTMData* U_EXPORT2 CreateLSTMDataForScript(
+    UScript_సంకేతం script, UError_సంకేతం& స్థితి_2);
 
-U_CAPI void U_EXPORT2 DeleteLSTMData(const LSTMData* data);
-U_CAPI const char16_t* U_EXPORT2 LSTMDataName(const LSTMData* data);
+U_CAPI శూన్య U_EXPORT2 DeleteLSTMData(స్థిరరాశి LSTMData* దత్తాంశం);
+U_CAPI స్థిరరాశి char16_t* U_EXPORT2 LSTMDataName(స్థిరరాశి LSTMData* దత్తాంశం);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif  /* LSTMBE_H */
+#అయితే_ముగింపు  /* LSTMBE_H */

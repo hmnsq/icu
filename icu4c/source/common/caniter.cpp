@@ -7,20 +7,20 @@
  *****************************************************************************
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ఒకవేళ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/caniter.h"
-#include "unicode/normalizer2.h"
-#include "unicode/uchar.h"
-#include "unicode/uniset.h"
-#include "unicode/usetiter.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "hash.h"
-#include "normalizer2impl.h"
+#అన్తర్భావ "unicode/caniter.h"
+#అన్తర్భావ "unicode/normalizer2.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/usetiter.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "hash.h"
+#అన్తర్భావ "normalizer2impl.h"
 
 /**
  * This class allows one to iterate through all the strings that are canonically equivalent to a given
@@ -56,7 +56,7 @@ Results for: {LATIN CAPITAL LETTER A WITH RING ABOVE}{LATIN SMALL LETTER D}{COMB
  *@draft
  */
 
-// public
+//ప్రజా
 
 U_NAMESPACE_BEGIN
 
@@ -68,17 +68,17 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(CanonicalIterator)
 /**
  *@param source string to get results for
  */
-CanonicalIterator::CanonicalIterator(const UnicodeString &sourceStr, UErrorCode &status) :
-    pieces(nullptr),
-    pieces_length(0),
-    pieces_lengths(nullptr),
-    current(nullptr),
-    current_length(0),
-    nfd(Normalizer2::getNFDInstance(status)),
-    nfcImpl(Normalizer2Factory::getNFCImpl(status))
+CanonicalIterator::CanonicalIterator(స్థిరరాశి UnicodeString &ఆధారం_Str, UError_సంకేతం &స్థితి_2) :
+    pieces(శూన్యసూచిక),
+    pieces_నిడివి(0),
+    pieces_lengths(శూన్యసూచిక),
+    current(శూన్యసూచిక),
+    current_నిడివి(0),
+    nfd(Normalizer2::getNFDInstance(స్థితి_2)),
+    nfcImpl(Normalizer2Factory::getNFCImpl(స్థితి_2))
 {
-    if(U_SUCCESS(status) && nfcImpl->ensureCanonIterData(status)) {
-      setSource(sourceStr, status);
+    ఒకవేళ(U_SUCCESS(స్థితి_2) && nfcImpl->ensure_Canon_Iter_దత్తాంశం(స్థితి_2)) {
+      సమితి_ఆధారం(ఆధారం_Str, స్థితి_2);
     }
 }
 
@@ -86,42 +86,42 @@ CanonicalIterator::~CanonicalIterator() {
   cleanPieces();
 }
 
-void CanonicalIterator::cleanPieces() {
+శూన్య CanonicalIterator::cleanPieces() {
     int32_t i = 0;
-    if(pieces != nullptr) {
-        for(i = 0; i < pieces_length; i++) {
-            if(pieces[i] != nullptr) {
-                delete[] pieces[i];
+    ఒకవేళ(pieces != శూన్యసూచిక) {
+        కొరకు(i = 0; i < pieces_నిడివి; i++) {
+            ఒకవేళ(pieces[i] != శూన్యసూచిక) {
+                తొలగించు[] pieces[i];
             }
         }
         uprv_free(pieces);
-        pieces = nullptr;
-        pieces_length = 0;
+        pieces = శూన్యసూచిక;
+        pieces_నిడివి = 0;
     }
-    if(pieces_lengths != nullptr) {
+    ఒకవేళ(pieces_lengths != శూన్యసూచిక) {
         uprv_free(pieces_lengths);
-        pieces_lengths = nullptr;
+        pieces_lengths = శూన్యసూచిక;
     }
-    if(current != nullptr) {
+    ఒకవేళ(current != శూన్యసూచిక) {
         uprv_free(current);
-        current = nullptr;
-        current_length = 0;
+        current = శూన్యసూచిక;
+        current_నిడివి = 0;
     }
 }
 
 /**
  *@return gets the source: NOTE: it is the NFD form of source
  */
-UnicodeString CanonicalIterator::getSource() {
-  return source;
+UnicodeString CanonicalIterator::get_ఆధారం() {
+  తిరిగి ఆధారం;
 }
 
 /**
  * Resets the iterator so that one can start again from the beginning.
  */
-void CanonicalIterator::reset() {
-    done = false;
-    for (int i = 0; i < current_length; ++i) {
+శూన్య CanonicalIterator::reset() {
+    పూర్తి = అబద్ధం;
+    కొరకు (పూర్ణాంకం i = 0; i < current_నిడివి; ++i) {
         current[i] = 0;
     }
 }
@@ -133,127 +133,127 @@ void CanonicalIterator::reset() {
 UnicodeString CanonicalIterator::next() {
     int32_t i = 0;
 
-    if (done) {
-      buffer.setToBogus();
-      return buffer;
+    ఒకవేళ (పూర్తి) {
+      బఫరు.సమితి_గమ్యం_Bogus();
+      తిరిగి బఫరు;
     }
 
     // delete old contents
-    buffer.remove();
+    బఫరు.remove();
 
     // construct return value
 
-    for (i = 0; i < pieces_length; ++i) {
-        buffer.append(pieces[i][current[i]]);
+    కొరకు (i = 0; i < pieces_నిడివి; ++i) {
+        బఫరు.append(pieces[i][current[i]]);
     }
     //String result = buffer.toString(); // not needed
 
     // find next value for next time
 
-    for (i = current_length - 1; ; --i) {
-        if (i < 0) {
-            done = true;
-            break;
+    కొరకు (i = current_నిడివి - 1; ; --i) {
+        ఒకవేళ (i < 0) {
+            పూర్తి = నిజం;
+            ఆపు;
         }
         current[i]++;
-        if (current[i] < pieces_lengths[i]) break; // got sequence
+        ఒకవేళ (current[i] < pieces_lengths[i]) ఆపు; // got sequence
         current[i] = 0;
     }
-    return buffer;
+    తిరిగి బఫరు;
 }
 
 /**
  *@param set the source string to iterate against. This allows the same iterator to be used
  * while changing the source string, saving object creation.
  */
-void CanonicalIterator::setSource(const UnicodeString &newSource, UErrorCode &status) {
-    int32_t list_length = 0;
+శూన్య CanonicalIterator::సమితి_ఆధారం(స్థిరరాశి UnicodeString &new_ఆధారం, UError_సంకేతం &స్థితి_2) {
+    int32_t list_నిడివి_2 = 0;
     UChar32 cp = 0;
-    int32_t start = 0;
+    int32_t ప్రారంభం = 0;
     int32_t i = 0;
-    UnicodeString *list = nullptr;
+    UnicodeString *list = శూన్యసూచిక;
 
-    nfd->normalize(newSource, source, status);
-    if(U_FAILURE(status)) {
-      return;
+    nfd->normalize(new_ఆధారం, ఆధారం, స్థితి_2);
+    ఒకవేళ(U_FAILURE(స్థితి_2)) {
+      తిరిగి;
     }
-    done = false;
+    పూర్తి = అబద్ధం;
 
     cleanPieces();
 
     // catch degenerate case
-    if (newSource.length() == 0) {
-        pieces = static_cast<UnicodeString**>(uprv_malloc(sizeof(UnicodeString*)));
-        pieces_lengths = static_cast<int32_t*>(uprv_malloc(1 * sizeof(int32_t)));
-        pieces_length = 1;
-        current = static_cast<int32_t*>(uprv_malloc(1 * sizeof(int32_t)));
-        current_length = 1;
-        if (pieces == nullptr || pieces_lengths == nullptr || current == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            goto CleanPartialInitialization;
+    ఒకవేళ (new_ఆధారం.length() == 0) {
+        pieces = static_cast<UnicodeString**>(uprv_malloc(పరిమాణం(UnicodeString*)));
+        pieces_lengths = static_cast<int32_t*>(uprv_malloc(1 * పరిమాణం(int32_t)));
+        pieces_నిడివి = 1;
+        current = static_cast<int32_t*>(uprv_malloc(1 * పరిమాణం(int32_t)));
+        current_నిడివి = 1;
+        ఒకవేళ (pieces == శూన్యసూచిక || pieces_lengths == శూన్యసూచిక || current == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            వెళ్ళు CleanPartialInitialization;
         }
         current[0] = 0;
-        pieces[0] = new UnicodeString[1];
+        pieces[0] = కొత్త UnicodeString[1];
         pieces_lengths[0] = 1;
-        if (pieces[0] == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            goto CleanPartialInitialization;
+        ఒకవేళ (pieces[0] == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            వెళ్ళు CleanPartialInitialization;
         }
-        return;
+        తిరిగి;
     }
 
 
-    list = new UnicodeString[source.length()];
-    if (list == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        goto CleanPartialInitialization;
+    list = కొత్త UnicodeString[ఆధారం.length()];
+    ఒకవేళ (list == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        వెళ్ళు CleanPartialInitialization;
     }
 
     // i should initially be the number of code units at the 
     // start of the string
-    i = U16_LENGTH(source.char32At(0));
+    i = U16_నిడివి(ఆధారం.char32At(0));
     // int32_t i = 1;
     // find the segments
     // This code iterates through the source string and 
     // extracts segments that end up on a codepoint that
     // doesn't start any decompositions. (Analysis is done
     // on the NFD form - see above).
-    for (; i < source.length(); i += U16_LENGTH(cp)) {
-        cp = source.char32At(i);
-        if (nfcImpl->isCanonSegmentStarter(cp)) {
-            source.extract(start, i-start, list[list_length++]); // add up to i
-            start = i;
+    కొరకు (; i < ఆధారం.length(); i += U16_నిడివి(cp)) {
+        cp = ఆధారం.char32At(i);
+        ఒకవేళ (nfcImpl->isCanonSegmentStarter(cp)) {
+            ఆధారం.extract(ప్రారంభం, i-ప్రారంభం, list[list_నిడివి_2++]); // add up to i
+            ప్రారంభం = i;
         }
     }
-    source.extract(start, i-start, list[list_length++]); // add last one
+    ఆధారం.extract(ప్రారంభం, i-ప్రారంభం, list[list_నిడివి_2++]); // add last one
 
 
     // allocate the arrays, and find the strings that are CE to each segment
-    pieces = static_cast<UnicodeString**>(uprv_malloc(list_length * sizeof(UnicodeString*)));
-    pieces_length = list_length;
-    pieces_lengths = static_cast<int32_t*>(uprv_malloc(list_length * sizeof(int32_t)));
-    current = static_cast<int32_t*>(uprv_malloc(list_length * sizeof(int32_t)));
-    current_length = list_length;
-    if (pieces == nullptr || pieces_lengths == nullptr || current == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        goto CleanPartialInitialization;
+    pieces = static_cast<UnicodeString**>(uprv_malloc(list_నిడివి_2 * పరిమాణం(UnicodeString*)));
+    pieces_నిడివి = list_నిడివి_2;
+    pieces_lengths = static_cast<int32_t*>(uprv_malloc(list_నిడివి_2 * పరిమాణం(int32_t)));
+    current = static_cast<int32_t*>(uprv_malloc(list_నిడివి_2 * పరిమాణం(int32_t)));
+    current_నిడివి = list_నిడివి_2;
+    ఒకవేళ (pieces == శూన్యసూచిక || pieces_lengths == శూన్యసూచిక || current == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        వెళ్ళు CleanPartialInitialization;
     }
 
-    for (i = 0; i < current_length; i++) {
+    కొరకు (i = 0; i < current_నిడివి; i++) {
         current[i] = 0;
     }
     // for each segment, get all the combinations that can produce 
     // it after NFD normalization
-    for (i = 0; i < pieces_length; ++i) {
+    కొరకు (i = 0; i < pieces_నిడివి; ++i) {
         //if (PROGRESS) printf("SEGMENT\n");
-        pieces[i] = getEquivalents(list[i], pieces_lengths[i], status);
+        pieces[i] = getEquivalents(list[i], pieces_lengths[i], స్థితి_2);
     }
 
-    delete[] list;
-    return;
+    తొలగించు[] list;
+    తిరిగి;
 // Common section to cleanup all local variables and reset object variables.
 CleanPartialInitialization:
-    delete[] list;
+    తొలగించు[] list;
     cleanPieces();
 }
 
@@ -263,18 +263,18 @@ CleanPartialInitialization:
  * @param source the string to find permutations for
  * @return the results in a set.
  */
-void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros, Hashtable *result, UErrorCode &status, int32_t depth) {
-    if(U_FAILURE(status)) {
-        return;
+శూన్య U_EXPORT2 CanonicalIterator::క్రమమార్పు(UnicodeString &ఆధారం, UBool skipZeros, Hashtable *ఫలితం, UError_సంకేతం &స్థితి_2, int32_t లోతు) {
+    ఒకవేళ(U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
     // To avoid infinity loop caused by permute, we limit the depth of recursive
     // call to permute and return U_UNSUPPORTED_ERROR.
     // We know in some unit test we need at least 4. Set to 8 just in case some
     // unforseen use cases.
-    constexpr int32_t kPermuteDepthLimit = 8;
-    if (depth > kPermuteDepthLimit) {
-        status = U_UNSUPPORTED_ERROR;
-        return;
+    constexpr int32_t k_క్రమమార్పు_లోతు_హద్దు = 8;
+    ఒకవేళ (లోతు > k_క్రమమార్పు_లోతు_హద్దు) {
+        స్థితి_2 = U_UNSUPPORTED_ERROR;
+        తిరిగి;
     }
     //if (PROGRESS) printf("Permute: %s\n", UToS(Tr(source)));
     int32_t i = 0;
@@ -282,65 +282,65 @@ void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros
     // optimization:
     // if zero or one character, just return a set with it
     // we check for length < 2 to keep from counting code points all the time
-    if (source.length() <= 2 && source.countChar32() <= 1) {
-        UnicodeString *toPut = new UnicodeString(source);
+    ఒకవేళ (ఆధారం.length() <= 2 && ఆధారం.లెక్క_Char32() <= 1) {
+        UnicodeString *గమ్యం_Put = కొత్త UnicodeString(ఆధారం);
         /* test for nullptr */
-        if (toPut == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return;
+        ఒకవేళ (గమ్యం_Put == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
-        result->put(source, toPut, status);
-        return;
+        ఫలితం->put(ఆధారం, గమ్యం_Put, స్థితి_2);
+        తిరిగి;
     }
 
     // otherwise iterate through the string, and recursively permute all the other characters
     UChar32 cp;
-    Hashtable subpermute(status);
-    if(U_FAILURE(status)) {
-        return;
+    Hashtable subpermute(స్థితి_2);
+    ఒకవేళ(U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    subpermute.setValueDeleter(uprv_deleteUObject);
+    subpermute.సమితి_విలువ_Deleter(uprv_deleteUObject);
 
-    for (i = 0; i < source.length(); i += U16_LENGTH(cp)) {
-        cp = source.char32At(i);
-        const UHashElement *ne = nullptr;
-        int32_t el = UHASH_FIRST;
-        UnicodeString subPermuteString = source;
+    కొరకు (i = 0; i < ఆధారం.length(); i += U16_నిడివి(cp)) {
+        cp = ఆధారం.char32At(i);
+        స్థిరరాశి UHashElement *ne = శూన్యసూచిక;
+        int32_t el = UHASH_మొదటి;
+        UnicodeString sub_క్రమమార్పు_String = ఆధారం;
 
         // optimization:
         // if the character is canonical combining class zero,
         // don't permute it
-        if (skipZeros && i != 0 && u_getCombiningClass(cp) == 0) {
+        ఒకవేళ (skipZeros && i != 0 && u_getCombiningClass(cp) == 0) {
             //System.out.println("Skipping " + Utility.hex(UTF16.valueOf(source, i)));
-            continue;
+            కొనసాగు;
         }
 
         subpermute.removeAll();
 
         // see what the permutations of the characters before and after this one are
         //Hashtable *subpermute = permute(source.substring(0,i) + source.substring(i + UTF16.getCharCount(cp)));
-        permute(subPermuteString.remove(i, U16_LENGTH(cp)), skipZeros, &subpermute, status, depth+1);
+        క్రమమార్పు(sub_క్రమమార్పు_String.remove(i, U16_నిడివి(cp)), skipZeros, &subpermute, స్థితి_2, లోతు+1);
         /* Test for buffer overflows */
-        if(U_FAILURE(status)) {
-            return;
+        ఒకవేళ(U_FAILURE(స్థితి_2)) {
+            తిరిగి;
         }
         // The upper remove is destructive. The question is do we have to make a copy, or we don't care about the contents 
         // of source at this point.
 
         // prefix this character to all of them
-        ne = subpermute.nextElement(el);
-        while (ne != nullptr) {
-            UnicodeString* permRes = static_cast<UnicodeString*>(ne->value.pointer);
-            UnicodeString *chStr = new UnicodeString(cp);
+        ne = subpermute.తదుపరి_Element(el);
+        అయితే (ne != శూన్యసూచిక) {
+            UnicodeString* permRes = static_cast<UnicodeString*>(ne->value.సూచిక);
+            UnicodeString *chStr = కొత్త UnicodeString(cp);
             //test for nullptr
-            if (chStr == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ఒకవేళ (chStr == శూన్యసూచిక) {
+                స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి;
             }
             chStr->append(*permRes); //*((UnicodeString *)(ne->value.pointer));
             //if (PROGRESS) printf("  Piece: %s\n", UToS(*chStr));
-            result->put(*chStr, chStr, status);
-            ne = subpermute.nextElement(el);
+            ఫలితం->put(*chStr, chStr, స్థితి_2);
+            ne = subpermute.తదుపరి_Element(el);
         }
     }
     //return result;
@@ -349,170 +349,170 @@ void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros
 // privates
 
 // we have a segment, in NFD. Find all the strings that are canonically equivalent to it.
-UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, int32_t &result_len, UErrorCode &status) {
-    Hashtable result(status);
-    Hashtable permutations(status);
-    Hashtable basic(status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+UnicodeString* CanonicalIterator::getEquivalents(స్థిరరాశి UnicodeString &segment, int32_t &ఫలితం_len, UError_సంకేతం &స్థితి_2) {
+    Hashtable ఫలితం(స్థితి_2);
+    Hashtable permutations(స్థితి_2);
+    Hashtable basic(స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    result.setValueDeleter(uprv_deleteUObject);
-    permutations.setValueDeleter(uprv_deleteUObject);
-    basic.setValueDeleter(uprv_deleteUObject);
+    ఫలితం.సమితి_విలువ_Deleter(uprv_deleteUObject);
+    permutations.సమితి_విలువ_Deleter(uprv_deleteUObject);
+    basic.సమితి_విలువ_Deleter(uprv_deleteUObject);
 
     char16_t USeg[256];
-    int32_t segLen = segment.extract(USeg, 256, status);
-    getEquivalents2(&basic, USeg, segLen, status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+    int32_t segLen = segment.extract(USeg, 256, స్థితి_2);
+    getEquivalents2(&basic, USeg, segLen, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     // now get all the permutations
     // add only the ones that are canonically equivalent
     // TODO: optimize by not permuting any class zero.
 
-    const UHashElement *ne = nullptr;
-    int32_t el = UHASH_FIRST;
+    స్థిరరాశి UHashElement *ne = శూన్యసూచిక;
+    int32_t el = UHASH_మొదటి;
     //Iterator it = basic.iterator();
-    ne = basic.nextElement(el);
+    ne = basic.తదుపరి_Element(el);
     //while (it.hasNext())
-    while (ne != nullptr) {
+    అయితే (ne != శూన్యసూచిక) {
         //String item = (String) it.next();
-        UnicodeString item = *static_cast<UnicodeString*>(ne->value.pointer);
+        UnicodeString అంశం = *static_cast<UnicodeString*>(ne->value.సూచిక);
 
         permutations.removeAll();
-        permute(item, CANITER_SKIP_ZEROES, &permutations, status);
-        const UHashElement *ne2 = nullptr;
-        int32_t el2 = UHASH_FIRST;
+        క్రమమార్పు(అంశం, CANITER_SKIP_ZEROES, &permutations, స్థితి_2);
+        స్థిరరాశి UHashElement *ne2 = శూన్యసూచిక;
+        int32_t el2 = UHASH_మొదటి;
         //Iterator it2 = permutations.iterator();
-        ne2 = permutations.nextElement(el2);
+        ne2 = permutations.తదుపరి_Element(el2);
         //while (it2.hasNext())
-        while (ne2 != nullptr) {
+        అయితే (ne2 != శూన్యసూచిక) {
             //String possible = (String) it2.next();
             //UnicodeString *possible = new UnicodeString(*((UnicodeString *)(ne2->value.pointer)));
-            UnicodeString possible(*static_cast<UnicodeString*>(ne2->value.pointer));
+            UnicodeString possible(*static_cast<UnicodeString*>(ne2->value.సూచిక));
             UnicodeString attempt;
-            nfd->normalize(possible, attempt, status);
+            nfd->normalize(possible, attempt, స్థితి_2);
 
             // TODO: check if operator == is semanticaly the same as attempt.equals(segment)
-            if (attempt==segment) {
+            ఒకవేళ (attempt==segment) {
                 //if (PROGRESS) printf("Adding Permutation: %s\n", UToS(Tr(*possible)));
                 // TODO: use the hashtable just to catch duplicates - store strings directly (somehow).
-                result.put(possible, new UnicodeString(possible), status); //add(possible);
-            } else {
+                ఫలితం.put(possible, కొత్త UnicodeString(possible), స్థితి_2); //add(possible);
+            } లేకపోతే {
                 //if (PROGRESS) printf("-Skipping Permutation: %s\n", UToS(Tr(*possible)));
             }
 
-            ne2 = permutations.nextElement(el2);
+            ne2 = permutations.తదుపరి_Element(el2);
         }
-        ne = basic.nextElement(el);
+        ne = basic.తదుపరి_Element(el);
     }
 
     /* Test for buffer overflows */
-    if(U_FAILURE(status)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
     // convert into a String[] to clean up storage
     //String[] finalResult = new String[result.size()];
-    UnicodeString *finalResult = nullptr;
-    int32_t resultCount;
-    if((resultCount = result.count()) != 0) {
-        finalResult = new UnicodeString[resultCount];
-        if (finalResult == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+    UnicodeString *final_ఫలితం = శూన్యసూచిక;
+    int32_t ఫలితం_లెక్క;
+    ఒకవేళ((ఫలితం_లెక్క = ఫలితం.count()) != 0) {
+        final_ఫలితం = కొత్త UnicodeString[ఫలితం_లెక్క];
+        ఒకవేళ (final_ఫలితం == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
     }
-    else {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    లేకపోతే {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
     //result.toArray(finalResult);
-    result_len = 0;
-    el = UHASH_FIRST;
-    ne = result.nextElement(el);
-    while(ne != nullptr) {
-        finalResult[result_len++] = *static_cast<UnicodeString*>(ne->value.pointer);
-        ne = result.nextElement(el);
+    ఫలితం_len = 0;
+    el = UHASH_మొదటి;
+    ne = ఫలితం.తదుపరి_Element(el);
+    అయితే(ne != శూన్యసూచిక) {
+        final_ఫలితం[ఫలితం_len++] = *static_cast<UnicodeString*>(ne->value.సూచిక);
+        ne = ఫలితం.తదుపరి_Element(el);
     }
 
 
-    return finalResult;
+    తిరిగి final_ఫలితం;
 }
 
-Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillinResult U_LIFETIME_BOUND,
-                                              const char16_t* segment,
+Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillin_ఫలితం U_LIFETIME_BOUND,
+                                              స్థిరరాశి char16_t* segment,
                                               int32_t segLen,
-                                              UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+                                              UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     //if (PROGRESS) printf("Adding: %s\n", UToS(Tr(segment)));
 
-    UnicodeString toPut(segment, segLen);
+    UnicodeString గమ్యం_Put(segment, segLen);
 
-    fillinResult->put(toPut, new UnicodeString(toPut), status);
+    fillin_ఫలితం->put(గమ్యం_Put, కొత్త UnicodeString(గమ్యం_Put), స్థితి_2);
 
-    UnicodeSet starts;
+    Unicode_సమితి starts;
 
     // cycle through all the characters
     UChar32 cp;
-    for (int32_t i = 0; i < segLen; i += U16_LENGTH(cp)) {
+    కొరకు (int32_t i = 0; i < segLen; i += U16_నిడివి(cp)) {
         // see if any character is at the start of some decomposition
         U16_GET(segment, 0, i, segLen, cp);
-        if (!nfcImpl->getCanonStartSet(cp, starts)) {
-            continue;
+        ఒకవేళ (!nfcImpl->get_Canon_ప్రారంభం_సమితి(cp, starts)) {
+            కొనసాగు;
         }
         // if so, see which decompositions match
-        UnicodeSetIterator iter(starts);
-        while (iter.next()) {
+        Unicode_సమితి_Iterator iter(starts);
+        అయితే (iter.next()) {
             UChar32 cp2 = iter.getCodepoint();
-            Hashtable remainder(status);
-            remainder.setValueDeleter(uprv_deleteUObject);
-            if (extract(&remainder, cp2, segment, segLen, i, status) == nullptr) {
-                if (U_FAILURE(status)) {
-                    return nullptr;
+            Hashtable remainder(స్థితి_2);
+            remainder.సమితి_విలువ_Deleter(uprv_deleteUObject);
+            ఒకవేళ (extract(&remainder, cp2, segment, segLen, i, స్థితి_2) == శూన్యసూచిక) {
+                ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                    తిరిగి శూన్యసూచిక;
                 }
-                continue;
+                కొనసాగు;
             }
 
             // there were some matches, so add all the possibilities to the set.
-            UnicodeString prefix(segment, i);
-            prefix += cp2;
+            UnicodeString ఉపసర్గ(segment, i);
+            ఉపసర్గ += cp2;
 
-            int32_t el = UHASH_FIRST;
-            const UHashElement *ne = remainder.nextElement(el);
-            while (ne != nullptr) {
-                UnicodeString item = *static_cast<UnicodeString*>(ne->value.pointer);
-                UnicodeString *toAdd = new UnicodeString(prefix);
+            int32_t el = UHASH_మొదటి;
+            స్థిరరాశి UHashElement *ne = remainder.తదుపరి_Element(el);
+            అయితే (ne != శూన్యసూచిక) {
+                UnicodeString అంశం = *static_cast<UnicodeString*>(ne->value.సూచిక);
+                UnicodeString *గమ్యం_కూడు = కొత్త UnicodeString(ఉపసర్గ);
                 /* test for nullptr */
-                if (toAdd == nullptr) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                ఒకవేళ (గమ్యం_కూడు == శూన్యసూచిక) {
+                    స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    తిరిగి శూన్యసూచిక;
                 }
-                *toAdd += item;
-                fillinResult->put(*toAdd, toAdd, status);
+                *గమ్యం_కూడు += అంశం;
+                fillin_ఫలితం->put(*గమ్యం_కూడు, గమ్యం_కూడు, స్థితి_2);
 
                 //if (PROGRESS) printf("Adding: %s\n", UToS(Tr(*toAdd)));
 
-                ne = remainder.nextElement(el);
+                ne = remainder.తదుపరి_Element(el);
             }
             // ICU-22642 Guards against strings that have so many permutations
             // that they would otherwise hang the function.
-            constexpr int32_t kResultLimit = 4096;
-            if (fillinResult->count() > kResultLimit) {
-                status = U_UNSUPPORTED_ERROR;
-                return nullptr;
+            constexpr int32_t k_ఫలితం_హద్దు = 4096;
+            ఒకవేళ (fillin_ఫలితం->count() > k_ఫలితం_హద్దు) {
+                స్థితి_2 = U_UNSUPPORTED_ERROR;
+                తిరిగి శూన్యసూచిక;
             }
         }
     }
 
     /* Test for buffer overflows */
-    if(U_FAILURE(status)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    return fillinResult;
+    తిరిగి fillin_ఫలితం;
 }
 
 /**
@@ -520,60 +520,60 @@ Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillinResult U_LIFETIME
  * (with canonical rearrangement!)
  * If so, take the remainder, and return the equivalents 
  */
-Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
+Hashtable* CanonicalIterator::extract(Hashtable* fillin_ఫలితం U_LIFETIME_BOUND,
                                       UChar32 comp,
-                                      const char16_t* segment,
+                                      స్థిరరాశి char16_t* segment,
                                       int32_t segLen,
                                       int32_t segmentPos,
-                                      UErrorCode& status) {
+                                      UError_సంకేతం& స్థితి_2) {
 //Hashtable *CanonicalIterator::extract(UChar32 comp, const UnicodeString &segment, int32_t segLen, int32_t segmentPos, UErrorCode &status) {
     //if (PROGRESS) printf(" extract: %s, ", UToS(Tr(UnicodeString(comp))));
     //if (PROGRESS) printf("%s, %i\n", UToS(Tr(segment)), segmentPos);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    UnicodeString temp(comp);
-    int32_t inputLen=temp.length();
+    UnicodeString తాత్కాలిక(comp);
+    int32_t ఆదానం_Len=తాత్కాలిక.length();
     UnicodeString decompString;
-    nfd->normalize(temp, decompString, status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nfd->normalize(తాత్కాలిక, decompString, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if (decompString.isBogus()) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    ఒకవేళ (decompString.isBogus()) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    const char16_t *decomp=decompString.getBuffer();
+    స్థిరరాశి char16_t *decomp=decompString.get_బఫరు();
     int32_t decompLen=decompString.length();
 
     // See if it matches the start of segment (at segmentPos)
-    UBool ok = false;
+    UBool ok = అబద్ధం;
     UChar32 cp;
     int32_t decompPos = 0;
     UChar32 decompCp;
-    U16_NEXT(decomp, decompPos, decompLen, decompCp);
+    U16_తదుపరి(decomp, decompPos, decompLen, decompCp);
 
     int32_t i = segmentPos;
-    while(i < segLen) {
-        U16_NEXT(segment, i, segLen, cp);
+    అయితే(i < segLen) {
+        U16_తదుపరి(segment, i, segLen, cp);
 
-        if (cp == decompCp) { // if equal, eat another cp from decomp
+        ఒకవేళ (cp == decompCp) { // if equal, eat another cp from decomp
 
             //if (PROGRESS) printf("  matches: %s\n", UToS(Tr(UnicodeString(cp))));
 
-            if (decompPos == decompLen) { // done, have all decomp characters!
-                temp.append(segment+i, segLen-i);
-                ok = true;
-                break;
+            ఒకవేళ (decompPos == decompLen) { // done, have all decomp characters!
+                తాత్కాలిక.append(segment+i, segLen-i);
+                ok = నిజం;
+                ఆపు;
             }
-            U16_NEXT(decomp, decompPos, decompLen, decompCp);
-        } else {
+            U16_తదుపరి(decomp, decompPos, decompLen, decompCp);
+        } లేకపోతే {
             //if (PROGRESS) printf("  buffer: %s\n", UToS(Tr(UnicodeString(cp))));
 
             // brute force approach
-            temp.append(cp);
+            తాత్కాలిక.append(cp);
 
             /* TODO: optimize
             // since we know that the classes are monotonically increasing, after zero
@@ -588,27 +588,27 @@ Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
             */
         }
     }
-    if (!ok)
-        return nullptr; // we failed, characters left over
+    ఒకవేళ (!ok)
+        తిరిగి శూన్యసూచిక; // we failed, characters left over
 
     //if (PROGRESS) printf("Matches\n");
 
-    if (inputLen == temp.length()) {
-        fillinResult->put(UnicodeString(), new UnicodeString(), status);
-        return fillinResult; // succeed, but no remainder
+    ఒకవేళ (ఆదానం_Len == తాత్కాలిక.length()) {
+        fillin_ఫలితం->put(UnicodeString(), కొత్త UnicodeString(), స్థితి_2);
+        తిరిగి fillin_ఫలితం; // succeed, but no remainder
     }
 
     // brute force approach
     // check to make sure result is canonically equivalent
     UnicodeString trial;
-    nfd->normalize(temp, trial, status);
-    if(U_FAILURE(status) || trial.compare(segment+segmentPos, segLen - segmentPos) != 0) {
-        return nullptr;
+    nfd->normalize(తాత్కాలిక, trial, స్థితి_2);
+    ఒకవేళ(U_FAILURE(స్థితి_2) || trial.compare(segment+segmentPos, segLen - segmentPos) != 0) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    return getEquivalents2(fillinResult, temp.getBuffer()+inputLen, temp.length()-inputLen, status);
+    తిరిగి getEquivalents2(fillin_ఫలితం, తాత్కాలిక.get_బఫరు()+ఆదానం_Len, తాత్కాలిక.length()-ఆదానం_Len, స్థితి_2);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_NORMALIZATION */

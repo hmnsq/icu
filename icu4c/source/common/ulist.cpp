@@ -7,264 +7,264 @@
 ******************************************************************************
 */
 
-#include "ulist.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uenumimp.h"
+#అన్తర్భావ "ulist.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uenumimp.h"
 
-typedef struct UListNode UListNode;
-struct UListNode {
-    void *data;
+రకనిర్వచనం నిర్మాణం UList_కణుపు UList_కణుపు;
+నిర్మాణం UList_కణుపు {
+    శూన్య *దత్తాంశం;
     
-    UListNode *next;
-    UListNode *previous;
+    UList_కణుపు *next;
+    UList_కణుపు *మునుపటి;
     
     /* When data is created with uprv_malloc, needs to be freed during deleteList function. */
     UBool forceDelete;
 };
 
-struct UList {
-    UListNode *curr;
-    UListNode *head;
-    UListNode *tail;
+నిర్మాణం UList {
+    UList_కణుపు *curr;
+    UList_కణుపు *తల;
+    UList_కణుపు *తోక;
     
     int32_t size;
 };
 
-static void ulist_addFirstItem(UList *list, UListNode *newItem);
+స్థిర శూన్య ulist_కూడు_మొదటి_అంశం(UList *list, UList_కణుపు *new_అంశం);
 
-U_CAPI UList *U_EXPORT2 ulist_createEmptyList(UErrorCode *status) {
-    UList *newList = nullptr;
+U_CAPI UList *U_EXPORT2 ulist_create_ఖాళీలు_List(UError_సంకేతం *స్థితి_2) {
+    UList *newList = శూన్యసూచిక;
     
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
     
-    newList = (UList *)uprv_malloc(sizeof(UList));
-    if (newList == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    newList = (UList *)uprv_malloc(పరిమాణం(UList));
+    ఒకవేళ (newList == శూన్యసూచిక) {
+        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
     
-    newList->curr = nullptr;
-    newList->head = nullptr;
-    newList->tail = nullptr;
+    newList->curr = శూన్యసూచిక;
+    newList->తల = శూన్యసూచిక;
+    newList->తోక = శూన్యసూచిక;
     newList->size = 0;
     
-    return newList;
+    తిరిగి newList;
 }
 
 /*
  * Function called by addItemEndList or addItemBeginList when the first item is added to the list.
  * This function properly sets the pointers for the first item added.
  */
-static void ulist_addFirstItem(UList *list, UListNode *newItem) {
-    newItem->next = nullptr;
-    newItem->previous = nullptr;
-    list->head = newItem;
-    list->tail = newItem;
+స్థిర శూన్య ulist_కూడు_మొదటి_అంశం(UList *list, UList_కణుపు *new_అంశం) {
+    new_అంశం->next = శూన్యసూచిక;
+    new_అంశం->మునుపటి = శూన్యసూచిక;
+    list->తల = new_అంశం;
+    list->తోక = new_అంశం;
 }
 
-static void ulist_removeItem(UList *list, UListNode *p) {
-    if (p->previous == nullptr) {
+స్థిర శూన్య ulist_remove_అంశం(UList *list, UList_కణుపు *p) {
+    ఒకవేళ (p->మునుపటి == శూన్యసూచిక) {
         // p is the list head.
-        list->head = p->next;
-    } else {
-        p->previous->next = p->next;
+        list->తల = p->next;
+    } లేకపోతే {
+        p->మునుపటి->next = p->next;
     }
-    if (p->next == nullptr) {
+    ఒకవేళ (p->next == శూన్యసూచిక) {
         // p is the list tail.
-        list->tail = p->previous;
-    } else {
-        p->next->previous = p->previous;
+        list->తోక = p->మునుపటి;
+    } లేకపోతే {
+        p->next->మునుపటి = p->మునుపటి;
     }
-    if (p == list->curr) {
+    ఒకవేళ (p == list->curr) {
         list->curr = p->next;
     }
     --list->size;
-    if (p->forceDelete) {
-        uprv_free(p->data);
+    ఒకవేళ (p->forceDelete) {
+        uprv_free(p->దత్తాంశం);
     }
     uprv_free(p);
 }
 
-U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
-    UListNode *newItem = nullptr;
+U_CAPI శూన్య U_EXPORT2 ulist_కూడు_అంశం_చివర_List(UList *list, స్థిరరాశి శూన్య *దత్తాంశం, UBool forceDelete, UError_సంకేతం *స్థితి_2) {
+    UList_కణుపు *new_అంశం = శూన్యసూచిక;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    ఒకవేళ (U_FAILURE(*స్థితి_2) || list == శూన్యసూచిక || దత్తాంశం == శూన్యసూచిక) {
+        ఒకవేళ (forceDelete) {
+            uprv_free((శూన్య *)దత్తాంశం);
         }
-        return;
+        తిరిగి;
     }
     
-    newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    new_అంశం = (UList_కణుపు *)uprv_malloc(పరిమాణం(UList_కణుపు));
+    ఒకవేళ (new_అంశం == శూన్యసూచిక) {
+        ఒకవేళ (forceDelete) {
+            uprv_free((శూన్య *)దత్తాంశం);
         }
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    newItem->data = (void *)(data);
-    newItem->forceDelete = forceDelete;
+    new_అంశం->దత్తాంశం = (శూన్య *)(దత్తాంశం);
+    new_అంశం->forceDelete = forceDelete;
     
-    if (list->size == 0) {
-        ulist_addFirstItem(list, newItem);
-    } else {
-        newItem->next = nullptr;
-        newItem->previous = list->tail;
-        list->tail->next = newItem;
-        list->tail = newItem;
+    ఒకవేళ (list->size == 0) {
+        ulist_కూడు_మొదటి_అంశం(list, new_అంశం);
+    } లేకపోతే {
+        new_అంశం->next = శూన్యసూచిక;
+        new_అంశం->మునుపటి = list->తోక;
+        list->తోక->next = new_అంశం;
+        list->తోక = new_అంశం;
     }
     
     list->size++;
 }
 
-U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
-    UListNode *newItem = nullptr;
+U_CAPI శూన్య U_EXPORT2 ulist_కూడు_అంశం_Begin_List(UList *list, స్థిరరాశి శూన్య *దత్తాంశం, UBool forceDelete, UError_సంకేతం *స్థితి_2) {
+    UList_కణుపు *new_అంశం = శూన్యసూచిక;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    ఒకవేళ (U_FAILURE(*స్థితి_2) || list == శూన్యసూచిక || దత్తాంశం == శూన్యసూచిక) {
+        ఒకవేళ (forceDelete) {
+            uprv_free((శూన్య *)దత్తాంశం);
         }
-        return;
+        తిరిగి;
     }
     
-    newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    new_అంశం = (UList_కణుపు *)uprv_malloc(పరిమాణం(UList_కణుపు));
+    ఒకవేళ (new_అంశం == శూన్యసూచిక) {
+        ఒకవేళ (forceDelete) {
+            uprv_free((శూన్య *)దత్తాంశం);
         }
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    newItem->data = (void *)(data);
-    newItem->forceDelete = forceDelete;
+    new_అంశం->దత్తాంశం = (శూన్య *)(దత్తాంశం);
+    new_అంశం->forceDelete = forceDelete;
     
-    if (list->size == 0) {
-        ulist_addFirstItem(list, newItem);
-    } else {
-        newItem->previous = nullptr;
-        newItem->next = list->head;
-        list->head->previous = newItem;
-        list->head = newItem;
+    ఒకవేళ (list->size == 0) {
+        ulist_కూడు_మొదటి_అంశం(list, new_అంశం);
+    } లేకపోతే {
+        new_అంశం->మునుపటి = శూన్యసూచిక;
+        new_అంశం->next = list->తల;
+        list->తల->మునుపటి = new_అంశం;
+        list->తల = new_అంశం;
     }
     
     list->size++;
 }
 
-U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const char *data, int32_t length) {
-    if (list != nullptr) {
-        const UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (length == (int32_t)uprv_strlen((const char *)pointer->data)) {
-                if (uprv_memcmp(data, pointer->data, length) == 0) {
-                    return true;
+U_CAPI UBool U_EXPORT2 ulist_కలిగియుంది_String(స్థిరరాశి UList *list, స్థిరరాశి అక్షరం *దత్తాంశం, int32_t length) {
+    ఒకవేళ (list != శూన్యసూచిక) {
+        స్థిరరాశి UList_కణుపు *సూచిక;
+        కొరకు (సూచిక = list->తల; సూచిక != శూన్యసూచిక; సూచిక = సూచిక->next) {
+            ఒకవేళ (length == (int32_t)uprv_strlen((స్థిరరాశి అక్షరం *)సూచిక->దత్తాంశం)) {
+                ఒకవేళ (uprv_memcmp(దత్తాంశం, సూచిక->దత్తాంశం, length) == 0) {
+                    తిరిగి నిజం;
                 }
             }
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const char *data) {
-    if (list != nullptr) {
-        UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (uprv_strcmp(data, (const char *)pointer->data) == 0) {
-                ulist_removeItem(list, pointer);
+U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, స్థిరరాశి అక్షరం *దత్తాంశం) {
+    ఒకవేళ (list != శూన్యసూచిక) {
+        UList_కణుపు *సూచిక;
+        కొరకు (సూచిక = list->తల; సూచిక != శూన్యసూచిక; సూచిక = సూచిక->next) {
+            ఒకవేళ (uprv_strcmp(దత్తాంశం, (స్థిరరాశి అక్షరం *)సూచిక->దత్తాంశం) == 0) {
+                ulist_remove_అంశం(list, సూచిక);
                 // Remove only the first occurrence, like Java LinkedList.remove(Object).
-                return true;
+                తిరిగి నిజం;
             }
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-U_CAPI void *U_EXPORT2 ulist_getNext(UList *list) {
-    UListNode *curr = nullptr;
+U_CAPI శూన్య *U_EXPORT2 ulist_get_తదుపరి(UList *list) {
+    UList_కణుపు *curr = శూన్యసూచిక;
     
-    if (list == nullptr || list->curr == nullptr) {
-        return nullptr;
+    ఒకవేళ (list == శూన్యసూచిక || list->curr == శూన్యసూచిక) {
+        తిరిగి శూన్యసూచిక;
     }
     
     curr = list->curr;
     list->curr = curr->next;
     
-    return curr->data;
+    తిరిగి curr->దత్తాంశం;
 }
 
-U_CAPI int32_t U_EXPORT2 ulist_getListSize(const UList *list) {
-    if (list != nullptr) {
-        return list->size;
+U_CAPI int32_t U_EXPORT2 ulist_get_List_కొలత(స్థిరరాశి UList *list) {
+    ఒకవేళ (list != శూన్యసూచిక) {
+        తిరిగి list->size;
     }
     
-    return -1;
+    తిరిగి -1;
 }
 
-U_CAPI void U_EXPORT2 ulist_resetList(UList *list) {
-    if (list != nullptr) {
-        list->curr = list->head;
+U_CAPI శూన్య U_EXPORT2 ulist_resetList(UList *list) {
+    ఒకవేళ (list != శూన్యసూచిక) {
+        list->curr = list->తల;
     }
 }
 
-U_CAPI void U_EXPORT2 ulist_deleteList(UList *list) {
-    UListNode *listHead = nullptr;
+U_CAPI శూన్య U_EXPORT2 ulist_deleteList(UList *list) {
+    UList_కణుపు *list_తల = శూన్యసూచిక;
 
-    if (list != nullptr) {
-        listHead = list->head;
-        while (listHead != nullptr) {
-            UListNode *listPointer = listHead->next;
+    ఒకవేళ (list != శూన్యసూచిక) {
+        list_తల = list->తల;
+        అయితే (list_తల != శూన్యసూచిక) {
+            UList_కణుపు *list_సూచిక = list_తల->next;
 
-            if (listHead->forceDelete) {
-                uprv_free(listHead->data);
+            ఒకవేళ (list_తల->forceDelete) {
+                uprv_free(list_తల->దత్తాంశం);
             }
 
-            uprv_free(listHead);
-            listHead = listPointer;
+            uprv_free(list_తల);
+            list_తల = list_సూచిక;
         }
         uprv_free(list);
-        list = nullptr;
+        list = శూన్యసూచిక;
     }
 }
 
-U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en) {
-    if (en != nullptr) {
+U_CAPI శూన్య U_EXPORT2 ulist_close_keyword_విలువలు_iterator(UEnumeration *en) {
+    ఒకవేళ (en != శూన్యసూచిక) {
         ulist_deleteList((UList *)(en->context));
         uprv_free(en);
     }
 }
 
-U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return -1;
+U_CAPI int32_t U_EXPORT2 ulist_లెక్క_keyword_విలువలు(UEnumeration *en, UError_సంకేతం *స్థితి_2) {
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి -1;
     }
     
-    return ulist_getListSize((UList *)(en->context));
+    తిరిగి ulist_get_List_కొలత((UList *)(en->context));
 }
 
-U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration *en, int32_t *resultLength, UErrorCode *status) {
-    const char *s;
-    if (U_FAILURE(*status)) {
-        return nullptr;
+U_CAPI స్థిరరాశి అక్షరం * U_EXPORT2 ulist_తదుపరి_keyword_విలువ(UEnumeration *en, int32_t *ఫలితం_నిడివి, UError_సంకేతం *స్థితి_2) {
+    స్థిరరాశి అక్షరం *s;
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    s = (const char *)ulist_getNext((UList *)(en->context));
-    if (s != nullptr && resultLength != nullptr) {
-        *resultLength = static_cast<int32_t>(uprv_strlen(s));
+    s = (స్థిరరాశి అక్షరం *)ulist_get_తదుపరి((UList *)(en->context));
+    ఒకవేళ (s != శూన్యసూచిక && ఫలితం_నిడివి != శూన్యసూచిక) {
+        *ఫలితం_నిడివి = static_cast<int32_t>(uprv_strlen(s));
     }
-    return s;
+    తిరిగి s;
 }
 
-U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return ;
+U_CAPI శూన్య U_EXPORT2 ulist_reset_keyword_విలువలు_iterator(UEnumeration *en, UError_సంకేతం *స్థితి_2) {
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి ;
     }
     
     ulist_resetList((UList *)(en->context));
 }
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en) {
-    return (UList *)(en->context);
+    తిరిగి (UList *)(en->context);
 }

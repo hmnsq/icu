@@ -14,269 +14,269 @@
 *   created by: Markus W. Scherer
 */
 
-#include <cstdlib>
+#అన్తర్భావ <cstdlib>
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uinvchar.h"
-#include "ustr_imp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uinvchar.h"
+#అన్తర్భావ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
 CharString::CharString(CharString&& src) noexcept
-        : buffer(std::move(src.buffer)), len(src.len) {
+        : బఫరు(std::move(src.బఫరు)), len(src.len) {
     src.len = 0;  // not strictly necessary because we make no guarantees on the source string
 }
 
-CharString& CharString::operator=(CharString&& src) noexcept {
-    buffer = std::move(src.buffer);
+CharString& CharString::క్రియాకారకం=(CharString&& src) noexcept {
+    బఫరు = std::move(src.బఫరు);
     len = src.len;
     src.len = 0;  // not strictly necessary because we make no guarantees on the source string
-    return *this;
+    తిరిగి *ఇది;
 }
 
-char *CharString::cloneData(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    char *p = static_cast<char *>(uprv_malloc(len + 1));
-    if (p == nullptr) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+అక్షరం *CharString::clone_దత్తాంశం(UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    అక్షరం *p = static_cast<అక్షరం *>(uprv_malloc(len + 1));
+    ఒకవేళ (p == శూన్యసూచిక) {
+        error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    uprv_memcpy(p, buffer.getAlias(), len + 1);
-    return p;
+    uprv_memcpy(p, బఫరు.getAlias(), len + 1);
+    తిరిగి p;
 }
 
-int32_t CharString::extract(char *dest, int32_t capacity, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return len; }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return len;
+int32_t CharString::extract(అక్షరం *dest, int32_t capacity, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి len; }
+    ఒకవేళ (capacity < 0 || (capacity > 0 && dest == శూన్యసూచిక)) {
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి len;
     }
-    const char *src = buffer.getAlias();
-    if (0 < len && len <= capacity && src != dest) {
+    స్థిరరాశి అక్షరం *src = బఫరు.getAlias();
+    ఒకవేళ (0 < len && len <= capacity && src != dest) {
         uprv_memcpy(dest, src, len);
     }
-    return u_terminateChars(dest, capacity, len, &errorCode);
+    తిరిగి u_terminateChars(dest, capacity, len, &error_సంకేతం);
 }
 
-CharString &CharString::copyFrom(const CharString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && this!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
+CharString &CharString::copyFrom(స్థిరరాశి CharString &s, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_SUCCESS(error_సంకేతం) && ఇది!=&s && ensure_సామర్థ్యం(s.len+1, 0, error_సంకేతం)) {
         len=s.len;
-        uprv_memcpy(buffer.getAlias(), s.buffer.getAlias(), len+1);
+        uprv_memcpy(బఫరు.getAlias(), s.బఫరు.getAlias(), len+1);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-CharString &CharString::copyFrom(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::copyFrom(StringPiece s, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి *ఇది;
     }
     len = 0;
-    append(s, errorCode);
-    return *this;
+    append(s, error_సంకేతం);
+    తిరిగి *ఇది;
 }
 
-int32_t CharString::lastIndexOf(char c) const {
-    for(int32_t i=len; i>0;) {
-        if(buffer[--i]==c) {
-            return i;
+int32_t CharString::చివరి_సూచీ_యొక్క(అక్షరం c) స్థిరరాశి {
+    కొరకు(int32_t i=len; i>0;) {
+        ఒకవేళ(బఫరు[--i]==c) {
+            తిరిగి i;
         }
     }
-    return -1;
+    తిరిగి -1;
 }
 
-bool CharString::contains(StringPiece s) const {
-    if (s.empty()) { return false; }
-    const char *p = buffer.getAlias();
-    int32_t lastStart = len - s.length();
-    for (int32_t i = 0; i <= lastStart; ++i) {
-        if (uprv_memcmp(p + i, s.data(), s.length()) == 0) {
-            return true;
+తార్కిక CharString::కలిగియుంది(StringPiece s) స్థిరరాశి {
+    ఒకవేళ (s.empty()) { తిరిగి అబద్ధం; }
+    స్థిరరాశి అక్షరం *p = బఫరు.getAlias();
+    int32_t చివరి_ప్రారంభం = len - s.length();
+    కొరకు (int32_t i = 0; i <= చివరి_ప్రారంభం; ++i) {
+        ఒకవేళ (uprv_memcmp(p + i, s.దత్తాంశం(), s.length()) == 0) {
+            తిరిగి నిజం;
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-CharString &CharString::truncate(int32_t newLength) {
-    if(newLength<0) {
-        newLength=0;
+CharString &CharString::truncate(int32_t new_నిడివి) {
+    ఒకవేళ(new_నిడివి<0) {
+        new_నిడివి=0;
     }
-    if(newLength<len) {
-        buffer[len=newLength]=0;
+    ఒకవేళ(new_నిడివి<len) {
+        బఫరు[len=new_నిడివి]=0;
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-CharString &CharString::append(char c, UErrorCode &errorCode) {
-    if(ensureCapacity(len+2, 0, errorCode)) {
-        buffer[len++]=c;
-        buffer[len]=0;
+CharString &CharString::append(అక్షరం c, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(ensure_సామర్థ్యం(len+2, 0, error_సంకేతం)) {
+        బఫరు[len++]=c;
+        బఫరు[len]=0;
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-CharString &CharString::append(const char *s, int32_t sLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::append(స్థిరరాశి అక్షరం *s, int32_t s_నిడివి, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి *ఇది;
     }
-    if(sLength<-1 || (s==nullptr && sLength!=0)) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    ఒకవేళ(s_నిడివి<-1 || (s==శూన్యసూచిక && s_నిడివి!=0)) {
+        error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి *ఇది;
     }
-    if(sLength<0) {
-        sLength= static_cast<int32_t>(uprv_strlen(s));
+    ఒకవేళ(s_నిడివి<0) {
+        s_నిడివి= static_cast<int32_t>(uprv_strlen(s));
     }
-    if(sLength>0) {
-        if(s==(buffer.getAlias()+len)) {
+    ఒకవేళ(s_నిడివి>0) {
+        ఒకవేళ(s==(బఫరు.getAlias()+len)) {
             // The caller wrote into the getAppendBuffer().
-            if(sLength>=(buffer.getCapacity()-len)) {
+            ఒకవేళ(s_నిడివి>=(బఫరు.get_సామర్థ్యం()-len)) {
                 // The caller wrote too much.
-                errorCode=U_INTERNAL_PROGRAM_ERROR;
-            } else {
-                buffer[len+=sLength]=0;
+                error_సంకేతం=U_అంతర్గత_కార్యక్రమం_ERROR;
+            } లేకపోతే {
+                బఫరు[len+=s_నిడివి]=0;
             }
-        } else if(buffer.getAlias()<=s && s<(buffer.getAlias()+len) &&
-                  sLength>=(buffer.getCapacity()-len)
+        } లేకపోతే ఒకవేళ(బఫరు.getAlias()<=s && s<(బఫరు.getAlias()+len) &&
+                  s_నిడివి>=(బఫరు.get_సామర్థ్యం()-len)
         ) {
             // (Part of) this string is appended to itself which requires reallocation,
             // so we have to make a copy of the substring and append that.
-            return append(CharString(s, sLength, errorCode), errorCode);
-        } else if(ensureCapacity(len+sLength+1, 0, errorCode)) {
-            uprv_memcpy(buffer.getAlias()+len, s, sLength);
-            buffer[len+=sLength]=0;
+            తిరిగి append(CharString(s, s_నిడివి, error_సంకేతం), error_సంకేతం);
+        } లేకపోతే ఒకవేళ(ensure_సామర్థ్యం(len+s_నిడివి+1, 0, error_సంకేతం)) {
+            uprv_memcpy(బఫరు.getAlias()+len, s, s_నిడివి);
+            బఫరు[len+=s_నిడివి]=0;
         }
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-CharString &CharString::appendNumber(int64_t number, UErrorCode &status) {
-    if (number < 0) {
-        this->append('-', status);
-        if (U_FAILURE(status)) {
-            return *this;
+CharString &CharString::append_సంఖ్య(int64_t number, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (number < 0) {
+        ఇది->append('-', స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి *ఇది;
         }
     }
 
-    if (number == 0) {
-        this->append('0', status);
-        return *this;
+    ఒకవేళ (number == 0) {
+        ఇది->append('0', స్థితి_2);
+        తిరిగి *ఇది;
     }
 
-    int32_t numLen = 0;
-    while (number != 0) {
+    int32_t అంకె_Len = 0;
+    అయితే (number != 0) {
         int32_t residue = number % 10;
         number /= 10;
-        this->append(std::abs(residue) + '0', status);
-        numLen++;
-        if (U_FAILURE(status)) {
-            return *this;
+        ఇది->append(std::నిరపేక్ష(residue) + '0', స్థితి_2);
+        అంకె_Len++;
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి *ఇది;
         }
     }
 
-    int32_t start = this->length() - numLen, end = this->length() - 1;
-    while(start < end) {
-        std::swap(this->data()[start++], this->data()[end--]);
+    int32_t ప్రారంభం = ఇది->length() - అంకె_Len, చివర = ఇది->length() - 1;
+    అయితే(ప్రారంభం < చివర) {
+        std::swap(ఇది->దత్తాంశం()[ప్రారంభం++], ఇది->దత్తాంశం()[చివర--]);
     }
 
-    return *this;
+    తిరిగి *ఇది;
 }
 
-char *CharString::getAppendBuffer(int32_t minCapacity,
-                                  int32_t desiredCapacityHint,
-                                  int32_t &resultCapacity,
-                                  UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        resultCapacity=0;
-        return nullptr;
+అక్షరం *CharString::get_Append_బఫరు(int32_t min_సామర్థ్యం,
+                                  int32_t desired_సామర్థ్యం_Hint,
+                                  int32_t &ఫలితం_సామర్థ్యం,
+                                  UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        ఫలితం_సామర్థ్యం=0;
+        తిరిగి శూన్యసూచిక;
     }
-    int32_t appendCapacity=buffer.getCapacity()-len-1;  // -1 for NUL
-    if(appendCapacity>=minCapacity) {
-        resultCapacity=appendCapacity;
-        return buffer.getAlias()+len;
+    int32_t append_సామర్థ్యం=బఫరు.get_సామర్థ్యం()-len-1;  // -1 for NUL
+    ఒకవేళ(append_సామర్థ్యం>=min_సామర్థ్యం) {
+        ఫలితం_సామర్థ్యం=append_సామర్థ్యం;
+        తిరిగి బఫరు.getAlias()+len;
     }
-    if(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
-        resultCapacity=buffer.getCapacity()-len-1;
-        return buffer.getAlias()+len;
+    ఒకవేళ(ensure_సామర్థ్యం(len+min_సామర్థ్యం+1, len+desired_సామర్థ్యం_Hint+1, error_సంకేతం)) {
+        ఫలితం_సామర్థ్యం=బఫరు.get_సామర్థ్యం()-len-1;
+        తిరిగి బఫరు.getAlias()+len;
     }
-    resultCapacity=0;
-    return nullptr;
+    ఫలితం_సామర్థ్యం=0;
+    తిరిగి శూన్యసూచిక;
 }
 
-CharString &CharString::appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode) {
-    return appendInvariantChars(s.getBuffer(), s.length(), errorCode);
+CharString &CharString::appendInvariantChars(స్థిరరాశి UnicodeString &s, UError_సంకేతం &error_సంకేతం) {
+    తిరిగి appendInvariantChars(s.get_బఫరు(), s.length(), error_సంకేతం);
 }
 
-CharString &CharString::appendInvariantChars(const char16_t* uchars, int32_t ucharsLen, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::appendInvariantChars(స్థిరరాశి char16_t* uchars, int32_t ucharsLen, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి *ఇది;
     }
-    if (!uprv_isInvariantUString(uchars, ucharsLen)) {
-        errorCode = U_INVARIANT_CONVERSION_ERROR;
-        return *this;
+    ఒకవేళ (!uprv_isInvariantUString(uchars, ucharsLen)) {
+        error_సంకేతం = U_INVARIANT_CONVERSION_ERROR;
+        తిరిగి *ఇది;
     }
-    if(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
-        u_UCharsToChars(uchars, buffer.getAlias()+len, ucharsLen);
+    ఒకవేళ(ensure_సామర్థ్యం(len+ucharsLen+1, 0, error_సంకేతం)) {
+        u_UChars_గమ్యం_Chars(uchars, బఫరు.getAlias()+len, ucharsLen);
         len += ucharsLen;
-        buffer[len] = 0;
+        బఫరు[len] = 0;
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-UBool CharString::ensureCapacity(int32_t capacity,
-                                 int32_t desiredCapacityHint,
-                                 UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+UBool CharString::ensure_సామర్థ్యం(int32_t capacity,
+                                 int32_t desired_సామర్థ్యం_Hint,
+                                 UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి అబద్ధం;
     }
-    if(capacity>buffer.getCapacity()) {
-        if(desiredCapacityHint==0) {
-            desiredCapacityHint=capacity+buffer.getCapacity();
+    ఒకవేళ(capacity>బఫరు.get_సామర్థ్యం()) {
+        ఒకవేళ(desired_సామర్థ్యం_Hint==0) {
+            desired_సామర్థ్యం_Hint=capacity+బఫరు.get_సామర్థ్యం();
         }
-        if( (desiredCapacityHint<=capacity || buffer.resize(desiredCapacityHint, len+1)==nullptr) &&
-            buffer.resize(capacity, len+1)==nullptr
+        ఒకవేళ( (desired_సామర్థ్యం_Hint<=capacity || బఫరు.resize(desired_సామర్థ్యం_Hint, len+1)==శూన్యసూచిక) &&
+            బఫరు.resize(capacity, len+1)==శూన్యసూచిక
         ) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి అబద్ధం;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-CharString &CharString::appendPathPart(StringPiece s, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::append_మార్గం_Part(StringPiece s, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి *ఇది;
     }
-    if(s.length()==0) {
-        return *this;
+    ఒకవేళ(s.length()==0) {
+        తిరిగి *ఇది;
     }
-    char c;
-    if(len>0 && (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
-        append(getDirSepChar(), errorCode);
+    అక్షరం c;
+    ఒకవేళ(len>0 && (c=బఫరు[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
+        append(getDirSepChar(), error_సంకేతం);
     }
-    append(s, errorCode);
-    return *this;
+    append(s, error_సంకేతం);
+    తిరిగి *ఇది;
 }
 
-CharString &CharString::ensureEndsWithFileSeparator(UErrorCode &errorCode) {
-    char c;
-    if(U_SUCCESS(errorCode) && len>0 &&
-            (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
-        append(getDirSepChar(), errorCode);
+CharString &CharString::ensure_చివర్లు_With_File_Separator(UError_సంకేతం &error_సంకేతం) {
+    అక్షరం c;
+    ఒకవేళ(U_SUCCESS(error_సంకేతం) && len>0 &&
+            (c=బఫరు[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
+        append(getDirSepChar(), error_సంకేతం);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-char CharString::getDirSepChar() const {
-    char dirSepChar = U_FILE_SEP_CHAR;
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+అక్షరం CharString::getDirSepChar() స్థిరరాశి {
+    అక్షరం dirSepChar = U_FILE_SEP_CHAR;
+#ఒకవేళ (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
     // We may need to return a different directory separator when building for Cygwin or MSYS2.
-    if(len>0 && !uprv_strchr(data(), U_FILE_SEP_CHAR) && uprv_strchr(data(), U_FILE_ALT_SEP_CHAR))
+    ఒకవేళ(len>0 && !uprv_strchr(దత్తాంశం(), U_FILE_SEP_CHAR) && uprv_strchr(దత్తాంశం(), U_FILE_ALT_SEP_CHAR))
         dirSepChar = U_FILE_ALT_SEP_CHAR;
-#endif
-    return dirSepChar;
+#అయితే_ముగింపు
+    తిరిగి dirSepChar;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

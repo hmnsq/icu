@@ -14,12 +14,12 @@
  * \brief C++: internal template EnumSet<>
  */
 
-#ifndef ENUMSET_H
-#define ENUMSET_H
+#నిర్వచితం_కాకపోతే ENUMSET_H
+#నిర్వచించు ENUMSET_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,41 +30,41 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
-class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
-#ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+మూస<typename T, uint32_t min_విలువ, uint32_t హద్దు_విలువ>
+class Enum_సమితి {
+బహిరంగ:
+    అంతఃవరుస Enum_సమితి() : fBools(0) {}
+    అంతఃవరుస Enum_సమితి(స్థిరరాశి Enum_సమితి<T,min_విలువ,హద్దు_విలువ>& other) : fBools(other.fBools) {}
+    అంతఃవరుస ~Enum_సమితి() {}
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
+    అంతఃవరుస శూన్య clear() { fBools=0; }
+    అంతఃవరుస శూన్య కూడు(T గమ్యం_కూడు) { సమితి(గమ్యం_కూడు, 1); }
+    అంతఃవరుస శూన్య remove(T గమ్యం_Remove) { సమితి(గమ్యం_Remove, 0); }
+    అంతఃవరుస int32_t కలిగియుంది(T గమ్యం_Check) స్థిరరాశి { తిరిగి get(గమ్యం_Check); }
+    అంతఃవరుస శూన్య సమితి(T గమ్యం_సమితి, int32_t v) { fBools=(fBools&(~flag(గమ్యం_సమితి)))|(v?(flag(గమ్యం_సమితి)):0); }
+    అంతఃవరుస int32_t get(T గమ్యం_Check) స్థిరరాశి { తిరిగి (fBools & flag(గమ్యం_Check))?1:0; }
+    అంతఃవరుస UBool isValidEnum(T గమ్యం_Check) స్థిరరాశి {  తిరిగి (గమ్యం_Check>=min_విలువ&&గమ్యం_Check<హద్దు_విలువ); }
+    అంతఃవరుస UBool is_Valid_విలువ(int32_t v) స్థిరరాశి { తిరిగి (v==0||v==1); }
+    అంతఃవరుస స్థిరరాశి Enum_సమితి<T, min_విలువ, హద్దు_విలువ>&
+    క్రియాకారకం=(స్థిరరాశి Enum_సమితి<T, min_విలువ, హద్దు_విలువ>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        తిరిగి *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    అంతఃవరుస uint32_t getAll() స్థిరరాశి {
+        తిరిగి fBools; 
     }
-#endif /* U_HIDE_INTERNAL_API */
+#అయితే_ముగింపు /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+అంతరంగ:
+    అంతఃవరుస uint32_t flag(T గమ్యం_Check) స్థిరరాశి { తిరిగి (1<<(గమ్యం_Check-min_విలువ)); }
+అంతరంగ:
     uint32_t fBools;
 };
 
 /** \endcond */
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
-#endif /* ENUMSET_H */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* ENUMSET_H */

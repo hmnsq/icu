@@ -18,11 +18,11 @@
 ******************************************************************************
 */
 
-#ifndef _PLATFORM_H
-#define _PLATFORM_H
+#నిర్వచితం_కాకపోతే _PLATFORM_H
+#నిర్వచించు _PLATFORM_H
 
-#include "unicode/uconfig.h"
-#include "unicode/uvernum.h"
+#అన్తర్భావ "unicode/uconfig.h"
+#అన్తర్భావ "unicode/uvernum.h"
 
 /**
  * \file
@@ -56,14 +56,14 @@
  * Define some things so that they can be documented.
  * @internal
  */
-#ifdef U_IN_DOXYGEN
+#నిర్వచితమైతే U_లోపల_DOXYGEN
 /*
  * Problem: "platform.h:335: warning: documentation for unknown define U_HAVE_STD_STRING found." means that U_HAVE_STD_STRING is not documented.
  * Solution: #define any defines for non @internal API here, so that they are visible in the docs.  If you just set PREDEFINED in Doxyfile.in,  they won't be documented.
  */
 
 /* None for now. */
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_PLATFORM
@@ -86,28 +86,28 @@
  */
 
 /** Unknown platform. @internal */
-#define U_PF_UNKNOWN 0
+#నిర్వచించు U_PF_UNKNOWN 0
 /** Windows @internal */
-#define U_PF_WINDOWS 1000
+#నిర్వచించు U_PF_WINDOWS 1000
 /** MinGW. Windows, calls to Win32 API, but using GNU gcc and binutils. @internal */
-#define U_PF_MINGW 1800
+#నిర్వచించు U_PF_MINGW 1800
 /**
  * Cygwin. Windows, calls to cygwin1.dll for Posix functions,
  * using MSVC or GNU gcc and binutils.
  * @internal
  */
-#define U_PF_CYGWIN 1900
+#నిర్వచించు U_PF_CYGWIN 1900
 /* Reserve 2000 for U_PF_UNIX? */
 /** HP-UX is based on UNIX System V. @internal */
-#define U_PF_HPUX 2100
+#నిర్వచించు U_PF_HPUX 2100
 /** Solaris is a Unix operating system based on SVR4. @internal */
-#define U_PF_SOLARIS 2600
+#నిర్వచించు U_PF_SOLARIS 2600
 /** BSD is a UNIX operating system derivative. @internal */
-#define U_PF_BSD 3000
+#నిర్వచించు U_PF_BSD 3000
 /** AIX is based on UNIX System V Releases and 4.3 BSD. @internal */
-#define U_PF_AIX 3100
+#నిర్వచించు U_PF_AIX 3100
 /** IRIX is based on UNIX System V with BSD extensions. @internal */
-#define U_PF_IRIX 3200
+#నిర్వచించు U_PF_IRIX 3200
 /**
  * Darwin is a POSIX-compliant operating system, composed of code developed by Apple,
  * as well as code derived from NeXTSTEP, BSD, and other projects,
@@ -116,26 +116,26 @@
  * (Original description modified from WikiPedia.)
  * @internal
  */
-#define U_PF_DARWIN 3500
+#నిర్వచించు U_PF_DARWIN 3500
 /** iPhone OS (iOS) is a derivative of Mac OS X. @internal */
-#define U_PF_IPHONE 3550
+#నిర్వచించు U_PF_IPHONE 3550
 /** QNX is a commercial Unix-like real-time operating system related to BSD. @internal */
-#define U_PF_QNX 3700
+#నిర్వచించు U_PF_QNX 3700
 /** Linux is a Unix-like operating system. @internal */
-#define U_PF_LINUX 4000
+#నిర్వచించు U_PF_LINUX 4000
 /**
  * Native Client is pretty close to Linux.
  * See https://developer.chrome.com/native-client and
  *  http://www.chromium.org/nativeclient
  *  @internal
  */
-#define U_PF_BROWSER_NATIVE_CLIENT 4020
+#నిర్వచించు U_PF_BROWSER_NATIVE_CLIENT 4020
 /** Android is based on Linux. @internal */
-#define U_PF_ANDROID 4050
+#నిర్వచించు U_PF_ANDROID 4050
 /** Haiku is a POSIX-ish platform. @internal */
-#define U_PF_HAIKU 4080
+#నిర్వచించు U_PF_HAIKU 4080
 /** Fuchsia is a POSIX-ish platform. @internal */
-#define U_PF_FUCHSIA 4100
+#నిర్వచించు U_PF_FUCHSIA 4100
 /* Maximum value for Linux-based platform is 4499 */
 /**
  * Emscripten is a C++ transpiler for the Web that can target asm.js or
@@ -144,73 +144,73 @@
  * either.
  * @internal
  */
-#define U_PF_EMSCRIPTEN 5010
+#నిర్వచించు U_PF_EMSCRIPTEN 5010
 /** z/OS is the successor to OS/390 which was the successor to MVS. @internal */
-#define U_PF_OS390 9000
+#నిర్వచించు U_PF_OS390 9000
 /** "IBM i" is the current name of what used to be i5/OS and earlier OS/400. @internal */
-#define U_PF_OS400 9400
+#నిర్వచించు U_PF_OS400 9400
 
-#ifdef U_PLATFORM
+#నిర్వచితమైతే U_PLATFORM
     /* Use the predefined value. */
-#elif defined(__MINGW32__)
+#లేదావేళ defined(__MINGW32__)
 #   define U_PLATFORM U_PF_MINGW
-#elif defined(__CYGWIN__)
+#లేదావేళ defined(__CYGWIN__)
 #   define U_PLATFORM U_PF_CYGWIN
     /* Cygwin uchar.h doesn't exist until Cygwin 3.5. */
 #   include <cygwin/version.h>
-#elif defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#లేదావేళ defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #   define U_PLATFORM U_PF_WINDOWS
-#elif defined(__ANDROID__)
+#లేదావేళ defined(__ANDROID__)
 #   define U_PLATFORM U_PF_ANDROID
     /* Android wchar_t support depends on the API level. */
 #   include <android/api-level.h>
-#elif defined(__pnacl__) || defined(__native_client__)
+#లేదావేళ defined(__pnacl__) || defined(__native_client__)
 #   define U_PLATFORM U_PF_BROWSER_NATIVE_CLIENT
-#elif defined(__Fuchsia__)
+#లేదావేళ defined(__Fuchsia__)
 #   define U_PLATFORM U_PF_FUCHSIA
-#elif defined(linux) || defined(__linux__) || defined(__linux)
+#లేదావేళ defined(linux) || defined(__linux__) || defined(__linux)
 #   define U_PLATFORM U_PF_LINUX
-#elif defined(__APPLE__) && defined(__MACH__)
+#లేదావేళ defined(__APPLE__) && defined(__MACH__)
 #   include <TargetConditionals.h>
-#   if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && (defined(TARGET_OS_MACCATALYST) && !TARGET_OS_MACCATALYST)   /* variant of TARGET_OS_MAC */
+#   ఒకవేళ (defined(లక్ష్యం_OS_IPHONE) && లక్ష్యం_OS_IPHONE) && (defined(లక్ష్యం_OS_MACCATALYST) && !లక్ష్యం_OS_MACCATALYST)   /* variant of TARGET_OS_MAC */
 #       define U_PLATFORM U_PF_IPHONE
-#   else
+#   లేకపోతే
 #       define U_PLATFORM U_PF_DARWIN
 #   endif
-#elif defined(BSD) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__MirBSD__)
-#   if defined(__FreeBSD__)
+#లేదావేళ defined(BSD) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__MirBSD__)
+#   ఒకవేళ defined(__FreeBSD__)
 #       include <sys/endian.h>
 #   endif
 #   define U_PLATFORM U_PF_BSD
-#elif defined(sun) || defined(__sun)
+#లేదావేళ defined(sun) || defined(__sun)
     /* Check defined(__SVR4) || defined(__svr4__) to distinguish Solaris from SunOS? */
 #   define U_PLATFORM U_PF_SOLARIS
-#   if defined(__GNUC__)
+#   ఒకవేళ defined(__GNUC__)
         /* Solaris/GCC needs this header file to get the proper endianness. Normally, this
          * header file is included with stddef.h but on Solairs/GCC, the GCC version of stddef.h
          *  is included which does not include this header file.
          */
 #       include <sys/isa_defs.h>
 #   endif
-#elif defined(_AIX) || defined(__TOS_AIX__)
+#లేదావేళ defined(_AIX) || defined(__TOS_AIX__)
 #   define U_PLATFORM U_PF_AIX
-#elif defined(_hpux) || defined(hpux) || defined(__hpux)
+#లేదావేళ defined(_hpux) || defined(hpux) || defined(__hpux)
 #   define U_PLATFORM U_PF_HPUX
-#elif defined(sgi) || defined(__sgi)
+#లేదావేళ defined(sgi) || defined(__sgi)
 #   define U_PLATFORM U_PF_IRIX
-#elif defined(__QNX__) || defined(__QNXNTO__)
+#లేదావేళ defined(__QNX__) || defined(__QNXNTO__)
 #   define U_PLATFORM U_PF_QNX
-#elif defined(__TOS_MVS__)
+#లేదావేళ defined(__TOS_MVS__)
 #   define U_PLATFORM U_PF_OS390
-#elif defined(__OS400__) || defined(__TOS_OS400__)
+#లేదావేళ defined(__OS400__) || defined(__TOS_OS400__)
 #   define U_PLATFORM U_PF_OS400
-#elif defined(__HAIKU__)
+#లేదావేళ defined(__HAIKU__)
 #   define U_PLATFORM U_PF_HAIKU
-#elif defined(__EMSCRIPTEN__)
+#లేదావేళ defined(__EMSCRIPTEN__)
 #   define U_PLATFORM U_PF_EMSCRIPTEN
-#else
+#లేకపోతే
 #   define U_PLATFORM U_PF_UNKNOWN
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_REAL_MSVC
@@ -219,9 +219,9 @@
  * Otherwise undefined.
  * @internal
  */
-#if (defined(_MSC_VER) && !(defined(__clang__) && __clang__)) || defined(U_IN_DOXYGEN)
+#ఒకవేళ (defined(_MSC_VER) && !(defined(__clang__) && __clang__)) || defined(U_లోపల_DOXYGEN)
 #   define U_REAL_MSVC
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def CYGWINMSVC
@@ -234,9 +234,9 @@
 #   define CYGWINMSVC
 #endif
 */
-#ifdef U_IN_DOXYGEN
+#నిర్వచితమైతే U_లోపల_DOXYGEN
 #   define CYGWINMSVC
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_PLATFORM_USES_ONLY_WIN32_API
@@ -244,14 +244,14 @@
  * Set to 1 for Windows/MSVC, ClangCL and MinGW but not Cygwin.
  * @internal
  */
-#ifdef U_PLATFORM_USES_ONLY_WIN32_API
+#నిర్వచితమైతే U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API
     /* Use the predefined value. */
-#elif (U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_MINGW) || defined(CYGWINMSVC)
-#   define U_PLATFORM_USES_ONLY_WIN32_API 1
-#else
+#లేదావేళ (U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_MINGW) || defined(CYGWINMSVC)
+#   define U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API 1
+#లేకపోతే
     /* Cygwin implements POSIX. */
-#   define U_PLATFORM_USES_ONLY_WIN32_API 0
-#endif
+#   define U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API 0
+#అయితే_ముగింపు
 
 /**
  * \def U_PLATFORM_HAS_WIN32_API
@@ -259,13 +259,13 @@
  * Set to 1 for Windows/MSVC, ClangCL, MinGW and Cygwin.
  * @internal
  */
-#ifdef U_PLATFORM_HAS_WIN32_API
+#నిర్వచితమైతే U_PLATFORM_HAS_WIN32_API
     /* Use the predefined value. */
-#elif U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN
+#లేదావేళ U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN
 #   define U_PLATFORM_HAS_WIN32_API 1
-#else
+#లేకపోతే
 #   define U_PLATFORM_HAS_WIN32_API 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_PLATFORM_HAS_WINUWP_API
@@ -273,11 +273,11 @@
  * Set to 1 for Windows10 Release Solution Configuration
  * @internal
  */
-#ifdef U_PLATFORM_HAS_WINUWP_API
+#నిర్వచితమైతే U_PLATFORM_HAS_WINUWP_API
     /* Use the predefined value. */
-#else
+#లేకపోతే
 #   define U_PLATFORM_HAS_WINUWP_API 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_PLATFORM_IMPLEMENTS_POSIX
@@ -285,39 +285,39 @@
  * Set to 1 for Cygwin and most other platforms.
  * @internal
  */
-#ifdef U_PLATFORM_IMPLEMENTS_POSIX
+#నిర్వచితమైతే U_PLATFORM_IMPLEMENTS_POSIX
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#లేదావేళ U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API
 #   define U_PLATFORM_IMPLEMENTS_POSIX 0
-#else
+#లేకపోతే
 #   define U_PLATFORM_IMPLEMENTS_POSIX 1
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_PLATFORM_IS_LINUX_BASED
  * Defines whether the platform is Linux or one of its derivatives.
  * @internal
  */
-#ifdef U_PLATFORM_IS_LINUX_BASED
+#నిర్వచితమైతే U_PLATFORM_IS_LINUX_BASED
     /* Use the predefined value. */
-#elif U_PF_LINUX <= U_PLATFORM && U_PLATFORM <= 4499
+#లేదావేళ U_PF_LINUX <= U_PLATFORM && U_PLATFORM <= 4499
 #   define U_PLATFORM_IS_LINUX_BASED 1
-#else
+#లేకపోతే
 #   define U_PLATFORM_IS_LINUX_BASED 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_PLATFORM_IS_DARWIN_BASED
  * Defines whether the platform is Darwin or one of its derivatives.
  * @internal
  */
-#ifdef U_PLATFORM_IS_DARWIN_BASED
+#నిర్వచితమైతే U_PLATFORM_IS_DARWIN_BASED
     /* Use the predefined value. */
-#elif U_PF_DARWIN <= U_PLATFORM && U_PLATFORM <= U_PF_IPHONE
+#లేదావేళ U_PF_DARWIN <= U_PLATFORM && U_PLATFORM <= U_PF_IPHONE
 #   define U_PLATFORM_IS_DARWIN_BASED 1
-#else
+#లేకపోతే
 #   define U_PLATFORM_IS_DARWIN_BASED 0
-#endif
+#అయితే_ముగింపు
 
 /*===========================================================================*/
 /** @{ Compiler and environment features                                     */
@@ -333,40 +333,40 @@
  * use "#if U_GCC_MAJOR_MINOR >= 406".
  * @internal
  */
-#ifdef __GNUC__
+#నిర్వచితమైతే __GNUC__
 #   define U_GCC_MAJOR_MINOR (__GNUC__ * 100 + __GNUC_MINOR__)
-#else
+#లేకపోతే
 #   define U_GCC_MAJOR_MINOR 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_IS_BIG_ENDIAN
  * Determines the endianness of the platform.
  * @internal
  */
-#ifdef U_IS_BIG_ENDIAN
+#నిర్వచితమైతే U_IS_BIG_ENDIAN
     /* Use the predefined value. */
-#elif defined(BYTE_ORDER) && defined(BIG_ENDIAN)
+#లేదావేళ defined(BYTE_ORDER) && defined(BIG_ENDIAN)
 #   define U_IS_BIG_ENDIAN (BYTE_ORDER == BIG_ENDIAN)
-#elif defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__)
+#లేదావేళ defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__)
     /* gcc */
 #   define U_IS_BIG_ENDIAN (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-#elif defined(__BIG_ENDIAN__) || defined(_BIG_ENDIAN)
+#లేదావేళ defined(__BIG_ENDIAN__) || defined(_BIG_ENDIAN)
 #   define U_IS_BIG_ENDIAN 1
-#elif defined(__LITTLE_ENDIAN__) || defined(_LITTLE_ENDIAN)
+#లేదావేళ defined(__LITTLE_ENDIAN__) || defined(_LITTLE_ENDIAN)
 #   define U_IS_BIG_ENDIAN 0
-#elif U_PLATFORM == U_PF_OS390 || U_PLATFORM == U_PF_OS400 || defined(__s390__) || defined(__s390x__)
+#లేదావేళ U_PLATFORM == U_PF_OS390 || U_PLATFORM == U_PF_OS400 || defined(__s390__) || defined(__s390x__)
     /* These platforms do not appear to predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#elif defined(_PA_RISC1_0) || defined(_PA_RISC1_1) || defined(_PA_RISC2_0)
+#లేదావేళ defined(_PA_RISC1_0) || defined(_PA_RISC1_1) || defined(_PA_RISC2_0)
     /* HPPA do not appear to predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#elif defined(sparc) || defined(__sparc) || defined(__sparc__)
+#లేదావేళ defined(sparc) || defined(__sparc) || defined(__sparc__)
     /* Some sparc based systems (e.g. Linux) do not predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#else
+#లేకపోతే
 #   define U_IS_BIG_ENDIAN 0
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_HAVE_DEBUG_LOCATION_NEW 
@@ -374,96 +374,96 @@
  *
  * @stable ICU 3.4
  */
-#ifdef U_HAVE_DEBUG_LOCATION_NEW
+#నిర్వచితమైతే U_HAVE_DEBUG_LOCATION_NEW
     /* Use the predefined value. */
-#elif defined(_MSC_VER)
+#లేదావేళ defined(_MSC_VER)
 #   define U_HAVE_DEBUG_LOCATION_NEW 1
-#else
+#లేకపోతే
 #   define U_HAVE_DEBUG_LOCATION_NEW 0
-#endif
+#అయితే_ముగింపు
 
 /* Compatibility with compilers other than clang: http://clang.llvm.org/docs/LanguageExtensions.html */
-#ifdef __has_attribute
+#నిర్వచితమైతే __has_attribute
 #   define UPRV_HAS_ATTRIBUTE(x) __has_attribute(x)
-#else
+#లేకపోతే
 #   define UPRV_HAS_ATTRIBUTE(x) 0
-#endif
-#ifdef __has_cpp_attribute
+#అయితే_ముగింపు
+#నిర్వచితమైతే __has_cpp_attribute
 #   define UPRV_HAS_CPP_ATTRIBUTE(x) __has_cpp_attribute(x)
-#else
+#లేకపోతే
 #   define UPRV_HAS_CPP_ATTRIBUTE(x) 0
-#endif
-#ifdef __has_declspec_attribute
+#అయితే_ముగింపు
+#నిర్వచితమైతే __has_declspec_attribute
 #   define UPRV_HAS_DECLSPEC_ATTRIBUTE(x) __has_declspec_attribute(x)
-#else
+#లేకపోతే
 #   define UPRV_HAS_DECLSPEC_ATTRIBUTE(x) 0
-#endif
-#ifdef __has_builtin
+#అయితే_ముగింపు
+#నిర్వచితమైతే __has_builtin
 #   define UPRV_HAS_BUILTIN(x) __has_builtin(x)
-#else
+#లేకపోతే
 #   define UPRV_HAS_BUILTIN(x) 0
-#endif
-#ifdef __has_feature
+#అయితే_ముగింపు
+#నిర్వచితమైతే __has_feature
 #   define UPRV_HAS_FEATURE(x) __has_feature(x)
-#else
+#లేకపోతే
 #   define UPRV_HAS_FEATURE(x) 0
-#endif
-#if UPRV_HAS_FEATURE(address_sanitizer) || \
-    UPRV_HAS_FEATURE(memory_sanitizer) || \
+#అయితే_ముగింపు
+#ఒకవేళ UPRV_HAS_FEATURE(చిరునామా_sanitizer) || \
+    UPRV_HAS_FEATURE(జ్ఞాపకం_sanitizer) || \
     UPRV_HAS_FEATURE(thread_sanitizer) || \
     UPRV_HAS_FEATURE(undefined_sanitizer) || \
     defined(__SANITIZE_ADDRESS__) || \
     defined(__SANITIZE_THREAD__) || \
     defined(__SANITIZE_UNDEFINED__)
 #   define UPRV_HAS_SANITIZER 1
-#else
+#లేకపోతే
 #   define UPRV_HAS_SANITIZER 0
-#endif
-#ifdef __has_extension
+#అయితే_ముగింపు
+#నిర్వచితమైతే __has_extension
 #   define UPRV_HAS_EXTENSION(x) __has_extension(x)
-#else
+#లేకపోతే
 #   define UPRV_HAS_EXTENSION(x) 0
-#endif
-#ifdef __has_warning
+#అయితే_ముగింపు
+#నిర్వచితమైతే __has_warning
 #   define UPRV_HAS_WARNING(x) __has_warning(x)
-#else
+#లేకపోతే
 #   define UPRV_HAS_WARNING(x) 0
-#endif
+#అయితే_ముగింపు
 
 
-#if defined(__clang__)
-#define UPRV_NO_SANITIZE_FUNCTION __attribute__((no_sanitize("function")))
-#define UPRV_NO_SANITIZE_UNDEFINED __attribute__((no_sanitize("undefined")))
-#else
-#define UPRV_NO_SANITIZE_FUNCTION
-#define UPRV_NO_SANITIZE_UNDEFINED
-#endif
+#ఒకవేళ defined(__clang__)
+#నిర్వచించు UPRV_NO_SANITIZE_FUNCTION __attribute__((no_sanitize("function")))
+#నిర్వచించు UPRV_NO_SANITIZE_UNDEFINED __attribute__((no_sanitize("undefined")))
+#లేకపోతే
+#నిర్వచించు UPRV_NO_SANITIZE_FUNCTION
+#నిర్వచించు UPRV_NO_SANITIZE_UNDEFINED
+#అయితే_ముగింపు
 
 /**
  * \def U_MALLOC_ATTR
  * Attribute to mark functions as malloc-like
  * @internal
  */
-#if defined(__GNUC__) && __GNUC__>=3
+#ఒకవేళ defined(__GNUC__) && __GNUC__>=3
 #    define U_MALLOC_ATTR __attribute__ ((__malloc__))
-#else
+#లేకపోతే
 #    define U_MALLOC_ATTR
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_ALLOC_SIZE_ATTR
  * Attribute to specify the size of the allocated buffer for malloc-like functions
  * @internal
  */
-#if (defined(__GNUC__) &&                                            \
+#ఒకవేళ (defined(__GNUC__) &&                                            \
         (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3))) || \
-        UPRV_HAS_ATTRIBUTE(alloc_size)
-#   define U_ALLOC_SIZE_ATTR(X) __attribute__ ((alloc_size(X)))
-#   define U_ALLOC_SIZE_ATTR2(X,Y) __attribute__ ((alloc_size(X,Y)))
-#else
-#   define U_ALLOC_SIZE_ATTR(X)
-#   define U_ALLOC_SIZE_ATTR2(X,Y)
-#endif
+        UPRV_HAS_ATTRIBUTE(alloc_కొలత)
+#   define U_ALLOC_కొలత_ATTR(X) __attribute__ ((alloc_కొలత(X)))
+#   define U_ALLOC_కొలత_ATTR2(X,Y) __attribute__ ((alloc_కొలత(X,Y)))
+#లేకపోతే
+#   define U_ALLOC_కొలత_ATTR(X)
+#   define U_ALLOC_కొలత_ATTR2(X,Y)
+#అయితే_ముగింపు
 
 /**
  * \def U_CPLUSPLUS_VERSION
@@ -471,30 +471,30 @@
  * Support for specific features cannot always be determined by the C++ version alone.
  * @internal
  */
-#ifdef U_CPLUSPLUS_VERSION
-#   if U_CPLUSPLUS_VERSION != 0 && !defined(__cplusplus)
-#       undef U_CPLUSPLUS_VERSION
-#       define U_CPLUSPLUS_VERSION 0
+#నిర్వచితమైతే U_CPLUSPLUS_సంస్కరణ
+#   ఒకవేళ U_CPLUSPLUS_సంస్కరణ != 0 && !defined(__cplusplus)
+#       undef U_CPLUSPLUS_సంస్కరణ
+#       define U_CPLUSPLUS_సంస్కరణ 0
 #   endif
     /* Otherwise use the predefined value. */
-#elif !defined(__cplusplus)
-#   define U_CPLUSPLUS_VERSION 0
+#లేదావేళ !defined(__cplusplus)
+#   define U_CPLUSPLUS_సంస్కరణ 0
 // The value of _MSVC_LANG for C++23 preview is undocumented, except that it is larger than 202002.
 // As of this writing, it is 202004.
-#elif __cplusplus >= 202302L || (defined(_MSVC_LANG) && _MSVC_LANG > 202002L)
-#   define U_CPLUSPLUS_VERSION 23
-#elif __cplusplus >= 202002L || (defined(_MSVC_LANG) && _MSVC_LANG >= 202002L)
-#   define U_CPLUSPLUS_VERSION 20
-#elif __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
-#   define U_CPLUSPLUS_VERSION 17
-#elif __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
-#   define U_CPLUSPLUS_VERSION 14
-#elif __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
-#   define U_CPLUSPLUS_VERSION 11
-#else
+#లేదావేళ __cplusplus >= 202302L || (defined(_MSVC_LANG) && _MSVC_LANG > 202002L)
+#   define U_CPLUSPLUS_సంస్కరణ 23
+#లేదావేళ __cplusplus >= 202002L || (defined(_MSVC_LANG) && _MSVC_LANG >= 202002L)
+#   define U_CPLUSPLUS_సంస్కరణ 20
+#లేదావేళ __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
+#   define U_CPLUSPLUS_సంస్కరణ 17
+#లేదావేళ __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
+#   define U_CPLUSPLUS_సంస్కరణ 14
+#లేదావేళ __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
+#   define U_CPLUSPLUS_సంస్కరణ 11
+#లేకపోతే
     // C++98 or C++03
-#   define U_CPLUSPLUS_VERSION 1
-#endif
+#   define U_CPLUSPLUS_సంస్కరణ 1
+#అయితే_ముగింపు
 
 /**
  * \def U_FALLTHROUGH
@@ -502,25 +502,25 @@
  * https://clang.llvm.org/docs/AttributeReference.html#fallthrough
  * @internal
  */
-#if defined(U_FALLTHROUGH)
+#ఒకవేళ defined(U_FALLTHROUGH)
     // Use the predefined value.
-#elif defined(__clang__)
+#లేదావేళ defined(__clang__)
     // Test for compiler vs. feature separately.
     // Other compilers might choke on the feature test.
-#    if UPRV_HAS_CPP_ATTRIBUTE(clang::fallthrough) || \
-             (UPRV_HAS_FEATURE(cxx_attributes) &&     \
+#    ఒకవేళ UPRV_HAS_CPP_ATTRIBUTE(clang::fallthrough) || \
+             (UPRV_HAS_FEATURE(cxx_లక్షణాలు) &&     \
              UPRV_HAS_WARNING("-Wimplicit-fallthrough"))
 #       define U_FALLTHROUGH [[clang::fallthrough]]
 #   endif
-#elif defined(__GNUC__) && (__GNUC__ >= 7)
+#లేదావేళ defined(__GNUC__) && (__GNUC__ >= 7)
 #   define U_FALLTHROUGH __attribute__((fallthrough))
-#endif
+#అయితే_ముగింపు
 
-#ifndef U_FALLTHROUGH
+#నిర్వచితం_కాకపోతే U_FALLTHROUGH
 #   define U_FALLTHROUGH
-#endif
+#అయితే_ముగింపు
 
-#ifndef U_IN_DOXYGEN
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
 /**
  * \def U_LIFETIME_BOUND
  *
@@ -534,22 +534,22 @@
  *
  * @internal
  */
-#ifndef __cplusplus
+#నిర్వచితం_కాకపోతే __cplusplus
 // Not for C.
-#elif defined(U_LIFETIME_BOUND)
+#లేదావేళ defined(U_LIFETIME_BOUND)
 // Use the predefined value.
-#elif  UPRV_HAS_CPP_ATTRIBUTE(clang::lifetimebound)
+#లేదావేళ  UPRV_HAS_CPP_ATTRIBUTE(clang::lifetimebound)
 #   define U_LIFETIME_BOUND [[clang::lifetimebound]]
-#elif UPRV_HAS_CPP_ATTRIBUTE(msvc::lifetimebound)
+#లేదావేళ UPRV_HAS_CPP_ATTRIBUTE(msvc::lifetimebound)
 #   define U_LIFETIME_BOUND [[msvc::lifetimebound]]
-#elif UPRV_HAS_ATTRIBUTE(lifetimebound)
+#లేదావేళ UPRV_HAS_ATTRIBUTE(lifetimebound)
 #   define U_LIFETIME_BOUND __attribute__((lifetimebound))
-#endif
+#అయితే_ముగింపు
 
-#ifndef U_LIFETIME_BOUND
+#నిర్వచితం_కాకపోతే U_LIFETIME_BOUND
 #   define U_LIFETIME_BOUND
-#endif
-#endif
+#అయితే_ముగింపు
+#అయితే_ముగింపు
 
 /** @} */
 
@@ -561,13 +561,13 @@
  * U_CHARSET_FAMILY is equal to this value when the platform is an ASCII based platform.
  * @stable ICU 2.0
  */
-#define U_ASCII_FAMILY 0
+#నిర్వచించు U_ASCII_FAMILY 0
 
 /**
  * U_CHARSET_FAMILY is equal to this value when the platform is an EBCDIC based platform.
  * @stable ICU 2.0
  */
-#define U_EBCDIC_FAMILY 1
+#నిర్వచించు U_EBCDIC_FAMILY 1
 
 /**
  * \def U_CHARSET_FAMILY
@@ -611,15 +611,15 @@
  * \endcode
  * @stable ICU 2.0
  */
-#ifdef U_CHARSET_FAMILY
+#నిర్వచితమైతే U_CHARSET_FAMILY
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_OS390 && (!defined(__CHARSET_LIB) || !__CHARSET_LIB)
+#లేదావేళ U_PLATFORM == U_PF_OS390 && (!defined(__CHARSET_LIB) || !__CHARSET_LIB)
 #   define U_CHARSET_FAMILY U_EBCDIC_FAMILY
-#elif U_PLATFORM == U_PF_OS400 && !defined(__UTF32__)
+#లేదావేళ U_PLATFORM == U_PF_OS400 && !defined(__UTF32__)
 #   define U_CHARSET_FAMILY U_EBCDIC_FAMILY
-#else
+#లేకపోతే
 #   define U_CHARSET_FAMILY U_ASCII_FAMILY
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_CHARSET_IS_UTF8
@@ -641,14 +641,14 @@
  * @stable ICU 4.2
  * @see UCONFIG_NO_CONVERSION
  */
-#ifdef U_CHARSET_IS_UTF8
+#నిర్వచితమైతే U_CHARSET_IS_UTF8
     /* Use the predefined value. */
-#elif U_PLATFORM_IS_LINUX_BASED || U_PLATFORM_IS_DARWIN_BASED || \
+#లేదావేళ U_PLATFORM_IS_LINUX_BASED || U_PLATFORM_IS_DARWIN_BASED || \
         U_PLATFORM == U_PF_EMSCRIPTEN
 #   define U_CHARSET_IS_UTF8 1
-#else
+#లేకపోతే
 #   define U_CHARSET_IS_UTF8 0
-#endif
+#అయితే_ముగింపు
 
 /** @} */
 
@@ -662,18 +662,18 @@
  *
  * @stable ICU 2.0
  */
-#ifdef U_HAVE_WCHAR_H
+#నిర్వచితమైతే U_HAVE_WCHAR_H
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9
+#లేదావేళ U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9
     /*
      * Android before Gingerbread (Android 2.3, API level 9) did not support wchar_t.
      * The type and header existed, but the library functions did not work as expected.
      * The size of wchar_t was 1 but L"xyz" string literals had 32-bit units anyway.
      */
 #   define U_HAVE_WCHAR_H 0
-#else
+#లేకపోతే
 #   define U_HAVE_WCHAR_H 1
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_SIZEOF_WCHAR_T
@@ -681,17 +681,17 @@
  *
  * @stable ICU 2.0
  */
-#ifdef U_SIZEOF_WCHAR_T
+#నిర్వచితమైతే U_SIZEOF_WCHAR_T
     /* Use the predefined value. */
-#elif (U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9)
+#లేదావేళ (U_PLATFORM == U_PF_ANDROID && __ANDROID_API__ < 9)
     /*
      * Classic Mac OS and Mac OS X before 10.3 (Panther) did not support wchar_t or wstring.
      * Newer Mac OS X has size 4.
      */
 #   define U_SIZEOF_WCHAR_T 1
-#elif U_PLATFORM_HAS_WIN32_API || U_PLATFORM == U_PF_CYGWIN
+#లేదావేళ U_PLATFORM_HAS_WIN32_API || U_PLATFORM == U_PF_CYGWIN
 #   define U_SIZEOF_WCHAR_T 2
-#elif U_PLATFORM == U_PF_AIX
+#లేదావేళ U_PLATFORM == U_PF_AIX
     /*
      * AIX 6.1 information, section "Wide character data representation":
      * "... the wchar_t datatype is 32-bit in the 64-bit environment and
@@ -702,10 +702,10 @@
      */
 #   ifdef __64BIT__
 #       define U_SIZEOF_WCHAR_T 4
-#   else
+#   లేకపోతే
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#elif U_PLATFORM == U_PF_OS390
+#లేదావేళ U_PLATFORM == U_PF_OS390
     /*
      * z/OS V1R11 information center, section "LP64 | ILP32":
      * "In 31-bit mode, the size of long and pointers is 4 bytes and the size of wchar_t is 2 bytes.
@@ -713,11 +713,11 @@
      */
 #   ifdef _LP64
 #       define U_SIZEOF_WCHAR_T 4
-#   else
+#   లేకపోతే
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#elif U_PLATFORM == U_PF_OS400
-#   if defined(__UTF32__)
+#లేదావేళ U_PLATFORM == U_PF_OS400
+#   ఒకవేళ defined(__UTF32__)
         /*
          * LOCALETYPE(*LOCALEUTF) is specified.
          * Wide-character strings are in UTF-32,
@@ -731,7 +731,7 @@
          * narrow-character strings are in EBCDIC.
          */
 #       define U_SIZEOF_WCHAR_T 2
-#   else
+#   లేకపోతే
         /*
          * LOCALETYPE(*CLD) or LOCALETYPE(*LOCALE) is specified.
          * Wide-character strings are in 16-bit EBCDIC,
@@ -739,13 +739,13 @@
          */
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#else
+#లేకపోతే
 #   define U_SIZEOF_WCHAR_T 4
-#endif
+#అయితే_ముగింపు
 
-#ifndef U_HAVE_WCSCPY
-#define U_HAVE_WCSCPY U_HAVE_WCHAR_H
-#endif
+#నిర్వచితం_కాకపోతే U_HAVE_WCSCPY
+#నిర్వచించు U_HAVE_WCSCPY U_HAVE_WCHAR_H
+#అయితే_ముగింపు
 
 /** @} */
 
@@ -757,24 +757,24 @@
  * but has been available in some compilers before.
  * @internal
  */
-#ifdef U_HAVE_CHAR16_T
+#నిర్వచితమైతే U_HAVE_CHAR16_T
     /* Use the predefined value. */
-#else
+#లేకపోతే
     /*
      * Notes:
      * C++11 and C11 require support for UTF-16 literals
      * Doesn't work on Mac C11 (see workaround in ptypes.h)
      * or Cygwin less than 3.5.
      */
-#   if defined(__cplusplus)
+#   ఒకవేళ defined(__cplusplus)
 #       define U_HAVE_CHAR16_T 1
-#   elif U_PLATFORM_IS_DARWIN_BASED || (U_PLATFORM == U_PF_CYGWIN && CYGWIN_VERSION_DLL_MAJOR < 3005)
+#   elif U_PLATFORM_IS_DARWIN_BASED || (U_PLATFORM == U_PF_CYGWIN && CYGWIN_సంస్కరణ_DLL_MAJOR < 3005)
 #       define U_HAVE_CHAR16_T 0
-#   else
+#   లేకపోతే
         // conformant C11
 #       define U_HAVE_CHAR16_T 1
 #   endif
-#endif
+#అయితే_ముగింపు
 
 /**
  * @{
@@ -785,20 +785,20 @@
  * See also the public U_STRING_DECL macro.
  * @internal
  */
-#ifdef U_DECLARE_UTF16
+#నిర్వచితమైతే U_DECLARE_UTF16
     /* Use the predefined value. */
-#elif U_HAVE_CHAR16_T \
+#లేదావేళ U_HAVE_CHAR16_T \
     || (defined(__xlC__) && defined(__IBM_UTF_LITERAL) && U_SIZEOF_WCHAR_T != 2) \
     || (defined(__HP_aCC) && __HP_aCC >= 035000) \
     || (defined(__HP_cc) && __HP_cc >= 111106) \
-    || (defined(U_IN_DOXYGEN))
+    || (defined(U_లోపల_DOXYGEN))
 #   define U_DECLARE_UTF16(string) u ## string
-#elif U_SIZEOF_WCHAR_T == 2 \
+#లేదావేళ U_SIZEOF_WCHAR_T == 2 \
     && (U_CHARSET_FAMILY == 0 || (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400 && defined(__UCS2__)))
 #   define U_DECLARE_UTF16(string) L ## string
-#else
+#లేకపోతే
     /* Leave U_DECLARE_UTF16 undefined. See unistr.h. */
-#endif
+#అయితే_ముగింపు
 
 /** @} */
 
@@ -806,42 +806,42 @@
 /** @{ Symbol import-export control                                          */
 /*===========================================================================*/
 
-#ifdef U_EXPORT
+#నిర్వచితమైతే U_EXPORT
     /* Use the predefined value. */
-#elif defined(U_STATIC_IMPLEMENTATION)
+#లేదావేళ defined(U_STATIC_IMPLEMENTATION)
 #   define U_EXPORT
-#elif defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#లేదావేళ defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                             UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
 #   define U_EXPORT __declspec(dllexport)
-#elif defined(__GNUC__) || defined(__open_xl__)
+#లేదావేళ defined(__GNUC__) || defined(__open_xl__)
 #   define U_EXPORT __attribute__((visibility("default")))
-#elif (defined(__SUNPRO_CC) && __SUNPRO_CC >= 0x550) \
+#లేదావేళ (defined(__SUNPRO_CC) && __SUNPRO_CC >= 0x550) \
    || (defined(__SUNPRO_C) && __SUNPRO_C >= 0x550) 
 #   define U_EXPORT __global
 /*#elif defined(__HP_aCC) || defined(__HP_cc)
 #   define U_EXPORT __declspec(dllexport)*/
-#else
+#లేకపోతే
 #   define U_EXPORT
-#endif
+#అయితే_ముగింపు
 
 /* U_CALLCONV is related to U_EXPORT2 */
-#ifdef U_EXPORT2
+#నిర్వచితమైతే U_EXPORT2
     /* Use the predefined value. */
-#elif defined(_MSC_VER)
+#లేదావేళ defined(_MSC_VER)
 #   define U_EXPORT2 __cdecl
-#else
+#లేకపోతే
 #   define U_EXPORT2
-#endif
+#అయితే_ముగింపు
 
-#ifdef U_IMPORT
+#నిర్వచితమైతే U_IMPORT
     /* Use the predefined value. */
-#elif defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#లేదావేళ defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                             UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
     /* Windows needs to export/import data. */
 #   define U_IMPORT __declspec(dllimport)
-#else
+#లేకపోతే
 #   define U_IMPORT 
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_HIDDEN
@@ -850,13 +850,13 @@
  * class within which they are declared. 
  * @internal
  */
-#ifdef U_HIDDEN
+#నిర్వచితమైతే U_HIDDEN
     /* Use the predefined value. */
-#elif defined(__GNUC__) || defined(__open_xl__)
+#లేదావేళ defined(__GNUC__) || defined(__open_xl__)
 #   define U_HIDDEN __attribute__((visibility("hidden")))
-#else
+#లేకపోతే
 #   define U_HIDDEN 
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_CALLCONV
@@ -875,22 +875,22 @@
  *
  * @stable ICU 2.0
  */
-#if U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
+#ఒకవేళ U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
 #    define U_CALLCONV __cdecl
-#else
+#లేకపోతే
 #    define U_CALLCONV U_EXPORT2
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_CALLCONV_FPTR
  * Similar to U_CALLCONV, but only used on function pointers.
  * @internal
  */
-#if U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
+#ఒకవేళ U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
 #    define U_CALLCONV_FPTR U_CALLCONV
-#else
+#లేకపోతే
 #    define U_CALLCONV_FPTR
-#endif
+#అయితే_ముగింపు
 /** @} */
 
-#endif  // _PLATFORM_H
+#అయితే_ముగింపు  // _PLATFORM_H

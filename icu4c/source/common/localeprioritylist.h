@@ -4,19 +4,19 @@
 // localeprioritylist.h
 // created: 2019jul11 Markus W. Scherer
 
-#ifndef __LOCALEPRIORITYLIST_H__
-#define __LOCALEPRIORITYLIST_H__
+#నిర్వచితం_కాకపోతే __LOCALEPRIORITYLIST_H__
+#నిర్వచించు __LOCALEPRIORITYLIST_H__
 
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/uobject.h"
 
-struct UHashtable;
+నిర్మాణం UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LocaleAndWeightArray;
+నిర్మాణం Locale_And_బరువు_Array;
 
 /**
  * Parses a list of locales from an accept-language string.
@@ -54,62 +54,62 @@ struct LocaleAndWeightArray;
  *        qvalue         = ( "0" [ "." 0*3DIGIT ] )
  *                       | ( "1" [ "." 0*3("0") ] )
  */
-class U_COMMON_API LocalePriorityList : public UMemory {
-public:
-    class Iterator : public Locale::Iterator {
-    public:
-        UBool hasNext() const override { return count < length; }
+class U_COMMON_API Locale_ప్రాధాన్యత_List : బహిరంగ UMemory {
+బహిరంగ:
+    class Iterator : బహిరంగ Locale::Iterator {
+    బహిరంగ:
+        UBool has_తదుపరి() స్థిరరాశి override { తిరిగి లెక్క < నిడివి; }
 
-        const Locale &next() override {
-            for(;;) {
-                const Locale *locale = list.localeAt(index++);
-                if (locale != nullptr) {
-                    ++count;
-                    return *locale;
+        స్థిరరాశి Locale &తదుపరి() override {
+            కొరకు(;;) {
+                స్థిరరాశి Locale *locale = list.localeAt(సూచీ++);
+                ఒకవేళ (locale != nullptr) {
+                    ++లెక్క;
+                    తిరిగి *locale;
                 }
             }
         }
 
-    private:
-        friend class LocalePriorityList;
+    అంతరంగ:
+        మిత్ర class Locale_ప్రాధాన్యత_List;
 
-        Iterator(const LocalePriorityList &list) : list(list), length(list.getLength()) {}
+        Iterator(స్థిరరాశి Locale_ప్రాధాన్యత_List &list) : list(list), నిడివి(list.get_నిడివి()) {}
 
-        const LocalePriorityList &list;
-        int32_t index = 0;
-        int32_t count = 0;
-        const int32_t length;
+        స్థిరరాశి Locale_ప్రాధాన్యత_List &list;
+        int32_t సూచీ = 0;
+        int32_t లెక్క = 0;
+        స్థిరరాశి int32_t నిడివి;
     };
 
-    LocalePriorityList(StringPiece s, UErrorCode &errorCode);
+    Locale_ప్రాధాన్యత_List(StringPiece s, UError_సంకేతం &error_సంకేతం);
 
-    ~LocalePriorityList();
+    ~Locale_ప్రాధాన్యత_List();
 
-    int32_t getLength() const { return listLength - numRemoved; }
+    int32_t get_నిడివి() స్థిరరాశి { తిరిగి list_నిడివి - అంకె_Removed; }
 
-    int32_t getLengthIncludingRemoved() const { return listLength; }
+    int32_t get_నిడివి_Including_Removed() స్థిరరాశి { తిరిగి list_నిడివి; }
 
-    Iterator iterator() const { return Iterator(*this); }
+    Iterator iterator() స్థిరరాశి { తిరిగి Iterator(*this); }
 
-    const Locale *localeAt(int32_t i) const;
+    స్థిరరాశి Locale *localeAt(int32_t i) స్థిరరాశి;
 
     Locale *orphanLocaleAt(int32_t i);
 
-private:
-    LocalePriorityList(const LocalePriorityList &) = delete;
-    LocalePriorityList &operator=(const LocalePriorityList &) = delete;
+అంతరంగ:
+    Locale_ప్రాధాన్యత_List(స్థిరరాశి Locale_ప్రాధాన్యత_List &) = delete;
+    Locale_ప్రాధాన్యత_List &క్రియాకారకం=(స్థిరరాశి Locale_ప్రాధాన్యత_List &) = delete;
 
-    bool add(const Locale &locale, int32_t weight, UErrorCode &errorCode);
+    bool కూడు(స్థిరరాశి Locale &locale, int32_t బరువు, UError_సంకేతం &error_సంకేతం);
 
-    void sort(UErrorCode &errorCode);
+    శూన్య క్రమీకరించు(UError_సంకేతం &error_సంకేతం);
 
-    LocaleAndWeightArray *list = nullptr;
-    int32_t listLength = 0;
-    int32_t numRemoved = 0;
+    Locale_And_బరువు_Array *list = nullptr;
+    int32_t list_నిడివి = 0;
+    int32_t అంకె_Removed = 0;
     bool hasWeights = false;  // other than 1.0
     UHashtable *map = nullptr;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // __LOCALEPRIORITYLIST_H__
+#అయితే_ముగింపు  // __LOCALEPRIORITYLIST_H__

@@ -39,11 +39,11 @@
 *     or should enum types be used?
 */
 
-#ifndef __UTRACIMP_H__
-#define __UTRACIMP_H__
+#నిర్వచితం_కాకపోతే __UTRACIMP_H__
+#నిర్వచించు __UTRACIMP_H__
 
-#include "unicode/utrace.h"
-#include <stdarg.h>
+#అన్తర్భావ "unicode/utrace.h"
+#అన్తర్భావ <stdarg.h>
 
 U_CDECL_BEGIN
 
@@ -55,7 +55,7 @@ U_CDECL_BEGIN
  *   Bit    4:  Flag for presence of U_ErrorCode status param.
  *   @internal
  */
-typedef enum UTraceExitVal {
+రకనిర్వచనం గణన UTraceExitVal {
     /** The traced function returns no value  @internal */
     UTRACE_EXITV_NONE   = 0,
     /** The traced function returns an int32_t, or compatible, type.  @internal */
@@ -65,9 +65,9 @@ typedef enum UTraceExitVal {
     /** The traced function returns a UBool  @internal */
     UTRACE_EXITV_BOOL   = 3,
     /** Mask to extract the return type values from a UTraceExitVal  @internal */
-    UTRACE_EXITV_MASK   = 0xf,
+    UTRACE_EXITV_ముసుగు   = 0xf,
     /** Bit indicating that the traced function includes a UErrorCode parameter  @internal */
-    UTRACE_EXITV_STATUS = 0x10
+    UTRACE_EXITV_స్థితి = 0x10
 } UTraceExitVal;
 
 /**
@@ -76,8 +76,8 @@ typedef enum UTraceExitVal {
  * @param fnNumber The UTraceFunctionNumber for the current function.
  * @internal
  */
-U_CAPI void U_EXPORT2
-utrace_entry(int32_t fnNumber);
+U_CAPI శూన్య U_EXPORT2
+utrace_నమోదు(int32_t fn_సంఖ్య);
 
 /**
  * Trace function for each exit point of a function.
@@ -87,8 +87,8 @@ utrace_entry(int32_t fnNumber);
  * @param errorCode The UErrorCode value at function exit. See UTRACE_EXIT.
  * @internal
  */
-U_CAPI void U_EXPORT2
-utrace_exit(int32_t fnNumber, int32_t returnType, ...);
+U_CAPI శూన్య U_EXPORT2
+utrace_exit(int32_t fn_సంఖ్య, int32_t returnType, ...);
 
 
 /**
@@ -102,19 +102,19 @@ utrace_exit(int32_t fnNumber, int32_t returnType, ...);
  *
  * @internal
  */
-U_CAPI void U_EXPORT2
-utrace_data(int32_t utraceFnNumber, int32_t level, const char *fmt, ...);
+U_CAPI శూన్య U_EXPORT2
+utrace_దత్తాంశం(int32_t utrace_Fn_సంఖ్య, int32_t level, స్థిరరాశి అక్షరం *fmt, ...);
 
-U_CDECL_END
+U_CDECL_చివర
 
-#if U_ENABLE_TRACING
+#ఒకవేళ U_ENABLE_TRACING
 
 /**
  * Boolean expression to see if ICU tracing is turned on
  * to at least the specified level.
  * @internal
  */
-#define UTRACE_LEVEL(level) (utrace_getLevel()>=(level))
+#నిర్వచించు UTRACE_LEVEL(level) (utrace_getLevel()>=(level))
 
 /**
   *  Flag bit in utraceFnNumber, the local variable added to each function 
@@ -126,7 +126,7 @@ U_CDECL_END
   *  always be available for error trace output.
   *  @internal
   */            
-#define UTRACE_TRACED_ENTRY 0x80000000
+#నిర్వచించు UTRACE_TRACED_నమోదు 0x80000000
 
 /**
  * Trace statement for the entry point of a function.
@@ -142,14 +142,14 @@ U_CDECL_END
  * @param fnNumber The UTraceFunctionNumber for the current function.
  * @internal
  */
-#define UTRACE_ENTRY(fnNumber) \
-    int32_t utraceFnNumber=(fnNumber); \
-UPRV_BLOCK_MACRO_BEGIN { \
-    if(utrace_getLevel()>=UTRACE_INFO) { \
-        utrace_entry(fnNumber); \
-        utraceFnNumber |= UTRACE_TRACED_ENTRY; \
+#నిర్వచించు UTRACE_నమోదు(fn_సంఖ్య) \
+    int32_t utrace_Fn_సంఖ్య=(fn_సంఖ్య); \
+UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(utrace_getLevel()>=UTRACE_INFO) { \
+        utrace_నమోదు(fn_సంఖ్య); \
+        utrace_Fn_సంఖ్య |= UTRACE_TRACED_నమోదు; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 
 /**
@@ -162,14 +162,14 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * @param fnNumber The UTraceFunctionNumber for the current function.
  * @internal
  */
-#define UTRACE_ENTRY_OC(fnNumber) \
-    int32_t utraceFnNumber=(fnNumber); \
-UPRV_BLOCK_MACRO_BEGIN { \
-    if(utrace_getLevel()>=UTRACE_OPEN_CLOSE) { \
-        utrace_entry(fnNumber); \
-        utraceFnNumber |= UTRACE_TRACED_ENTRY; \
+#నిర్వచించు UTRACE_నమోదు_OC(fn_సంఖ్య) \
+    int32_t utrace_Fn_సంఖ్య=(fn_సంఖ్య); \
+UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(utrace_getLevel()>=UTRACE_OPEN_CLOSE) { \
+        utrace_నమోదు(fn_సంఖ్య); \
+        utrace_Fn_సంఖ్య |= UTRACE_TRACED_నమోదు; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement for each exit point of a function that has a UTRACE_ENTRY()
@@ -183,11 +183,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  *
  * @internal
  */
-#define UTRACE_EXIT() UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, UTRACE_EXITV_NONE); \
+#నిర్వచించు UTRACE_EXIT() UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(utrace_Fn_సంఖ్య & UTRACE_TRACED_నమోదు) { \
+        utrace_exit(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, UTRACE_EXITV_NONE); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement for each exit point of a function that has a UTRACE_ENTRY()
@@ -197,29 +197,29 @@ UPRV_BLOCK_MACRO_BEGIN { \
  *
  * @internal 
  */
-#define UTRACE_EXIT_VALUE(val) UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, UTRACE_EXITV_I32, val); \
+#నిర్వచించు UTRACE_EXIT_విలువ(val) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(utrace_Fn_సంఖ్య & UTRACE_TRACED_నమోదు) { \
+        utrace_exit(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, UTRACE_EXITV_I32, val); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
-#define UTRACE_EXIT_STATUS(status) UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, UTRACE_EXITV_STATUS, status); \
+#నిర్వచించు UTRACE_EXIT_స్థితి(స్థితి_2) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(utrace_Fn_సంఖ్య & UTRACE_TRACED_నమోదు) { \
+        utrace_exit(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, UTRACE_EXITV_స్థితి, స్థితి_2); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
-#define UTRACE_EXIT_VALUE_STATUS(val, status) UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (UTRACE_EXITV_I32 | UTRACE_EXITV_STATUS), val, status); \
+#నిర్వచించు UTRACE_EXIT_విలువ_స్థితి(val, స్థితి_2) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(utrace_Fn_సంఖ్య & UTRACE_TRACED_నమోదు) { \
+        utrace_exit(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (UTRACE_EXITV_I32 | UTRACE_EXITV_స్థితి), val, స్థితి_2); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
-#define UTRACE_EXIT_PTR_STATUS(ptr, status) UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (UTRACE_EXITV_PTR | UTRACE_EXITV_STATUS), ptr, status); \
+#నిర్వచించు UTRACE_EXIT_PTR_స్థితి(ptr, స్థితి_2) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(utrace_Fn_సంఖ్య & UTRACE_TRACED_నమోదు) { \
+        utrace_exit(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (UTRACE_EXITV_PTR | UTRACE_EXITV_స్థితి), ptr, స్థితి_2); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -229,11 +229,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA0(level, fmt) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt)); \
+#నిర్వచించు UTRACE_DATA0(level, fmt) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (level), (fmt)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -243,11 +243,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA1(level, fmt, a) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY , (level), (fmt), (a)); \
+#నిర్వచించు UTRACE_DATA1(level, fmt, a) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు , (level), (fmt), (a)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -257,11 +257,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA2(level, fmt, a, b) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY , (level), (fmt), (a), (b)); \
+#నిర్వచించు UTRACE_DATA2(level, fmt, a, b) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు , (level), (fmt), (a), (b)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -271,11 +271,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA3(level, fmt, a, b, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c)); \
+#నిర్వచించు UTRACE_DATA3(level, fmt, a, b, c) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (level), (fmt), (a), (b), (c)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -285,11 +285,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA4(level, fmt, a, b, c, d) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d)); \
+#నిర్వచించు UTRACE_DATA4(level, fmt, a, b, c, d) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (level), (fmt), (a), (b), (c), (d)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -299,11 +299,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA5(level, fmt, a, b, c, d, e) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e)); \
+#నిర్వచించు UTRACE_DATA5(level, fmt, a, b, c, d, e) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (level), (fmt), (a), (b), (c), (d), (e)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -313,11 +313,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA6(level, fmt, a, b, c, d, e, f) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f)); \
+#నిర్వచించు UTRACE_DATA6(level, fmt, a, b, c, d, e, f) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (level), (fmt), (a), (b), (c), (d), (e), (f)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -327,11 +327,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA7(level, fmt, a, b, c, d, e, f, g) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f), (g)); \
+#నిర్వచించు UTRACE_DATA7(level, fmt, a, b, c, d, e, f, g) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (level), (fmt), (a), (b), (c), (d), (e), (f), (g)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -341,11 +341,11 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA8(level, fmt, a, b, c, d, e, f, g, h) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f), (g), (h)); \
+#నిర్వచించు UTRACE_DATA8(level, fmt, a, b, c, d, e, f, g, h) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (level), (fmt), (a), (b), (c), (d), (e), (f), (g), (h)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
@@ -355,37 +355,37 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
-#define UTRACE_DATA9(level, fmt, a, b, c, d, e, f, g, h, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f), (g), (h), (i)); \
+#నిర్వచించు UTRACE_DATA9(level, fmt, a, b, c, d, e, f, g, h, i) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(UTRACE_LEVEL(level)) { \
+        utrace_దత్తాంశం(utrace_Fn_సంఖ్య & ~UTRACE_TRACED_నమోదు, (level), (fmt), (a), (b), (c), (d), (e), (f), (g), (h), (i)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
-#else
+#లేకపోతే
 
 /*
  * When tracing is disabled, the following macros become empty
  */
 
-#define UTRACE_LEVEL(level) 0
-#define UTRACE_ENTRY(fnNumber)
-#define UTRACE_ENTRY_OC(fnNumber)
-#define UTRACE_EXIT()
-#define UTRACE_EXIT_VALUE(val)
-#define UTRACE_EXIT_STATUS(status)
-#define UTRACE_EXIT_VALUE_STATUS(val, status)
-#define UTRACE_EXIT_PTR_STATUS(ptr, status)
-#define UTRACE_DATA0(level, fmt)
-#define UTRACE_DATA1(level, fmt, a)
-#define UTRACE_DATA2(level, fmt, a, b)
-#define UTRACE_DATA3(level, fmt, a, b, c)
-#define UTRACE_DATA4(level, fmt, a, b, c, d)
-#define UTRACE_DATA5(level, fmt, a, b, c, d, e)
-#define UTRACE_DATA6(level, fmt, a, b, c, d, e, f)
-#define UTRACE_DATA7(level, fmt, a, b, c, d, e, f, g)
-#define UTRACE_DATA8(level, fmt, a, b, c, d, e, f, g, h)
-#define UTRACE_DATA9(level, fmt, a, b, c, d, e, f, g, h, i)
+#నిర్వచించు UTRACE_LEVEL(level) 0
+#నిర్వచించు UTRACE_నమోదు(fn_సంఖ్య)
+#నిర్వచించు UTRACE_నమోదు_OC(fn_సంఖ్య)
+#నిర్వచించు UTRACE_EXIT()
+#నిర్వచించు UTRACE_EXIT_విలువ(val)
+#నిర్వచించు UTRACE_EXIT_స్థితి(స్థితి_2)
+#నిర్వచించు UTRACE_EXIT_విలువ_స్థితి(val, స్థితి_2)
+#నిర్వచించు UTRACE_EXIT_PTR_స్థితి(ptr, స్థితి_2)
+#నిర్వచించు UTRACE_DATA0(level, fmt)
+#నిర్వచించు UTRACE_DATA1(level, fmt, a)
+#నిర్వచించు UTRACE_DATA2(level, fmt, a, b)
+#నిర్వచించు UTRACE_DATA3(level, fmt, a, b, c)
+#నిర్వచించు UTRACE_DATA4(level, fmt, a, b, c, d)
+#నిర్వచించు UTRACE_DATA5(level, fmt, a, b, c, d, e)
+#నిర్వచించు UTRACE_DATA6(level, fmt, a, b, c, d, e, f)
+#నిర్వచించు UTRACE_DATA7(level, fmt, a, b, c, d, e, f, g)
+#నిర్వచించు UTRACE_DATA8(level, fmt, a, b, c, d, e, f, g, h)
+#నిర్వచించు UTRACE_DATA9(level, fmt, a, b, c, d, e, f, g, h, i)
 
-#endif
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు

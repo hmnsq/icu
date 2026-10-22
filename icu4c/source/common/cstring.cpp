@@ -23,12 +23,12 @@
 
 
 
-#include <stdlib.h>
-#include <stdio.h>
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
+#అన్తర్భావ <stdlib.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uassert.h"
 
 /*
  * We hardcode case conversion for invariant characters to match our expectation
@@ -49,32 +49,32 @@
  */
 
 U_CAPI UBool U_EXPORT2
-uprv_isASCIILetter(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    return
+uprv_isASCIILetter(అక్షరం c) {
+#ఒకవేళ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    తిరిగి
         ('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z') ||
         ('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z');
-#else
-    return ('a'<=c && c<='z') || ('A'<=c && c<='Z');
-#endif
+#లేకపోతే
+    తిరిగి ('a'<=c && c<='z') || ('A'<=c && c<='Z');
+#అయితే_ముగింపు
 }
 
-U_CAPI char U_EXPORT2
-uprv_toupper(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
-        c=(char)(c+('A'-'a'));
+U_CAPI అక్షరం U_EXPORT2
+uprv_toupper(అక్షరం c) {
+#ఒకవేళ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    ఒకవేళ(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
+        c=(అక్షరం)(c+('A'-'a'));
     }
-#else
-    if('a'<=c && c<='z') {
-        c=(char)(c+('A'-'a'));
+#లేకపోతే
+    ఒకవేళ('a'<=c && c<='z') {
+        c=(అక్షరం)(c+('A'-'a'));
     }
-#endif
-    return c;
+#అయితే_ముగింపు
+    తిరిగి c;
 }
 
 
-#if 0
+#ఒకవేళ 0
 /*
  * Commented out because cstring.h defines uprv_tolower() to be
  * the same as either uprv_asciitolower() or uprv_ebcdictolower()
@@ -84,67 +84,67 @@ uprv_toupper(char c) {
  * charset families, not just ASCII and EBCDIC, because its #else branch
  * is written generically.
  */
-U_CAPI char U_EXPORT2
-uprv_tolower(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
-        c=(char)(c+('a'-'A'));
+U_CAPI అక్షరం U_EXPORT2
+uprv_tolower(అక్షరం c) {
+#ఒకవేళ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    ఒకవేళ(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
+        c=(అక్షరం)(c+('a'-'A'));
     }
-#else
-    if('A'<=c && c<='Z') {
-        c=(char)(c+('a'-'A'));
+#లేకపోతే
+    ఒకవేళ('A'<=c && c<='Z') {
+        c=(అక్షరం)(c+('a'-'A'));
     }
-#endif
-    return c;
+#అయితే_ముగింపు
+    తిరిగి c;
 }
-#endif
+#అయితే_ముగింపు
 
-U_CAPI char U_EXPORT2
-uprv_asciitolower(char c) {
-    if(0x41<=c && c<=0x5a) {
-        c=(char)(c+0x20);
+U_CAPI అక్షరం U_EXPORT2
+uprv_asciitolower(అక్షరం c) {
+    ఒకవేళ(0x41<=c && c<=0x5a) {
+        c=(అక్షరం)(c+0x20);
     }
-    return c;
+    తిరిగి c;
 }
 
-U_CAPI char U_EXPORT2
-uprv_ebcdictolower(char c) {
-    if( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
+U_CAPI అక్షరం U_EXPORT2
+uprv_ebcdictolower(అక్షరం c) {
+    ఒకవేళ( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
         (0xd1<=(uint8_t)c && (uint8_t)c<=0xd9) ||
         (0xe2<=(uint8_t)c && (uint8_t)c<=0xe9)
     ) {
-        c=(char)(c-0x40);
+        c=(అక్షరం)(c-0x40);
     }
-    return c;
+    తిరిగి c;
 }
 
 
-U_CAPI char* U_EXPORT2
-T_CString_toLowerCase(char* str)
+U_CAPI అక్షరం* U_EXPORT2
+T_CString_గమ్యం_క్రింది_Case(అక్షరం* str)
 {
-    char* origPtr = str;
+    అక్షరం* origPtr = str;
 
-    if (str) {
-        do
+    ఒకవేళ (str) {
+        చేయి
             *str = uprv_tolower(*str);
-        while (*(str++));
+        అయితే (*(str++));
     }
 
-    return origPtr;
+    తిరిగి origPtr;
 }
 
-U_CAPI char* U_EXPORT2
-T_CString_toUpperCase(char* str)
+U_CAPI అక్షరం* U_EXPORT2
+T_CString_గమ్యం_పై_Case(అక్షరం* str)
 {
-    char* origPtr = str;
+    అక్షరం* origPtr = str;
 
-    if (str) {
-        do
+    ఒకవేళ (str) {
+        చేయి
             *str = uprv_toupper(*str);
-        while (*(str++));
+        అయితే (*(str++));
     }
 
-    return origPtr;
+    తిరిగి origPtr;
 }
 
 /*
@@ -154,34 +154,34 @@ T_CString_toUpperCase(char* str)
  * Returns the length of the string (not including the NUL).
  */
 U_CAPI int32_t U_EXPORT2
-T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
+T_CString_integer_గమ్యం_String(అక్షరం* బఫరు, int32_t v, int32_t radix)
 {
-    char      tbuf[30];
-    int32_t   tbx    = sizeof(tbuf);
+    అక్షరం      tbuf[30];
+    int32_t   tbx    = పరిమాణం(tbuf);
     uint8_t   digit;
     int32_t   length = 0;
     uint32_t  uval;
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint32_t) v;
-    if(v<0 && radix == 10) {
+    ఒకవేళ(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint32_t)(-v); 
-        buffer[length++] = '-';
+        బఫరు[length++] = '-';
     }
     
-    tbx = sizeof(tbuf)-1;
+    tbx = పరిమాణం(tbuf)-1;
     tbuf[tbx] = 0;   /* We are generating the digits backwards.  Null term the end. */
-    do {
+    చేయి {
         digit = (uint8_t)(uval % radix);
-        tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
+        tbuf[--tbx] = (అక్షరం)(T_CString_itos_స్థానభ్రంశం(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } అయితే (uval != 0);
     
     /* copy converted number into user buffer  */
-    uprv_strcpy(buffer+length, tbuf+tbx);
-    length += sizeof(tbuf) - tbx -1;
-    return length;
+    uprv_strcpy(బఫరు+length, tbuf+tbx);
+    length += పరిమాణం(tbuf) - tbx -1;
+    తిరిగి length;
 }
 
 
@@ -192,76 +192,76 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
  * Returns the length of the string, not including the terminating NUL.
  */
 U_CAPI int32_t U_EXPORT2
-T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
+T_CString_int64_గమ్యం_String(అక్షరం* బఫరు, int64_t v, uint32_t radix)
 {
-    char      tbuf[30];
-    int32_t   tbx    = sizeof(tbuf);
+    అక్షరం      tbuf[30];
+    int32_t   tbx    = పరిమాణం(tbuf);
     uint8_t   digit;
     int32_t   length = 0;
     uint64_t  uval;
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint64_t) v;
-    if(v<0 && radix == 10) {
+    ఒకవేళ(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint64_t)(-v); 
-        buffer[length++] = '-';
+        బఫరు[length++] = '-';
     }
     
-    tbx = sizeof(tbuf)-1;
+    tbx = పరిమాణం(tbuf)-1;
     tbuf[tbx] = 0;   /* We are generating the digits backwards.  Null term the end. */
-    do {
+    చేయి {
         digit = (uint8_t)(uval % radix);
-        tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
+        tbuf[--tbx] = (అక్షరం)(T_CString_itos_స్థానభ్రంశం(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } అయితే (uval != 0);
     
     /* copy converted number into user buffer  */
-    uprv_strcpy(buffer+length, tbuf+tbx);
-    length += sizeof(tbuf) - tbx -1;
-    return length;
+    uprv_strcpy(బఫరు+length, tbuf+tbx);
+    length += పరిమాణం(tbuf) - tbx -1;
+    తిరిగి length;
 }
 
 
 U_CAPI int32_t U_EXPORT2
-T_CString_stringToInteger(const char *integerString, int32_t radix)
+T_CString_string_గమ్యం_Integer(స్థిరరాశి అక్షరం *integerString, int32_t radix)
 {
-    char *end;
-    return uprv_strtoul(integerString, &end, radix);
+    అక్షరం *చివర;
+    తిరిగి uprv_strtoul(integerString, &చివర, radix);
 
 }
 
-U_CAPI int U_EXPORT2
-uprv_stricmp(const char *str1, const char *str2) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+U_CAPI పూర్ణాంకం U_EXPORT2
+uprv_stricmp(స్థిరరాశి అక్షరం *str1, స్థిరరాశి అక్షరం *str2) {
+    ఒకవేళ(str1==శూన్యసూచిక) {
+        ఒకవేళ(str2==శూన్యసూచిక) {
+            తిరిగి 0;
+        } లేకపోతే {
+            తిరిగి -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } లేకపోతే ఒకవేళ(str2==శూన్యసూచిక) {
+        తిరిగి 1;
+    } లేకపోతే {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
-        unsigned char c1, c2;
+        పూర్ణాంకం rc;
+        గుర్తులేని అక్షరం c1, c2;
 
-        for(;;) {
-            c1=(unsigned char)*str1;
-            c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+        కొరకు(;;) {
+            c1=(గుర్తులేని అక్షరం)*str1;
+            c2=(గుర్తులేని అక్షరం)*str2;
+            ఒకవేళ(c1==0) {
+                ఒకవేళ(c2==0) {
+                    తిరిగి 0;
+                } లేకపోతే {
+                    తిరిగి -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } లేకపోతే ఒకవేళ(c2==0) {
+                తిరిగి 1;
+            } లేకపోతే {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(పూర్ణాంకం)(గుర్తులేని అక్షరం)uprv_tolower(c1)-(పూర్ణాంకం)(గుర్తులేని అక్షరం)uprv_tolower(c2);
+                ఒకవేళ(rc!=0) {
+                    తిరిగి rc;
                 }
             }
             ++str1;
@@ -270,37 +270,37 @@ uprv_stricmp(const char *str1, const char *str2) {
     }
 }
 
-U_CAPI int U_EXPORT2
-uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+U_CAPI పూర్ణాంకం U_EXPORT2
+uprv_strnicmp(స్థిరరాశి అక్షరం *str1, స్థిరరాశి అక్షరం *str2, uint32_t n) {
+    ఒకవేళ(str1==శూన్యసూచిక) {
+        ఒకవేళ(str2==శూన్యసూచిక) {
+            తిరిగి 0;
+        } లేకపోతే {
+            తిరిగి -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } లేకపోతే ఒకవేళ(str2==శూన్యసూచిక) {
+        తిరిగి 1;
+    } లేకపోతే {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
-        unsigned char c1, c2;
+        పూర్ణాంకం rc;
+        గుర్తులేని అక్షరం c1, c2;
 
-        for(; n--;) {
-            c1=(unsigned char)*str1;
-            c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+        కొరకు(; n--;) {
+            c1=(గుర్తులేని అక్షరం)*str1;
+            c2=(గుర్తులేని అక్షరం)*str2;
+            ఒకవేళ(c1==0) {
+                ఒకవేళ(c2==0) {
+                    తిరిగి 0;
+                } లేకపోతే {
+                    తిరిగి -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } లేకపోతే ఒకవేళ(c2==0) {
+                తిరిగి 1;
+            } లేకపోతే {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(పూర్ణాంకం)(గుర్తులేని అక్షరం)uprv_tolower(c1)-(పూర్ణాంకం)(గుర్తులేని అక్షరం)uprv_tolower(c2);
+                ఒకవేళ(rc!=0) {
+                    తిరిగి rc;
                 }
             }
             ++str1;
@@ -308,34 +308,34 @@ uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-U_CAPI char* U_EXPORT2
-uprv_strdup(const char *src) {
+U_CAPI అక్షరం* U_EXPORT2
+uprv_strdup(స్థిరరాశి అక్షరం *src) {
     size_t len = uprv_strlen(src) + 1;
-    char *dup = (char *) uprv_malloc(len);
+    అక్షరం *dup = (అక్షరం *) uprv_malloc(len);
 
-    if (dup) {
+    ఒకవేళ (dup) {
         uprv_memcpy(dup, src, len);
     }
 
-    return dup;
+    తిరిగి dup;
 }
 
-U_CAPI char* U_EXPORT2
-uprv_strndup(const char *src, int32_t n) {
-    char *dup;
+U_CAPI అక్షరం* U_EXPORT2
+uprv_strndup(స్థిరరాశి అక్షరం *src, int32_t n) {
+    అక్షరం *dup;
 
-    if(n < 0) {
+    ఒకవేళ(n < 0) {
         dup = uprv_strdup(src);
-    } else {
-        dup = (char*)uprv_malloc(n+1);
-        if (dup) { 
+    } లేకపోతే {
+        dup = (అక్షరం*)uprv_malloc(n+1);
+        ఒకవేళ (dup) { 
             uprv_memcpy(dup, src, n);
             dup[n] = 0;
         }
     }
 
-    return dup;
+    తిరిగి dup;
 }

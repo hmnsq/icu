@@ -7,27 +7,27 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#ఒకవేళ !UCONFIG_NO_FORMATTING
 
-#include "unicode/locdspnm.h"
-#include "unicode/simpleformatter.h"
-#include "unicode/ucasemap.h"
-#include "unicode/ures.h"
-#include "unicode/udisplaycontext.h"
-#include "unicode/brkiter.h"
-#include "unicode/ucurr.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "ureslocs.h"
-#include "uresimp.h"
+#అన్తర్భావ "unicode/locdspnm.h"
+#అన్తర్భావ "unicode/simpleformatter.h"
+#అన్తర్భావ "unicode/ucasemap.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "unicode/udisplaycontext.h"
+#అన్తర్భావ "unicode/brkiter.h"
+#అన్తర్భావ "unicode/ucurr.h"
+#అన్తర్భావ "bytesinkutil.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ulocimp.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "ureslocs.h"
+#అన్తర్భావ "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,1083 +35,1083 @@ U_NAMESPACE_BEGIN
 
 // Access resource data for locale components.
 // Wrap code in uloc.c for now.
-class ICUDataTable {
-    const char* const path;
+తరగతి ICUData_పట్టిక {
+    స్థిరరాశి అక్షరం* స్థిరరాశి మార్గం;
     Locale locale;
 
-public:
+బహిరంగ:
     // Note: path should be a pointer to a statically allocated string.
-    ICUDataTable(const char* path, const Locale& locale);
-    ~ICUDataTable() = default;
+    ICUData_పట్టిక(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి Locale& locale);
+    ~ICUData_పట్టిక() = అప్రమేయ;
 
-    const Locale& getLocale() U_LIFETIME_BOUND;
+    స్థిరరాశి Locale& getLocale() U_LIFETIME_BOUND;
 
-    UnicodeString& get(const char* tableKey, const char* itemKey,
-                       UnicodeString& result U_LIFETIME_BOUND) const;
-    UnicodeString& get(const char* tableKey, const char* subTableKey, const char* itemKey,
-                       UnicodeString& result U_LIFETIME_BOUND) const;
+    UnicodeString& get(స్థిరరాశి అక్షరం* పట్టిక_కీలకం, స్థిరరాశి అక్షరం* అంశం_కీలకం,
+                       UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+    UnicodeString& get(స్థిరరాశి అక్షరం* పట్టిక_కీలకం, స్థిరరాశి అక్షరం* sub_పట్టిక_కీలకం, స్థిరరాశి అక్షరం* అంశం_కీలకం,
+                       UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
 
-    UnicodeString& getNoFallback(const char* tableKey, const char* itemKey,
-                                 UnicodeString& result U_LIFETIME_BOUND) const;
-    UnicodeString& getNoFallback(const char* tableKey, const char* subTableKey, const char* itemKey,
-                                 UnicodeString& result U_LIFETIME_BOUND) const;
+    UnicodeString& getNoFallback(స్థిరరాశి అక్షరం* పట్టిక_కీలకం, స్థిరరాశి అక్షరం* అంశం_కీలకం,
+                                 UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+    UnicodeString& getNoFallback(స్థిరరాశి అక్షరం* పట్టిక_కీలకం, స్థిరరాశి అక్షరం* sub_పట్టిక_కీలకం, స్థిరరాశి అక్షరం* అంశం_కీలకం,
+                                 UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
 };
 
-inline UnicodeString& ICUDataTable::get(const char* tableKey, const char* itemKey,
-                                        UnicodeString& result U_LIFETIME_BOUND) const {
-    return get(tableKey, nullptr, itemKey, result);
+అంతఃవరుస UnicodeString& ICUData_పట్టిక::get(స్థిరరాశి అక్షరం* పట్టిక_కీలకం, స్థిరరాశి అక్షరం* అంశం_కీలకం,
+                                        UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    తిరిగి get(పట్టిక_కీలకం, శూన్యసూచిక, అంశం_కీలకం, ఫలితం);
 }
 
-inline UnicodeString& ICUDataTable::getNoFallback(const char* tableKey, const char* itemKey,
-                                                  UnicodeString& result U_LIFETIME_BOUND) const {
-    return getNoFallback(tableKey, nullptr, itemKey, result);
+అంతఃవరుస UnicodeString& ICUData_పట్టిక::getNoFallback(స్థిరరాశి అక్షరం* పట్టిక_కీలకం, స్థిరరాశి అక్షరం* అంశం_కీలకం,
+                                                  UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    తిరిగి getNoFallback(పట్టిక_కీలకం, శూన్యసూచిక, అంశం_కీలకం, ఫలితం);
 }
 
-ICUDataTable::ICUDataTable(const char* path, const Locale& locale)
-    : path(path), locale(locale)
+ICUData_పట్టిక::ICUData_పట్టిక(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి Locale& locale)
+    : మార్గం(మార్గం), locale(locale)
 {
-    U_ASSERT(path != nullptr);
+    U_ASSERT(మార్గం != శూన్యసూచిక);
 }
 
-const Locale&
-ICUDataTable::getLocale() U_LIFETIME_BOUND {
-  return locale;
-}
-
-UnicodeString&
-ICUDataTable::get(const char* tableKey, const char* subTableKey, const char* itemKey,
-                  UnicodeString &result U_LIFETIME_BOUND) const {
-  UErrorCode status = U_ZERO_ERROR;
-  int32_t len = 0;
-
-  const char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
-                                                   tableKey, subTableKey, itemKey,
-                                                   &len, &status);
-  if (U_SUCCESS(status) && len > 0) {
-    return result.setTo(s, len);
-  }
-  return result.setTo(UnicodeString(itemKey, -1, US_INV));
+స్థిరరాశి Locale&
+ICUData_పట్టిక::getLocale() U_LIFETIME_BOUND {
+  తిరిగి locale;
 }
 
 UnicodeString&
-ICUDataTable::getNoFallback(const char* tableKey, const char* subTableKey, const char* itemKey,
-                            UnicodeString& result U_LIFETIME_BOUND) const {
-  UErrorCode status = U_ZERO_ERROR;
+ICUData_పట్టిక::get(స్థిరరాశి అక్షరం* పట్టిక_కీలకం, స్థిరరాశి అక్షరం* sub_పట్టిక_కీలకం, స్థిరరాశి అక్షరం* అంశం_కీలకం,
+                  UnicodeString &ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
   int32_t len = 0;
 
-  const char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
-                                                   tableKey, subTableKey, itemKey,
-                                                   &len, &status);
-  if (U_SUCCESS(status)) {
-    return result.setTo(s, len);
+  స్థిరరాశి char16_t *s = uloc_get_పట్టిక_String_With_Fallback(మార్గం, locale.getName(),
+                                                   పట్టిక_కీలకం, sub_పట్టిక_కీలకం, అంశం_కీలకం,
+                                                   &len, &స్థితి_2);
+  ఒకవేళ (U_SUCCESS(స్థితి_2) && len > 0) {
+    తిరిగి ఫలితం.సమితి_గమ్యం(s, len);
+  }
+  తిరిగి ఫలితం.సమితి_గమ్యం(UnicodeString(అంశం_కీలకం, -1, US_INV));
+}
+
+UnicodeString&
+ICUData_పట్టిక::getNoFallback(స్థిరరాశి అక్షరం* పట్టిక_కీలకం, స్థిరరాశి అక్షరం* sub_పట్టిక_కీలకం, స్థిరరాశి అక్షరం* అంశం_కీలకం,
+                            UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+  int32_t len = 0;
+
+  స్థిరరాశి char16_t *s = uloc_get_పట్టిక_String_With_Fallback(మార్గం, locale.getName(),
+                                                   పట్టిక_కీలకం, sub_పట్టిక_కీలకం, అంశం_కీలకం,
+                                                   &len, &స్థితి_2);
+  ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+    తిరిగి ఫలితం.సమితి_గమ్యం(s, len);
   }
 
-  result.setToBogus();
-  return result;
+  ఫలితం.సమితి_గమ్యం_Bogus();
+  తిరిగి ఫలితం;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-LocaleDisplayNames::~LocaleDisplayNames() {}
+Locale_Display_పేర్లు::~Locale_Display_పేర్లు() {}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if 0  // currently unused
+#ఒకవేళ 0  // currently unused
 
-class DefaultLocaleDisplayNames : public LocaleDisplayNames {
+తరగతి Default_Locale_Display_పేర్లు : బహిరంగ Locale_Display_పేర్లు {
   UDialectHandling dialectHandling;
 
-public:
+బహిరంగ:
   // constructor
-  DefaultLocaleDisplayNames(UDialectHandling dialectHandling);
+  Default_Locale_Display_పేర్లు(UDialectHandling dialectHandling);
 
-  virtual ~DefaultLocaleDisplayNames();
+  మాయా ~Default_Locale_Display_పేర్లు();
 
-  virtual const Locale& getLocale() const U_LIFETIME_BOUND;
-  virtual UDialectHandling getDialectHandling() const;
+  మాయా స్థిరరాశి Locale& getLocale() స్థిరరాశి U_LIFETIME_BOUND;
+  మాయా UDialectHandling getDialectHandling() స్థిరరాశి;
 
-  virtual UnicodeString& localeDisplayName(const Locale& locale,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& localeDisplayName(const char* localeId,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& languageDisplayName(const char* lang,
-                                             UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& scriptDisplayName(const char* script,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& scriptDisplayName(UScriptCode scriptCode,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& regionDisplayName(const char* region,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& variantDisplayName(const char* variant,
-                                            UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& keyDisplayName(const char* key,
-                                        UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& keyValueDisplayName(const char* key,
-                                             const char* value,
-                                             UnicodeString& result U_LIFETIME_BOUND) const;
+  మాయా UnicodeString& localeDisplayName(స్థిరరాశి Locale& locale,
+                                           UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+  మాయా UnicodeString& localeDisplayName(స్థిరరాశి అక్షరం* localeId,
+                                           UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+  మాయా UnicodeString& languageDisplayName(స్థిరరాశి అక్షరం* lang,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+  మాయా UnicodeString& scriptDisplayName(స్థిరరాశి అక్షరం* script,
+                                           UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+  మాయా UnicodeString& scriptDisplayName(UScript_సంకేతం script_సంకేతం,
+                                           UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+  మాయా UnicodeString& regionDisplayName(స్థిరరాశి అక్షరం* region,
+                                           UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+  మాయా UnicodeString& variantDisplayName(స్థిరరాశి అక్షరం* variant,
+                                            UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+  మాయా UnicodeString& కీలకం_Display_Name(స్థిరరాశి అక్షరం* కీలకం,
+                                        UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+  మాయా UnicodeString& కీలకం_విలువ_Display_Name(స్థిరరాశి అక్షరం* కీలకం,
+                                             స్థిరరాశి అక్షరం* value,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
 };
 
-DefaultLocaleDisplayNames::DefaultLocaleDisplayNames(UDialectHandling dialectHandling)
+Default_Locale_Display_పేర్లు::Default_Locale_Display_పేర్లు(UDialectHandling dialectHandling)
     : dialectHandling(dialectHandling) {
 }
 
-DefaultLocaleDisplayNames::~DefaultLocaleDisplayNames() {
+Default_Locale_Display_పేర్లు::~Default_Locale_Display_పేర్లు() {
 }
 
-const Locale&
-DefaultLocaleDisplayNames::getLocale() const U_LIFETIME_BOUND {
-  return Locale::getRoot();
+స్థిరరాశి Locale&
+Default_Locale_Display_పేర్లు::getLocale() స్థిరరాశి U_LIFETIME_BOUND {
+  తిరిగి Locale::get_మూలం();
 }
 
 UDialectHandling
-DefaultLocaleDisplayNames::getDialectHandling() const {
-  return dialectHandling;
+Default_Locale_Display_పేర్లు::getDialectHandling() స్థిరరాశి {
+  తిరిగి dialectHandling;
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::localeDisplayName(const Locale& locale,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(locale.getName(), -1, US_INV);
+Default_Locale_Display_పేర్లు::localeDisplayName(స్థిరరాశి Locale& locale,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  తిరిగి ఫలితం = UnicodeString(locale.getName(), -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::localeDisplayName(const char* localeId,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(localeId, -1, US_INV);
+Default_Locale_Display_పేర్లు::localeDisplayName(స్థిరరాశి అక్షరం* localeId,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  తిరిగి ఫలితం = UnicodeString(localeId, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::languageDisplayName(const char* lang,
-                                               UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(lang, -1, US_INV);
+Default_Locale_Display_పేర్లు::languageDisplayName(స్థిరరాశి అక్షరం* lang,
+                                               UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  తిరిగి ఫలితం = UnicodeString(lang, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::scriptDisplayName(const char* script,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(script, -1, US_INV);
+Default_Locale_Display_పేర్లు::scriptDisplayName(స్థిరరాశి అక్షరం* script,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  తిరిగి ఫలితం = UnicodeString(script, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::scriptDisplayName(UScriptCode scriptCode,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  const char* name = uscript_getName(scriptCode);
-  if (name) {
-    return result = UnicodeString(name, -1, US_INV);
+Default_Locale_Display_పేర్లు::scriptDisplayName(UScript_సంకేతం script_సంకేతం,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  స్థిరరాశి అక్షరం* name = uscript_getName(script_సంకేతం);
+  ఒకవేళ (name) {
+    తిరిగి ఫలితం = UnicodeString(name, -1, US_INV);
   }
-  return result.remove();
+  తిరిగి ఫలితం.remove();
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::regionDisplayName(const char* region,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(region, -1, US_INV);
+Default_Locale_Display_పేర్లు::regionDisplayName(స్థిరరాశి అక్షరం* region,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  తిరిగి ఫలితం = UnicodeString(region, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::variantDisplayName(const char* variant,
-                                              UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(variant, -1, US_INV);
+Default_Locale_Display_పేర్లు::variantDisplayName(స్థిరరాశి అక్షరం* variant,
+                                              UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  తిరిగి ఫలితం = UnicodeString(variant, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::keyDisplayName(const char* key,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(key, -1, US_INV);
+Default_Locale_Display_పేర్లు::కీలకం_Display_Name(స్థిరరాశి అక్షరం* కీలకం,
+                                          UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  తిరిగి ఫలితం = UnicodeString(కీలకం, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::keyValueDisplayName(const char* /* key */,
-                                               const char* value,
-                                               UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(value, -1, US_INV);
+Default_Locale_Display_పేర్లు::కీలకం_విలువ_Display_Name(స్థిరరాశి అక్షరం* /*కీలకం*/,
+                                               స్థిరరాశి అక్షరం* value,
+                                               UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  తిరిగి ఫలితం = UnicodeString(value, -1, US_INV);
 }
 
-#endif  // currently unused class DefaultLocaleDisplayNames
+#అయితే_ముగింపు  // currently unused class DefaultLocaleDisplayNames
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class LocaleDisplayNamesImpl : public LocaleDisplayNames {
+తరగతి Locale_Display_పేర్లు_Impl : బహిరంగ Locale_Display_పేర్లు {
     Locale locale;
     UDialectHandling dialectHandling;
-    ICUDataTable langData;
-    ICUDataTable regionData;
+    ICUData_పట్టిక lang_దత్తాంశం;
+    ICUData_పట్టిక region_దత్తాంశం;
     SimpleFormatter separatorFormat;
     SimpleFormatter format;
-    SimpleFormatter keyTypeFormat;
+    SimpleFormatter కీలకం_Type_Format;
     UDisplayContext capitalizationContext;
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
     BreakIterator* capitalizationBrkIter;
-#else
+#లేకపోతే
     UObject* capitalizationBrkIter;
-#endif
+#అయితే_ముగింపు
     UnicodeString formatOpenParen;
     UnicodeString formatReplaceOpenParen;
     UnicodeString formatCloseParen;
     UnicodeString formatReplaceCloseParen;
-    UDisplayContext nameLength;
+    UDisplayContext name_నిడివి;
     UDisplayContext substitute;
 
     // Constants for capitalization context usage types.
-    enum CapContextUsage {
+    గణన CapContextUsage {
         kCapContextUsageLanguage,
         kCapContextUsageScript,
         kCapContextUsageTerritory,
         kCapContextUsageVariant,
-        kCapContextUsageKey,
-        kCapContextUsageKeyValue,
-        kCapContextUsageCount
+        k_Cap_Context_Usage_కీలకం,
+        k_Cap_Context_Usage_కీలకం_విలువ,
+        k_Cap_Context_Usage_లెక్క
     };
     // Capitalization transforms. For each usage type, indicates whether to titlecase for
     // the context specified in capitalizationContext (which we know at construction time)
-     bool fCapitalization[kCapContextUsageCount];
+     తార్కిక fCapitalization[k_Cap_Context_Usage_లెక్క];
 
-public:
+బహిరంగ:
     // constructor
-    LocaleDisplayNamesImpl(const Locale& locale, UDialectHandling dialectHandling);
-    LocaleDisplayNamesImpl(const Locale& locale, UDisplayContext *contexts, int32_t length);
-    virtual ~LocaleDisplayNamesImpl();
+    Locale_Display_పేర్లు_Impl(స్థిరరాశి Locale& locale, UDialectHandling dialectHandling);
+    Locale_Display_పేర్లు_Impl(స్థిరరాశి Locale& locale, UDisplayContext *contexts, int32_t length);
+    మాయా ~Locale_Display_పేర్లు_Impl();
 
-    virtual const Locale& getLocale() const U_LIFETIME_BOUND override;
-    virtual UDialectHandling getDialectHandling() const override;
-    virtual UDisplayContext getContext(UDisplayContextType type) const override;
+    మాయా స్థిరరాశి Locale& getLocale() స్థిరరాశి U_LIFETIME_BOUND override;
+    మాయా UDialectHandling getDialectHandling() స్థిరరాశి override;
+    మాయా UDisplayContext getContext(UDisplayContextType type) స్థిరరాశి override;
 
-    virtual UnicodeString& localeDisplayName(const Locale& locale,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& localeDisplayName(const char* localeId,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString&
-    languageDisplayName(const char* lang, UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& scriptDisplayName(const char* script,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& scriptDisplayName(UScriptCode scriptCode,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& regionDisplayName(const char* region,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString&
-    variantDisplayName(const char* variant, UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& keyDisplayName(const char* key,
-                                          UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString&
-    keyValueDisplayName(const char* key, const char* value,
-                        UnicodeString& result U_LIFETIME_BOUND) const override;
+    మాయా UnicodeString& localeDisplayName(స్థిరరాశి Locale& locale,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి override;
+    మాయా UnicodeString& localeDisplayName(స్థిరరాశి అక్షరం* localeId,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి override;
+    మాయా UnicodeString&
+    languageDisplayName(స్థిరరాశి అక్షరం* lang, UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి override;
+    మాయా UnicodeString& scriptDisplayName(స్థిరరాశి అక్షరం* script,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి override;
+    మాయా UnicodeString& scriptDisplayName(UScript_సంకేతం script_సంకేతం,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి override;
+    మాయా UnicodeString& regionDisplayName(స్థిరరాశి అక్షరం* region,
+                                             UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి override;
+    మాయా UnicodeString&
+    variantDisplayName(స్థిరరాశి అక్షరం* variant, UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి override;
+    మాయా UnicodeString& కీలకం_Display_Name(స్థిరరాశి అక్షరం* కీలకం,
+                                          UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి override;
+    మాయా UnicodeString&
+    కీలకం_విలువ_Display_Name(స్థిరరాశి అక్షరం* కీలకం, స్థిరరాశి అక్షరం* value,
+                        UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి override;
 
-private:
-    UnicodeString& localeIdName(const char* localeId, UnicodeString& result U_LIFETIME_BOUND,
-                                bool substitute) const;
-    UnicodeString& appendWithSep(UnicodeString& buffer U_LIFETIME_BOUND,
-                                 const UnicodeString& src) const;
+అంతరంగ:
+    UnicodeString& localeIdName(స్థిరరాశి అక్షరం* localeId, UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                తార్కిక substitute) స్థిరరాశి;
+    UnicodeString& appendWithSep(UnicodeString& బఫరు U_LIFETIME_BOUND,
+                                 స్థిరరాశి UnicodeString& src) స్థిరరాశి;
     UnicodeString& adjustForUsageAndContext(CapContextUsage usage,
-                                            UnicodeString& result U_LIFETIME_BOUND) const;
-    UnicodeString& scriptDisplayName(const char* script, UnicodeString& result U_LIFETIME_BOUND,
-                                     bool skipAdjust) const;
-    UnicodeString& regionDisplayName(const char* region, UnicodeString& result U_LIFETIME_BOUND,
-                                     bool skipAdjust) const;
-    UnicodeString& variantDisplayName(const char* variant, UnicodeString& result U_LIFETIME_BOUND,
-                                      bool skipAdjust) const;
-    UnicodeString& keyDisplayName(const char* key, UnicodeString& result U_LIFETIME_BOUND,
-                                  bool skipAdjust) const;
-    UnicodeString& keyValueDisplayName(const char* key, const char* value,
-                                       UnicodeString& result U_LIFETIME_BOUND,
-                                       bool skipAdjust) const;
-    void initialize();
+                                            UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి;
+    UnicodeString& scriptDisplayName(స్థిరరాశి అక్షరం* script, UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                     తార్కిక skipAdjust) స్థిరరాశి;
+    UnicodeString& regionDisplayName(స్థిరరాశి అక్షరం* region, UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                     తార్కిక skipAdjust) స్థిరరాశి;
+    UnicodeString& variantDisplayName(స్థిరరాశి అక్షరం* variant, UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                      తార్కిక skipAdjust) స్థిరరాశి;
+    UnicodeString& కీలకం_Display_Name(స్థిరరాశి అక్షరం* కీలకం, UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                  తార్కిక skipAdjust) స్థిరరాశి;
+    UnicodeString& కీలకం_విలువ_Display_Name(స్థిరరాశి అక్షరం* కీలకం, స్థిరరాశి అక్షరం* value,
+                                       UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                       తార్కిక skipAdjust) స్థిరరాశి;
+    శూన్య initialize();
 
-    struct CapitalizationContextSink;
+    నిర్మాణం CapitalizationContextSink;
 };
 
-LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
+Locale_Display_పేర్లు_Impl::Locale_Display_పేర్లు_Impl(స్థిరరాశి Locale& locale,
                                                UDialectHandling dialectHandling)
     : dialectHandling(dialectHandling)
-    , langData(U_ICUDATA_LANG, locale)
-    , regionData(U_ICUDATA_REGION, locale)
+    , lang_దత్తాంశం(U_ICUDATA_LANG, locale)
+    , region_దత్తాంశం(U_ICUDATA_REGION, locale)
     , capitalizationContext(UDISPCTX_CAPITALIZATION_NONE)
-    , capitalizationBrkIter(nullptr)
-    , nameLength(UDISPCTX_LENGTH_FULL)
+    , capitalizationBrkIter(శూన్యసూచిక)
+    , name_నిడివి(UDISPCTX_నిడివి_నిండిన)
     , substitute(UDISPCTX_SUBSTITUTE)
 {
     initialize();
 }
 
-LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
+Locale_Display_పేర్లు_Impl::Locale_Display_పేర్లు_Impl(స్థిరరాశి Locale& locale,
                                                UDisplayContext *contexts, int32_t length)
-    : dialectHandling(ULDN_STANDARD_NAMES)
-    , langData(U_ICUDATA_LANG, locale)
-    , regionData(U_ICUDATA_REGION, locale)
+    : dialectHandling(ULDN_STANDARD_పేర్లు)
+    , lang_దత్తాంశం(U_ICUDATA_LANG, locale)
+    , region_దత్తాంశం(U_ICUDATA_REGION, locale)
     , capitalizationContext(UDISPCTX_CAPITALIZATION_NONE)
-    , capitalizationBrkIter(nullptr)
-    , nameLength(UDISPCTX_LENGTH_FULL)
+    , capitalizationBrkIter(శూన్యసూచిక)
+    , name_నిడివి(UDISPCTX_నిడివి_నిండిన)
     , substitute(UDISPCTX_SUBSTITUTE)
 {
-    while (length-- > 0) {
+    అయితే (length-- > 0) {
         UDisplayContext value = *contexts++;
         UDisplayContextType selector =
             static_cast<UDisplayContextType>(static_cast<uint32_t>(value) >> 8);
-        switch (selector) {
-            case UDISPCTX_TYPE_DIALECT_HANDLING:
+        ఎంపిక (selector) {
+            స్థితి UDISPCTX_TYPE_DIALECT_HANDLING:
                 dialectHandling = static_cast<UDialectHandling>(value);
-                break;
-            case UDISPCTX_TYPE_CAPITALIZATION:
+                ఆపు;
+            స్థితి UDISPCTX_TYPE_CAPITALIZATION:
                 capitalizationContext = value;
-                break;
-            case UDISPCTX_TYPE_DISPLAY_LENGTH:
-                nameLength = value;
-                break;
-            case UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
+                ఆపు;
+            స్థితి UDISPCTX_TYPE_DISPLAY_నిడివి:
+                name_నిడివి = value;
+                ఆపు;
+            స్థితి UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
                 substitute = value;
-                break;
-            default:
-                break;
+                ఆపు;
+            అప్రమేయ:
+                ఆపు;
         }
     }
     initialize();
 }
 
-struct LocaleDisplayNamesImpl::CapitalizationContextSink : public ResourceSink {
-    bool hasCapitalizationUsage;
-    LocaleDisplayNamesImpl& parent;
+నిర్మాణం Locale_Display_పేర్లు_Impl::CapitalizationContextSink : బహిరంగ ResourceSink {
+    తార్కిక hasCapitalizationUsage;
+    Locale_Display_పేర్లు_Impl& మాతృ;
 
-    CapitalizationContextSink(LocaleDisplayNamesImpl& _parent)
-      : hasCapitalizationUsage(false), parent(_parent) {}
-    virtual ~CapitalizationContextSink();
+    CapitalizationContextSink(Locale_Display_పేర్లు_Impl& మాతృ_2)
+      : hasCapitalizationUsage(అబద్ధం), మాతృ(మాతృ_2) {}
+    మాయా ~CapitalizationContextSink();
 
-    virtual void put(const char *key, ResourceValue &value, UBool /*noFallback*/,
-            UErrorCode &errorCode) override {
-        ResourceTable contexts = value.getTable(errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        for (int i = 0; contexts.getKeyAndValue(i, key, value); ++i) {
+    మాయా శూన్య put(స్థిరరాశి అక్షరం *కీలకం, Resource_విలువ &value, UBool /*noFallback*/,
+            UError_సంకేతం &error_సంకేతం) override {
+        Resource_పట్టిక contexts = value.get_పట్టిక(error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+        కొరకు (పూర్ణాంకం i = 0; contexts.get_కీలకం_And_విలువ(i, కీలకం, value); ++i) {
 
             CapContextUsage usageEnum;
-            if (uprv_strcmp(key, "key") == 0) {
-                usageEnum = kCapContextUsageKey;
-            } else if (uprv_strcmp(key, "keyValue") == 0) {
-                usageEnum = kCapContextUsageKeyValue;
-            } else if (uprv_strcmp(key, "languages") == 0) {
+            ఒకవేళ (uprv_strcmp(కీలకం, "key") == 0) {
+                usageEnum = k_Cap_Context_Usage_కీలకం;
+            } లేకపోతే ఒకవేళ (uprv_strcmp(కీలకం, "keyValue") == 0) {
+                usageEnum = k_Cap_Context_Usage_కీలకం_విలువ;
+            } లేకపోతే ఒకవేళ (uprv_strcmp(కీలకం, "languages") == 0) {
                 usageEnum = kCapContextUsageLanguage;
-            } else if (uprv_strcmp(key, "script") == 0) {
+            } లేకపోతే ఒకవేళ (uprv_strcmp(కీలకం, "script") == 0) {
                 usageEnum = kCapContextUsageScript;
-            } else if (uprv_strcmp(key, "territory") == 0) {
+            } లేకపోతే ఒకవేళ (uprv_strcmp(కీలకం, "territory") == 0) {
                 usageEnum = kCapContextUsageTerritory;
-            } else if (uprv_strcmp(key, "variant") == 0) {
+            } లేకపోతే ఒకవేళ (uprv_strcmp(కీలకం, "variant") == 0) {
                 usageEnum = kCapContextUsageVariant;
-            } else {
-                continue;
+            } లేకపోతే {
+                కొనసాగు;
             }
 
             int32_t len = 0;
-            const int32_t* intVector = value.getIntVector(len, errorCode);
-            if (U_FAILURE(errorCode)) { return; }
-            if (len < 2) { continue; }
+            స్థిరరాశి int32_t* int_సదిశ = value.get_Int_సదిశ(len, error_సంకేతం);
+            ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+            ఒకవేళ (len < 2) { కొనసాగు; }
 
-            int32_t titlecaseInt = (parent.capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU) ? intVector[0] : intVector[1];
-            if (titlecaseInt == 0) { continue; }
+            int32_t titlecaseInt = (మాతృ.capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU) ? int_సదిశ[0] : int_సదిశ[1];
+            ఒకవేళ (titlecaseInt == 0) { కొనసాగు; }
 
-            parent.fCapitalization[usageEnum] = true;
-            hasCapitalizationUsage = true;
+            మాతృ.fCapitalization[usageEnum] = నిజం;
+            hasCapitalizationUsage = నిజం;
         }
     }
 };
 
 // Virtual destructors must be defined out of line.
-LocaleDisplayNamesImpl::CapitalizationContextSink::~CapitalizationContextSink() {}
+Locale_Display_పేర్లు_Impl::CapitalizationContextSink::~CapitalizationContextSink() {}
 
-void
-LocaleDisplayNamesImpl::initialize() {
-    LocaleDisplayNamesImpl* nonConstThis = this;
-    nonConstThis->locale = langData.getLocale() == Locale::getRoot()
-        ? regionData.getLocale()
-        : langData.getLocale();
+శూన్య
+Locale_Display_పేర్లు_Impl::initialize() {
+    Locale_Display_పేర్లు_Impl* nonConstThis = ఇది;
+    nonConstThis->locale = lang_దత్తాంశం.getLocale() == Locale::get_మూలం()
+        ? region_దత్తాంశం.getLocale()
+        : lang_దత్తాంశం.getLocale();
 
     UnicodeString sep;
-    langData.getNoFallback("localeDisplayPattern", "separator", sep);
-    if (sep.isBogus()) {
+    lang_దత్తాంశం.getNoFallback("localeDisplayPattern", "separator", sep);
+    ఒకవేళ (sep.isBogus()) {
         sep = UnicodeString("{0}, {1}", -1, US_INV);
     }
-    UErrorCode status = U_ZERO_ERROR;
-    separatorFormat.applyPatternMinMaxArguments(sep, 2, 2, status);
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    separatorFormat.apply_నమూనా_Min_Max_Arguments(sep, 2, 2, స్థితి_2);
 
-    UnicodeString pattern;
-    langData.getNoFallback("localeDisplayPattern", "pattern", pattern);
-    if (pattern.isBogus()) {
-        pattern = UnicodeString("{0} ({1})", -1, US_INV);
+    UnicodeString నమూనా;
+    lang_దత్తాంశం.getNoFallback("localeDisplayPattern", "pattern", నమూనా);
+    ఒకవేళ (నమూనా.isBogus()) {
+        నమూనా = UnicodeString("{0} ({1})", -1, US_INV);
     }
-    format.applyPatternMinMaxArguments(pattern, 2, 2, status);
-    if (pattern.indexOf(static_cast<char16_t>(0xFF08)) >= 0) {
-        formatOpenParen.setTo(static_cast<char16_t>(0xFF08));         // fullwidth (
-        formatReplaceOpenParen.setTo(static_cast<char16_t>(0xFF3B));  // fullwidth [
-        formatCloseParen.setTo(static_cast<char16_t>(0xFF09));        // fullwidth )
-        formatReplaceCloseParen.setTo(static_cast<char16_t>(0xFF3D)); // fullwidth ]
-    } else {
-        formatOpenParen.setTo(static_cast<char16_t>(0x0028));         // (
-        formatReplaceOpenParen.setTo(static_cast<char16_t>(0x005B));  // [
-        formatCloseParen.setTo(static_cast<char16_t>(0x0029));        // )
-        formatReplaceCloseParen.setTo(static_cast<char16_t>(0x005D)); // ]
+    format.apply_నమూనా_Min_Max_Arguments(నమూనా, 2, 2, స్థితి_2);
+    ఒకవేళ (నమూనా.సూచీ_యొక్క(static_cast<char16_t>(0xFF08)) >= 0) {
+        formatOpenParen.సమితి_గమ్యం(static_cast<char16_t>(0xFF08));         // fullwidth (
+        formatReplaceOpenParen.సమితి_గమ్యం(static_cast<char16_t>(0xFF3B));  // fullwidth [
+        formatCloseParen.సమితి_గమ్యం(static_cast<char16_t>(0xFF09));        // fullwidth )
+        formatReplaceCloseParen.సమితి_గమ్యం(static_cast<char16_t>(0xFF3D)); // fullwidth ]
+    } లేకపోతే {
+        formatOpenParen.సమితి_గమ్యం(static_cast<char16_t>(0x0028));         // (
+        formatReplaceOpenParen.సమితి_గమ్యం(static_cast<char16_t>(0x005B));  // [
+        formatCloseParen.సమితి_గమ్యం(static_cast<char16_t>(0x0029));        // )
+        formatReplaceCloseParen.సమితి_గమ్యం(static_cast<char16_t>(0x005D)); // ]
     }
 
-    UnicodeString ktPattern;
-    langData.get("localeDisplayPattern", "keyTypePattern", ktPattern);
-    if (ktPattern.isBogus()) {
-        ktPattern = UnicodeString("{0}={1}", -1, US_INV);
+    UnicodeString kt_నమూనా;
+    lang_దత్తాంశం.get("localeDisplayPattern", "keyTypePattern", kt_నమూనా);
+    ఒకవేళ (kt_నమూనా.isBogus()) {
+        kt_నమూనా = UnicodeString("{0}={1}", -1, US_INV);
     }
-    keyTypeFormat.applyPatternMinMaxArguments(ktPattern, 2, 2, status);
+    కీలకం_Type_Format.apply_నమూనా_Min_Max_Arguments(kt_నమూనా, 2, 2, స్థితి_2);
 
-    uprv_memset(fCapitalization, 0, sizeof(fCapitalization));
-#if !UCONFIG_NO_BREAK_ITERATION
+    uprv_memset(fCapitalization, 0, పరిమాణం(fCapitalization));
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
     // Only get the context data if we need it! This is a const object so we know now...
     // Also check whether we will need a break iterator (depends on the data)
-    bool needBrkIter = false;
-    if (capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_STANDALONE) {
-        LocalUResourceBundlePointer resource(ures_open(nullptr, locale.getName(), &status));
-        if (U_FAILURE(status)) { return; }
-        CapitalizationContextSink sink(*this);
-        ures_getAllItemsWithFallback(resource.getAlias(), "contextTransforms", sink, status);
-        if (status == U_MISSING_RESOURCE_ERROR) {
+    తార్కిక needBrkIter = అబద్ధం;
+    ఒకవేళ (capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_STANDALONE) {
+        Local_UResource_Bundle_సూచిక resource(ures_open(శూన్యసూచిక, locale.getName(), &స్థితి_2));
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+        CapitalizationContextSink sink(*ఇది);
+        ures_get_All_వస్తువులు_With_Fallback(resource.getAlias(), "contextTransforms", sink, స్థితి_2);
+        ఒకవేళ (స్థితి_2 == U_MISSING_RESOURCE_ERROR) {
             // Silently ignore.  Not every locale has contextTransforms.
-            status = U_ZERO_ERROR;
-        } else if (U_FAILURE(status)) {
-            return;
+            స్థితి_2 = U_ZERO_ERROR;
+        } లేకపోతే ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి;
         }
         needBrkIter = sink.hasCapitalizationUsage;
     }
     // Get a sentence break iterator if we will need it
-    if (needBrkIter || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE) {
-        status = U_ZERO_ERROR;
-        capitalizationBrkIter = BreakIterator::createSentenceInstance(locale, status);
-        if (U_FAILURE(status)) {
-            delete capitalizationBrkIter;
-            capitalizationBrkIter = nullptr;
+    ఒకవేళ (needBrkIter || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_BEGINNING_యొక్క_SENTENCE) {
+        స్థితి_2 = U_ZERO_ERROR;
+        capitalizationBrkIter = BreakIterator::createSentenceInstance(locale, స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తొలగించు capitalizationBrkIter;
+            capitalizationBrkIter = శూన్యసూచిక;
         }
     }
-#endif
+#అయితే_ముగింపు
 }
 
-LocaleDisplayNamesImpl::~LocaleDisplayNamesImpl() {
-#if !UCONFIG_NO_BREAK_ITERATION
-    delete capitalizationBrkIter;
-#endif
+Locale_Display_పేర్లు_Impl::~Locale_Display_పేర్లు_Impl() {
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
+    తొలగించు capitalizationBrkIter;
+#అయితే_ముగింపు
 }
 
-const Locale&
-LocaleDisplayNamesImpl::getLocale() const U_LIFETIME_BOUND {
-    return locale;
+స్థిరరాశి Locale&
+Locale_Display_పేర్లు_Impl::getLocale() స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి locale;
 }
 
 UDialectHandling
-LocaleDisplayNamesImpl::getDialectHandling() const {
-    return dialectHandling;
+Locale_Display_పేర్లు_Impl::getDialectHandling() స్థిరరాశి {
+    తిరిగి dialectHandling;
 }
 
 UDisplayContext
-LocaleDisplayNamesImpl::getContext(UDisplayContextType type) const {
-    switch (type) {
-        case UDISPCTX_TYPE_DIALECT_HANDLING:
-            return static_cast<UDisplayContext>(dialectHandling);
-        case UDISPCTX_TYPE_CAPITALIZATION:
-            return capitalizationContext;
-        case UDISPCTX_TYPE_DISPLAY_LENGTH:
-            return nameLength;
-        case UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
-            return substitute;
-        default:
-            break;
+Locale_Display_పేర్లు_Impl::getContext(UDisplayContextType type) స్థిరరాశి {
+    ఎంపిక (type) {
+        స్థితి UDISPCTX_TYPE_DIALECT_HANDLING:
+            తిరిగి static_cast<UDisplayContext>(dialectHandling);
+        స్థితి UDISPCTX_TYPE_CAPITALIZATION:
+            తిరిగి capitalizationContext;
+        స్థితి UDISPCTX_TYPE_DISPLAY_నిడివి:
+            తిరిగి name_నిడివి;
+        స్థితి UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
+            తిరిగి substitute;
+        అప్రమేయ:
+            ఆపు;
     }
-    return static_cast<UDisplayContext>(0);
+    తిరిగి static_cast<UDisplayContext>(0);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::adjustForUsageAndContext(CapContextUsage usage,
-                                                 UnicodeString& result U_LIFETIME_BOUND) const {
-#if !UCONFIG_NO_BREAK_ITERATION
+Locale_Display_పేర్లు_Impl::adjustForUsageAndContext(CapContextUsage usage,
+                                                 UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
     // check to see whether we need to titlecase result
-    if ( result.length() > 0 && u_islower(result.char32At(0)) && capitalizationBrkIter!= nullptr &&
-          ( capitalizationContext==UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE || fCapitalization[usage] ) ) {
+    ఒకవేళ ( ఫలితం.length() > 0 && u_islower(ఫలితం.char32At(0)) && capitalizationBrkIter!= శూన్యసూచిక &&
+          ( capitalizationContext==UDISPCTX_CAPITALIZATION_FOR_BEGINNING_యొక్క_SENTENCE || fCapitalization[usage] ) ) {
         // note fCapitalization[usage] won't be set unless capitalizationContext is UI_LIST_OR_MENU or STANDALONE
-        static UMutex capitalizationBrkIterLock;
-        Mutex lock(&capitalizationBrkIterLock);
-        result.toTitle(capitalizationBrkIter, locale, U_TITLECASE_NO_LOWERCASE | U_TITLECASE_NO_BREAK_ADJUSTMENT);
+        స్థిర UMutex capitalization_Brk_Iter_తాళం;
+        Mutex తాళం(&capitalization_Brk_Iter_తాళం);
+        ఫలితం.గమ్యం_Title(capitalizationBrkIter, locale, U_TITLECASE_NO_LOWERCASE | U_TITLECASE_NO_BREAK_ADJUSTMENT);
     }
-#endif
-    return result;
+#అయితే_ముగింపు
+    తిరిగి ఫలితం;
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::localeDisplayName(const Locale& loc,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-  if (loc.isBogus()) {
-    result.setToBogus();
-    return result;
+Locale_Display_పేర్లు_Impl::localeDisplayName(స్థిరరాశి Locale& loc,
+                                          UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+  ఒకవేళ (loc.isBogus()) {
+    ఫలితం.సమితి_గమ్యం_Bogus();
+    తిరిగి ఫలితం;
   }
-  UnicodeString resultName;
+  UnicodeString ఫలితం_Name;
 
-  const char* lang = loc.getLanguage();
-  if (uprv_strlen(lang) == 0) {
+  స్థిరరాశి అక్షరం* lang = loc.getLanguage();
+  ఒకవేళ (uprv_strlen(lang) == 0) {
     lang = "root";
   }
-  const char* script = loc.getScript();
-  const char* country = loc.getCountry();
-  const char* variant = loc.getVariant();
+  స్థిరరాశి అక్షరం* script = loc.getScript();
+  స్థిరరాశి అక్షరం* country = loc.getCountry();
+  స్థిరరాశి అక్షరం* variant = loc.getVariant();
 
-  bool hasScript = uprv_strlen(script) > 0;
-  bool hasCountry = uprv_strlen(country) > 0;
-  bool hasVariant = uprv_strlen(variant) > 0;
+  తార్కిక hasScript = uprv_strlen(script) > 0;
+  తార్కిక hasCountry = uprv_strlen(country) > 0;
+  తార్కిక hasVariant = uprv_strlen(variant) > 0;
 
-  if (dialectHandling == ULDN_DIALECT_NAMES) {
-    UErrorCode status = U_ZERO_ERROR;
-    CharString buffer;
-    do { // loop construct is so we can break early out of search
-      if (hasScript && hasCountry) {
-        buffer.append(lang, status)
-              .append('_', status)
-              .append(script, status)
-              .append('_', status)
-              .append(country, status);
-        if (U_SUCCESS(status)) {
-          localeIdName(buffer.data(), resultName, false);
-          if (!resultName.isBogus()) {
-            hasScript = false;
-            hasCountry = false;
-            break;
+  ఒకవేళ (dialectHandling == ULDN_DIALECT_పేర్లు) {
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    CharString బఫరు;
+    చేయి { // loop construct is so we can break early out of search
+      ఒకవేళ (hasScript && hasCountry) {
+        బఫరు.append(lang, స్థితి_2)
+              .append('_', స్థితి_2)
+              .append(script, స్థితి_2)
+              .append('_', స్థితి_2)
+              .append(country, స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+          localeIdName(బఫరు.దత్తాంశం(), ఫలితం_Name, అబద్ధం);
+          ఒకవేళ (!ఫలితం_Name.isBogus()) {
+            hasScript = అబద్ధం;
+            hasCountry = అబద్ధం;
+            ఆపు;
           }
         }
       }
-      if (hasScript) {
-        buffer.append(lang, status)
-              .append('_', status)
-              .append(script, status);
-        if (U_SUCCESS(status)) {
-          localeIdName(buffer.data(), resultName, false);
-          if (!resultName.isBogus()) {
-            hasScript = false;
-            break;
+      ఒకవేళ (hasScript) {
+        బఫరు.append(lang, స్థితి_2)
+              .append('_', స్థితి_2)
+              .append(script, స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+          localeIdName(బఫరు.దత్తాంశం(), ఫలితం_Name, అబద్ధం);
+          ఒకవేళ (!ఫలితం_Name.isBogus()) {
+            hasScript = అబద్ధం;
+            ఆపు;
           }
         }
       }
-      if (hasCountry) {
-        buffer.append(lang, status)
-              .append('_', status)
-              .append(country, status);
-        if (U_SUCCESS(status)) {
-          localeIdName(buffer.data(), resultName, false);
-          if (!resultName.isBogus()) {
-            hasCountry = false;
-            break;
+      ఒకవేళ (hasCountry) {
+        బఫరు.append(lang, స్థితి_2)
+              .append('_', స్థితి_2)
+              .append(country, స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+          localeIdName(బఫరు.దత్తాంశం(), ఫలితం_Name, అబద్ధం);
+          ఒకవేళ (!ఫలితం_Name.isBogus()) {
+            hasCountry = అబద్ధం;
+            ఆపు;
           }
         }
       }
-    } while (false);
+    } అయితే (అబద్ధం);
   }
-  if (resultName.isBogus() || resultName.isEmpty()) {
-    localeIdName(lang, resultName, substitute == UDISPCTX_SUBSTITUTE);
-    if (resultName.isBogus()) {
-      result.setToBogus();
-      return result;
+  ఒకవేళ (ఫలితం_Name.isBogus() || ఫలితం_Name.is_ఖాళీలు()) {
+    localeIdName(lang, ఫలితం_Name, substitute == UDISPCTX_SUBSTITUTE);
+    ఒకవేళ (ఫలితం_Name.isBogus()) {
+      ఫలితం.సమితి_గమ్యం_Bogus();
+      తిరిగి ఫలితం;
     }
   }
 
-  UnicodeString resultRemainder;
-  UnicodeString temp;
-  UErrorCode status = U_ZERO_ERROR;
+  UnicodeString ఫలితం_Remainder;
+  UnicodeString తాత్కాలిక;
+  UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
 
-  if (hasScript) {
-    UnicodeString script_str = scriptDisplayName(script, temp, true);
-    if (script_str.isBogus()) {
-      result.setToBogus();
-      return result;
+  ఒకవేళ (hasScript) {
+    UnicodeString script_str = scriptDisplayName(script, తాత్కాలిక, నిజం);
+    ఒకవేళ (script_str.isBogus()) {
+      ఫలితం.సమితి_గమ్యం_Bogus();
+      తిరిగి ఫలితం;
     }
-    resultRemainder.append(script_str);
+    ఫలితం_Remainder.append(script_str);
   }
-  if (hasCountry) {
-    UnicodeString region_str = regionDisplayName(country, temp, true);
-    if (region_str.isBogus()) {
-      result.setToBogus();
-      return result;
+  ఒకవేళ (hasCountry) {
+    UnicodeString region_str = regionDisplayName(country, తాత్కాలిక, నిజం);
+    ఒకవేళ (region_str.isBogus()) {
+      ఫలితం.సమితి_గమ్యం_Bogus();
+      తిరిగి ఫలితం;
     }
-    appendWithSep(resultRemainder, region_str);
+    appendWithSep(ఫలితం_Remainder, region_str);
   }
-  if (hasVariant) {
-    UnicodeString variant_str = variantDisplayName(variant, temp, true);
-    if (variant_str.isBogus()) {
-      result.setToBogus();
-      return result;
+  ఒకవేళ (hasVariant) {
+    UnicodeString variant_str = variantDisplayName(variant, తాత్కాలిక, నిజం);
+    ఒకవేళ (variant_str.isBogus()) {
+      ఫలితం.సమితి_గమ్యం_Bogus();
+      తిరిగి ఫలితం;
     }
-    appendWithSep(resultRemainder, variant_str);
+    appendWithSep(ఫలితం_Remainder, variant_str);
   }
-  resultRemainder.findAndReplace(formatOpenParen, formatReplaceOpenParen);
-  resultRemainder.findAndReplace(formatCloseParen, formatReplaceCloseParen);
+  ఫలితం_Remainder.కనుగొను_And_Replace(formatOpenParen, formatReplaceOpenParen);
+  ఫలితం_Remainder.కనుగొను_And_Replace(formatCloseParen, formatReplaceCloseParen);
 
-  LocalPointer<StringEnumeration> e(loc.createKeywords(status));
-  if (e.isValid() && U_SUCCESS(status)) {
+  Local_సూచిక<StringEnumeration> e(loc.createKeywords(స్థితి_2));
+  ఒకవేళ (e.isValid() && U_SUCCESS(స్థితి_2)) {
     UnicodeString temp2;
-    const char* key;
-    while ((key = e->next((int32_t*)nullptr, status)) != nullptr) {
-        auto value = loc.getKeywordValue<CharString>(key, status);
-        if (U_FAILURE(status)) {
-            return result;
+    స్థిరరాశి అక్షరం* కీలకం;
+    అయితే ((కీలకం = e->next((int32_t*)శూన్యసూచిక, స్థితి_2)) != శూన్యసూచిక) {
+        స్వయంచాలక value = loc.get_Keyword_విలువ<CharString>(కీలకం, స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి ఫలితం;
       }
-      keyDisplayName(key, temp, true);
-      temp.findAndReplace(formatOpenParen, formatReplaceOpenParen);
-      temp.findAndReplace(formatCloseParen, formatReplaceCloseParen);
-      keyValueDisplayName(key, value.data(), temp2, true);
-      temp2.findAndReplace(formatOpenParen, formatReplaceOpenParen);
-      temp2.findAndReplace(formatCloseParen, formatReplaceCloseParen);
-      if (temp2 != UnicodeString(value.data(), -1, US_INV)) {
-        appendWithSep(resultRemainder, temp2);
-      } else if (temp != UnicodeString(key, -1, US_INV)) {
+      కీలకం_Display_Name(కీలకం, తాత్కాలిక, నిజం);
+      తాత్కాలిక.కనుగొను_And_Replace(formatOpenParen, formatReplaceOpenParen);
+      తాత్కాలిక.కనుగొను_And_Replace(formatCloseParen, formatReplaceCloseParen);
+      కీలకం_విలువ_Display_Name(కీలకం, value.దత్తాంశం(), temp2, నిజం);
+      temp2.కనుగొను_And_Replace(formatOpenParen, formatReplaceOpenParen);
+      temp2.కనుగొను_And_Replace(formatCloseParen, formatReplaceCloseParen);
+      ఒకవేళ (temp2 != UnicodeString(value.దత్తాంశం(), -1, US_INV)) {
+        appendWithSep(ఫలితం_Remainder, temp2);
+      } లేకపోతే ఒకవేళ (తాత్కాలిక != UnicodeString(కీలకం, -1, US_INV)) {
         UnicodeString temp3;
-        keyTypeFormat.format(temp, temp2, temp3, status);
-        appendWithSep(resultRemainder, temp3);
-      } else {
-        appendWithSep(resultRemainder, temp)
+        కీలకం_Type_Format.format(తాత్కాలిక, temp2, temp3, స్థితి_2);
+        appendWithSep(ఫలితం_Remainder, temp3);
+      } లేకపోతే {
+        appendWithSep(ఫలితం_Remainder, తాత్కాలిక)
           .append(static_cast<char16_t>(0x3d) /* = */)
           .append(temp2);
       }
     }
   }
 
-  if (!resultRemainder.isEmpty()) {
-    format.format(resultName, resultRemainder, result.remove(), status);
-    return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+  ఒకవేళ (!ఫలితం_Remainder.is_ఖాళీలు()) {
+    format.format(ఫలితం_Name, ఫలితం_Remainder, ఫలితం.remove(), స్థితి_2);
+    తిరిగి adjustForUsageAndContext(kCapContextUsageLanguage, ఫలితం);
   }
 
-  result = resultName;
-  return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+  ఫలితం = ఫలితం_Name;
+  తిరిగి adjustForUsageAndContext(kCapContextUsageLanguage, ఫలితం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::appendWithSep(UnicodeString& buffer U_LIFETIME_BOUND, const UnicodeString& src) const {
-    if (buffer.isEmpty()) {
-        buffer.setTo(src);
-    } else {
-        const UnicodeString *values[2] = { &buffer, &src };
-        UErrorCode status = U_ZERO_ERROR;
-        separatorFormat.formatAndReplace(values, 2, buffer, nullptr, 0, status);
+Locale_Display_పేర్లు_Impl::appendWithSep(UnicodeString& బఫరు U_LIFETIME_BOUND, స్థిరరాశి UnicodeString& src) స్థిరరాశి {
+    ఒకవేళ (బఫరు.is_ఖాళీలు()) {
+        బఫరు.సమితి_గమ్యం(src);
+    } లేకపోతే {
+        స్థిరరాశి UnicodeString *విలువలు[2] = { &బఫరు, &src };
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+        separatorFormat.formatAndReplace(విలువలు, 2, బఫరు, శూన్యసూచిక, 0, స్థితి_2);
     }
-    return buffer;
+    తిరిగి బఫరు;
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::localeDisplayName(const char* localeId,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return localeDisplayName(Locale(localeId), result);
+Locale_Display_పేర్లు_Impl::localeDisplayName(స్థిరరాశి అక్షరం* localeId,
+                                          UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    తిరిగి localeDisplayName(Locale(localeId), ఫలితం);
 }
 
-// private
+//వ్యక్తిగత
 UnicodeString&
-LocaleDisplayNamesImpl::localeIdName(const char* localeId,
-                                     UnicodeString& result U_LIFETIME_BOUND, bool substitute) const {
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
-        langData.getNoFallback("Languages%short", localeId, result);
-        if (!result.isBogus()) {
-            return result;
+Locale_Display_పేర్లు_Impl::localeIdName(స్థిరరాశి అక్షరం* localeId,
+                                     UnicodeString& ఫలితం U_LIFETIME_BOUND, తార్కిక substitute) స్థిరరాశి {
+    ఒకవేళ (name_నిడివి == UDISPCTX_నిడివి_SHORT) {
+        lang_దత్తాంశం.getNoFallback("Languages%short", localeId, ఫలితం);
+        ఒకవేళ (!ఫలితం.isBogus()) {
+            తిరిగి ఫలితం;
         }
     }
-    langData.getNoFallback("Languages", localeId, result);
-    if (result.isBogus() && uprv_strchr(localeId, '_') == nullptr) {
+    lang_దత్తాంశం.getNoFallback("Languages", localeId, ఫలితం);
+    ఒకవేళ (ఫలితం.isBogus() && uprv_strchr(localeId, '_') == శూన్యసూచిక) {
         // Canonicalize lang and try again, ICU-20870
         // (only for language codes without script or region)
         Locale canonLocale = Locale::createCanonical(localeId);
-        const char* canonLocId = canonLocale.getName();
-        if (nameLength == UDISPCTX_LENGTH_SHORT) {
-            langData.getNoFallback("Languages%short", canonLocId, result);
-            if (!result.isBogus()) {
-                return result;
+        స్థిరరాశి అక్షరం* canonLocId = canonLocale.getName();
+        ఒకవేళ (name_నిడివి == UDISPCTX_నిడివి_SHORT) {
+            lang_దత్తాంశం.getNoFallback("Languages%short", canonLocId, ఫలితం);
+            ఒకవేళ (!ఫలితం.isBogus()) {
+                తిరిగి ఫలితం;
             }
         }
-        langData.getNoFallback("Languages", canonLocId, result);
+        lang_దత్తాంశం.getNoFallback("Languages", canonLocId, ఫలితం);
     }
-    if (result.isBogus() && substitute) {
+    ఒకవేళ (ఫలితం.isBogus() && substitute) {
         // use key, this is what langData.get (with fallback) falls back to.
-        result.setTo(UnicodeString(localeId, -1, US_INV)); // use key (
+        ఫలితం.సమితి_గమ్యం(UnicodeString(localeId, -1, US_INV)); // use key (
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::languageDisplayName(const char* lang,
-                                            UnicodeString& result U_LIFETIME_BOUND) const {
-    if (uprv_strcmp("root", lang) == 0 || uprv_strchr(lang, '_') != nullptr) {
-        return result = UnicodeString(lang, -1, US_INV);
+Locale_Display_పేర్లు_Impl::languageDisplayName(స్థిరరాశి అక్షరం* lang,
+                                            UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    ఒకవేళ (uprv_strcmp("root", lang) == 0 || uprv_strchr(lang, '_') != శూన్యసూచిక) {
+        తిరిగి ఫలితం = UnicodeString(lang, -1, US_INV);
     }
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
-        langData.getNoFallback("Languages%short", lang, result);
-        if (!result.isBogus()) {
-            return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+    ఒకవేళ (name_నిడివి == UDISPCTX_నిడివి_SHORT) {
+        lang_దత్తాంశం.getNoFallback("Languages%short", lang, ఫలితం);
+        ఒకవేళ (!ఫలితం.isBogus()) {
+            తిరిగి adjustForUsageAndContext(kCapContextUsageLanguage, ఫలితం);
         }
     }
-    langData.getNoFallback("Languages", lang, result);
-    if (result.isBogus()) {
+    lang_దత్తాంశం.getNoFallback("Languages", lang, ఫలితం);
+    ఒకవేళ (ఫలితం.isBogus()) {
         // Canonicalize lang and try again, ICU-20870
         Locale canonLocale = Locale::createCanonical(lang);
-        const char* canonLocId = canonLocale.getName();
-        if (nameLength == UDISPCTX_LENGTH_SHORT) {
-            langData.getNoFallback("Languages%short", canonLocId, result);
-            if (!result.isBogus()) {
-                return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+        స్థిరరాశి అక్షరం* canonLocId = canonLocale.getName();
+        ఒకవేళ (name_నిడివి == UDISPCTX_నిడివి_SHORT) {
+            lang_దత్తాంశం.getNoFallback("Languages%short", canonLocId, ఫలితం);
+            ఒకవేళ (!ఫలితం.isBogus()) {
+                తిరిగి adjustForUsageAndContext(kCapContextUsageLanguage, ఫలితం);
             }
         }
-        langData.getNoFallback("Languages", canonLocId, result);
+        lang_దత్తాంశం.getNoFallback("Languages", canonLocId, ఫలితం);
     }
-    if (result.isBogus() && substitute == UDISPCTX_SUBSTITUTE) {
+    ఒకవేళ (ఫలితం.isBogus() && substitute == UDISPCTX_SUBSTITUTE) {
         // use key, this is what langData.get (with fallback) falls back to.
-        result.setTo(UnicodeString(lang, -1, US_INV)); // use key (
+        ఫలితం.సమితి_గమ్యం(UnicodeString(lang, -1, US_INV)); // use key (
     }
-    return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+    తిరిగి adjustForUsageAndContext(kCapContextUsageLanguage, ఫలితం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::scriptDisplayName(const char* script,
-                                          UnicodeString& result U_LIFETIME_BOUND,
-                                          bool skipAdjust) const {
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
-        langData.getNoFallback("Scripts%short", script, result);
-        if (!result.isBogus()) {
-            return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
+Locale_Display_పేర్లు_Impl::scriptDisplayName(స్థిరరాశి అక్షరం* script,
+                                          UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                          తార్కిక skipAdjust) స్థిరరాశి {
+    ఒకవేళ (name_నిడివి == UDISPCTX_నిడివి_SHORT) {
+        lang_దత్తాంశం.getNoFallback("Scripts%short", script, ఫలితం);
+        ఒకవేళ (!ఫలితం.isBogus()) {
+            తిరిగి skipAdjust? ఫలితం: adjustForUsageAndContext(kCapContextUsageScript, ఫలితం);
         }
     }
-    if (substitute == UDISPCTX_SUBSTITUTE) {
-        langData.get("Scripts", script, result);
-    } else {
-        langData.getNoFallback("Scripts", script, result);
+    ఒకవేళ (substitute == UDISPCTX_SUBSTITUTE) {
+        lang_దత్తాంశం.get("Scripts", script, ఫలితం);
+    } లేకపోతే {
+        lang_దత్తాంశం.getNoFallback("Scripts", script, ఫలితం);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
+    తిరిగి skipAdjust? ఫలితం: adjustForUsageAndContext(kCapContextUsageScript, ఫలితం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::scriptDisplayName(const char* script,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return scriptDisplayName(script, result, false);
+Locale_Display_పేర్లు_Impl::scriptDisplayName(స్థిరరాశి అక్షరం* script,
+                                          UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    తిరిగి scriptDisplayName(script, ఫలితం, అబద్ధం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::scriptDisplayName(UScriptCode scriptCode,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return scriptDisplayName(uscript_getName(scriptCode), result, false);
+Locale_Display_పేర్లు_Impl::scriptDisplayName(UScript_సంకేతం script_సంకేతం,
+                                          UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    తిరిగి scriptDisplayName(uscript_getName(script_సంకేతం), ఫలితం, అబద్ధం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::regionDisplayName(const char* region,
-                                          UnicodeString& result U_LIFETIME_BOUND,
-                                          bool skipAdjust) const {
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
-         regionData.getNoFallback("Countries%short", region, result);
-        if (!result.isBogus()) {
-            return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
+Locale_Display_పేర్లు_Impl::regionDisplayName(స్థిరరాశి అక్షరం* region,
+                                          UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                          తార్కిక skipAdjust) స్థిరరాశి {
+    ఒకవేళ (name_నిడివి == UDISPCTX_నిడివి_SHORT) {
+         region_దత్తాంశం.getNoFallback("Countries%short", region, ఫలితం);
+        ఒకవేళ (!ఫలితం.isBogus()) {
+            తిరిగి skipAdjust? ఫలితం: adjustForUsageAndContext(kCapContextUsageTerritory, ఫలితం);
         }
     }
-    if (substitute == UDISPCTX_SUBSTITUTE) {
-        regionData.get("Countries", region, result);
-    } else {
-        regionData.getNoFallback("Countries", region, result);
+    ఒకవేళ (substitute == UDISPCTX_SUBSTITUTE) {
+        region_దత్తాంశం.get("Countries", region, ఫలితం);
+    } లేకపోతే {
+        region_దత్తాంశం.getNoFallback("Countries", region, ఫలితం);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
+    తిరిగి skipAdjust? ఫలితం: adjustForUsageAndContext(kCapContextUsageTerritory, ఫలితం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::regionDisplayName(const char* region,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return regionDisplayName(region, result, false);
+Locale_Display_పేర్లు_Impl::regionDisplayName(స్థిరరాశి అక్షరం* region,
+                                          UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    తిరిగి regionDisplayName(region, ఫలితం, అబద్ధం);
 }
 
 
 UnicodeString&
-LocaleDisplayNamesImpl::variantDisplayName(const char* variant,
-                                           UnicodeString& result U_LIFETIME_BOUND,
-                                           bool skipAdjust) const {
+Locale_Display_పేర్లు_Impl::variantDisplayName(స్థిరరాశి అక్షరం* variant,
+                                           UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                           తార్కిక skipAdjust) స్థిరరాశి {
     // don't have a resource for short variant names
-    if (substitute == UDISPCTX_SUBSTITUTE) {
-        langData.get("Variants", variant, result);
-    } else {
-        langData.getNoFallback("Variants", variant, result);
+    ఒకవేళ (substitute == UDISPCTX_SUBSTITUTE) {
+        lang_దత్తాంశం.get("Variants", variant, ఫలితం);
+    } లేకపోతే {
+        lang_దత్తాంశం.getNoFallback("Variants", variant, ఫలితం);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageVariant, result);
+    తిరిగి skipAdjust? ఫలితం: adjustForUsageAndContext(kCapContextUsageVariant, ఫలితం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::variantDisplayName(const char* variant,
-                                           UnicodeString& result U_LIFETIME_BOUND) const {
-    return variantDisplayName(variant, result, false);
+Locale_Display_పేర్లు_Impl::variantDisplayName(స్థిరరాశి అక్షరం* variant,
+                                           UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    తిరిగి variantDisplayName(variant, ఫలితం, అబద్ధం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyDisplayName(const char* key,
-                                       UnicodeString& result U_LIFETIME_BOUND,
-                                       bool skipAdjust) const {
+Locale_Display_పేర్లు_Impl::కీలకం_Display_Name(స్థిరరాశి అక్షరం* కీలకం,
+                                       UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                       తార్కిక skipAdjust) స్థిరరాశి {
     // don't have a resource for short key names
-    if (substitute == UDISPCTX_SUBSTITUTE) {
-        langData.get("Keys", key, result);
-    } else {
-        langData.getNoFallback("Keys", key, result);
+    ఒకవేళ (substitute == UDISPCTX_SUBSTITUTE) {
+        lang_దత్తాంశం.get("Keys", కీలకం, ఫలితం);
+    } లేకపోతే {
+        lang_దత్తాంశం.getNoFallback("Keys", కీలకం, ఫలితం);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKey, result);
+    తిరిగి skipAdjust? ఫలితం: adjustForUsageAndContext(k_Cap_Context_Usage_కీలకం, ఫలితం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyDisplayName(const char* key,
-                                       UnicodeString& result U_LIFETIME_BOUND) const {
-    return keyDisplayName(key, result, false);
+Locale_Display_పేర్లు_Impl::కీలకం_Display_Name(స్థిరరాశి అక్షరం* కీలకం,
+                                       UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    తిరిగి కీలకం_Display_Name(కీలకం, ఫలితం, అబద్ధం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyValueDisplayName(const char* key,
-                                            const char* value,
-                                            UnicodeString& result U_LIFETIME_BOUND,
-                                            bool skipAdjust) const {
-    if (uprv_strcmp(key, "currency") == 0) {
+Locale_Display_పేర్లు_Impl::కీలకం_విలువ_Display_Name(స్థిరరాశి అక్షరం* కీలకం,
+                                            స్థిరరాశి అక్షరం* value,
+                                            UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                            తార్కిక skipAdjust) స్థిరరాశి {
+    ఒకవేళ (uprv_strcmp(కీలకం, "currency") == 0) {
         // ICU4C does not have ICU4J CurrencyDisplayInfo equivalent for now.
-        UErrorCode sts = U_ZERO_ERROR;
-        UnicodeString ustrValue(value, -1, US_INV);
+        UError_సంకేతం sts = U_ZERO_ERROR;
+        UnicodeString ustr_విలువ(value, -1, US_INV);
         int32_t len;
-        const char16_t *currencyName = ucurr_getName(ustrValue.getTerminatedBuffer(),
-            locale.getBaseName(), UCURR_LONG_NAME, nullptr /* isChoiceFormat */, &len, &sts);
-        if (U_FAILURE(sts)) {
+        స్థిరరాశి char16_t *currencyName = ucurr_getName(ustr_విలువ.get_Terminated_బఫరు(),
+            locale.get_పునాది_Name(), UCURR_LONG_NAME, శూన్యసూచిక /* isChoiceFormat */, &len, &sts);
+        ఒకవేళ (U_FAILURE(sts)) {
             // Return the value as is on failure
-            result = ustrValue;
-            return result;
+            ఫలితం = ustr_విలువ;
+            తిరిగి ఫలితం;
         }
-        result.setTo(currencyName, len);
-        return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKeyValue, result);
+        ఫలితం.సమితి_గమ్యం(currencyName, len);
+        తిరిగి skipAdjust? ఫలితం: adjustForUsageAndContext(k_Cap_Context_Usage_కీలకం_విలువ, ఫలితం);
     }
 
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
-        langData.getNoFallback("Types%short", key, value, result);
-        if (!result.isBogus()) {
-            return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKeyValue, result);
+    ఒకవేళ (name_నిడివి == UDISPCTX_నిడివి_SHORT) {
+        lang_దత్తాంశం.getNoFallback("Types%short", కీలకం, value, ఫలితం);
+        ఒకవేళ (!ఫలితం.isBogus()) {
+            తిరిగి skipAdjust? ఫలితం: adjustForUsageAndContext(k_Cap_Context_Usage_కీలకం_విలువ, ఫలితం);
         }
     }
-    if (substitute == UDISPCTX_SUBSTITUTE) {
-        langData.get("Types", key, value, result);
-    } else {
-        langData.getNoFallback("Types", key, value, result);
+    ఒకవేళ (substitute == UDISPCTX_SUBSTITUTE) {
+        lang_దత్తాంశం.get("Types", కీలకం, value, ఫలితం);
+    } లేకపోతే {
+        lang_దత్తాంశం.getNoFallback("Types", కీలకం, value, ఫలితం);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKeyValue, result);
+    తిరిగి skipAdjust? ఫలితం: adjustForUsageAndContext(k_Cap_Context_Usage_కీలకం_విలువ, ఫలితం);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyValueDisplayName(const char* key,
-                                            const char* value,
-                                            UnicodeString& result U_LIFETIME_BOUND) const {
-    return keyValueDisplayName(key, value, result, false);
+Locale_Display_పేర్లు_Impl::కీలకం_విలువ_Display_Name(స్థిరరాశి అక్షరం* కీలకం,
+                                            స్థిరరాశి అక్షరం* value,
+                                            UnicodeString& ఫలితం U_LIFETIME_BOUND) స్థిరరాశి {
+    తిరిగి కీలకం_విలువ_Display_Name(కీలకం, value, ఫలితం, అబద్ధం);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-LocaleDisplayNames*
-LocaleDisplayNames::createInstance(const Locale& locale,
+Locale_Display_పేర్లు*
+Locale_Display_పేర్లు::createInstance(స్థిరరాశి Locale& locale,
                                    UDialectHandling dialectHandling) {
-    return new LocaleDisplayNamesImpl(locale, dialectHandling);
+    తిరిగి కొత్త Locale_Display_పేర్లు_Impl(locale, dialectHandling);
 }
 
-LocaleDisplayNames*
-LocaleDisplayNames::createInstance(const Locale& locale,
+Locale_Display_పేర్లు*
+Locale_Display_పేర్లు::createInstance(స్థిరరాశి Locale& locale,
                                    UDisplayContext *contexts, int32_t length) {
-    if (contexts == nullptr) {
+    ఒకవేళ (contexts == శూన్యసూచిక) {
         length = 0;
     }
-    return new LocaleDisplayNamesImpl(locale, contexts, length);
+    తిరిగి కొత్త Locale_Display_పేర్లు_Impl(locale, contexts, length);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 U_NAMESPACE_USE
 
-U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_open(const char * locale,
+U_CAPI ULocale_Display_పేర్లు * U_EXPORT2
+uldn_open(స్థిరరాశి అక్షరం * locale,
           UDialectHandling dialectHandling,
-          UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return nullptr;
+          UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి శూన్యసూచిక;
   }
-  if (locale == nullptr) {
+  ఒకవేళ (locale == శూన్యసూచిక) {
     locale = uloc_getDefault();
   }
-  return (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), dialectHandling);
+  తిరిగి (ULocale_Display_పేర్లు *)Locale_Display_పేర్లు::createInstance(Locale(locale), dialectHandling);
 }
 
-U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_openForContext(const char * locale,
+U_CAPI ULocale_Display_పేర్లు * U_EXPORT2
+uldn_openForContext(స్థిరరాశి అక్షరం * locale,
                     UDisplayContext *contexts, int32_t length,
-                    UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return nullptr;
+                    UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి శూన్యసూచిక;
   }
-  if (locale == nullptr) {
+  ఒకవేళ (locale == శూన్యసూచిక) {
     locale = uloc_getDefault();
   }
-  return (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), contexts, length);
+  తిరిగి (ULocale_Display_పేర్లు *)Locale_Display_పేర్లు::createInstance(Locale(locale), contexts, length);
 }
 
 
-U_CAPI void U_EXPORT2
-uldn_close(ULocaleDisplayNames *ldn) {
-  delete (LocaleDisplayNames *)ldn;
+U_CAPI శూన్య U_EXPORT2
+uldn_close(ULocale_Display_పేర్లు *ldn) {
+  తొలగించు (Locale_Display_పేర్లు *)ldn;
 }
 
-U_CAPI const char* U_EXPORT2
-uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND) {
-  if (ldn) {
-    return ((const LocaleDisplayNames *)ldn)->getLocale().getName();
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uldn_getLocale(స్థిరరాశి ULocale_Display_పేర్లు* ldn U_LIFETIME_BOUND) {
+  ఒకవేళ (ldn) {
+    తిరిగి ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->getLocale().getName();
   }
-  return nullptr;
+  తిరిగి శూన్యసూచిక;
 }
 
 U_CAPI UDialectHandling U_EXPORT2
-uldn_getDialectHandling(const ULocaleDisplayNames *ldn) {
-  if (ldn) {
-    return ((const LocaleDisplayNames *)ldn)->getDialectHandling();
+uldn_getDialectHandling(స్థిరరాశి ULocale_Display_పేర్లు *ldn) {
+  ఒకవేళ (ldn) {
+    తిరిగి ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->getDialectHandling();
   }
-  return ULDN_STANDARD_NAMES;
+  తిరిగి ULDN_STANDARD_పేర్లు;
 }
 
 U_CAPI UDisplayContext U_EXPORT2
-uldn_getContext(const ULocaleDisplayNames *ldn,
+uldn_getContext(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
               UDisplayContextType type,
-              UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return (UDisplayContext)0;
+              UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి (UDisplayContext)0;
   }
-  return ((const LocaleDisplayNames *)ldn)->getContext(type);
+  తిరిగి ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->getContext(type);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *locale,
-                       char16_t *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+uldn_localeDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                       స్థిరరాశి అక్షరం *locale,
+                       char16_t *ఫలితం,
+                       int32_t max_ఫలితం_కొలత,
+                       UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి 0;
   }
-  if (ldn == nullptr || locale == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
-    *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+  ఒకవేళ (ldn == శూన్యసూచిక || locale == శూన్యసూచిక || (ఫలితం == శూన్యసూచిక && max_ఫలితం_కొలత > 0) || max_ఫలితం_కొలత < 0) {
+    *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0;
   }
-  UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->localeDisplayName(locale, temp);
-  if (temp.isBogus()) {
-    *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+  UnicodeString తాత్కాలిక(ఫలితం, 0, max_ఫలితం_కొలత);
+  ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->localeDisplayName(locale, తాత్కాలిక);
+  ఒకవేళ (తాత్కాలిక.isBogus()) {
+    *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0;
   }
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  తిరిగి తాత్కాలిక.extract(ఫలితం, max_ఫలితం_కొలత, *p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *lang,
-                         char16_t *result,
-                         int32_t maxResultSize,
-                         UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+uldn_languageDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                         స్థిరరాశి అక్షరం *lang,
+                         char16_t *ఫలితం,
+                         int32_t max_ఫలితం_కొలత,
+                         UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి 0;
   }
-  if (ldn == nullptr || lang == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
-    *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+  ఒకవేళ (ldn == శూన్యసూచిక || lang == శూన్యసూచిక || (ఫలితం == శూన్యసూచిక && max_ఫలితం_కొలత > 0) || max_ఫలితం_కొలత < 0) {
+    *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0;
   }
-  UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->languageDisplayName(lang, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  UnicodeString తాత్కాలిక(ఫలితం, 0, max_ఫలితం_కొలత);
+  ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->languageDisplayName(lang, తాత్కాలిక);
+  తిరిగి తాత్కాలిక.extract(ఫలితం, max_ఫలితం_కొలత, *p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *script,
-                       char16_t *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+uldn_scriptDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                       స్థిరరాశి అక్షరం *script,
+                       char16_t *ఫలితం,
+                       int32_t max_ఫలితం_కొలత,
+                       UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి 0;
   }
-  if (ldn == nullptr || script == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
-    *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+  ఒకవేళ (ldn == శూన్యసూచిక || script == శూన్యసూచిక || (ఫలితం == శూన్యసూచిక && max_ఫలితం_కొలత > 0) || max_ఫలితం_కొలత < 0) {
+    *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0;
   }
-  UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->scriptDisplayName(script, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  UnicodeString తాత్కాలిక(ఫలితం, 0, max_ఫలితం_కొలత);
+  ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->scriptDisplayName(script, తాత్కాలిక);
+  తిరిగి తాత్కాలిక.extract(ఫలితం, max_ఫలితం_కొలత, *p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
-                           UScriptCode scriptCode,
-                           char16_t *result,
-                           int32_t maxResultSize,
-                           UErrorCode *pErrorCode) {
-  return uldn_scriptDisplayName(ldn, uscript_getName(scriptCode), result, maxResultSize, pErrorCode);
+uldn_script_సంకేతం_Display_Name(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                           UScript_సంకేతం script_సంకేతం,
+                           char16_t *ఫలితం,
+                           int32_t max_ఫలితం_కొలత,
+                           UError_సంకేతం *p_Error_సంకేతం) {
+  తిరిగి uldn_scriptDisplayName(ldn, uscript_getName(script_సంకేతం), ఫలితం, max_ఫలితం_కొలత, p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *region,
-                       char16_t *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+uldn_regionDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                       స్థిరరాశి అక్షరం *region,
+                       char16_t *ఫలితం,
+                       int32_t max_ఫలితం_కొలత,
+                       UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి 0;
   }
-  if (ldn == nullptr || region == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
-    *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+  ఒకవేళ (ldn == శూన్యసూచిక || region == శూన్యసూచిక || (ఫలితం == శూన్యసూచిక && max_ఫలితం_కొలత > 0) || max_ఫలితం_కొలత < 0) {
+    *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0;
   }
-  UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->regionDisplayName(region, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  UnicodeString తాత్కాలిక(ఫలితం, 0, max_ఫలితం_కొలత);
+  ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->regionDisplayName(region, తాత్కాలిక);
+  తిరిగి తాత్కాలిక.extract(ఫలితం, max_ఫలితం_కొలత, *p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
-                        const char *variant,
-                        char16_t *result,
-                        int32_t maxResultSize,
-                        UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+uldn_variantDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                        స్థిరరాశి అక్షరం *variant,
+                        char16_t *ఫలితం,
+                        int32_t max_ఫలితం_కొలత,
+                        UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి 0;
   }
-  if (ldn == nullptr || variant == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
-    *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+  ఒకవేళ (ldn == శూన్యసూచిక || variant == శూన్యసూచిక || (ఫలితం == శూన్యసూచిక && max_ఫలితం_కొలత > 0) || max_ఫలితం_కొలత < 0) {
+    *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0;
   }
-  UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->variantDisplayName(variant, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  UnicodeString తాత్కాలిక(ఫలితం, 0, max_ఫలితం_కొలత);
+  ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->variantDisplayName(variant, తాత్కాలిక);
+  తిరిగి తాత్కాలిక.extract(ఫలితం, max_ఫలితం_కొలత, *p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
-                    const char *key,
-                    char16_t *result,
-                    int32_t maxResultSize,
-                    UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+uldn_కీలకం_Display_Name(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                    స్థిరరాశి అక్షరం *కీలకం,
+                    char16_t *ఫలితం,
+                    int32_t max_ఫలితం_కొలత,
+                    UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి 0;
   }
-  if (ldn == nullptr || key == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
-    *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+  ఒకవేళ (ldn == శూన్యసూచిక || కీలకం == శూన్యసూచిక || (ఫలితం == శూన్యసూచిక && max_ఫలితం_కొలత > 0) || max_ఫలితం_కొలత < 0) {
+    *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0;
   }
-  UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->keyDisplayName(key, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  UnicodeString తాత్కాలిక(ఫలితం, 0, max_ఫలితం_కొలత);
+  ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->కీలకం_Display_Name(కీలకం, తాత్కాలిక);
+  తిరిగి తాత్కాలిక.extract(ఫలితం, max_ఫలితం_కొలత, *p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *key,
-                         const char *value,
-                         char16_t *result,
-                         int32_t maxResultSize,
-                         UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+uldn_కీలకం_విలువ_Display_Name(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                         స్థిరరాశి అక్షరం *కీలకం,
+                         స్థిరరాశి అక్షరం *value,
+                         char16_t *ఫలితం,
+                         int32_t max_ఫలితం_కొలత,
+                         UError_సంకేతం *p_Error_సంకేతం) {
+  ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+    తిరిగి 0;
   }
-  if (ldn == nullptr || key == nullptr || value == nullptr || (result == nullptr && maxResultSize > 0)
-      || maxResultSize < 0) {
-    *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+  ఒకవేళ (ldn == శూన్యసూచిక || కీలకం == శూన్యసూచిక || value == శూన్యసూచిక || (ఫలితం == శూన్యసూచిక && max_ఫలితం_కొలత > 0)
+      || max_ఫలితం_కొలత < 0) {
+    *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0;
   }
-  UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->keyValueDisplayName(key, value, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  UnicodeString తాత్కాలిక(ఫలితం, 0, max_ఫలితం_కొలత);
+  ((స్థిరరాశి Locale_Display_పేర్లు *)ldn)->కీలకం_విలువ_Display_Name(కీలకం, value, తాత్కాలిక);
+  తిరిగి తాత్కాలిక.extract(ఫలితం, max_ఫలితం_కొలత, *p_Error_సంకేతం);
 }
 
-#endif
+#అయితే_ముగింపు

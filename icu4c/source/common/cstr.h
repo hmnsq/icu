@@ -11,14 +11,14 @@
 * File: cstr.h
 */
 
-#ifndef CSTR_H
-#define CSTR_H
+#నిర్వచితం_కాకపోతే CSTR_H
+#నిర్వచించు CSTR_H
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#include "charstr.h"
+#అన్తర్భావ "charstr.h"
 
 /**
  * ICU-internal class CStr, a small helper class to facilitate passing UnicodeStrings
@@ -43,18 +43,18 @@
 
 U_NAMESPACE_BEGIN
 
-class U_COMMON_API_CLASS CStr : public UMemory {
-  public:
-    U_COMMON_API CStr(const UnicodeString &in);
+class U_COMMON_API_CLASS CStr : బహిరంగ UMemory {
+  బహిరంగ:
+    U_COMMON_API CStr(స్థిరరాశి UnicodeString &లోపల);
     U_COMMON_API ~CStr();
-    U_COMMON_API const char * operator ()() const;
+    U_COMMON_API స్థిరరాశి అక్షరం * క్రియాకారకం ()() స్థిరరాశి;
 
-  private:
+  అంతరంగ:
     CharString s;
-    CStr(const CStr &other) = delete;               //  Forbid copying of this class.
-    CStr &operator =(const CStr &other) = delete;   //  Forbid assignment.
+    CStr(స్థిరరాశి CStr &other) = delete;               //  Forbid copying of this class.
+    CStr &క్రియాకారకం =(స్థిరరాశి CStr &other) = delete;   //  Forbid assignment.
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు

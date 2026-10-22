@@ -19,125 +19,125 @@
 *   uniset_props.cpp, split off for modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "unicode/uset.h"
-#include "unicode/uniset.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/parsepos.h"
 
 U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
-uset_openPattern(const char16_t* pattern, int32_t patternLength,
-                 UErrorCode* ec)
+uset_open_నమూనా(స్థిరరాశి char16_t* నమూనా, int32_t నమూనా_నిడివి,
+                 UError_సంకేతం* ec)
 {
-    UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, *ec);
+    UnicodeString pat(నమూనా_నిడివి==-1, నమూనా, నమూనా_నిడివి);
+    Unicode_సమితి* సమితి = కొత్త Unicode_సమితి(pat, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
-        *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    ఒకవేళ (సమితి == శూన్యసూచిక) {
+        *ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if (U_FAILURE(*ec)) {
-        delete set;
-        set = nullptr;
+    ఒకవేళ (U_FAILURE(*ec)) {
+        తొలగించు సమితి;
+        సమితి = శూన్యసూచిక;
     }
-    return (USet*) set;
+    తిరిగి (USet*) సమితి;
 }
 
 U_CAPI USet* U_EXPORT2
-uset_openPatternOptions(const char16_t* pattern, int32_t patternLength,
+uset_open_నమూనా_Options(స్థిరరాశి char16_t* నమూనా, int32_t నమూనా_నిడివి,
                  uint32_t options,
-                 UErrorCode* ec)
+                 UError_సంకేతం* ec)
 {
-    UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, options, nullptr, *ec);
+    UnicodeString pat(నమూనా_నిడివి==-1, నమూనా, నమూనా_నిడివి);
+    Unicode_సమితి* సమితి = కొత్త Unicode_సమితి(pat, options, శూన్యసూచిక, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
-        *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    ఒకవేళ (సమితి == శూన్యసూచిక) {
+        *ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if (U_FAILURE(*ec)) {
-        delete set;
-        set = nullptr;
+    ఒకవేళ (U_FAILURE(*ec)) {
+        తొలగించు సమితి;
+        సమితి = శూన్యసూచిక;
     }
-    return (USet*) set;
+    తిరిగి (USet*) సమితి;
 }
 
 
 U_CAPI int32_t U_EXPORT2 
-uset_applyPattern(USet *set,
-                  const char16_t *pattern, int32_t patternLength,
+uset_apply_నమూనా(USet *సమితి,
+                  స్థిరరాశి char16_t *నమూనా, int32_t నమూనా_నిడివి,
                   uint32_t options,
-                  UErrorCode *status){
+                  UError_సంకేతం *స్థితి_2){
 
     // status code needs to be checked since we 
     // dereference it
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి 0;
     }
 
     // check only the set paramenter
     // if pattern is nullptr or NUL terminated
     // UnicodeString constructor takes care of it
-    if(set == nullptr){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(సమితి == శూన్యసూచిక){
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    UnicodeString pat(pattern, patternLength);
+    UnicodeString pat(నమూనా, నమూనా_నిడివి);
 
     ParsePosition pos;
    
-    ((UnicodeSet*) set)->applyPattern(pat, pos, options, nullptr, *status);
+    ((Unicode_సమితి*) సమితి)->apply_నమూనా(pat, pos, options, శూన్యసూచిక, *స్థితి_2);
     
-    return pos.getIndex();
+    తిరిగి pos.get_సూచీ();
 }
 
-U_CAPI void U_EXPORT2
-uset_applyIntPropertyValue(USet* set,
-               UProperty prop, int32_t value, UErrorCode* ec) {
-    ((UnicodeSet*) set)->applyIntPropertyValue(prop, value, *ec);
+U_CAPI శూన్య U_EXPORT2
+uset_apply_Int_Property_విలువ(USet* సమితి,
+               UProperty prop, int32_t value, UError_సంకేతం* ec) {
+    ((Unicode_సమితి*) సమితి)->apply_Int_Property_విలువ(prop, value, *ec);
 }
 
-U_CAPI void U_EXPORT2
-uset_applyPropertyAlias(USet* set,
-                        const char16_t *prop, int32_t propLength,
-                        const char16_t *value, int32_t valueLength,
-            UErrorCode* ec) {
+U_CAPI శూన్య U_EXPORT2
+uset_applyPropertyAlias(USet* సమితి,
+                        స్థిరరాశి char16_t *prop, int32_t prop_నిడివి,
+                        స్థిరరాశి char16_t *value, int32_t విలువ_నిడివి,
+            UError_సంకేతం* ec) {
 
-    UnicodeString p(prop, propLength);
-    UnicodeString v(value, valueLength);
+    UnicodeString p(prop, prop_నిడివి);
+    UnicodeString v(value, విలువ_నిడివి);
 
-    ((UnicodeSet*) set)->applyPropertyAlias(p, v, *ec);
+    ((Unicode_సమితి*) సమితి)->applyPropertyAlias(p, v, *ec);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_resemblesPattern(const char16_t *pattern, int32_t patternLength,
+uset_resembles_నమూనా(స్థిరరాశి char16_t *నమూనా, int32_t నమూనా_నిడివి,
                       int32_t pos) {
 
-    UnicodeString pat(pattern, patternLength);
+    UnicodeString pat(నమూనా, నమూనా_నిడివి);
 
-    return ((pos+1) < pat.length() &&
+    తిరిగి ((pos+1) < pat.length() &&
             pat.charAt(pos) == (char16_t)91/*[*/) ||
-            UnicodeSet::resemblesPattern(pat, pos);
+            Unicode_సమితి::resembles_నమూనా(pat, pos);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_toPattern(const USet* set,
-               char16_t* result, int32_t resultCapacity,
+uset_గమ్యం_నమూనా(స్థిరరాశి USet* సమితి,
+               char16_t* ఫలితం, int32_t ఫలితం_సామర్థ్యం,
                UBool escapeUnprintable,
-               UErrorCode* ec) {
+               UError_సంకేతం* ec) {
     UnicodeString pat;
-    ((const UnicodeSet*) set)->toPattern(pat, escapeUnprintable);
-    return pat.extract(result, resultCapacity, *ec);
+    ((స్థిరరాశి Unicode_సమితి*) సమితి)->గమ్యం_నమూనా(pat, escapeUnprintable);
+    తిరిగి pat.extract(ఫలితం, ఫలితం_సామర్థ్యం, *ec);
 }
 
-U_CAPI void U_EXPORT2
-uset_closeOver(USet* set, int32_t attributes) {
-    ((UnicodeSet*) set)->UnicodeSet::closeOver(attributes);
+U_CAPI శూన్య U_EXPORT2
+uset_closeOver(USet* సమితి, int32_t లక్షణాలు) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::closeOver(లక్షణాలు);
 }

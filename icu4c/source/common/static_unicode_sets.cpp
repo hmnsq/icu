@@ -1,126 +1,126 @@
 // © 2018 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#ఒకవేళ !UCONFIG_NO_FORMATTING
 
 // Allow implicit conversion from char16_t* to UnicodeString for this file:
 // Helpful in toString methods and elsewhere.
-#define UNISTR_FROM_STRING_EXPLICIT
+#నిర్వచించు UNISTR_FROM_STRING_EXPLICIT
 
-#include "static_unicode_sets.h"
-#include "umutex.h"
-#include "ucln_cmn.h"
-#include "unicode/uniset.h"
-#include "uresimp.h"
-#include "cstring.h"
-#include "uassert.h"
+#అన్తర్భావ "static_unicode_sets.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uassert.h"
 
-using namespace icu;
-using namespace icu::unisets;
+ఉపయోగించి నామాకాశ icu;
+ఉపయోగించి నామాకాశ icu::unisets;
 
 
-namespace {
+నామాకాశ {
 
-UnicodeSet* gUnicodeSets[UNISETS_KEY_COUNT] = {};
+Unicode_సమితి* gUnicodeSets[UNISETS_కీలకం_లెక్క] = {};
 
 // Save the empty instance in static memory to have well-defined behavior if a
 // regular UnicodeSet cannot be allocated.
-alignas(UnicodeSet)
-char gEmptyUnicodeSet[sizeof(UnicodeSet)];
+alignas(Unicode_సమితి)
+అక్షరం g_ఖాళీలు_Unicode_సమితి[పరిమాణం(Unicode_సమితి)];
 
 // Whether the gEmptyUnicodeSet is initialized and ready to use.
-UBool gEmptyUnicodeSetInitialized = false;
+UBool g_ఖాళీలు_Unicode_సమితి_Initialized = అబద్ధం;
 
-inline UnicodeSet* getImpl(Key key) {
-    UnicodeSet* candidate = gUnicodeSets[key];
-    if (candidate == nullptr) {
-        return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
+అంతఃవరుస Unicode_సమితి* getImpl(కీలకం_2 కీలకం) {
+    Unicode_సమితి* candidate = gUnicodeSets[కీలకం];
+    ఒకవేళ (candidate == శూన్యసూచిక) {
+        తిరిగి reinterpret_cast<Unicode_సమితి*>(g_ఖాళీలు_Unicode_సమితి);
     }
-    return candidate;
+    తిరిగి candidate;
 }
 
-UnicodeSet* computeUnion(Key k1, Key k2) {
-    UnicodeSet* result = new UnicodeSet();
-    if (result == nullptr) {
-        return nullptr;
+Unicode_సమితి* computeUnion(కీలకం_2 k1, కీలకం_2 k2) {
+    Unicode_సమితి* ఫలితం = కొత్త Unicode_సమితి();
+    ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+        తిరిగి శూన్యసూచిక;
     }
-    result->addAll(*getImpl(k1));
-    result->addAll(*getImpl(k2));
-    result->freeze();
-    return result;
+    ఫలితం->కూడు_All(*getImpl(k1));
+    ఫలితం->కూడు_All(*getImpl(k2));
+    ఫలితం->freeze();
+    తిరిగి ఫలితం;
 }
 
-UnicodeSet* computeUnion(Key k1, Key k2, Key k3) {
-    UnicodeSet* result = new UnicodeSet();
-    if (result == nullptr) {
-        return nullptr;
+Unicode_సమితి* computeUnion(కీలకం_2 k1, కీలకం_2 k2, కీలకం_2 k3) {
+    Unicode_సమితి* ఫలితం = కొత్త Unicode_సమితి();
+    ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+        తిరిగి శూన్యసూచిక;
     }
-    result->addAll(*getImpl(k1));
-    result->addAll(*getImpl(k2));
-    result->addAll(*getImpl(k3));
-    result->freeze();
-    return result;
+    ఫలితం->కూడు_All(*getImpl(k1));
+    ఫలితం->కూడు_All(*getImpl(k2));
+    ఫలితం->కూడు_All(*getImpl(k3));
+    ఫలితం->freeze();
+    తిరిగి ఫలితం;
 }
 
 
-void saveSet(Key key, const UnicodeString& unicodeSetPattern, UErrorCode& status) {
+శూన్య save_సమితి(కీలకం_2 కీలకం, స్థిరరాశి UnicodeString& unicode_సమితి_నమూనా, UError_సంకేతం& స్థితి_2) {
     // assert unicodeSets.get(key) == null;
-    gUnicodeSets[key] = new UnicodeSet(unicodeSetPattern, status);
+    gUnicodeSets[కీలకం] = కొత్త Unicode_సమితి(unicode_సమితి_నమూనా, స్థితి_2);
 }
 
-class ParseDataSink : public ResourceSink {
-  public:
-    void put(const char* key, ResourceValue& value, UBool /*noFallback*/, UErrorCode& status) override {
-        ResourceTable contextsTable = value.getTable(status);
-        if (U_FAILURE(status)) { return; }
-        for (int i = 0; contextsTable.getKeyAndValue(i, key, value); i++) {
-            if (uprv_strcmp(key, "date") == 0) {
+తరగతి Parse_దత్తాంశం_Sink : బహిరంగ ResourceSink {
+  బహిరంగ:
+    శూన్య put(స్థిరరాశి అక్షరం* కీలకం, Resource_విలువ& value, UBool /*noFallback*/, UError_సంకేతం& స్థితి_2) override {
+        Resource_పట్టిక contexts_పట్టిక = value.get_పట్టిక(స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+        కొరకు (పూర్ణాంకం i = 0; contexts_పట్టిక.get_కీలకం_And_విలువ(i, కీలకం, value); i++) {
+            ఒకవేళ (uprv_strcmp(కీలకం, "date") == 0) {
                 // ignore
-            } else {
-                ResourceTable strictnessTable = value.getTable(status);
-                if (U_FAILURE(status)) { return; }
-                for (int j = 0; strictnessTable.getKeyAndValue(j, key, value); j++) {
-                    bool isLenient = (uprv_strcmp(key, "lenient") == 0);
-                    ResourceArray array = value.getArray(status);
-                    if (U_FAILURE(status)) { return; }
-                    for (int k = 0; k < array.getSize(); k++) {
-                        array.getValue(k, value);
-                        UnicodeString str = value.getUnicodeString(status);
-                        if (U_FAILURE(status)) { return; }
+            } లేకపోతే {
+                Resource_పట్టిక strictness_పట్టిక = value.get_పట్టిక(స్థితి_2);
+                ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+                కొరకు (పూర్ణాంకం j = 0; strictness_పట్టిక.get_కీలకం_And_విలువ(j, కీలకం, value); j++) {
+                    తార్కిక isLenient = (uprv_strcmp(కీలకం, "lenient") == 0);
+                    ResourceArray array = value.getArray(స్థితి_2);
+                    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+                    కొరకు (పూర్ణాంకం k = 0; k < array.get_కొలత(); k++) {
+                        array.get_విలువ(k, value);
+                        UnicodeString str = value.getUnicodeString(స్థితి_2);
+                        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
                         // There is both lenient and strict data for comma/period,
                         // but not for any of the other symbols.
-                        if (str.indexOf(u'.') != -1) {
-                            saveSet(isLenient ? PERIOD : STRICT_PERIOD, str, status);
-                        } else if (str.indexOf(u',') != -1) {
-                            saveSet(isLenient ? COMMA : STRICT_COMMA, str, status);
-                        } else if (str.indexOf(u'+') != -1) {
-                            saveSet(PLUS_SIGN, str, status);
-                        } else if (str.indexOf(u'-') != -1) {
-                            saveSet(MINUS_SIGN, str, status);
-                        } else if (str.indexOf(u'$') != -1) {
-                            saveSet(DOLLAR_SIGN, str, status);
-                        } else if (str.indexOf(u'£') != -1) {
-                            saveSet(POUND_SIGN, str, status);
-                        } else if (str.indexOf(u'₹') != -1) {
-                            saveSet(RUPEE_SIGN, str, status);
-                        } else if (str.indexOf(u'¥') != -1) {
-                            saveSet(YEN_SIGN, str, status);
-                        } else if (str.indexOf(u'₩') != -1) {
-                            saveSet(WON_SIGN, str, status);
-                        } else if (str.indexOf(u'%') != -1) {
-                            saveSet(PERCENT_SIGN, str, status);
-                        } else if (str.indexOf(u'‰') != -1) {
-                            saveSet(PERMILLE_SIGN, str, status);
-                        } else if (str.indexOf(u'’') != -1) {
-                            saveSet(APOSTROPHE_SIGN, str, status);
-                        } else {
+                        ఒకవేళ (str.సూచీ_యొక్క(u'.') != -1) {
+                            save_సమితి(isLenient ? PERIOD : STRICT_PERIOD, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u',') != -1) {
+                            save_సమితి(isLenient ? COMMA : STRICT_COMMA, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'+') != -1) {
+                            save_సమితి(PLUS_SIGN, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'-') != -1) {
+                            save_సమితి(MINUS_SIGN, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'$') != -1) {
+                            save_సమితి(DOLLAR_SIGN, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'£') != -1) {
+                            save_సమితి(POUND_SIGN, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'₹') != -1) {
+                            save_సమితి(RUPEE_SIGN, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'¥') != -1) {
+                            save_సమితి(YEN_SIGN, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'₩') != -1) {
+                            save_సమితి(WON_SIGN, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'%') != -1) {
+                            save_సమితి(PERCENT_SIGN, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'‰') != -1) {
+                            save_సమితి(PERMILLE_SIGN, str, స్థితి_2);
+                        } లేకపోతే ఒకవేళ (str.సూచీ_యొక్క(u'’') != -1) {
+                            save_సమితి(APOSTROPHE_SIGN, str, స్థితి_2);
+                        } లేకపోతే {
                             // Unknown class of parse lenients
                             // TODO(ICU-20428): Make ICU automatically accept new classes?
-                            U_ASSERT(false);
+                            U_ASSERT(అబద్ధం);
                         }
-                        if (U_FAILURE(status)) { return; }
+                        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
                     }
                 }
             }
@@ -129,86 +129,86 @@ class ParseDataSink : public ResourceSink {
 };
 
 
-icu::UInitOnce gNumberParseUniSetsInitOnce {};
+icu::UInitOnce g_సంఖ్య_Parse_Uni_Sets_Init_Once {};
 
-UBool U_CALLCONV cleanupNumberParseUniSets() {
-    if (gEmptyUnicodeSetInitialized) {
-        reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet)->~UnicodeSet();
-        gEmptyUnicodeSetInitialized = false;
+UBool U_CALLCONV cleanup_సంఖ్య_Parse_Uni_Sets() {
+    ఒకవేళ (g_ఖాళీలు_Unicode_సమితి_Initialized) {
+        reinterpret_cast<Unicode_సమితి*>(g_ఖాళీలు_Unicode_సమితి)->~Unicode_సమితి();
+        g_ఖాళీలు_Unicode_సమితి_Initialized = అబద్ధం;
     }
-    for (int32_t i = 0; i < UNISETS_KEY_COUNT; i++) {
-        delete gUnicodeSets[i];
-        gUnicodeSets[i] = nullptr;
+    కొరకు (int32_t i = 0; i < UNISETS_కీలకం_లెక్క; i++) {
+        తొలగించు gUnicodeSets[i];
+        gUnicodeSets[i] = శూన్యసూచిక;
     }
-    gNumberParseUniSetsInitOnce.reset();
-    return true;
+    g_సంఖ్య_Parse_Uni_Sets_Init_Once.reset();
+    తిరిగి నిజం;
 }
 
-void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
-    ucln_common_registerCleanup(UCLN_COMMON_NUMPARSE_UNISETS, cleanupNumberParseUniSets);
+శూన్య U_CALLCONV init_సంఖ్య_Parse_Uni_Sets(UError_సంకేతం& స్థితి_2) {
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_NUMPARSE_UNISETS, cleanup_సంఖ్య_Parse_Uni_Sets);
 
     // Initialize the empty instance for well-defined fallback behavior
-    new(gEmptyUnicodeSet) UnicodeSet();
-    reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet)->freeze();
-    gEmptyUnicodeSetInitialized = true;
+    కొత్త(g_ఖాళీలు_Unicode_సమితి) Unicode_సమితి();
+    reinterpret_cast<Unicode_సమితి*>(g_ఖాళీలు_Unicode_సమితి)->freeze();
+    g_ఖాళీలు_Unicode_సమితి_Initialized = నిజం;
 
     // These sets were decided after discussion with icu-design@. See tickets #13084 and #13309.
     // Zs+TAB is "horizontal whitespace" according to UTS #18 (blank property).
-    gUnicodeSets[DEFAULT_IGNORABLES] = new UnicodeSet(
-            u"[[:Zs:][\\u0009][:Bidi_Control:][:Variation_Selector:]]", status);
-    gUnicodeSets[STRICT_IGNORABLES] = new UnicodeSet(u"[[:Bidi_Control:]]", status);
+    gUnicodeSets[DEFAULT_IGNORABLES] = కొత్త Unicode_సమితి(
+            u"[[:Zs:][\\u0009][:Bidi_Control:][:Variation_Selector:]]", స్థితి_2);
+    gUnicodeSets[STRICT_IGNORABLES] = కొత్త Unicode_సమితి(u"[[:Bidi_Control:]]", స్థితి_2);
 
-    LocalUResourceBundlePointer rb(ures_open(nullptr, "root", &status));
-    if (U_FAILURE(status)) { return; }
-    ParseDataSink sink;
-    ures_getAllItemsWithFallback(rb.getAlias(), "parse", sink, status);
-    if (U_FAILURE(status)) { return; }
+    Local_UResource_Bundle_సూచిక rb(ures_open(శూన్యసూచిక, "root", &స్థితి_2));
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+    Parse_దత్తాంశం_Sink sink;
+    ures_get_All_వస్తువులు_With_Fallback(rb.getAlias(), "parse", sink, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
 
     // NOTE: It is OK for these assertions to fail if there was a no-data build.
-    U_ASSERT(gUnicodeSets[COMMA] != nullptr);
-    U_ASSERT(gUnicodeSets[STRICT_COMMA] != nullptr);
-    U_ASSERT(gUnicodeSets[PERIOD] != nullptr);
-    U_ASSERT(gUnicodeSets[STRICT_PERIOD] != nullptr);
-    U_ASSERT(gUnicodeSets[APOSTROPHE_SIGN] != nullptr);
+    U_ASSERT(gUnicodeSets[COMMA] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[STRICT_COMMA] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[PERIOD] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[STRICT_PERIOD] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[APOSTROPHE_SIGN] != శూన్యసూచిక);
 
-    LocalPointer<UnicodeSet> otherGrouping(new UnicodeSet(
+    Local_సూచిక<Unicode_సమితి> otherGrouping(కొత్త Unicode_సమితి(
         u"[٬‘\\u0020\\u00A0\\u2000-\\u200A\\u202F\\u205F\\u3000]",
-        status
-    ), status);
-    if (U_FAILURE(status)) { return; }
-    otherGrouping->addAll(*gUnicodeSets[APOSTROPHE_SIGN]);
+        స్థితి_2
+    ), స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+    otherGrouping->కూడు_All(*gUnicodeSets[APOSTROPHE_SIGN]);
     gUnicodeSets[OTHER_GROUPING_SEPARATORS] = otherGrouping.orphan();
     gUnicodeSets[ALL_SEPARATORS] = computeUnion(COMMA, PERIOD, OTHER_GROUPING_SEPARATORS);
     gUnicodeSets[STRICT_ALL_SEPARATORS] = computeUnion(
             STRICT_COMMA, STRICT_PERIOD, OTHER_GROUPING_SEPARATORS);
 
-    U_ASSERT(gUnicodeSets[MINUS_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[PLUS_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[PERCENT_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[PERMILLE_SIGN] != nullptr);
+    U_ASSERT(gUnicodeSets[MINUS_SIGN] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[PLUS_SIGN] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[PERCENT_SIGN] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[PERMILLE_SIGN] != శూన్యసూచిక);
 
     // The following don't currently have parseLenients in data.
-    U_ASSERT(gUnicodeSets[INFINITY_SIGN] == nullptr);
-    gUnicodeSets[INFINITY_SIGN] = new UnicodeSet(u"[∞]", status);
-    U_ASSERT(gUnicodeSets[APPROXIMATELY_SIGN] == nullptr);
+    U_ASSERT(gUnicodeSets[INFINITY_SIGN] == శూన్యసూచిక);
+    gUnicodeSets[INFINITY_SIGN] = కొత్త Unicode_సమితి(u"[∞]", స్థితి_2);
+    U_ASSERT(gUnicodeSets[APPROXIMATELY_SIGN] == శూన్యసూచిక);
     // This set of characters was manually curated from the
     // values of the approximatelySign element of CLDR common/main/*.xml files.
-    gUnicodeSets[APPROXIMATELY_SIGN] = new UnicodeSet(u"[∼~≈≃約]", status);
-    if (U_FAILURE(status)) { return; }
+    gUnicodeSets[APPROXIMATELY_SIGN] = కొత్త Unicode_సమితి(u"[∼~≈≃約]", స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
 
-    U_ASSERT(gUnicodeSets[DOLLAR_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[POUND_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[RUPEE_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[YEN_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[WON_SIGN] != nullptr);
+    U_ASSERT(gUnicodeSets[DOLLAR_SIGN] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[POUND_SIGN] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[RUPEE_SIGN] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[YEN_SIGN] != శూన్యసూచిక);
+    U_ASSERT(gUnicodeSets[WON_SIGN] != శూన్యసూచిక);
 
-    gUnicodeSets[DIGITS] = new UnicodeSet(u"[:digit:]", status);
-    if (U_FAILURE(status)) { return; }
+    gUnicodeSets[DIGITS] = కొత్త Unicode_సమితి(u"[:digit:]", స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
     gUnicodeSets[DIGITS_OR_ALL_SEPARATORS] = computeUnion(DIGITS, ALL_SEPARATORS);
     gUnicodeSets[DIGITS_OR_STRICT_ALL_SEPARATORS] = computeUnion(DIGITS, STRICT_ALL_SEPARATORS);
 
-    for (auto* uniset : gUnicodeSets) {
-        if (uniset != nullptr) {
+    కొరకు (స్వయంచాలక* uniset : gUnicodeSets) {
+        ఒకవేళ (uniset != శూన్యసూచిక) {
             uniset->freeze();
         }
     }
@@ -216,21 +216,21 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
 
 }
 
-const UnicodeSet* unisets::get(Key key) {
-    UErrorCode localStatus = U_ZERO_ERROR;
-    umtx_initOnce(gNumberParseUniSetsInitOnce, &initNumberParseUniSets, localStatus);
-    if (U_FAILURE(localStatus)) {
-        return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
+స్థిరరాశి Unicode_సమితి* unisets::get(కీలకం_2 కీలకం) {
+    UError_సంకేతం local_స్థితి = U_ZERO_ERROR;
+    umtx_initOnce(g_సంఖ్య_Parse_Uni_Sets_Init_Once, &init_సంఖ్య_Parse_Uni_Sets, local_స్థితి);
+    ఒకవేళ (U_FAILURE(local_స్థితి)) {
+        తిరిగి reinterpret_cast<Unicode_సమితి*>(g_ఖాళీలు_Unicode_సమితి);
     }
-    return getImpl(key);
+    తిరిగి getImpl(కీలకం);
 }
 
-Key unisets::chooseFrom(UnicodeString str, Key key1) {
-    return get(key1)->contains(str) ? key1 : NONE;
+కీలకం_2 unisets::ఎంచుకో_From(UnicodeString str, కీలకం_2 key1) {
+    తిరిగి get(key1)->కలిగియుంది(str) ? key1 : NONE;
 }
 
-Key unisets::chooseFrom(UnicodeString str, Key key1, Key key2) {
-    return get(key1)->contains(str) ? key1 : chooseFrom(str, key2);
+కీలకం_2 unisets::ఎంచుకో_From(UnicodeString str, కీలకం_2 key1, కీలకం_2 key2) {
+    తిరిగి get(key1)->కలిగియుంది(str) ? key1 : ఎంచుకో_From(str, key2);
 }
 
 //Key unisets::chooseCurrency(UnicodeString str) {
@@ -248,4 +248,4 @@ Key unisets::chooseFrom(UnicodeString str, Key key1, Key key2) {
 //}
 
 
-#endif /* #if !UCONFIG_NO_FORMATTING */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_FORMATTING */

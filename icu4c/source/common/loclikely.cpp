@@ -19,25 +19,25 @@
 *   that then do not depend on resource bundle code and likely-subtags data.
 */
 
-#include <string_view>
-#include <utility>
+#అన్తర్భావ <string_view>
+#అన్తర్భావ <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/putil.h"
-#include "unicode/uchar.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "unicode/uscript.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "loclikelysubtags.h"
-#include "ulocimp.h"
+#అన్తర్భావ "unicode/bytestream.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/uloc.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "unicode/uscript.h"
+#అన్తర్భావ "bytesinkutil.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "loclikelysubtags.h"
+#అన్తర్భావ "ulocimp.h"
 
-namespace {
+నామాకాశ {
 
 /**
  * Create a tag string from the supplied parameters.  The lang, script and region
@@ -60,212 +60,212 @@ namespace {
  * @param sink The output sink receiving the tag string.
  * @param err A pointer to a UErrorCode for error reporting.
  **/
-void U_CALLCONV
-createTagStringWithAlternates(
-    const char* lang,
-    int32_t langLength,
-    const char* script,
-    int32_t scriptLength,
-    const char* region,
-    int32_t regionLength,
-    const char* variant,
-    int32_t variantLength,
-    const char* trailing,
-    int32_t trailingLength,
+శూన్య U_CALLCONV
+create_ట్యాగ్_String_With_Alternates(
+    స్థిరరాశి అక్షరం* lang,
+    int32_t lang_నిడివి,
+    స్థిరరాశి అక్షరం* script,
+    int32_t script_నిడివి,
+    స్థిరరాశి అక్షరం* region,
+    int32_t region_నిడివి,
+    స్థిరరాశి అక్షరం* variant,
+    int32_t variant_నిడివి,
+    స్థిరరాశి అక్షరం* trailing,
+    int32_t trailing_నిడివి,
     icu::ByteSink& sink,
-    UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+    UError_సంకేతం& err) {
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
 
-    if (langLength >= ULOC_LANG_CAPACITY ||
-            scriptLength >= ULOC_SCRIPT_CAPACITY ||
-            regionLength >= ULOC_COUNTRY_CAPACITY) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (lang_నిడివి >= ULOC_LANG_సామర్థ్యం ||
+            script_నిడివి >= ULOC_SCRIPT_సామర్థ్యం ||
+            region_నిడివి >= ULOC_COUNTRY_సామర్థ్యం) {
+        err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    if (langLength > 0) {
-        sink.Append(lang, langLength);
+    ఒకవేళ (lang_నిడివి > 0) {
+        sink.Append(lang, lang_నిడివి);
     }
 
-    if (scriptLength > 0) {
+    ఒకవేళ (script_నిడివి > 0) {
         sink.Append("_", 1);
-        sink.Append(script, scriptLength);
+        sink.Append(script, script_నిడివి);
     }
 
-    if (regionLength > 0) {
+    ఒకవేళ (region_నిడివి > 0) {
         sink.Append("_", 1);
-        sink.Append(region, regionLength);
+        sink.Append(region, region_నిడివి);
     }
 
-    if (variantLength > 0) {
-        if (regionLength == 0) {
+    ఒకవేళ (variant_నిడివి > 0) {
+        ఒకవేళ (region_నిడివి == 0) {
             /* extra separator is required */
             sink.Append("_", 1);
         }
         sink.Append("_", 1);
-        sink.Append(variant, variantLength);
+        sink.Append(variant, variant_నిడివి);
     }
 
-    if (trailingLength > 0) {
+    ఒకవేళ (trailing_నిడివి > 0) {
         /*
          * Copy the trailing data into the supplied buffer.
          */
-        sink.Append(trailing, trailingLength);
+        sink.Append(trailing, trailing_నిడివి);
     }
 }
 
-bool CHECK_TRAILING_VARIANT_SIZE(const char* variant, int32_t variantLength) {
+తార్కిక CHECK_TRAILING_VARIANT_కొలత(స్థిరరాశి అక్షరం* variant, int32_t variant_నిడివి) {
     int32_t count = 0;
-    for (int32_t i = 0; i < variantLength; i++) {
-        if (_isIDSeparator(variant[i])) {
+    కొరకు (int32_t i = 0; i < variant_నిడివి; i++) {
+        ఒకవేళ (_isIDSeparator(variant[i])) {
             count = 0;
-        } else if (count == 8) {
-            return false;
-        } else {
+        } లేకపోతే ఒకవేళ (count == 8) {
+            తిరిగి అబద్ధం;
+        } లేకపోతే {
             count++;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-void
-_uloc_addLikelySubtags(const char* localeID,
+శూన్య
+uloc_కూడు_Likely_Subtags(స్థిరరాశి అక్షరం* localeID,
                        icu::ByteSink& sink,
-                       UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+                       UError_సంకేతం& err) {
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
 
-    if (localeID == nullptr) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (localeID == శూన్యసూచిక) {
+        err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
     icu::CharString lang;
     icu::CharString script;
     icu::CharString region;
     icu::CharString variant;
-    const char* trailing = nullptr;
+    స్థిరరాశి అక్షరం* trailing = శూన్యసూచిక;
     ulocimp_getSubtags(localeID, &lang, &script, &region, &variant, &trailing, err);
-    if (U_FAILURE(err)) {
-        return;
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
 
-    if (!CHECK_TRAILING_VARIANT_SIZE(variant.data(), variant.length())) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (!CHECK_TRAILING_VARIANT_కొలత(variant.దత్తాంశం(), variant.length())) {
+        err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    if (lang.length() == 4) {
-        if (script.isEmpty()) {
+    ఒకవేళ (lang.length() == 4) {
+        ఒకవేళ (script.is_ఖాళీలు()) {
             script = std::move(lang);
             lang.clear();
-        } else {
-            err = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        } లేకపోతే {
+            err = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
-    } else if (lang.length() > 8) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    } లేకపోతే ఒకవేళ (lang.length() > 8) {
+        err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    int32_t trailingLength = static_cast<int32_t>(uprv_strlen(trailing));
+    int32_t trailing_నిడివి = static_cast<int32_t>(uprv_strlen(trailing));
 
-    const icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
-    if (U_FAILURE(err)) {
-        return;
+    స్థిరరాశి icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
     // We need to keep l on the stack because lsr may point into internal
     // memory of l.
     icu::Locale l = icu::Locale::createFromName(localeID);
-    if (l.isBogus()) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (l.isBogus()) {
+        err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    icu::LSR lsr = likelySubtags->makeMaximizedLsrFrom(l, true, err);
-    if (U_FAILURE(err)) {
-        return;
+    icu::LSR lsr = likelySubtags->makeMaximizedLsrFrom(l, నిజం, err);
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
-    const char* language = lsr.language;
-    if (uprv_strcmp(language, "und") == 0) {
+    స్థిరరాశి అక్షరం* language = lsr.language;
+    ఒకవేళ (uprv_strcmp(language, "und") == 0) {
         language = "";
     }
-    createTagStringWithAlternates(
+    create_ట్యాగ్_String_With_Alternates(
         language,
         static_cast<int32_t>(uprv_strlen(language)),
         lsr.script,
         static_cast<int32_t>(uprv_strlen(lsr.script)),
         lsr.region,
         static_cast<int32_t>(uprv_strlen(lsr.region)),
-        variant.data(),
+        variant.దత్తాంశం(),
         variant.length(),
         trailing,
-        trailingLength,
+        trailing_నిడివి,
         sink,
         err);
 }
 
-void
-_uloc_minimizeSubtags(const char* localeID,
+శూన్య
+_uloc_minimizeSubtags(స్థిరరాశి అక్షరం* localeID,
                       icu::ByteSink& sink,
-                      bool favorScript,
-                      UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+                      తార్కిక favorScript,
+                      UError_సంకేతం& err) {
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
 
-    if (localeID == nullptr) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (localeID == శూన్యసూచిక) {
+        err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
     icu::CharString lang;
     icu::CharString script;
     icu::CharString region;
     icu::CharString variant;
-    const char* trailing = nullptr;
+    స్థిరరాశి అక్షరం* trailing = శూన్యసూచిక;
     ulocimp_getSubtags(localeID, &lang, &script, &region, &variant, &trailing, err);
-    if (U_FAILURE(err)) {
-        return;
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
 
-    if (!CHECK_TRAILING_VARIANT_SIZE(variant.data(), variant.length())) {
-        err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (!CHECK_TRAILING_VARIANT_కొలత(variant.దత్తాంశం(), variant.length())) {
+        err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    int32_t trailingLength = static_cast<int32_t>(uprv_strlen(trailing));
+    int32_t trailing_నిడివి = static_cast<int32_t>(uprv_strlen(trailing));
 
-    const icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
-    if (U_FAILURE(err)) {
-        return;
+    స్థిరరాశి icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
     icu::LSR lsr = likelySubtags->minimizeSubtags(
-        lang.toStringPiece(),
-        script.toStringPiece(),
-        region.toStringPiece(),
+        lang.గమ్యం_String_Piece(),
+        script.గమ్యం_String_Piece(),
+        region.గమ్యం_String_Piece(),
         favorScript,
         err);
-    if (U_FAILURE(err)) {
-        return;
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
-    const char* language = lsr.language;
-    if (uprv_strcmp(language, "und") == 0) {
+    స్థిరరాశి అక్షరం* language = lsr.language;
+    ఒకవేళ (uprv_strcmp(language, "und") == 0) {
         language = "";
     }
-    createTagStringWithAlternates(
+    create_ట్యాగ్_String_With_Alternates(
         language,
         static_cast<int32_t>(uprv_strlen(language)),
         lsr.script,
         static_cast<int32_t>(uprv_strlen(lsr.script)),
         lsr.region,
         static_cast<int32_t>(uprv_strlen(lsr.region)),
-        variant.data(),
+        variant.దత్తాంశం(),
         variant.length(),
         trailing,
-        trailingLength,
+        trailing_నిడివి,
         sink,
         err);
 }
@@ -273,134 +273,134 @@ _uloc_minimizeSubtags(const char* localeID,
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-uloc_addLikelySubtags(const char* localeID,
-                      char* maximizedLocaleID,
+uloc_కూడు_Likely_Subtags_2(స్థిరరాశి అక్షరం* localeID,
+                      అక్షరం* maximizedLocaleID,
                       int32_t maximizedLocaleIDCapacity,
-                      UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+                      UError_సంకేతం* స్థితి_2) {
+    తిరిగి icu::ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
         maximizedLocaleID, maximizedLocaleIDCapacity,
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_addLikelySubtags(localeID, sink, status);
+        [&](icu::ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_కూడు_Likely_Subtags(localeID, sink, స్థితి_2);
         },
-        *status);
+        *స్థితి_2);
 }
 
 U_EXPORT icu::CharString
-ulocimp_addLikelySubtags(const char* localeID,
-                         UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_addLikelySubtags(localeID, sink, status);
+ulocimp_కూడు_Likely_Subtags(స్థిరరాశి అక్షరం* localeID,
+                         UError_సంకేతం& స్థితి_2) {
+    తిరిగి icu::ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](icu::ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_కూడు_Likely_Subtags(localeID, sink, స్థితి_2);
         },
-        status);
+        స్థితి_2);
 }
 
-U_EXPORT void
-ulocimp_addLikelySubtags(const char* localeID,
+U_EXPORT శూన్య
+ulocimp_కూడు_Likely_Subtags(స్థిరరాశి అక్షరం* localeID,
                          icu::ByteSink& sink,
-                         UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
-    if (localeID == nullptr) {
+                         UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
     }
-    icu::CharString localeBuffer = ulocimp_canonicalize(localeID, status);
-    _uloc_addLikelySubtags(localeBuffer.data(), sink, status);
+    icu::CharString locale_బఫరు = ulocimp_canonicalize(localeID, స్థితి_2);
+    uloc_కూడు_Likely_Subtags(locale_బఫరు.దత్తాంశం(), sink, స్థితి_2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_minimizeSubtags(const char* localeID,
-                     char* minimizedLocaleID,
+uloc_minimizeSubtags(స్థిరరాశి అక్షరం* localeID,
+                     అక్షరం* minimizedLocaleID,
                      int32_t minimizedLocaleIDCapacity,
-                     UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+                     UError_సంకేతం* స్థితి_2) {
+    తిరిగి icu::ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
         minimizedLocaleID, minimizedLocaleIDCapacity,
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_minimizeSubtags(localeID, sink, false, status);
+        [&](icu::ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_minimizeSubtags(localeID, sink, అబద్ధం, స్థితి_2);
         },
-        *status);
+        *స్థితి_2);
 }
 
 U_EXPORT icu::CharString
-ulocimp_minimizeSubtags(const char* localeID,
-                        bool favorScript,
-                        UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
-        [&](icu::ByteSink& sink, UErrorCode& status) {
-            ulocimp_minimizeSubtags(localeID, sink, favorScript, status);
+ulocimp_minimizeSubtags(స్థిరరాశి అక్షరం* localeID,
+                        తార్కిక favorScript,
+                        UError_సంకేతం& స్థితి_2) {
+    తిరిగి icu::ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](icu::ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_minimizeSubtags(localeID, sink, favorScript, స్థితి_2);
         },
-        status);
+        స్థితి_2);
 }
 
-U_EXPORT void
-ulocimp_minimizeSubtags(const char* localeID,
+U_EXPORT శూన్య
+ulocimp_minimizeSubtags(స్థిరరాశి అక్షరం* localeID,
                         icu::ByteSink& sink,
-                        bool favorScript,
-                        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
-    if (localeID == nullptr) {
+                        తార్కిక favorScript,
+                        UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
     }
-    icu::CharString localeBuffer = ulocimp_canonicalize(localeID, status);
-    _uloc_minimizeSubtags(localeBuffer.data(), sink, favorScript, status);
+    icu::CharString locale_బఫరు = ulocimp_canonicalize(localeID, స్థితి_2);
+    _uloc_minimizeSubtags(locale_బఫరు.దత్తాంశం(), sink, favorScript, స్థితి_2);
 }
 
 // Pairs of (language subtag, + or -) for finding out fast if common languages
 // are LTR (minus) or RTL (plus).
-static const char LANG_DIR_STRING[] =
+స్థిర స్థిరరాశి అక్షరం LANG_DIR_STRING[] =
         "root-en-es-pt-zh-ja-ko-de-fr-it-ar+he+fa+ru-nl-pl-th-tr-";
 
 // Implemented here because this calls ulocimp_addLikelySubtags().
 U_CAPI UBool U_EXPORT2
-uloc_isRightToLeft(const char *locale) {
-    UErrorCode errorCode = U_ZERO_ERROR;
+uloc_is_కుడి_గమ్యం_ఎడమ(స్థిరరాశి అక్షరం *locale) {
+    UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
     icu::CharString lang;
     icu::CharString script;
     ulocimp_getSubtags(
-        locale == nullptr ? uloc_getDefault() : locale,
-        &lang, &script, nullptr, nullptr, nullptr, errorCode);
-    if (U_FAILURE(errorCode) || script.isEmpty()) {
+        locale == శూన్యసూచిక ? uloc_getDefault() : locale,
+        &lang, &script, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం) || script.is_ఖాళీలు()) {
         // Fastpath: We know the likely scripts and their writing direction
         // for some common languages.
-        if (!lang.isEmpty()) {
-            const char* langPtr = uprv_strstr(LANG_DIR_STRING, lang.data());
-            if (langPtr != nullptr) {
-                switch (langPtr[lang.length()]) {
-                case '-': return false;
-                case '+': return true;
-                default: break;  // partial match of a longer code
+        ఒకవేళ (!lang.is_ఖాళీలు()) {
+            స్థిరరాశి అక్షరం* langPtr = uprv_strstr(LANG_DIR_STRING, lang.దత్తాంశం());
+            ఒకవేళ (langPtr != శూన్యసూచిక) {
+                ఎంపిక (langPtr[lang.length()]) {
+                స్థితి '-': తిరిగి అబద్ధం;
+                స్థితి '+': తిరిగి నిజం;
+                అప్రమేయ: ఆపు;  // partial match of a longer code
                 }
             }
         }
         // Otherwise, find the likely script.
-        errorCode = U_ZERO_ERROR;
-        icu::CharString likely = ulocimp_addLikelySubtags(locale, errorCode);
-        if (U_FAILURE(errorCode)) {
-            return false;
+        error_సంకేతం = U_ZERO_ERROR;
+        icu::CharString likely = ulocimp_కూడు_Likely_Subtags(locale, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            తిరిగి అబద్ధం;
         }
-        ulocimp_getSubtags(likely.toStringPiece(), nullptr, &script, nullptr, nullptr, nullptr, errorCode);
-        if (U_FAILURE(errorCode) || script.isEmpty()) {
-            return false;
+        ulocimp_getSubtags(likely.గమ్యం_String_Piece(), శూన్యసూచిక, &script, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం) || script.is_ఖాళీలు()) {
+            తిరిగి అబద్ధం;
         }
     }
-    UScriptCode scriptCode = (UScriptCode)u_getPropertyValueEnum(UCHAR_SCRIPT, script.data());
-    return uscript_isRightToLeft(scriptCode);
+    UScript_సంకేతం script_సంకేతం = (UScript_సంకేతం)u_get_Property_విలువ_Enum(UCHAR_SCRIPT, script.దత్తాంశం());
+    తిరిగి uscript_is_కుడి_గమ్యం_ఎడమ(script_సంకేతం);
 }
 
 U_NAMESPACE_BEGIN
 
 UBool
-Locale::isRightToLeft() const {
-    return uloc_isRightToLeft(getBaseName());
+Locale::is_కుడి_గమ్యం_ఎడమ() స్థిరరాశి {
+    తిరిగి uloc_is_కుడి_గమ్యం_ఎడమ(get_పునాది_Name());
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-namespace {
+నామాకాశ {
 icu::CharString
-GetRegionFromKey(const char* localeID, std::string_view key, UErrorCode& status) {
-    icu::CharString result;
+Get_Region_From_కీలకం(స్థిరరాశి అక్షరం* localeID, std::string_view కీలకం, UError_సంకేతం& స్థితి_2) {
+    icu::CharString ఫలితం;
     // First check for keyword value
-    icu::CharString kw = ulocimp_getKeywordValue(localeID, key, status);
+    icu::CharString kw = ulocimp_get_Keyword_విలువ(localeID, కీలకం, స్థితి_2);
     int32_t len = kw.length();
     // In UTS35
     //   type = alphanum{3,8} (sep alphanum{3,8})* ;
@@ -415,53 +415,53 @@ GetRegionFromKey(const char* localeID, std::string_view key, UErrorCode& status)
     // unicode_subdivision_id = alpha{2} alphanum{1,4}
     //
     // and only need to accept/reject the code based on the alpha{2} and the length.
-    if (U_SUCCESS(status) && len >= 3 && len <= 6 &&
+    ఒకవేళ (U_SUCCESS(స్థితి_2) && len >= 3 && len <= 6 &&
         uprv_isASCIILetter(kw[0]) && uprv_isASCIILetter(kw[1])) {
         // Additional Check
         icu::RegionValidateMap valid;
-        const char region[] = {kw[0], kw[1], '\0'};
-        if (valid.isSet(region)) {
-            result.append(uprv_toupper(kw[0]), status);
-            result.append(uprv_toupper(kw[1]), status);
+        స్థిరరాశి అక్షరం region[] = {kw[0], kw[1], '\0'};
+        ఒకవేళ (valid.is_సమితి(region)) {
+            ఫలితం.append(uprv_toupper(kw[0]), స్థితి_2);
+            ఫలితం.append(uprv_toupper(kw[1]), స్థితి_2);
         }
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 }  // namespace
 
 U_EXPORT icu::CharString
-ulocimp_getRegionForSupplementalData(const char *localeID, bool inferRegion,
-                                     UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return {};
+ulocimp_get_Region_For_Supplemental_దత్తాంశం(స్థిరరాశి అక్షరం *localeID, తార్కిక inferRegion,
+                                     UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి {};
     }
-    icu::CharString rgBuf = GetRegionFromKey(localeID, "rg", status);
-    if (U_SUCCESS(status) && rgBuf.isEmpty()) {
+    icu::CharString rgBuf = Get_Region_From_కీలకం(localeID, "rg", స్థితి_2);
+    ఒకవేళ (U_SUCCESS(స్థితి_2) && rgBuf.is_ఖాళీలు()) {
         // No valid rg keyword value, try for unicode_region_subtag
-        rgBuf = ulocimp_getRegion(localeID == nullptr ? uloc_getDefault() : localeID, status);
-        if (U_SUCCESS(status) && rgBuf.isEmpty() && inferRegion) {
+        rgBuf = ulocimp_getRegion(localeID == శూన్యసూచిక ? uloc_getDefault() : localeID, స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2) && rgBuf.is_ఖాళీలు() && inferRegion) {
             // Second check for sd keyword value
-            rgBuf = GetRegionFromKey(localeID, "sd", status);
-            if (U_SUCCESS(status) && rgBuf.isEmpty()) {
+            rgBuf = Get_Region_From_కీలకం(localeID, "sd", స్థితి_2);
+            ఒకవేళ (U_SUCCESS(స్థితి_2) && rgBuf.is_ఖాళీలు()) {
                 // no unicode_region_subtag but inferRegion true, try likely subtags
-                UErrorCode rgStatus = U_ZERO_ERROR;
-                icu::CharString locBuf = ulocimp_addLikelySubtags(localeID, rgStatus);
-                if (U_SUCCESS(rgStatus)) {
-                    rgBuf = ulocimp_getRegion(locBuf.toStringPiece(), status);
+                UError_సంకేతం rg_స్థితి = U_ZERO_ERROR;
+                icu::CharString locBuf = ulocimp_కూడు_Likely_Subtags(localeID, rg_స్థితి);
+                ఒకవేళ (U_SUCCESS(rg_స్థితి)) {
+                    rgBuf = ulocimp_getRegion(locBuf.గమ్యం_String_Piece(), స్థితి_2);
                 }
             }
         }
     }
 
-    return rgBuf;
+    తిరిగి rgBuf;
 }
 
-namespace {
+నామాకాశ {
 
 // The following data is generated by unit test code inside
 // test/intltest/regiontst.cpp from the resource data while
 // the test failed.
-const uint32_t gValidRegionMap[] = {
+స్థిరరాశి uint32_t gValidRegionMap[] = {
     0xeedf597c, 0xdeddbdef, 0x15943f3f, 0x0e00d580, 
     0xb0095c00, 0x0015fb9f, 0x781c068d, 0x0340400f, 
     0xf42b1d00, 0xfd4f8141, 0x25d7fffc, 0x0100084b, 
@@ -474,22 +474,22 @@ const uint32_t gValidRegionMap[] = {
    //
 U_NAMESPACE_BEGIN
 RegionValidateMap::RegionValidateMap() {
-    uprv_memcpy(map, gValidRegionMap, sizeof(map));
+    uprv_memcpy(map, gValidRegionMap, పరిమాణం(map));
 }
 
 RegionValidateMap::~RegionValidateMap() {
 }
 
-bool RegionValidateMap::isSet(const char* region) const {
-    int32_t index = value(region);
-    if (index < 0) {
-        return false;
+తార్కిక RegionValidateMap::is_సమితి(స్థిరరాశి అక్షరం* region) స్థిరరాశి {
+    int32_t సూచీ = value(region);
+    ఒకవేళ (సూచీ < 0) {
+        తిరిగి అబద్ధం;
     }
-    return 0 != (map[index / 32] & (1L << (index % 32)));
+    తిరిగి 0 != (map[సూచీ / 32] & (1L << (సూచీ % 32)));
 }
 
-bool RegionValidateMap::equals(const RegionValidateMap& that) const {
-    return uprv_memcmp(map, that.map, sizeof(map)) == 0;
+తార్కిక RegionValidateMap::equals(స్థిరరాశి RegionValidateMap& that) స్థిరరాశి {
+    తిరిగి uprv_memcmp(map, that.map, పరిమాణం(map)) == 0;
 }
 
 // The code transform two letter a-z to a integer valued between -1, 26x26.
@@ -497,13 +497,13 @@ bool RegionValidateMap::equals(const RegionValidateMap& that) const {
 // the rest of value is between 0 and 676 (= 26x26) and used as an index
 // the bigmap in map. The map is an array of 22 int32_t.
 // since 32x21 < 676/32 < 32x22 we store this 676 bits bitmap into 22 int32_t.
-int32_t RegionValidateMap::value(const char* region) const {
-    if (uprv_isASCIILetter(region[0]) && uprv_isASCIILetter(region[1]) &&
+int32_t RegionValidateMap::value(స్థిరరాశి అక్షరం* region) స్థిరరాశి {
+    ఒకవేళ (uprv_isASCIILetter(region[0]) && uprv_isASCIILetter(region[1]) &&
         region[2] == '\0') {
-        return (uprv_toupper(region[0])-'A') * 26 +
+        తిరిగి (uprv_toupper(region[0])-'A') * 26 +
                (uprv_toupper(region[1])-'A');
     }
-    return -1;
+    తిరిగి -1;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

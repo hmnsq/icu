@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/bytestriebuilder.h"
-#include "unicode/stringpiece.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uhash.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "ustr_imp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/bytestrie.h"
+#అన్తర్భావ "unicode/bytestriebuilder.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "uarrsort.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -33,49 +33,49 @@ U_NAMESPACE_BEGIN
  * It might(!) take less memory if we collected the data in a temporary, dynamic trie.
  */
 
-class BytesTrieElement : public UMemory {
-public:
+తరగతి బైట్లు_Trie_Element : బహిరంగ UMemory {
+బహిరంగ:
     // Use compiler's default constructor, initializes nothing.
 
-    void setTo(StringPiece s, int32_t val, CharString &strings, UErrorCode &errorCode);
+    శూన్య సమితి_గమ్యం(StringPiece s, int32_t val, CharString &అక్షరశ్రేణులు, UError_సంకేతం &error_సంకేతం);
 
-    StringPiece getString(const CharString& strings U_LIFETIME_BOUND) const {
-        int32_t offset=stringOffset;
+    StringPiece getString(స్థిరరాశి CharString& అక్షరశ్రేణులు U_LIFETIME_BOUND) స్థిరరాశి {
+        int32_t స్థానభ్రంశం=string_స్థానభ్రంశం;
         int32_t length;
-        if(offset>=0) {
-            length = static_cast<uint8_t>(strings[offset++]);
-        } else {
-            offset=~offset;
-            length = (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
-            offset+=2;
+        ఒకవేళ(స్థానభ్రంశం>=0) {
+            length = static_cast<uint8_t>(అక్షరశ్రేణులు[స్థానభ్రంశం++]);
+        } లేకపోతే {
+            స్థానభ్రంశం=~స్థానభ్రంశం;
+            length = (static_cast<int32_t>(static_cast<uint8_t>(అక్షరశ్రేణులు[స్థానభ్రంశం])) << 8) | static_cast<uint8_t>(అక్షరశ్రేణులు[స్థానభ్రంశం + 1]);
+            స్థానభ్రంశం+=2;
         }
-        return StringPiece(strings.data()+offset, length);
+        తిరిగి StringPiece(అక్షరశ్రేణులు.దత్తాంశం()+స్థానభ్రంశం, length);
     }
-    int32_t getStringLength(const CharString &strings) const {
-        int32_t offset=stringOffset;
-        if(offset>=0) {
-            return static_cast<uint8_t>(strings[offset]);
-        } else {
-            offset=~offset;
-            return (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
+    int32_t get_String_నిడివి(స్థిరరాశి CharString &అక్షరశ్రేణులు) స్థిరరాశి {
+        int32_t స్థానభ్రంశం=string_స్థానభ్రంశం;
+        ఒకవేళ(స్థానభ్రంశం>=0) {
+            తిరిగి static_cast<uint8_t>(అక్షరశ్రేణులు[స్థానభ్రంశం]);
+        } లేకపోతే {
+            స్థానభ్రంశం=~స్థానభ్రంశం;
+            తిరిగి (static_cast<int32_t>(static_cast<uint8_t>(అక్షరశ్రేణులు[స్థానభ్రంశం])) << 8) | static_cast<uint8_t>(అక్షరశ్రేణులు[స్థానభ్రంశం + 1]);
         }
     }
 
-    char charAt(int32_t index, const CharString &strings) const { return data(strings)[index]; }
+    అక్షరం charAt(int32_t సూచీ, స్థిరరాశి CharString &అక్షరశ్రేణులు) స్థిరరాశి { తిరిగి దత్తాంశం(అక్షరశ్రేణులు)[సూచీ]; }
 
-    int32_t getValue() const { return value; }
+    int32_t get_విలువ() స్థిరరాశి { తిరిగి value; }
 
-    int32_t compareStringTo(const BytesTrieElement &o, const CharString &strings) const;
+    int32_t compare_String_గమ్యం(స్థిరరాశి బైట్లు_Trie_Element &o, స్థిరరాశి CharString &అక్షరశ్రేణులు) స్థిరరాశి;
 
-private:
-    const char* data(const CharString& strings U_LIFETIME_BOUND) const {
-        int32_t offset=stringOffset;
-        if(offset>=0) {
-            ++offset;
-        } else {
-            offset=~offset+2;
+అంతరంగ:
+    స్థిరరాశి అక్షరం* దత్తాంశం(స్థిరరాశి CharString& అక్షరశ్రేణులు U_LIFETIME_BOUND) స్థిరరాశి {
+        int32_t స్థానభ్రంశం=string_స్థానభ్రంశం;
+        ఒకవేళ(స్థానభ్రంశం>=0) {
+            ++స్థానభ్రంశం;
+        } లేకపోతే {
+            స్థానభ్రంశం=~స్థానభ్రంశం+2;
         }
-        return strings.data()+offset;
+        తిరిగి అక్షరశ్రేణులు.దత్తాంశం()+స్థానభ్రంశం;
     }
 
     // If the stringOffset is non-negative, then the first strings byte contains
@@ -83,431 +83,431 @@ private:
     // If the stringOffset is negative, then the first two strings bytes contain
     // the string length (big-endian), and the offset needs to be bit-inverted.
     // (Compared with a stringLength field here, this saves 3 bytes per string for most strings.)
-    int32_t stringOffset;
+    int32_t string_స్థానభ్రంశం;
     int32_t value;
 };
 
-void
-BytesTrieElement::setTo(StringPiece s, int32_t val,
-                        CharString &strings, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+శూన్య
+బైట్లు_Trie_Element::సమితి_గమ్యం(StringPiece s, int32_t val,
+                        CharString &అక్షరశ్రేణులు, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
     int32_t length=s.length();
-    if(length>0xffff) {
+    ఒకవేళ(length>0xffff) {
         // Too long: We store the length in 1 or 2 bytes.
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి;
     }
-    int32_t offset=strings.length();
-    if(length>0xff) {
-        offset=~offset;
-        strings.append(static_cast<char>(length >> 8), errorCode);
+    int32_t స్థానభ్రంశం=అక్షరశ్రేణులు.length();
+    ఒకవేళ(length>0xff) {
+        స్థానభ్రంశం=~స్థానభ్రంశం;
+        అక్షరశ్రేణులు.append(static_cast<అక్షరం>(length >> 8), error_సంకేతం);
     }
-    strings.append(static_cast<char>(length), errorCode);
-    stringOffset=offset;
+    అక్షరశ్రేణులు.append(static_cast<అక్షరం>(length), error_సంకేతం);
+    string_స్థానభ్రంశం=స్థానభ్రంశం;
     value=val;
-    strings.append(s, errorCode);
+    అక్షరశ్రేణులు.append(s, error_సంకేతం);
 }
 
 int32_t
-BytesTrieElement::compareStringTo(const BytesTrieElement &other, const CharString &strings) const {
+బైట్లు_Trie_Element::compare_String_గమ్యం(స్థిరరాశి బైట్లు_Trie_Element &other, స్థిరరాశి CharString &అక్షరశ్రేణులు) స్థిరరాశి {
     // TODO: add StringPiece::compare(), see ticket #8187
-    StringPiece thisString=getString(strings);
-    StringPiece otherString=other.getString(strings);
-    int32_t lengthDiff=thisString.length()-otherString.length();
-    int32_t commonLength;
-    if(lengthDiff<=0) {
-        commonLength=thisString.length();
-    } else {
-        commonLength=otherString.length();
+    StringPiece thisString=getString(అక్షరశ్రేణులు);
+    StringPiece otherString=other.getString(అక్షరశ్రేణులు);
+    int32_t నిడివి_Diff=thisString.length()-otherString.length();
+    int32_t common_నిడివి;
+    ఒకవేళ(నిడివి_Diff<=0) {
+        common_నిడివి=thisString.length();
+    } లేకపోతే {
+        common_నిడివి=otherString.length();
     }
-    int32_t diff=uprv_memcmp(thisString.data(), otherString.data(), commonLength);
-    return diff!=0 ? diff : lengthDiff;
+    int32_t diff=uprv_memcmp(thisString.దత్తాంశం(), otherString.దత్తాంశం(), common_నిడివి);
+    తిరిగి diff!=0 ? diff : నిడివి_Diff;
 }
 
-BytesTrieBuilder::BytesTrieBuilder(UErrorCode &errorCode)
-        : strings(nullptr), elements(nullptr), elementsCapacity(0), elementsLength(0),
-          bytes(nullptr), bytesCapacity(0), bytesLength(0) {
-    if(U_FAILURE(errorCode)) {
-        return;
+బైట్లు_Trie_Builder::బైట్లు_Trie_Builder(UError_సంకేతం &error_సంకేతం)
+        : అక్షరశ్రేణులు(శూన్యసూచిక), elements(శూన్యసూచిక), elements_సామర్థ్యం(0), elements_నిడివి(0),
+          బైట్లు(శూన్యసూచిక), బైట్లు_సామర్థ్యం(0), బైట్లు_నిడివి(0) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
-    strings=new CharString();
-    if(strings==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    అక్షరశ్రేణులు=కొత్త CharString();
+    ఒకవేళ(అక్షరశ్రేణులు==శూన్యసూచిక) {
+        error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
 }
 
-BytesTrieBuilder::~BytesTrieBuilder() {
-    delete strings;
-    delete[] elements;
-    uprv_free(bytes);
+బైట్లు_Trie_Builder::~బైట్లు_Trie_Builder() {
+    తొలగించు అక్షరశ్రేణులు;
+    తొలగించు[] elements;
+    uprv_free(బైట్లు);
 }
 
-BytesTrieBuilder&
-BytesTrieBuilder::add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+బైట్లు_Trie_Builder&
+బైట్లు_Trie_Builder::కూడు(StringPiece s, int32_t value, UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి *ఇది;
     }
-    if(bytesLength>0) {
+    ఒకవేళ(బైట్లు_నిడివి>0) {
         // Cannot add elements after building.
-        errorCode=U_NO_WRITE_PERMISSION;
-        return *this;
+        error_సంకేతం=U_NO_WRITE_PERMISSION;
+        తిరిగి *ఇది;
     }
-    if(elementsLength==elementsCapacity) {
-        int32_t newCapacity;
-        if(elementsCapacity==0) {
-            newCapacity=1024;
-        } else {
-            newCapacity=4*elementsCapacity;
+    ఒకవేళ(elements_నిడివి==elements_సామర్థ్యం) {
+        int32_t new_సామర్థ్యం;
+        ఒకవేళ(elements_సామర్థ్యం==0) {
+            new_సామర్థ్యం=1024;
+        } లేకపోతే {
+            new_సామర్థ్యం=4*elements_సామర్థ్యం;
         }
-        BytesTrieElement *newElements=new BytesTrieElement[newCapacity];
-        if(newElements==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return *this; // error instead of dereferencing null
+        బైట్లు_Trie_Element *newElements=కొత్త బైట్లు_Trie_Element[new_సామర్థ్యం];
+        ఒకవేళ(newElements==శూన్యసూచిక) {
+            error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి *ఇది; // error instead of dereferencing null
         }
-        if(elementsLength>0) {
-            uprv_memcpy(newElements, elements, (size_t)elementsLength*sizeof(BytesTrieElement));
+        ఒకవేళ(elements_నిడివి>0) {
+            uprv_memcpy(newElements, elements, (size_t)elements_నిడివి*పరిమాణం(బైట్లు_Trie_Element));
         }
-        delete[] elements;
+        తొలగించు[] elements;
         elements=newElements;
-        elementsCapacity=newCapacity;
+        elements_సామర్థ్యం=new_సామర్థ్యం;
     }
-    elements[elementsLength++].setTo(s, value, *strings, errorCode);
-    return *this;
+    elements[elements_నిడివి++].సమితి_గమ్యం(s, value, *అక్షరశ్రేణులు, error_సంకేతం);
+    తిరిగి *ఇది;
 }
 
 U_CDECL_BEGIN
 
-static int32_t U_CALLCONV
-compareElementStrings(const void *context, const void *left, const void *right) {
-    const CharString *strings=static_cast<const CharString *>(context);
-    const BytesTrieElement *leftElement=static_cast<const BytesTrieElement *>(left);
-    const BytesTrieElement *rightElement=static_cast<const BytesTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+స్థిర int32_t U_CALLCONV
+compare_Element_అక్షరశ్రేణులు(స్థిరరాశి శూన్య *context, స్థిరరాశి శూన్య *ఎడమ, స్థిరరాశి శూన్య *కుడి) {
+    స్థిరరాశి CharString *అక్షరశ్రేణులు=static_cast<స్థిరరాశి CharString *>(context);
+    స్థిరరాశి బైట్లు_Trie_Element *ఎడమ_Element=static_cast<స్థిరరాశి బైట్లు_Trie_Element *>(ఎడమ);
+    స్థిరరాశి బైట్లు_Trie_Element *కుడి_Element=static_cast<స్థిరరాశి బైట్లు_Trie_Element *>(కుడి);
+    తిరిగి ఎడమ_Element->compare_String_గమ్యం(*కుడి_Element, *అక్షరశ్రేణులు);
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
-BytesTrie *
-BytesTrieBuilder::build(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    buildBytes(buildOption, errorCode);
-    BytesTrie *newTrie=nullptr;
-    if(U_SUCCESS(errorCode)) {
-        newTrie=new BytesTrie(bytes, bytes+(bytesCapacity-bytesLength));
-        if(newTrie==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            bytes=nullptr;  // The new trie now owns the array.
-            bytesCapacity=0;
+బైట్లు_Trie *
+బైట్లు_Trie_Builder::build(UStringTrieBuildOption buildOption, UError_సంకేతం &error_సంకేతం) {
+    build_బైట్లు(buildOption, error_సంకేతం);
+    బైట్లు_Trie *newTrie=శూన్యసూచిక;
+    ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+        newTrie=కొత్త బైట్లు_Trie(బైట్లు, బైట్లు+(బైట్లు_సామర్థ్యం-బైట్లు_నిడివి));
+        ఒకవేళ(newTrie==శూన్యసూచిక) {
+            error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        } లేకపోతే {
+            బైట్లు=శూన్యసూచిక;  // The new trie now owns the array.
+            బైట్లు_సామర్థ్యం=0;
         }
     }
-    return newTrie;
+    తిరిగి newTrie;
 }
 
 StringPiece
-BytesTrieBuilder::buildStringPiece(UStringTrieBuildOption buildOption,
-                                   UErrorCode& errorCode) U_LIFETIME_BOUND {
-    buildBytes(buildOption, errorCode);
-    StringPiece result;
-    if(U_SUCCESS(errorCode)) {
-        result.set(bytes+(bytesCapacity-bytesLength), bytesLength);
+బైట్లు_Trie_Builder::buildStringPiece(UStringTrieBuildOption buildOption,
+                                   UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND {
+    build_బైట్లు(buildOption, error_సంకేతం);
+    StringPiece ఫలితం;
+    ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+        ఫలితం.సమితి(బైట్లు+(బైట్లు_సామర్థ్యం-బైట్లు_నిడివి), బైట్లు_నిడివి);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-void
-BytesTrieBuilder::buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+శూన్య
+బైట్లు_Trie_Builder::build_బైట్లు(UStringTrieBuildOption buildOption, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
-    if(bytes!=nullptr && bytesLength>0) {
+    ఒకవేళ(బైట్లు!=శూన్యసూచిక && బైట్లు_నిడివి>0) {
         // Already built.
-        return;
+        తిరిగి;
     }
-    if(bytesLength==0) {
-        if(elementsLength==0) {
-            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+    ఒకవేళ(బైట్లు_నిడివి==0) {
+        ఒకవేళ(elements_నిడివి==0) {
+            error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి;
         }
-        uprv_sortArray(elements, elementsLength, static_cast<int32_t>(sizeof(BytesTrieElement)),
-                      compareElementStrings, strings,
-                      false,  // need not be a stable sort
-                      &errorCode);
-        if(U_FAILURE(errorCode)) {
-            return;
+        uprv_క్రమీకరించు_Array(elements, elements_నిడివి, static_cast<int32_t>(పరిమాణం(బైట్లు_Trie_Element)),
+                      compare_Element_అక్షరశ్రేణులు, అక్షరశ్రేణులు,
+                      అబద్ధం,  // need not be a stable sort
+                      &error_సంకేతం);
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి;
         }
         // Duplicate strings are not allowed.
-        StringPiece prev=elements[0].getString(*strings);
-        for(int32_t i=1; i<elementsLength; ++i) {
-            StringPiece current=elements[i].getString(*strings);
-            if(prev==current) {
-                errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+        StringPiece prev=elements[0].getString(*అక్షరశ్రేణులు);
+        కొరకు(int32_t i=1; i<elements_నిడివి; ++i) {
+            StringPiece current=elements[i].getString(*అక్షరశ్రేణులు);
+            ఒకవేళ(prev==current) {
+                error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+                తిరిగి;
             }
             prev=current;
         }
     }
     // Create and byte-serialize the trie for the elements.
-    bytesLength=0;
-    int32_t capacity=strings->length();
-    if(capacity<1024) {
+    బైట్లు_నిడివి=0;
+    int32_t capacity=అక్షరశ్రేణులు->length();
+    ఒకవేళ(capacity<1024) {
         capacity=1024;
     }
-    if(bytesCapacity<capacity) {
-        uprv_free(bytes);
-        bytes=static_cast<char *>(uprv_malloc(capacity));
-        if(bytes==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            bytesCapacity=0;
-            return;
+    ఒకవేళ(బైట్లు_సామర్థ్యం<capacity) {
+        uprv_free(బైట్లు);
+        బైట్లు=static_cast<అక్షరం *>(uprv_malloc(capacity));
+        ఒకవేళ(బైట్లు==శూన్యసూచిక) {
+            error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            బైట్లు_సామర్థ్యం=0;
+            తిరిగి;
         }
-        bytesCapacity=capacity;
+        బైట్లు_సామర్థ్యం=capacity;
     }
-    StringTrieBuilder::build(buildOption, elementsLength, errorCode);
-    if(bytes==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    StringTrieBuilder::build(buildOption, elements_నిడివి, error_సంకేతం);
+    ఒకవేళ(బైట్లు==శూన్యసూచిక) {
+        error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
 }
 
-BytesTrieBuilder&
-BytesTrieBuilder::clear() U_LIFETIME_BOUND {
-    strings->clear();
-    elementsLength=0;
-    bytesLength=0;
-    return *this;
+బైట్లు_Trie_Builder&
+బైట్లు_Trie_Builder::clear() U_LIFETIME_BOUND {
+    అక్షరశ్రేణులు->clear();
+    elements_నిడివి=0;
+    బైట్లు_నిడివి=0;
+    తిరిగి *ఇది;
 }
 
 int32_t
-BytesTrieBuilder::getElementStringLength(int32_t i) const {
-    return elements[i].getStringLength(*strings);
+బైట్లు_Trie_Builder::get_Element_String_నిడివి(int32_t i) స్థిరరాశి {
+    తిరిగి elements[i].get_String_నిడివి(*అక్షరశ్రేణులు);
 }
 
 char16_t
-BytesTrieBuilder::getElementUnit(int32_t i, int32_t byteIndex) const {
-    return static_cast<uint8_t>(elements[i].charAt(byteIndex, *strings));
+బైట్లు_Trie_Builder::getElementUnit(int32_t i, int32_t byte_సూచీ) స్థిరరాశి {
+    తిరిగి static_cast<uint8_t>(elements[i].charAt(byte_సూచీ, *అక్షరశ్రేణులు));
 }
 
 int32_t
-BytesTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+బైట్లు_Trie_Builder::get_Element_విలువ(int32_t i) స్థిరరాశి {
+    తిరిగి elements[i].get_విలువ();
 }
 
 int32_t
-BytesTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) const {
-    const BytesTrieElement &firstElement=elements[first];
-    const BytesTrieElement &lastElement=elements[last];
-    int32_t minStringLength=firstElement.getStringLength(*strings);
-    while(++byteIndex<minStringLength &&
-            firstElement.charAt(byteIndex, *strings)==
-            lastElement.charAt(byteIndex, *strings)) {}
-    return byteIndex;
+బైట్లు_Trie_Builder::get_హద్దు_యొక్క_రేఖీయ_సరిపోలిక(int32_t first, int32_t చివరి, int32_t byte_సూచీ) స్థిరరాశి {
+    స్థిరరాశి బైట్లు_Trie_Element &మొదటి_Element=elements[first];
+    స్థిరరాశి బైట్లు_Trie_Element &చివరి_Element=elements[చివరి];
+    int32_t min_String_నిడివి=మొదటి_Element.get_String_నిడివి(*అక్షరశ్రేణులు);
+    అయితే(++byte_సూచీ<min_String_నిడివి &&
+            మొదటి_Element.charAt(byte_సూచీ, *అక్షరశ్రేణులు)==
+            చివరి_Element.charAt(byte_సూచీ, *అక్షరశ్రేణులు)) {}
+    తిరిగి byte_సూచీ;
 }
 
 int32_t
-BytesTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t byteIndex) const {
+బైట్లు_Trie_Builder::లెక్క_Element_Units(int32_t ప్రారంభం, int32_t హద్దు, int32_t byte_సూచీ) స్థిరరాశి {
     int32_t length=0;  // Number of different bytes at byteIndex.
-    int32_t i=start;
-    do {
-        char byte=elements[i++].charAt(byteIndex, *strings);
-        while(i<limit && byte==elements[i].charAt(byteIndex, *strings)) {
+    int32_t i=ప్రారంభం;
+    చేయి {
+        అక్షరం byte=elements[i++].charAt(byte_సూచీ, *అక్షరశ్రేణులు);
+        అయితే(i<హద్దు && byte==elements[i].charAt(byte_సూచీ, *అక్షరశ్రేణులు)) {
             ++i;
         }
         ++length;
-    } while(i<limit);
-    return length;
+    } అయితే(i<హద్దు);
+    తిరిగి length;
 }
 
 int32_t
-BytesTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const {
-    do {
-        char byte=elements[i++].charAt(byteIndex, *strings);
-        while(byte==elements[i].charAt(byteIndex, *strings)) {
+బైట్లు_Trie_Builder::skipElementsBySomeUnits(int32_t i, int32_t byte_సూచీ, int32_t count) స్థిరరాశి {
+    చేయి {
+        అక్షరం byte=elements[i++].charAt(byte_సూచీ, *అక్షరశ్రేణులు);
+        అయితే(byte==elements[i].charAt(byte_సూచీ, *అక్షరశ్రేణులు)) {
             ++i;
         }
-    } while(--count>0);
-    return i;
+    } అయితే(--count>0);
+    తిరిగి i;
 }
 
 int32_t
-BytesTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const {
-    char b = static_cast<char>(byte);
-    while(b==elements[i].charAt(byteIndex, *strings)) {
+బైట్లు_Trie_Builder::సూచీ_యొక్క_Element_With_తదుపరి_Unit(int32_t i, int32_t byte_సూచీ, char16_t byte) స్థిరరాశి {
+    అక్షరం b = static_cast<అక్షరం>(byte);
+    అయితే(b==elements[i].charAt(byte_సూచీ, *అక్షరశ్రేణులు)) {
         ++i;
     }
-    return i;
+    తిరిగి i;
 }
 
-BytesTrieBuilder::BTLinearMatchNode::BTLinearMatchNode(const char *bytes, int32_t len, Node *nextNode)
-        : LinearMatchNode(len, nextNode), s(bytes) {
+బైట్లు_Trie_Builder::BTLinear_సరిపోలిక_కణుపు::BTLinear_సరిపోలిక_కణుపు(స్థిరరాశి అక్షరం *బైట్లు, int32_t len, Node *తదుపరి_కణుపు)
+        : రేఖీయ_సరిపోలిక_కణుపు(len, తదుపరి_కణుపు), s(బైట్లు) {
     hash=static_cast<int32_t>(
-        static_cast<uint32_t>(hash)*37u + static_cast<uint32_t>(ustr_hashCharsN(bytes, len)));
+        static_cast<uint32_t>(hash)*37u + static_cast<uint32_t>(ustr_hashCharsN(బైట్లు, len)));
 }
 
-bool
-BytesTrieBuilder::BTLinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+తార్కిక
+బైట్లు_Trie_Builder::BTLinear_సరిపోలిక_కణుపు::క్రియాకారకం==(స్థిరరాశి Node &other) స్థిరరాశి {
+    ఒకవేళ(ఇది==&other) {
+        తిరిగి నిజం;
     }
-    if(!LinearMatchNode::operator==(other)) {
-        return false;
+    ఒకవేళ(!రేఖీయ_సరిపోలిక_కణుపు::క్రియాకారకం==(other)) {
+        తిరిగి అబద్ధం;
     }
-    const BTLinearMatchNode &o=static_cast<const BTLinearMatchNode &>(other);
-    return 0==uprv_memcmp(s, o.s, length);
+    స్థిరరాశి BTLinear_సరిపోలిక_కణుపు &o=static_cast<స్థిరరాశి BTLinear_సరిపోలిక_కణుపు &>(other);
+    తిరిగి 0==uprv_memcmp(s, o.s, length);
 }
 
-void
-BytesTrieBuilder::BTLinearMatchNode::write(StringTrieBuilder &builder) {
-    BytesTrieBuilder &b=static_cast<BytesTrieBuilder &>(builder);
-    next->write(builder);
-    b.write(s, length);
-    offset=b.write(b.getMinLinearMatch()+length-1);
+శూన్య
+బైట్లు_Trie_Builder::BTLinear_సరిపోలిక_కణుపు::లిఖ(StringTrieBuilder &builder) {
+    బైట్లు_Trie_Builder &b=static_cast<బైట్లు_Trie_Builder &>(builder);
+    next->లిఖ(builder);
+    b.లిఖ(s, length);
+    స్థానభ్రంశం=b.లిఖ(b.get_Min_రేఖీయ_సరిపోలిక()+length-1);
 }
 
 StringTrieBuilder::Node *
-BytesTrieBuilder::createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
-                                        Node *nextNode) const {
-    return new BTLinearMatchNode(
-            elements[i].getString(*strings).data()+byteIndex,
+బైట్లు_Trie_Builder::create_రేఖీయ_సరిపోలిక_కణుపు(int32_t i, int32_t byte_సూచీ, int32_t length,
+                                        Node *తదుపరి_కణుపు) స్థిరరాశి {
+    తిరిగి కొత్త BTLinear_సరిపోలిక_కణుపు(
+            elements[i].getString(*అక్షరశ్రేణులు).దత్తాంశం()+byte_సూచీ,
             length,
-            nextNode);
+            తదుపరి_కణుపు);
 }
 
 UBool
-BytesTrieBuilder::ensureCapacity(int32_t length) {
-    if(bytes==nullptr) {
-        return false;  // previous memory allocation had failed
+బైట్లు_Trie_Builder::ensure_సామర్థ్యం(int32_t length) {
+    ఒకవేళ(బైట్లు==శూన్యసూచిక) {
+        తిరిగి అబద్ధం;  // previous memory allocation had failed
     }
-    if(length>bytesCapacity) {
-        int32_t newCapacity=bytesCapacity;
-        do {
-            newCapacity*=2;
-        } while(newCapacity<=length);
-        char *newBytes=static_cast<char *>(uprv_malloc(newCapacity));
-        if(newBytes==nullptr) {
+    ఒకవేళ(length>బైట్లు_సామర్థ్యం) {
+        int32_t new_సామర్థ్యం=బైట్లు_సామర్థ్యం;
+        చేయి {
+            new_సామర్థ్యం*=2;
+        } అయితే(new_సామర్థ్యం<=length);
+        అక్షరం *new_బైట్లు=static_cast<అక్షరం *>(uprv_malloc(new_సామర్థ్యం));
+        ఒకవేళ(new_బైట్లు==శూన్యసూచిక) {
             // unable to allocate memory
-            uprv_free(bytes);
-            bytes=nullptr;
-            bytesCapacity=0;
-            return false;
+            uprv_free(బైట్లు);
+            బైట్లు=శూన్యసూచిక;
+            బైట్లు_సామర్థ్యం=0;
+            తిరిగి అబద్ధం;
         }
-        uprv_memcpy(newBytes+(newCapacity-bytesLength),
-                    bytes+(bytesCapacity-bytesLength), bytesLength);
-        uprv_free(bytes);
-        bytes=newBytes;
-        bytesCapacity=newCapacity;
+        uprv_memcpy(new_బైట్లు+(new_సామర్థ్యం-బైట్లు_నిడివి),
+                    బైట్లు+(బైట్లు_సామర్థ్యం-బైట్లు_నిడివి), బైట్లు_నిడివి);
+        uprv_free(బైట్లు);
+        బైట్లు=new_బైట్లు;
+        బైట్లు_సామర్థ్యం=new_సామర్థ్యం;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 int32_t
-BytesTrieBuilder::write(int32_t byte) {
-    int32_t newLength=bytesLength+1;
-    if(ensureCapacity(newLength)) {
-        bytesLength=newLength;
-        bytes[bytesCapacity - bytesLength] = static_cast<char>(byte);
+బైట్లు_Trie_Builder::లిఖ(int32_t byte) {
+    int32_t new_నిడివి=బైట్లు_నిడివి+1;
+    ఒకవేళ(ensure_సామర్థ్యం(new_నిడివి)) {
+        బైట్లు_నిడివి=new_నిడివి;
+        బైట్లు[బైట్లు_సామర్థ్యం - బైట్లు_నిడివి] = static_cast<అక్షరం>(byte);
     }
-    return bytesLength;
+    తిరిగి బైట్లు_నిడివి;
 }
 
 int32_t
-BytesTrieBuilder::write(const char *b, int32_t length) {
-    int32_t newLength=bytesLength+length;
-    if(ensureCapacity(newLength)) {
-        bytesLength=newLength;
-        uprv_memcpy(bytes+(bytesCapacity-bytesLength), b, length);
+బైట్లు_Trie_Builder::లిఖ(స్థిరరాశి అక్షరం *b, int32_t length) {
+    int32_t new_నిడివి=బైట్లు_నిడివి+length;
+    ఒకవేళ(ensure_సామర్థ్యం(new_నిడివి)) {
+        బైట్లు_నిడివి=new_నిడివి;
+        uprv_memcpy(బైట్లు+(బైట్లు_సామర్థ్యం-బైట్లు_నిడివి), b, length);
     }
-    return bytesLength;
+    తిరిగి బైట్లు_నిడివి;
 }
 
 int32_t
-BytesTrieBuilder::writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) {
-    return write(elements[i].getString(*strings).data()+byteIndex, length);
+బైట్లు_Trie_Builder::writeElementUnits(int32_t i, int32_t byte_సూచీ, int32_t length) {
+    తిరిగి లిఖ(elements[i].getString(*అక్షరశ్రేణులు).దత్తాంశం()+byte_సూచీ, length);
 }
 
 int32_t
-BytesTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=BytesTrie::kMaxOneByteValue) {
-        return write(((BytesTrie::kMinOneByteValueLead+i)<<1)|isFinal);
+బైట్లు_Trie_Builder::write_విలువ_And_Final(int32_t i, UBool isFinal) {
+    ఒకవేళ(0<=i && i<=బైట్లు_Trie::k_Max_One_Byte_విలువ) {
+        తిరిగి లిఖ(((బైట్లు_Trie::k_Min_One_Byte_విలువ_Lead+i)<<1)|isFinal);
     }
-    char intBytes[5];
+    అక్షరం int_బైట్లు[5];
     int32_t length=1;
-    if(i<0 || i>0xffffff) {
-        intBytes[0] = static_cast<char>(BytesTrie::kFiveByteValueLead);
-        intBytes[1] = static_cast<char>(static_cast<uint32_t>(i) >> 24);
-        intBytes[2] = static_cast<char>(static_cast<uint32_t>(i) >> 16);
-        intBytes[3] = static_cast<char>(static_cast<uint32_t>(i) >> 8);
-        intBytes[4] = static_cast<char>(i);
+    ఒకవేళ(i<0 || i>0xffffff) {
+        int_బైట్లు[0] = static_cast<అక్షరం>(బైట్లు_Trie::k_Five_Byte_విలువ_Lead);
+        int_బైట్లు[1] = static_cast<అక్షరం>(static_cast<uint32_t>(i) >> 24);
+        int_బైట్లు[2] = static_cast<అక్షరం>(static_cast<uint32_t>(i) >> 16);
+        int_బైట్లు[3] = static_cast<అక్షరం>(static_cast<uint32_t>(i) >> 8);
+        int_బైట్లు[4] = static_cast<అక్షరం>(i);
         length=5;
     // } else if(i<=BytesTrie::kMaxOneByteValue) {
     //     intBytes[0]=(char)(BytesTrie::kMinOneByteValueLead+i);
-    } else {
-        if(i<=BytesTrie::kMaxTwoByteValue) {
-            intBytes[0] = static_cast<char>(BytesTrie::kMinTwoByteValueLead + (i >> 8));
-        } else {
-            if(i<=BytesTrie::kMaxThreeByteValue) {
-                intBytes[0] = static_cast<char>(BytesTrie::kMinThreeByteValueLead + (i >> 16));
-            } else {
-                intBytes[0] = static_cast<char>(BytesTrie::kFourByteValueLead);
-                intBytes[1] = static_cast<char>(i >> 16);
+    } లేకపోతే {
+        ఒకవేళ(i<=బైట్లు_Trie::k_Max_Two_Byte_విలువ) {
+            int_బైట్లు[0] = static_cast<అక్షరం>(బైట్లు_Trie::k_Min_Two_Byte_విలువ_Lead + (i >> 8));
+        } లేకపోతే {
+            ఒకవేళ(i<=బైట్లు_Trie::k_Max_Three_Byte_విలువ) {
+                int_బైట్లు[0] = static_cast<అక్షరం>(బైట్లు_Trie::k_Min_Three_Byte_విలువ_Lead + (i >> 16));
+            } లేకపోతే {
+                int_బైట్లు[0] = static_cast<అక్షరం>(బైట్లు_Trie::k_Four_Byte_విలువ_Lead);
+                int_బైట్లు[1] = static_cast<అక్షరం>(i >> 16);
                 length=2;
             }
-            intBytes[length++] = static_cast<char>(i >> 8);
+            int_బైట్లు[length++] = static_cast<అక్షరం>(i >> 8);
         }
-        intBytes[length++] = static_cast<char>(i);
+        int_బైట్లు[length++] = static_cast<అక్షరం>(i);
     }
-    intBytes[0] = static_cast<char>((intBytes[0] << 1) | isFinal);
-    return write(intBytes, length);
+    int_బైట్లు[0] = static_cast<అక్షరం>((int_బైట్లు[0] << 1) | isFinal);
+    తిరిగి లిఖ(int_బైట్లు, length);
 }
 
 int32_t
-BytesTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    int32_t offset=write(node);
-    if(hasValue) {
-        offset=writeValueAndFinal(value, false);
+బైట్లు_Trie_Builder::write_విలువ_And_Type(UBool has_విలువ, int32_t value, int32_t కణుపు) {
+    int32_t స్థానభ్రంశం=లిఖ(కణుపు);
+    ఒకవేళ(has_విలువ) {
+        స్థానభ్రంశం=write_విలువ_And_Final(value, అబద్ధం);
     }
-    return offset;
+    తిరిగి స్థానభ్రంశం;
 }
 
 int32_t
-BytesTrieBuilder::writeDeltaTo(int32_t jumpTarget) {
-    int32_t i=bytesLength-jumpTarget;
+బైట్లు_Trie_Builder::write_Delta_గమ్యం(int32_t jump_లక్ష్యం) {
+    int32_t i=బైట్లు_నిడివి-jump_లక్ష్యం;
     U_ASSERT(i>=0);
-    if(i<=BytesTrie::kMaxOneByteDelta) {
-        return write(i);
-    } else {
-        char intBytes[5];
-        return write(intBytes, internalEncodeDelta(i, intBytes));
+    ఒకవేళ(i<=బైట్లు_Trie::kMaxOneByteDelta) {
+        తిరిగి లిఖ(i);
+    } లేకపోతే {
+        అక్షరం int_బైట్లు[5];
+        తిరిగి లిఖ(int_బైట్లు, అంతర్గత_Encode_Delta(i, int_బైట్లు));
     }
 }
 
 int32_t
-BytesTrieBuilder::internalEncodeDelta(int32_t i, char intBytes[]) {
+బైట్లు_Trie_Builder::అంతర్గత_Encode_Delta(int32_t i, అక్షరం int_బైట్లు[]) {
     U_ASSERT(i>=0);
-    if(i<=BytesTrie::kMaxOneByteDelta) {
-        intBytes[0] = static_cast<char>(i);
-        return 1;
+    ఒకవేళ(i<=బైట్లు_Trie::kMaxOneByteDelta) {
+        int_బైట్లు[0] = static_cast<అక్షరం>(i);
+        తిరిగి 1;
     }
     int32_t length=1;
-    if(i<=BytesTrie::kMaxTwoByteDelta) {
-        intBytes[0] = static_cast<char>(BytesTrie::kMinTwoByteDeltaLead + (i >> 8));
-    } else {
-        if(i<=BytesTrie::kMaxThreeByteDelta) {
-            intBytes[0] = static_cast<char>(BytesTrie::kMinThreeByteDeltaLead + (i >> 16));
-        } else {
-            if(i<=0xffffff) {
-                intBytes[0] = static_cast<char>(BytesTrie::kFourByteDeltaLead);
-            } else {
-                intBytes[0] = static_cast<char>(BytesTrie::kFiveByteDeltaLead);
-                intBytes[1] = static_cast<char>(i >> 24);
+    ఒకవేళ(i<=బైట్లు_Trie::kMaxTwoByteDelta) {
+        int_బైట్లు[0] = static_cast<అక్షరం>(బైట్లు_Trie::kMinTwoByteDeltaLead + (i >> 8));
+    } లేకపోతే {
+        ఒకవేళ(i<=బైట్లు_Trie::kMaxThreeByteDelta) {
+            int_బైట్లు[0] = static_cast<అక్షరం>(బైట్లు_Trie::kMinThreeByteDeltaLead + (i >> 16));
+        } లేకపోతే {
+            ఒకవేళ(i<=0xffffff) {
+                int_బైట్లు[0] = static_cast<అక్షరం>(బైట్లు_Trie::kFourByteDeltaLead);
+            } లేకపోతే {
+                int_బైట్లు[0] = static_cast<అక్షరం>(బైట్లు_Trie::kFiveByteDeltaLead);
+                int_బైట్లు[1] = static_cast<అక్షరం>(i >> 24);
                 length=2;
             }
-            intBytes[length++] = static_cast<char>(i >> 16);
+            int_బైట్లు[length++] = static_cast<అక్షరం>(i >> 16);
         }
-        intBytes[length++] = static_cast<char>(i >> 8);
+        int_బైట్లు[length++] = static_cast<అక్షరం>(i >> 8);
     }
-    intBytes[length++] = static_cast<char>(i);
-    return length;
+    int_బైట్లు[length++] = static_cast<అక్షరం>(i);
+    తిరిగి length;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

@@ -21,58 +21,58 @@
 ******************************************************************************
 */
 
-#include "unicode/ures.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "uresimp.h"
-#include "ustr_imp.h"
-#include "cwchar.h"
-#include "ucln_cmn.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "uhash.h"
-#include "unicode/uenum.h"
-#include "uenumimp.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "uresdata.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "bytesinkutil.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "cwchar.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "unicode/uenum.h"
+#అన్తర్భావ "uenumimp.h"
+#అన్తర్భావ "ulocimp.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "uresdata.h"
 
-using namespace icu;
+ఉపయోగించి నామాకాశ icu;
 
 /*
 Static cache for already opened resource bundles - mostly for keeping fallback info
 TODO: This cache should probably be removed when the deprecated code is
       completely removed.
 */
-static UHashtable *cache = nullptr;
-static icu::UInitOnce gCacheInitOnce {};
+స్థిర UHashtable *cache = శూన్యసూచిక;
+స్థిర icu::UInitOnce gCacheInitOnce {};
 
-static UMutex resbMutex;
+స్థిర UMutex resbMutex;
 
 /* INTERNAL: hashes an entry  */
-static int32_t U_CALLCONV hashEntry(const UHashTok parm) {
-    UResourceDataEntry* b = static_cast<UResourceDataEntry*>(parm.pointer);
+స్థిర int32_t U_CALLCONV hash_నమోదు(స్థిరరాశి UHashTok parm) {
+    UResource_దత్తాంశం_నమోదు* b = static_cast<UResource_దత్తాంశం_నమోదు*>(parm.సూచిక);
     UHashTok namekey, pathkey;
-    namekey.pointer = b->fName;
-    pathkey.pointer = b->fPath;
-    return uhash_hashChars(namekey)+37u*uhash_hashChars(pathkey);
+    namekey.సూచిక = b->fName;
+    pathkey.సూచిక = b->f_మార్గం;
+    తిరిగి uhash_hashChars(namekey)+37u*uhash_hashChars(pathkey);
 }
 
 /* INTERNAL: compares two entries */
-static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
-    UResourceDataEntry* b1 = static_cast<UResourceDataEntry*>(p1.pointer);
-    UResourceDataEntry* b2 = static_cast<UResourceDataEntry*>(p2.pointer);
+స్థిర UBool U_CALLCONV compareEntries(స్థిరరాశి UHashTok p1, స్థిరరాశి UHashTok p2) {
+    UResource_దత్తాంశం_నమోదు* b1 = static_cast<UResource_దత్తాంశం_నమోదు*>(p1.సూచిక);
+    UResource_దత్తాంశం_నమోదు* b2 = static_cast<UResource_దత్తాంశం_నమోదు*>(p2.సూచిక);
     UHashTok name1, name2, path1, path2;
-    name1.pointer = b1->fName;
-    name2.pointer = b2->fName;
-    path1.pointer = b1->fPath;
-    path2.pointer = b2->fPath;
-    return uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
+    name1.సూచిక = b1->fName;
+    name2.సూచిక = b2->fName;
+    path1.సూచిక = b1->f_మార్గం;
+    path2.సూచిక = b2->f_మార్గం;
+    తిరిగి uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
 }
 
 
@@ -80,93 +80,93 @@ static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
  *  Internal function, gets parts of locale name according 
  *  to the position of '_' character
  */
-static UBool chopLocale(char *name) {
-    char *i = uprv_strrchr(name, '_');
+స్థిర UBool chopLocale(అక్షరం *name) {
+    అక్షరం *i = uprv_strrchr(name, '_');
 
-    if(i != nullptr) {
+    ఒకవేళ(i != శూన్యసూచిక) {
         *i = '\0';
-        return true;
+        తిరిగి నిజం;
     }
 
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-static UBool hasVariant(const char* localeID) {
-    UErrorCode err = U_ZERO_ERROR;
-    CheckedArrayByteSink sink(nullptr, 0);
+స్థిర UBool hasVariant(స్థిరరాశి అక్షరం* localeID) {
+    UError_సంకేతం err = U_ZERO_ERROR;
+    CheckedArrayByteSink sink(శూన్యసూచిక, 0);
     ulocimp_getSubtags(
             localeID,
-            nullptr,
-            nullptr,
-            nullptr,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
             &sink,
-            nullptr,
+            శూన్యసూచిక,
             err);
-    return sink.NumberOfBytesAppended() != 0;
+    తిరిగి sink.సంఖ్య_యొక్క_బైట్లు_Appended() != 0;
 }
 
 // This file contains the tables for doing locale fallback, which are generated
 // by the CLDR-to-ICU process directly from the CLDR data.  This file should only
 // ever be included from here.
-#define INCLUDED_FROM_URESBUND_CPP
-#include "localefallback_data.h"
+#నిర్వచించు INCLUDED_FROM_URESBUND_CPP
+#అన్తర్భావ "localefallback_data.h"
 
-static const char* performFallbackLookup(const char* key,
-                                         const char* keyStrs,
-                                         const char* valueStrs U_LIFETIME_BOUND,
-                                         const int32_t* lookupTable,
-                                         int32_t lookupTableLength) {
-    const int32_t* bottom = lookupTable;
-    const int32_t* top = lookupTable + lookupTableLength;
+స్థిర స్థిరరాశి అక్షరం* performFallbackLookup(స్థిరరాశి అక్షరం* కీలకం,
+                                         స్థిరరాశి అక్షరం* కీలకం_Strs,
+                                         స్థిరరాశి అక్షరం* విలువ_Strs U_LIFETIME_BOUND,
+                                         స్థిరరాశి int32_t* lookup_పట్టిక,
+                                         int32_t lookup_పట్టిక_నిడివి) {
+    స్థిరరాశి int32_t* bottom = lookup_పట్టిక;
+    స్థిరరాశి int32_t* శిఖరం = lookup_పట్టిక + lookup_పట్టిక_నిడివి;
 
-    while (bottom < top) {
+    అయితే (bottom < శిఖరం) {
         // Effectively, divide by 2 and round down to an even index
-        const int32_t* middle = bottom + (((top - bottom) / 4) * 2);
-        const char* entryKey = &(keyStrs[*middle]);
-        int32_t strcmpResult = uprv_strcmp(key, entryKey);
-        if (strcmpResult == 0) {
-            return &(valueStrs[middle[1]]);
-        } else if (strcmpResult < 0) {
-            top = middle;
-        } else {
-            bottom = middle + 2;
+        స్థిరరాశి int32_t* మధ్య = bottom + (((శిఖరం - bottom) / 4) * 2);
+        స్థిరరాశి అక్షరం* నమోదు_కీలకం = &(కీలకం_Strs[*మధ్య]);
+        int32_t strcmp_ఫలితం = uprv_strcmp(కీలకం, నమోదు_కీలకం);
+        ఒకవేళ (strcmp_ఫలితం == 0) {
+            తిరిగి &(విలువ_Strs[మధ్య[1]]);
+        } లేకపోతే ఒకవేళ (strcmp_ఫలితం < 0) {
+            శిఖరం = మధ్య;
+        } లేకపోతే {
+            bottom = మధ్య + 2;
         }
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-static CharString getDefaultScript(const CharString& language, const CharString& region) {
-    const char* defaultScript = nullptr;
-    UErrorCode err = U_ZERO_ERROR;
+స్థిర CharString getDefaultScript(స్థిరరాశి CharString& language, స్థిరరాశి CharString& region) {
+    స్థిరరాశి అక్షరం* defaultScript = శూన్యసూచిక;
+    UError_సంకేతం err = U_ZERO_ERROR;
     
     // the default script will be "Latn" if we don't find the locale ID in the tables
-    CharString result("Latn", err);
+    CharString ఫలితం("Latn", err);
     
     // if we were passed both language and region, make them into a locale ID and look that up in the default
     // script table
-    if (!region.isEmpty()) {
+    ఒకవేళ (!region.is_ఖాళీలు()) {
         CharString localeID;
         localeID.append(language, err).append("_", err).append(region, err);
-        if (U_FAILURE(err)) {
-            return result;
+        ఒకవేళ (U_FAILURE(err)) {
+            తిరిగి ఫలితం;
         }
-        defaultScript = performFallbackLookup(localeID.data(), dsLocaleIDChars, scriptCodeChars, defaultScriptTable, UPRV_LENGTHOF(defaultScriptTable));
+        defaultScript = performFallbackLookup(localeID.దత్తాంశం(), dsLocaleIDChars, script_సంకేతం_Chars, default_Script_పట్టిక, UPRV_LENGTHOF(default_Script_పట్టిక));
     }
     
     // if we didn't find anything, look up just the language in the default script table
-    if (defaultScript == nullptr) {
-        defaultScript = performFallbackLookup(language.data(), dsLocaleIDChars, scriptCodeChars, defaultScriptTable, UPRV_LENGTHOF(defaultScriptTable));
+    ఒకవేళ (defaultScript == శూన్యసూచిక) {
+        defaultScript = performFallbackLookup(language.దత్తాంశం(), dsLocaleIDChars, script_సంకేతం_Chars, default_Script_పట్టిక, UPRV_LENGTHOF(default_Script_పట్టిక));
     }
     
     // if either lookup above succeeded, copy the result from "defaultScript" into "result"; otherwise, return "Latn"
-    if (defaultScript != nullptr) {
-        result.clear();
-        result.append(defaultScript, err);
+    ఒకవేళ (defaultScript != శూన్యసూచిక) {
+        ఫలితం.clear();
+        ఫలితం.append(defaultScript, err);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-enum UResOpenType {
+గణన UResOpenType {
     /**
      * Open a resource bundle for the locale;
      * if there is not even a base language bundle, then fall back to the default locale;
@@ -174,7 +174,7 @@ enum UResOpenType {
      *
      * This is the default bundle loading behavior.
      */
-    URES_OPEN_LOCALE_DEFAULT_ROOT,
+    URES_OPEN_LOCALE_DEFAULT_మూలం,
     // TODO: ICU ticket #11271 "consistent default locale across locale trees"
     // Add an option to look at the main locale tree for whether to
     // fall back to root directly (if the locale has main data) or
@@ -187,16 +187,16 @@ enum UResOpenType {
      * This is used for algorithms that have good pan-Unicode default behavior,
      * such as case mappings, collation, and segmentation (BreakIterator).
      */
-    URES_OPEN_LOCALE_ROOT,
+    URES_OPEN_LOCALE_మూలం,
     /**
      * Open a resource bundle for the exact bundle name as requested;
      * no fallbacks, do not load parent bundles.
      *
      * This is used for supplemental (non-locale) data.
      */
-    URES_OPEN_DIRECT
+    URES_OPEN_ప్రత్యక్ష
 };
-typedef enum UResOpenType UResOpenType;
+రకనిర్వచనం గణన UResOpenType UResOpenType;
 
 /**
  *  Internal function, determines the search path for resource bundle files.
@@ -208,22 +208,22 @@ typedef enum UResOpenType UResOpenType;
  *  @param origName The original locale ID the caller of findFirstExisting() requested.  This is the same as `name` on the first call to this function,
  *  but as findFirstExisting() ascends the resource bundle's parent tree, this parameter will continue to be the original locale ID requested.
  */
-static bool getParentLocaleID(char *name, const char *origName, UResOpenType openType) {
+స్థిర తార్కిక get_మాతృ_Locale_ID(అక్షరం *name, స్థిరరాశి అక్షరం *origName, UResOpenType openType) {
     // early out if the locale ID has a variant code or ends with _
     size_t nameLen = uprv_strlen(name);
-    if (!nameLen || name[nameLen - 1] == '_' || hasVariant(name)) {
-        return chopLocale(name);
+    ఒకవేళ (!nameLen || name[nameLen - 1] == '_' || hasVariant(name)) {
+        తిరిగి chopLocale(name);
     }
     
-    UErrorCode err = U_ZERO_ERROR;
+    UError_సంకేతం err = U_ZERO_ERROR;
     CharString language;
     CharString script;
     CharString region;
-    ulocimp_getSubtags(name, &language, &script, &region, nullptr, nullptr, err);
+    ulocimp_getSubtags(name, &language, &script, &region, శూన్యసూచిక, శూన్యసూచిక, err);
 
-    if (U_FAILURE(err)) {
+    ఒకవేళ (U_FAILURE(err)) {
         // hopefully this never happens...
-        return chopLocale(name);
+        తిరిగి chopLocale(name);
     }
     
     // if the open type is URES_OPEN_LOCALE_DEFAULT_ROOT, first look the locale ID up in the parent locale table;
@@ -231,11 +231,11 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
     // falling back through the system default locale, we also want to do straight truncation fallback instead
     // of looking things up in the parent locale table-- see https://www.unicode.org/reports/tr35/tr35.html#Parent_Locales:
     // "Collation data, however, is an exception...")
-    if (openType == URES_OPEN_LOCALE_DEFAULT_ROOT) {
-        const char* parentID = performFallbackLookup(name, parentLocaleChars, parentLocaleChars, parentLocaleTable, UPRV_LENGTHOF(parentLocaleTable));
-        if (parentID != nullptr) {
-            uprv_strcpy(name, parentID);
-            return true;
+    ఒకవేళ (openType == URES_OPEN_LOCALE_DEFAULT_మూలం) {
+        స్థిరరాశి అక్షరం* మాతృ_ID = performFallbackLookup(name, మాతృ_Locale_Chars, మాతృ_Locale_Chars, మాతృ_Locale_పట్టిక, UPRV_LENGTHOF(మాతృ_Locale_పట్టిక));
+        ఒకవేళ (మాతృ_ID != శూన్యసూచిక) {
+            uprv_strcpy(name, మాతృ_ID);
+            తిరిగి నిజం;
         }
     }
 
@@ -243,49 +243,49 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
 
     // if it's not in the parent locale table, figure out the fallback script algorithmically
     // (see CLDR-15265 for an explanation of the algorithm)
-    if (!script.isEmpty() && !region.isEmpty()) {
+    ఒకవేళ (!script.is_ఖాళీలు() && !region.is_ఖాళీలు()) {
         // if "name" has both script and region, is the script the default script?
         // - if so, remove it and keep the region
         // - if not, remove the region and keep the script
-        if (getDefaultScript(language, region) == script) {
+        ఒకవేళ (getDefaultScript(language, region) == script) {
             workingLocale.append(language, err).append("_", err).append(region, err);
-        } else {
+        } లేకపోతే {
             workingLocale.append(language, err).append("_", err).append(script, err);
         }
-    } else if (!region.isEmpty()) {
+    } లేకపోతే ఒకవేళ (!region.is_ఖాళీలు()) {
         // if "name" has region but not script, did the original locale ID specify a script?
         // - if yes, replace the region with the script from the original locale ID
         // - if no, replace the region with the default script for that language and region
-        UErrorCode err = U_ZERO_ERROR;
+        UError_సంకేతం err = U_ZERO_ERROR;
         CharString origNameLanguage;
         CharString origNameScript;
-        ulocimp_getSubtags(origName, &origNameLanguage, &origNameScript, nullptr, nullptr, nullptr, err);
-        if (!origNameScript.isEmpty()) {
+        ulocimp_getSubtags(origName, &origNameLanguage, &origNameScript, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, err);
+        ఒకవేళ (!origNameScript.is_ఖాళీలు()) {
             workingLocale.append(language, err).append("_", err).append(origNameScript, err);
-        } else {
+        } లేకపోతే {
             workingLocale.append(language, err).append("_", err).append(getDefaultScript(language, region), err);
         }
-    } else if (!script.isEmpty()) {
+    } లేకపోతే ఒకవేళ (!script.is_ఖాళీలు()) {
         // if "name" has script but not region (and our open type if URES_OPEN_LOCALE_DEFAULT_ROOT), is the script
         // the default script for the language?
         // - if so, remove it from the locale ID
         // - if not, return false to continue up the chain
         // (we don't do this for other open types for the same reason we don't look things up in the parent
         // locale table for other open types-- see the reference to UTS #35 above)
-        if (openType != URES_OPEN_LOCALE_DEFAULT_ROOT || getDefaultScript(language, CharString()) == script) {
+        ఒకవేళ (openType != URES_OPEN_LOCALE_DEFAULT_మూలం || getDefaultScript(language, CharString()) == script) {
             workingLocale.append(language, err);
-        } else {
-            return false;
+        } లేకపోతే {
+            తిరిగి అబద్ధం;
         }
-    } else {
+    } లేకపోతే {
         // if "name" just contains a language code, return false so the calling code falls back to "root"
-        return false;
+        తిరిగి అబద్ధం;
     }
-    if (U_SUCCESS(err) && !workingLocale.isEmpty()) {
-        uprv_strcpy(name, workingLocale.data());
-        return true;
-    } else {
-        return false;
+    ఒకవేళ (U_SUCCESS(err) && !workingLocale.is_ఖాళీలు()) {
+        uprv_strcpy(name, workingLocale.దత్తాంశం());
+        తిరిగి నిజం;
+    } లేకపోతే {
+        తిరిగి అబద్ధం;
     }
 }
 
@@ -294,19 +294,19 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
  *  Some code had assumed that locale IDs with '_' could not have a non-root parent.
  *  We may want a better way of doing this.
  */
-static UBool mayHaveParent(char *name) {
-    return (name[0] != 0 && uprv_strstr("nb nn",name) != nullptr);
+స్థిర UBool may_Have_మాతృ(అక్షరం *name) {
+    తిరిగి (name[0] != 0 && uprv_strstr("nb nn",name) != శూన్యసూచిక);
 }
 
 /**
  *  Internal function
  */
-static void entryIncrease(UResourceDataEntry *entry) {
-    Mutex lock(&resbMutex);
-    entry->fCountExisting++;
-    while(entry->fParent != nullptr) {
-      entry = entry->fParent;
-      entry->fCountExisting++;
+స్థిర శూన్య నమోదు_Increase(UResource_దత్తాంశం_నమోదు *నమోదు_2) {
+    Mutex తాళం(&resbMutex);
+    నమోదు_2->f_లెక్క_Existing++;
+    అయితే(నమోదు_2->f_మాతృ != శూన్యసూచిక) {
+      నమోదు_2 = నమోదు_2->f_మాతృ;
+      నమోదు_2->f_లెక్క_Existing++;
     }
 }
 
@@ -314,95 +314,95 @@ static void entryIncrease(UResourceDataEntry *entry) {
  *  Internal function. Tries to find a resource in given Resource
  *  Bundle, as well as in its parents
  */
-static UResourceDataEntry *getFallbackData(
-        const UResourceBundle *resBundle,
-        const char **resTag, Resource *res, UErrorCode *status) {
-    UResourceDataEntry *dataEntry = resBundle->fData;
-    int32_t indexR = -1;
+స్థిర UResource_దత్తాంశం_నమోదు *get_Fallback_దత్తాంశం(
+        స్థిరరాశి UResourceBundle *resBundle,
+        స్థిరరాశి అక్షరం **res_ట్యాగ్, Resource *res, UError_సంకేతం *స్థితి_2) {
+    UResource_దత్తాంశం_నమోదు *దత్తాంశం_నమోదు = resBundle->f_దత్తాంశం;
+    int32_t సూచీ_R = -1;
     int32_t i = 0;
     *res = RES_BOGUS;
-    if(dataEntry == nullptr) {
-        *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+    ఒకవేళ(దత్తాంశం_నమోదు == శూన్యసూచిక) {
+        *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    if(dataEntry->fBogus == U_ZERO_ERROR) { /* if this resource is real, */
-        *res = res_getTableItemByKey(&(dataEntry->fData), dataEntry->fData.rootRes, &indexR, resTag); /* try to get data from there */
+    ఒకవేళ(దత్తాంశం_నమోదు->fBogus == U_ZERO_ERROR) { /* if this resource is real, */
+        *res = res_get_పట్టిక_అంశం_By_కీలకం(&(దత్తాంశం_నమోదు->f_దత్తాంశం), దత్తాంశం_నమోదు->f_దత్తాంశం.మూలం_Res, &సూచీ_R, res_ట్యాగ్); /* try to get data from there */
         i++;
     }
-    if(resBundle->fHasFallback) {
+    ఒకవేళ(resBundle->fHasFallback) {
         // Otherwise, we'll look in parents.
-        while(*res == RES_BOGUS && dataEntry->fParent != nullptr) {
-            dataEntry = dataEntry->fParent;
-            if(dataEntry->fBogus == U_ZERO_ERROR) {
+        అయితే(*res == RES_BOGUS && దత్తాంశం_నమోదు->f_మాతృ != శూన్యసూచిక) {
+            దత్తాంశం_నమోదు = దత్తాంశం_నమోదు->f_మాతృ;
+            ఒకవేళ(దత్తాంశం_నమోదు->fBogus == U_ZERO_ERROR) {
                 i++;
-                *res = res_getTableItemByKey(&(dataEntry->fData), dataEntry->fData.rootRes, &indexR, resTag);
+                *res = res_get_పట్టిక_అంశం_By_కీలకం(&(దత్తాంశం_నమోదు->f_దత్తాంశం), దత్తాంశం_నమోదు->f_దత్తాంశం.మూలం_Res, &సూచీ_R, res_ట్యాగ్);
             }
         }
     }
 
-    if(*res == RES_BOGUS) {
+    ఒకవేళ(*res == RES_BOGUS) {
         // If the resource is not found, we need to give an error.
-        *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+        *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
     // If the resource is found in parents, we need to adjust the error.
-    if(i>1) {
-        if(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, kRootLocaleName)==0) {
-            *status = U_USING_DEFAULT_WARNING;
-        } else {
-            *status = U_USING_FALLBACK_WARNING;
+    ఒకవేళ(i>1) {
+        ఒకవేళ(uprv_strcmp(దత్తాంశం_నమోదు->fName, uloc_getDefault())==0 || uprv_strcmp(దత్తాంశం_నమోదు->fName, k_మూలం_Locale_Name)==0) {
+            *స్థితి_2 = U_USING_DEFAULT_WARNING;
+        } లేకపోతే {
+            *స్థితి_2 = U_USING_FALLBACK_WARNING;
         }
     }
-    return dataEntry;
+    తిరిగి దత్తాంశం_నమోదు;
 }
 
-static void
-free_entry(UResourceDataEntry *entry) {
-    UResourceDataEntry *alias;
-    res_unload(&(entry->fData));
-    if(entry->fName != nullptr && entry->fName != entry->fNameBuffer) {
-        uprv_free(entry->fName);
+స్థిర శూన్య
+free_నమోదు(UResource_దత్తాంశం_నమోదు *నమోదు_2) {
+    UResource_దత్తాంశం_నమోదు *alias;
+    res_unload(&(నమోదు_2->f_దత్తాంశం));
+    ఒకవేళ(నమోదు_2->fName != శూన్యసూచిక && నమోదు_2->fName != నమోదు_2->f_Name_బఫరు) {
+        uprv_free(నమోదు_2->fName);
     }
-    if(entry->fPath != nullptr) {
-        uprv_free(entry->fPath);
+    ఒకవేళ(నమోదు_2->f_మార్గం != శూన్యసూచిక) {
+        uprv_free(నమోదు_2->f_మార్గం);
     }
-    if(entry->fPool != nullptr) {
-        --entry->fPool->fCountExisting;
+    ఒకవేళ(నమోదు_2->fPool != శూన్యసూచిక) {
+        --నమోదు_2->fPool->f_లెక్క_Existing;
     }
-    alias = entry->fAlias;
-    if(alias != nullptr) {
-        while(alias->fAlias != nullptr) {
+    alias = నమోదు_2->fAlias;
+    ఒకవేళ(alias != శూన్యసూచిక) {
+        అయితే(alias->fAlias != శూన్యసూచిక) {
             alias = alias->fAlias;
         }
-        --alias->fCountExisting;
+        --alias->f_లెక్క_Existing;
     }
-    uprv_free(entry);
+    uprv_free(నమోదు_2);
 }
 
 /* Works just like ucnv_flushCache() */
-static int32_t ures_flushCache()
+స్థిర int32_t ures_flushCache()
 {
-    UResourceDataEntry *resB;
+    UResource_దత్తాంశం_నమోదు *resB;
     int32_t pos;
-    int32_t rbDeletedNum = 0;
-    const UHashElement *e;
-    UBool deletedMore;
+    int32_t rb_Deleted_అంకె = 0;
+    స్థిరరాశి UHashElement *e;
+    UBool deleted_మరిన్ని;
 
     /*if shared data hasn't even been lazy evaluated yet
     * return 0
     */
-    Mutex lock(&resbMutex);
-    if (cache == nullptr) {
-        return 0;
+    Mutex తాళం(&resbMutex);
+    ఒకవేళ (cache == శూన్యసూచిక) {
+        తిరిగి 0;
     }
 
-    do {
-        deletedMore = false;
+    చేయి {
+        deleted_మరిన్ని = అబద్ధం;
         /*creates an enumeration to iterate through every element in the table */
-        pos = UHASH_FIRST;
-        while ((e = uhash_nextElement(cache, &pos)) != nullptr)
+        pos = UHASH_మొదటి;
+        అయితే ((e = uhash_తదుపరి_Element(cache, &pos)) != శూన్యసూచిక)
         {
-            resB = static_cast<UResourceDataEntry*>(e->value.pointer);
+            resB = static_cast<UResource_దత్తాంశం_నమోదు*>(e->value.సూచిక);
             /* Deletes only if reference counter == 0
              * Don't worry about the children of this node.
              * Those will eventually get deleted too, if not already.
@@ -412,500 +412,500 @@ static int32_t ures_flushCache()
             /* 04/05/2002 [weiv] fCountExisting should now be accurate. If it's not zero, that means that    */
             /* some resource bundles are still open somewhere. */
 
-            if (resB->fCountExisting == 0) {
-                rbDeletedNum++;
-                deletedMore = true;
+            ఒకవేళ (resB->f_లెక్క_Existing == 0) {
+                rb_Deleted_అంకె++;
+                deleted_మరిన్ని = నిజం;
                 uhash_removeElement(cache, e);
-                free_entry(resB);
+                free_నమోదు(resB);
             }
         }
         /*
          * Do it again to catch bundles (aliases, pool bundle) whose fCountExisting
          * got decremented by free_entry().
          */
-    } while(deletedMore);
+    } అయితే(deleted_మరిన్ని);
 
-    return rbDeletedNum;
+    తిరిగి rb_Deleted_అంకె;
 }
 
-#ifdef URES_DEBUG
-#include <stdio.h>
+#నిర్వచితమైతే URES_DEBUG
+#అన్తర్భావ <stdio.h>
 
 U_CAPI UBool U_EXPORT2 ures_dumpCacheContents() {
-  UBool cacheNotEmpty = false;
-  int32_t pos = UHASH_FIRST;
-  const UHashElement *e;
-  UResourceDataEntry *resB;
+  UBool cache_Not_ఖాళీలు = అబద్ధం;
+  int32_t pos = UHASH_మొదటి;
+  స్థిరరాశి UHashElement *e;
+  UResource_దత్తాంశం_నమోదు *resB;
   
-    Mutex lock(&resbMutex);
-    if (cache == nullptr) {
+    Mutex తాళం(&resbMutex);
+    ఒకవేళ (cache == శూన్యసూచిక) {
       fprintf(stderr,"%s:%d: RB Cache is nullptr.\n", __FILE__, __LINE__);
-      return false;
+      తిరిగి అబద్ధం;
     }
 
-    while ((e = uhash_nextElement(cache, &pos)) != nullptr) {
-      cacheNotEmpty=true;
-      resB = (UResourceDataEntry *) e->value.pointer;
+    అయితే ((e = uhash_తదుపరి_Element(cache, &pos)) != శూన్యసూచిక) {
+      cache_Not_ఖాళీలు=నిజం;
+      resB = (UResource_దత్తాంశం_నమోదు *) e->value.సూచిక;
       fprintf(stderr,"%s:%d: RB Cache: Entry @0x%p, refcount %d, name %s:%s.  Pool 0x%p, alias 0x%p, parent 0x%p\n",
               __FILE__, __LINE__,
-              (void*)resB, resB->fCountExisting,
+              (శూన్య*)resB, resB->f_లెక్క_Existing,
               resB->fName?resB->fName:"nullptr",
-              resB->fPath?resB->fPath:"nullptr",
-              (void*)resB->fPool,
-              (void*)resB->fAlias,
-              (void*)resB->fParent);       
+              resB->f_మార్గం?resB->f_మార్గం:"nullptr",
+              (శూన్య*)resB->fPool,
+              (శూన్య*)resB->fAlias,
+              (శూన్య*)resB->f_మాతృ);       
     }
     
-    fprintf(stderr,"%s:%d: RB Cache still contains %d items.\n", __FILE__, __LINE__, uhash_count(cache));
-    return cacheNotEmpty;
+    fprintf(stderr,"%s:%d: RB Cache still contains %d items.\n", __FILE__, __LINE__, uhash_లెక్క(cache));
+    తిరిగి cache_Not_ఖాళీలు;
 }
 
-#endif
+#అయితే_ముగింపు
 
-static UBool U_CALLCONV ures_cleanup()
+స్థిర UBool U_CALLCONV ures_cleanup()
 {
-    if (cache != nullptr) {
+    ఒకవేళ (cache != శూన్యసూచిక) {
         ures_flushCache();
         uhash_close(cache);
-        cache = nullptr;
+        cache = శూన్యసూచిక;
     }
     gCacheInitOnce.reset();
-    return true;
+    తిరిగి నిజం;
 }
 
 /** INTERNAL: Initializes the cache for resources */
-static void U_CALLCONV createCache(UErrorCode &status) {
-    U_ASSERT(cache == nullptr);
-    cache = uhash_open(hashEntry, compareEntries, nullptr, &status);
-    ucln_common_registerCleanup(UCLN_COMMON_URES, ures_cleanup);
+స్థిర శూన్య U_CALLCONV createCache(UError_సంకేతం &స్థితి_2) {
+    U_ASSERT(cache == శూన్యసూచిక);
+    cache = uhash_open(hash_నమోదు, compareEntries, శూన్యసూచిక, &స్థితి_2);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_URES, ures_cleanup);
 }
      
-static void initCache(UErrorCode *status) {
-    umtx_initOnce(gCacheInitOnce, &createCache, *status);
+స్థిర శూన్య initCache(UError_సంకేతం *స్థితి_2) {
+    umtx_initOnce(gCacheInitOnce, &createCache, *స్థితి_2);
 }
 
 /** INTERNAL: sets the name (locale) of the resource bundle to given name */
 
-static void setEntryName(UResourceDataEntry *res, const char *name, UErrorCode *status) {
+స్థిర శూన్య సమితి_నమోదు_Name(UResource_దత్తాంశం_నమోదు *res, స్థిరరాశి అక్షరం *name, UError_సంకేతం *స్థితి_2) {
     int32_t len = static_cast<int32_t>(uprv_strlen(name));
-    if(res->fName != nullptr && res->fName != res->fNameBuffer) {
+    ఒకవేళ(res->fName != శూన్యసూచిక && res->fName != res->f_Name_బఫరు) {
         uprv_free(res->fName);
     }
-    if (len < static_cast<int32_t>(sizeof(res->fNameBuffer))) {
-        res->fName = res->fNameBuffer;
+    ఒకవేళ (len < static_cast<int32_t>(పరిమాణం(res->f_Name_బఫరు))) {
+        res->fName = res->f_Name_బఫరు;
     }
-    else {
-        res->fName = static_cast<char*>(uprv_malloc(len + 1));
+    లేకపోతే {
+        res->fName = static_cast<అక్షరం*>(uprv_malloc(len + 1));
     }
-    if(res->fName == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    ఒకవేళ(res->fName == శూన్యసూచిక) {
+        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    } లేకపోతే {
         uprv_strcpy(res->fName, name);
     }
 }
 
-static UResourceDataEntry *
-getPoolEntry(const char *path, UErrorCode *status);
+స్థిర UResource_దత్తాంశం_నమోదు *
+get_Pool_నమోదు(స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం *స్థితి_2);
 
 /**
  *  INTERNAL: Inits and opens an entry from a data DLL.
  *    CAUTION:  resbMutex must be locked when calling this function.
  */
-static UResourceDataEntry *init_entry(const char *localeID, const char *path, UErrorCode *status) {
-    UResourceDataEntry *r = nullptr;
-    UResourceDataEntry find;
+స్థిర UResource_దత్తాంశం_నమోదు *init_నమోదు(స్థిరరాశి అక్షరం *localeID, స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం *స్థితి_2) {
+    UResource_దత్తాంశం_నమోదు *r = శూన్యసూచిక;
+    UResource_దత్తాంశం_నమోదు find;
     /*int32_t hashValue;*/
-    const char *name;
-    char aliasName[100] = { 0 };
+    స్థిరరాశి అక్షరం *name;
+    అక్షరం aliasName[100] = { 0 };
     int32_t aliasLen = 0;
     /*UBool isAlias = false;*/
     /*UHashTok hashkey; */
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     /* here we try to deduce the right locale name */
-    if(localeID == nullptr) { /* if localeID is nullptr, we're trying to open default locale */
+    ఒకవేళ(localeID == శూన్యసూచిక) { /* if localeID is nullptr, we're trying to open default locale */
         name = uloc_getDefault();
-    } else if(*localeID == 0) { /* if localeID is "" then we try to open root locale */
-        name = kRootLocaleName;
-    } else { /* otherwise, we'll open what we're given */
+    } లేకపోతే ఒకవేళ(*localeID == 0) { /* if localeID is "" then we try to open root locale */
+        name = k_మూలం_Locale_Name;
+    } లేకపోతే { /* otherwise, we'll open what we're given */
         name = localeID;
     }
 
-    find.fName = const_cast<char*>(name);
-    find.fPath = const_cast<char*>(path);
+    find.fName = const_cast<అక్షరం*>(name);
+    find.f_మార్గం = const_cast<అక్షరం*>(మార్గం);
 
     /* calculate the hash value of the entry */
     /*hashkey.pointer = (void *)&find;*/
     /*hashValue = hashEntry(hashkey);*/
 
     /* check to see if we already have this entry */
-    r = static_cast<UResourceDataEntry*>(uhash_get(cache, &find));
-    if(r == nullptr) {
+    r = static_cast<UResource_దత్తాంశం_నమోదు*>(uhash_get(cache, &find));
+    ఒకవేళ(r == శూన్యసూచిక) {
         /* if the entry is not yet in the hash table, we'll try to construct a new one */
-        r = static_cast<UResourceDataEntry*>(uprv_malloc(sizeof(UResourceDataEntry)));
-        if(r == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+        r = static_cast<UResource_దత్తాంశం_నమోదు*>(uprv_malloc(పరిమాణం(UResource_దత్తాంశం_నమోదు)));
+        ఒకవేళ(r == శూన్యసూచిక) {
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
 
-        uprv_memset(r, 0, sizeof(UResourceDataEntry));
+        uprv_memset(r, 0, పరిమాణం(UResource_దత్తాంశం_నమోదు));
         /*r->fHashKey = hashValue;*/
 
-        setEntryName(r, name, status);
-        if (U_FAILURE(*status)) {
+        సమితి_నమోదు_Name(r, name, స్థితి_2);
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
             uprv_free(r);
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
 
-        if(path != nullptr) {
-            r->fPath = uprv_strdup(path);
-            if(r->fPath == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
+        ఒకవేళ(మార్గం != శూన్యసూచిక) {
+            r->f_మార్గం = uprv_strdup(మార్గం);
+            ఒకవేళ(r->f_మార్గం == శూన్యసూచిక) {
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
                 uprv_free(r);
-                return nullptr;
+                తిరిగి శూన్యసూచిక;
             }
         }
 
         /* this is the actual loading */
-        res_load(&(r->fData), r->fPath, r->fName, status);
+        res_ఎక్కించు(&(r->f_దత్తాంశం), r->f_మార్గం, r->fName, స్థితి_2);
 
-        if (U_FAILURE(*status)) {
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
             /* if we failed to load due to an out-of-memory error, exit early. */
-            if (*status == U_MEMORY_ALLOCATION_ERROR) {
+            ఒకవేళ (*స్థితి_2 == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
                 uprv_free(r);
-                return nullptr;
+                తిరిగి శూన్యసూచిక;
             }
             /* we have no such entry in dll, so it will always use fallback */
-            *status = U_USING_FALLBACK_WARNING;
+            *స్థితి_2 = U_USING_FALLBACK_WARNING;
             r->fBogus = U_USING_FALLBACK_WARNING;
-        } else { /* if we have a regular entry */
+        } లేకపోతే { /* if we have a regular entry */
             Resource aliasres;
-            if (r->fData.usesPoolBundle) {
-                r->fPool = getPoolEntry(r->fPath, status);
-                if (U_SUCCESS(*status)) {
-                    const int32_t *poolIndexes = r->fPool->fData.pRoot + 1;
-                    if(r->fData.pRoot[1 + URES_INDEX_POOL_CHECKSUM] == poolIndexes[URES_INDEX_POOL_CHECKSUM]) {
-                        r->fData.poolBundleKeys = reinterpret_cast<const char*>(poolIndexes + (poolIndexes[URES_INDEX_LENGTH] & 0xff));
-                        r->fData.poolBundleStrings = r->fPool->fData.p16BitUnits;
-                    } else {
-                        r->fBogus = *status = U_INVALID_FORMAT_ERROR;
+            ఒకవేళ (r->f_దత్తాంశం.ఉపయోగిస్తుంది_Pool_Bundle) {
+                r->fPool = get_Pool_నమోదు(r->f_మార్గం, స్థితి_2);
+                ఒకవేళ (U_SUCCESS(*స్థితి_2)) {
+                    స్థిరరాశి int32_t *poolIndexes = r->fPool->f_దత్తాంశం.p_మూలం + 1;
+                    ఒకవేళ(r->f_దత్తాంశం.p_మూలం[1 + URES_సూచీ_POOL_CHECKSUM] == poolIndexes[URES_సూచీ_POOL_CHECKSUM]) {
+                        r->f_దత్తాంశం.pool_Bundle_కీలకాలు = reinterpret_cast<స్థిరరాశి అక్షరం*>(poolIndexes + (poolIndexes[URES_సూచీ_నిడివి] & 0xff));
+                        r->f_దత్తాంశం.pool_Bundle_అక్షరశ్రేణులు = r->fPool->f_దత్తాంశం.p16_బిట్టు_Units;
+                    } లేకపోతే {
+                        r->fBogus = *స్థితి_2 = U_INVALID_FORMAT_ERROR;
                     }
-                } else {
-                    r->fBogus = *status;
+                } లేకపోతే {
+                    r->fBogus = *స్థితి_2;
                 }
             }
-            if (U_SUCCESS(*status)) {
+            ఒకవేళ (U_SUCCESS(*స్థితి_2)) {
                 /* handle the alias by trying to get out the %%Alias tag.*/
                 /* We'll try to get alias string from the bundle */
-                aliasres = res_getResource(&(r->fData), "%%ALIAS");
-                if (aliasres != RES_BOGUS) {
+                aliasres = res_getResource(&(r->f_దత్తాంశం), "%%ALIAS");
+                ఒకవేళ (aliasres != RES_BOGUS) {
                     // No tracing: called during initial data loading
-                    const char16_t *alias = res_getStringNoTrace(&(r->fData), aliasres, &aliasLen);
-                    if(alias != nullptr && aliasLen > 0) { /* if there is actual alias - unload and load new data */
-                        u_UCharsToChars(alias, aliasName, aliasLen+1);
-                        r->fAlias = init_entry(aliasName, path, status);
+                    స్థిరరాశి char16_t *alias = res_getStringNoTrace(&(r->f_దత్తాంశం), aliasres, &aliasLen);
+                    ఒకవేళ(alias != శూన్యసూచిక && aliasLen > 0) { /* if there is actual alias - unload and load new data */
+                        u_UChars_గమ్యం_Chars(alias, aliasName, aliasLen+1);
+                        r->fAlias = init_నమోదు(aliasName, మార్గం, స్థితి_2);
                     }
                 }
             }
         }
 
         {
-            UResourceDataEntry *oldR = nullptr;
-            if ((oldR = static_cast<UResourceDataEntry*>(uhash_get(cache, r))) == nullptr) { /* if the data is not cached */
+            UResource_దత్తాంశం_నమోదు *oldR = శూన్యసూచిక;
+            ఒకవేళ ((oldR = static_cast<UResource_దత్తాంశం_నమోదు*>(uhash_get(cache, r))) == శూన్యసూచిక) { /* if the data is not cached */
                 /* just insert it in the cache */
-                UErrorCode cacheStatus = U_ZERO_ERROR;
-                uhash_put(cache, (void *)r, r, &cacheStatus);
-                if (U_FAILURE(cacheStatus)) {
-                    *status = cacheStatus;
-                    free_entry(r);
-                    r = nullptr;
+                UError_సంకేతం cache_స్థితి = U_ZERO_ERROR;
+                uhash_put(cache, (శూన్య *)r, r, &cache_స్థితి);
+                ఒకవేళ (U_FAILURE(cache_స్థితి)) {
+                    *స్థితి_2 = cache_స్థితి;
+                    free_నమోదు(r);
+                    r = శూన్యసూచిక;
                 }
-            } else {
+            } లేకపోతే {
                 /* somebody have already inserted it while we were working, discard newly opened data */
                 /* Also, we could get here IF we opened an alias */
-                free_entry(r);
+                free_నమోదు(r);
                 r = oldR;
             }
         }
 
     }
-    if(r != nullptr) {
+    ఒకవేళ(r != శూన్యసూచిక) {
         /* return the real bundle */
-        while(r->fAlias != nullptr) {
+        అయితే(r->fAlias != శూన్యసూచిక) {
             r = r->fAlias;
         }
-        r->fCountExisting++; /* we increase its reference count */
+        r->f_లెక్క_Existing++; /* we increase its reference count */
         /* if the resource has a warning */
         /* we don't want to overwrite a status with no error */
-        if(r->fBogus != U_ZERO_ERROR && U_SUCCESS(*status)) {
-             *status = r->fBogus; /* set the returning status */
+        ఒకవేళ(r->fBogus != U_ZERO_ERROR && U_SUCCESS(*స్థితి_2)) {
+             *స్థితి_2 = r->fBogus; /* set the returning status */
         }
     }
-    return r;
+    తిరిగి r;
 }
 
-static UResourceDataEntry *
-getPoolEntry(const char *path, UErrorCode *status) {
-    UResourceDataEntry *poolBundle = init_entry(kPoolBundleName, path, status);
-    if( U_SUCCESS(*status) &&
-        (poolBundle == nullptr || poolBundle->fBogus != U_ZERO_ERROR || !poolBundle->fData.isPoolBundle)
+స్థిర UResource_దత్తాంశం_నమోదు *
+get_Pool_నమోదు(స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం *స్థితి_2) {
+    UResource_దత్తాంశం_నమోదు *poolBundle = init_నమోదు(kPoolBundleName, మార్గం, స్థితి_2);
+    ఒకవేళ( U_SUCCESS(*స్థితి_2) &&
+        (poolBundle == శూన్యసూచిక || poolBundle->fBogus != U_ZERO_ERROR || !poolBundle->f_దత్తాంశం.isPoolBundle)
     ) {
-        *status = U_INVALID_FORMAT_ERROR;
+        *స్థితి_2 = U_INVALID_FORMAT_ERROR;
     }
-    return poolBundle;
+    తిరిగి poolBundle;
 }
 
 /* INTERNAL: */
 /*   CAUTION:  resbMutex must be locked when calling this function! */
-static UResourceDataEntry *
-findFirstExisting(const char* path, char* name, const char* defaultLocale, UResOpenType openType,
-                  UBool *isRoot, UBool *foundParent, UBool *isDefault, UErrorCode* status) {
-    UResourceDataEntry *r = nullptr;
-    UBool hasRealData = false;
-    *foundParent = true; /* we're starting with a fresh name */
-    char origName[ULOC_FULLNAME_CAPACITY];
+స్థిర UResource_దత్తాంశం_నమోదు *
+కనుగొను_మొదటి_Existing(స్థిరరాశి అక్షరం* మార్గం, అక్షరం* name, స్థిరరాశి అక్షరం* defaultLocale, UResOpenType openType,
+                  UBool *is_మూలం, UBool *దొరికింది_మాతృ, UBool *isDefault, UError_సంకేతం* స్థితి_2) {
+    UResource_దత్తాంశం_నమోదు *r = శూన్యసూచిక;
+    UBool has_Real_దత్తాంశం = అబద్ధం;
+    *దొరికింది_మాతృ = నిజం; /* we're starting with a fresh name */
+    అక్షరం origName[ULOC_FULLNAME_సామర్థ్యం];
 
     uprv_strcpy(origName, name);
-    while(*foundParent && !hasRealData) {
-        r = init_entry(name, path, status);
+    అయితే(*దొరికింది_మాతృ && !has_Real_దత్తాంశం) {
+        r = init_నమోదు(name, మార్గం, స్థితి_2);
         /* Null pointer test */
-        if (U_FAILURE(*status)) {
-            return nullptr;
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            తిరిగి శూన్యసూచిక;
         }
         *isDefault = static_cast<UBool>(uprv_strncmp(name, defaultLocale, uprv_strlen(name)) == 0);
-        hasRealData = static_cast<UBool>(r->fBogus == U_ZERO_ERROR);
-        if(!hasRealData) {
+        has_Real_దత్తాంశం = static_cast<UBool>(r->fBogus == U_ZERO_ERROR);
+        ఒకవేళ(!has_Real_దత్తాంశం) {
             /* this entry is not real. We will discard it. */
             /* However, the parent line for this entry is  */
             /* not to be used - as there might be parent   */
             /* lines in cache from previous openings that  */
             /* are not updated yet. */
-            r->fCountExisting--;
+            r->f_లెక్క_Existing--;
             /*entryCloseInt(r);*/
-            r = nullptr;
-            *status = U_USING_FALLBACK_WARNING;
-        } else {
+            r = శూన్యసూచిక;
+            *స్థితి_2 = U_USING_FALLBACK_WARNING;
+        } లేకపోతే {
             uprv_strcpy(name, r->fName); /* this is needed for supporting aliases */
         }
 
-        *isRoot = static_cast<UBool>(uprv_strcmp(name, kRootLocaleName) == 0);
+        *is_మూలం = static_cast<UBool>(uprv_strcmp(name, k_మూలం_Locale_Name) == 0);
 
         /*Fallback data stuff*/
-        if (!hasRealData) {
-            *foundParent = getParentLocaleID(name, origName, openType);
-        } else {
+        ఒకవేళ (!has_Real_దత్తాంశం) {
+            *దొరికింది_మాతృ = get_మాతృ_Locale_ID(name, origName, openType);
+        } లేకపోతే {
             // we've already found a real resource file; what we return to the caller is the parent
             // locale ID for inheritance, which should come from chopLocale(), not getParentLocaleID()
-            *foundParent = chopLocale(name);
+            *దొరికింది_మాతృ = chopLocale(name);
         }
-        if (*foundParent && *name == '\0') {
+        ఒకవేళ (*దొరికింది_మాతృ && *name == '\0') {
             uprv_strcpy(name, "und");
         }
     }
-    return r;
+    తిరిగి r;
 }
 
-static void ures_setIsStackObject( UResourceBundle* resB, UBool state) {
-    if(state) {
+స్థిర శూన్య ures_సమితి_Is_దొంతర_Object( UResourceBundle* resB, UBool state) {
+    ఒకవేళ(state) {
         resB->fMagic1 = 0;
         resB->fMagic2 = 0;
-    } else {
+    } లేకపోతే {
         resB->fMagic1 = MAGIC1;
         resB->fMagic2 = MAGIC2;
     }
 }
 
-static UBool ures_isStackObject(const UResourceBundle* resB) {
-  return((resB->fMagic1 == MAGIC1 && resB->fMagic2 == MAGIC2)?false:true);
+స్థిర UBool ures_is_దొంతర_Object(స్థిరరాశి UResourceBundle* resB) {
+  తిరిగి((resB->fMagic1 == MAGIC1 && resB->fMagic2 == MAGIC2)?అబద్ధం:నిజం);
 }
 
 
-U_CFUNC void ures_initStackObject(UResourceBundle* resB) {
-  uprv_memset(resB, 0, sizeof(UResourceBundle));
-  ures_setIsStackObject(resB, true);
+U_CFUNC శూన్య ures_init_దొంతర_Object(UResourceBundle* resB) {
+  uprv_memset(resB, 0, పరిమాణం(UResourceBundle));
+  ures_సమితి_Is_దొంతర_Object(resB, నిజం);
 }
 
 U_NAMESPACE_BEGIN
 
-StackUResourceBundle::StackUResourceBundle() {
-    ures_initStackObject(&bundle);
+దొంతర_UResource_Bundle::దొంతర_UResource_Bundle() {
+    ures_init_దొంతర_Object(&bundle);
 }
 
-StackUResourceBundle::~StackUResourceBundle() {
+దొంతర_UResource_Bundle::~దొంతర_UResource_Bundle() {
     ures_close(&bundle);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-static UBool  // returns U_SUCCESS(*status)
-loadParentsExceptRoot(UResourceDataEntry *&t1,
-                      char name[], int32_t nameCapacity,
-                      UBool usingUSRData, char usrDataPath[], UErrorCode *status) {
-    if (U_FAILURE(*status)) { return false; }
-    UBool checkParent = true;
-    while (checkParent && t1->fParent == nullptr && !t1->fData.noFallback &&
-            res_getResource(&t1->fData,"%%ParentIsRoot") == RES_BOGUS) {
-        Resource parentRes = res_getResource(&t1->fData, "%%Parent");
-        if (parentRes != RES_BOGUS) {  // An explicit parent was found.
-            int32_t parentLocaleLen = 0;
+స్థిర UBool  // returns U_SUCCESS(*status)
+ఎక్కించు_Parents_Except_మూలం(UResource_దత్తాంశం_నమోదు *&t1,
+                      అక్షరం name[], int32_t name_సామర్థ్యం,
+                      UBool usingUSRData, అక్షరం usr_దత్తాంశం_మార్గం[], UError_సంకేతం *స్థితి_2) {
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) { తిరిగి అబద్ధం; }
+    UBool check_మాతృ = నిజం;
+    అయితే (check_మాతృ && t1->f_మాతృ == శూన్యసూచిక && !t1->f_దత్తాంశం.noFallback &&
+            res_getResource(&t1->f_దత్తాంశం,"%%ParentIsRoot") == RES_BOGUS) {
+        Resource మాతృ_Res = res_getResource(&t1->f_దత్తాంశం, "%%Parent");
+        ఒకవేళ (మాతృ_Res != RES_BOGUS) {  // An explicit parent was found.
+            int32_t మాతృ_Locale_Len = 0;
             // No tracing: called during initial data loading
-            const char16_t *parentLocaleName = res_getStringNoTrace(&(t1->fData), parentRes, &parentLocaleLen);
-            if(parentLocaleName != nullptr && 0 < parentLocaleLen && parentLocaleLen < nameCapacity) {
-                u_UCharsToChars(parentLocaleName, name, parentLocaleLen + 1);
-                if (uprv_strcmp(name, kRootLocaleName) == 0) {
-                    return true;
+            స్థిరరాశి char16_t *మాతృ_Locale_Name = res_getStringNoTrace(&(t1->f_దత్తాంశం), మాతృ_Res, &మాతృ_Locale_Len);
+            ఒకవేళ(మాతృ_Locale_Name != శూన్యసూచిక && 0 < మాతృ_Locale_Len && మాతృ_Locale_Len < name_సామర్థ్యం) {
+                u_UChars_గమ్యం_Chars(మాతృ_Locale_Name, name, మాతృ_Locale_Len + 1);
+                ఒకవేళ (uprv_strcmp(name, k_మూలం_Locale_Name) == 0) {
+                    తిరిగి నిజం;
                 }
             }
         }
         // Insert regular parents.
-        UErrorCode parentStatus = U_ZERO_ERROR;
-        UResourceDataEntry *t2 = init_entry(name, t1->fPath, &parentStatus);
-        if (U_FAILURE(parentStatus)) {
-            *status = parentStatus;
-            return false;
+        UError_సంకేతం మాతృ_స్థితి = U_ZERO_ERROR;
+        UResource_దత్తాంశం_నమోదు *t2 = init_నమోదు(name, t1->f_మార్గం, &మాతృ_స్థితి);
+        ఒకవేళ (U_FAILURE(మాతృ_స్థితి)) {
+            *స్థితి_2 = మాతృ_స్థితి;
+            తిరిగి అబద్ధం;
         }
-        UResourceDataEntry *u2 = nullptr;
-        UErrorCode usrStatus = U_ZERO_ERROR;
-        if (usingUSRData) {  // This code inserts user override data into the inheritance chain.
-            u2 = init_entry(name, usrDataPath, &usrStatus);
+        UResource_దత్తాంశం_నమోదు *u2 = శూన్యసూచిక;
+        UError_సంకేతం usr_స్థితి = U_ZERO_ERROR;
+        ఒకవేళ (usingUSRData) {  // This code inserts user override data into the inheritance chain.
+            u2 = init_నమోదు(name, usr_దత్తాంశం_మార్గం, &usr_స్థితి);
             // If we failed due to out-of-memory, report that to the caller and exit early.
-            if (usrStatus == U_MEMORY_ALLOCATION_ERROR) {
-                *status = usrStatus;
-                return false;
+            ఒకవేళ (usr_స్థితి == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+                *స్థితి_2 = usr_స్థితి;
+                తిరిగి అబద్ధం;
             }
         }
 
-        if (usingUSRData && U_SUCCESS(usrStatus) && u2->fBogus == U_ZERO_ERROR) {
-            t1->fParent = u2;
-            u2->fParent = t2;
-        } else {
-            t1->fParent = t2;
-            if (usingUSRData) {
+        ఒకవేళ (usingUSRData && U_SUCCESS(usr_స్థితి) && u2->fBogus == U_ZERO_ERROR) {
+            t1->f_మాతృ = u2;
+            u2->f_మాతృ = t2;
+        } లేకపోతే {
+            t1->f_మాతృ = t2;
+            ఒకవేళ (usingUSRData) {
                 // The USR override data wasn't found, set it to be deleted.
-                u2->fCountExisting = 0;
+                u2->f_లెక్క_Existing = 0;
             }
         }
         t1 = t2;
-        checkParent = chopLocale(name) || mayHaveParent(name);
+        check_మాతృ = chopLocale(name) || may_Have_మాతృ(name);
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-static UBool  // returns U_SUCCESS(*status)
-insertRootBundle(UResourceDataEntry *&t1, UErrorCode *status) {
-    if (U_FAILURE(*status)) { return false; }
-    UErrorCode parentStatus = U_ZERO_ERROR;
-    UResourceDataEntry *t2 = init_entry(kRootLocaleName, t1->fPath, &parentStatus);
-    if (U_FAILURE(parentStatus)) {
-        *status = parentStatus;
-        return false;
+స్థిర UBool  // returns U_SUCCESS(*status)
+చొప్పించు_మూలం_Bundle(UResource_దత్తాంశం_నమోదు *&t1, UError_సంకేతం *స్థితి_2) {
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) { తిరిగి అబద్ధం; }
+    UError_సంకేతం మాతృ_స్థితి = U_ZERO_ERROR;
+    UResource_దత్తాంశం_నమోదు *t2 = init_నమోదు(k_మూలం_Locale_Name, t1->f_మార్గం, &మాతృ_స్థితి);
+    ఒకవేళ (U_FAILURE(మాతృ_స్థితి)) {
+        *స్థితి_2 = మాతృ_స్థితి;
+        తిరిగి అబద్ధం;
     }
-    t1->fParent = t2;
+    t1->f_మాతృ = t2;
     t1 = t2;
-    return true;
+    తిరిగి నిజం;
 }
 
-static UResourceDataEntry *entryOpen(const char* path, const char* localeID,
-                                     UResOpenType openType, UErrorCode* status) {
-    U_ASSERT(openType != URES_OPEN_DIRECT);
-    UErrorCode intStatus = U_ZERO_ERROR;
-    UResourceDataEntry *r = nullptr;
-    UResourceDataEntry *t1 = nullptr;
-    UBool isDefault = false;
-    UBool isRoot = false;
-    UBool hasRealData = false;
-    UBool hasChopped = true;
-    UBool usingUSRData = U_USE_USRDATA && ( path == nullptr || uprv_strncmp(path,U_ICUDATA_NAME,8) == 0);
+స్థిర UResource_దత్తాంశం_నమోదు *నమోదు_Open(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి అక్షరం* localeID,
+                                     UResOpenType openType, UError_సంకేతం* స్థితి_2) {
+    U_ASSERT(openType != URES_OPEN_ప్రత్యక్ష);
+    UError_సంకేతం int_స్థితి = U_ZERO_ERROR;
+    UResource_దత్తాంశం_నమోదు *r = శూన్యసూచిక;
+    UResource_దత్తాంశం_నమోదు *t1 = శూన్యసూచిక;
+    UBool isDefault = అబద్ధం;
+    UBool is_మూలం = అబద్ధం;
+    UBool has_Real_దత్తాంశం = అబద్ధం;
+    UBool hasChopped = నిజం;
+    UBool usingUSRData = U_USE_USRDATA && ( మార్గం == శూన్యసూచిక || uprv_strncmp(మార్గం,U_ICUDATA_NAME,8) == 0);
 
-    char name[ULOC_FULLNAME_CAPACITY];
-    char usrDataPath[96];
+    అక్షరం name[ULOC_FULLNAME_సామర్థ్యం];
+    అక్షరం usr_దత్తాంశం_మార్గం[96];
 
-    initCache(status);
+    initCache(స్థితి_2);
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    uprv_strncpy(name, localeID, sizeof(name) - 1);
-    name[sizeof(name) - 1] = 0;
+    uprv_strncpy(name, localeID, పరిమాణం(name) - 1);
+    name[పరిమాణం(name) - 1] = 0;
 
-    if ( usingUSRData ) {
-        if ( path == nullptr ) {
-            uprv_strcpy(usrDataPath, U_USRDATA_NAME);
-        } else {
-            uprv_strncpy(usrDataPath, path, sizeof(usrDataPath) - 1);
-            usrDataPath[0] = 'u';
-            usrDataPath[1] = 's';
-            usrDataPath[2] = 'r';
-            usrDataPath[sizeof(usrDataPath) - 1] = 0;
+    ఒకవేళ ( usingUSRData ) {
+        ఒకవేళ ( మార్గం == శూన్యసూచిక ) {
+            uprv_strcpy(usr_దత్తాంశం_మార్గం, U_USRDATA_NAME);
+        } లేకపోతే {
+            uprv_strncpy(usr_దత్తాంశం_మార్గం, మార్గం, పరిమాణం(usr_దత్తాంశం_మార్గం) - 1);
+            usr_దత్తాంశం_మార్గం[0] = 'u';
+            usr_దత్తాంశం_మార్గం[1] = 's';
+            usr_దత్తాంశం_మార్గం[2] = 'r';
+            usr_దత్తాంశం_మార్గం[పరిమాణం(usr_దత్తాంశం_మార్గం) - 1] = 0;
         }
     }
  
     // Note: We need to query the default locale *before* locking resbMutex.
-    const char *defaultLocale = uloc_getDefault();
+    స్థిరరాశి అక్షరం *defaultLocale = uloc_getDefault();
 
-    Mutex lock(&resbMutex);    // Lock resbMutex until the end of this function.
+    Mutex తాళం(&resbMutex);    // Lock resbMutex until the end of this function.
 
     /* We're going to skip all the locales that do not have any data */
-    r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+    r = కనుగొను_మొదటి_Existing(మార్గం, name, defaultLocale, openType, &is_మూలం, &hasChopped, &isDefault, &int_స్థితి);
 
     // If we failed due to out-of-memory, report the failure and exit early.
-    if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-        *status = intStatus;
-        goto finish;
+    ఒకవేళ (int_స్థితి == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+        *స్థితి_2 = int_స్థితి;
+        వెళ్ళు ముగింపు;
     }
 
-    if(r != nullptr) { /* if there is one real locale, we can look for parents. */
+    ఒకవేళ(r != శూన్యసూచిక) { /* if there is one real locale, we can look for parents. */
         t1 = r;
-        hasRealData = true;
-        if ( usingUSRData ) {  /* This code inserts user override data into the inheritance chain */
-            UErrorCode usrStatus = U_ZERO_ERROR;
-            UResourceDataEntry *u1 = init_entry(t1->fName, usrDataPath, &usrStatus);
+        has_Real_దత్తాంశం = నిజం;
+        ఒకవేళ ( usingUSRData ) {  /* This code inserts user override data into the inheritance chain */
+            UError_సంకేతం usr_స్థితి = U_ZERO_ERROR;
+            UResource_దత్తాంశం_నమోదు *u1 = init_నమోదు(t1->fName, usr_దత్తాంశం_మార్గం, &usr_స్థితి);
             // If we failed due to out-of-memory, report the failure and exit early.
-            if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-                *status = intStatus;
-                goto finish;
+            ఒకవేళ (int_స్థితి == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+                *స్థితి_2 = int_స్థితి;
+                వెళ్ళు ముగింపు;
             }
-            if ( u1 != nullptr ) {
-                if(u1->fBogus == U_ZERO_ERROR) {
-                    u1->fParent = t1;
+            ఒకవేళ ( u1 != శూన్యసూచిక ) {
+                ఒకవేళ(u1->fBogus == U_ZERO_ERROR) {
+                    u1->f_మాతృ = t1;
                     r = u1;
-                } else {
+                } లేకపోతే {
                     /* the USR override data wasn't found, set it to be deleted */
-                    u1->fCountExisting = 0;
+                    u1->f_లెక్క_Existing = 0;
                 }
             }
         }
-        if ((hasChopped || mayHaveParent(name)) && !isRoot) {
-            if (!loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
-                goto finish;
+        ఒకవేళ ((hasChopped || may_Have_మాతృ(name)) && !is_మూలం) {
+            ఒకవేళ (!ఎక్కించు_Parents_Except_మూలం(t1, name, UPRV_LENGTHOF(name), usingUSRData, usr_దత్తాంశం_మార్గం, స్థితి_2)) {
+                వెళ్ళు ముగింపు;
             }
         }
     }
 
     /* we could have reached this point without having any real data */
     /* if that is the case, we need to chain in the default locale   */
-    if(r==nullptr && openType == URES_OPEN_LOCALE_DEFAULT_ROOT && !isDefault && !isRoot) {
+    ఒకవేళ(r==శూన్యసూచిక && openType == URES_OPEN_LOCALE_DEFAULT_మూలం && !isDefault && !is_మూలం) {
         /* insert default locale */
         uprv_strcpy(name, defaultLocale);
-        r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+        r = కనుగొను_మొదటి_Existing(మార్గం, name, defaultLocale, openType, &is_మూలం, &hasChopped, &isDefault, &int_స్థితి);
         // If we failed due to out-of-memory, report the failure and exit early.
-        if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-            *status = intStatus;
-            goto finish;
+        ఒకవేళ (int_స్థితి == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+            *స్థితి_2 = int_స్థితి;
+            వెళ్ళు ముగింపు;
         }
-        intStatus = U_USING_DEFAULT_WARNING;
-        if(r != nullptr) { /* the default locale exists */
+        int_స్థితి = U_USING_DEFAULT_WARNING;
+        ఒకవేళ(r != శూన్యసూచిక) { /* the default locale exists */
             t1 = r;
-            hasRealData = true;
-            isDefault = true;
+            has_Real_దత్తాంశం = నిజం;
+            isDefault = నిజం;
             // TODO: Why not if (usingUSRData) { ... } like in the non-default-locale code path?
-            if ((hasChopped || mayHaveParent(name)) && !isRoot) {
-                if (!loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
-                    goto finish;
+            ఒకవేళ ((hasChopped || may_Have_మాతృ(name)) && !is_మూలం) {
+                ఒకవేళ (!ఎక్కించు_Parents_Except_మూలం(t1, name, UPRV_LENGTHOF(name), usingUSRData, usr_దత్తాంశం_మార్గం, స్థితి_2)) {
+                    వెళ్ళు ముగింపు;
                 }
             }
         }
@@ -913,46 +913,46 @@ static UResourceDataEntry *entryOpen(const char* path, const char* localeID,
 
     /* we could still have r == nullptr at this point - maybe even default locale is not */
     /* present */
-    if(r == nullptr) {
-        uprv_strcpy(name, kRootLocaleName);
-        r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+    ఒకవేళ(r == శూన్యసూచిక) {
+        uprv_strcpy(name, k_మూలం_Locale_Name);
+        r = కనుగొను_మొదటి_Existing(మార్గం, name, defaultLocale, openType, &is_మూలం, &hasChopped, &isDefault, &int_స్థితి);
         // If we failed due to out-of-memory, report the failure and exit early.
-        if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-            *status = intStatus;
-            goto finish;
+        ఒకవేళ (int_స్థితి == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+            *స్థితి_2 = int_స్థితి;
+            వెళ్ళు ముగింపు;
         }
-        if(r != nullptr) {
+        ఒకవేళ(r != శూన్యసూచిక) {
             t1 = r;
-            intStatus = U_USING_DEFAULT_WARNING;
-            hasRealData = true;
-        } else { /* we don't even have the root locale */
-            *status = U_MISSING_RESOURCE_ERROR;
-            goto finish;
+            int_స్థితి = U_USING_DEFAULT_WARNING;
+            has_Real_దత్తాంశం = నిజం;
+        } లేకపోతే { /* we don't even have the root locale */
+            *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
+            వెళ్ళు ముగింపు;
         }
-    } else if(!isRoot && uprv_strcmp(t1->fName, kRootLocaleName) != 0 &&
-            t1->fParent == nullptr && !r->fData.noFallback) {
-        if (!insertRootBundle(t1, status)) {
-            goto finish;
+    } లేకపోతే ఒకవేళ(!is_మూలం && uprv_strcmp(t1->fName, k_మూలం_Locale_Name) != 0 &&
+            t1->f_మాతృ == శూన్యసూచిక && !r->f_దత్తాంశం.noFallback) {
+        ఒకవేళ (!చొప్పించు_మూలం_Bundle(t1, స్థితి_2)) {
+            వెళ్ళు ముగింపు;
         }
-        if(!hasRealData) {
+        ఒకవేళ(!has_Real_దత్తాంశం) {
             r->fBogus = U_USING_DEFAULT_WARNING;
         }
     }
 
     // TODO: Does this ever loop?
-    while(r != nullptr && !isRoot && t1->fParent != nullptr) {
-        t1->fParent->fCountExisting++;
-        t1 = t1->fParent;
+    అయితే(r != శూన్యసూచిక && !is_మూలం && t1->f_మాతృ != శూన్యసూచిక) {
+        t1->f_మాతృ->f_లెక్క_Existing++;
+        t1 = t1->f_మాతృ;
     }
 
-finish:
-    if(U_SUCCESS(*status)) {
-        if(intStatus != U_ZERO_ERROR) {
-            *status = intStatus;  
+ముగింపు:
+    ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+        ఒకవేళ(int_స్థితి != U_ZERO_ERROR) {
+            *స్థితి_2 = int_స్థితి;  
         }
-        return r;
-    } else {
-        return nullptr;
+        తిరిగి r;
+    } లేకపోతే {
+        తిరిగి శూన్యసూచిక;
     }
 }
 
@@ -962,62 +962,62 @@ finish:
  * Parent and root locale bundles are loaded if
  * the requested bundle does not have the "nofallback" flag.
  */
-static UResourceDataEntry *
-entryOpenDirect(const char* path, const char* localeID, UErrorCode* status) {
-    initCache(status);
-    if(U_FAILURE(*status)) {
-        return nullptr;
+స్థిర UResource_దత్తాంశం_నమోదు *
+నమోదు_Open_ప్రత్యక్ష(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి అక్షరం* localeID, UError_సంకేతం* స్థితి_2) {
+    initCache(స్థితి_2);
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     // Note: We need to query the default locale *before* locking resbMutex.
     // If the localeID is nullptr, then we want to use the default locale.
-    if (localeID == nullptr) {
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
-    } else if (*localeID == 0) {
+    } లేకపోతే ఒకవేళ (*localeID == 0) {
         // If the localeID is "", then we want to use the root locale.
-        localeID = kRootLocaleName;
+        localeID = k_మూలం_Locale_Name;
     }
 
-    Mutex lock(&resbMutex);
+    Mutex తాళం(&resbMutex);
 
     // findFirstExisting() without fallbacks.
-    UResourceDataEntry *r = init_entry(localeID, path, status);
-    if(U_SUCCESS(*status)) {
-        if(r->fBogus != U_ZERO_ERROR) {
-            r->fCountExisting--;
-            r = nullptr;
+    UResource_దత్తాంశం_నమోదు *r = init_నమోదు(localeID, మార్గం, స్థితి_2);
+    ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+        ఒకవేళ(r->fBogus != U_ZERO_ERROR) {
+            r->f_లెక్క_Existing--;
+            r = శూన్యసూచిక;
         }
-    } else {
-        r = nullptr;
+    } లేకపోతే {
+        r = శూన్యసూచిక;
     }
 
     // Some code depends on the ures_openDirect() bundle to have a parent bundle chain,
     // unless it is marked with "nofallback".
-    UResourceDataEntry *t1 = r;
-    if(r != nullptr && uprv_strcmp(localeID, kRootLocaleName) != 0 &&  // not root
-            r->fParent == nullptr && !r->fData.noFallback &&
-            uprv_strlen(localeID) < ULOC_FULLNAME_CAPACITY) {
-        char name[ULOC_FULLNAME_CAPACITY];
+    UResource_దత్తాంశం_నమోదు *t1 = r;
+    ఒకవేళ(r != శూన్యసూచిక && uprv_strcmp(localeID, k_మూలం_Locale_Name) != 0 &&  // not root
+            r->f_మాతృ == శూన్యసూచిక && !r->f_దత్తాంశం.noFallback &&
+            uprv_strlen(localeID) < ULOC_FULLNAME_సామర్థ్యం) {
+        అక్షరం name[ULOC_FULLNAME_సామర్థ్యం];
         uprv_strcpy(name, localeID);
-        if(!chopLocale(name) || uprv_strcmp(name, kRootLocaleName) == 0 ||
-                loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), false, nullptr, status)) {
-            if(uprv_strcmp(t1->fName, kRootLocaleName) != 0 && t1->fParent == nullptr) {
-                insertRootBundle(t1, status);
+        ఒకవేళ(!chopLocale(name) || uprv_strcmp(name, k_మూలం_Locale_Name) == 0 ||
+                ఎక్కించు_Parents_Except_మూలం(t1, name, UPRV_LENGTHOF(name), అబద్ధం, శూన్యసూచిక, స్థితి_2)) {
+            ఒకవేళ(uprv_strcmp(t1->fName, k_మూలం_Locale_Name) != 0 && t1->f_మాతృ == శూన్యసూచిక) {
+                చొప్పించు_మూలం_Bundle(t1, స్థితి_2);
             }
         }
-        if(U_FAILURE(*status)) {
-            r = nullptr;
+        ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+            r = శూన్యసూచిక;
         }
     }
 
-    if(r != nullptr) {
+    ఒకవేళ(r != శూన్యసూచిక) {
         // TODO: Does this ever loop?
-        while(t1->fParent != nullptr) {
-            t1->fParent->fCountExisting++;
-            t1 = t1->fParent;
+        అయితే(t1->f_మాతృ != శూన్యసూచిక) {
+            t1->f_మాతృ->f_లెక్క_Existing++;
+            t1 = t1->f_మాతృ;
         }
     }
-    return r;
+    తిరిగి r;
 }
 
 /**
@@ -1025,12 +1025,12 @@ entryOpenDirect(const char* path, const char* localeID, UErrorCode* status) {
  *     CAUTION:  resbMutex must be locked when calling this function.
  */
 /* INTERNAL: */
-static void entryCloseInt(UResourceDataEntry *resB) {
-    UResourceDataEntry *p = resB;
+స్థిర శూన్య నమోదు_Close_Int(UResource_దత్తాంశం_నమోదు *resB) {
+    UResource_దత్తాంశం_నమోదు *p = resB;
 
-    while(resB != nullptr) {
-        p = resB->fParent;
-        resB->fCountExisting--;
+    అయితే(resB != శూన్యసూచిక) {
+        p = resB->f_మాతృ;
+        resB->f_లెక్క_Existing--;
 
         /* Entries are left in the cache. TODO: add ures_flushCache() to force a flush
          of the cache. */
@@ -1058,9 +1058,9 @@ static void entryCloseInt(UResourceDataEntry *resB) {
  *  API: closes a resource bundle and cleans up.
  */
 
-static void entryClose(UResourceDataEntry *resB) {
-  Mutex lock(&resbMutex);
-  entryCloseInt(resB);
+స్థిర శూన్య నమోదు_Close(UResource_దత్తాంశం_నమోదు *resB) {
+  Mutex తాళం(&resbMutex);
+  నమోదు_Close_Int(resB);
 }
 
 /*
@@ -1080,108 +1080,108 @@ U_CFUNC void ures_setResPath(UResourceBundle *resB, const char* toAdd) {
   uprv_strcpy(resB->fResPath, toAdd);
 }
 */
-static void ures_appendResPath(UResourceBundle *resB, const char* toAdd, int32_t lenToAdd, UErrorCode *status) {
-    int32_t resPathLenOrig = resB->fResPathLen;
-    if(resB->fResPath == nullptr) {
-        resB->fResPath = resB->fResBuf;
-        *(resB->fResPath) = 0;
-        resB->fResPathLen = 0;
+స్థిర శూన్య ures_append_Res_మార్గం(UResourceBundle *resB, స్థిరరాశి అక్షరం* గమ్యం_కూడు, int32_t len_గమ్యం_కూడు, UError_సంకేతం *స్థితి_2) {
+    int32_t res_మార్గం_Len_Orig = resB->f_Res_మార్గం_Len;
+    ఒకవేళ(resB->f_Res_మార్గం == శూన్యసూచిక) {
+        resB->f_Res_మార్గం = resB->fResBuf;
+        *(resB->f_Res_మార్గం) = 0;
+        resB->f_Res_మార్గం_Len = 0;
     } 
-    resB->fResPathLen += lenToAdd;
-    if(RES_BUFSIZE <= resB->fResPathLen+1) {
-        if(resB->fResPath == resB->fResBuf) {
-            resB->fResPath = static_cast<char*>(uprv_malloc((resB->fResPathLen + 1) * sizeof(char)));
+    resB->f_Res_మార్గం_Len += len_గమ్యం_కూడు;
+    ఒకవేళ(RES_BUFSIZE <= resB->f_Res_మార్గం_Len+1) {
+        ఒకవేళ(resB->f_Res_మార్గం == resB->fResBuf) {
+            resB->f_Res_మార్గం = static_cast<అక్షరం*>(uprv_malloc((resB->f_Res_మార్గం_Len + 1) * పరిమాణం(అక్షరం)));
             /* Check that memory was allocated correctly. */
-            if (resB->fResPath == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ఒకవేళ (resB->f_Res_మార్గం == శూన్యసూచిక) {
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి;
             }
-            uprv_strcpy(resB->fResPath, resB->fResBuf);
-        } else {
-            char* temp = static_cast<char*>(uprv_realloc(resB->fResPath, (resB->fResPathLen + 1) * sizeof(char)));
+            uprv_strcpy(resB->f_Res_మార్గం, resB->fResBuf);
+        } లేకపోతే {
+            అక్షరం* తాత్కాలిక = static_cast<అక్షరం*>(uprv_realloc(resB->f_Res_మార్గం, (resB->f_Res_మార్గం_Len + 1) * పరిమాణం(అక్షరం)));
             /* Check that memory was reallocated correctly. */
-            if (temp == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ఒకవేళ (తాత్కాలిక == శూన్యసూచిక) {
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి;
             }
-            resB->fResPath = temp;
+            resB->f_Res_మార్గం = తాత్కాలిక;
         }
     }
-    uprv_strcpy(resB->fResPath + resPathLenOrig, toAdd);
+    uprv_strcpy(resB->f_Res_మార్గం + res_మార్గం_Len_Orig, గమ్యం_కూడు);
 }
 
-static void ures_freeResPath(UResourceBundle *resB) {
-    if (resB->fResPath && resB->fResPath != resB->fResBuf) {
-        uprv_free(resB->fResPath);
+స్థిర శూన్య ures_free_Res_మార్గం(UResourceBundle *resB) {
+    ఒకవేళ (resB->f_Res_మార్గం && resB->f_Res_మార్గం != resB->fResBuf) {
+        uprv_free(resB->f_Res_మార్గం);
     }
-    resB->fResPath = nullptr;
-    resB->fResPathLen = 0;
+    resB->f_Res_మార్గం = శూన్యసూచిక;
+    resB->f_Res_మార్గం_Len = 0;
 }
 
-static void
+స్థిర శూన్య
 ures_closeBundle(UResourceBundle* resB, UBool freeBundleObj)
 {
-    if(resB != nullptr) {
-        if(resB->fData != nullptr) {
-            entryClose(resB->fData);
+    ఒకవేళ(resB != శూన్యసూచిక) {
+        ఒకవేళ(resB->f_దత్తాంశం != శూన్యసూచిక) {
+            నమోదు_Close(resB->f_దత్తాంశం);
         }
-        if(resB->fVersion != nullptr) {
-            uprv_free(resB->fVersion);
+        ఒకవేళ(resB->f_సంస్కరణ != శూన్యసూచిక) {
+            uprv_free(resB->f_సంస్కరణ);
         }
-        ures_freeResPath(resB);
+        ures_free_Res_మార్గం(resB);
 
-        if(ures_isStackObject(resB) == false && freeBundleObj) {
+        ఒకవేళ(ures_is_దొంతర_Object(resB) == అబద్ధం && freeBundleObj) {
             uprv_free(resB);
         }
-#if 0 /*U_DEBUG*/
-        else {
+#ఒకవేళ 0 /*U_DEBUG*/
+        లేకపోతే {
             /* poison the data */
-            uprv_memset(resB, -1, sizeof(UResourceBundle));
+            uprv_memset(resB, -1, పరిమాణం(UResourceBundle));
         }
-#endif
+#అయితే_ముగింపు
     }
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI శూన్య  U_EXPORT2
 ures_close(UResourceBundle* resB)
 {
-    ures_closeBundle(resB, true);
+    ures_closeBundle(resB, నిజం);
 }
 
-namespace {
+నామాకాశ {
 
-UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
+UResourceBundle* init_resb_ఫలితం(UResource_దత్తాంశం_నమోదు* దత్తాంశం_నమోదు,
                                   Resource r,
-                                  const char* key,
+                                  స్థిరరాశి అక్షరం* కీలకం,
                                   int32_t idx,
-                                  UResourceDataEntry* validLocaleDataEntry,
-                                  const char* containerResPath,
-                                  int32_t recursionDepth,
+                                  UResource_దత్తాంశం_నమోదు* valid_Locale_దత్తాంశం_నమోదు,
+                                  స్థిరరాశి అక్షరం* container_Res_మార్గం,
+                                  int32_t recursion_లోతు,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
-                                  UErrorCode* status);
+                                  UError_సంకేతం* స్థితి_2);
 
 // TODO: Try to refactor further, so that we output a dataEntry + Resource + (optionally) resPath,
 // rather than a UResourceBundle.
 // May need to entryIncrease() the resulting dataEntry.
 UResourceBundle*
-getAliasTargetAsResourceBundle(const ResourceData& resData,
+get_Alias_లక్ష్యం_As_Resource_Bundle(స్థిరరాశి Resource_దత్తాంశం& res_దత్తాంశం,
                                Resource r,
-                               const char* key,
+                               స్థిరరాశి అక్షరం* కీలకం,
                                int32_t idx,
-                               UResourceDataEntry* validLocaleDataEntry,
-                               const char* containerResPath,
-                               int32_t recursionDepth,
+                               UResource_దత్తాంశం_నమోదు* valid_Locale_దత్తాంశం_నమోదు,
+                               స్థిరరాశి అక్షరం* container_Res_మార్గం,
+                               int32_t recursion_లోతు,
                                UResourceBundle* resB U_LIFETIME_BOUND,
-                               UErrorCode* status) {
+                               UError_సంకేతం* స్థితి_2) {
     // TODO: When an error occurs: Should we return nullptr vs. resB?
-    if (U_FAILURE(*status)) { return resB; }
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) { తిరిగి resB; }
     U_ASSERT(RES_GET_TYPE(r) == URES_ALIAS);
     int32_t len = 0;
-    const char16_t *alias = res_getAlias(&resData, r, &len);
-    if(len <= 0) {
+    స్థిరరాశి char16_t *alias = res_getAlias(&res_దత్తాంశం, r, &len);
+    ఒకవేళ(len <= 0) {
         // bad alias
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return resB;
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి resB;
     }
 
     // Copy the UTF-16 alias string into an invariant-character string.
@@ -1195,82 +1195,82 @@ getAliasTargetAsResourceBundle(const ResourceData& resData,
     //
     // markus 2003oct17
     CharString chAlias;
-    chAlias.appendInvariantChars(alias, len, *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    chAlias.appendInvariantChars(alias, len, *స్థితి_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     // We have an alias, now let's cut it up.
-    const char *path = nullptr, *locale = nullptr, *keyPath = nullptr;
-    if(chAlias[0] == RES_PATH_SEPARATOR) {
+    స్థిరరాశి అక్షరం *మార్గం = శూన్యసూచిక, *locale = శూన్యసూచిక, *కీలకం_మార్గం = శూన్యసూచిక;
+    ఒకవేళ(chAlias[0] == RES_మార్గం_SEPARATOR) {
         // There is a path included.
-        char *chAliasData = chAlias.data();
-        char *sep = chAliasData + 1;
-        path = sep;
-        sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-        if(sep != nullptr) {
+        అక్షరం *ch_Alias_దత్తాంశం = chAlias.దత్తాంశం();
+        అక్షరం *sep = ch_Alias_దత్తాంశం + 1;
+        మార్గం = sep;
+        sep = uprv_strchr(sep, RES_మార్గం_SEPARATOR);
+        ఒకవేళ(sep != శూన్యసూచిక) {
             *sep++ = 0;
         }
-        if(uprv_strcmp(path, "LOCALE") == 0) {
+        ఒకవేళ(uprv_strcmp(మార్గం, "LOCALE") == 0) {
             // This is an XPath alias, starting with "/LOCALE/".
             // It contains the path to a resource which should be looked up
             // starting in the valid locale.
             // TODO: Can/should we forbid a /LOCALE alias without key path?
             //   It seems weird to alias to the same path, just starting from the valid locale.
             //   That will often yield an infinite loop.
-            keyPath = sep;
+            కీలకం_మార్గం = sep;
             // Read from the valid locale which we already have.
-            path = locale = nullptr;
-        } else {
-            if(uprv_strcmp(path, "ICUDATA") == 0) { /* want ICU data */
-                path = nullptr;
+            మార్గం = locale = శూన్యసూచిక;
+        } లేకపోతే {
+            ఒకవేళ(uprv_strcmp(మార్గం, "ICUDATA") == 0) { /* want ICU data */
+                మార్గం = శూన్యసూచిక;
             }
-            if (sep == nullptr) {
+            ఒకవేళ (sep == శూన్యసూచిక) {
                 // TODO: This ends up using the root bundle. Can/should we forbid this?
                 locale = "";
-            } else {
+            } లేకపోతే {
                 locale = sep;
-                sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-                if(sep != nullptr) {
+                sep = uprv_strchr(sep, RES_మార్గం_SEPARATOR);
+                ఒకవేళ(sep != శూన్యసూచిక) {
                     *sep++ = 0;
                 }
-                keyPath = sep;
+                కీలకం_మార్గం = sep;
             }
         }
-    } else {
+    } లేకపోతే {
         // No path, start with a locale.
-        char *sep = chAlias.data();
+        అక్షరం *sep = chAlias.దత్తాంశం();
         locale = sep;
-        sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-        if(sep != nullptr) {
+        sep = uprv_strchr(sep, RES_మార్గం_SEPARATOR);
+        ఒకవేళ(sep != శూన్యసూచిక) {
             *sep++ = 0;
         }
-        keyPath = sep;
-        path = validLocaleDataEntry->fPath;
+        కీలకం_మార్గం = sep;
+        మార్గం = valid_Locale_దత్తాంశం_నమోదు->f_మార్గం;
     }
 
     // Got almost everything, let's try to open.
     // First, open the bundle with real data.
-    LocalUResourceBundlePointer mainRes;
-    UResourceDataEntry *dataEntry;
-    if (locale == nullptr) {
+    Local_UResource_Bundle_సూచిక mainRes;
+    UResource_దత్తాంశం_నమోదు *దత్తాంశం_నమోదు;
+    ఒకవేళ (locale == శూన్యసూచిక) {
         // alias = /LOCALE/keyPath
         // Read from the valid locale which we already have.
-        dataEntry = validLocaleDataEntry;
-    } else {
-        UErrorCode intStatus = U_ZERO_ERROR;
+        దత్తాంశం_నమోదు = valid_Locale_దత్తాంశం_నమోదు;
+    } లేకపోతే {
+        UError_సంకేతం int_స్థితి = U_ZERO_ERROR;
         // TODO: Shouldn't we use ures_open() for locale data bundles (!noFallback)?
-        mainRes.adoptInstead(ures_openDirect(path, locale, &intStatus));
-        if(U_FAILURE(intStatus)) {
+        mainRes.adoptInstead(ures_open_ప్రత్యక్ష(మార్గం, locale, &int_స్థితి));
+        ఒకవేళ(U_FAILURE(int_స్థితి)) {
             // We failed to open the resource bundle we're aliasing to.
-            *status = intStatus;
-            return resB;
+            *స్థితి_2 = int_స్థితి;
+            తిరిగి resB;
         }
-        dataEntry = mainRes->fData;
+        దత్తాంశం_నమోదు = mainRes->f_దత్తాంశం;
     }
 
-    const char* temp = nullptr;
-    if(keyPath == nullptr) {
+    స్థిరరాశి అక్షరం* తాత్కాలిక = శూన్యసూచిక;
+    ఒకవేళ(కీలకం_మార్గం == శూన్యసూచిక) {
         // No key path. This means that we are going to to use the corresponding resource from
         // another bundle.
         // TODO: Why the special code path?
@@ -1278,161 +1278,161 @@ getAliasTargetAsResourceBundle(const ResourceData& resData,
         //   as a comment below suggests, and go into the regular code branch?
         // First, we are going to get a corresponding container
         // resource to the one we are searching.
-        r = dataEntry->fData.rootRes;
-        if(containerResPath) {
-            chAlias.clear().append(containerResPath, *status);
-            if (U_FAILURE(*status)) {
-                return nullptr;
+        r = దత్తాంశం_నమోదు->f_దత్తాంశం.మూలం_Res;
+        ఒకవేళ(container_Res_మార్గం) {
+            chAlias.clear().append(container_Res_మార్గం, *స్థితి_2);
+            ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+                తిరిగి శూన్యసూచిక;
             }
-            char *aKey = chAlias.data();
+            అక్షరం *a_కీలకం = chAlias.దత్తాంశం();
             // TODO: should res_findResource() return a new dataEntry, too?
-            r = res_findResource(&dataEntry->fData, r, &aKey, &temp);
+            r = res_కనుగొను_Resource(&దత్తాంశం_నమోదు->f_దత్తాంశం, r, &a_కీలకం, &తాత్కాలిక);
         }
-        if(key) {
+        ఒకవేళ(కీలకం) {
             // We need to make keyPath from the containerResPath and
             // current key, if there is a key associated.
-            chAlias.clear().append(key, *status);
-            if (U_FAILURE(*status)) {
-                return nullptr;
+            chAlias.clear().append(కీలకం, *స్థితి_2);
+            ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+                తిరిగి శూన్యసూచిక;
             }
-            char *aKey = chAlias.data();
-            r = res_findResource(&dataEntry->fData, r, &aKey, &temp);
-        } else if(idx != -1) {
+            అక్షరం *a_కీలకం = chAlias.దత్తాంశం();
+            r = res_కనుగొను_Resource(&దత్తాంశం_నమోదు->f_దత్తాంశం, r, &a_కీలకం, &తాత్కాలిక);
+        } లేకపోతే ఒకవేళ(idx != -1) {
             // If there is no key, but there is an index, try to get by the index.
             // Here we have either a table or an array, so get the element.
             int32_t type = RES_GET_TYPE(r);
-            if(URES_IS_TABLE(type)) {
-                const char *aKey;
-                r = res_getTableItemByIndex(&dataEntry->fData, r, idx, &aKey);
-            } else { /* array */
-                r = res_getArrayItem(&dataEntry->fData, r, idx);
+            ఒకవేళ(URES_IS_పట్టిక(type)) {
+                స్థిరరాశి అక్షరం *a_కీలకం;
+                r = res_get_పట్టిక_అంశం_By_సూచీ(&దత్తాంశం_నమోదు->f_దత్తాంశం, r, idx, &a_కీలకం);
+            } లేకపోతే { /* array */
+                r = res_get_Array_అంశం(&దత్తాంశం_నమోదు->f_దత్తాంశం, r, idx);
             }
         }
-        if(r != RES_BOGUS) {
-            resB = init_resb_result(
-                dataEntry, r, temp, -1, validLocaleDataEntry, nullptr, recursionDepth+1,
-                resB, status);
-        } else {
-            *status = U_MISSING_RESOURCE_ERROR;
+        ఒకవేళ(r != RES_BOGUS) {
+            resB = init_resb_ఫలితం(
+                దత్తాంశం_నమోదు, r, తాత్కాలిక, -1, valid_Locale_దత్తాంశం_నమోదు, శూన్యసూచిక, recursion_లోతు+1,
+                resB, స్థితి_2);
+        } లేకపోతే {
+            *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
         }
-    } else {
+    } లేకపోతే {
         // This one is a bit trickier.
         // We start finding keys, but after we resolve one alias, the path might continue.
         // Consider:
         //     aliastest:alias { "testtypes/anotheralias/Sequence" }
         //     anotheralias:alias { "/ICUDATA/sh/CollationElements" }
         // aliastest resource should finally have the sequence, not collation elements.
-        CharString pathBuf(keyPath, *status);
-        if (U_FAILURE(*status)) {
-            return nullptr;
+        CharString మార్గం_Buf(కీలకం_మార్గం, *స్థితి_2);
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            తిరిగి శూన్యసూచిక;
         }
-        char *myPath = pathBuf.data();
-        containerResPath = nullptr;
+        అక్షరం *my_మార్గం = మార్గం_Buf.దత్తాంశం();
+        container_Res_మార్గం = శూన్యసూచిక;
         // Now we have fallback following here.
-        for(;;) {
-            r = dataEntry->fData.rootRes;
+        కొరకు(;;) {
+            r = దత్తాంశం_నమోదు->f_దత్తాంశం.మూలం_Res;
             // TODO: Move  containerResPath = nullptr  to here,
             // consistent with restarting from the rootRes of another bundle?!
 
             // This loop handles 'found' resources over several levels.
-            while(*myPath && U_SUCCESS(*status)) {
-                r = res_findResource(&(dataEntry->fData), r, &myPath, &temp);
-                if(r == RES_BOGUS) {
+            అయితే(*my_మార్గం && U_SUCCESS(*స్థితి_2)) {
+                r = res_కనుగొను_Resource(&(దత్తాంశం_నమోదు->f_దత్తాంశం), r, &my_మార్గం, &తాత్కాలిక);
+                ఒకవేళ(r == RES_BOGUS) {
                     // No resource found, we don't really want to look anymore on this level.
-                    break;
+                    ఆపు;
                 }
                 // Found a resource, but it might be an indirection.
-                resB = init_resb_result(
-                    dataEntry, r, temp, -1,
-                    validLocaleDataEntry, containerResPath, recursionDepth+1,
-                    resB, status);
-                if (U_FAILURE(*status)) {
-                    break;
+                resB = init_resb_ఫలితం(
+                    దత్తాంశం_నమోదు, r, తాత్కాలిక, -1,
+                    valid_Locale_దత్తాంశం_నమోదు, container_Res_మార్గం, recursion_లోతు+1,
+                    resB, స్థితి_2);
+                ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+                    ఆపు;
                 }
-                if (temp == nullptr || uprv_strcmp(keyPath, temp) != 0) {
+                ఒకవేళ (తాత్కాలిక == శూన్యసూచిక || uprv_strcmp(కీలకం_మార్గం, తాత్కాలిక) != 0) {
                     // The call to init_resb_result() above will set resB->fKeyPath to be
                     // the same as resB->fKey,
                     // throwing away any additional path elements if we had them --
                     // if the key path wasn't just a single resource ID, clear out
                     // the bundle's key path and re-set it to be equal to keyPath.
-                    ures_freeResPath(resB);
-                    ures_appendResPath(resB, keyPath, static_cast<int32_t>(uprv_strlen(keyPath)), status);
-                    if(resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
-                        ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
+                    ures_free_Res_మార్గం(resB);
+                    ures_append_Res_మార్గం(resB, కీలకం_మార్గం, static_cast<int32_t>(uprv_strlen(కీలకం_మార్గం)), స్థితి_2);
+                    ఒకవేళ(resB->f_Res_మార్గం[resB->f_Res_మార్గం_Len-1] != RES_మార్గం_SEPARATOR) {
+                        ures_append_Res_మార్గం(resB, RES_మార్గం_SEPARATOR_S, 1, స్థితి_2);
                     }
-                    if (U_FAILURE(*status)) {
-                        break;
+                    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+                        ఆపు;
                     }
                 }
                 r = resB->fRes; /* switch to a new resource, possibly a new tree */
-                dataEntry = resB->fData;
-                containerResPath = resB->fResPath;
+                దత్తాంశం_నమోదు = resB->f_దత్తాంశం;
+                container_Res_మార్గం = resB->f_Res_మార్గం;
             }
-            if (U_FAILURE(*status) || r != RES_BOGUS) {
-                break;
+            ఒకవేళ (U_FAILURE(*స్థితి_2) || r != RES_BOGUS) {
+                ఆపు;
             }
             // Fall back to the parent bundle, if there is one.
-            dataEntry = dataEntry->fParent;
-            if (dataEntry == nullptr) {
-                *status = U_MISSING_RESOURCE_ERROR;
-                break;
+            దత్తాంశం_నమోదు = దత్తాంశం_నమోదు->f_మాతృ;
+            ఒకవేళ (దత్తాంశం_నమోదు == శూన్యసూచిక) {
+                *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
+                ఆపు;
             }
             // Copy the same keyPath again.
-            myPath = pathBuf.data();
-            uprv_strcpy(myPath, keyPath);
+            my_మార్గం = మార్గం_Buf.దత్తాంశం();
+            uprv_strcpy(my_మార్గం, కీలకం_మార్గం);
         }
     }
-    if(mainRes.getAlias() == resB) {
+    ఒకవేళ(mainRes.getAlias() == resB) {
         mainRes.orphan();
     }
     ResourceTracer(resB).maybeTrace("getalias");
-    return resB;
+    తిరిగి resB;
 }
 
 // Recursive function, should be called only by itself, by its simpler wrapper,
 // or by getAliasTargetAsResourceBundle().
-UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
+UResourceBundle* init_resb_ఫలితం(UResource_దత్తాంశం_నమోదు* దత్తాంశం_నమోదు,
                                   Resource r,
-                                  const char* key,
+                                  స్థిరరాశి అక్షరం* కీలకం,
                                   int32_t idx,
-                                  UResourceDataEntry* validLocaleDataEntry,
-                                  const char* containerResPath,
-                                  int32_t recursionDepth,
+                                  UResource_దత్తాంశం_నమోదు* valid_Locale_దత్తాంశం_నమోదు,
+                                  స్థిరరాశి అక్షరం* container_Res_మార్గం,
+                                  int32_t recursion_లోతు,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
-                                  UErrorCode* status) {
+                                  UError_సంకేతం* స్థితి_2) {
     // TODO: When an error occurs: Should we return nullptr vs. resB?
-    if(status == nullptr || U_FAILURE(*status)) {
-        return resB;
+    ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి resB;
     }
-    if (validLocaleDataEntry == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ (valid_Locale_దత్తాంశం_నమోదు == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    if(RES_GET_TYPE(r) == URES_ALIAS) {
+    ఒకవేళ(RES_GET_TYPE(r) == URES_ALIAS) {
         // This is an alias, need to exchange with real data.
-        if(recursionDepth >= URES_MAX_ALIAS_LEVEL) {
-            *status = U_TOO_MANY_ALIASES_ERROR;
-            return resB;
+        ఒకవేళ(recursion_లోతు >= URES_MAX_ALIAS_LEVEL) {
+            *స్థితి_2 = U_TOO_MANY_ALIASES_ERROR;
+            తిరిగి resB;
         }
-        return getAliasTargetAsResourceBundle(
-            dataEntry->fData, r, key, idx,
-            validLocaleDataEntry, containerResPath, recursionDepth, resB, status);
+        తిరిగి get_Alias_లక్ష్యం_As_Resource_Bundle(
+            దత్తాంశం_నమోదు->f_దత్తాంశం, r, కీలకం, idx,
+            valid_Locale_దత్తాంశం_నమోదు, container_Res_మార్గం, recursion_లోతు, resB, స్థితి_2);
     }
-    if(resB == nullptr) {
-        resB = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
-        if (resB == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+    ఒకవేళ(resB == శూన్యసూచిక) {
+        resB = static_cast<UResourceBundle*>(uprv_malloc(పరిమాణం(UResourceBundle)));
+        ఒకవేళ (resB == శూన్యసూచిక) {
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
-        ures_setIsStackObject(resB, false);
-        resB->fResPath = nullptr;
-        resB->fResPathLen = 0;
-    } else {
-        if(resB->fData != nullptr) {
-            entryClose(resB->fData);
+        ures_సమితి_Is_దొంతర_Object(resB, అబద్ధం);
+        resB->f_Res_మార్గం = శూన్యసూచిక;
+        resB->f_Res_మార్గం_Len = 0;
+    } లేకపోతే {
+        ఒకవేళ(resB->f_దత్తాంశం != శూన్యసూచిక) {
+            నమోదు_Close(resB->f_దత్తాంశం);
         }
-        if(resB->fVersion != nullptr) {
-            uprv_free(resB->fVersion);
+        ఒకవేళ(resB->f_సంస్కరణ != శూన్యసూచిక) {
+            uprv_free(resB->f_సంస్కరణ);
         }
         /* 
         weiv: if stack object was passed in, it doesn't really need to be reinited,
@@ -1445,158 +1445,158 @@ UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
         ures_initStackObject(resB);
         }
         */
-        if(containerResPath != resB->fResPath) {
-            ures_freeResPath(resB);
+        ఒకవేళ(container_Res_మార్గం != resB->f_Res_మార్గం) {
+            ures_free_Res_మార్గం(resB);
         }
     }
-    resB->fData = dataEntry;
-    entryIncrease(resB->fData);
-    resB->fHasFallback = false;
-    resB->fIsTopLevel = false;
-    resB->fIndex = -1;
-    resB->fKey = key; 
-    resB->fValidLocaleDataEntry = validLocaleDataEntry;
-    if(containerResPath != resB->fResPath) {
-        ures_appendResPath(
-            resB, containerResPath, static_cast<int32_t>(uprv_strlen(containerResPath)), status);
+    resB->f_దత్తాంశం = దత్తాంశం_నమోదు;
+    నమోదు_Increase(resB->f_దత్తాంశం);
+    resB->fHasFallback = అబద్ధం;
+    resB->f_Is_శిఖరం_Level = అబద్ధం;
+    resB->f_సూచీ = -1;
+    resB->f_కీలకం = కీలకం; 
+    resB->f_Valid_Locale_దత్తాంశం_నమోదు = valid_Locale_దత్తాంశం_నమోదు;
+    ఒకవేళ(container_Res_మార్గం != resB->f_Res_మార్గం) {
+        ures_append_Res_మార్గం(
+            resB, container_Res_మార్గం, static_cast<int32_t>(uprv_strlen(container_Res_మార్గం)), స్థితి_2);
     }
-    if(key != nullptr) {
-        ures_appendResPath(resB, key, static_cast<int32_t>(uprv_strlen(key)), status);
-        if(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
-            ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
+    ఒకవేళ(కీలకం != శూన్యసూచిక) {
+        ures_append_Res_మార్గం(resB, కీలకం, static_cast<int32_t>(uprv_strlen(కీలకం)), స్థితి_2);
+        ఒకవేళ(resB->f_Res_మార్గం_Len > 0 && resB->f_Res_మార్గం[resB->f_Res_మార్గం_Len-1] != RES_మార్గం_SEPARATOR) {
+            ures_append_Res_మార్గం(resB, RES_మార్గం_SEPARATOR_S, 1, స్థితి_2);
         }
-    } else if(idx >= 0) {
-        char buf[256];
-        int32_t len = T_CString_integerToString(buf, idx, 10);
-        ures_appendResPath(resB, buf, len, status);
-        if(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
-            ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
+    } లేకపోతే ఒకవేళ(idx >= 0) {
+        అక్షరం buf[256];
+        int32_t len = T_CString_integer_గమ్యం_String(buf, idx, 10);
+        ures_append_Res_మార్గం(resB, buf, len, స్థితి_2);
+        ఒకవేళ(resB->f_Res_మార్గం_Len > 0 && resB->f_Res_మార్గం[resB->f_Res_మార్గం_Len-1] != RES_మార్గం_SEPARATOR) {
+            ures_append_Res_మార్గం(resB, RES_మార్గం_SEPARATOR_S, 1, స్థితి_2);
         }
     }
     /* Make sure that Purify doesn't complain about uninitialized memory copies. */
     {
-        int32_t usedLen = ((resB->fResBuf == resB->fResPath) ? resB->fResPathLen : 0);
-        uprv_memset(resB->fResBuf + usedLen, 0, sizeof(resB->fResBuf) - usedLen);
+        int32_t వాడిన_Len = ((resB->fResBuf == resB->f_Res_మార్గం) ? resB->f_Res_మార్గం_Len : 0);
+        uprv_memset(resB->fResBuf + వాడిన_Len, 0, పరిమాణం(resB->fResBuf) - వాడిన_Len);
     }
 
-    resB->fVersion = nullptr;
+    resB->f_సంస్కరణ = శూన్యసూచిక;
     resB->fRes = r;
-    resB->fSize = res_countArrayItems(&resB->getResData(), resB->fRes);
+    resB->f_కొలత = res_లెక్క_Array_వస్తువులు(&resB->get_Res_దత్తాంశం(), resB->fRes);
     ResourceTracer(resB).trace("get");
-    return resB;
+    తిరిగి resB;
 }
 
-UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
+UResourceBundle* init_resb_ఫలితం(UResource_దత్తాంశం_నమోదు* దత్తాంశం_నమోదు,
                                   Resource r,
-                                  const char* key,
+                                  స్థిరరాశి అక్షరం* కీలకం,
                                   int32_t idx,
                                   // validLocaleDataEntry + containerResPath
-                                  const UResourceBundle* container,
+                                  స్థిరరాశి UResourceBundle* container,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
-                                  UErrorCode* status) {
-    return init_resb_result(
-        dataEntry, r, key, idx,
-        container->fValidLocaleDataEntry, container->fResPath, 0, resB, status);
+                                  UError_సంకేతం* స్థితి_2) {
+    తిరిగి init_resb_ఫలితం(
+        దత్తాంశం_నమోదు, r, కీలకం, idx,
+        container->f_Valid_Locale_దత్తాంశం_నమోదు, container->f_Res_మార్గం, 0, resB, స్థితి_2);
 }
 
 }  // namespace
 
 UResourceBundle* ures_copyResb(UResourceBundle* r U_LIFETIME_BOUND,
-                               const UResourceBundle* original,
-                               UErrorCode* status) {
-    UBool isStackObject;
-    if(U_FAILURE(*status) || r == original) {
-        return r;
+                               స్థిరరాశి UResourceBundle* original,
+                               UError_సంకేతం* స్థితి_2) {
+    UBool is_దొంతర_Object;
+    ఒకవేళ(U_FAILURE(*స్థితి_2) || r == original) {
+        తిరిగి r;
     }
-    if(original != nullptr) {
-        if(r == nullptr) {
-            isStackObject = false;
-            r = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
+    ఒకవేళ(original != శూన్యసూచిక) {
+        ఒకవేళ(r == శూన్యసూచిక) {
+            is_దొంతర_Object = అబద్ధం;
+            r = static_cast<UResourceBundle*>(uprv_malloc(పరిమాణం(UResourceBundle)));
             /* test for nullptr */
-            if (r == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+            ఒకవేళ (r == శూన్యసూచిక) {
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి శూన్యసూచిక;
             }
-        } else {
-            isStackObject = ures_isStackObject(r);
-            ures_closeBundle(r, false);
+        } లేకపోతే {
+            is_దొంతర_Object = ures_is_దొంతర_Object(r);
+            ures_closeBundle(r, అబద్ధం);
         }
-        uprv_memcpy(r, original, sizeof(UResourceBundle));
-        r->fResPath = nullptr;
-        r->fResPathLen = 0;
-        if(original->fResPath) {
-            ures_appendResPath(r, original->fResPath, original->fResPathLen, status);
+        uprv_memcpy(r, original, పరిమాణం(UResourceBundle));
+        r->f_Res_మార్గం = శూన్యసూచిక;
+        r->f_Res_మార్గం_Len = 0;
+        ఒకవేళ(original->f_Res_మార్గం) {
+            ures_append_Res_మార్గం(r, original->f_Res_మార్గం, original->f_Res_మార్గం_Len, స్థితి_2);
         }
-        ures_setIsStackObject(r, isStackObject);
-        if(r->fData != nullptr) {
-            entryIncrease(r->fData);
+        ures_సమితి_Is_దొంతర_Object(r, is_దొంతర_Object);
+        ఒకవేళ(r->f_దత్తాంశం != శూన్యసూచిక) {
+            నమోదు_Increase(r->f_దత్తాంశం);
         }
     }
-    return r;
+    తిరిగి r;
 }
 
 /**
  * Functions to retrieve data from resource bundles.
  */
 
-U_CAPI const char16_t* U_EXPORT2 ures_getString(const UResourceBundle* resB U_LIFETIME_BOUND,
+U_CAPI స్థిరరాశి char16_t* U_EXPORT2 ures_getString(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND,
                                                 int32_t* len,
-                                                UErrorCode* status) {
-    const char16_t *s;
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+                                                UError_సంకేతం* స్థితి_2) {
+    స్థిరరాశి char16_t *s;
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ(resB == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    s = res_getString({resB}, &resB->getResData(), resB->fRes, len);
-    if (s == nullptr) {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+    s = res_getString({resB}, &resB->get_Res_దత్తాంశం(), resB->fRes, len);
+    ఒకవేళ (s == శూన్యసూచిక) {
+        *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    తిరిగి s;
 }
 
-static const char*
-ures_toUTF8String(const char16_t* s16,
+స్థిర స్థిరరాశి అక్షరం*
+ures_గమ్యం_UTF8_String(స్థిరరాశి char16_t* s16,
                   int32_t length16,
-                  char* dest U_LIFETIME_BOUND,
-                  int32_t* pLength,
+                  అక్షరం* dest U_LIFETIME_BOUND,
+                  int32_t* p_నిడివి,
                   UBool forceCopy,
-                  UErrorCode* status) {
+                  UError_సంకేతం* స్థితి_2) {
     int32_t capacity;
 
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if (pLength != nullptr) {
-        capacity = *pLength;
-    } else {
+    ఒకవేళ (p_నిడివి != శూన్యసూచిక) {
+        capacity = *p_నిడివి;
+    } లేకపోతే {
         capacity = 0;
     }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ (capacity < 0 || (capacity > 0 && dest == శూన్యసూచిక)) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if (length16 == 0) {
+    ఒకవేళ (length16 == 0) {
         /* empty string, return as read-only pointer */
-        if (pLength != nullptr) {
-            *pLength = 0;
+        ఒకవేళ (p_నిడివి != శూన్యసూచిక) {
+            *p_నిడివి = 0;
         }
-        if (forceCopy) {
-            u_terminateChars(dest, capacity, 0, status);
-            return dest;
-        } else {
-            return "";
+        ఒకవేళ (forceCopy) {
+            u_terminateChars(dest, capacity, 0, స్థితి_2);
+            తిరిగి dest;
+        } లేకపోతే {
+            తిరిగి "";
         }
-    } else {
+    } లేకపోతే {
         /* We need to transform the string to the destination buffer. */
-        if (capacity < length16) {
+        ఒకవేళ (capacity < length16) {
             /* No chance for the string to fit. Pure preflighting. */
-            return u_strToUTF8(nullptr, 0, pLength, s16, length16, status);
+            తిరిగి u_str_గమ్యం_UTF8(శూన్యసూచిక, 0, p_నిడివి, s16, length16, స్థితి_2);
         }
-        if (!forceCopy && (length16 <= 0x2aaaaaaa)) {
+        ఒకవేళ (!forceCopy && (length16 <= 0x2aaaaaaa)) {
             /*
              * We know the string will fit into dest because each char16_t turns
              * into at most three UTF-8 bytes. Fill the latter part of dest
@@ -1611,102 +1611,102 @@ ures_toUTF8String(const char16_t* s16,
              * The test above for <= 0x2aaaaaaa prevents overflows.
              * The +1 is for the NUL terminator.
              */
-            int32_t maxLength = 3 * length16 + 1;
-            if (capacity > maxLength) {
-                dest += capacity - maxLength;
-                capacity = maxLength;
+            int32_t max_నిడివి_2 = 3 * length16 + 1;
+            ఒకవేళ (capacity > max_నిడివి_2) {
+                dest += capacity - max_నిడివి_2;
+                capacity = max_నిడివి_2;
             }
         }
-        return u_strToUTF8(dest, capacity, pLength, s16, length16, status);
+        తిరిగి u_str_గమ్యం_UTF8(dest, capacity, p_నిడివి, s16, length16, స్థితి_2);
     }
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
-                   int32_t* pLength,
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_getUTF8String(స్థిరరాశి UResourceBundle* resB,
+                   అక్షరం* dest U_LIFETIME_BOUND,
+                   int32_t* p_నిడివి,
                    UBool forceCopy,
-                   UErrorCode* status) {
+                   UError_సంకేతం* స్థితి_2) {
     int32_t length16;
-    const char16_t *s16 = ures_getString(resB, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    స్థిరరాశి char16_t *s16 = ures_getString(resB, &length16, స్థితి_2);
+    తిరిగి ures_గమ్యం_UTF8_String(s16, length16, dest, p_నిడివి, forceCopy, స్థితి_2);
 }
 
-U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
-  const uint8_t *p;
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+U_CAPI స్థిరరాశి uint8_t* U_EXPORT2
+ures_get_ద్విమాన(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UError_సంకేతం* స్థితి_2) {
+  స్థిరరాశి uint8_t *p;
+  ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  p = res_getBinary({resB}, &resB->getResData(), resB->fRes, len);
-  if (p == nullptr) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
+  p = res_get_ద్విమాన({resB}, &resB->get_Res_దత్తాంశం(), resB->fRes, len);
+  ఒకవేళ (p == శూన్యసూచిక) {
+    *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
   }
-  return p;
+  తిరిగి p;
 }
 
-U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
-  const int32_t *p;
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+U_CAPI స్థిరరాశి int32_t* U_EXPORT2
+ures_get_Int_సదిశ(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UError_సంకేతం* స్థితి_2) {
+  స్థిరరాశి int32_t *p;
+  ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  p = res_getIntVector({resB}, &resB->getResData(), resB->fRes, len);
-  if (p == nullptr) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
+  p = res_get_Int_సదిశ({resB}, &resB->get_Res_దత్తాంశం(), resB->fRes, len);
+  ఒకవేళ (p == శూన్యసూచిక) {
+    *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
   }
-  return p;
+  తిరిగి p;
 }
 
 /* this function returns a signed integer */ 
 /* it performs sign extension */
-U_CAPI int32_t U_EXPORT2 ures_getInt(const UResourceBundle* resB, UErrorCode *status) {
-  if (status==nullptr || U_FAILURE(*status)) {
-    return 0xffffffff;
+U_CAPI int32_t U_EXPORT2 ures_getInt(స్థిరరాశి UResourceBundle* resB, UError_సంకేతం *స్థితి_2) {
+  ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+    తిరిగి 0xffffffff;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0xffffffff;
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0xffffffff;
   }
-  if(RES_GET_TYPE(resB->fRes) != URES_INT) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
-    return 0xffffffff;
+  ఒకవేళ(RES_GET_TYPE(resB->fRes) != URES_INT) {
+    *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
+    తిరిగి 0xffffffff;
   }
-  return res_getInt({resB}, resB->fRes);
+  తిరిగి res_getInt({resB}, resB->fRes);
 }
 
-U_CAPI uint32_t U_EXPORT2 ures_getUInt(const UResourceBundle* resB, UErrorCode *status) {
-  if (status==nullptr || U_FAILURE(*status)) {
-    return 0xffffffff;
+U_CAPI uint32_t U_EXPORT2 ures_getUInt(స్థిరరాశి UResourceBundle* resB, UError_సంకేతం *స్థితి_2) {
+  ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+    తిరిగి 0xffffffff;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0xffffffff;
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0xffffffff;
   }
-  if(RES_GET_TYPE(resB->fRes) != URES_INT) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
-    return 0xffffffff;
+  ఒకవేళ(RES_GET_TYPE(resB->fRes) != URES_INT) {
+    *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
+    తిరిగి 0xffffffff;
   }
-  return res_getUInt({resB}, resB->fRes);
+  తిరిగి res_getUInt({resB}, resB->fRes);
 }
 
-U_CAPI UResType U_EXPORT2 ures_getType(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return URES_NONE;
+U_CAPI UResType U_EXPORT2 ures_getType(స్థిరరాశి UResourceBundle *resB) {
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    తిరిగి URES_NONE;
   }
-  return res_getPublicType(resB->fRes);
+  తిరిగి res_get_ప్రజా_Type(resB->fRes);
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resB U_LIFETIME_BOUND) {
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_కీలకం(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND) {
   //
   // TODO: Trace ures_getKey? I guess not usually.
   //
@@ -1716,273 +1716,273 @@ ures_getKey(const UResourceBundle* resB U_LIFETIME_BOUND) {
   // However, I believe we have some data (e.g., in res_index) where the key
   // strings are the data. Tracing the enclosing table should suffice.
   //
-  if(resB == nullptr) {
-    return nullptr;
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    తిరిగి శూన్యసూచిక;
   }
-  return(resB->fKey);
+  తిరిగి(resB->f_కీలకం);
 }
 
-U_CAPI int32_t U_EXPORT2 ures_getSize(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return 0;
+U_CAPI int32_t U_EXPORT2 ures_get_కొలత(స్థిరరాశి UResourceBundle *resB) {
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    తిరిగి 0;
   }
   
-  return resB->fSize;
+  తిరిగి resB->f_కొలత;
 }
 
-static const char16_t*
-ures_getStringWithAlias(const UResourceBundle* resB U_LIFETIME_BOUND,
+స్థిర స్థిరరాశి char16_t*
+ures_getStringWithAlias(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND,
                         Resource r,
-                        int32_t sIndex,
+                        int32_t s_సూచీ,
                         int32_t* len,
-                        UErrorCode* status) {
-  if(RES_GET_TYPE(r) == URES_ALIAS) {
-    const char16_t* result = nullptr;
-    UResourceBundle *tempRes = ures_getByIndex(resB, sIndex, nullptr, status);
-    result = ures_getString(tempRes, len, status);
-    ures_close(tempRes);
-    return result;
-  } else {
-    return res_getString({resB, sIndex}, &resB->getResData(), r, len); 
+                        UError_సంకేతం* స్థితి_2) {
+  ఒకవేళ(RES_GET_TYPE(r) == URES_ALIAS) {
+    స్థిరరాశి char16_t* ఫలితం = శూన్యసూచిక;
+    UResourceBundle *తాత్కాలిక_Res = ures_get_By_సూచీ(resB, s_సూచీ, శూన్యసూచిక, స్థితి_2);
+    ఫలితం = ures_getString(తాత్కాలిక_Res, len, స్థితి_2);
+    ures_close(తాత్కాలిక_Res);
+    తిరిగి ఫలితం;
+  } లేకపోతే {
+    తిరిగి res_getString({resB, s_సూచీ}, &resB->get_Res_దత్తాంశం(), r, len); 
   }
 }
 
-U_CAPI void U_EXPORT2 ures_resetIterator(UResourceBundle *resB){
-  if(resB == nullptr) {
-    return;
+U_CAPI శూన్య U_EXPORT2 ures_resetIterator(UResourceBundle *resB){
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    తిరిగి;
   }
-  resB->fIndex = -1;
+  resB->f_సూచీ = -1;
 }
 
-U_CAPI UBool U_EXPORT2 ures_hasNext(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return false;
+U_CAPI UBool U_EXPORT2 ures_has_తదుపరి(స్థిరరాశి UResourceBundle *resB) {
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    తిరిగి అబద్ధం;
   }
-  return resB->fIndex < resB->fSize-1;
+  తిరిగి resB->f_సూచీ < resB->f_కొలత-1;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getNextString(UResourceBundle* resB U_LIFETIME_BOUND,
+U_CAPI స్థిరరాశి char16_t* U_EXPORT2
+ures_get_తదుపరి_String(UResourceBundle* resB U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
-                   UErrorCode* status) {
+                   స్థిరరాశి అక్షరం** కీలకం,
+                   UError_సంకేతం* స్థితి_2) {
   Resource r = RES_BOGUS;
   
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+  ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
   
-  if(resB->fIndex == resB->fSize-1) {
-    *status = U_INDEX_OUTOFBOUNDS_ERROR;
-  } else {
-    resB->fIndex++;
-    switch(RES_GET_TYPE(resB->fRes)) {
-    case URES_STRING:
-    case URES_STRING_V2:
-      return res_getString({resB}, &resB->getResData(), resB->fRes, len);
-    case URES_TABLE:
-    case URES_TABLE16:
-    case URES_TABLE32:
-      r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, key);
-      if(r == RES_BOGUS && resB->fHasFallback) {
+  ఒకవేళ(resB->f_సూచీ == resB->f_కొలత-1) {
+    *స్థితి_2 = U_సూచీ_OUTOFBOUNDS_ERROR;
+  } లేకపోతే {
+    resB->f_సూచీ++;
+    ఎంపిక(RES_GET_TYPE(resB->fRes)) {
+    స్థితి URES_STRING:
+    స్థితి URES_STRING_V2:
+      తిరిగి res_getString({resB}, &resB->get_Res_దత్తాంశం(), resB->fRes, len);
+    స్థితి URES_పట్టిక:
+    స్థితి URES_TABLE16:
+    స్థితి URES_TABLE32:
+      r = res_get_పట్టిక_అంశం_By_సూచీ(&resB->get_Res_దత్తాంశం(), resB->fRes, resB->f_సూచీ, కీలకం);
+      ఒకవేళ(r == RES_BOGUS && resB->fHasFallback) {
         /* TODO: do the fallback */
       }
-      return ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
-    case URES_ARRAY:
-    case URES_ARRAY16:
-      r = res_getArrayItem(&resB->getResData(), resB->fRes, resB->fIndex);
-      if(r == RES_BOGUS && resB->fHasFallback) {
+      తిరిగి ures_getStringWithAlias(resB, r, resB->f_సూచీ, len, స్థితి_2);
+    స్థితి URES_ARRAY:
+    స్థితి URES_ARRAY16:
+      r = res_get_Array_అంశం(&resB->get_Res_దత్తాంశం(), resB->fRes, resB->f_సూచీ);
+      ఒకవేళ(r == RES_BOGUS && resB->fHasFallback) {
         /* TODO: do the fallback */
       }
-      return ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
-    case URES_ALIAS:
-      return ures_getStringWithAlias(resB, resB->fRes, resB->fIndex, len, status);
-    case URES_INT:
-    case URES_BINARY:
-    case URES_INT_VECTOR:
-        *status = U_RESOURCE_TYPE_MISMATCH;
+      తిరిగి ures_getStringWithAlias(resB, r, resB->f_సూచీ, len, స్థితి_2);
+    స్థితి URES_ALIAS:
+      తిరిగి ures_getStringWithAlias(resB, resB->fRes, resB->f_సూచీ, len, స్థితి_2);
+    స్థితి URES_INT:
+    స్థితి URES_ద్విమాన:
+    స్థితి URES_INT_సదిశ:
+        *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
         U_FALLTHROUGH;
-    default:
-      return nullptr;
+    అప్రమేయ:
+      తిరిగి శూన్యసూచిక;
     }
   }
 
-  return nullptr;
+  తిరిగి శూన్యసూచిక;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getNextResource(UResourceBundle* resB,
-                     UResourceBundle* fillIn U_LIFETIME_BOUND,
-                     UErrorCode* status) {
-    const char *key = nullptr;
+ures_get_తదుపరి_Resource(UResourceBundle* resB,
+                     UResourceBundle* fill_లోపల U_LIFETIME_BOUND,
+                     UError_సంకేతం* స్థితి_2) {
+    స్థిరరాశి అక్షరం *కీలకం = శూన్యసూచిక;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
             /*return nullptr;*/
-            return fillIn;
+            తిరిగి fill_లోపల;
     }
-    if(resB == nullptr) {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
+    ఒకవేళ(resB == శూన్యసూచిక) {
+            *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
             /*return nullptr;*/
-            return fillIn;
+            తిరిగి fill_లోపల;
     }
 
-    if(resB->fIndex == resB->fSize-1) {
-      *status = U_INDEX_OUTOFBOUNDS_ERROR;
+    ఒకవేళ(resB->f_సూచీ == resB->f_కొలత-1) {
+      *స్థితి_2 = U_సూచీ_OUTOFBOUNDS_ERROR;
       /*return nullptr;*/
-    } else {
-        resB->fIndex++;
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_INT:
-        case URES_BINARY:
-        case URES_STRING:
-        case URES_STRING_V2:
-        case URES_INT_VECTOR:
-            return ures_copyResb(fillIn, resB, status);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    } లేకపోతే {
+        resB->f_సూచీ++;
+        ఎంపిక(RES_GET_TYPE(resB->fRes)) {
+        స్థితి URES_INT:
+        స్థితి URES_ద్విమాన:
+        స్థితి URES_STRING:
+        స్థితి URES_STRING_V2:
+        స్థితి URES_INT_సదిశ:
+            తిరిగి ures_copyResb(fill_లోపల, resB, స్థితి_2);
+        స్థితి URES_పట్టిక:
+        స్థితి URES_TABLE16:
+        స్థితి URES_TABLE32:
+            r = res_get_పట్టిక_అంశం_By_సూచీ(&resB->get_Res_దత్తాంశం(), resB->fRes, resB->f_సూచీ, &కీలకం);
+            ఒకవేళ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, resB->fIndex, resB, fillIn, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
-            r = res_getArrayItem(&resB->getResData(), resB->fRes, resB->fIndex);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            తిరిగి init_resb_ఫలితం(resB->f_దత్తాంశం, r, కీలకం, resB->f_సూచీ, resB, fill_లోపల, స్థితి_2);
+        స్థితి URES_ARRAY:
+        స్థితి URES_ARRAY16:
+            r = res_get_Array_అంశం(&resB->get_Res_దత్తాంశం(), resB->fRes, resB->f_సూచీ);
+            ఒకవేళ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, resB->fIndex, resB, fillIn, status);
-        default:
+            తిరిగి init_resb_ఫలితం(resB->f_దత్తాంశం, r, కీలకం, resB->f_సూచీ, resB, fill_లోపల, స్థితి_2);
+        అప్రమేయ:
             /*return nullptr;*/
-            return fillIn;
+            తిరిగి fill_లోపల;
         }
     }
     /*return nullptr;*/
-    return fillIn;
+    తిరిగి fill_లోపల;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByIndex(const UResourceBundle* resB,
-                int32_t indexR,
-                UResourceBundle* fillIn U_LIFETIME_BOUND,
-                UErrorCode* status) {
-    const char* key = nullptr;
+ures_get_By_సూచీ(స్థిరరాశి UResourceBundle* resB,
+                int32_t సూచీ_R,
+                UResourceBundle* fill_లోపల U_LIFETIME_BOUND,
+                UError_సంకేతం* స్థితి_2) {
+    స్థిరరాశి అక్షరం* కీలకం = శూన్యసూచిక;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
         /*return nullptr;*/
-        return fillIn;
+        తిరిగి fill_లోపల;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
+    ఒకవేళ(resB == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
         /*return nullptr;*/
-        return fillIn;
+        తిరిగి fill_లోపల;
     }
 
-    if(indexR >= 0 && resB->fSize > indexR) {
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_INT:
-        case URES_BINARY:
-        case URES_STRING:
-        case URES_STRING_V2:
-        case URES_INT_VECTOR:
-            return ures_copyResb(fillIn, resB, status);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexR, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    ఒకవేళ(సూచీ_R >= 0 && resB->f_కొలత > సూచీ_R) {
+        ఎంపిక(RES_GET_TYPE(resB->fRes)) {
+        స్థితి URES_INT:
+        స్థితి URES_ద్విమాన:
+        స్థితి URES_STRING:
+        స్థితి URES_STRING_V2:
+        స్థితి URES_INT_సదిశ:
+            తిరిగి ures_copyResb(fill_లోపల, resB, స్థితి_2);
+        స్థితి URES_పట్టిక:
+        స్థితి URES_TABLE16:
+        స్థితి URES_TABLE32:
+            r = res_get_పట్టిక_అంశం_By_సూచీ(&resB->get_Res_దత్తాంశం(), resB->fRes, సూచీ_R, &కీలకం);
+            ఒకవేళ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, indexR, resB, fillIn, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
-            r = res_getArrayItem(&resB->getResData(), resB->fRes, indexR);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            తిరిగి init_resb_ఫలితం(resB->f_దత్తాంశం, r, కీలకం, సూచీ_R, resB, fill_లోపల, స్థితి_2);
+        స్థితి URES_ARRAY:
+        స్థితి URES_ARRAY16:
+            r = res_get_Array_అంశం(&resB->get_Res_దత్తాంశం(), resB->fRes, సూచీ_R);
+            ఒకవేళ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, indexR, resB, fillIn, status);
-        default:
+            తిరిగి init_resb_ఫలితం(resB->f_దత్తాంశం, r, కీలకం, సూచీ_R, resB, fill_లోపల, స్థితి_2);
+        అప్రమేయ:
             /*return nullptr;*/
-            return fillIn;
+            తిరిగి fill_లోపల;
         }
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
+    } లేకపోతే {
+        *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
     }
     /*return nullptr;*/
-    return fillIn;
+    తిరిగి fill_లోపల;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
-                      int32_t indexS,
+U_CAPI స్థిరరాశి char16_t* U_EXPORT2
+ures_get_String_By_సూచీ(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND,
+                      int32_t సూచీ_S,
                       int32_t* len,
-                      UErrorCode* status) {
-    const char* key = nullptr;
+                      UError_సంకేతం* స్థితి_2) {
+    స్థిరరాశి అక్షరం* కీలకం = శూన్యసూచిక;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ(resB == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(indexS >= 0 && resB->fSize > indexS) {
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_STRING:
-        case URES_STRING_V2:
-            return res_getString({resB}, &resB->getResData(), resB->fRes, len);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexS, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    ఒకవేళ(సూచీ_S >= 0 && resB->f_కొలత > సూచీ_S) {
+        ఎంపిక(RES_GET_TYPE(resB->fRes)) {
+        స్థితి URES_STRING:
+        స్థితి URES_STRING_V2:
+            తిరిగి res_getString({resB}, &resB->get_Res_దత్తాంశం(), resB->fRes, len);
+        స్థితి URES_పట్టిక:
+        స్థితి URES_TABLE16:
+        స్థితి URES_TABLE32:
+            r = res_get_పట్టిక_అంశం_By_సూచీ(&resB->get_Res_దత్తాంశం(), resB->fRes, సూచీ_S, &కీలకం);
+            ఒకవేళ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return ures_getStringWithAlias(resB, r, indexS, len, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
-            r = res_getArrayItem(&resB->getResData(), resB->fRes, indexS);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            తిరిగి ures_getStringWithAlias(resB, r, సూచీ_S, len, స్థితి_2);
+        స్థితి URES_ARRAY:
+        స్థితి URES_ARRAY16:
+            r = res_get_Array_అంశం(&resB->get_Res_దత్తాంశం(), resB->fRes, సూచీ_S);
+            ఒకవేళ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return ures_getStringWithAlias(resB, r, indexS, len, status);
-        case URES_ALIAS:
-            return ures_getStringWithAlias(resB, resB->fRes, indexS, len, status);
-        case URES_INT:
-        case URES_BINARY:
-        case URES_INT_VECTOR:
-            *status = U_RESOURCE_TYPE_MISMATCH;
-            break;
-        default:
+            తిరిగి ures_getStringWithAlias(resB, r, సూచీ_S, len, స్థితి_2);
+        స్థితి URES_ALIAS:
+            తిరిగి ures_getStringWithAlias(resB, resB->fRes, సూచీ_S, len, స్థితి_2);
+        స్థితి URES_INT:
+        స్థితి URES_ద్విమాన:
+        స్థితి URES_INT_సదిశ:
+            *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
+            ఆపు;
+        అప్రమేయ:
           /* must not occur */
-          *status = U_INTERNAL_PROGRAM_ERROR;
-          break;
+          *స్థితి_2 = U_అంతర్గత_కార్యక్రమం_ERROR;
+          ఆపు;
         }
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
+    } లేకపోతే {
+        *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByIndex(const UResourceBundle* resB,
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_UTF8_String_By_సూచీ(స్థిరరాశి UResourceBundle* resB,
                           int32_t idx,
-                          char* dest U_LIFETIME_BOUND,
-                          int32_t* pLength,
+                          అక్షరం* dest U_LIFETIME_BOUND,
+                          int32_t* p_నిడివి,
                           UBool forceCopy,
-                          UErrorCode* status) {
+                          UError_సంకేతం* స్థితి_2) {
     int32_t length16;
-    const char16_t *s16 = ures_getStringByIndex(resB, idx, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    స్థిరరాశి char16_t *s16 = ures_get_String_By_సూచీ(resB, idx, &length16, స్థితి_2);
+    తిరిగి ures_గమ్యం_UTF8_String(s16, length16, dest, p_నిడివి, forceCopy, స్థితి_2);
 }
 
 /*U_CAPI const char *ures_getResPath(UResourceBundle *resB) {
@@ -1990,155 +1990,155 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
 }*/
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findResource(const char* path, UResourceBundle* fillIn U_LIFETIME_BOUND, UErrorCode* status)
+ures_కనుగొను_Resource(స్థిరరాశి అక్షరం* మార్గం, UResourceBundle* fill_లోపల U_LIFETIME_BOUND, UError_సంకేతం* స్థితి_2)
 {
-  UResourceBundle *first = nullptr; 
-  UResourceBundle *result = fillIn;
-  char *packageName = nullptr;
-  char *pathToResource = nullptr, *save = nullptr;
-  char *locale = nullptr, *localeEnd = nullptr;
+  UResourceBundle *first = శూన్యసూచిక; 
+  UResourceBundle *ఫలితం = fill_లోపల;
+  అక్షరం *packageName = శూన్యసూచిక;
+  అక్షరం *మార్గం_గమ్యం_Resource = శూన్యసూచిక, *save = శూన్యసూచిక;
+  అక్షరం *locale = శూన్యసూచిక, *locale_చివర = శూన్యసూచిక;
   int32_t length;
 
-  if(status == nullptr || U_FAILURE(*status)) {
-    return result;
+  ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+    తిరిగి ఫలితం;
   }
 
-  length = (int32_t)(uprv_strlen(path)+1);
-  save = pathToResource = (char *)uprv_malloc(length*sizeof(char));
+  length = (int32_t)(uprv_strlen(మార్గం)+1);
+  save = మార్గం_గమ్యం_Resource = (అక్షరం *)uprv_malloc(length*పరిమాణం(అక్షరం));
   /* test for nullptr */
-  if(pathToResource == nullptr) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return result;
+  ఒకవేళ(మార్గం_గమ్యం_Resource == శూన్యసూచిక) {
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి ఫలితం;
   }
-  uprv_memcpy(pathToResource, path, length);
+  uprv_memcpy(మార్గం_గమ్యం_Resource, మార్గం, length);
 
-  locale = pathToResource;
-  if(*pathToResource == RES_PATH_SEPARATOR) { /* there is a path specification */
-    pathToResource++;
-    packageName = pathToResource;
-    pathToResource = uprv_strchr(pathToResource, RES_PATH_SEPARATOR);
-    if(pathToResource == nullptr) {
-      *status = U_ILLEGAL_ARGUMENT_ERROR;
-    } else {
-      *pathToResource = 0;
-      locale = pathToResource+1;
+  locale = మార్గం_గమ్యం_Resource;
+  ఒకవేళ(*మార్గం_గమ్యం_Resource == RES_మార్గం_SEPARATOR) { /* there is a path specification */
+    మార్గం_గమ్యం_Resource++;
+    packageName = మార్గం_గమ్యం_Resource;
+    మార్గం_గమ్యం_Resource = uprv_strchr(మార్గం_గమ్యం_Resource, RES_మార్గం_SEPARATOR);
+    ఒకవేళ(మార్గం_గమ్యం_Resource == శూన్యసూచిక) {
+      *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    } లేకపోతే {
+      *మార్గం_గమ్యం_Resource = 0;
+      locale = మార్గం_గమ్యం_Resource+1;
     }
   }
 
-  localeEnd = uprv_strchr(locale, RES_PATH_SEPARATOR);
-  if(localeEnd != nullptr) {
-    *localeEnd = 0;
+  locale_చివర = uprv_strchr(locale, RES_మార్గం_SEPARATOR);
+  ఒకవేళ(locale_చివర != శూన్యసూచిక) {
+    *locale_చివర = 0;
   }
 
-  first = ures_open(packageName, locale, status);
+  first = ures_open(packageName, locale, స్థితి_2);
 
-  if(U_SUCCESS(*status)) {
-    if(localeEnd) {
-      result = ures_findSubResource(first, localeEnd+1, fillIn, status);
-    } else {
-      result = ures_copyResb(fillIn, first, status);
+  ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+    ఒకవేళ(locale_చివర) {
+      ఫలితం = ures_కనుగొను_Sub_Resource(first, locale_చివర+1, fill_లోపల, స్థితి_2);
+    } లేకపోతే {
+      ఫలితం = ures_copyResb(fill_లోపల, first, స్థితి_2);
     }
     ures_close(first);
   }
   uprv_free(save);
-  return result;
+  తిరిగి ఫలితం;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findSubResource(const UResourceBundle* resB,
-                     char* path,
-                     UResourceBundle* fillIn U_LIFETIME_BOUND,
-                     UErrorCode* status)
+ures_కనుగొను_Sub_Resource(స్థిరరాశి UResourceBundle* resB,
+                     అక్షరం* మార్గం,
+                     UResourceBundle* fill_లోపల U_LIFETIME_BOUND,
+                     UError_సంకేతం* స్థితి_2)
 {
   Resource res = RES_BOGUS;
-  UResourceBundle *result = fillIn;
-  const char *key;
+  UResourceBundle *ఫలితం = fill_లోపల;
+  స్థిరరాశి అక్షరం *కీలకం;
 
-  if(status == nullptr || U_FAILURE(*status)) {
-    return result;
+  ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+    తిరిగి ఫలితం;
   }
 
   /* here we do looping and circular alias checking */
   /* this loop is here because aliasing is resolved on this level, not on res level */
   /* so, when we encounter an alias, it is not an aggregate resource, so we return */
-  do {
-    res = res_findResource(&resB->getResData(), resB->fRes, &path, &key); 
-    if(res != RES_BOGUS) {
-        result = init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
-        resB = result;
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
-        break;
+  చేయి {
+    res = res_కనుగొను_Resource(&resB->get_Res_దత్తాంశం(), resB->fRes, &మార్గం, &కీలకం); 
+    ఒకవేళ(res != RES_BOGUS) {
+        ఫలితం = init_resb_ఫలితం(resB->f_దత్తాంశం, res, కీలకం, -1, resB, fill_లోపల, స్థితి_2);
+        resB = ఫలితం;
+    } లేకపోతే {
+        *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
+        ఆపు;
     }
-  } while(*path); /* there is more stuff in the path */
+  } అయితే(*మార్గం); /* there is more stuff in the path */
 
-  return result;
+  తిరిగి ఫలితం;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByKeyWithFallback(const UResourceBundle* resB U_LIFETIME_BOUND,
-                                const char* inKey,
+U_CAPI స్థిరరాశి char16_t* U_EXPORT2
+ures_get_String_By_కీలకం_With_Fallback(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND,
+                                స్థిరరాశి అక్షరం* లోపల_కీలకం,
                                 int32_t* len,
-                                UErrorCode* status) {
-    UResourceBundle stack;
-    const char16_t* retVal = nullptr;
-    ures_initStackObject(&stack);
-    ures_getByKeyWithFallback(resB, inKey, &stack, status);
+                                UError_సంకేతం* స్థితి_2) {
+    UResourceBundle దొంతర_2;
+    స్థిరరాశి char16_t* retVal = శూన్యసూచిక;
+    ures_init_దొంతర_Object(&దొంతర_2);
+    ures_get_By_కీలకం_With_Fallback(resB, లోపల_కీలకం, &దొంతర_2, స్థితి_2);
     int32_t length;
-    retVal = ures_getString(&stack, &length, status);
-    ures_close(&stack);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    retVal = ures_getString(&దొంతర_2, &length, స్థితి_2);
+    ures_close(&దొంతర_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if (length == 3 && retVal[0] == EMPTY_SET && retVal[1] == EMPTY_SET && retVal[2] == EMPTY_SET ) {
-        retVal = nullptr;
+    ఒకవేళ (length == 3 && retVal[0] == ఖాళీలు_సమితి && retVal[1] == ఖాళీలు_సమితి && retVal[2] == ఖాళీలు_సమితి ) {
+        retVal = శూన్యసూచిక;
         length = 0;
-        *status = U_MISSING_RESOURCE_ERROR;
+        *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
     }
-    if (len != nullptr) {
+    ఒకవేళ (len != శూన్యసూచిక) {
         *len = length;
     }
-    return retVal;
+    తిరిగి retVal;
 }
 
 /*
   Like res_getTableItemByKey but accepts full paths like "NumberElements/latn/patternsShort".
 */  
-static Resource getTableItemByKeyPath(const ResourceData *pResData, Resource table, const char *key) {
-  Resource resource = table;  /* The current resource */
-  icu::CharString path;
-  UErrorCode errorCode = U_ZERO_ERROR;
-  path.append(key, errorCode);
-  if (U_FAILURE(errorCode)) { return RES_BOGUS; }
-  char *pathPart = path.data();  /* Path from current resource to desired resource */
+స్థిర Resource get_పట్టిక_అంశం_By_కీలకం_మార్గం(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource పట్టిక, స్థిరరాశి అక్షరం *కీలకం) {
+  Resource resource = పట్టిక;  /* The current resource */
+  icu::CharString మార్గం;
+  UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
+  మార్గం.append(కీలకం, error_సంకేతం);
+  ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి RES_BOGUS; }
+  అక్షరం *మార్గం_Part = మార్గం.దత్తాంశం();  /* Path from current resource to desired resource */
   UResType type = static_cast<UResType>(RES_GET_TYPE(resource)); /* the current resource type */
-  while (*pathPart && resource != RES_BOGUS && URES_IS_CONTAINER(type)) {
-    char *nextPathPart = uprv_strchr(pathPart, RES_PATH_SEPARATOR);
-    if (nextPathPart != nullptr) {
-      *nextPathPart = 0;  /* Terminating null for this part of path. */
-      nextPathPart++;
-    } else {
-      nextPathPart = uprv_strchr(pathPart, 0);
+  అయితే (*మార్గం_Part && resource != RES_BOGUS && URES_IS_CONTAINER(type)) {
+    అక్షరం *తదుపరి_మార్గం_Part = uprv_strchr(మార్గం_Part, RES_మార్గం_SEPARATOR);
+    ఒకవేళ (తదుపరి_మార్గం_Part != శూన్యసూచిక) {
+      *తదుపరి_మార్గం_Part = 0;  /* Terminating null for this part of path. */
+      తదుపరి_మార్గం_Part++;
+    } లేకపోతే {
+      తదుపరి_మార్గం_Part = uprv_strchr(మార్గం_Part, 0);
     }
     int32_t t;
-    const char *pathP = pathPart;
-    resource = res_getTableItemByKey(pResData, resource, &t, &pathP);
+    స్థిరరాశి అక్షరం *మార్గం_P = మార్గం_Part;
+    resource = res_get_పట్టిక_అంశం_By_కీలకం(p_Res_దత్తాంశం, resource, &t, &మార్గం_P);
     type = static_cast<UResType>(RES_GET_TYPE(resource));
-    pathPart = nextPathPart; 
+    మార్గం_Part = తదుపరి_మార్గం_Part; 
   }
-  if (*pathPart) {
-    return RES_BOGUS;
+  ఒకవేళ (*మార్గం_Part) {
+    తిరిగి RES_BOGUS;
   }
-  return resource;
+  తిరిగి resource;
 }
 
-static void createPath(const char* origResPath,
-                       int32_t     origResPathLen,
-                       const char* resPath,
-                       int32_t     resPathLen,
-                       const char* inKey,
-                       CharString& path,
-                       UErrorCode* status) {
+స్థిర శూన్య create_మార్గం(స్థిరరాశి అక్షరం* orig_Res_మార్గం,
+                       int32_t     orig_Res_మార్గం_Len,
+                       స్థిరరాశి అక్షరం* res_మార్గం,
+                       int32_t     res_మార్గం_Len,
+                       స్థిరరాశి అక్షరం* లోపల_కీలకం,
+                       CharString& మార్గం,
+                       UError_సంకేతం* స్థితి_2) {
     // This is a utility function used by ures_getByKeyWithFallback() below.  This function builds a path from
     // resPath and inKey, returning the result in `path`.  Originally, this function just cleared `path` and
     // appended resPath and inKey to it, but that caused problems for horizontal inheritance.
@@ -2151,47 +2151,47 @@ static void createPath(const char* origResPath,
     // deletes a path element from the beginning of inKey.  The remainder of inKey is then appended to
     // resPath to form the result.  (We're not using uprv_strchr() here because resPath and origResPath may
     // not be zero-terminated.)
-    path.clear();
-    const char* key = inKey;
-    if (resPathLen > 0) {
-        path.append(resPath, resPathLen, *status);
-        if (U_SUCCESS(*status)) {
-            const char* resPathLimit = resPath + resPathLen;
-            const char* origResPathLimit = origResPath + origResPathLen;
-            const char* resPathPtr = resPath;
-            const char* origResPathPtr = origResPath;
+    మార్గం.clear();
+    స్థిరరాశి అక్షరం* కీలకం = లోపల_కీలకం;
+    ఒకవేళ (res_మార్గం_Len > 0) {
+        మార్గం.append(res_మార్గం, res_మార్గం_Len, *స్థితి_2);
+        ఒకవేళ (U_SUCCESS(*స్థితి_2)) {
+            స్థిరరాశి అక్షరం* res_మార్గం_హద్దు = res_మార్గం + res_మార్గం_Len;
+            స్థిరరాశి అక్షరం* orig_Res_మార్గం_హద్దు = orig_Res_మార్గం + orig_Res_మార్గం_Len;
+            స్థిరరాశి అక్షరం* res_మార్గం_Ptr = res_మార్గం;
+            స్థిరరాశి అక్షరం* orig_Res_మార్గం_Ptr = orig_Res_మార్గం;
             
             // Remove from the beginning of resPath the number of segments that are contained in origResPath.
             // If origResPath has MORE segments than resPath, this will leave resPath as the empty string.
-            while (origResPathPtr < origResPathLimit && resPathPtr < resPathLimit) {
-                while (origResPathPtr < origResPathLimit && *origResPathPtr != RES_PATH_SEPARATOR) {
-                    ++origResPathPtr;
+            అయితే (orig_Res_మార్గం_Ptr < orig_Res_మార్గం_హద్దు && res_మార్గం_Ptr < res_మార్గం_హద్దు) {
+                అయితే (orig_Res_మార్గం_Ptr < orig_Res_మార్గం_హద్దు && *orig_Res_మార్గం_Ptr != RES_మార్గం_SEPARATOR) {
+                    ++orig_Res_మార్గం_Ptr;
                 }
-                if (origResPathPtr < origResPathLimit && *origResPathPtr == RES_PATH_SEPARATOR) {
-                    ++origResPathPtr;
+                ఒకవేళ (orig_Res_మార్గం_Ptr < orig_Res_మార్గం_హద్దు && *orig_Res_మార్గం_Ptr == RES_మార్గం_SEPARATOR) {
+                    ++orig_Res_మార్గం_Ptr;
                 }
-                while (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+                అయితే (res_మార్గం_Ptr < res_మార్గం_హద్దు && *res_మార్గం_Ptr != RES_మార్గం_SEPARATOR) {
+                    ++res_మార్గం_Ptr;
                 }
-                if (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+                ఒకవేళ (res_మార్గం_Ptr < res_మార్గం_హద్దు && *res_మార్గం_Ptr == RES_మార్గం_SEPARATOR) {
+                    ++res_మార్గం_Ptr;
                 }
             }
             
             // New remove from the beginning of `key` the number of segments remaining in resPath.
             // If resPath has more segments than `key` does, `key` will end up empty.
-            while (resPathPtr < resPathLimit && *key != '\0') {
-                while (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+            అయితే (res_మార్గం_Ptr < res_మార్గం_హద్దు && *కీలకం != '\0') {
+                అయితే (res_మార్గం_Ptr < res_మార్గం_హద్దు && *res_మార్గం_Ptr != RES_మార్గం_SEPARATOR) {
+                    ++res_మార్గం_Ptr;
                 }
-                if (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+                ఒకవేళ (res_మార్గం_Ptr < res_మార్గం_హద్దు && *res_మార్గం_Ptr == RES_మార్గం_SEPARATOR) {
+                    ++res_మార్గం_Ptr;
                 }
-                while (*key != '\0' && *key != RES_PATH_SEPARATOR) {
-                    ++key;
+                అయితే (*కీలకం != '\0' && *కీలకం != RES_మార్గం_SEPARATOR) {
+                    ++కీలకం;
                 }
-                if (*key == RES_PATH_SEPARATOR) {
-                    ++key;
+                ఒకవేళ (*కీలకం == RES_మార్గం_SEPARATOR) {
+                    ++కీలకం;
                 }
             }
         }
@@ -2199,132 +2199,132 @@ static void createPath(const char* origResPath,
         // any pieces of `key` that aren't superseded by `resPath`.
         // Or, to put it another way, calculate <#-segments-in-key> - (<#-segments-in-resPath> - <#-segments-in-origResPath>),
         // and append that many segments from the end of `key` to `resPath` to produce the result.
-        path.append(key, *status);
-    } else {
-        path.append(inKey, *status);
+        మార్గం.append(కీలకం, *స్థితి_2);
+    } లేకపోతే {
+        మార్గం.append(లోపల_కీలకం, *స్థితి_2);
     }
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKeyWithFallback(const UResourceBundle* resB,
-                          const char* inKey,
-                          UResourceBundle* fillIn U_LIFETIME_BOUND,
-                          UErrorCode* status) {
-    Resource res = RES_BOGUS, rootRes = RES_BOGUS;
-    UResourceBundle *helper = nullptr;
+ures_get_By_కీలకం_With_Fallback(స్థిరరాశి UResourceBundle* resB,
+                          స్థిరరాశి అక్షరం* లోపల_కీలకం,
+                          UResourceBundle* fill_లోపల U_LIFETIME_BOUND,
+                          UError_సంకేతం* స్థితి_2) {
+    Resource res = RES_BOGUS, మూలం_Res = RES_BOGUS;
+    UResourceBundle *helper = శూన్యసూచిక;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return fillIn;
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి fill_లోపల;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return fillIn;
+    ఒకవేళ(resB == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి fill_లోపల;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
-        const char* origResPath = resB->fResPath;
-        int32_t origResPathLen = resB->fResPathLen;
-        res = getTableItemByKeyPath(&resB->getResData(), resB->fRes, inKey);
-        const char* key = inKey;
-        bool didRootOnce = false;
-        if(res == RES_BOGUS) {
-            UResourceDataEntry *dataEntry = resB->fData;
-            CharString path;
-            char *myPath = nullptr;
-            const char* resPath = resB->fResPath;
-            int32_t len = resB->fResPathLen;
-            while(res == RES_BOGUS && (dataEntry->fParent != nullptr || !didRootOnce)) { /* Otherwise, we'll look in parents */
-                if (dataEntry->fParent != nullptr) {
-                    dataEntry = dataEntry->fParent;
-                } else {
+    ఒకవేళ(URES_IS_పట్టిక(type)) {
+        స్థిరరాశి అక్షరం* orig_Res_మార్గం = resB->f_Res_మార్గం;
+        int32_t orig_Res_మార్గం_Len = resB->f_Res_మార్గం_Len;
+        res = get_పట్టిక_అంశం_By_కీలకం_మార్గం(&resB->get_Res_దత్తాంశం(), resB->fRes, లోపల_కీలకం);
+        స్థిరరాశి అక్షరం* కీలకం = లోపల_కీలకం;
+        తార్కిక did_మూలం_Once = అబద్ధం;
+        ఒకవేళ(res == RES_BOGUS) {
+            UResource_దత్తాంశం_నమోదు *దత్తాంశం_నమోదు = resB->f_దత్తాంశం;
+            CharString మార్గం;
+            అక్షరం *my_మార్గం = శూన్యసూచిక;
+            స్థిరరాశి అక్షరం* res_మార్గం = resB->f_Res_మార్గం;
+            int32_t len = resB->f_Res_మార్గం_Len;
+            అయితే(res == RES_BOGUS && (దత్తాంశం_నమోదు->f_మాతృ != శూన్యసూచిక || !did_మూలం_Once)) { /* Otherwise, we'll look in parents */
+                ఒకవేళ (దత్తాంశం_నమోదు->f_మాతృ != శూన్యసూచిక) {
+                    దత్తాంశం_నమోదు = దత్తాంశం_నమోదు->f_మాతృ;
+                } లేకపోతే {
                     // We can't just stop when we get to a bundle whose fParent is nullptr.  That'll work most of the time,
                     // but if the bundle that the caller passed to us was "root" (which happens in getAllItemsWithFallback(),
                     // this function will drop right out without doing anything if "root" doesn't contain the exact key path
                     // specified.  In that case, we need one extra time through this loop to make sure we follow any
                     // applicable aliases at the root level.
-                    didRootOnce = true;
+                    did_మూలం_Once = నిజం;
                 }
-                rootRes = dataEntry->fData.rootRes;
+                మూలం_Res = దత్తాంశం_నమోదు->f_దత్తాంశం.మూలం_Res;
 
-                if(dataEntry->fBogus == U_ZERO_ERROR) {
-                    createPath(origResPath, origResPathLen, resPath, len, inKey, path, status);
-                    if (U_FAILURE(*status)) {
+                ఒకవేళ(దత్తాంశం_నమోదు->fBogus == U_ZERO_ERROR) {
+                    create_మార్గం(orig_Res_మార్గం, orig_Res_మార్గం_Len, res_మార్గం, len, లోపల_కీలకం, మార్గం, స్థితి_2);
+                    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
                         ures_close(helper);
-                        return fillIn;
+                        తిరిగి fill_లోపల;
                     }
-                    myPath = path.data();
-                    key = inKey;
-                    do {
-                        res = res_findResource(&(dataEntry->fData), rootRes, &myPath, &key);
-                        if (RES_GET_TYPE(res) == URES_ALIAS && *myPath) {
+                    my_మార్గం = మార్గం.దత్తాంశం();
+                    కీలకం = లోపల_కీలకం;
+                    చేయి {
+                        res = res_కనుగొను_Resource(&(దత్తాంశం_నమోదు->f_దత్తాంశం), మూలం_Res, &my_మార్గం, &కీలకం);
+                        ఒకవేళ (RES_GET_TYPE(res) == URES_ALIAS && *my_మార్గం) {
                             /* We hit an alias, but we didn't finish following the path. */
-                            helper = init_resb_result(dataEntry, res, nullptr, -1, resB, helper, status);
+                            helper = init_resb_ఫలితం(దత్తాంశం_నమోదు, res, శూన్యసూచిక, -1, resB, helper, స్థితి_2);
                             /*helper = init_resb_result(dataEntry, res, inKey, -1, resB, helper, status);*/
-                            if(helper) {
-                              dataEntry = helper->fData;
-                              rootRes = helper->fRes;
-                              resPath = helper->fResPath;
-                              len = helper->fResPathLen;
+                            ఒకవేళ(helper) {
+                              దత్తాంశం_నమోదు = helper->f_దత్తాంశం;
+                              మూలం_Res = helper->fRes;
+                              res_మార్గం = helper->f_Res_మార్గం;
+                              len = helper->f_Res_మార్గం_Len;
 
-                            } else {
-                              break;
+                            } లేకపోతే {
+                              ఆపు;
                             }
-                        } else if (res == RES_BOGUS) {
-                            break;
+                        } లేకపోతే ఒకవేళ (res == RES_BOGUS) {
+                            ఆపు;
                         }
-                    } while(*myPath); /* Continue until the whole path is consumed */
+                    } అయితే(*my_మార్గం); /* Continue until the whole path is consumed */
                 }
             }
             /*dataEntry = getFallbackData(resB, &key, &res, status);*/
-            if(res != RES_BOGUS) {
+            ఒకవేళ(res != RES_BOGUS) {
               /* check if resB->fResPath gives the right name here */
-                if(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, kRootLocaleName)==0) {
-                    *status = U_USING_DEFAULT_WARNING;
-                } else {
-                    *status = U_USING_FALLBACK_WARNING;
+                ఒకవేళ(uprv_strcmp(దత్తాంశం_నమోదు->fName, uloc_getDefault())==0 || uprv_strcmp(దత్తాంశం_నమోదు->fName, k_మూలం_Locale_Name)==0) {
+                    *స్థితి_2 = U_USING_DEFAULT_WARNING;
+                } లేకపోతే {
+                    *స్థితి_2 = U_USING_FALLBACK_WARNING;
                 }
 
-                fillIn = init_resb_result(dataEntry, res, key, -1, resB, fillIn, status);
-                if (resPath != nullptr) {
-                    createPath(origResPath, origResPathLen, resPath, len, inKey, path, status);
-                } else {
-                    const char* separator = nullptr;
-                    if (fillIn->fResPath != nullptr) {
-                        separator = uprv_strchr(fillIn->fResPath, RES_PATH_SEPARATOR);
+                fill_లోపల = init_resb_ఫలితం(దత్తాంశం_నమోదు, res, కీలకం, -1, resB, fill_లోపల, స్థితి_2);
+                ఒకవేళ (res_మార్గం != శూన్యసూచిక) {
+                    create_మార్గం(orig_Res_మార్గం, orig_Res_మార్గం_Len, res_మార్గం, len, లోపల_కీలకం, మార్గం, స్థితి_2);
+                } లేకపోతే {
+                    స్థిరరాశి అక్షరం* separator = శూన్యసూచిక;
+                    ఒకవేళ (fill_లోపల->f_Res_మార్గం != శూన్యసూచిక) {
+                        separator = uprv_strchr(fill_లోపల->f_Res_మార్గం, RES_మార్గం_SEPARATOR);
                     }
-                    if (separator != nullptr && separator[1] != '\0') {
-                        createPath(origResPath, origResPathLen, fillIn->fResPath,
-                                   static_cast<int32_t>(uprv_strlen(fillIn->fResPath)), inKey, path, status);
-                    } else {
-                        createPath(origResPath, origResPathLen, "", 0, inKey, path, status);
+                    ఒకవేళ (separator != శూన్యసూచిక && separator[1] != '\0') {
+                        create_మార్గం(orig_Res_మార్గం, orig_Res_మార్గం_Len, fill_లోపల->f_Res_మార్గం,
+                                   static_cast<int32_t>(uprv_strlen(fill_లోపల->f_Res_మార్గం)), లోపల_కీలకం, మార్గం, స్థితి_2);
+                    } లేకపోతే {
+                        create_మార్గం(orig_Res_మార్గం, orig_Res_మార్గం_Len, "", 0, లోపల_కీలకం, మార్గం, స్థితి_2);
                     }
                 }
-                ures_freeResPath(fillIn);
-                ures_appendResPath(fillIn, path.data(), path.length(), status);
-                if(fillIn->fResPath[fillIn->fResPathLen-1] != RES_PATH_SEPARATOR) {
-                    ures_appendResPath(fillIn, RES_PATH_SEPARATOR_S, 1, status);
+                ures_free_Res_మార్గం(fill_లోపల);
+                ures_append_Res_మార్గం(fill_లోపల, మార్గం.దత్తాంశం(), మార్గం.length(), స్థితి_2);
+                ఒకవేళ(fill_లోపల->f_Res_మార్గం[fill_లోపల->f_Res_మార్గం_Len-1] != RES_మార్గం_SEPARATOR) {
+                    ures_append_Res_మార్గం(fill_లోపల, RES_మార్గం_SEPARATOR_S, 1, స్థితి_2);
                 }
-            } else {
-                *status = U_MISSING_RESOURCE_ERROR;
+            } లేకపోతే {
+                *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            fillIn = init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
+        } లేకపోతే {
+            fill_లోపల = init_resb_ఫలితం(resB->f_దత్తాంశం, res, కీలకం, -1, resB, fill_లోపల, స్థితి_2);
         }
     } 
-    else {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+    లేకపోతే {
+        *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
     }
     ures_close(helper);
-    return fillIn;
+    తిరిగి fill_లోపల;
 }
 
-namespace {
+నామాకాశ {
 
-void getAllItemsWithFallback(
-        const UResourceBundle *bundle, ResourceDataValue &value,
-        ResourceSink &sink, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
+శూన్య get_All_వస్తువులు_With_Fallback(
+        స్థిరరాశి UResourceBundle *bundle, Resource_దత్తాంశం_విలువ &value,
+        ResourceSink &sink, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
     // We recursively enumerate child-first,
     // only storing parent items in the absence of child items.
     // The sink needs to store a placeholder value for the no-fallback/no-inheritance marker
@@ -2335,13 +2335,13 @@ void getAllItemsWithFallback(
     // When the sink sees the no-fallback/no-inheritance marker,
     // then it would remove the parent's item.
     // We would deserialize parent values even though they are overridden in a child bundle.
-    value.setData(bundle->getResData());
-    value.setValidLocaleDataEntry(bundle->fValidLocaleDataEntry);
-    UResourceDataEntry *parentEntry = bundle->fData->fParent;
-    UBool hasParent = parentEntry != nullptr && U_SUCCESS(parentEntry->fBogus);
-    value.setResource(bundle->fRes, ResourceTracer(bundle));
-    sink.put(bundle->fKey, value, !hasParent, errorCode);
-    if (hasParent) {
+    value.సమితి_దత్తాంశం(bundle->get_Res_దత్తాంశం());
+    value.సమితి_Valid_Locale_దత్తాంశం_నమోదు(bundle->f_Valid_Locale_దత్తాంశం_నమోదు);
+    UResource_దత్తాంశం_నమోదు *మాతృ_నమోదు = bundle->f_దత్తాంశం->f_మాతృ;
+    UBool has_మాతృ = మాతృ_నమోదు != శూన్యసూచిక && U_SUCCESS(మాతృ_నమోదు->fBogus);
+    value.సమితి_Resource(bundle->fRes, ResourceTracer(bundle));
+    sink.put(bundle->f_కీలకం, value, !has_మాతృ, error_సంకేతం);
+    ఒకవేళ (has_మాతృ) {
         // We might try to query the sink whether
         // any fallback from the parent bundle is still possible.
 
@@ -2350,121 +2350,121 @@ void getAllItemsWithFallback(
         // TODO: See if we can refactor ures_getByKeyWithFallback()
         // and pull out an inner function that takes and returns a UResourceDataEntry
         // so that we need not create UResourceBundle objects.
-        StackUResourceBundle parentBundle;
-        UResourceBundle &parentRef = parentBundle.ref();
-        parentRef.fData = parentEntry;
-        parentRef.fValidLocaleDataEntry = bundle->fValidLocaleDataEntry;
-        parentRef.fHasFallback = !parentRef.getResData().noFallback;
-        parentRef.fIsTopLevel = true;
-        parentRef.fRes = parentRef.getResData().rootRes;
-        parentRef.fSize = res_countArrayItems(&parentRef.getResData(), parentRef.fRes);
-        parentRef.fIndex = -1;
-        entryIncrease(parentEntry);
+        దొంతర_UResource_Bundle మాతృ_Bundle;
+        UResourceBundle &మాతృ_Ref = మాతృ_Bundle.ref();
+        మాతృ_Ref.f_దత్తాంశం = మాతృ_నమోదు;
+        మాతృ_Ref.f_Valid_Locale_దత్తాంశం_నమోదు = bundle->f_Valid_Locale_దత్తాంశం_నమోదు;
+        మాతృ_Ref.fHasFallback = !మాతృ_Ref.get_Res_దత్తాంశం().noFallback;
+        మాతృ_Ref.f_Is_శిఖరం_Level = నిజం;
+        మాతృ_Ref.fRes = మాతృ_Ref.get_Res_దత్తాంశం().మూలం_Res;
+        మాతృ_Ref.f_కొలత = res_లెక్క_Array_వస్తువులు(&మాతృ_Ref.get_Res_దత్తాంశం(), మాతృ_Ref.fRes);
+        మాతృ_Ref.f_సూచీ = -1;
+        నమోదు_Increase(మాతృ_నమోదు);
 
         // Look up the container item in the parent bundle.
-        StackUResourceBundle containerBundle;
-        const UResourceBundle *rb;
-        UErrorCode pathErrorCode = U_ZERO_ERROR;  // Ignore if parents up to root do not have this path.
-        if (bundle->fResPath == nullptr || *bundle->fResPath == 0) {
-            rb = parentBundle.getAlias();
-        } else {
-            rb = ures_getByKeyWithFallback(parentBundle.getAlias(), bundle->fResPath,
-                                           containerBundle.getAlias(), &pathErrorCode);
+        దొంతర_UResource_Bundle containerBundle;
+        స్థిరరాశి UResourceBundle *rb;
+        UError_సంకేతం మార్గం_Error_సంకేతం = U_ZERO_ERROR;  // Ignore if parents up to root do not have this path.
+        ఒకవేళ (bundle->f_Res_మార్గం == శూన్యసూచిక || *bundle->f_Res_మార్గం == 0) {
+            rb = మాతృ_Bundle.getAlias();
+        } లేకపోతే {
+            rb = ures_get_By_కీలకం_With_Fallback(మాతృ_Bundle.getAlias(), bundle->f_Res_మార్గం,
+                                           containerBundle.getAlias(), &మార్గం_Error_సంకేతం);
         }
-        if (U_SUCCESS(pathErrorCode)) {
-            getAllItemsWithFallback(rb, value, sink, errorCode);
+        ఒకవేళ (U_SUCCESS(మార్గం_Error_సంకేతం)) {
+            get_All_వస్తువులు_With_Fallback(rb, value, sink, error_సంకేతం);
         }
     }
 }
 
-struct GetAllChildrenSink : public ResourceSink {
+నిర్మాణం GetAllChildrenSink : బహిరంగ ResourceSink {
     // Destination sink
     ResourceSink& dest;
 
     GetAllChildrenSink(ResourceSink& dest)
         : dest(dest) {}
-    virtual ~GetAllChildrenSink() override;
-    virtual void put(const char *key, ResourceValue &value, UBool isRoot,
-           UErrorCode &errorCode) override {
-        ResourceTable itemsTable = value.getTable(errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        for (int32_t i = 0; itemsTable.getKeyAndValue(i, key, value); ++i) {
-            if (value.getType() == URES_ALIAS) {
-                ResourceDataValue& rdv = static_cast<ResourceDataValue&>(value);
-                StackUResourceBundle stackTempBundle;
-                UResourceBundle* aliasRB = getAliasTargetAsResourceBundle(rdv.getData(), rdv.getResource(), nullptr, -1,
-                                                                          rdv.getValidLocaleDataEntry(), nullptr, 0,
-                                                                          stackTempBundle.getAlias(), &errorCode);
-                if (U_SUCCESS(errorCode)) {
-                    ResourceDataValue aliasedValue;
-                    aliasedValue.setData(aliasRB->getResData());
-                    aliasedValue.setValidLocaleDataEntry(aliasRB->fValidLocaleDataEntry);
-                    aliasedValue.setResource(aliasRB->fRes, ResourceTracer(aliasRB));
+    మాయా ~GetAllChildrenSink() override;
+    మాయా శూన్య put(స్థిరరాశి అక్షరం *కీలకం, Resource_విలువ &value, UBool is_మూలం,
+           UError_సంకేతం &error_సంకేతం) override {
+        Resource_పట్టిక వస్తువులు_పట్టిక = value.get_పట్టిక(error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+        కొరకు (int32_t i = 0; వస్తువులు_పట్టిక.get_కీలకం_And_విలువ(i, కీలకం, value); ++i) {
+            ఒకవేళ (value.getType() == URES_ALIAS) {
+                Resource_దత్తాంశం_విలువ& rdv = static_cast<Resource_దత్తాంశం_విలువ&>(value);
+                దొంతర_UResource_Bundle దొంతర_తాత్కాలిక_Bundle;
+                UResourceBundle* aliasRB = get_Alias_లక్ష్యం_As_Resource_Bundle(rdv.get_దత్తాంశం(), rdv.getResource(), శూన్యసూచిక, -1,
+                                                                          rdv.get_Valid_Locale_దత్తాంశం_నమోదు(), శూన్యసూచిక, 0,
+                                                                          దొంతర_తాత్కాలిక_Bundle.getAlias(), &error_సంకేతం);
+                ఒకవేళ (U_SUCCESS(error_సంకేతం)) {
+                    Resource_దత్తాంశం_విలువ aliased_విలువ;
+                    aliased_విలువ.సమితి_దత్తాంశం(aliasRB->get_Res_దత్తాంశం());
+                    aliased_విలువ.సమితి_Valid_Locale_దత్తాంశం_నమోదు(aliasRB->f_Valid_Locale_దత్తాంశం_నమోదు);
+                    aliased_విలువ.సమితి_Resource(aliasRB->fRes, ResourceTracer(aliasRB));
                     
-                    if (aliasedValue.getType() != URES_TABLE) {
-                        dest.put(key, aliasedValue, isRoot, errorCode);
-                    } else {
+                    ఒకవేళ (aliased_విలువ.getType() != URES_పట్టిక) {
+                        dest.put(కీలకం, aliased_విలువ, is_మూలం, error_సంకేతం);
+                    } లేకపోతే {
                         // if the resource we're aliasing over to is a table, the sink might iterate over its contents.
                         // If it does, it'll get only the things defined in the actual alias target, not the things
                         // the target inherits from its parent resources.  So we walk the parent chain for the *alias target*,
                         // calling dest.put() for each of the parent tables we could be inheriting from.  This means
                         // that dest.put() has to iterate over the children of multiple tables to get all of the inherited
                         // resource values, but it already has to do that to handle normal vertical inheritance.
-                        UResType aliasedValueType = URES_TABLE;
-                        CharString tablePath;
-                        tablePath.append(aliasRB->fResPath, errorCode);
-                        const char* parentKey = key; // dest.put() changes the key
-                        dest.put(parentKey, aliasedValue, isRoot, errorCode);
-                        UResourceDataEntry* entry = aliasRB->fData;
+                        UResType aliased_విలువ_Type = URES_పట్టిక;
+                        CharString పట్టిక_మార్గం;
+                        పట్టిక_మార్గం.append(aliasRB->f_Res_మార్గం, error_సంకేతం);
+                        స్థిరరాశి అక్షరం* మాతృ_కీలకం = కీలకం; // dest.put() changes the key
+                        dest.put(మాతృ_కీలకం, aliased_విలువ, is_మూలం, error_సంకేతం);
+                        UResource_దత్తాంశం_నమోదు* నమోదు_2 = aliasRB->f_దత్తాంశం;
                         Resource res = aliasRB->fRes;
-                        while (aliasedValueType == URES_TABLE && entry->fParent != nullptr) {
-                            CharString localPath;
-                            localPath.copyFrom(tablePath, errorCode);
-                            char* localPathAsCharPtr = localPath.data();
-                            const char* childKey;
-                            entry = entry->fParent;
-                            res = entry->fData.rootRes;
-                            Resource newRes = res_findResource(&entry->fData, res, &localPathAsCharPtr, &childKey);
-                            if (newRes != RES_BOGUS) {
-                                aliasedValue.setData(entry->fData);
+                        అయితే (aliased_విలువ_Type == URES_పట్టిక && నమోదు_2->f_మాతృ != శూన్యసూచిక) {
+                            CharString local_మార్గం;
+                            local_మార్గం.copyFrom(పట్టిక_మార్గం, error_సంకేతం);
+                            అక్షరం* local_మార్గం_As_Char_Ptr = local_మార్గం.దత్తాంశం();
+                            స్థిరరాశి అక్షరం* బిడ్డ_కీలకం;
+                            నమోదు_2 = నమోదు_2->f_మాతృ;
+                            res = నమోదు_2->f_దత్తాంశం.మూలం_Res;
+                            Resource newRes = res_కనుగొను_Resource(&నమోదు_2->f_దత్తాంశం, res, &local_మార్గం_As_Char_Ptr, &బిడ్డ_కీలకం);
+                            ఒకవేళ (newRes != RES_BOGUS) {
+                                aliased_విలువ.సమితి_దత్తాంశం(నమోదు_2->f_దత్తాంశం);
                                 // TODO: do I also need to call aliasedValue.setValueLocaleDataEntry() ?
-                                aliasedValue.setResource(newRes, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
-                                aliasedValueType = aliasedValue.getType();
-                                if (aliasedValueType == URES_ALIAS) {
+                                aliased_విలువ.సమితి_Resource(newRes, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
+                                aliased_విలువ_Type = aliased_విలువ.getType();
+                                ఒకవేళ (aliased_విలువ_Type == URES_ALIAS) {
                                     // in a few rare cases, when we get to the root resource bundle, the resource in question
                                     // won't be an actual table, but will instead be an alias to a table.  That is, we have
                                     // two aliases in the inheritance path.  (For some locales, such as Zulu, we see this with
                                     // children of the "fields" resource: "day-narrow" aliases to "day-short", which aliases
                                     // to "day".)  When this happens, we need to make sure we follow all the aliases.
-                                    ResourceDataValue& rdv2 = static_cast<ResourceDataValue&>(aliasedValue);
-                                    aliasRB = getAliasTargetAsResourceBundle(rdv2.getData(), rdv2.getResource(), nullptr, -1,
-                                                                             rdv2.getValidLocaleDataEntry(), nullptr, 0,
-                                                                             stackTempBundle.getAlias(), &errorCode);
-                                    tablePath.clear();
-                                    tablePath.append(aliasRB->fResPath, errorCode);
-                                    entry = aliasRB->fData;
+                                    Resource_దత్తాంశం_విలువ& rdv2 = static_cast<Resource_దత్తాంశం_విలువ&>(aliased_విలువ);
+                                    aliasRB = get_Alias_లక్ష్యం_As_Resource_Bundle(rdv2.get_దత్తాంశం(), rdv2.getResource(), శూన్యసూచిక, -1,
+                                                                             rdv2.get_Valid_Locale_దత్తాంశం_నమోదు(), శూన్యసూచిక, 0,
+                                                                             దొంతర_తాత్కాలిక_Bundle.getAlias(), &error_సంకేతం);
+                                    పట్టిక_మార్గం.clear();
+                                    పట్టిక_మార్గం.append(aliasRB->f_Res_మార్గం, error_సంకేతం);
+                                    నమోదు_2 = aliasRB->f_దత్తాంశం;
                                     res = aliasRB->fRes;
-                                    aliasedValue.setData(entry->fData);
+                                    aliased_విలువ.సమితి_దత్తాంశం(నమోదు_2->f_దత్తాంశం);
                                     // TODO: do I also need to call aliasedValue.setValueLocaleDataEntry() ?
-                                    aliasedValue.setResource(res, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
-                                    aliasedValueType = aliasedValue.getType();
+                                    aliased_విలువ.సమితి_Resource(res, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
+                                    aliased_విలువ_Type = aliased_విలువ.getType();
                                 }
-                                if (aliasedValueType == URES_TABLE) {
-                                    dest.put(parentKey, aliasedValue, isRoot, errorCode);
-                                } else {
+                                ఒకవేళ (aliased_విలువ_Type == URES_పట్టిక) {
+                                    dest.put(మాతృ_కీలకం, aliased_విలువ, is_మూలం, error_సంకేతం);
+                                } లేకపోతే {
                                     // once we've followed the alias, the resource we're looking at really should
                                     // be a table
-                                    errorCode = U_INTERNAL_PROGRAM_ERROR;
-                                    return;
+                                    error_సంకేతం = U_అంతర్గత_కార్యక్రమం_ERROR;
+                                    తిరిగి;
                                 }
                             }
                         }
                     }
                 }
-            } else {
-                dest.put(key, value, isRoot, errorCode);
+            } లేకపోతే {
+                dest.put(కీలకం, value, is_మూలం, error_సంకేతం);
             }
-            if (U_FAILURE(errorCode)) { return; }
+            ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
         }
     }
 };
@@ -2472,11 +2472,11 @@ struct GetAllChildrenSink : public ResourceSink {
 // Virtual destructors must be defined out of line.
 GetAllChildrenSink::~GetAllChildrenSink() {}
 
-U_CAPI void U_EXPORT2
-ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
-                                icu::ResourceSink &sink, UErrorCode &errorCode) {
+U_CAPI శూన్య U_EXPORT2
+ures_getAllChildrenWithFallback(స్థిరరాశి UResourceBundle *bundle, స్థిరరాశి అక్షరం *మార్గం,
+                                icu::ResourceSink &sink, UError_సంకేతం &error_సంకేతం) {
     GetAllChildrenSink allChildrenSink(sink);
-    ures_getAllItemsWithFallback(bundle, path, allChildrenSink, errorCode);
+    ures_get_All_వస్తువులు_With_Fallback(bundle, మార్గం, allChildrenSink, error_సంకేతం);
 }
 
 }  // namespace
@@ -2490,208 +2490,208 @@ ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
 // Also requires a UResourceBundle fill-in, so that the value's ResourceTracer
 // can point to a non-local bundle.
 // Without tracing, the child bundle could be a function-local object.
-U_CAPI void U_EXPORT2
-ures_getValueWithFallback(const UResourceBundle *bundle, const char *path,
-                          UResourceBundle *tempFillIn,
-                          ResourceDataValue &value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (path == nullptr) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI శూన్య U_EXPORT2
+ures_get_విలువ_With_Fallback(స్థిరరాశి UResourceBundle *bundle, స్థిరరాశి అక్షరం *మార్గం,
+                          UResourceBundle *తాత్కాలిక_Fill_లోపల,
+                          Resource_దత్తాంశం_విలువ &value, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+    ఒకవేళ (మార్గం == శూన్యసూచిక) {
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    const UResourceBundle *rb;
-    if (*path == 0) {
+    స్థిరరాశి UResourceBundle *rb;
+    ఒకవేళ (*మార్గం == 0) {
         // empty path
         rb = bundle;
-    } else {
-        rb = ures_getByKeyWithFallback(bundle, path, tempFillIn, &errorCode);
-        if (U_FAILURE(errorCode)) {
-            return;
+    } లేకపోతే {
+        rb = ures_get_By_కీలకం_With_Fallback(bundle, మార్గం, తాత్కాలిక_Fill_లోపల, &error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            తిరిగి;
         }
     }
-    value.setData(rb->getResData());
-    value.setValidLocaleDataEntry(rb->fValidLocaleDataEntry);
-    value.setResource(rb->fRes, ResourceTracer(rb));
+    value.సమితి_దత్తాంశం(rb->get_Res_దత్తాంశం());
+    value.సమితి_Valid_Locale_దత్తాంశం_నమోదు(rb->f_Valid_Locale_దత్తాంశం_నమోదు);
+    value.సమితి_Resource(rb->fRes, ResourceTracer(rb));
 }
 
-U_CAPI void U_EXPORT2
-ures_getAllItemsWithFallback(const UResourceBundle *bundle, const char *path,
-                             icu::ResourceSink &sink, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (path == nullptr) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI శూన్య U_EXPORT2
+ures_get_All_వస్తువులు_With_Fallback(స్థిరరాశి UResourceBundle *bundle, స్థిరరాశి అక్షరం *మార్గం,
+                             icu::ResourceSink &sink, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+    ఒకవేళ (మార్గం == శూన్యసూచిక) {
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    StackUResourceBundle stackBundle;
-    const UResourceBundle *rb;
-    if (*path == 0) {
+    దొంతర_UResource_Bundle దొంతర_Bundle;
+    స్థిరరాశి UResourceBundle *rb;
+    ఒకవేళ (*మార్గం == 0) {
         // empty path
         rb = bundle;
-    } else {
-        rb = ures_getByKeyWithFallback(bundle, path, stackBundle.getAlias(), &errorCode);
-        if (U_FAILURE(errorCode)) {
-            return;
+    } లేకపోతే {
+        rb = ures_get_By_కీలకం_With_Fallback(bundle, మార్గం, దొంతర_Bundle.getAlias(), &error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            తిరిగి;
         }
     }
     // Get all table items with fallback.
-    ResourceDataValue value;
-    getAllItemsWithFallback(rb, value, sink, errorCode);
+    Resource_దత్తాంశం_విలువ value;
+    get_All_వస్తువులు_With_Fallback(rb, value, sink, error_సంకేతం);
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resB,
-              const char* inKey,
-              UResourceBundle* fillIn U_LIFETIME_BOUND,
-              UErrorCode* status) {
+ures_get_By_కీలకం(స్థిరరాశి UResourceBundle* resB,
+              స్థిరరాశి అక్షరం* లోపల_కీలకం,
+              UResourceBundle* fill_లోపల U_LIFETIME_BOUND,
+              UError_సంకేతం* స్థితి_2) {
     Resource res = RES_BOGUS;
-    UResourceDataEntry *dataEntry = nullptr;
-    const char *key = inKey;
+    UResource_దత్తాంశం_నమోదు *దత్తాంశం_నమోదు = శూన్యసూచిక;
+    స్థిరరాశి అక్షరం *కీలకం = లోపల_కీలకం;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return fillIn;
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి fill_లోపల;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return fillIn;
+    ఒకవేళ(resB == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి fill_లోపల;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
+    ఒకవేళ(URES_IS_పట్టిక(type)) {
         int32_t t;
-        res = res_getTableItemByKey(&resB->getResData(), resB->fRes, &t, &key);
-        if(res == RES_BOGUS) {
-            key = inKey;
-            if(resB->fHasFallback) {
-                dataEntry = getFallbackData(resB, &key, &res, status);
-                if(U_SUCCESS(*status)) {
+        res = res_get_పట్టిక_అంశం_By_కీలకం(&resB->get_Res_దత్తాంశం(), resB->fRes, &t, &కీలకం);
+        ఒకవేళ(res == RES_BOGUS) {
+            కీలకం = లోపల_కీలకం;
+            ఒకవేళ(resB->fHasFallback) {
+                దత్తాంశం_నమోదు = get_Fallback_దత్తాంశం(resB, &కీలకం, &res, స్థితి_2);
+                ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
                     /* check if resB->fResPath gives the right name here */
-                    return init_resb_result(dataEntry, res, key, -1, resB, fillIn, status);
-                } else {
-                    *status = U_MISSING_RESOURCE_ERROR;
+                    తిరిగి init_resb_ఫలితం(దత్తాంశం_నమోదు, res, కీలకం, -1, resB, fill_లోపల, స్థితి_2);
+                } లేకపోతే {
+                    *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
                 }
-            } else {
-                *status = U_MISSING_RESOURCE_ERROR;
+            } లేకపోతే {
+                *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            return init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
+        } లేకపోతే {
+            తిరిగి init_resb_ఫలితం(resB->f_దత్తాంశం, res, కీలకం, -1, resB, fill_లోపల, స్థితి_2);
         }
     } 
-#if 0
+#ఒకవేళ 0
     /* this is a kind of TODO item. If we have an array with an index table, we could do this. */
     /* not currently */
-    else if(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == true) {
+    లేకపోతే ఒకవేళ(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == నిజం) {
         /* here should go a first attempt to locate the key using index table */
-        dataEntry = getFallbackData(resB, &key, &res, status);
-        if(U_SUCCESS(*status)) {
-            return init_resb_result(dataEntry, res, key, resB, fillIn, status);
-        } else {
-            *status = U_MISSING_RESOURCE_ERROR;
+        దత్తాంశం_నమోదు = get_Fallback_దత్తాంశం(resB, &కీలకం, &res, స్థితి_2);
+        ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+            తిరిగి init_resb_ఫలితం(దత్తాంశం_నమోదు, res, కీలకం, resB, fill_లోపల, స్థితి_2);
+        } లేకపోతే {
+            *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
         }
     }
-#endif    
-    else {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+#అయితే_ముగింపు    
+    లేకపోతే {
+        *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
     }
-    return fillIn;
+    తిరిగి fill_లోపల;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* inKey,
+U_CAPI స్థిరరాశి char16_t* U_EXPORT2
+ures_get_String_By_కీలకం(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND,
+                    స్థిరరాశి అక్షరం* లోపల_కీలకం,
                     int32_t* len,
-                    UErrorCode* status) {
+                    UError_సంకేతం* స్థితి_2) {
     Resource res = RES_BOGUS;
-    UResourceDataEntry *dataEntry = nullptr;
-    const char* key = inKey;
+    UResource_దత్తాంశం_నమోదు *దత్తాంశం_నమోదు = శూన్యసూచిక;
+    స్థిరరాశి అక్షరం* కీలకం = లోపల_కీలకం;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ(resB == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
+    ఒకవేళ(URES_IS_పట్టిక(type)) {
         int32_t t=0;
 
-        res = res_getTableItemByKey(&resB->getResData(), resB->fRes, &t, &key);
+        res = res_get_పట్టిక_అంశం_By_కీలకం(&resB->get_Res_దత్తాంశం(), resB->fRes, &t, &కీలకం);
 
-        if(res == RES_BOGUS) {
-            key = inKey;
-            if(resB->fHasFallback) {
-                dataEntry = getFallbackData(resB, &key, &res, status);
-                if(U_SUCCESS(*status)) {
-                    switch (RES_GET_TYPE(res)) {
-                    case URES_STRING:
-                    case URES_STRING_V2:
-                        return res_getString({resB, key}, &dataEntry->fData, res, len);
-                    case URES_ALIAS:
+        ఒకవేళ(res == RES_BOGUS) {
+            కీలకం = లోపల_కీలకం;
+            ఒకవేళ(resB->fHasFallback) {
+                దత్తాంశం_నమోదు = get_Fallback_దత్తాంశం(resB, &కీలకం, &res, స్థితి_2);
+                ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+                    ఎంపిక (RES_GET_TYPE(res)) {
+                    స్థితి URES_STRING:
+                    స్థితి URES_STRING_V2:
+                        తిరిగి res_getString({resB, కీలకం}, &దత్తాంశం_నమోదు->f_దత్తాంశం, res, len);
+                    స్థితి URES_ALIAS:
                       {
-                        const char16_t* result = nullptr;
-                        UResourceBundle *tempRes = ures_getByKey(resB, inKey, nullptr, status);
-                        result = ures_getString(tempRes, len, status);
-                        ures_close(tempRes);
-                        return result;
+                        స్థిరరాశి char16_t* ఫలితం = శూన్యసూచిక;
+                        UResourceBundle *తాత్కాలిక_Res = ures_get_By_కీలకం(resB, లోపల_కీలకం, శూన్యసూచిక, స్థితి_2);
+                        ఫలితం = ures_getString(తాత్కాలిక_Res, len, స్థితి_2);
+                        ures_close(తాత్కాలిక_Res);
+                        తిరిగి ఫలితం;
                       }
-                    default:
-                        *status = U_RESOURCE_TYPE_MISMATCH;
+                    అప్రమేయ:
+                        *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
                     }
-                } else {
-                    *status = U_MISSING_RESOURCE_ERROR;
+                } లేకపోతే {
+                    *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
                 }
-            } else {
-                *status = U_MISSING_RESOURCE_ERROR;
+            } లేకపోతే {
+                *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            switch (RES_GET_TYPE(res)) {
-            case URES_STRING:
-            case URES_STRING_V2:
-                return res_getString({resB, key}, &resB->getResData(), res, len);
-            case URES_ALIAS:
+        } లేకపోతే {
+            ఎంపిక (RES_GET_TYPE(res)) {
+            స్థితి URES_STRING:
+            స్థితి URES_STRING_V2:
+                తిరిగి res_getString({resB, కీలకం}, &resB->get_Res_దత్తాంశం(), res, len);
+            స్థితి URES_ALIAS:
               {
-                const char16_t* result = nullptr;
-                UResourceBundle *tempRes = ures_getByKey(resB, inKey, nullptr, status);
-                result = ures_getString(tempRes, len, status);
-                ures_close(tempRes);
-                return result;
+                స్థిరరాశి char16_t* ఫలితం = శూన్యసూచిక;
+                UResourceBundle *తాత్కాలిక_Res = ures_get_By_కీలకం(resB, లోపల_కీలకం, శూన్యసూచిక, స్థితి_2);
+                ఫలితం = ures_getString(తాత్కాలిక_Res, len, స్థితి_2);
+                ures_close(తాత్కాలిక_Res);
+                తిరిగి ఫలితం;
               }
-            default:
-                *status = U_RESOURCE_TYPE_MISMATCH;
+            అప్రమేయ:
+                *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
             }
         }
     } 
-#if 0 
+#ఒకవేళ 0 
     /* this is a kind of TODO item. If we have an array with an index table, we could do this. */
     /* not currently */   
-    else if(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == true) {
+    లేకపోతే ఒకవేళ(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == నిజం) {
         /* here should go a first attempt to locate the key using index table */
-        dataEntry = getFallbackData(resB, &key, &res, status);
-        if(U_SUCCESS(*status)) {
+        దత్తాంశం_నమోదు = get_Fallback_దత్తాంశం(resB, &కీలకం, &res, స్థితి_2);
+        ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
             // TODO: Tracing
-            return res_getString(rd, res, len);
-        } else {
-            *status = U_MISSING_RESOURCE_ERROR;
+            తిరిగి res_getString(rd, res, len);
+        } లేకపోతే {
+            *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
         }
     } 
-#endif    
-    else {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+#అయితే_ముగింపు    
+    లేకపోతే {
+        *స్థితి_2 = U_RESOURCE_TYPE_MISMATCH;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
-                        int32_t* pLength,
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_UTF8_String_By_కీలకం(స్థిరరాశి UResourceBundle* resB,
+                        స్థిరరాశి అక్షరం* కీలకం,
+                        అక్షరం* dest U_LIFETIME_BOUND,
+                        int32_t* p_నిడివి,
                         UBool forceCopy,
-                        UErrorCode* status) {
+                        UError_సంకేతం* స్థితి_2) {
     int32_t length16;
-    const char16_t *s16 = ures_getStringByKey(resB, key, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    స్థిరరాశి char16_t *s16 = ures_get_String_By_కీలకం(resB, కీలకం, &length16, స్థితి_2);
+    తిరిగి ures_గమ్యం_UTF8_String(s16, length16, dest, p_నిడివి, forceCopy, స్థితి_2);
 }
 
 /* TODO: clean from here down */
@@ -2700,139 +2700,139 @@ ures_getUTF8StringByKey(const UResourceBundle* resB,
  *  INTERNAL: Get the name of the first real locale (not placeholder) 
  *  that has resource bundle data.
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_Locale_అంతర్గత(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND, UError_సంకేతం* స్థితి_2)
 {
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if (!resourceBundle) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-      return resourceBundle->fData->fName;
+    ఒకవేళ (!resourceBundle) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే {
+      తిరిగి resourceBundle->f_దత్తాంశం->fName;
     }
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_getLocale(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND, UError_సంకేతం* స్థితి_2)
 {
-  return ures_getLocaleInternal(resourceBundle, status);
+  తిరిగి ures_get_Locale_అంతర్గత(resourceBundle, స్థితి_2);
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
-                     ULocDataLocaleType type,
-                     UErrorCode* status) {
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_getLocaleByType(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+                     ULoc_దత్తాంశం_Locale_Type type,
+                     UError_సంకేతం* స్థితి_2) {
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if (!resourceBundle) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        switch(type) {
-        case ULOC_ACTUAL_LOCALE:
-            return resourceBundle->fData->fName;
-        case ULOC_VALID_LOCALE:
-            return resourceBundle->fValidLocaleDataEntry->fName;
-        case ULOC_REQUESTED_LOCALE:
-        default:
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+    ఒకవేళ (!resourceBundle) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే {
+        ఎంపిక(type) {
+        స్థితి ULOC_ACTUAL_LOCALE:
+            తిరిగి resourceBundle->f_దత్తాంశం->fName;
+        స్థితి ULOC_VALID_LOCALE:
+            తిరిగి resourceBundle->f_Valid_Locale_దత్తాంశం_నమోదు->fName;
+        స్థితి ULOC_REQUESTED_LOCALE:
+        అప్రమేయ:
+            *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
     }
 }
 
-U_CFUNC const char*
-ures_getName(const UResourceBundle* resB U_LIFETIME_BOUND) {
-  if(resB == nullptr) {
-    return nullptr;
+U_CFUNC స్థిరరాశి అక్షరం*
+ures_getName(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND) {
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    తిరిగి శూన్యసూచిక;
   }
 
-  return resB->fData->fName;
+  తిరిగి resB->f_దత్తాంశం->fName;
 }
 
-#ifdef URES_DEBUG
-U_CFUNC const char*
-ures_getPath(const UResourceBundle* resB U_LIFETIME_BOUND) {
-  if(resB == nullptr) {
-    return nullptr;
+#నిర్వచితమైతే URES_DEBUG
+U_CFUNC స్థిరరాశి అక్షరం*
+ures_get_మార్గం(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND) {
+  ఒకవేళ(resB == శూన్యసూచిక) {
+    తిరిగి శూన్యసూచిక;
   }
 
-  return resB->fData->fPath;
+  తిరిగి resB->f_దత్తాంశం->f_మార్గం;
 }
-#endif
+#అయితే_ముగింపు
 
-static UResourceBundle*
+స్థిర UResourceBundle*
 ures_openWithType(UResourceBundle* r U_LIFETIME_BOUND,
-                  const char* path,
-                  const char* localeID,
+                  స్థిరరాశి అక్షరం* మార్గం,
+                  స్థిరరాశి అక్షరం* localeID,
                   UResOpenType openType,
-                  UErrorCode* status) {
-    if(U_FAILURE(*status)) {
-        return nullptr;
+                  UError_సంకేతం* స్థితి_2) {
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    UResourceDataEntry *entry;
-    if(openType != URES_OPEN_DIRECT) {
-        if (localeID == nullptr) {
+    UResource_దత్తాంశం_నమోదు *నమోదు_2;
+    ఒకవేళ(openType != URES_OPEN_ప్రత్యక్ష) {
+        ఒకవేళ (localeID == శూన్యసూచిక) {
             localeID = uloc_getDefault();
         }
         /* first "canonicalize" the locale ID */
-        CharString canonLocaleID = ulocimp_getBaseName(localeID, *status);
-        if(U_FAILURE(*status)) {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+        CharString canonLocaleID = ulocimp_get_పునాది_Name(localeID, *స్థితి_2);
+        ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+            *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
-        entry = entryOpen(path, canonLocaleID.data(), openType, status);
-    } else {
-        entry = entryOpenDirect(path, localeID, status);
+        నమోదు_2 = నమోదు_Open(మార్గం, canonLocaleID.దత్తాంశం(), openType, స్థితి_2);
+    } లేకపోతే {
+        నమోదు_2 = నమోదు_Open_ప్రత్యక్ష(మార్గం, localeID, స్థితి_2);
     }
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(entry == nullptr) {
-        *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+    ఒకవేళ(నమోదు_2 == శూన్యసూచిక) {
+        *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    UBool isStackObject;
-    if(r == nullptr) {
-        r = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
-        if(r == nullptr) {
-            entryClose(entry);
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+    UBool is_దొంతర_Object;
+    ఒకవేళ(r == శూన్యసూచిక) {
+        r = static_cast<UResourceBundle*>(uprv_malloc(పరిమాణం(UResourceBundle)));
+        ఒకవేళ(r == శూన్యసూచిక) {
+            నమోదు_Close(నమోదు_2);
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
-        isStackObject = false;
-    } else {  // fill-in
-        isStackObject = ures_isStackObject(r);
-        ures_closeBundle(r, false);
+        is_దొంతర_Object = అబద్ధం;
+    } లేకపోతే {  // fill-in
+        is_దొంతర_Object = ures_is_దొంతర_Object(r);
+        ures_closeBundle(r, అబద్ధం);
     }
-    uprv_memset(r, 0, sizeof(UResourceBundle));
-    ures_setIsStackObject(r, isStackObject);
+    uprv_memset(r, 0, పరిమాణం(UResourceBundle));
+    ures_సమితి_Is_దొంతర_Object(r, is_దొంతర_Object);
 
-    r->fValidLocaleDataEntry = r->fData = entry;
-    r->fHasFallback = openType != URES_OPEN_DIRECT && !r->getResData().noFallback;
-    r->fIsTopLevel = true;
-    r->fRes = r->getResData().rootRes;
-    r->fSize = res_countArrayItems(&r->getResData(), r->fRes);
-    r->fIndex = -1;
+    r->f_Valid_Locale_దత్తాంశం_నమోదు = r->f_దత్తాంశం = నమోదు_2;
+    r->fHasFallback = openType != URES_OPEN_ప్రత్యక్ష && !r->get_Res_దత్తాంశం().noFallback;
+    r->f_Is_శిఖరం_Level = నిజం;
+    r->fRes = r->get_Res_దత్తాంశం().మూలం_Res;
+    r->f_కొలత = res_లెక్క_Array_వస్తువులు(&r->get_Res_దత్తాంశం(), r->fRes);
+    r->f_సూచీ = -1;
 
     ResourceTracer(r).traceOpen();
 
-    return r;
+    తిరిగి r;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_open(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_DEFAULT_ROOT, status);
+ures_open(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి అక్షరం* localeID, UError_సంకేతం* స్థితి_2) {
+    తిరిగి ures_openWithType(శూన్యసూచిక, మార్గం, localeID, URES_OPEN_LOCALE_DEFAULT_మూలం, స్థితి_2);
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openNoDefault(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_ROOT, status);
+ures_openNoDefault(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి అక్షరం* localeID, UError_సంకేతం* స్థితి_2) {
+    తిరిగి ures_openWithType(శూన్యసూచిక, మార్గం, localeID, URES_OPEN_LOCALE_మూలం, స్థితి_2);
 }
 
 /**
@@ -2840,8 +2840,8 @@ ures_openNoDefault(const char* path, const char* localeID, UErrorCode* status) {
  *  or sought. However, alias substitution will happen!
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_openDirect(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_DIRECT, status);
+ures_open_ప్రత్యక్ష(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి అక్షరం* localeID, UError_సంకేతం* స్థితి_2) {
+    తిరిగి ures_openWithType(శూన్యసూచిక, మార్గం, localeID, URES_OPEN_ప్రత్యక్ష, స్థితి_2);
 }
 
 /**
@@ -2851,26 +2851,26 @@ ures_openDirect(const char* path, const char* localeID, UErrorCode* status) {
  * 
  * Same as ures_open(), but uses the fill-in parameter and does not allocate a new bundle.
  */
-U_CAPI void U_EXPORT2
-ures_openFillIn(UResourceBundle *r, const char* path,
-                const char* localeID, UErrorCode* status) {
-    if(U_SUCCESS(*status) && r == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI శూన్య U_EXPORT2
+ures_open_Fill_లోపల(UResourceBundle *r, స్థిరరాశి అక్షరం* మార్గం,
+                స్థిరరాశి అక్షరం* localeID, UError_సంకేతం* స్థితి_2) {
+    ఒకవేళ(U_SUCCESS(*స్థితి_2) && r == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    ures_openWithType(r, path, localeID, URES_OPEN_LOCALE_DEFAULT_ROOT, status);
+    ures_openWithType(r, మార్గం, localeID, URES_OPEN_LOCALE_DEFAULT_మూలం, స్థితి_2);
 }
 
 /**
  * Same as ures_openDirect(), but uses the fill-in parameter and does not allocate a new bundle.
  */
-U_CAPI void U_EXPORT2
-ures_openDirectFillIn(UResourceBundle *r, const char* path, const char* localeID, UErrorCode* status) {
-    if(U_SUCCESS(*status) && r == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI శూన్య U_EXPORT2
+ures_open_ప్రత్యక్ష_Fill_లోపల(UResourceBundle *r, స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి అక్షరం* localeID, UError_సంకేతం* స్థితి_2) {
+    ఒకవేళ(U_SUCCESS(*స్థితి_2) && r == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    ures_openWithType(r, path, localeID, URES_OPEN_DIRECT, status);
+    ures_openWithType(r, మార్గం, localeID, URES_OPEN_ప్రత్యక్ష, స్థితి_2);
 }
 
 /**
@@ -2878,29 +2878,29 @@ ures_openDirectFillIn(UResourceBundle *r, const char* path, const char* localeID
  *  For strings, returns 1.
  */
 U_CAPI int32_t  U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                  const char* resourceKey,
-                  UErrorCode* status)
+ures_లెక్క_Array_వస్తువులు(స్థిరరాశి UResourceBundle* resourceBundle,
+                  స్థిరరాశి అక్షరం* resource_కీలకం,
+                  UError_సంకేతం* స్థితి_2)
 {
-    UResourceBundle resData;
-    ures_initStackObject(&resData);
-    if (status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    UResourceBundle res_దత్తాంశం;
+    ures_init_దొంతర_Object(&res_దత్తాంశం);
+    ఒకవేళ (స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి 0;
     }
-    if(resourceBundle == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(resourceBundle == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    ures_getByKey(resourceBundle, resourceKey, &resData, status);
+    ures_get_By_కీలకం(resourceBundle, resource_కీలకం, &res_దత్తాంశం, స్థితి_2);
     
-    if(resData.getResData().data != nullptr) {
-        int32_t result = res_countArrayItems(&resData.getResData(), resData.fRes);
-        ures_close(&resData);
-        return result;
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
-        ures_close(&resData);
-        return 0;
+    ఒకవేళ(res_దత్తాంశం.get_Res_దత్తాంశం().దత్తాంశం != శూన్యసూచిక) {
+        int32_t ఫలితం = res_లెక్క_Array_వస్తువులు(&res_దత్తాంశం.get_Res_దత్తాంశం(), res_దత్తాంశం.fRes);
+        ures_close(&res_దత్తాంశం);
+        తిరిగి ఫలితం;
+    } లేకపోతే {
+        *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
+        ures_close(&res_దత్తాంశం);
+        తిరిగి 0;
     }
 }
 
@@ -2914,20 +2914,20 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
  * @see ures_getVersion
  * @internal
  */
-U_CAPI const char* U_EXPORT2
-ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_సంస్కరణ_సంఖ్య_అంతర్గత(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND)
 {
-    if (!resourceBundle) return nullptr;
+    ఒకవేళ (!resourceBundle) తిరిగి శూన్యసూచిక;
 
-    if(resourceBundle->fVersion == nullptr) {
+    ఒకవేళ(resourceBundle->f_సంస్కరణ == శూన్యసూచిక) {
 
         /* If the version ID has not been built yet, then do so.  Retrieve */
         /* the minor version from the file. */
-        UErrorCode status = U_ZERO_ERROR;
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
         int32_t minor_len = 0;
         int32_t len;
 
-        const char16_t* minor_version = ures_getStringByKey(resourceBundle, kVersionTag, &minor_len, &status);
+        స్థిరరాశి char16_t* minor_సంస్కరణ = ures_get_String_By_కీలకం(resourceBundle, k_సంస్కరణ_ట్యాగ్, &minor_len, &స్థితి_2);
         
         /* Determine the length of of the final version string.  This is */
         /* the length of the major part + the length of the separator */
@@ -2940,51 +2940,51 @@ ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_B
         /* + 1 for zero byte */
 
 
-        ((UResourceBundle *)resourceBundle)->fVersion = (char *)uprv_malloc(1 + len); 
+        ((UResourceBundle *)resourceBundle)->f_సంస్కరణ = (అక్షరం *)uprv_malloc(1 + len); 
         /* Check for null pointer. */
-        if (((UResourceBundle *)resourceBundle)->fVersion == nullptr) {
-            return nullptr;
+        ఒకవేళ (((UResourceBundle *)resourceBundle)->f_సంస్కరణ == శూన్యసూచిక) {
+            తిరిగి శూన్యసూచిక;
         }
        
-        if(minor_len > 0) {
-            u_UCharsToChars(minor_version, resourceBundle->fVersion , minor_len);
-            resourceBundle->fVersion[len] =  '\0';
+        ఒకవేళ(minor_len > 0) {
+            u_UChars_గమ్యం_Chars(minor_సంస్కరణ, resourceBundle->f_సంస్కరణ , minor_len);
+            resourceBundle->f_సంస్కరణ[len] =  '\0';
         }
-        else {
-            uprv_strcpy(resourceBundle->fVersion, kDefaultMinorVersion);
+        లేకపోతే {
+            uprv_strcpy(resourceBundle->f_సంస్కరణ, k_Default_Minor_సంస్కరణ);
         }
     }
 
-    return resourceBundle->fVersion;
+    తిరిగి resourceBundle->f_సంస్కరణ;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_సంస్కరణ_సంఖ్య(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND)
 {
-    return ures_getVersionNumberInternal(resourceBundle);
+    తిరిగి ures_get_సంస్కరణ_సంఖ్య_అంతర్గత(resourceBundle);
 }
 
-U_CAPI void U_EXPORT2 ures_getVersion(const UResourceBundle* resB, UVersionInfo versionInfo) {
-    if (!resB) return;
+U_CAPI శూన్య U_EXPORT2 ures_get_సంస్కరణ(స్థిరరాశి UResourceBundle* resB, UVersionInfo సంస్కరణ_Info) {
+    ఒకవేళ (!resB) తిరిగి;
 
-    u_versionFromString(versionInfo, ures_getVersionNumberInternal(resB));
+    u_సంస్కరణ_From_String(సంస్కరణ_Info, ures_get_సంస్కరణ_సంఖ్య_అంతర్గత(resB));
 }
 
 /** Tree support functions *******************************/
-#define INDEX_LOCALE_NAME "res_index"
-#define INDEX_TAG         "InstalledLocales"
-#define DEFAULT_TAG       "default"
+#నిర్వచించు సూచీ_LOCALE_NAME "res_index"
+#నిర్వచించు సూచీ_ట్యాగ్         "InstalledLocales"
+#నిర్వచించు DEFAULT_ట్యాగ్       "default"
 
-#if defined(URES_TREE_DEBUG)
-#include <stdio.h>
-#endif
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+#అన్తర్భావ <stdio.h>
+#అయితే_ముగింపు
 
-typedef struct ULocalesContext {
+రకనిర్వచనం నిర్మాణం ULocalesContext {
     UResourceBundle installed;
     UResourceBundle curr;
 } ULocalesContext;
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ures_loc_closeLocales(UEnumeration *enumerator) {
     ULocalesContext* ctx = static_cast<ULocalesContext*>(enumerator->context);
     ures_close(&ctx->curr);
@@ -2993,447 +2993,447 @@ ures_loc_closeLocales(UEnumeration *enumerator) {
     uprv_free(enumerator);
 }
 
-static int32_t U_CALLCONV
-ures_loc_countLocales(UEnumeration *en, UErrorCode * /*status*/) {
+స్థిర int32_t U_CALLCONV
+ures_loc_లెక్క_Locales(UEnumeration *en, UError_సంకేతం * /*స్థితి*/) {
     ULocalesContext* ctx = static_cast<ULocalesContext*>(en->context);
-    return ures_getSize(&ctx->installed);
+    తిరిగి ures_get_కొలత(&ctx->installed);
 }
 
 U_CDECL_BEGIN
 
 
-static const char * U_CALLCONV
-ures_loc_nextLocale(UEnumeration* en,
-                    int32_t* resultLength,
-                    UErrorCode* status) {
+స్థిర స్థిరరాశి అక్షరం * U_CALLCONV
+ures_loc_తదుపరి_Locale(UEnumeration* en,
+                    int32_t* ఫలితం_నిడివి,
+                    UError_సంకేతం* స్థితి_2) {
     ULocalesContext *ctx = (ULocalesContext *)en->context;
     UResourceBundle *res = &(ctx->installed);
-    UResourceBundle *k = nullptr;
-    const char *result = nullptr;
+    UResourceBundle *k = శూన్యసూచిక;
+    స్థిరరాశి అక్షరం *ఫలితం = శూన్యసూచిక;
     int32_t len = 0;
-    if (ures_hasNext(res) && (k = ures_getNextResource(res, &ctx->curr, status)) != nullptr) {
-        result = ures_getKey(k);
-        len = (int32_t)uprv_strlen(result);
+    ఒకవేళ (ures_has_తదుపరి(res) && (k = ures_get_తదుపరి_Resource(res, &ctx->curr, స్థితి_2)) != శూన్యసూచిక) {
+        ఫలితం = ures_get_కీలకం(k);
+        len = (int32_t)uprv_strlen(ఫలితం);
     }
-    if (resultLength) {
-        *resultLength = len;
+    ఒకవేళ (ఫలితం_నిడివి) {
+        *ఫలితం_నిడివి = len;
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-static void U_CALLCONV 
+స్థిర శూన్య U_CALLCONV 
 ures_loc_resetLocales(UEnumeration* en, 
-                      UErrorCode* /*status*/) {
+                      UError_సంకేతం* /*స్థితి*/) {
     UResourceBundle *res = &((ULocalesContext *)en->context)->installed;
     ures_resetIterator(res);
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
-static const UEnumeration gLocalesEnum = {
-    nullptr,
-        nullptr,
+స్థిర స్థిరరాశి UEnumeration gLocalesEnum = {
+    శూన్యసూచిక,
+        శూన్యసూచిక,
         ures_loc_closeLocales,
-        ures_loc_countLocales,
+        ures_loc_లెక్క_Locales,
         uenum_unextDefault,
-        ures_loc_nextLocale,
+        ures_loc_తదుపరి_Locale,
         ures_loc_resetLocales
 };
 
 
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *path, UErrorCode *status)
+ures_open_అందుబాటు_Locales(స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం *స్థితి_2)
 {
-    UResourceBundle *idx = nullptr;
-    UEnumeration *en = nullptr;
-    ULocalesContext *myContext = nullptr;
+    UResourceBundle *idx = శూన్యసూచిక;
+    UEnumeration *en = శూన్యసూచిక;
+    ULocalesContext *myContext = శూన్యసూచిక;
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    myContext = static_cast<ULocalesContext *>(uprv_malloc(sizeof(ULocalesContext)));
-    en =  (UEnumeration *)uprv_malloc(sizeof(UEnumeration));
-    if(!en || !myContext) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
+    myContext = static_cast<ULocalesContext *>(uprv_malloc(పరిమాణం(ULocalesContext)));
+    en =  (UEnumeration *)uprv_malloc(పరిమాణం(UEnumeration));
+    ఒకవేళ(!en || !myContext) {
+        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
         uprv_free(en);
         uprv_free(myContext);
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
-    uprv_memcpy(en, &gLocalesEnum, sizeof(UEnumeration));
+    uprv_memcpy(en, &gLocalesEnum, పరిమాణం(UEnumeration));
 
-    ures_initStackObject(&myContext->installed);
-    ures_initStackObject(&myContext->curr);
-    idx = ures_openDirect(path, INDEX_LOCALE_NAME, status);
-    ures_getByKey(idx, INDEX_TAG, &myContext->installed, status);
-    if(U_SUCCESS(*status)) {
-#if defined(URES_TREE_DEBUG)
+    ures_init_దొంతర_Object(&myContext->installed);
+    ures_init_దొంతర_Object(&myContext->curr);
+    idx = ures_open_ప్రత్యక్ష(మార్గం, సూచీ_LOCALE_NAME, స్థితి_2);
+    ures_get_By_కీలకం(idx, సూచీ_ట్యాగ్, &myContext->installed, స్థితి_2);
+    ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
         fprintf(stderr, "Got %s::%s::[%s] : %s\n", 
-            path, INDEX_LOCALE_NAME, INDEX_TAG, ures_getKey(&myContext->installed));
-#endif
+            మార్గం, సూచీ_LOCALE_NAME, సూచీ_ట్యాగ్, ures_get_కీలకం(&myContext->installed));
+#అయితే_ముగింపు
         en->context = myContext;
-    } else {
-#if defined(URES_TREE_DEBUG)
-        fprintf(stderr, "%s open failed - %s\n", path, u_errorName(*status));
-#endif
+    } లేకపోతే {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+        fprintf(stderr, "%s open failed - %s\n", మార్గం, u_errorName(*స్థితి_2));
+#అయితే_ముగింపు
         ures_close(&myContext->installed);
         uprv_free(myContext);
         uprv_free(en);
-        en = nullptr;
+        en = శూన్యసూచిక;
     }
     
     ures_close(idx);
     
-    return en;
+    తిరిగి en;
 }
 
-static UBool isLocaleInList(UEnumeration *locEnum, const char *locToSearch, UErrorCode *status) {
-    const char *loc;
-    while ((loc = uenum_next(locEnum, nullptr, status)) != nullptr) {
-        if (uprv_strcmp(loc, locToSearch) == 0) {
-            return true;
+స్థిర UBool is_Locale_లోపల_List(UEnumeration *locEnum, స్థిరరాశి అక్షరం *loc_గమ్యం_శోధన, UError_సంకేతం *స్థితి_2) {
+    స్థిరరాశి అక్షరం *loc;
+    అయితే ((loc = uenum_తదుపరి(locEnum, శూన్యసూచిక, స్థితి_2)) != శూన్యసూచిక) {
+        ఒకవేళ (uprv_strcmp(loc, loc_గమ్యం_శోధన) == 0) {
+            తిరిగి నిజం;
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-static void getParentForFunctionalEquivalent(const char*      localeID,
+స్థిర శూన్య get_మాతృ_For_Functional_Equivalent(స్థిరరాశి అక్షరం*      localeID,
                                              UResourceBundle* res,
                                              UResourceBundle* bund1,
-                                             CharString&      parent) {
+                                             CharString&      మాతృ) {
     // Get parent.
     // First check for a parent from %%Parent resource (Note that in resource trees
     // such as collation, data may have different parents than in parentLocales).
-    UErrorCode subStatus = U_ZERO_ERROR;
-    parent.clear();
-    if (res != nullptr) {
-        ures_getByKey(res, "%%Parent", bund1, &subStatus);
-        if (U_SUCCESS(subStatus)) {
+    UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+    మాతృ.clear();
+    ఒకవేళ (res != శూన్యసూచిక) {
+        ures_get_By_కీలకం(res, "%%Parent", bund1, &sub_స్థితి);
+        ఒకవేళ (U_SUCCESS(sub_స్థితి)) {
             int32_t length16;
-            const char16_t* s16 = ures_getString(bund1, &length16, &subStatus);
-            parent.appendInvariantChars(s16, length16, subStatus);
+            స్థిరరాశి char16_t* s16 = ures_getString(bund1, &length16, &sub_స్థితి);
+            మాతృ.appendInvariantChars(s16, length16, sub_స్థితి);
         }
     }
     
     // If none there, use normal truncation parent
-    if (U_FAILURE(subStatus) || parent.isEmpty()) {
-        subStatus = U_ZERO_ERROR;
-        parent = ulocimp_getParent(localeID, subStatus);
+    ఒకవేళ (U_FAILURE(sub_స్థితి) || మాతృ.is_ఖాళీలు()) {
+        sub_స్థితి = U_ZERO_ERROR;
+        మాతృ = ulocimp_get_మాతృ(localeID, sub_స్థితి);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
-                             const char *path, const char *resName, const char *keyword, const char *locid,
-                             UBool *isAvailable, UBool omitDefault, UErrorCode *status)
+ures_getFunctionalEquivalent(అక్షరం *ఫలితం, int32_t ఫలితం_సామర్థ్యం,
+                             స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *resName, స్థిరరాశి అక్షరం *keyword, స్థిరరాశి అక్షరం *locid,
+                             UBool *is_అందుబాటు, UBool omitDefault, UError_సంకేతం *స్థితి_2)
 {
     CharString defVal; /* default value for given locale */
     CharString defLoc; /* default value for given locale */
-    CharString found;
-    CharString parent;
-    CharString full;
+    CharString దొరికింది;
+    CharString మాతృ;
+    CharString నిండిన;
     UResourceBundle bund1, bund2;
-    UResourceBundle *res = nullptr;
-    UErrorCode subStatus = U_ZERO_ERROR;
+    UResourceBundle *res = శూన్యసూచిక;
+    UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
     int32_t length = 0;
-    if(U_FAILURE(*status)) return 0;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) తిరిగి 0;
     CharString kwVal;
-    if (keyword != nullptr && *keyword != '\0') {
-        kwVal = ulocimp_getKeywordValue(locid, keyword, subStatus);
-        if (kwVal == DEFAULT_TAG) {
+    ఒకవేళ (keyword != శూన్యసూచిక && *keyword != '\0') {
+        kwVal = ulocimp_get_Keyword_విలువ(locid, keyword, sub_స్థితి);
+        ఒకవేళ (kwVal == DEFAULT_ట్యాగ్) {
             kwVal.clear();
         }
     }
-    if (locid == nullptr) {
+    ఒకవేళ (locid == శూన్యసూచిక) {
         locid = uloc_getDefault();
     }
-    CharString base = ulocimp_getBaseName(locid, subStatus);
-#if defined(URES_TREE_DEBUG)
+    CharString పునాది = ulocimp_get_పునాది_Name(locid, sub_స్థితి);
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
     fprintf(stderr, "getFunctionalEquivalent: \"%s\" [%s=%s] in %s - %s\n", 
-            locid, keyword, kwVal.data(), base.data(), u_errorName(subStatus));
-#endif
-    ures_initStackObject(&bund1);
-    ures_initStackObject(&bund2);
+            locid, keyword, kwVal.దత్తాంశం(), పునాది.దత్తాంశం(), u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
+    ures_init_దొంతర_Object(&bund1);
+    ures_init_దొంతర_Object(&bund2);
 
-    parent.copyFrom(base, subStatus);
-    found.copyFrom(base, subStatus);
+    మాతృ.copyFrom(పునాది, sub_స్థితి);
+    దొరికింది.copyFrom(పునాది, sub_స్థితి);
 
-    if(isAvailable) {
-        UEnumeration *locEnum = ures_openAvailableLocales(path, &subStatus);
-        *isAvailable = true;
-        if (U_SUCCESS(subStatus)) {
-            *isAvailable = isLocaleInList(locEnum, parent.data(), &subStatus);
+    ఒకవేళ(is_అందుబాటు) {
+        UEnumeration *locEnum = ures_open_అందుబాటు_Locales(మార్గం, &sub_స్థితి);
+        *is_అందుబాటు = నిజం;
+        ఒకవేళ (U_SUCCESS(sub_స్థితి)) {
+            *is_అందుబాటు = is_Locale_లోపల_List(locEnum, మాతృ.దత్తాంశం(), &sub_స్థితి);
         }
         uenum_close(locEnum);
     }
 
-    if(U_FAILURE(subStatus)) {
-        *status = subStatus;
-        return 0;
+    ఒకవేళ(U_FAILURE(sub_స్థితి)) {
+        *స్థితి_2 = sub_స్థితి;
+        తిరిగి 0;
     }
     
-    do {
-        subStatus = U_ZERO_ERROR;
-        res = ures_open(path, parent.data(), &subStatus);
-        if(((subStatus == U_USING_FALLBACK_WARNING) ||
-            (subStatus == U_USING_DEFAULT_WARNING)) && isAvailable)
+    చేయి {
+        sub_స్థితి = U_ZERO_ERROR;
+        res = ures_open(మార్గం, మాతృ.దత్తాంశం(), &sub_స్థితి);
+        ఒకవేళ(((sub_స్థితి == U_USING_FALLBACK_WARNING) ||
+            (sub_స్థితి == U_USING_DEFAULT_WARNING)) && is_అందుబాటు)
         {
-            *isAvailable = false;
+            *is_అందుబాటు = అబద్ధం;
         }
-        isAvailable = nullptr; /* only want to set this the first time around */
+        is_అందుబాటు = శూన్యసూచిక; /* only want to set this the first time around */
         
-#if defined(URES_TREE_DEBUG)
-        fprintf(stderr, "%s;%s -> %s [%s]\n", path?path:"ICUDATA", parent.data(), u_errorName(subStatus), ures_getLocale(res, &subStatus));
-#endif
-        if(U_FAILURE(subStatus)) {
-            *status = subStatus;
-        } else if(subStatus == U_ZERO_ERROR) {
-            ures_getByKey(res,resName,&bund1, &subStatus);
-            if(subStatus == U_ZERO_ERROR) {
-                const char16_t *defUstr;
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+        fprintf(stderr, "%s;%s -> %s [%s]\n", మార్గం?మార్గం:"ICUDATA", మాతృ.దత్తాంశం(), u_errorName(sub_స్థితి), ures_getLocale(res, &sub_స్థితి));
+#అయితే_ముగింపు
+        ఒకవేళ(U_FAILURE(sub_స్థితి)) {
+            *స్థితి_2 = sub_స్థితి;
+        } లేకపోతే ఒకవేళ(sub_స్థితి == U_ZERO_ERROR) {
+            ures_get_By_కీలకం(res,resName,&bund1, &sub_స్థితి);
+            ఒకవేళ(sub_స్థితి == U_ZERO_ERROR) {
+                స్థిరరాశి char16_t *defUstr;
                 int32_t defLen;
                 /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                 fprintf(stderr, "%s;%s : loaded default -> %s\n",
-                    path?path:"ICUDATA", parent.data(), u_errorName(subStatus));
-#endif
-                defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                if(U_SUCCESS(subStatus) && defLen) {
-                    defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+                    మార్గం?మార్గం:"ICUDATA", మాతృ.దత్తాంశం(), u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
+                defUstr = ures_get_String_By_కీలకం(&bund1, DEFAULT_ట్యాగ్, &defLen, &sub_స్థితి);
+                ఒకవేళ(U_SUCCESS(sub_స్థితి) && defLen) {
+                    defVal.clear().appendInvariantChars(defUstr, defLen, sub_స్థితి);
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                     fprintf(stderr, "%s;%s -> default %s=%s,  %s\n", 
-                        path?path:"ICUDATA", parent.data(), keyword, defVal.data(), u_errorName(subStatus));
-#endif
-                    defLoc.copyFrom(parent, subStatus);
-                    if(kwVal.isEmpty()) {
-                        kwVal.append(defVal, subStatus);
-#if defined(URES_TREE_DEBUG)
+                        మార్గం?మార్గం:"ICUDATA", మాతృ.దత్తాంశం(), keyword, defVal.దత్తాంశం(), u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
+                    defLoc.copyFrom(మాతృ, sub_స్థితి);
+                    ఒకవేళ(kwVal.is_ఖాళీలు()) {
+                        kwVal.append(defVal, sub_స్థితి);
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                         fprintf(stderr, "%s;%s -> kwVal =  %s\n", 
-                            path?path:"ICUDATA", parent.data(), keyword, kwVal.data());
-#endif
+                            మార్గం?మార్గం:"ICUDATA", మాతృ.దత్తాంశం(), keyword, kwVal.దత్తాంశం());
+#అయితే_ముగింపు
                     }
                 }
             }
         }
         
-        subStatus = U_ZERO_ERROR;
+        sub_స్థితి = U_ZERO_ERROR;
 
-        if (res != nullptr) {
-            found.clear().append(ures_getLocaleByType(res, ULOC_VALID_LOCALE, &subStatus), subStatus);
+        ఒకవేళ (res != శూన్యసూచిక) {
+            దొరికింది.clear().append(ures_getLocaleByType(res, ULOC_VALID_LOCALE, &sub_స్థితి), sub_స్థితి);
         }
 
-        if (found != parent) {
-            parent.copyFrom(found, subStatus);
-        } else {
-            getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
+        ఒకవేళ (దొరికింది != మాతృ) {
+            మాతృ.copyFrom(దొరికింది, sub_స్థితి);
+        } లేకపోతే {
+            get_మాతృ_For_Functional_Equivalent(దొరికింది.దత్తాంశం(),res,&bund1,మాతృ);
         }
         ures_close(res);
-    } while(defVal.isEmpty() && !found.isEmpty() && found != "root" && U_SUCCESS(*status));
+    } అయితే(defVal.is_ఖాళీలు() && !దొరికింది.is_ఖాళీలు() && దొరికింది != "root" && U_SUCCESS(*స్థితి_2));
     
     /* Now, see if we can find the kwVal collator.. start the search over.. */
-    parent.copyFrom(base, subStatus);
-    found.copyFrom(base, subStatus);
+    మాతృ.copyFrom(పునాది, sub_స్థితి);
+    దొరికింది.copyFrom(పునాది, sub_స్థితి);
 
-    do {
-        res = ures_open(path, parent.data(), &subStatus);
-        if((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
-            *isAvailable = false;
+    చేయి {
+        res = ures_open(మార్గం, మాతృ.దత్తాంశం(), &sub_స్థితి);
+        ఒకవేళ((sub_స్థితి == U_USING_FALLBACK_WARNING) && is_అందుబాటు) {
+            *is_అందుబాటు = అబద్ధం;
         }
-        isAvailable = nullptr; /* only want to set this the first time around */
+        is_అందుబాటు = శూన్యసూచిక; /* only want to set this the first time around */
         
-#if defined(URES_TREE_DEBUG)
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
         fprintf(stderr, "%s;%s -> %s (looking for %s)\n", 
-            path?path:"ICUDATA", parent.data(), u_errorName(subStatus), kwVal.data());
-#endif
-        if(U_FAILURE(subStatus)) {
-            *status = subStatus;
-        } else if(subStatus == U_ZERO_ERROR) {
-            ures_getByKey(res,resName,&bund1, &subStatus);
-#if defined(URES_TREE_DEBUG)
-/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, resName, u_errorName(subStatus));
-#endif
-            if(subStatus == U_ZERO_ERROR) {
-                ures_getByKey(&bund1, kwVal.data(), &bund2, &subStatus);
-#if defined(URES_TREE_DEBUG)
-/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, kwVal.data(), u_errorName(subStatus));
-#endif
-                if(subStatus == U_ZERO_ERROR) {
-#if defined(URES_TREE_DEBUG)
+            మార్గం?మార్గం:"ICUDATA", మాతృ.దత్తాంశం(), u_errorName(sub_స్థితి), kwVal.దత్తాంశం());
+#అయితే_ముగింపు
+        ఒకవేళ(U_FAILURE(sub_స్థితి)) {
+            *స్థితి_2 = sub_స్థితి;
+        } లేకపోతే ఒకవేళ(sub_స్థితి == U_ZERO_ERROR) {
+            ures_get_By_కీలకం(res,resName,&bund1, &sub_స్థితి);
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, resName, u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
+            ఒకవేళ(sub_స్థితి == U_ZERO_ERROR) {
+                ures_get_By_కీలకం(&bund1, kwVal.దత్తాంశం(), &bund2, &sub_స్థితి);
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, kwVal.దత్తాంశం(), u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
+                ఒకవేళ(sub_స్థితి == U_ZERO_ERROR) {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                     fprintf(stderr, "%s;%s -> full0 %s=%s,  %s\n", 
-                        path?path:"ICUDATA", parent.data(), keyword, kwVal.data(), u_errorName(subStatus));
-#endif
-                    if (parent.isEmpty()) {
-                        full.clear().append("root", subStatus);
-                    } else {
-                        full.copyFrom(parent, subStatus);
+                        మార్గం?మార్గం:"ICUDATA", మాతృ.దత్తాంశం(), keyword, kwVal.దత్తాంశం(), u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
+                    ఒకవేళ (మాతృ.is_ఖాళీలు()) {
+                        నిండిన.clear().append("root", sub_స్థితి);
+                    } లేకపోతే {
+                        నిండిన.copyFrom(మాతృ, sub_స్థితి);
                     }
                         /* now, recalculate default kw if need be */
-                        if(defLoc.length() > full.length()) {
-                          const char16_t *defUstr;
+                        ఒకవేళ(defLoc.length() > నిండిన.length()) {
+                          స్థిరరాశి char16_t *defUstr;
                           int32_t defLen;
                           /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                             fprintf(stderr, "%s;%s -> recalculating Default0\n", 
-                                    path?path:"ICUDATA", full.data());
-#endif
-                          defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                          if(U_SUCCESS(subStatus) && defLen) {
-                            defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+                                    మార్గం?మార్గం:"ICUDATA", నిండిన.దత్తాంశం());
+#అయితే_ముగింపు
+                          defUstr = ures_get_String_By_కీలకం(&bund1, DEFAULT_ట్యాగ్, &defLen, &sub_స్థితి);
+                          ఒకవేళ(U_SUCCESS(sub_స్థితి) && defLen) {
+                            defVal.clear().appendInvariantChars(defUstr, defLen, sub_స్థితి);
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                             fprintf(stderr, "%s;%s -> default0 %s=%s,  %s\n", 
-                                    path?path:"ICUDATA", full.data(), keyword, defVal.data(), u_errorName(subStatus));
-#endif
-                            defLoc.copyFrom(full, subStatus);
+                                    మార్గం?మార్గం:"ICUDATA", నిండిన.దత్తాంశం(), keyword, defVal.దత్తాంశం(), u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
+                            defLoc.copyFrom(నిండిన, sub_స్థితి);
                           }
                         } /* end of recalculate default KW */
-#if defined(URES_TREE_DEBUG)
-                        else {
-                          fprintf(stderr, "No trim0,  %s <= %s\n", defLoc.data(), full.data());
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+                        లేకపోతే {
+                          fprintf(stderr, "No trim0,  %s <= %s\n", defLoc.దత్తాంశం(), నిండిన.దత్తాంశం());
                         }
-#endif
-                } else {
-#if defined(URES_TREE_DEBUG)
+#అయితే_ముగింపు
+                } లేకపోతే {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                     fprintf(stderr, "err=%s in %s looking for %s\n", 
-                        u_errorName(subStatus), parent.data(), kwVal.data());
-#endif
+                        u_errorName(sub_స్థితి), మాతృ.దత్తాంశం(), kwVal.దత్తాంశం());
+#అయితే_ముగింపు
                 }
             }
         }
         
-        subStatus = U_ZERO_ERROR;
-        UBool haveFound = false;
+        sub_స్థితి = U_ZERO_ERROR;
+        UBool have_దొరికింది = అబద్ధం;
         // At least for collations which may be aliased, we need to use the VALID locale
         // as the parent instead of just truncating, as long as the VALID locale is not
         // root and has a different language than the parent. Use of the VALID locale
         // here is similar to the procedure used at the end of the previous do-while loop
         // for all resource types.
-        if (res != nullptr && uprv_strcmp(resName, "collations") == 0) {
-            const char *validLoc = ures_getLocaleByType(res, ULOC_VALID_LOCALE, &subStatus);
-            if (U_SUCCESS(subStatus) && validLoc != nullptr && validLoc[0] != 0 && uprv_strcmp(validLoc, "root") != 0) {
-                CharString validLang = ulocimp_getLanguage(validLoc, subStatus);
-                CharString parentLang = ulocimp_getLanguage(parent.toStringPiece(), subStatus);
-                if (U_SUCCESS(subStatus) && validLang != parentLang) {
+        ఒకవేళ (res != శూన్యసూచిక && uprv_strcmp(resName, "collations") == 0) {
+            స్థిరరాశి అక్షరం *validLoc = ures_getLocaleByType(res, ULOC_VALID_LOCALE, &sub_స్థితి);
+            ఒకవేళ (U_SUCCESS(sub_స్థితి) && validLoc != శూన్యసూచిక && validLoc[0] != 0 && uprv_strcmp(validLoc, "root") != 0) {
+                CharString validLang = ulocimp_getLanguage(validLoc, sub_స్థితి);
+                CharString మాతృ_Lang = ulocimp_getLanguage(మాతృ.గమ్యం_String_Piece(), sub_స్థితి);
+                ఒకవేళ (U_SUCCESS(sub_స్థితి) && validLang != మాతృ_Lang) {
                     // validLoc is not root and has a different language than parent, use it instead
-                    found.clear().append(validLoc, subStatus);
-                    haveFound = true;
+                    దొరికింది.clear().append(validLoc, sub_స్థితి);
+                    have_దొరికింది = నిజం;
                 }
             }
-            subStatus = U_ZERO_ERROR;
+            sub_స్థితి = U_ZERO_ERROR;
         }
-        if (!haveFound) {
-            found.copyFrom(parent, subStatus);
+        ఒకవేళ (!have_దొరికింది) {
+            దొరికింది.copyFrom(మాతృ, sub_స్థితి);
         }
 
-        getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
+        get_మాతృ_For_Functional_Equivalent(దొరికింది.దత్తాంశం(),res,&bund1,మాతృ);
         ures_close(res);
-        subStatus = U_ZERO_ERROR;
-    } while(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
+        sub_స్థితి = U_ZERO_ERROR;
+    } అయితే(నిండిన.is_ఖాళీలు() && !దొరికింది.is_ఖాళీలు() && U_SUCCESS(*స్థితి_2));
 
-    if(full.isEmpty() && kwVal != defVal) {
-#if defined(URES_TREE_DEBUG)
-        fprintf(stderr, "Failed to locate kw %s - try default %s\n", kwVal.data(), defVal.data());
-#endif
-        kwVal.clear().append(defVal, subStatus);
-        parent.copyFrom(base, subStatus);
-        found.copyFrom(base, subStatus);
+    ఒకవేళ(నిండిన.is_ఖాళీలు() && kwVal != defVal) {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+        fprintf(stderr, "Failed to locate kw %s - try default %s\n", kwVal.దత్తాంశం(), defVal.దత్తాంశం());
+#అయితే_ముగింపు
+        kwVal.clear().append(defVal, sub_స్థితి);
+        మాతృ.copyFrom(పునాది, sub_స్థితి);
+        దొరికింది.copyFrom(పునాది, sub_స్థితి);
 
-        do { /* search for 'default' named item */
-            res = ures_open(path, parent.data(), &subStatus);
-            if((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
-                *isAvailable = false;
+        చేయి { /* search for 'default' named item */
+            res = ures_open(మార్గం, మాతృ.దత్తాంశం(), &sub_స్థితి);
+            ఒకవేళ((sub_స్థితి == U_USING_FALLBACK_WARNING) && is_అందుబాటు) {
+                *is_అందుబాటు = అబద్ధం;
             }
-            isAvailable = nullptr; /* only want to set this the first time around */
+            is_అందుబాటు = శూన్యసూచిక; /* only want to set this the first time around */
             
-#if defined(URES_TREE_DEBUG)
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
             fprintf(stderr, "%s;%s -> %s (looking for default %s)\n",
-                path?path:"ICUDATA", parent.data(), u_errorName(subStatus), kwVal.data());
-#endif
-            if(U_FAILURE(subStatus)) {
-                *status = subStatus;
-            } else if(subStatus == U_ZERO_ERROR) {
-                ures_getByKey(res,resName,&bund1, &subStatus);
-                if(subStatus == U_ZERO_ERROR) {
-                    ures_getByKey(&bund1, kwVal.data(), &bund2, &subStatus);
-                    if(subStatus == U_ZERO_ERROR) {
-#if defined(URES_TREE_DEBUG)
-                        fprintf(stderr, "%s;%s -> full1 %s=%s,  %s\n", path?path:"ICUDATA",
-                            parent.data(), keyword, kwVal.data(), u_errorName(subStatus));
-#endif
-                        if (parent.isEmpty()) {
-                            full.clear().append("root", subStatus);
-                        } else {
-                            full.copyFrom(parent, subStatus);
+                మార్గం?మార్గం:"ICUDATA", మాతృ.దత్తాంశం(), u_errorName(sub_స్థితి), kwVal.దత్తాంశం());
+#అయితే_ముగింపు
+            ఒకవేళ(U_FAILURE(sub_స్థితి)) {
+                *స్థితి_2 = sub_స్థితి;
+            } లేకపోతే ఒకవేళ(sub_స్థితి == U_ZERO_ERROR) {
+                ures_get_By_కీలకం(res,resName,&bund1, &sub_స్థితి);
+                ఒకవేళ(sub_స్థితి == U_ZERO_ERROR) {
+                    ures_get_By_కీలకం(&bund1, kwVal.దత్తాంశం(), &bund2, &sub_స్థితి);
+                    ఒకవేళ(sub_స్థితి == U_ZERO_ERROR) {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+                        fprintf(stderr, "%s;%s -> full1 %s=%s,  %s\n", మార్గం?మార్గం:"ICUDATA",
+                            మాతృ.దత్తాంశం(), keyword, kwVal.దత్తాంశం(), u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
+                        ఒకవేళ (మాతృ.is_ఖాళీలు()) {
+                            నిండిన.clear().append("root", sub_స్థితి);
+                        } లేకపోతే {
+                            నిండిన.copyFrom(మాతృ, sub_స్థితి);
                         }
                         
                         /* now, recalculate default kw if need be */
-                        if(defLoc.length() > full.length()) {
-                          const char16_t *defUstr;
+                        ఒకవేళ(defLoc.length() > నిండిన.length()) {
+                          స్థిరరాశి char16_t *defUstr;
                           int32_t defLen;
                           /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                             fprintf(stderr, "%s;%s -> recalculating Default1\n", 
-                                    path?path:"ICUDATA", full.data());
-#endif
-                          defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                          if(U_SUCCESS(subStatus) && defLen) {
-                            defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+                                    మార్గం?మార్గం:"ICUDATA", నిండిన.దత్తాంశం());
+#అయితే_ముగింపు
+                          defUstr = ures_get_String_By_కీలకం(&bund1, DEFAULT_ట్యాగ్, &defLen, &sub_స్థితి);
+                          ఒకవేళ(U_SUCCESS(sub_స్థితి) && defLen) {
+                            defVal.clear().appendInvariantChars(defUstr, defLen, sub_స్థితి);
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                             fprintf(stderr, "%s;%s -> default %s=%s,  %s\n", 
-                                    path?path:"ICUDATA", full.data(), keyword, defVal.data(), u_errorName(subStatus));
-#endif
-                            defLoc.copyFrom(full, subStatus);
+                                    మార్గం?మార్గం:"ICUDATA", నిండిన.దత్తాంశం(), keyword, defVal.దత్తాంశం(), u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
+                            defLoc.copyFrom(నిండిన, sub_స్థితి);
                           }
                         } /* end of recalculate default KW */
-#if defined(URES_TREE_DEBUG)
-                        else {
-                          fprintf(stderr, "No trim1,  %s <= %s\n", defLoc.data(), full.data());
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+                        లేకపోతే {
+                          fprintf(stderr, "No trim1,  %s <= %s\n", defLoc.దత్తాంశం(), నిండిన.దత్తాంశం());
                         }
-#endif
+#అయితే_ముగింపు
                     }
                 }
             }
             
-            subStatus = U_ZERO_ERROR;
-            found.copyFrom(parent, subStatus);
-            getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
+            sub_స్థితి = U_ZERO_ERROR;
+            దొరికింది.copyFrom(మాతృ, sub_స్థితి);
+            get_మాతృ_For_Functional_Equivalent(దొరికింది.దత్తాంశం(),res,&bund1,మాతృ);
             ures_close(res);
-            subStatus = U_ZERO_ERROR;
-        } while(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
+            sub_స్థితి = U_ZERO_ERROR;
+        } అయితే(నిండిన.is_ఖాళీలు() && !దొరికింది.is_ఖాళీలు() && U_SUCCESS(*స్థితి_2));
     }
     
-    if(U_SUCCESS(*status)) {
-        if(full.isEmpty()) {
-#if defined(URES_TREE_DEBUG)
-          fprintf(stderr, "Still could not load keyword %s=%s\n", keyword, kwVal.data());
-#endif
-          *status = U_MISSING_RESOURCE_ERROR;
-        } else if(omitDefault) {
-#if defined(URES_TREE_DEBUG)
-          fprintf(stderr,"Trim? full=%s, defLoc=%s, found=%s\n", full.data(), defLoc.data(), found.data());
-#endif        
-          if(defLoc.length() <= full.length()) {
+    ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+        ఒకవేళ(నిండిన.is_ఖాళీలు()) {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+          fprintf(stderr, "Still could not load keyword %s=%s\n", keyword, kwVal.దత్తాంశం());
+#అయితే_ముగింపు
+          *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
+        } లేకపోతే ఒకవేళ(omitDefault) {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+          fprintf(stderr,"Trim? full=%s, defLoc=%s, found=%s\n", నిండిన.దత్తాంశం(), defLoc.దత్తాంశం(), దొరికింది.దత్తాంశం());
+#అయితే_ముగింపు        
+          ఒకవేళ(defLoc.length() <= నిండిన.length()) {
             /* found the keyword in a *child* of where the default tag was present. */
-            if(kwVal == defVal) { /* if the requested kw is default, */
+            ఒకవేళ(kwVal == defVal) { /* if the requested kw is default, */
               /* and the default is in or in an ancestor of the current locale */
-#if defined(URES_TREE_DEBUG)
-              fprintf(stderr, "Removing unneeded var %s=%s\n", keyword, kwVal.data());
-#endif
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+              fprintf(stderr, "Removing unneeded var %s=%s\n", keyword, kwVal.దత్తాంశం());
+#అయితే_ముగింపు
               kwVal.clear();
             }
           }
         }
-        found.copyFrom(full, subStatus);
-        if(!kwVal.isEmpty()) {
-            found
-                .append("@", subStatus)
-                .append(keyword, subStatus)
-                .append("=", subStatus)
-                .append(kwVal, subStatus);
-        } else if(!omitDefault) {
-            found
-                .append("@", subStatus)
-                .append(keyword, subStatus)
-                .append("=", subStatus)
-                .append(defVal, subStatus);
+        దొరికింది.copyFrom(నిండిన, sub_స్థితి);
+        ఒకవేళ(!kwVal.is_ఖాళీలు()) {
+            దొరికింది
+                .append("@", sub_స్థితి)
+                .append(keyword, sub_స్థితి)
+                .append("=", sub_స్థితి)
+                .append(kwVal, sub_స్థితి);
+        } లేకపోతే ఒకవేళ(!omitDefault) {
+            దొరికింది
+                .append("@", sub_స్థితి)
+                .append(keyword, sub_స్థితి)
+                .append("=", sub_స్థితి)
+                .append(defVal, sub_స్థితి);
         }
     }
     /* we found the default locale - no need to repeat it.*/
@@ -3441,200 +3441,200 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
     ures_close(&bund1);
     ures_close(&bund2);
     
-    length = found.length();
+    length = దొరికింది.length();
 
-    if(U_SUCCESS(*status)) {
-        int32_t copyLength = uprv_min(length, resultCapacity);
-        if(copyLength>0) {
-            found.extract(result, copyLength, subStatus);
+    ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+        int32_t copy_నిడివి = uprv_min(length, ఫలితం_సామర్థ్యం);
+        ఒకవేళ(copy_నిడివి>0) {
+            దొరికింది.extract(ఫలితం, copy_నిడివి, sub_స్థితి);
         }
-        if(length == 0) {
-          *status = U_MISSING_RESOURCE_ERROR; 
+        ఒకవేళ(length == 0) {
+          *స్థితి_2 = U_MISSING_RESOURCE_ERROR; 
         }
-    } else {
+    } లేకపోతే {
         length = 0;
-        result[0]=0;
+        ఫలితం[0]=0;
     }
-    return u_terminateChars(result, resultCapacity, length, status);
+    తిరిగి u_terminateChars(ఫలితం, ఫలితం_సామర్థ్యం, length, స్థితి_2);
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-ures_getKeywordValues(const char *path, const char *keyword, UErrorCode *status)
+ures_get_Keyword_విలువలు(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *keyword, UError_సంకేతం *స్థితి_2)
 {
-#define VALUES_BUF_SIZE 2048
-#define VALUES_LIST_SIZE 512
+#నిర్వచించు విలువలు_BUF_కొలత 2048
+#నిర్వచించు విలువలు_LIST_కొలత 512
     
-    char       valuesBuf[VALUES_BUF_SIZE];
-    int32_t    valuesIndex = 0;
-    const char *valuesList[VALUES_LIST_SIZE];
-    int32_t    valuesCount = 0;
+    అక్షరం       విలువలు_Buf[విలువలు_BUF_కొలత];
+    int32_t    విలువలు_సూచీ = 0;
+    స్థిరరాశి అక్షరం *విలువలు_List[విలువలు_LIST_కొలత];
+    int32_t    విలువలు_లెక్క = 0;
     
-    const char *locale;
+    స్థిరరాశి అక్షరం *locale;
     int32_t     locLen;
     
-    UEnumeration *locs = nullptr;
+    UEnumeration *locs = శూన్యసూచిక;
     
-    UResourceBundle    item;
-    UResourceBundle    subItem;
+    UResourceBundle    అంశం;
+    UResourceBundle    sub_అంశం;
     
-    ures_initStackObject(&item);
-    ures_initStackObject(&subItem);
-    locs = ures_openAvailableLocales(path, status);
+    ures_init_దొంతర_Object(&అంశం);
+    ures_init_దొంతర_Object(&sub_అంశం);
+    locs = ures_open_అందుబాటు_Locales(మార్గం, స్థితి_2);
     
-    if(U_FAILURE(*status)) {
-        ures_close(&item);
-        ures_close(&subItem);
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+        ures_close(&అంశం);
+        ures_close(&sub_అంశం);
+        తిరిగి శూన్యసూచిక;
     }
     
-    valuesBuf[0]=0;
-    valuesBuf[1]=0;
+    విలువలు_Buf[0]=0;
+    విలువలు_Buf[1]=0;
 
-    while ((locale = uenum_next(locs, &locLen, status)) != nullptr) {
-        UResourceBundle   *bund = nullptr;
-        UResourceBundle   *subPtr = nullptr;
-        UErrorCode subStatus = U_ZERO_ERROR; /* don't fail if a bundle is unopenable */
-        bund = ures_open(path, locale, &subStatus);
+    అయితే ((locale = uenum_తదుపరి(locs, &locLen, స్థితి_2)) != శూన్యసూచిక) {
+        UResourceBundle   *bund = శూన్యసూచిక;
+        UResourceBundle   *subPtr = శూన్యసూచిక;
+        UError_సంకేతం sub_స్థితి = U_ZERO_ERROR; /* don't fail if a bundle is unopenable */
+        bund = ures_open(మార్గం, locale, &sub_స్థితి);
         
-#if defined(URES_TREE_DEBUG)
-        if(!bund || U_FAILURE(subStatus)) {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+        ఒకవేళ(!bund || U_FAILURE(sub_స్థితి)) {
             fprintf(stderr, "%s-%s values: Can't open %s locale - skipping. (%s)\n", 
-                path?path:"<ICUDATA>", keyword, locale, u_errorName(subStatus));
+                మార్గం?మార్గం:"<ICUDATA>", keyword, locale, u_errorName(sub_స్థితి));
         }
-#endif
+#అయితే_ముగింపు
         
-        ures_getByKey(bund, keyword, &item, &subStatus);
+        ures_get_By_కీలకం(bund, keyword, &అంశం, &sub_స్థితి);
         
-        if(!bund || U_FAILURE(subStatus)) {
-#if defined(URES_TREE_DEBUG)
+        ఒకవేళ(!bund || U_FAILURE(sub_స్థితి)) {
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
             fprintf(stderr, "%s-%s values: Can't find in %s - skipping. (%s)\n", 
-                path?path:"<ICUDATA>", keyword, locale, u_errorName(subStatus));
-#endif
+                మార్గం?మార్గం:"<ICUDATA>", keyword, locale, u_errorName(sub_స్థితి));
+#అయితే_ముగింపు
             ures_close(bund);
-            bund = nullptr;
-            continue;
+            bund = శూన్యసూచిక;
+            కొనసాగు;
         }
 
-        while ((subPtr = ures_getNextResource(&item, &subItem, &subStatus)) != nullptr
-            && U_SUCCESS(subStatus)) {
-            const char *k;
+        అయితే ((subPtr = ures_get_తదుపరి_Resource(&అంశం, &sub_అంశం, &sub_స్థితి)) != శూన్యసూచిక
+            && U_SUCCESS(sub_స్థితి)) {
+            స్థిరరాశి అక్షరం *k;
             int32_t i;
-            k = ures_getKey(subPtr);
+            k = ures_get_కీలకం(subPtr);
 
-#if defined(URES_TREE_DEBUG)
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
             /* fprintf(stderr, "%s | %s | %s | %s\n", path?path:"<ICUDATA>", keyword, locale, k); */
-#endif
-            if(k == nullptr || *k == 0 ||
-                    uprv_strcmp(k, DEFAULT_TAG) == 0 || uprv_strncmp(k, "private-", 8) == 0) {
+#అయితే_ముగింపు
+            ఒకవేళ(k == శూన్యసూచిక || *k == 0 ||
+                    uprv_strcmp(k, DEFAULT_ట్యాగ్) == 0 || uprv_strncmp(k, "private-", 8) == 0) {
                 // empty or "default" or unlisted type
-                continue;
+                కొనసాగు;
             }
-            for(i=0; i<valuesCount; i++) {
-                if(!uprv_strcmp(valuesList[i],k)) {
-                    k = nullptr; /* found duplicate */
-                    break;
+            కొరకు(i=0; i<విలువలు_లెక్క; i++) {
+                ఒకవేళ(!uprv_strcmp(విలువలు_List[i],k)) {
+                    k = శూన్యసూచిక; /* found duplicate */
+                    ఆపు;
                 }
             }
-            if(k != nullptr) {
+            ఒకవేళ(k != శూన్యసూచిక) {
                 int32_t kLen = (int32_t)uprv_strlen(k);
-                if((valuesCount >= (VALUES_LIST_SIZE-1)) ||       /* no more space in list .. */
-                    ((valuesIndex+kLen+1+1) >= VALUES_BUF_SIZE)) { /* no more space in buffer (string + 2 nulls) */
-                    *status = U_ILLEGAL_ARGUMENT_ERROR; /* out of space.. */
-                } else {
-                    uprv_strcpy(valuesBuf+valuesIndex, k);
-                    valuesList[valuesCount++] = valuesBuf+valuesIndex;
-                    valuesIndex += kLen;
-#if defined(URES_TREE_DEBUG)
+                ఒకవేళ((విలువలు_లెక్క >= (విలువలు_LIST_కొలత-1)) ||       /* no more space in list .. */
+                    ((విలువలు_సూచీ+kLen+1+1) >= విలువలు_BUF_కొలత)) { /* no more space in buffer (string + 2 nulls) */
+                    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* out of space.. */
+                } లేకపోతే {
+                    uprv_strcpy(విలువలు_Buf+విలువలు_సూచీ, k);
+                    విలువలు_List[విలువలు_లెక్క++] = విలువలు_Buf+విలువలు_సూచీ;
+                    విలువలు_సూచీ += kLen;
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
                     fprintf(stderr, "%s | %s | %s | [%s]   (UNIQUE)\n",
-                        path?path:"<ICUDATA>", keyword, locale, k);
-#endif
-                    valuesBuf[valuesIndex++] = 0; /* terminate */
+                        మార్గం?మార్గం:"<ICUDATA>", keyword, locale, k);
+#అయితే_ముగింపు
+                    విలువలు_Buf[విలువలు_సూచీ++] = 0; /* terminate */
                 }
             }
         }
         ures_close(bund);
     }
-    valuesBuf[valuesIndex++] = 0; /* terminate */
+    విలువలు_Buf[విలువలు_సూచీ++] = 0; /* terminate */
     
-    ures_close(&item);
-    ures_close(&subItem);
+    ures_close(&అంశం);
+    ures_close(&sub_అంశం);
     uenum_close(locs);
-#if defined(URES_TREE_DEBUG)
-    fprintf(stderr, "%s:  size %d, #%d\n", u_errorName(*status), 
-        valuesIndex, valuesCount);
-#endif
-    return uloc_openKeywordList(valuesBuf, valuesIndex, status);
+#ఒకవేళ defined(URES_వృక్షం_DEBUG)
+    fprintf(stderr, "%s:  size %d, #%d\n", u_errorName(*స్థితి_2), 
+        విలువలు_సూచీ, విలువలు_లెక్క);
+#అయితే_ముగింపు
+    తిరిగి uloc_openKeywordList(విలువలు_Buf, విలువలు_సూచీ, స్థితి_2);
 }
-#if 0
+#ఒకవేళ 0
 /* This code isn't needed, and given the documentation warnings the implementation is suspect */
 U_CAPI UBool U_EXPORT2
-ures_equal(const UResourceBundle* res1, const UResourceBundle* res2){
-    if(res1==nullptr || res2==nullptr){
-        return res1==res2; /* pointer comparison */
+ures_equal(స్థిరరాశి UResourceBundle* res1, స్థిరరాశి UResourceBundle* res2){
+    ఒకవేళ(res1==శూన్యసూచిక || res2==శూన్యసూచిక){
+        తిరిగి res1==res2; /* pointer comparison */
     }
-    if(res1->fKey==nullptr||  res2->fKey==nullptr){
-        return (res1->fKey==res2->fKey);
-    }else{
-        if(uprv_strcmp(res1->fKey, res2->fKey)!=0){
-            return false;
+    ఒకవేళ(res1->f_కీలకం==శూన్యసూచిక||  res2->f_కీలకం==శూన్యసూచిక){
+        తిరిగి (res1->f_కీలకం==res2->f_కీలకం);
+    }లేకపోతే{
+        ఒకవేళ(uprv_strcmp(res1->f_కీలకం, res2->f_కీలకం)!=0){
+            తిరిగి అబద్ధం;
         }
     }
-    if(uprv_strcmp(res1->fData->fName, res2->fData->fName)!=0){
-        return false;
+    ఒకవేళ(uprv_strcmp(res1->f_దత్తాంశం->fName, res2->f_దత్తాంశం->fName)!=0){
+        తిరిగి అబద్ధం;
     }
-    if(res1->fData->fPath == nullptr||  res2->fData->fPath==nullptr){
-        return (res1->fData->fPath == res2->fData->fPath);
-    }else{
-        if(uprv_strcmp(res1->fData->fPath, res2->fData->fPath)!=0){
-            return false;
+    ఒకవేళ(res1->f_దత్తాంశం->f_మార్గం == శూన్యసూచిక||  res2->f_దత్తాంశం->f_మార్గం==శూన్యసూచిక){
+        తిరిగి (res1->f_దత్తాంశం->f_మార్గం == res2->f_దత్తాంశం->f_మార్గం);
+    }లేకపోతే{
+        ఒకవేళ(uprv_strcmp(res1->f_దత్తాంశం->f_మార్గం, res2->f_దత్తాంశం->f_మార్గం)!=0){
+            తిరిగి అబద్ధం;
         }
     }
-    if(uprv_strcmp(res1->fData->fParent->fName, res2->fData->fParent->fName)!=0){
-        return false;
+    ఒకవేళ(uprv_strcmp(res1->f_దత్తాంశం->f_మాతృ->fName, res2->f_దత్తాంశం->f_మాతృ->fName)!=0){
+        తిరిగి అబద్ధం;
     }
-    if(uprv_strcmp(res1->fData->fParent->fPath, res2->fData->fParent->fPath)!=0){
-        return false;
+    ఒకవేళ(uprv_strcmp(res1->f_దత్తాంశం->f_మాతృ->f_మార్గం, res2->f_దత్తాంశం->f_మాతృ->f_మార్గం)!=0){
+        తిరిగి అబద్ధం;
     }
-    if(uprv_strncmp(res1->fResPath, res2->fResPath, res1->fResPathLen)!=0){
-        return false;
+    ఒకవేళ(uprv_strncmp(res1->f_Res_మార్గం, res2->f_Res_మార్గం, res1->f_Res_మార్గం_Len)!=0){
+        తిరిగి అబద్ధం;
     }
-    if(res1->fRes != res2->fRes){
-        return false;
+    ఒకవేళ(res1->fRes != res2->fRes){
+        తిరిగి అబద్ధం;
     }
-    return true;
+    తిరిగి నిజం;
 }
 U_CAPI UResourceBundle* U_EXPORT2
-ures_clone(const UResourceBundle* res, UErrorCode* status){
-    UResourceBundle* bundle = nullptr;
-    UResourceBundle* ret = nullptr;
-    if(U_FAILURE(*status) || res == nullptr){
-        return nullptr;
+ures_clone(స్థిరరాశి UResourceBundle* res, UError_సంకేతం* స్థితి_2){
+    UResourceBundle* bundle = శూన్యసూచిక;
+    UResourceBundle* ret = శూన్యసూచిక;
+    ఒకవేళ(U_FAILURE(*స్థితి_2) || res == శూన్యసూచిక){
+        తిరిగి శూన్యసూచిక;
     }
-    bundle = ures_open(res->fData->fPath, res->fData->fName, status);
-    if(res->fResPath!=nullptr){
-        ret = ures_findSubResource(bundle, res->fResPath, nullptr, status);
+    bundle = ures_open(res->f_దత్తాంశం->f_మార్గం, res->f_దత్తాంశం->fName, స్థితి_2);
+    ఒకవేళ(res->f_Res_మార్గం!=శూన్యసూచిక){
+        ret = ures_కనుగొను_Sub_Resource(bundle, res->f_Res_మార్గం, శూన్యసూచిక, స్థితి_2);
         ures_close(bundle);
-    }else{
+    }లేకపోతే{
         ret = bundle;
     }
-    return ret;
+    తిరిగి ret;
 }
-U_CAPI const UResourceBundle* U_EXPORT2
-ures_getParentBundle(const UResourceBundle* res){
-    if(res==nullptr){
-        return nullptr;
+U_CAPI స్థిరరాశి UResourceBundle* U_EXPORT2
+ures_get_మాతృ_Bundle(స్థిరరాశి UResourceBundle* res){
+    ఒకవేళ(res==శూన్యసూచిక){
+        తిరిగి శూన్యసూచిక;
     }
-    return res->fParentRes;
+    తిరిగి res->f_మాతృ_Res;
 }
-#endif
+#అయితే_ముగింపు
 
-U_CAPI void U_EXPORT2
-ures_getVersionByKey(const UResourceBundle* res, const char *key, UVersionInfo ver, UErrorCode *status) {
-  const char16_t *str;
+U_CAPI శూన్య U_EXPORT2
+ures_get_సంస్కరణ_By_కీలకం(స్థిరరాశి UResourceBundle* res, స్థిరరాశి అక్షరం *కీలకం, UVersionInfo ver, UError_సంకేతం *స్థితి_2) {
+  స్థిరరాశి char16_t *str;
   int32_t len;
-  str = ures_getStringByKey(res, key, &len, status);
-  if(U_SUCCESS(*status)) {
-    u_versionFromUString(ver, str);
+  str = ures_get_String_By_కీలకం(res, కీలకం, &len, స్థితి_2);
+  ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+    u_సంస్కరణ_From_UString(ver, str);
   } 
 }
 

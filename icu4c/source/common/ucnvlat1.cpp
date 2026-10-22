@@ -14,150 +14,150 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "unicode/utf8.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ustr_imp.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "ustr_imp.h"
 
 /* control optimizations according to the platform */
-#define LATIN1_UNROLL_FROM_UNICODE 1
+#నిర్వచించు LATIN1_UNROLL_FROM_UNICODE 1
 
 /* ISO 8859-1 --------------------------------------------------------------- */
 
 /* This is a table-less and callback-less version of ucnv_MBCSSingleToBMPWithOffsets(). */
 U_CDECL_BEGIN
-static void U_CALLCONV
-_Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
-    const uint8_t *source;
-    char16_t *target;
-    int32_t targetCapacity, length;
+స్థిర శూన్య U_CALLCONV
+Latin1_గమ్యం_Unicode_With_Offsets(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                            UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి uint8_t *ఆధారం;
+    char16_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం, length;
     int32_t *offsets;
 
-    int32_t sourceIndex;
+    int32_t ఆధారం_సూచీ;
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    target=pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    ఆధారం=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం;
+    లక్ష్యం=p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_సామర్థ్యం=(int32_t)(p_వాదనలు->లక్ష్యం_హద్దు-p_వాదనలు->లక్ష్యం);
+    offsets=p_వాదనలు->offsets;
 
-    sourceIndex=0;
+    ఆధారం_సూచీ=0;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)((const uint8_t *)pArgs->sourceLimit-source);
-    if(length<=targetCapacity) {
-        targetCapacity=length;
-    } else {
+    length=(int32_t)((స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం_హద్దు-ఆధారం);
+    ఒకవేళ(length<=లక్ష్యం_సామర్థ్యం) {
+        లక్ష్యం_సామర్థ్యం=length;
+    } లేకపోతే {
         /* target will be full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        length=targetCapacity;
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+        length=లక్ష్యం_సామర్థ్యం;
     }
 
-    if(targetCapacity>=8) {
+    ఒకవేళ(లక్ష్యం_సామర్థ్యం>=8) {
         /* This loop is unrolled for speed and improved pipelining. */
         int32_t count, loops;
 
-        loops=count=targetCapacity>>3;
-        length=targetCapacity&=0x7;
-        do {
-            target[0]=source[0];
-            target[1]=source[1];
-            target[2]=source[2];
-            target[3]=source[3];
-            target[4]=source[4];
-            target[5]=source[5];
-            target[6]=source[6];
-            target[7]=source[7];
-            target+=8;
-            source+=8;
-        } while(--count>0);
+        loops=count=లక్ష్యం_సామర్థ్యం>>3;
+        length=లక్ష్యం_సామర్థ్యం&=0x7;
+        చేయి {
+            లక్ష్యం[0]=ఆధారం[0];
+            లక్ష్యం[1]=ఆధారం[1];
+            లక్ష్యం[2]=ఆధారం[2];
+            లక్ష్యం[3]=ఆధారం[3];
+            లక్ష్యం[4]=ఆధారం[4];
+            లక్ష్యం[5]=ఆధారం[5];
+            లక్ష్యం[6]=ఆధారం[6];
+            లక్ష్యం[7]=ఆధారం[7];
+            లక్ష్యం+=8;
+            ఆధారం+=8;
+        } అయితే(--count>0);
 
-        if(offsets!=nullptr) {
-            do {
-                offsets[0]=sourceIndex++;
-                offsets[1]=sourceIndex++;
-                offsets[2]=sourceIndex++;
-                offsets[3]=sourceIndex++;
-                offsets[4]=sourceIndex++;
-                offsets[5]=sourceIndex++;
-                offsets[6]=sourceIndex++;
-                offsets[7]=sourceIndex++;
+        ఒకవేళ(offsets!=శూన్యసూచిక) {
+            చేయి {
+                offsets[0]=ఆధారం_సూచీ++;
+                offsets[1]=ఆధారం_సూచీ++;
+                offsets[2]=ఆధారం_సూచీ++;
+                offsets[3]=ఆధారం_సూచీ++;
+                offsets[4]=ఆధారం_సూచీ++;
+                offsets[5]=ఆధారం_సూచీ++;
+                offsets[6]=ఆధారం_సూచీ++;
+                offsets[7]=ఆధారం_సూచీ++;
                 offsets+=8;
-            } while(--loops>0);
+            } అయితే(--loops>0);
         }
     }
 
     /* conversion loop */
-    while(targetCapacity>0) {
-        *target++=*source++;
-        --targetCapacity;
+    అయితే(లక్ష్యం_సామర్థ్యం>0) {
+        *లక్ష్యం++=*ఆధారం++;
+        --లక్ష్యం_సామర్థ్యం;
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
+    p_వాదనలు->ఆధారం=(స్థిరరాశి అక్షరం *)ఆధారం;
+    p_వాదనలు->లక్ష్యం=లక్ష్యం;
 
     /* set offsets */
-    if(offsets!=nullptr) {
-        while(length>0) {
-            *offsets++=sourceIndex++;
+    ఒకవేళ(offsets!=శూన్యసూచిక) {
+        అయితే(length>0) {
+            *offsets++=ఆధారం_సూచీ++;
             --length;
         }
-        pArgs->offsets=offsets;
+        p_వాదనలు->offsets=offsets;
     }
 }
 
 /* This is a table-less and callback-less version of ucnv_MBCSSingleGetNextUChar(). */
-static UChar32 U_CALLCONV
-_Latin1GetNextUChar(UConverterToUnicodeArgs *pArgs,
-                    UErrorCode *pErrorCode) {
-    const uint8_t *source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
-        pArgs->source=(const char *)(source+1);
-        return *source;
+స్థిర UChar32 U_CALLCONV
+Latin1_Get_తదుపరి_UChar(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                    UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి uint8_t *ఆధారం=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం;
+    ఒకవేళ(ఆధారం<(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం_హద్దు) {
+        p_వాదనలు->ఆధారం=(స్థిరరాశి అక్షరం *)(ఆధారం+1);
+        తిరిగి *ఆధారం;
     }
 
     /* no output because of empty input */
-    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+    తిరిగి 0xffff;
 }
 
 /* This is a table-less version of ucnv_MBCSSingleFromBMPWithOffsets(). */
-static void U_CALLCONV
-_Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                              UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+_Latin1FromUnicodeWithOffsets(UConverter_From_Unicode_వాదనలు *p_వాదనలు,
+                              UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target, *oldTarget;
-    int32_t targetCapacity, length;
+    స్థిరరాశి char16_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం, *old_లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం, length;
     int32_t *offsets;
 
     UChar32 cp;
     char16_t c, max;
 
-    int32_t sourceIndex;
+    int32_t ఆధారం_సూచీ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=oldTarget=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_వాదనలు->converter;
+    ఆధారం=p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం=old_లక్ష్యం=(uint8_t *)p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_సామర్థ్యం=(int32_t)(p_వాదనలు->లక్ష్యం_హద్దు-p_వాదనలు->లక్ష్యం);
+    offsets=p_వాదనలు->offsets;
 
-    if(cnv->sharedData==&_Latin1Data) {
+    ఒకవేళ(cnv->shared_దత్తాంశం==&Latin1_దత్తాంశం) {
         max=0xff; /* Latin-1 */
-    } else {
+    } లేకపోతే {
         max=0x7f; /* US-ASCII */
     }
 
@@ -165,201 +165,201 @@ _Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     cp=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= cp==0 ? 0 : -1;
+    ఆధారం_సూచీ= cp==0 ? 0 : -1;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length=(int32_t)(ఆధారం_హద్దు-ఆధారం);
+    ఒకవేళ(length<లక్ష్యం_సామర్థ్యం) {
+        లక్ష్యం_సామర్థ్యం=length;
     }
 
     /* conversion loop */
-    if(cp!=0 && targetCapacity>0) {
-        goto getTrail;
+    ఒకవేళ(cp!=0 && లక్ష్యం_సామర్థ్యం>0) {
+        వెళ్ళు getTrail;
     }
 
-#if LATIN1_UNROLL_FROM_UNICODE
+#ఒకవేళ LATIN1_UNROLL_FROM_UNICODE
     /* unroll the loop with the most common case */
-    if(targetCapacity>=16) {
+    ఒకవేళ(లక్ష్యం_సామర్థ్యం>=16) {
         int32_t count, loops;
         char16_t u, oredChars;
 
-        loops=count=targetCapacity>>4;
-        do {
-            oredChars=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
+        loops=count=లక్ష్యం_సామర్థ్యం>>4;
+        చేయి {
+            oredChars=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
+            oredChars|=u=*ఆధారం++;
+            *లక్ష్యం++=(uint8_t)u;
 
             /* were all 16 entries really valid? */
-            if(oredChars>max) {
+            ఒకవేళ(oredChars>max) {
                 /* no, return to the first of these 16 */
-                source-=16;
-                target-=16;
-                break;
+                ఆధారం-=16;
+                లక్ష్యం-=16;
+                ఆపు;
             }
-        } while(--count>0);
+        } అయితే(--count>0);
         count=loops-count;
-        targetCapacity-=16*count;
+        లక్ష్యం_సామర్థ్యం-=16*count;
 
-        if(offsets!=nullptr) {
-            oldTarget+=16*count;
-            while(count>0) {
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
+        ఒకవేళ(offsets!=శూన్యసూచిక) {
+            old_లక్ష్యం+=16*count;
+            అయితే(count>0) {
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
                 --count;
             }
         }
     }
-#endif
+#అయితే_ముగింపు
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source++)<=max) {
+    అయితే(లక్ష్యం_సామర్థ్యం>0 && (c=*ఆధారం++)<=max) {
         /* convert the Unicode code point */
-        *target++=(uint8_t)c;
-        --targetCapacity;
+        *లక్ష్యం++=(uint8_t)c;
+        --లక్ష్యం_సామర్థ్యం;
     }
 
-    if(c>max) {
+    ఒకవేళ(c>max) {
         cp=c;
-        if(!U_IS_SURROGATE(cp)) {
+        ఒకవేళ(!U_IS_SURROGATE(cp)) {
             /* callback(unassigned) */
-        } else if(U_IS_SURROGATE_LEAD(cp)) {
+        } లేకపోతే ఒకవేళ(U_IS_SURROGATE_LEAD(cp)) {
 getTrail:
-            if(source<sourceLimit) {
+            ఒకవేళ(ఆధారం<ఆధారం_హద్దు) {
                 /* test the following code unit */
-                char16_t trail=*source;
-                if(U16_IS_TRAIL(trail)) {
-                    ++source;
+                char16_t trail=*ఆధారం;
+                ఒకవేళ(U16_IS_TRAIL(trail)) {
+                    ++ఆధారం;
                     cp=U16_GET_SUPPLEMENTARY(cp, trail);
                     /* this codepage does not map supplementary code points */
                     /* callback(unassigned) */
-                } else {
+                } లేకపోతే {
                     /* this is an unmatched lead code unit (1st surrogate) */
                     /* callback(illegal) */
                 }
-            } else {
+            } లేకపోతే {
                 /* no more input */
                 cnv->fromUChar32=cp;
-                goto noMoreInput;
+                వెళ్ళు no_మరిన్ని_ఆదానం;
             }
-        } else {
+        } లేకపోతే {
             /* this is an unmatched trail code unit (2nd surrogate) */
             /* callback(illegal) */
         }
 
-        *pErrorCode= U_IS_SURROGATE(cp) ? U_ILLEGAL_CHAR_FOUND : U_INVALID_CHAR_FOUND;
+        *p_Error_సంకేతం= U_IS_SURROGATE(cp) ? U_ILLEGAL_CHAR_దొరికింది : U_INVALID_CHAR_దొరికింది;
         cnv->fromUChar32=cp;
     }
-noMoreInput:
+no_మరిన్ని_ఆదానం:
 
     /* set offsets since the start */
-    if(offsets!=nullptr) {
-        size_t count=target-oldTarget;
-        while(count>0) {
-            *offsets++=sourceIndex++;
+    ఒకవేళ(offsets!=శూన్యసూచిక) {
+        size_t count=లక్ష్యం-old_లక్ష్యం;
+        అయితే(count>0) {
+            *offsets++=ఆధారం_సూచీ++;
             --count;
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం) && ఆధారం<ఆధారం_హద్దు && లక్ష్యం>=(uint8_t *)p_వాదనలు->లక్ష్యం_హద్దు) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=ఆధారం;
+    p_వాదనలు->లక్ష్యం=(అక్షరం *)లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
 
 /* Convert UTF-8 to Latin-1. Adapted from ucnv_SBCSFromUTF8(). */
-static void U_CALLCONV
-ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                    UConverterToUnicodeArgs *pToUArgs,
-                    UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+ucnv_Latin1FromUTF8(UConverter_From_Unicode_వాదనలు *pFromUArgs,
+                    UConverter_గమ్యం_Unicode_వాదనలు *p_గమ్యం_UArgs,
+                    UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *utf8;
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం;
 
     UChar32 c;
     uint8_t b, t1;
 
     /* set up the local pointers */
-    utf8=pToUArgs->converter;
-    source=(uint8_t *)pToUArgs->source;
-    sourceLimit=(uint8_t *)pToUArgs->sourceLimit;
-    target=(uint8_t *)pFromUArgs->target;
-    targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
+    utf8=p_గమ్యం_UArgs->converter;
+    ఆధారం=(uint8_t *)p_గమ్యం_UArgs->ఆధారం;
+    ఆధారం_హద్దు=(uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు;
+    లక్ష్యం=(uint8_t *)pFromUArgs->లక్ష్యం;
+    లక్ష్యం_సామర్థ్యం=(int32_t)(pFromUArgs->లక్ష్యం_హద్దు-pFromUArgs->లక్ష్యం);
 
     /* get the converter state from the UTF-8 UConverter */
-    if (utf8->toULength > 0) {
-        c=(UChar32)utf8->toUnicodeStatus;
-    } else {
+    ఒకవేళ (utf8->గమ్యం_ULength > 0) {
+        c=(UChar32)utf8->గమ్యం_Unicode_స్థితి;
+    } లేకపోతే {
         c = 0;
     }
-    if(c!=0 && source<sourceLimit) {
-        if(targetCapacity==0) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return;
-        } else if(c>=0xc2 && c<=0xc3 && (t1=(uint8_t)(*source-0x80)) <= 0x3f) {
-            ++source;
-            *target++=(uint8_t)(((c&3)<<6)|t1);
-            --targetCapacity;
+    ఒకవేళ(c!=0 && ఆధారం<ఆధారం_హద్దు) {
+        ఒకవేళ(లక్ష్యం_సామర్థ్యం==0) {
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+            తిరిగి;
+        } లేకపోతే ఒకవేళ(c>=0xc2 && c<=0xc3 && (t1=(uint8_t)(*ఆధారం-0x80)) <= 0x3f) {
+            ++ఆధారం;
+            *లక్ష్యం++=(uint8_t)(((c&3)<<6)|t1);
+            --లక్ష్యం_సామర్థ్యం;
 
-            utf8->toUnicodeStatus=0;
-            utf8->toULength=0;
-        } else {
+            utf8->గమ్యం_Unicode_స్థితి=0;
+            utf8->గమ్యం_ULength=0;
+        } లేకపోతే {
             /* complicated, illegal or unmappable input: fall back to the pivoting implementation */
-            *pErrorCode=U_USING_DEFAULT_WARNING;
-            return;
+            *p_Error_సంకేతం=U_USING_DEFAULT_WARNING;
+            తిరిగి;
         }
     }
 
@@ -371,36 +371,36 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
      * For Latin-1, adjust sourceLimit only for 1 trail byte because
      * the conversion loop handles at most 2-byte sequences.
      */
-    if(source<sourceLimit && U8_IS_LEAD(*(sourceLimit-1))) {
-        --sourceLimit;
+    ఒకవేళ(ఆధారం<ఆధారం_హద్దు && U8_IS_LEAD(*(ఆధారం_హద్దు-1))) {
+        --ఆధారం_హద్దు;
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
-            b=*source++;
-            if(U8_IS_SINGLE(b)) {
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
+        ఒకవేళ(లక్ష్యం_సామర్థ్యం>0) {
+            b=*ఆధారం++;
+            ఒకవేళ(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                *target++ = b;
-                --targetCapacity;
-            } else if( /* handle U+0080..U+00FF inline */
+                *లక్ష్యం++ = b;
+                --లక్ష్యం_సామర్థ్యం;
+            } లేకపోతే ఒకవేళ( /* handle U+0080..U+00FF inline */
                        b>=0xc2 && b<=0xc3 &&
-                       (t1=(uint8_t)(*source-0x80)) <= 0x3f
+                       (t1=(uint8_t)(*ఆధారం-0x80)) <= 0x3f
             ) {
-                ++source;
-                *target++=(uint8_t)(((b&3)<<6)|t1);
-                --targetCapacity;
-            } else {
+                ++ఆధారం;
+                *లక్ష్యం++=(uint8_t)(((b&3)<<6)|t1);
+                --లక్ష్యం_సామర్థ్యం;
+            } లేకపోతే {
                 /* complicated, illegal or unmappable input: fall back to the pivoting implementation */
-                pToUArgs->source=(char *)(source-1);
-                pFromUArgs->target=(char *)target;
-                *pErrorCode=U_USING_DEFAULT_WARNING;
-                return;
+                p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)(ఆధారం-1);
+                pFromUArgs->లక్ష్యం=(అక్షరం *)లక్ష్యం;
+                *p_Error_సంకేతం=U_USING_DEFAULT_WARNING;
+                తిరిగి;
             }
-        } else {
+        } లేకపోతే {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
     }
 
@@ -411,142 +411,142 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
      * For Latin-1, there is at most exactly one lead byte because of the
      * smaller sourceLimit adjustment logic.
      */
-    if(U_SUCCESS(*pErrorCode) && source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
-        utf8->toUnicodeStatus=utf8->toUBytes[0]=b=*source++;
-        utf8->toULength=1;
-        utf8->mode=U8_COUNT_BYTES(b);
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం) && ఆధారం<(ఆధారం_హద్దు=(uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు)) {
+        utf8->గమ్యం_Unicode_స్థితి=utf8->గమ్యం_UBytes[0]=b=*ఆధారం++;
+        utf8->గమ్యం_ULength=1;
+        utf8->బహుళకం=U8_లెక్క_బైట్లు(b);
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target=(char *)target;
+    p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+    pFromUArgs->లక్ష్యం=(అక్షరం *)లక్ష్యం;
 }
 
-static void U_CALLCONV
-_Latin1GetUnicodeSet(const UConverter *cnv,
-                     const USetAdder *sa,
-                     UConverterUnicodeSet which,
-                     UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0xff);
+స్థిర శూన్య U_CALLCONV
+Latin1_Get_Unicode_సమితి(స్థిరరాశి UConverter *cnv,
+                     స్థిరరాశి USetAdder *sa,
+                     UConverter_Unicode_సమితి which,
+                     UError_సంకేతం *p_Error_సంకేతం) {
+    (శూన్య)cnv;
+    (శూన్య)which;
+    (శూన్య)p_Error_సంకేతం;
+    sa->కూడు_Range(sa->సమితి, 0, 0xff);
 }
-U_CDECL_END
+U_CDECL_చివర
 
 
-static const UConverterImpl _Latin1Impl={
+స్థిర స్థిరరాశి UConverterImpl _Latin1Impl={
     UCNV_LATIN_1,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    _Latin1ToUnicodeWithOffsets,
-    _Latin1ToUnicodeWithOffsets,
+    Latin1_గమ్యం_Unicode_With_Offsets,
+    Latin1_గమ్యం_Unicode_With_Offsets,
     _Latin1FromUnicodeWithOffsets,
     _Latin1FromUnicodeWithOffsets,
-    _Latin1GetNextUChar,
+    Latin1_Get_తదుపరి_UChar,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    _Latin1GetUnicodeSet,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    Latin1_Get_Unicode_సమితి,
 
-    nullptr,
+    శూన్యసూచిక,
     ucnv_Latin1FromUTF8
 };
 
-static const UConverterStaticData _Latin1StaticData={
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం Latin1_Static_దత్తాంశం={
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "ISO-8859-1",
     819, UCNV_IBM, UCNV_LATIN_1, 1, 1,
-    { 0x1a, 0, 0, 0 }, 1, false, false,
+    { 0x1a, 0, 0, 0 }, 1, అబద్ధం, అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _Latin1Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_Latin1StaticData, &_Latin1Impl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం Latin1_దత్తాంశం=
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&Latin1_Static_దత్తాంశం, &_Latin1Impl);
 
 /* US-ASCII ----------------------------------------------------------------- */
 
 U_CDECL_BEGIN
 /* This is a table-less version of ucnv_MBCSSingleToBMPWithOffsets(). */
-static void U_CALLCONV
-_ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode) {
-    const uint8_t *source, *sourceLimit;
-    char16_t *target, *oldTarget;
-    int32_t targetCapacity, length;
+స్థిర శూన్య U_CALLCONV
+_ASCIIToUnicodeWithOffsets(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                           UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    char16_t *లక్ష్యం, *old_లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం, length;
     int32_t *offsets;
 
-    int32_t sourceIndex;
+    int32_t ఆధారం_సూచీ;
 
     uint8_t c;
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=oldTarget=pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    ఆధారం=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం=old_లక్ష్యం=p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_సామర్థ్యం=(int32_t)(p_వాదనలు->లక్ష్యం_హద్దు-p_వాదనలు->లక్ష్యం);
+    offsets=p_వాదనలు->offsets;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=0;
+    ఆధారం_సూచీ=0;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length=(int32_t)(ఆధారం_హద్దు-ఆధారం);
+    ఒకవేళ(length<లక్ష్యం_సామర్థ్యం) {
+        లక్ష్యం_సామర్థ్యం=length;
     }
 
-    if(targetCapacity>=8) {
+    ఒకవేళ(లక్ష్యం_సామర్థ్యం>=8) {
         /* This loop is unrolled for speed and improved pipelining. */
         int32_t count, loops;
         char16_t oredChars;
 
-        loops=count=targetCapacity>>3;
-        do {
-            oredChars=target[0]=source[0];
-            oredChars|=target[1]=source[1];
-            oredChars|=target[2]=source[2];
-            oredChars|=target[3]=source[3];
-            oredChars|=target[4]=source[4];
-            oredChars|=target[5]=source[5];
-            oredChars|=target[6]=source[6];
-            oredChars|=target[7]=source[7];
+        loops=count=లక్ష్యం_సామర్థ్యం>>3;
+        చేయి {
+            oredChars=లక్ష్యం[0]=ఆధారం[0];
+            oredChars|=లక్ష్యం[1]=ఆధారం[1];
+            oredChars|=లక్ష్యం[2]=ఆధారం[2];
+            oredChars|=లక్ష్యం[3]=ఆధారం[3];
+            oredChars|=లక్ష్యం[4]=ఆధారం[4];
+            oredChars|=లక్ష్యం[5]=ఆధారం[5];
+            oredChars|=లక్ష్యం[6]=ఆధారం[6];
+            oredChars|=లక్ష్యం[7]=ఆధారం[7];
 
             /* were all 16 entries really valid? */
-            if(oredChars>0x7f) {
+            ఒకవేళ(oredChars>0x7f) {
                 /* no, return to the first of these 16 */
-                break;
+                ఆపు;
             }
-            source+=8;
-            target+=8;
-        } while(--count>0);
+            ఆధారం+=8;
+            లక్ష్యం+=8;
+        } అయితే(--count>0);
         count=loops-count;
-        targetCapacity-=count*8;
+        లక్ష్యం_సామర్థ్యం-=count*8;
 
-        if(offsets!=nullptr) {
-            oldTarget+=count*8;
-            while(count>0) {
-                offsets[0]=sourceIndex++;
-                offsets[1]=sourceIndex++;
-                offsets[2]=sourceIndex++;
-                offsets[3]=sourceIndex++;
-                offsets[4]=sourceIndex++;
-                offsets[5]=sourceIndex++;
-                offsets[6]=sourceIndex++;
-                offsets[7]=sourceIndex++;
+        ఒకవేళ(offsets!=శూన్యసూచిక) {
+            old_లక్ష్యం+=count*8;
+            అయితే(count>0) {
+                offsets[0]=ఆధారం_సూచీ++;
+                offsets[1]=ఆధారం_సూచీ++;
+                offsets[2]=ఆధారం_సూచీ++;
+                offsets[3]=ఆధారం_సూచీ++;
+                offsets[4]=ఆధారం_సూచీ++;
+                offsets[5]=ఆధారం_సూచీ++;
+                offsets[6]=ఆధారం_సూచీ++;
+                offsets[7]=ఆధారం_సూచీ++;
                 offsets+=8;
                 --count;
             }
@@ -555,202 +555,202 @@ _ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source++)<=0x7f) {
-        *target++=c;
-        --targetCapacity;
+    అయితే(లక్ష్యం_సామర్థ్యం>0 && (c=*ఆధారం++)<=0x7f) {
+        *లక్ష్యం++=c;
+        --లక్ష్యం_సామర్థ్యం;
     }
 
-    if(c>0x7f) {
+    ఒకవేళ(c>0x7f) {
         /* callback(illegal); copy the current bytes to toUBytes[] */
-        UConverter *cnv=pArgs->converter;
-        cnv->toUBytes[0]=c;
-        cnv->toULength=1;
-        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-    } else if(source<sourceLimit && target>=pArgs->targetLimit) {
+        UConverter *cnv=p_వాదనలు->converter;
+        cnv->గమ్యం_UBytes[0]=c;
+        cnv->గమ్యం_ULength=1;
+        *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+    } లేకపోతే ఒకవేళ(ఆధారం<ఆధారం_హద్దు && లక్ష్యం>=p_వాదనలు->లక్ష్యం_హద్దు) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
     /* set offsets since the start */
-    if(offsets!=nullptr) {
-        size_t count=target-oldTarget;
-        while(count>0) {
-            *offsets++=sourceIndex++;
+    ఒకవేళ(offsets!=శూన్యసూచిక) {
+        size_t count=లక్ష్యం-old_లక్ష్యం;
+        అయితే(count>0) {
+            *offsets++=ఆధారం_సూచీ++;
             --count;
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=(స్థిరరాశి అక్షరం *)ఆధారం;
+    p_వాదనలు->లక్ష్యం=లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
 
 /* This is a table-less version of ucnv_MBCSSingleGetNextUChar(). */
-static UChar32 U_CALLCONV
-_ASCIIGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                   UErrorCode *pErrorCode) {
-    const uint8_t *source;
+స్థిర UChar32 U_CALLCONV
+ASCIIGet_తదుపరి_UChar(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                   UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి uint8_t *ఆధారం;
     uint8_t b;
 
-    source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
-        b=*source++;
-        pArgs->source=(const char *)source;
-        if(b<=0x7f) {
-            return b;
-        } else {
-            UConverter *cnv=pArgs->converter;
-            cnv->toUBytes[0]=b;
-            cnv->toULength=1;
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0xffff;
+    ఆధారం=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం;
+    ఒకవేళ(ఆధారం<(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం_హద్దు) {
+        b=*ఆధారం++;
+        p_వాదనలు->ఆధారం=(స్థిరరాశి అక్షరం *)ఆధారం;
+        ఒకవేళ(b<=0x7f) {
+            తిరిగి b;
+        } లేకపోతే {
+            UConverter *cnv=p_వాదనలు->converter;
+            cnv->గమ్యం_UBytes[0]=b;
+            cnv->గమ్యం_ULength=1;
+            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+            తిరిగి 0xffff;
         }
     }
 
     /* no output because of empty input */
-    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+    తిరిగి 0xffff;
 }
 
 /* "Convert" UTF-8 to US-ASCII: Validate and copy. */
-static void U_CALLCONV
-ucnv_ASCIIFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                   UConverterToUnicodeArgs *pToUArgs,
-                   UErrorCode *pErrorCode) {
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity, length;
+స్థిర శూన్య U_CALLCONV
+ucnv_ASCIIFromUTF8(UConverter_From_Unicode_వాదనలు *pFromUArgs,
+                   UConverter_గమ్యం_Unicode_వాదనలు *p_గమ్యం_UArgs,
+                   UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం, length;
 
     uint8_t c;
 
-    if(pToUArgs->converter->toULength > 0) {
+    ఒకవేళ(p_గమ్యం_UArgs->converter->గమ్యం_ULength > 0) {
         /* no handling of partial UTF-8 characters here, fall back to pivoting */
-        *pErrorCode=U_USING_DEFAULT_WARNING;
-        return;
+        *p_Error_సంకేతం=U_USING_DEFAULT_WARNING;
+        తిరిగి;
     }
 
     /* set up the local pointers */
-    source=(const uint8_t *)pToUArgs->source;
-    sourceLimit=(const uint8_t *)pToUArgs->sourceLimit;
-    target=(uint8_t *)pFromUArgs->target;
-    targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
+    ఆధారం=(స్థిరరాశి uint8_t *)p_గమ్యం_UArgs->ఆధారం;
+    ఆధారం_హద్దు=(స్థిరరాశి uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు;
+    లక్ష్యం=(uint8_t *)pFromUArgs->లక్ష్యం;
+    లక్ష్యం_సామర్థ్యం=(int32_t)(pFromUArgs->లక్ష్యం_హద్దు-pFromUArgs->లక్ష్యం);
 
     /*
      * since the conversion here is 1:1 uint8_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length=(int32_t)(ఆధారం_హద్దు-ఆధారం);
+    ఒకవేళ(length<లక్ష్యం_సామర్థ్యం) {
+        లక్ష్యం_సామర్థ్యం=length;
     }
 
     /* unroll the loop with the most common case */
-    if(targetCapacity>=16) {
+    ఒకవేళ(లక్ష్యం_సామర్థ్యం>=16) {
         int32_t count, loops;
         uint8_t oredChars;
 
-        loops=count=targetCapacity>>4;
-        do {
-            oredChars=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
+        loops=count=లక్ష్యం_సామర్థ్యం>>4;
+        చేయి {
+            oredChars=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
+            oredChars|=*లక్ష్యం++=*ఆధారం++;
 
             /* were all 16 entries really valid? */
-            if(oredChars>0x7f) {
+            ఒకవేళ(oredChars>0x7f) {
                 /* no, return to the first of these 16 */
-                source-=16;
-                target-=16;
-                break;
+                ఆధారం-=16;
+                లక్ష్యం-=16;
+                ఆపు;
             }
-        } while(--count>0);
+        } అయితే(--count>0);
         count=loops-count;
-        targetCapacity-=16*count;
+        లక్ష్యం_సామర్థ్యం-=16*count;
     }
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source)<=0x7f) {
-        ++source;
-        *target++=c;
-        --targetCapacity;
+    అయితే(లక్ష్యం_సామర్థ్యం>0 && (c=*ఆధారం)<=0x7f) {
+        ++ఆధారం;
+        *లక్ష్యం++=c;
+        --లక్ష్యం_సామర్థ్యం;
     }
 
-    if(c>0x7f) {
+    ఒకవేళ(c>0x7f) {
         /* non-ASCII character, handle in standard converter */
-        *pErrorCode=U_USING_DEFAULT_WARNING;
-    } else if(source<sourceLimit && target>=(const uint8_t *)pFromUArgs->targetLimit) {
+        *p_Error_సంకేతం=U_USING_DEFAULT_WARNING;
+    } లేకపోతే ఒకవేళ(ఆధారం<ఆధారం_హద్దు && లక్ష్యం>=(స్థిరరాశి uint8_t *)pFromUArgs->లక్ష్యం_హద్దు) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(const char *)source;
-    pFromUArgs->target=(char *)target;
+    p_గమ్యం_UArgs->ఆధారం=(స్థిరరాశి అక్షరం *)ఆధారం;
+    pFromUArgs->లక్ష్యం=(అక్షరం *)లక్ష్యం;
 }
 
-static void U_CALLCONV
-_ASCIIGetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
-                    UConverterUnicodeSet which,
-                    UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0x7f);
+స్థిర శూన్య U_CALLCONV
+ASCIIGet_Unicode_సమితి(స్థిరరాశి UConverter *cnv,
+                    స్థిరరాశి USetAdder *sa,
+                    UConverter_Unicode_సమితి which,
+                    UError_సంకేతం *p_Error_సంకేతం) {
+    (శూన్య)cnv;
+    (శూన్య)which;
+    (శూన్య)p_Error_సంకేతం;
+    sa->కూడు_Range(sa->సమితి, 0, 0x7f);
 }
-U_CDECL_END
+U_CDECL_చివర
 
-static const UConverterImpl _ASCIIImpl={
+స్థిర స్థిరరాశి UConverterImpl _ASCIIImpl={
     UCNV_US_ASCII,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
     _ASCIIToUnicodeWithOffsets,
     _ASCIIToUnicodeWithOffsets,
     _Latin1FromUnicodeWithOffsets,
     _Latin1FromUnicodeWithOffsets,
-    _ASCIIGetNextUChar,
+    ASCIIGet_తదుపరి_UChar,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    _ASCIIGetUnicodeSet,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    ASCIIGet_Unicode_సమితి,
 
-    nullptr,
+    శూన్యసూచిక,
     ucnv_ASCIIFromUTF8
 };
 
-static const UConverterStaticData _ASCIIStaticData={
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం ASCIIStatic_దత్తాంశం={
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "US-ASCII",
     367, UCNV_IBM, UCNV_US_ASCII, 1, 1,
-    { 0x1a, 0, 0, 0 }, 1, false, false,
+    { 0x1a, 0, 0, 0 }, 1, అబద్ధం, అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _ASCIIData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ASCIIStaticData, &_ASCIIImpl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం _ASCIIData=
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&ASCIIStatic_దత్తాంశం, &_ASCIIImpl);
 
-#endif
+#అయితే_ముగింపు

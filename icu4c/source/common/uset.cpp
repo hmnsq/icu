@@ -20,264 +20,264 @@
 *   instantiating a new USet.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/char16ptr.h"
-#include "unicode/uobject.h"
-#include "unicode/uset.h"
-#include "unicode/uniset.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/char16ptr.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/parsepos.h"
 
 U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
-uset_openEmpty() {
-    return (USet*) new UnicodeSet();
+uset_open_ఖాళీలు() {
+    తిరిగి (USet*) కొత్త Unicode_సమితి();
 }
 
 U_CAPI USet* U_EXPORT2
-uset_open(UChar32 start, UChar32 end) {
-    return (USet*) new UnicodeSet(start, end);
+uset_open(UChar32 ప్రారంభం, UChar32 చివర) {
+    తిరిగి (USet*) కొత్త Unicode_సమితి(ప్రారంభం, చివర);
 }
 
-U_CAPI void U_EXPORT2
-uset_close(USet* set) {
-    delete (UnicodeSet*) set;
+U_CAPI శూన్య U_EXPORT2
+uset_close(USet* సమితి) {
+    తొలగించు (Unicode_సమితి*) సమితి;
 }
 
 U_CAPI USet * U_EXPORT2
-uset_clone(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::clone());
+uset_clone(స్థిరరాశి USet *సమితి) {
+    తిరిగి (USet*) (((Unicode_సమితి*) సమితి)->Unicode_సమితి::clone());
 }
 
 U_CAPI UBool U_EXPORT2
-uset_isFrozen(const USet *set) {
-    return ((UnicodeSet*) set)->UnicodeSet::isFrozen();
+uset_isFrozen(స్థిరరాశి USet *సమితి) {
+    తిరిగి ((Unicode_సమితి*) సమితి)->Unicode_సమితి::isFrozen();
 }
 
-U_CAPI void U_EXPORT2
-uset_freeze(USet *set) {
-    ((UnicodeSet*) set)->UnicodeSet::freeze();
+U_CAPI శూన్య U_EXPORT2
+uset_freeze(USet *సమితి) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::freeze();
 }
 
 U_CAPI USet * U_EXPORT2
-uset_cloneAsThawed(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::cloneAsThawed());
+uset_cloneAsThawed(స్థిరరాశి USet *సమితి) {
+    తిరిగి (USet*) (((Unicode_సమితి*) సమితి)->Unicode_సమితి::cloneAsThawed());
 }
 
-U_CAPI void U_EXPORT2
-uset_set(USet* set,
-     UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::set(start, end);
+U_CAPI శూన్య U_EXPORT2
+uset_సమితి(USet* సమితి,
+     UChar32 ప్రారంభం, UChar32 చివర) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::సమితి(ప్రారంభం, చివర);
 }
 
-U_CAPI void U_EXPORT2
-uset_addAll(USet* set, const USet *additionalSet) {
-    ((UnicodeSet*) set)->UnicodeSet::addAll(*((const UnicodeSet*)additionalSet));
+U_CAPI శూన్య U_EXPORT2
+uset_కూడు_All(USet* సమితి, స్థిరరాశి USet *additional_సమితి) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::కూడు_All(*((స్థిరరాశి Unicode_సమితి*)additional_సమితి));
 }
 
-U_CAPI void U_EXPORT2
-uset_add(USet* set, UChar32 c) {
-    ((UnicodeSet*) set)->UnicodeSet::add(c);
+U_CAPI శూన్య U_EXPORT2
+uset_కూడు(USet* సమితి, UChar32 c) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::కూడు(c);
 }
 
-U_CAPI void U_EXPORT2
-uset_addRange(USet* set, UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::add(start, end);    
+U_CAPI శూన్య U_EXPORT2
+uset_కూడు_Range(USet* సమితి, UChar32 ప్రారంభం, UChar32 చివర) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::కూడు(ప్రారంభం, చివర);    
 }
 
-U_CAPI void U_EXPORT2
-uset_addString(USet* set, const char16_t* str, int32_t strLen) {
+U_CAPI శూన్య U_EXPORT2
+uset_కూడు_String(USet* సమితి, స్థిరరాశి char16_t* str, int32_t strLen) {
     // UnicodeString handles -1 for strLen
     UnicodeString s(strLen<0, str, strLen);
-    ((UnicodeSet*) set)->UnicodeSet::add(s);
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::కూడు(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_addAllCodePoints(USet* set, const char16_t *str, int32_t strLen) {
+U_CAPI శూన్య U_EXPORT2
+uset_కూడు_All_సంకేతం_Points(USet* సమితి, స్థిరరాశి char16_t *str, int32_t strLen) {
     // UnicodeString handles -1 for strLen
     UnicodeString s(str, strLen);
-    ((UnicodeSet*) set)->UnicodeSet::addAll(s);
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::కూడు_All(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_remove(USet* set, UChar32 c) {
-    ((UnicodeSet*) set)->UnicodeSet::remove(c);
+U_CAPI శూన్య U_EXPORT2
+uset_remove(USet* సమితి, UChar32 c) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::remove(c);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeRange(USet* set, UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::remove(start, end);
+U_CAPI శూన్య U_EXPORT2
+uset_removeRange(USet* సమితి, UChar32 ప్రారంభం, UChar32 చివర) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::remove(ప్రారంభం, చివర);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeString(USet* set, const char16_t* str, int32_t strLen) {
+U_CAPI శూన్య U_EXPORT2
+uset_removeString(USet* సమితి, స్థిరరాశి char16_t* str, int32_t strLen) {
     UnicodeString s(strLen==-1, str, strLen);
-    ((UnicodeSet*) set)->UnicodeSet::remove(s);
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::remove(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI శూన్య U_EXPORT2
+uset_remove_All_సంకేతం_Points(USet *సమితి, స్థిరరాశి char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::removeAll(s);
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::removeAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAll(USet* set, const USet* remove) {
-    ((UnicodeSet*) set)->UnicodeSet::removeAll(*(const UnicodeSet*)remove);
+U_CAPI శూన్య U_EXPORT2
+uset_removeAll(USet* సమితి, స్థిరరాశి USet* remove) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::removeAll(*(స్థిరరాశి Unicode_సమితి*)remove);
 }
 
-U_CAPI void U_EXPORT2
-uset_retain(USet* set, UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::retain(start, end);
+U_CAPI శూన్య U_EXPORT2
+uset_retain(USet* సమితి, UChar32 ప్రారంభం, UChar32 చివర) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::retain(ప్రారంభం, చివర);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainString(USet *set, const char16_t *str, int32_t length) {
+U_CAPI శూన్య U_EXPORT2
+uset_retainString(USet *సమితి, స్థిరరాశి char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::retain(s);
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::retain(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI శూన్య U_EXPORT2
+uset_retain_All_సంకేతం_Points(USet *సమితి, స్థిరరాశి char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::retainAll(s);
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::retainAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainAll(USet* set, const USet* retain) {
-    ((UnicodeSet*) set)->UnicodeSet::retainAll(*(const UnicodeSet*)retain);
+U_CAPI శూన్య U_EXPORT2
+uset_retainAll(USet* సమితి, స్థిరరాశి USet* retain) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::retainAll(*(స్థిరరాశి Unicode_సమితి*)retain);
 }
 
-U_CAPI void U_EXPORT2
-uset_compact(USet* set) {
-    ((UnicodeSet*) set)->UnicodeSet::compact();
+U_CAPI శూన్య U_EXPORT2
+uset_compact(USet* సమితి) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::compact();
 }
 
-U_CAPI void U_EXPORT2
-uset_complement(USet* set) {
-    ((UnicodeSet*) set)->UnicodeSet::complement();
+U_CAPI శూన్య U_EXPORT2
+uset_complement(USet* సమితి) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::complement();
 }
 
-U_CAPI void U_EXPORT2
-uset_complementRange(USet *set, UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::complement(start, end);
+U_CAPI శూన్య U_EXPORT2
+uset_complementRange(USet *సమితి, UChar32 ప్రారంభం, UChar32 చివర) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::complement(ప్రారంభం, చివర);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementString(USet *set, const char16_t *str, int32_t length) {
+U_CAPI శూన్య U_EXPORT2
+uset_complementString(USet *సమితి, స్థిరరాశి char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::complement(s);
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::complement(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI శూన్య U_EXPORT2
+uset_complement_All_సంకేతం_Points(USet *సమితి, స్థిరరాశి char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
-    ((UnicodeSet*) set)->UnicodeSet::complementAll(s);
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::complementAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementAll(USet* set, const USet* complement) {
-    ((UnicodeSet*) set)->UnicodeSet::complementAll(*(const UnicodeSet*)complement);
+U_CAPI శూన్య U_EXPORT2
+uset_complementAll(USet* సమితి, స్థిరరాశి USet* complement) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::complementAll(*(స్థిరరాశి Unicode_సమితి*)complement);
 }
 
-U_CAPI void U_EXPORT2
-uset_clear(USet* set) {
-    ((UnicodeSet*) set)->UnicodeSet::clear();
+U_CAPI శూన్య U_EXPORT2
+uset_clear(USet* సమితి) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::clear();
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAllStrings(USet* set) {
-    ((UnicodeSet*) set)->UnicodeSet::removeAllStrings();
+U_CAPI శూన్య U_EXPORT2
+uset_remove_All_అక్షరశ్రేణులు(USet* సమితి) {
+    ((Unicode_సమితి*) సమితి)->Unicode_సమితి::remove_All_అక్షరశ్రేణులు();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_isEmpty(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::isEmpty();
+uset_is_ఖాళీలు(స్థిరరాశి USet* సమితి) {
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) సమితి)->Unicode_సమితి::is_ఖాళీలు();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_hasStrings(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::hasStrings();
+uset_has_అక్షరశ్రేణులు(స్థిరరాశి USet* సమితి) {
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) సమితి)->Unicode_సమితి::has_అక్షరశ్రేణులు();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_contains(const USet* set, UChar32 c) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(c);
+uset_కలిగియుంది(స్థిరరాశి USet* సమితి, UChar32 c) {
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) సమితి)->Unicode_సమితి::కలిగియుంది(c);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsRange(const USet* set, UChar32 start, UChar32 end) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(start, end);
+uset_కలిగియుంది_Range(స్థిరరాశి USet* సమితి, UChar32 ప్రారంభం, UChar32 చివర) {
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) సమితి)->Unicode_సమితి::కలిగియుంది(ప్రారంభం, చివర);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsString(const USet* set, const char16_t* str, int32_t strLen) {
+uset_కలిగియుంది_String(స్థిరరాశి USet* సమితి, స్థిరరాశి char16_t* str, int32_t strLen) {
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(s);
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) సమితి)->Unicode_సమితి::కలిగియుంది(s);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsAll(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsAll(* (const UnicodeSet*) set2);
+uset_కలిగియుంది_All(స్థిరరాశి USet* set1, స్థిరరాశి USet* set2) {
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) set1)->Unicode_సమితి::కలిగియుంది_All(* (స్థిరరాశి Unicode_సమితి*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsAllCodePoints(const USet* set, const char16_t *str, int32_t strLen) {
+uset_కలిగియుంది_All_సంకేతం_Points(స్థిరరాశి USet* సమితి, స్థిరరాశి char16_t *str, int32_t strLen) {
     // Create a string alias, since nothing is being added to the set.
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::containsAll(s);
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) సమితి)->Unicode_సమితి::కలిగియుంది_All(s);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsNone(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsNone(* (const UnicodeSet*) set2);
+uset_కలిగియుంది_None(స్థిరరాశి USet* set1, స్థిరరాశి USet* set2) {
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) set1)->Unicode_సమితి::కలిగియుంది_None(* (స్థిరరాశి Unicode_సమితి*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsSome(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsSome(* (const UnicodeSet*) set2);
+uset_కలిగియుంది_Some(స్థిరరాశి USet* set1, స్థిరరాశి USet* set2) {
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) set1)->Unicode_సమితి::కలిగియుంది_Some(* (స్థిరరాశి Unicode_సమితి*) set2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_span(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::span(s, length, spanCondition);
+uset_పరిధి(స్థిరరాశి USet *సమితి, స్థిరరాశి char16_t *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) {
+    తిరిగి ((Unicode_సమితి*) సమితి)->Unicode_సమితి::పరిధి(s, length, పరిధి_Condition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanBack(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBack(s, length, spanCondition);
+uset_పరిధి_వెనుక(స్థిరరాశి USet *సమితి, స్థిరరాశి char16_t *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) {
+    తిరిగి ((Unicode_సమితి*) సమితి)->Unicode_సమితి::పరిధి_వెనుక(s, length, పరిధి_Condition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanUTF8(s, length, spanCondition);
+uset_పరిధి_UTF8(స్థిరరాశి USet *సమితి, స్థిరరాశి అక్షరం *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) {
+    తిరిగి ((Unicode_సమితి*) సమితి)->Unicode_సమితి::పరిధి_UTF8(s, length, పరిధి_Condition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBackUTF8(s, length, spanCondition);
+uset_పరిధి_వెనుక_UTF8(స్థిరరాశి USet *సమితి, స్థిరరాశి అక్షరం *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) {
+    తిరిగి ((Unicode_సమితి*) సమితి)->Unicode_సమితి::పరిధి_వెనుక_UTF8(s, length, పరిధి_Condition);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_equals(const USet* set1, const USet* set2) {
-    return *(const UnicodeSet*)set1 == *(const UnicodeSet*)set2;
+uset_equals(స్థిరరాశి USet* set1, స్థిరరాశి USet* set2) {
+    తిరిగి *(స్థిరరాశి Unicode_సమితి*)set1 == *(స్థిరరాశి Unicode_సమితి*)set2;
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_indexOf(const USet* set, UChar32 c) {
-    return ((UnicodeSet*) set)->UnicodeSet::indexOf(c);
+uset_సూచీ_యొక్క(స్థిరరాశి USet* సమితి, UChar32 c) {
+    తిరిగి ((Unicode_సమితి*) సమితి)->Unicode_సమితి::సూచీ_యొక్క(c);
 }
 
 U_CAPI UChar32 U_EXPORT2
-uset_charAt(const USet* set, int32_t index) {
-    return ((UnicodeSet*) set)->UnicodeSet::charAt(index);
+uset_charAt(స్థిరరాశి USet* సమితి, int32_t సూచీ) {
+    తిరిగి ((Unicode_సమితి*) సమితి)->Unicode_సమితి::charAt(సూచీ);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_size(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::size();
+uset_కొలత(స్థిరరాశి USet* సమితి) {
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) సమితి)->Unicode_సమితి::size();
 }
 
 U_NAMESPACE_BEGIN
@@ -286,77 +286,77 @@ U_NAMESPACE_BEGIN
  * USet support API.  Declaring a class a friend is more portable than
  * trying to declare extern "C" functions as friends.
  */
-class USetAccess /* not : public UObject because all methods are static */ {
-public:
+తరగతి USetAccess /* not : public UObject because all methods are static */ {
+బహిరంగ:
     /* Try to have the compiler inline these*/
-    inline static int32_t getStringCount(const UnicodeSet& set) {
-        return set.stringsSize();
+    అంతఃవరుస స్థిర int32_t get_String_లెక్క(స్థిరరాశి Unicode_సమితి& సమితి) {
+        తిరిగి సమితి.అక్షరశ్రేణులు_కొలత();
     }
-    inline static const UnicodeString* getString(const UnicodeSet& set U_LIFETIME_BOUND,
+    అంతఃవరుస స్థిర స్థిరరాశి UnicodeString* getString(స్థిరరాశి Unicode_సమితి& సమితి U_LIFETIME_BOUND,
                                                  int32_t i) {
-        return set.getString(i);
+        తిరిగి సమితి.getString(i);
     }
-private:
+అంతరంగ:
     /* do not instantiate*/
     USetAccess();
 };
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 U_CAPI int32_t U_EXPORT2
-uset_getRangeCount(const USet *set) {
-    return ((const UnicodeSet *)set)->UnicodeSet::getRangeCount();
+uset_get_Range_లెక్క(స్థిరరాశి USet *సమితి) {
+    తిరిగి ((స్థిరరాశి Unicode_సమితి *)సమితి)->Unicode_సమితి::get_Range_లెక్క();
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getStringCount(const USet *uset) {
-    const UnicodeSet &set = *(const UnicodeSet *)uset;
-    return USetAccess::getStringCount(set);
+uset_get_String_లెక్క(స్థిరరాశి USet *uset) {
+    స్థిరరాశి Unicode_సమితి &సమితి = *(స్థిరరాశి Unicode_సమితి *)uset;
+    తిరిగి USetAccess::get_String_లెక్క(సమితి);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getItemCount(const USet* uset) {
-    const UnicodeSet& set = *(const UnicodeSet*)uset;
-    return set.getRangeCount() + USetAccess::getStringCount(set);
+uset_get_అంశం_లెక్క(స్థిరరాశి USet* uset) {
+    స్థిరరాశి Unicode_సమితి& సమితి = *(స్థిరరాశి Unicode_సమితి*)uset;
+    తిరిగి సమితి.get_Range_లెక్క() + USetAccess::get_String_లెక్క(సమితి);
 }
 
-U_CAPI const UChar* U_EXPORT2
-uset_getString(const USet* uset U_LIFETIME_BOUND, int32_t index, int32_t* pLength) {
-    if (pLength == nullptr) { return nullptr; }
-    const UnicodeSet &set = *(const UnicodeSet *)uset;
-    int32_t count = USetAccess::getStringCount(set);
-    if (index < 0 || count <= index) {
-        *pLength = 0;
-        return nullptr;
+U_CAPI స్థిరరాశి UChar* U_EXPORT2
+uset_getString(స్థిరరాశి USet* uset U_LIFETIME_BOUND, int32_t సూచీ, int32_t* p_నిడివి) {
+    ఒకవేళ (p_నిడివి == శూన్యసూచిక) { తిరిగి శూన్యసూచిక; }
+    స్థిరరాశి Unicode_సమితి &సమితి = *(స్థిరరాశి Unicode_సమితి *)uset;
+    int32_t count = USetAccess::get_String_లెక్క(సమితి);
+    ఒకవేళ (సూచీ < 0 || count <= సూచీ) {
+        *p_నిడివి = 0;
+        తిరిగి శూన్యసూచిక;
     }
-    const UnicodeString *s = USetAccess::getString(set, index);
-    *pLength = s->length();
-    return toUCharPtr(s->getBuffer());
+    స్థిరరాశి UnicodeString *s = USetAccess::getString(సమితి, సూచీ);
+    *p_నిడివి = s->length();
+    తిరిగి గమ్యం_UChar_Ptr(s->get_బఫరు());
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getItem(const USet* uset, int32_t itemIndex,
-             UChar32* start, UChar32* end,
-             char16_t* str, int32_t strCapacity,
-             UErrorCode* ec) {
-    if (U_FAILURE(*ec)) return 0;
-    const UnicodeSet& set = *(const UnicodeSet*)uset;
-    int32_t rangeCount;
+uset_get_అంశం(స్థిరరాశి USet* uset, int32_t అంశం_సూచీ,
+             UChar32* ప్రారంభం, UChar32* చివర,
+             char16_t* str, int32_t str_సామర్థ్యం,
+             UError_సంకేతం* ec) {
+    ఒకవేళ (U_FAILURE(*ec)) తిరిగి 0;
+    స్థిరరాశి Unicode_సమితి& సమితి = *(స్థిరరాశి Unicode_సమితి*)uset;
+    int32_t range_లెక్క;
 
-    if (itemIndex < 0) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
-    } else if (itemIndex < (rangeCount = set.getRangeCount())) {
-        *start = set.getRangeStart(itemIndex);
-        *end = set.getRangeEnd(itemIndex);
-        return 0;
-    } else {
-        itemIndex -= rangeCount;
-        if (itemIndex < USetAccess::getStringCount(set)) {
-            const UnicodeString* s = USetAccess::getString(set, itemIndex);
-            return s->extract(str, strCapacity, *ec);
-        } else {
-            *ec = U_INDEX_OUTOFBOUNDS_ERROR;
-            return -1;
+    ఒకవేళ (అంశం_సూచీ < 0) {
+        *ec = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి -1;
+    } లేకపోతే ఒకవేళ (అంశం_సూచీ < (range_లెక్క = సమితి.get_Range_లెక్క())) {
+        *ప్రారంభం = సమితి.get_Range_ప్రారంభం(అంశం_సూచీ);
+        *చివర = సమితి.get_Range_చివర(అంశం_సూచీ);
+        తిరిగి 0;
+    } లేకపోతే {
+        అంశం_సూచీ -= range_లెక్క;
+        ఒకవేళ (అంశం_సూచీ < USetAccess::get_String_లెక్క(సమితి)) {
+            స్థిరరాశి UnicodeString* s = USetAccess::getString(సమితి, అంశం_సూచీ);
+            తిరిగి s->extract(str, str_సామర్థ్యం, *ec);
+        } లేకపోతే {
+            *ec = U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి -1;
         }
     }
 }
@@ -392,189 +392,189 @@ uset_getItem(const USet* uset, int32_t itemIndex,
  * - some supplementary: (length|0x8000) (bmpLength<length) BMP, .., BMP, supp-high, supp-low, ..
  */
 U_CAPI int32_t U_EXPORT2
-uset_serialize(const USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* ec) {
-    if (ec==nullptr || U_FAILURE(*ec)) {
-        return 0;
+uset_serialize(స్థిరరాశి USet* సమితి, uint16_t* dest, int32_t dest_సామర్థ్యం, UError_సంకేతం* ec) {
+    ఒకవేళ (ec==శూన్యసూచిక || U_FAILURE(*ec)) {
+        తిరిగి 0;
     }
 
-    return ((const UnicodeSet*) set)->UnicodeSet::serialize(dest, destCapacity,* ec);
+    తిరిగి ((స్థిరరాశి Unicode_సమితి*) సమితి)->Unicode_సమితి::serialize(dest, dest_సామర్థ్యం,* ec);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_getSerializedSet(USerializedSet* fillSet, const uint16_t* src, int32_t srcLength) {
+uset_get_Serialized_సమితి(USerialized_సమితి* fill_సమితి, స్థిరరాశి uint16_t* src, int32_t src_నిడివి) {
     int32_t length;
 
-    if(fillSet==nullptr) {
-        return false;
+    ఒకవేళ(fill_సమితి==శూన్యసూచిక) {
+        తిరిగి అబద్ధం;
     }
-    if(src==nullptr || srcLength<=0) {
-        fillSet->length=fillSet->bmpLength=0;
-        return false;
+    ఒకవేళ(src==శూన్యసూచిక || src_నిడివి<=0) {
+        fill_సమితి->length=fill_సమితి->bmp_నిడివి=0;
+        తిరిగి అబద్ధం;
     }
 
     length=*src++;
-    if(length&0x8000) {
+    ఒకవేళ(length&0x8000) {
         /* there are supplementary values */
         length&=0x7fff;
-        if(srcLength<(2+length)) {
-            fillSet->length=fillSet->bmpLength=0;
-            return false;
+        ఒకవేళ(src_నిడివి<(2+length)) {
+            fill_సమితి->length=fill_సమితి->bmp_నిడివి=0;
+            తిరిగి అబద్ధం;
         }
-        fillSet->bmpLength=*src++;
-    } else {
+        fill_సమితి->bmp_నిడివి=*src++;
+    } లేకపోతే {
         /* only BMP values */
-        if(srcLength<(1+length)) {
-            fillSet->length=fillSet->bmpLength=0;
-            return false;
+        ఒకవేళ(src_నిడివి<(1+length)) {
+            fill_సమితి->length=fill_సమితి->bmp_నిడివి=0;
+            తిరిగి అబద్ధం;
         }
-        fillSet->bmpLength=length;
+        fill_సమితి->bmp_నిడివి=length;
     }
-    fillSet->array=src;
-    fillSet->length=length;
-    return true;
+    fill_సమితి->array=src;
+    fill_సమితి->length=length;
+    తిరిగి నిజం;
 }
 
-U_CAPI void U_EXPORT2
-uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
-    if(fillSet==nullptr || (uint32_t)c>0x10ffff) {
-        return;
+U_CAPI శూన్య U_EXPORT2
+uset_సమితి_Serialized_గమ్యం_One(USerialized_సమితి* fill_సమితి, UChar32 c) {
+    ఒకవేళ(fill_సమితి==శూన్యసూచిక || (uint32_t)c>0x10ffff) {
+        తిరిగి;
     }
 
-    fillSet->array=fillSet->staticArray;
-    if(c<0xffff) {
-        fillSet->bmpLength=fillSet->length=2;
-        fillSet->staticArray[0]=(uint16_t)c;
-        fillSet->staticArray[1]=(uint16_t)c+1;
-    } else if(c==0xffff) {
-        fillSet->bmpLength=1;
-        fillSet->length=3;
-        fillSet->staticArray[0]=0xffff;
-        fillSet->staticArray[1]=1;
-        fillSet->staticArray[2]=0;
-    } else if(c<0x10ffff) {
-        fillSet->bmpLength=0;
-        fillSet->length=4;
-        fillSet->staticArray[0]=(uint16_t)(c>>16);
-        fillSet->staticArray[1]=(uint16_t)c;
+    fill_సమితి->array=fill_సమితి->staticArray;
+    ఒకవేళ(c<0xffff) {
+        fill_సమితి->bmp_నిడివి=fill_సమితి->length=2;
+        fill_సమితి->staticArray[0]=(uint16_t)c;
+        fill_సమితి->staticArray[1]=(uint16_t)c+1;
+    } లేకపోతే ఒకవేళ(c==0xffff) {
+        fill_సమితి->bmp_నిడివి=1;
+        fill_సమితి->length=3;
+        fill_సమితి->staticArray[0]=0xffff;
+        fill_సమితి->staticArray[1]=1;
+        fill_సమితి->staticArray[2]=0;
+    } లేకపోతే ఒకవేళ(c<0x10ffff) {
+        fill_సమితి->bmp_నిడివి=0;
+        fill_సమితి->length=4;
+        fill_సమితి->staticArray[0]=(uint16_t)(c>>16);
+        fill_సమితి->staticArray[1]=(uint16_t)c;
         ++c;
-        fillSet->staticArray[2]=(uint16_t)(c>>16);
-        fillSet->staticArray[3]=(uint16_t)c;
-    } else /* c==0x10ffff */ {
-        fillSet->bmpLength=0;
-        fillSet->length=2;
-        fillSet->staticArray[0]=0x10;
-        fillSet->staticArray[1]=0xffff;
+        fill_సమితి->staticArray[2]=(uint16_t)(c>>16);
+        fill_సమితి->staticArray[3]=(uint16_t)c;
+    } లేకపోతే /* c==0x10ffff */ {
+        fill_సమితి->bmp_నిడివి=0;
+        fill_సమితి->length=2;
+        fill_సమితి->staticArray[0]=0x10;
+        fill_సమితి->staticArray[1]=0xffff;
     }
 }
 
 U_CAPI UBool U_EXPORT2
-uset_serializedContains(const USerializedSet* set, UChar32 c) {
-    const uint16_t* array;
+uset_serialized_కలిగియుంది(స్థిరరాశి USerialized_సమితి* సమితి, UChar32 c) {
+    స్థిరరాశి uint16_t* array;
 
-    if(set==nullptr || (uint32_t)c>0x10ffff) {
-        return false;
+    ఒకవేళ(సమితి==శూన్యసూచిక || (uint32_t)c>0x10ffff) {
+        తిరిగి అబద్ధం;
     }
 
-    array=set->array;
-    if(c<=0xffff) {
+    array=సమితి->array;
+    ఒకవేళ(c<=0xffff) {
         /* find c in the BMP part */
         int32_t lo = 0;
-        int32_t hi = set->bmpLength-1;
-        if (c < array[0]) {
+        int32_t hi = సమితి->bmp_నిడివి-1;
+        ఒకవేళ (c < array[0]) {
             hi = 0;
-        } else if (c < array[hi]) {
-            for(;;) {
+        } లేకపోతే ఒకవేళ (c < array[hi]) {
+            కొరకు(;;) {
                 int32_t i = (lo + hi) >> 1;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (c < array[i]) {
+                ఒకవేళ (i == lo) {
+                    ఆపు;  // Done!
+                } లేకపోతే ఒకవేళ (c < array[i]) {
                     hi = i;
-                } else {
+                } లేకపోతే {
                     lo = i;
                 }
             }
-        } else {
+        } లేకపోతే {
             hi += 1;
         }
-        return hi&1;
-    } else {
+        తిరిగి hi&1;
+    } లేకపోతే {
         /* find c in the supplementary part */
-        uint16_t high=(uint16_t)(c>>16), low=(uint16_t)c;
-        int32_t base = set->bmpLength;
+        uint16_t ఎగువ=(uint16_t)(c>>16), దిగువ=(uint16_t)c;
+        int32_t పునాది = సమితి->bmp_నిడివి;
         int32_t lo = 0;
-        int32_t hi = set->length - 2 - base;
-        if (high < array[base] || (high==array[base] && low<array[base+1])) {
+        int32_t hi = సమితి->length - 2 - పునాది;
+        ఒకవేళ (ఎగువ < array[పునాది] || (ఎగువ==array[పునాది] && దిగువ<array[పునాది+1])) {
             hi = 0;
-        } else if (high < array[base+hi] || (high==array[base+hi] && low<array[base+hi+1])) {
-            for (;;) {
+        } లేకపోతే ఒకవేళ (ఎగువ < array[పునాది+hi] || (ఎగువ==array[పునాది+hi] && దిగువ<array[పునాది+hi+1])) {
+            కొరకు (;;) {
                 int32_t i = ((lo + hi) >> 1) & ~1;  // Guarantee even result
-                int32_t iabs = i + base;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (high < array[iabs] || (high==array[iabs] && low<array[iabs+1])) {
+                int32_t iabs = i + పునాది;
+                ఒకవేళ (i == lo) {
+                    ఆపు;  // Done!
+                } లేకపోతే ఒకవేళ (ఎగువ < array[iabs] || (ఎగువ==array[iabs] && దిగువ<array[iabs+1])) {
                     hi = i;
-                } else {
+                } లేకపోతే {
                     lo = i;
                 }
             }
-        } else {
+        } లేకపోతే {
             hi += 2;
         }
         /* count pairs of 16-bit units even per BMP and check if the number of pairs is odd */
-        return ((hi+(base<<1))&2)!=0;
+        తిరిగి ((hi+(పునాది<<1))&2)!=0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getSerializedRangeCount(const USerializedSet* set) {
-    if(set==nullptr) {
-        return 0;
+uset_get_Serialized_Range_లెక్క(స్థిరరాశి USerialized_సమితి* సమితి) {
+    ఒకవేళ(సమితి==శూన్యసూచిక) {
+        తిరిగి 0;
     }
 
-    return (set->bmpLength+(set->length-set->bmpLength)/2+1)/2;
+    తిరిగి (సమితి->bmp_నిడివి+(సమితి->length-సమితి->bmp_నిడివి)/2+1)/2;
 }
 
 U_CAPI UBool U_EXPORT2
-uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
-                        UChar32* pStart, UChar32* pEnd) {
-    const uint16_t* array;
-    int32_t bmpLength, length;
+uset_getSerializedRange(స్థిరరాశి USerialized_సమితి* సమితి, int32_t range_సూచీ,
+                        UChar32* p_ప్రారంభం, UChar32* p_చివర) {
+    స్థిరరాశి uint16_t* array;
+    int32_t bmp_నిడివి, length;
 
-    if(set==nullptr || rangeIndex<0 || pStart==nullptr || pEnd==nullptr) {
-        return false;
+    ఒకవేళ(సమితి==శూన్యసూచిక || range_సూచీ<0 || p_ప్రారంభం==శూన్యసూచిక || p_చివర==శూన్యసూచిక) {
+        తిరిగి అబద్ధం;
     }
 
-    array=set->array;
-    length=set->length;
-    bmpLength=set->bmpLength;
+    array=సమితి->array;
+    length=సమితి->length;
+    bmp_నిడివి=సమితి->bmp_నిడివి;
 
-    rangeIndex*=2; /* address start/limit pairs */
-    if(rangeIndex<bmpLength) {
-        *pStart=array[rangeIndex++];
-        if(rangeIndex<bmpLength) {
-            *pEnd=array[rangeIndex]-1;
-        } else if(rangeIndex<length) {
-            *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-        } else {
-            *pEnd=0x10ffff;
+    range_సూచీ*=2; /* address start/limit pairs */
+    ఒకవేళ(range_సూచీ<bmp_నిడివి) {
+        *p_ప్రారంభం=array[range_సూచీ++];
+        ఒకవేళ(range_సూచీ<bmp_నిడివి) {
+            *p_చివర=array[range_సూచీ]-1;
+        } లేకపోతే ఒకవేళ(range_సూచీ<length) {
+            *p_చివర=((((int32_t)array[range_సూచీ])<<16)|array[range_సూచీ+1])-1;
+        } లేకపోతే {
+            *p_చివర=0x10ffff;
         }
-        return true;
-    } else {
-        rangeIndex-=bmpLength;
-        rangeIndex*=2; /* address pairs of pairs of units */
-        length-=bmpLength;
-        if(rangeIndex<length) {
-            array+=bmpLength;
-            *pStart=(((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1];
-            rangeIndex+=2;
-            if(rangeIndex<length) {
-                *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-            } else {
-                *pEnd=0x10ffff;
+        తిరిగి నిజం;
+    } లేకపోతే {
+        range_సూచీ-=bmp_నిడివి;
+        range_సూచీ*=2; /* address pairs of pairs of units */
+        length-=bmp_నిడివి;
+        ఒకవేళ(range_సూచీ<length) {
+            array+=bmp_నిడివి;
+            *p_ప్రారంభం=(((int32_t)array[range_సూచీ])<<16)|array[range_సూచీ+1];
+            range_సూచీ+=2;
+            ఒకవేళ(range_సూచీ<length) {
+                *p_చివర=((((int32_t)array[range_సూచీ])<<16)|array[range_సూచీ+1])-1;
+            } లేకపోతే {
+                *p_చివర=0x10ffff;
             }
-            return true;
-        } else {
-            return false;
+            తిరిగి నిజం;
+        } లేకపోతే {
+            తిరిగి అబద్ధం;
         }
     }
 }

@@ -10,19 +10,19 @@
 ***************************************************************************
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/parsepos.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/parsepos.h"
 
-#include "cstr.h"
-#include "rbbinode.h"
-#include "rbbirb.h"
-#include "umutex.h"
+#అన్తర్భావ "cstr.h"
+#అన్తర్భావ "rbbinode.h"
+#అన్తర్భావ "rbbirb.h"
+#అన్తర్భావ "umutex.h"
 
 
 //
@@ -30,34 +30,34 @@
 //                                  when the hash table is deleted.
 //
 U_CDECL_BEGIN
-static void U_CALLCONV RBBISymbolTableEntry_deleter(void *p) {
-    icu::RBBISymbolTableEntry *px = (icu::RBBISymbolTableEntry *)p;
-    delete px;
+స్థిర శూన్య U_CALLCONV RBBISymbol_పట్టిక_నమోదు_deleter(శూన్య *p) {
+    icu::RBBISymbol_పట్టిక_నమోదు *px = (icu::RBBISymbol_పట్టిక_నమోదు *)p;
+    తొలగించు px;
 }
-U_CDECL_END
+U_CDECL_చివర
 
 
 
 U_NAMESPACE_BEGIN
 
-RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, const UnicodeString &rules, UErrorCode &status)
-    : fRules(rules), fRuleScanner(rs)
+RBBISymbol_పట్టిక::RBBISymbol_పట్టిక(RBBIRuleScanner *rs, స్థిరరాశి UnicodeString &నియమాలు, UError_సంకేతం &స్థితి_2)
+    : f_నియమాలు(నియమాలు), f_నియమం_Scanner(rs)
 {
-    fHashTable       = nullptr;
+    f_Hash_పట్టిక       = శూన్యసూచిక;
 
-    fHashTable = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, &status);
+    f_Hash_పట్టిక = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, శూన్యసూచిక, &స్థితి_2);
     // uhash_open checks status
-    if (U_FAILURE(status)) {
-        return;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    uhash_setValueDeleter(fHashTable, RBBISymbolTableEntry_deleter);
+    uhash_సమితి_విలువ_Deleter(f_Hash_పట్టిక, RBBISymbol_పట్టిక_నమోదు_deleter);
 }
 
 
 
-RBBISymbolTable::~RBBISymbolTable()
+RBBISymbol_పట్టిక::~RBBISymbol_పట్టిక()
 {
-    uhash_close(fHashTable);
+    uhash_close(f_Hash_పట్టిక);
 }
 
 
@@ -68,14 +68,14 @@ RBBISymbolTable::~RBBISymbolTable()
 //
 //                                The variable name does NOT include the leading $.
 //
-const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
+స్థిరరాశి UnicodeString  *RBBISymbol_పట్టిక::lookup(స్థిరరాశి UnicodeString& s) స్థిరరాశి
 {
-    const RBBISymbolTableEntry* const el =
-        static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+    స్థిరరాశి RBBISymbol_పట్టిక_నమోదు* స్థిరరాశి el =
+        static_cast<స్థిరరాశి RBBISymbol_పట్టిక_నమోదు*>(uhash_get(f_Hash_పట్టిక, &s));
+    ఒకవేళ (el == శూన్యసూచిక) {
+        తిరిగి శూన్యసూచిక;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild; // Root node of expression for variable
+    స్థిరరాశి RBBINode& సమాసం_కణుపు = *el->val->f_ఎడమ_బిడ్డ; // Root node of expression for variable
     // Return the original source string for the expression.
     // Note that for set-valued variables used in UnicodeSet expressions, this would be rejected by
     // the UnicodeSet parser if the source itself contains variable references.  For instance, with
@@ -90,27 +90,27 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
     // to lookup() never happens; instead, lookupSet("CaseIgnorable") is called when computing
     // $Cased and returns the non-null value of $CaseIgnorable, and then when computing $NotCased,
     // lookupSet("Cased") returns the value computed for $Cased.
-    return &exprNode.fText;
+    తిరిగి &సమాసం_కణుపు.f_పాఠ్యం;
 }
 
-const UnicodeSet* RBBISymbolTable::lookupSet(const UnicodeString& s) const {
-    const RBBISymbolTableEntry* const el = static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+స్థిరరాశి Unicode_సమితి* RBBISymbol_పట్టిక::lookup_సమితి(స్థిరరాశి UnicodeString& s) స్థిరరాశి {
+    స్థిరరాశి RBBISymbol_పట్టిక_నమోదు* స్థిరరాశి el = static_cast<స్థిరరాశి RBBISymbol_పట్టిక_నమోదు*>(uhash_get(f_Hash_పట్టిక, &s));
+    ఒకవేళ (el == శూన్యసూచిక) {
+        తిరిగి శూన్యసూచిక;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild;
-    if (exprNode.fType == RBBINode::setRef) {
-        return exprNode.fLeftChild->fInputSet;
-    } else {
-        return nullptr;
+    స్థిరరాశి RBBINode& సమాసం_కణుపు = *el->val->f_ఎడమ_బిడ్డ;
+    ఒకవేళ (సమాసం_కణుపు.fType == RBBINode::సమితి_Ref) {
+        తిరిగి సమాసం_కణుపు.f_ఎడమ_బిడ్డ->f_ఆదానం_సమితి;
+    } లేకపోతే {
+        తిరిగి శూన్యసూచిక;
     }
 }
 
 
 
 //  No longer used, see ICU-23297.
-const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
-    return nullptr;
+స్థిరరాశి UnicodeFunctor* RBBISymbol_పట్టిక::lookupMatcher(UChar32 /*ch*/) స్థిరరాశి {
+    తిరిగి శూన్యసూచిక;
 }
 
 //
@@ -123,25 +123,25 @@ const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
 //                                   from the rules based transliterator implementation.
 //                                   I didn't see an obvious way of sharing it.
 //
-UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
-                                                ParsePosition& pos, int32_t limit) const
+UnicodeString   RBBISymbol_పట్టిక::parseReference(స్థిరరాశి UnicodeString& పాఠ్యం,
+                                                ParsePosition& pos, int32_t హద్దు) స్థిరరాశి
 {
-    int32_t start = pos.getIndex();
-    int32_t i = start;
-    UnicodeString result;
-    while (i < limit) {
-        char16_t c = text.charAt(i);
-        if ((i==start && !u_isIDStart(c)) || !u_isIDPart(c)) {
-            break;
+    int32_t ప్రారంభం = pos.get_సూచీ();
+    int32_t i = ప్రారంభం;
+    UnicodeString ఫలితం;
+    అయితే (i < హద్దు) {
+        char16_t c = పాఠ్యం.charAt(i);
+        ఒకవేళ ((i==ప్రారంభం && !u_isIDStart(c)) || !u_isIDPart(c)) {
+            ఆపు;
         }
         ++i;
     }
-    if (i == start) { // No valid name chars
-        return result; // Indicate failure with empty string
+    ఒకవేళ (i == ప్రారంభం) { // No valid name chars
+        తిరిగి ఫలితం; // Indicate failure with empty string
     }
-    pos.setIndex(i);
-    text.extractBetween(start, i, result);
-    return result;
+    pos.సమితి_సూచీ(i);
+    పాఠ్యం.వెలికితీయి_Between(ప్రారంభం, i, ఫలితం);
+    తిరిగి ఫలితం;
 }
 
 
@@ -151,16 +151,16 @@ UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
 //                                  corresponding RBBI Node.  If there is no entry
 //                                  in the table for this name, return nullptr.
 //
-RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
+RBBINode       *RBBISymbol_పట్టిక::lookup_కణుపు(స్థిరరాశి UnicodeString &కీలకం) స్థిరరాశి{
 
-    RBBINode             *retNode = nullptr;
-    RBBISymbolTableEntry *el;
+    RBBINode             *ret_కణుపు = శూన్యసూచిక;
+    RBBISymbol_పట్టిక_నమోదు *el;
 
-    el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (el != nullptr) {
-        retNode = el->val;
+    el = static_cast<RBBISymbol_పట్టిక_నమోదు*>(uhash_get(f_Hash_పట్టిక, &కీలకం));
+    ఒకవేళ (el != శూన్యసూచిక) {
+        ret_కణుపు = el->val;
     }
-    return retNode;
+    తిరిగి ret_కణుపు;
 }
 
 
@@ -170,40 +170,40 @@ RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
 //                                    this will only occur in the case of duplicate
 //                                    variable assignments.
 //
-void            RBBISymbolTable::addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err) {
-    RBBISymbolTableEntry *e;
+శూన్య            RBBISymbol_పట్టిక::కూడు_నమోదు  (స్థిరరాశి UnicodeString &కీలకం, RBBINode *val, UError_సంకేతం &err) {
+    RBBISymbol_పట్టిక_నమోదు *e;
     /* test for buffer overflows */
-    if (U_FAILURE(err)) {
-        return;
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
-    e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (e != nullptr) {
+    e = static_cast<RBBISymbol_పట్టిక_నమోదు*>(uhash_get(f_Hash_పట్టిక, &కీలకం));
+    ఒకవేళ (e != శూన్యసూచిక) {
         err = U_BRK_VARIABLE_REDFINITION;
-        return;
+        తిరిగి;
     }
 
-    e = new RBBISymbolTableEntry;
-    if (e == nullptr) {
-        err = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    e = కొత్త RBBISymbol_పట్టిక_నమోదు;
+    ఒకవేళ (e == శూన్యసూచిక) {
+        err = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    e->key = key;
+    e->కీలకం = కీలకం;
     e->val = val;
-    uhash_put( fHashTable, &e->key, e, &err);
+    uhash_put( f_Hash_పట్టిక, &e->కీలకం, e, &err);
 }
 
 
-RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), key(), val(nullptr) {}
+RBBISymbol_పట్టిక_నమోదు::RBBISymbol_పట్టిక_నమోదు() : UMemory(), కీలకం(), val(శూన్యసూచిక) {}
 
-RBBISymbolTableEntry::~RBBISymbolTableEntry() {
+RBBISymbol_పట్టిక_నమోదు::~RBBISymbol_పట్టిక_నమోదు() {
     // The "val" of a symbol table entry is a variable reference node.
     // The l. child of the val is the rhs expression from the assignment.
     // Unlike other node types, children of variable reference nodes are not
     //    automatically recursively deleted.  We do it manually here.
-    delete val->fLeftChild;
-    val->fLeftChild = nullptr;
+    తొలగించు val->f_ఎడమ_బిడ్డ;
+    val->f_ఎడమ_బిడ్డ = శూన్యసూచిక;
 
-    delete  val;
+    తొలగించు  val;
 
     // Note: the key UnicodeString is destructed by virtue of being in the object by value.
 }
@@ -212,45 +212,45 @@ RBBISymbolTableEntry::~RBBISymbolTableEntry() {
 //
 //  RBBISymbolTable::print    Debugging function, dump out the symbol table contents.
 //
-#ifdef RBBI_DEBUG
-void RBBISymbolTable::rbbiSymtablePrint() const {
+#నిర్వచితమైతే RBBI_DEBUG
+శూన్య RBBISymbol_పట్టిక::rbbiSymtablePrint() స్థిరరాశి {
     RBBIDebugPrintf("Variable Definitions Symbol Table\n"
            "Name                  Node         serial  String Val\n"
            "-------------------------------------------------------------------\n");
 
-    int32_t pos = UHASH_FIRST;
-    const UHashElement  *e   = nullptr;
-    for (;;) {
-        e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+    int32_t pos = UHASH_మొదటి;
+    స్థిరరాశి UHashElement  *e   = శూన్యసూచిక;
+    కొరకు (;;) {
+        e = uhash_తదుపరి_Element(f_Hash_పట్టిక,  &pos);
+        ఒకవేళ (e == శూన్యసూచిక ) {
+            ఆపు;
         }
-        RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
+        RBBISymbol_పట్టిక_నమోదు  *s   = (RBBISymbol_పట్టిక_నమోదు *)e->value.సూచిక;
 
-        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->key)(), (void *)s->val, s->val->fSerialNum);
-        RBBIDebugPrintf(" %s\n", CStr(s->val->fLeftChild->fText)());
+        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->కీలకం)(), (శూన్య *)s->val, s->val->f_Serial_అంకె);
+        RBBIDebugPrintf(" %s\n", CStr(s->val->f_ఎడమ_బిడ్డ->f_పాఠ్యం)());
     }
 
     RBBIDebugPrintf("\nParsed Variable Definitions\n");
     pos = -1;
-    for (;;) {
-        e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+    కొరకు (;;) {
+        e = uhash_తదుపరి_Element(f_Hash_పట్టిక,  &pos);
+        ఒకవేళ (e == శూన్యసూచిక ) {
+            ఆపు;
         }
-        RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
-        RBBIDebugPrintf("%s\n", CStr(s->key)());
-        RBBINode::printTree(s->val, true);
-        RBBINode::printTree(s->val->fLeftChild, false);
+        RBBISymbol_పట్టిక_నమోదు  *s   = (RBBISymbol_పట్టిక_నమోదు *)e->value.సూచిక;
+        RBBIDebugPrintf("%s\n", CStr(s->కీలకం)());
+        RBBINode::print_వృక్షం(s->val, నిజం);
+        RBBINode::print_వృక్షం(s->val->f_ఎడమ_బిడ్డ, అబద్ధం);
         RBBIDebugPrintf("\n");
     }
 }
-#endif
+#అయితే_ముగింపు
 
 
 
 
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_BREAK_ITERATION */

@@ -14,13 +14,13 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/appendable.h"
+#అన్తర్భావ "unicode/ucharstrie.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -28,50 +28,50 @@ UCharsTrie::~UCharsTrie() {
     uprv_free(ownedArray_);
 }
 
-UStringTrieResult
-UCharsTrie::current() const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+UString_Trie_ఫలితం
+UCharsTrie::current() స్థిరరాశి {
+    స్థిరరాశి char16_t *pos=pos_;
+    ఒకవేళ(pos==శూన్యసూచిక) {
+        తిరిగి USTRINGTRIE_NO_సరిపోలిక;
+    } లేకపోతే {
+        int32_t కణుపు;
+        తిరిగి (మిగిలిన_సరిపోలిక_నిడివి<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
     }
 }
 
-UStringTrieResult
-UCharsTrie::firstForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+UString_Trie_ఫలితం
+UCharsTrie::మొదటి_For_సంకేతం_బిందువు(UChar32 cp) {
+    తిరిగి cp<=0xffff ?
         first(cp) :
-        (USTRINGTRIE_HAS_NEXT(first(U16_LEAD(cp))) ?
+        (USTRINGTRIE_HAS_తదుపరి(first(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
-            USTRINGTRIE_NO_MATCH);
+            USTRINGTRIE_NO_సరిపోలిక);
 }
 
-UStringTrieResult
-UCharsTrie::nextForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+UString_Trie_ఫలితం
+UCharsTrie::తదుపరి_For_సంకేతం_బిందువు(UChar32 cp) {
+    తిరిగి cp<=0xffff ?
         next(cp) :
-        (USTRINGTRIE_HAS_NEXT(next(U16_LEAD(cp))) ?
+        (USTRINGTRIE_HAS_తదుపరి(next(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
-            USTRINGTRIE_NO_MATCH);
+            USTRINGTRIE_NO_సరిపోలిక);
 }
 
-UStringTrieResult
-UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
+UString_Trie_ఫలితం
+UCharsTrie::branch_తదుపరి(స్థిరరాశి char16_t *pos, int32_t length, int32_t uchar) {
     // Branch according to the current unit.
-    if(length==0) {
+    ఒకవేళ(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of units to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(uchar<*pos++) {
+    అయితే(length>k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి) {
+        ఒకవేళ(uchar<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } లేకపోతే {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -79,338 +79,338 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
     // Drop down to linear search for the last few units.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(uchar==*pos++) {
-            UStringTrieResult result;
-            int32_t node=*pos;
-            if(node&kValueIsFinal) {
+    చేయి {
+        ఒకవేళ(uchar==*pos++) {
+            UString_Trie_ఫలితం ఫలితం;
+            int32_t కణుపు=*pos;
+            ఒకవేళ(కణుపు&k_విలువ_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+                ఫలితం=USTRINGTRIE_FINAL_విలువ;
+            } లేకపోతే {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node);
                 int32_t delta;
-                if(node<kMinTwoUnitValueLead) {
-                    delta=node;
-                } else if(node<kThreeUnitValueLead) {
-                    delta=((node-kMinTwoUnitValueLead)<<16)|*pos++;
-                } else {
+                ఒకవేళ(కణుపు<k_Min_Two_Unit_విలువ_Lead) {
+                    delta=కణుపు;
+                } లేకపోతే ఒకవేళ(కణుపు<k_Three_Unit_విలువ_Lead) {
+                    delta=((కణుపు-k_Min_Two_Unit_విలువ_Lead)<<16)|*pos++;
+                } లేకపోతే {
                     delta=(pos[0]<<16)|pos[1];
                     pos+=2;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                కణుపు=*pos;
+                ఫలితం= కణుపు>=k_Min_విలువ_Lead ? విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
             }
             pos_=pos;
-            return result;
+            తిరిగి ఫలితం;
         }
         --length;
-        pos=skipValue(pos);
-    } while(length>1);
-    if(uchar==*pos++) {
+        pos=skip_విలువ(pos);
+    } అయితే(length>1);
+    ఒకవేళ(uchar==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        int32_t కణుపు=*pos;
+        తిరిగి కణుపు>=k_Min_విలువ_Lead ? విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
+    } లేకపోతే {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        తిరిగి USTRINGTRIE_NO_సరిపోలిక;
     }
 }
 
-UStringTrieResult
-UCharsTrie::nextImpl(const char16_t *pos, int32_t uchar) {
-    int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, uchar);
-        } else if(node<kMinValueLead) {
+UString_Trie_ఫలితం
+UCharsTrie::తదుపరి_Impl(స్థిరరాశి char16_t *pos, int32_t uchar) {
+    int32_t కణుపు=*pos++;
+    కొరకు(;;) {
+        ఒకవేళ(కణుపు<k_Min_రేఖీయ_సరిపోలిక) {
+            తిరిగి branch_తదుపరి(pos, కణుపు, uchar);
+        } లేకపోతే ఒకవేళ(కణుపు<k_Min_విలువ_Lead) {
             // Match the first of length+1 units.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(uchar==*pos++) {
-                remainingMatchLength_=--length;
+            int32_t length=కణుపు-k_Min_రేఖీయ_సరిపోలిక;  // Actual match length minus 1.
+            ఒకవేళ(uchar==*pos++) {
+                మిగిలిన_సరిపోలిక_నిడివి=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+                తిరిగి (length<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                        విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
+            } లేకపోతే {
                 // No match.
-                break;
+                ఆపు;
             }
-        } else if(node&kValueIsFinal) {
+        } లేకపోతే ఒకవేళ(కణుపు&k_విలువ_Is_Final) {
             // No further matching units.
-            break;
-        } else {
+            ఆపు;
+        } లేకపోతే {
             // Skip intermediate value.
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_కణుపు_విలువ(pos, కణుపు);
+            కణుపు&=k_కణుపు_Type_ముసుగు;
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
 }
 
-UStringTrieResult
+UString_Trie_ఫలితం
 UCharsTrie::next(int32_t uchar) {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    స్థిరరాశి char16_t *pos=pos_;
+    ఒకవేళ(pos==శూన్యసూచిక) {
+        తిరిగి USTRINGTRIE_NO_సరిపోలిక;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=మిగిలిన_సరిపోలిక_నిడివి;  // Actual remaining match length minus 1.
+    ఒకవేళ(length>=0) {
         // Remaining part of a linear-match node.
-        if(uchar==*pos++) {
-            remainingMatchLength_=--length;
+        ఒకవేళ(uchar==*pos++) {
+            మిగిలిన_సరిపోలిక_నిడివి=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+            int32_t కణుపు;
+            తిరిగి (length<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                    విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
+        } లేకపోతే {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            తిరిగి USTRINGTRIE_NO_సరిపోలిక;
         }
     }
-    return nextImpl(pos, uchar);
+    తిరిగి తదుపరి_Impl(pos, uchar);
 }
 
-UStringTrieResult
-UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
-    const char16_t *s=ptr;
-    if(sLength<0 ? *s==0 : sLength==0) {
+UString_Trie_ఫలితం
+UCharsTrie::next(ConstChar16Ptr ptr, int32_t s_నిడివి) {
+    స్థిరరాశి char16_t *s=ptr;
+    ఒకవేళ(s_నిడివి<0 ? *s==0 : s_నిడివి==0) {
         // Empty input.
-        return current();
+        తిరిగి current();
     }
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    స్థిరరాశి char16_t *pos=pos_;
+    ఒకవేళ(pos==శూన్యసూచిక) {
+        తిరిగి USTRINGTRIE_NO_సరిపోలిక;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    int32_t length=మిగిలిన_సరిపోలిక_నిడివి;  // Actual remaining match length minus 1.
+    కొరకు(;;) {
         // Fetch the next input unit, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t uchar;
-        if(sLength<0) {
-            for(;;) {
-                if((uchar=*s++)==0) {
-                    remainingMatchLength_=length;
+        ఒకవేళ(s_నిడివి<0) {
+            కొరకు(;;) {
+                ఒకవేళ((uchar=*s++)==0) {
+                    మిగిలిన_సరిపోలిక_నిడివి=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t కణుపు;
+                    తిరిగి (length<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                            విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
                 }
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                ఒకవేళ(length<0) {
+                    మిగిలిన_సరిపోలిక_నిడివి=length;
+                    ఆపు;
                 }
-                if(uchar!=*pos) {
+                ఒకవేళ(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
-                    remainingMatchLength_=length;
+        } లేకపోతే {
+            కొరకు(;;) {
+                ఒకవేళ(s_నిడివి==0) {
+                    మిగిలిన_సరిపోలిక_నిడివి=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t కణుపు;
+                    తిరిగి (length<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                            విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
                 }
                 uchar=*s++;
-                --sLength;
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                --s_నిడివి;
+                ఒకవేళ(length<0) {
+                    మిగిలిన_సరిపోలిక_నిడివి=length;
+                    ఆపు;
                 }
-                if(uchar!=*pos) {
+                ఒకవేళ(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 ++pos;
                 --length;
             }
         }
-        int32_t node=*pos++;
-        for(;;) {
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, uchar);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+        int32_t కణుపు=*pos++;
+        కొరకు(;;) {
+            ఒకవేళ(కణుపు<k_Min_రేఖీయ_సరిపోలిక) {
+                UString_Trie_ఫలితం ఫలితం=branch_తదుపరి(pos, కణుపు, uchar);
+                ఒకవేళ(ఫలితం==USTRINGTRIE_NO_సరిపోలిక) {
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 // Fetch the next input unit, if there is one.
-                if(sLength<0) {
-                    if((uchar=*s++)==0) {
-                        return result;
+                ఒకవేళ(s_నిడివి<0) {
+                    ఒకవేళ((uchar=*s++)==0) {
+                        తిరిగి ఫలితం;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } లేకపోతే {
+                    ఒకవేళ(s_నిడివి==0) {
+                        తిరిగి ఫలితం;
                     }
                     uchar=*s++;
-                    --sLength;
+                    --s_నిడివి;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                ఒకవేళ(ఫలితం==USTRINGTRIE_FINAL_విలువ) {
                     // No further matching units.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-                node=*pos++;
-            } else if(node<kMinValueLead) {
+                కణుపు=*pos++;
+            } లేకపోతే ఒకవేళ(కణుపు<k_Min_విలువ_Lead) {
                 // Match length+1 units.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(uchar!=*pos) {
+                length=కణుపు-k_Min_రేఖీయ_సరిపోలిక;  // Actual match length minus 1.
+                ఒకవేళ(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                ఆపు;
+            } లేకపోతే ఒకవేళ(కణుపు&k_విలువ_Is_Final) {
                 // No further matching units.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                తిరిగి USTRINGTRIE_NO_సరిపోలిక;
+            } లేకపోతే {
                 // Skip intermediate value.
-                pos=skipNodeValue(pos, node);
-                node&=kNodeTypeMask;
+                pos=skip_కణుపు_విలువ(pos, కణుపు);
+                కణుపు&=k_కణుపు_Type_ముసుగు;
             }
         }
     }
 }
 
-const char16_t*
-UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
+స్థిరరాశి char16_t*
+UCharsTrie::కనుగొను_Unique_విలువ_From_Branch(స్థిరరాశి char16_t* pos U_LIFETIME_BOUND,
                                       int32_t length,
-                                      UBool haveUniqueValue,
-                                      int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                      UBool have_Unique_విలువ,
+                                      int32_t& unique_విలువ) {
+    అయితే(length>k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి) {
         ++pos;  // ignore the comparison unit
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        ఒకవేళ(శూన్యసూచిక==కనుగొను_Unique_విలువ_From_Branch(jumpByDelta(pos), length>>1, have_Unique_విలువ, unique_విలువ)) {
+            తిరిగి శూన్యసూచిక;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    చేయి {
         ++pos;  // ignore a comparison unit
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node >> 15);
-        node&=0x7fff;
-        int32_t value=readValue(pos, node);
-        pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        int32_t కణుపు=*pos++;
+        UBool isFinal = static_cast<UBool>(కణుపు >> 15);
+        కణుపు&=0x7fff;
+        int32_t value=read_విలువ(pos, కణుపు);
+        pos=skip_విలువ(pos, కణుపు);
+        ఒకవేళ(isFinal) {
+            ఒకవేళ(have_Unique_విలువ) {
+                ఒకవేళ(value!=unique_విలువ) {
+                    తిరిగి శూన్యసూచిక;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } లేకపోతే {
+                unique_విలువ=value;
+                have_Unique_విలువ=నిజం;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } లేకపోతే {
+            ఒకవేళ(!కనుగొను_Unique_విలువ(pos+value, have_Unique_విలువ, unique_విలువ)) {
+                తిరిగి శూన్యసూచిక;
             }
-            haveUniqueValue=true;
+            have_Unique_విలువ=నిజం;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison unit
+    } అయితే(--length>1);
+    తిరిగి pos+1;  // ignore the last comparison unit
 }
 
 UBool
-UCharsTrie::findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+UCharsTrie::కనుగొను_Unique_విలువ(స్థిరరాశి char16_t *pos, UBool have_Unique_విలువ, int32_t &unique_విలువ) {
+    int32_t కణుపు=*pos++;
+    కొరకు(;;) {
+        ఒకవేళ(కణుపు<k_Min_రేఖీయ_సరిపోలిక) {
+            ఒకవేళ(కణుపు==0) {
+                కణుపు=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            pos=కనుగొను_Unique_విలువ_From_Branch(pos, కణుపు+1, have_Unique_విలువ, unique_విలువ);
+            ఒకవేళ(pos==శూన్యసూచిక) {
+                తిరిగి అబద్ధం;
             }
-            haveUniqueValue=true;
-            node=*pos++;
-        } else if(node<kMinValueLead) {
+            have_Unique_విలువ=నిజం;
+            కణుపు=*pos++;
+        } లేకపోతే ఒకవేళ(కణుపు<k_Min_విలువ_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match units.
-            node=*pos++;
-        } else {
-            UBool isFinal = static_cast<UBool>(node >> 15);
+            pos+=కణుపు-k_Min_రేఖీయ_సరిపోలిక+1;  // Ignore the match units.
+            కణుపు=*pos++;
+        } లేకపోతే {
+            UBool isFinal = static_cast<UBool>(కణుపు >> 15);
             int32_t value;
-            if(isFinal) {
-                value=readValue(pos, node&0x7fff);
-            } else {
-                value=readNodeValue(pos, node);
+            ఒకవేళ(isFinal) {
+                value=read_విలువ(pos, కణుపు&0x7fff);
+            } లేకపోతే {
+                value=read_కణుపు_విలువ(pos, కణుపు);
             }
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            ఒకవేళ(have_Unique_విలువ) {
+                ఒకవేళ(value!=unique_విలువ) {
+                    తిరిగి అబద్ధం;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } లేకపోతే {
+                unique_విలువ=value;
+                have_Unique_విలువ=నిజం;
             }
-            if(isFinal) {
-                return true;
+            ఒకవేళ(isFinal) {
+                తిరిగి నిజం;
             }
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_కణుపు_విలువ(pos, కణుపు);
+            కణుపు&=k_కణుపు_Type_ముసుగు;
         }
     }
 }
 
 int32_t
-UCharsTrie::getNextUChars(Appendable &out) const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+UCharsTrie::get_తదుపరి_UChars(Appendable &out) స్థిరరాశి {
+    స్థిరరాశి char16_t *pos=pos_;
+    ఒకవేళ(pos==శూన్యసూచిక) {
+        తిరిగి 0;
     }
-    if(remainingMatchLength_>=0) {
-        out.appendCodeUnit(*pos);  // Next unit of a pending linear-match node.
-        return 1;
+    ఒకవేళ(మిగిలిన_సరిపోలిక_నిడివి>=0) {
+        out.append_సంకేతం_Unit(*pos);  // Next unit of a pending linear-match node.
+        తిరిగి 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+    int32_t కణుపు=*pos++;
+    ఒకవేళ(కణుపు>=k_Min_విలువ_Lead) {
+        ఒకవేళ(కణుపు&k_విలువ_Is_Final) {
+            తిరిగి 0;
+        } లేకపోతే {
+            pos=skip_కణుపు_విలువ(pos, కణుపు);
+            కణుపు&=k_కణుపు_Type_ముసుగు;
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    ఒకవేళ(కణుపు<k_Min_రేఖీయ_సరిపోలిక) {
+        ఒకవేళ(కణుపు==0) {
+            కణుపు=*pos++;
         }
-        out.reserveAppendCapacity(++node);
-        getNextBranchUChars(pos, node, out);
-        return node;
-    } else {
+        out.reserve_Append_సామర్థ్యం(++కణుపు);
+        get_తదుపరి_Branch_UChars(pos, కణుపు, out);
+        తిరిగి కణుపు;
+    } లేకపోతే {
         // First unit of the linear-match node.
-        out.appendCodeUnit(*pos);
-        return 1;
+        out.append_సంకేతం_Unit(*pos);
+        తిరిగి 1;
     }
 }
 
-void
-UCharsTrie::getNextBranchUChars(const char16_t *pos, int32_t length, Appendable &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+శూన్య
+UCharsTrie::get_తదుపరి_Branch_UChars(స్థిరరాశి char16_t *pos, int32_t length, Appendable &out) {
+    అయితే(length>k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి) {
         ++pos;  // ignore the comparison unit
-        getNextBranchUChars(jumpByDelta(pos), length>>1, out);
+        get_తదుపరి_Branch_UChars(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
-        out.appendCodeUnit(*pos++);
-        pos=skipValue(pos);
-    } while(--length>1);
-    out.appendCodeUnit(*pos);
+    చేయి {
+        out.append_సంకేతం_Unit(*pos++);
+        pos=skip_విలువ(pos);
+    } అయితే(--length>1);
+    out.append_సంకేతం_Unit(*pos);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

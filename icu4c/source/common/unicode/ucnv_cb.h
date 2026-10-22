@@ -60,15 +60,15 @@
  *
  */
 
-#ifndef UCNV_CB_H
-#define UCNV_CB_H
+#నిర్వచితం_కాకపోతే UCNV_CB_H
+#నిర్వచించు UCNV_CB_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/ucnv_err.h"
 
 /**
  * ONLY used by FromU callback functions.
@@ -84,12 +84,12 @@
  * @see ucnv_cbFromUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                        const char* source,
-                        int32_t length,
-                        int32_t offsetIndex,
-                        UErrorCode * err);
+U_CAPI శూన్య U_EXPORT2
+ucnv_cb_From_UWrite_బైట్లు (UConverter_From_Unicode_వాదనలు *వాదనలు_2,
+                        స్థిరరాశి అక్షరం* ఆధారం,
+                        int32_t నిడివి,
+                        int32_t స్థానభ్రంశం_సూచీ,
+                        UError_సంకేతం * err);
 
 /**
  * ONLY used by FromU callback functions.  
@@ -104,10 +104,10 @@ ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbFromUWriteBytes
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 
-ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
-                      int32_t offsetIndex,
-                      UErrorCode * err);
+U_CAPI శూన్య U_EXPORT2 
+ucnv_cbFromUWriteSub (UConverter_From_Unicode_వాదనలు *వాదనలు_2,
+                      int32_t స్థానభ్రంశం_సూచీ,
+                      UError_సంకేతం * err);
 
 /**
  * ONLY used by fromU callback functions.  
@@ -121,11 +121,11 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
-                             const UChar** source,
-                             const UChar*  sourceLimit,
-                             int32_t offsetIndex,
-                             UErrorCode * err);
+U_CAPI శూన్య U_EXPORT2 ucnv_cbFromUWriteUChars(UConverter_From_Unicode_వాదనలు *వాదనలు_2,
+                             స్థిరరాశి UChar** ఆధారం,
+                             స్థిరరాశి UChar*  ఆధారం_హద్దు,
+                             int32_t స్థానభ్రంశం_సూచీ,
+                             UError_సంకేతం * err);
 
 /**
  * ONLY used by ToU callback functions.
@@ -140,11 +140,11 @@ U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
-                                             const UChar* source,
-                                             int32_t length,
-                                             int32_t offsetIndex,
-                                             UErrorCode * err);
+U_CAPI శూన్య U_EXPORT2 ucnv_cb_గమ్యం_UWrite_UChars (UConverter_గమ్యం_Unicode_వాదనలు *వాదనలు_2,
+                                             స్థిరరాశి UChar* ఆధారం,
+                                             int32_t నిడివి,
+                                             int32_t స్థానభ్రంశం_సూచీ,
+                                             UError_సంకేతం * err);
 
 /**
  * ONLY used by ToU  callback functions.  
@@ -156,9 +156,9 @@ U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
  * @see ucnv_cbToUWriteUChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
-                       int32_t offsetIndex,
-                       UErrorCode * err);
-#endif
+U_CAPI శూన్య U_EXPORT2 ucnv_cb_గమ్యం_UWrite_Sub (UConverter_గమ్యం_Unicode_వాదనలు *వాదనలు_2,
+                       int32_t స్థానభ్రంశం_సూచీ,
+                       UError_సంకేతం * err);
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు

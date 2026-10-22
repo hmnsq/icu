@@ -4,82 +4,82 @@
 // lsr.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LSR_H__
-#define __LSR_H__
+#నిర్వచితం_కాకపోతే __LSR_H__
+#నిర్వచించు __LSR_H__
 
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "cstring.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "cstring.h"
 
 U_NAMESPACE_BEGIN
 
-struct LSR final : public UMemory {
-    static constexpr int32_t REGION_INDEX_LIMIT = 1001 + 26 * 26;
+నిర్మాణం LSR final : బహిరంగ UMemory {
+    స్థిర constexpr int32_t REGION_సూచీ_హద్దు = 1001 + 26 * 26;
 
-    static constexpr int32_t EXPLICIT_LSR = 7;
-    static constexpr int32_t EXPLICIT_LANGUAGE = 4;
-    static constexpr int32_t EXPLICIT_SCRIPT = 2;
-    static constexpr int32_t EXPLICIT_REGION = 1;
-    static constexpr int32_t IMPLICIT_LSR = 0;
-    static constexpr int32_t DONT_CARE_FLAGS = 0;
+    స్థిర constexpr int32_t EXPLICIT_LSR = 7;
+    స్థిర constexpr int32_t EXPLICIT_LANGUAGE = 4;
+    స్థిర constexpr int32_t EXPLICIT_SCRIPT = 2;
+    స్థిర constexpr int32_t EXPLICIT_REGION = 1;
+    స్థిర constexpr int32_t IMPLICIT_LSR = 0;
+    స్థిర constexpr int32_t DONT_CARE_FLAGS = 0;
 
-    const char *language;
-    const char *script;
-    const char *region;
-    char *owned = nullptr;
+    స్థిరరాశి అక్షరం *language;
+    స్థిరరాశి అక్షరం *script;
+    స్థిరరాశి అక్షరం *region;
+    అక్షరం *owned = nullptr;
     /** Index for region, 0 if ill-formed. @see indexForRegion */
-    int32_t regionIndex = 0;
+    int32_t region_సూచీ = 0;
     int32_t flags = 0;
     /** Only set for LSRs that will be used in a hash table. */
-    int32_t hashCode = 0;
+    int32_t hash_సంకేతం = 0;
 
     LSR() : language("und"), script(""), region("") {}
 
     /** Constructor which aliases all subtag pointers. */
-    LSR(const char *lang, const char *scr, const char *r, int32_t f) :
+    LSR(స్థిరరాశి అక్షరం *lang, స్థిరరాశి అక్షరం *scr, స్థిరరాశి అక్షరం *r, int32_t f) :
             language(lang),  script(scr), region(r),
-            regionIndex(indexForRegion(region)), flags(f) {}
+            region_సూచీ(సూచీ_For_Region(region)), flags(f) {}
     /**
      * Constructor which prepends the prefix to the language and script,
      * copies those into owned memory, and aliases the region.
      */
-    LSR(char prefix, const char *lang, const char *scr, const char *r, int32_t f,
-        UErrorCode &errorCode);
+    LSR(అక్షరం ఉపసర్గ, స్థిరరాశి అక్షరం *lang, స్థిరరాశి అక్షరం *scr, స్థిరరాశి అక్షరం *r, int32_t f,
+        UError_సంకేతం &error_సంకేతం);
     LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
-        UErrorCode &errorCode);
+        UError_సంకేతం &error_సంకేతం);
     LSR(LSR &&other) noexcept;
-    LSR(const LSR &other) = delete;
-    inline ~LSR() {
+    LSR(స్థిరరాశి LSR &other) = delete;
+    అంతఃవరుస ~LSR() {
         // Pure inline code for almost all instances.
-        if (owned != nullptr) {
+        ఒకవేళ (owned != nullptr) {
             deleteOwned();
         }
     }
 
-    LSR &operator=(LSR &&other) noexcept;
-    LSR &operator=(const LSR &other) = delete;
+    LSR &క్రియాకారకం=(LSR &&other) noexcept;
+    LSR &క్రియాకారకం=(స్థిరరాశి LSR &other) = delete;
 
     /**
      * Returns a positive index (>0) for a well-formed region code.
      * Do not rely on a particular region->index mapping; it may change.
      * Returns 0 for ill-formed strings.
      */
-    static int32_t indexForRegion(const char *region);
+    స్థిర int32_t సూచీ_For_Region(స్థిరరాశి అక్షరం *region);
 
-    UBool isEquivalentTo(const LSR &other) const;
-    bool operator==(const LSR &other) const;
+    UBool is_Equivalent_గమ్యం(స్థిరరాశి LSR &other) స్థిరరాశి;
+    bool క్రియాకారకం==(స్థిరరాశి LSR &other) స్థిరరాశి;
 
-    inline bool operator!=(const LSR &other) const {
-        return !operator==(other);
+    అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి LSR &other) స్థిరరాశి {
+        తిరిగి !క్రియాకారకం==(other);
     }
 
-    LSR &setHashCode();
+    LSR &సమితి_Hash_సంకేతం();
 
-private:
-    void deleteOwned();
+అంతరంగ:
+    శూన్య deleteOwned();
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // __LSR_H__
+#అయితే_ముగింపు  // __LSR_H__

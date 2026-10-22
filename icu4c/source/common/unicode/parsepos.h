@@ -15,14 +15,14 @@
 *******************************************************************************
 */
 
-#ifndef PARSEPOS_H
-#define PARSEPOS_H
+#నిర్వచితం_కాకపోతే PARSEPOS_H
+#నిర్వచించు PARSEPOS_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/uobject.h"
 
  
 U_NAMESPACE_BEGIN
@@ -49,16 +49,16 @@ U_NAMESPACE_BEGIN
  * @see         java.text.Format
  */
 
-class U_COMMON_API ParsePosition : public UObject {
-public:
+class U_COMMON_API ParsePosition : బహిరంగ UObject {
+బహిరంగ:
     /**
      * Default constructor, the index starts with 0 as default.
      * @stable ICU 2.0
      */
     ParsePosition()
         : UObject(),
-        index(0),
-        errorIndex(-1)
+        సూచీ(0),
+        error_సూచీ(-1)
       {}
 
     /**
@@ -66,10 +66,10 @@ public:
      * @param newIndex the new text offset.
      * @stable ICU 2.0
      */
-    ParsePosition(int32_t newIndex)
+    ParsePosition(int32_t new_సూచీ)
         : UObject(),
-        index(newIndex),
-        errorIndex(-1)
+        సూచీ(new_సూచీ),
+        error_సూచీ(-1)
       {}
 
     /**
@@ -77,37 +77,37 @@ public:
      * @param copy the object to be copied from.
      * @stable ICU 2.0
      */
-    ParsePosition(const ParsePosition& copy)
+    ParsePosition(స్థిరరాశి ParsePosition& copy)
         : UObject(copy),
-        index(copy.index),
-        errorIndex(copy.errorIndex)
+        సూచీ(copy.సూచీ),
+        error_సూచీ(copy.error_సూచీ)
       {}
 
     /**
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~ParsePosition();
+    మాయా ~ParsePosition();
 
     /**
      * Assignment operator
      * @stable ICU 2.0
      */
-    inline ParsePosition& operator=(const ParsePosition& copy) U_LIFETIME_BOUND;
+    అంతఃవరుస ParsePosition& క్రియాకారకం=(స్థిరరాశి ParsePosition& copy) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator==(const ParsePosition& that) const;
+    అంతఃవరుస bool               క్రియాకారకం==(స్థిరరాశి ParsePosition& that) స్థిరరాశి;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are not equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator!=(const ParsePosition& that) const;
+    అంతఃవరుస bool               క్రియాకారకం!=(స్థిరరాశి ParsePosition& that) స్థిరరాశి;
 
     /**
      * Clone this object.
@@ -120,7 +120,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ParsePosition *clone() const;
+    ParsePosition *clone() స్థిరరాశి;
 
     /**
      * Retrieve the current parse position.  On input to a parse method, this
@@ -129,14 +129,14 @@ public:
      * @return the current index.
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    అంతఃవరుస int32_t get_సూచీ() స్థిరరాశి;
 
     /**
      * Set the current parse position.
      * @param index the new index.
      * @stable ICU 2.0
      */
-    inline void setIndex(int32_t index);
+    అంతఃవరుస శూన్య సమితి_సూచీ(int32_t సూచీ);
 
     /**
      * Set the index at which a parse error occurred.  Formatters
@@ -145,93 +145,93 @@ public:
      * set.
      * @stable ICU 2.0
      */
-    inline void setErrorIndex(int32_t ei);
+    అంతఃవరుస శూన్య సమితి_Error_సూచీ(int32_t ei);
 
     /**
      * Retrieve the index at which an error occurred, or -1 if the
      * error index has not been set.
      * @stable ICU 2.0
      */
-    inline int32_t getErrorIndex() const;
+    అంతఃవరుస int32_t get_Error_సూచీ() స్థిరరాశి;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    స్థిర UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    మాయా UClassID getDynamicClassID() స్థిరరాశి override;
 
-private:
+అంతరంగ:
     /**
      * Input: the place you start parsing.
      * <br>Output: position where the parse stopped.
      * This is designed to be used serially,
      * with each call setting index up for the next one.
      */
-    int32_t index;
+    int32_t సూచీ;
 
     /**
      * The index at which a parse error occurred.
      */
-    int32_t errorIndex;
+    int32_t error_సూచీ;
 
 };
 
-inline ParsePosition&
-ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
+అంతఃవరుస ParsePosition&
+ParsePosition::క్రియాకారకం=(స్థిరరాశి ParsePosition& copy) U_LIFETIME_BOUND
 {
-  index = copy.index;
-  errorIndex = copy.errorIndex;
-  return *this;
+  సూచీ = copy.సూచీ;
+  error_సూచీ = copy.error_సూచీ;
+  తిరిగి *this;
 }
 
-inline bool
-ParsePosition::operator==(const ParsePosition& copy) const
+అంతఃవరుస bool
+ParsePosition::క్రియాకారకం==(స్థిరరాశి ParsePosition& copy) స్థిరరాశి
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  ఒకవేళ(సూచీ != copy.సూచీ || error_సూచీ != copy.error_సూచీ)
+  తిరిగి false;
+  లేకపోతే
+  తిరిగి true;
 }
 
-inline bool
-ParsePosition::operator!=(const ParsePosition& copy) const
+అంతఃవరుస bool
+ParsePosition::క్రియాకారకం!=(స్థిరరాశి ParsePosition& copy) స్థిరరాశి
 {
-  return !operator==(copy);
+  తిరిగి !క్రియాకారకం==(copy);
 }
 
-inline int32_t
-ParsePosition::getIndex() const
+అంతఃవరుస int32_t
+ParsePosition::get_సూచీ() స్థిరరాశి
 {
-  return index;
+  తిరిగి సూచీ;
 }
 
-inline void
-ParsePosition::setIndex(int32_t offset)
+అంతఃవరుస శూన్య
+ParsePosition::సమితి_సూచీ(int32_t స్థానభ్రంశం)
 {
-  this->index = offset;
+  this->సూచీ = స్థానభ్రంశం;
 }
 
-inline int32_t
-ParsePosition::getErrorIndex() const
+అంతఃవరుస int32_t
+ParsePosition::get_Error_సూచీ() స్థిరరాశి
 {
-  return errorIndex;
+  తిరిగి error_సూచీ;
 }
 
-inline void
-ParsePosition::setErrorIndex(int32_t ei)
+అంతఃవరుస శూన్య
+ParsePosition::సమితి_Error_సూచీ(int32_t ei)
 {
-  this->errorIndex = ei;
+  this->error_సూచీ = ei;
 }
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#అయితే_ముగింపు

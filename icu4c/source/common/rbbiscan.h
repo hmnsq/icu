@@ -10,25 +10,25 @@
 //
 
 
-#ifndef RBBISCAN_H
-#define RBBISCAN_H
+#నిర్వచితం_కాకపోతే RBBISCAN_H
+#నిర్వచించు RBBISCAN_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "unicode/rbbi.h"
-#include "unicode/uniset.h"
-#include "unicode/parseerr.h"
-#include "uhash.h"
-#include "uvector.h"
-#include "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/rbbi.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/parseerr.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "uvector.h"
+#అన్తర్భావ "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
                           //    looks up references to $variables within a set.
-#include "rbbinode.h"
-#include "rbbirpt.h"
+#అన్తర్భావ "rbbinode.h"
+#అన్తర్భావ "rbbirpt.h"
 
 U_NAMESPACE_BEGIN
 
 class   RBBIRuleBuilder;
-class   RBBISymbolTable;
+class   RBBISymbol_పట్టిక;
 
 
 //--------------------------------------------------------------------------------
@@ -42,16 +42,16 @@ class   RBBISymbolTable;
 //
 //--------------------------------------------------------------------------------
 
-class RBBIRuleScanner : public UMemory {
-public:
+class RBBIRuleScanner : బహిరంగ UMemory {
+బహిరంగ:
 
-    enum {
-        kStackSize = 100            // The size of the state stack for
+    గణన {
+        k_దొంతర_కొలత = 100            // The size of the state stack for
     };                              //   rules parsing.  Corresponds roughly
                                     //   to the depth of parentheses nesting
                                     //   that is allowed in the rules.
 
-    struct RBBIRuleChar {
+    నిర్మాణం RBBIRuleChar {
         UChar32             fChar;
         UBool               fEscaped;
         RBBIRuleChar() : fChar(0), fEscaped(false) {}
@@ -60,52 +60,52 @@ public:
     RBBIRuleScanner(RBBIRuleBuilder  *rb);
 
 
-    virtual    ~RBBIRuleScanner();
+    మాయా    ~RBBIRuleScanner();
 
-    void        nextChar(RBBIRuleChar &c);          // Get the next char from the input stream.
+    శూన్య        తదుపరి_Char(RBBIRuleChar &c);          // Get the next char from the input stream.
                                                     // Return false if at end.
 
-    UBool       push(const RBBIRuleChar &c);        // Push (unget) one character.
+    UBool       నెట్టు(స్థిరరాశి RBBIRuleChar &c);        // Push (unget) one character.
                                                     //   Only a single character may be pushed.
 
-    void        parse();                            // Parse the rules, generating two parse
+    శూన్య        parse();                            // Parse the rules, generating two parse
                                                     //   trees, one each for the forward and
                                                     //   reverse rules,
                                                     //   and a list of UnicodeSets encountered.
 
-    int32_t     numRules();                         // Return the number of rules that have been seen.
+    int32_t     అంకె_నియమాలు();                         // Return the number of rules that have been seen.
 
     /**
      * Return a rules string without unnecessary
      * characters.
      */
-    static UnicodeString stripRules(const UnicodeString &rules);
-private:
+    స్థిర UnicodeString strip_నియమాలు(స్థిరరాశి UnicodeString &నియమాలు);
+అంతరంగ:
 
     UBool       doParseActions(int32_t a);
-    void        error(UErrorCode e);                   // error reporting convenience function.
-    void        fixOpStack(RBBINode::OpPrecedence p);
+    శూన్య        error(UError_సంకేతం e);                   // error reporting convenience function.
+    శూన్య        fix_Op_దొంతర(RBBINode::OpPrecedence p);
                                                        //   a character.
-    void        findSetFor(const UnicodeString &s, RBBINode *node, UnicodeSet *setToAdopt = nullptr);
+    శూన్య        కనుగొను_సమితి_For(స్థిరరాశి UnicodeString &s, RBBINode *కణుపు, Unicode_సమితి *సమితి_గమ్యం_Adopt = nullptr);
 
-    UChar32     nextCharLL();
-#ifdef RBBI_DEBUG
-    void        printNodeStack(const char *title);
-#endif
-    RBBINode    *pushNewNode(RBBINode::NodeType  t);
-    void        scanSet();
+    UChar32     తదుపరి_Char_LL();
+#నిర్వచితమైతే RBBI_DEBUG
+    శూన్య        print_కణుపు_దొంతర(స్థిరరాశి అక్షరం *title);
+#అయితే_ముగింపు
+    RBBINode    *నెట్టు_New_కణుపు(RBBINode::కణుపు_Type  t);
+    శూన్య        పరిశీలన_సమితి();
 
 
     RBBIRuleBuilder               *fRB;              // The rule builder that we are part of.
 
-    int32_t                       fScanIndex;        // Index of current character being processed
+    int32_t                       f_పరిశీలన_సూచీ;        // Index of current character being processed
                                                      //   in the rule input string.
-    int32_t                       fNextIndex;        // Index of the next character, which
+    int32_t                       f_తదుపరి_సూచీ;        // Index of the next character, which
                                                      //   is the first character not yet scanned.
-    UBool                         fQuoteMode;        // Scan is in a 'quoted region'
-    int32_t                       fLineNum;          // Line number in input file.
-    int32_t                       fCharNum;          // Char position within the line.
-    UChar32                       fLastChar;         // Previous char, needed to count CR-LF
+    UBool                         f_Quote_బహుళకం;        // Scan is in a 'quoted region'
+    int32_t                       f_పంక్తి_అంకె;          // Line number in input file.
+    int32_t                       f_Char_అంకె;          // Char position within the line.
+    UChar32                       f_చివరి_Char;         // Previous char, needed to count CR-LF
                                                      //   as a single line, not two.
 
     RBBIRuleChar                  fC;                // Current char for parse state machine
@@ -113,55 +113,55 @@ private:
     UnicodeString                 fVarName;          // $variableName, valid when we've just
                                                      //   scanned one.
 
-    RBBIRuleTableEl               **fStateTable;     // State Transition Table for RBBI Rule
+    RBBIRule_పట్టిక_El               **f_State_పట్టిక;     // State Transition Table for RBBI Rule
                                                      //   parsing.  index by p[state][char-class]
 
-    uint16_t                      fStack[kStackSize];  // State stack, holds state pushes
-    int32_t                       fStackPtr;           //  and pops as specified in the state
+    uint16_t                      f_దొంతర[k_దొంతర_కొలత];  // State stack, holds state pushes
+    int32_t                       f_దొంతర_Ptr;           //  and pops as specified in the state
                                                        //  transition rules.
 
-    RBBINode                      *fNodeStack[kStackSize]; // Node stack, holds nodes created
+    RBBINode                      *f_కణుపు_దొంతర[k_దొంతర_కొలత]; // Node stack, holds nodes created
                                                            //  during the parse of a rule
-    int32_t                        fNodeStackPtr;
+    int32_t                        f_కణుపు_దొంతర_Ptr;
 
 
-    UBool                          fReverseRule;     // True if the rule currently being scanned
+    UBool                          f_తిరగేయి_నియమం;     // True if the rule currently being scanned
                                                      //  is a reverse direction rule (if it
                                                      //  starts with a '!')
 
-    UBool                          fLookAheadRule;   // True if the rule includes a '/'
+    UBool                          f_Look_Ahead_నియమం;   // True if the rule includes a '/'
                                                      //   somewhere within it.
 
-    UBool                          fNoChainInRule;   // True if the current rule starts with a '^'.
+    UBool                          f_No_Chain_లోపల_నియమం;   // True if the current rule starts with a '^'.
 
-    RBBISymbolTable               *fSymbolTable;     // symbol table, holds definitions of
+    RBBISymbol_పట్టిక               *f_చిహ్నం_పట్టిక;     // symbol table, holds definitions of
                                                      //   $variable symbols.
 
-    UHashtable                    *fSetTable;        // UnicocodeSet hash table, holds indexes to
+    UHashtable                    *f_సమితి_పట్టిక;        // UnicocodeSet hash table, holds indexes to
                                                      //   the sets created while parsing rules.
                                                      //   The key is the string used for creating
                                                      //   the set.
 
-    UnicodeSet                     fRuleSets[10];    // Unicode Sets that are needed during
+    Unicode_సమితి                     f_నియమం_Sets[10];    // Unicode Sets that are needed during
                                                      //  the scanning of RBBI rules.  The
                                                      //  indices for these are assigned by the
                                                      //  perl script that builds the state tables.
                                                      //  See rbbirpt.h.
 
-    int32_t                        fRuleNum;         // Counts each rule as it is scanned.
+    int32_t                        f_నియమం_అంకె;         // Counts each rule as it is scanned.
 
-    int32_t                        fOptionStart;     // Input index of start of a !!option
+    int32_t                        f_Option_ప్రారంభం;     // Input index of start of a !!option
                                                      //   keyword, while being scanned.
 
-    UnicodeSet *gRuleSet_rule_char;
-    UnicodeSet *gRuleSet_white_space;
-    UnicodeSet *gRuleSet_name_char;
-    UnicodeSet *gRuleSet_name_start_char;
+    Unicode_సమితి *g_నియమం_సమితి_నియమం_char;
+    Unicode_సమితి *g_నియమం_సమితి_white_space;
+    Unicode_సమితి *g_నియమం_సమితి_name_char;
+    Unicode_సమితి *g_నియమం_సమితి_name_ప్రారంభం_char;
 
-    RBBIRuleScanner(const RBBIRuleScanner &other) = delete; // forbid copying of this class
-    RBBIRuleScanner &operator=(const RBBIRuleScanner &other) = delete; // forbid copying of this class
+    RBBIRuleScanner(స్థిరరాశి RBBIRuleScanner &other) = delete; // forbid copying of this class
+    RBBIRuleScanner &క్రియాకారకం=(స్థిరరాశి RBBIRuleScanner &other) = delete; // forbid copying of this class
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు

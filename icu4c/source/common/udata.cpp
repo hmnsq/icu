@@ -16,31 +16,31 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"  /* U_PLATFORM etc. */
+#అన్తర్భావ "unicode/utypes.h"  /* U_PLATFORM etc. */
 
-#ifdef __GNUC__
+#నిర్వచితమైతే __GNUC__
 /* if gcc
 #define ATTRIBUTE_WEAK __attribute__ ((weak))
 might have to #include some other header
 */
-#endif
+#అయితే_ముగింపు
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "unicode/uversion.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "putilimp.h"
-#include "restrace.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "ucmndata.h"
-#include "udatamem.h"
-#include "uhash.h"
-#include "umapfile.h"
-#include "umutex.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/uversion.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "restrace.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "ucmndata.h"
+#అన్తర్భావ "udatamem.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "umapfile.h"
+#అన్తర్భావ "umutex.h"
 
 /***********************************************************************
 *
@@ -71,16 +71,16 @@ might have to #include some other header
 /* If you are excruciatingly bored turn this on .. */
 /* #define UDATA_DEBUG 1 */
 
-#if defined(UDATA_DEBUG)
+#ఒకవేళ defined(UDATA_DEBUG)
 #   include <stdio.h>
-#endif
+#అయితే_ముగింపు
 
 U_NAMESPACE_USE
 
 /*
  *  Forward declarations
  */
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err);
+స్థిర UData_జ్ఞాపకం *udata_కనుగొను_Cached_దత్తాంశం(స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం &err);
 
 /***********************************************************************
 *
@@ -104,150 +104,150 @@ static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err);
  * that they really need, reducing the size of binaries that take advantage
  * of this.
  */
-static UDataMemory *gCommonICUDataArray[10] = { nullptr };   // Access protected by icu global mutex.
+స్థిర UData_జ్ఞాపకం *gCommonICUDataArray[10] = { శూన్యసూచిక };   // Access protected by icu global mutex.
 
-static u_atomic_int32_t gHaveTriedToLoadCommonData {0};  //  See extendICUData().
+స్థిర u_atomic_int32_t g_Have_Tried_గమ్యం_ఎక్కించు_Common_దత్తాంశం {0};  //  See extendICUData().
 
-static UHashtable  *gCommonDataCache = nullptr;  /* Global hash table of opened ICU data files.  */
-static icu::UInitOnce gCommonDataCacheInitOnce {};
+స్థిర UHashtable  *g_Common_దత్తాంశం_Cache = శూన్యసూచిక;  /* Global hash table of opened ICU data files.  */
+స్థిర icu::UInitOnce g_Common_దత్తాంశం_Cache_Init_Once {};
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
-static UDataFileAccess  gDataFileAccess = UDATA_DEFAULT_ACCESS;  // Access not synchronized.
+#ఒకవేళ !defined(ICU_దత్తాంశం_DIR_WINDOWS)
+స్థిర UDataFileAccess  g_దత్తాంశం_File_Access = UDATA_DEFAULT_ACCESS;  // Access not synchronized.
                                                                  // Modifying is documented as thread-unsafe.
-#else
+#లేకపోతే
 // If we are using the Windows data directory, then look in one spot only.
-static UDataFileAccess  gDataFileAccess = UDATA_NO_FILES;
-#endif
+స్థిర UDataFileAccess  g_దత్తాంశం_File_Access = UDATA_NO_FILES;
+#అయితే_ముగింపు
 
-static UBool U_CALLCONV
+స్థిర UBool U_CALLCONV
 udata_cleanup()
 {
     int32_t i;
 
-    if (gCommonDataCache) {             /* Delete the cache of user data mappings.  */
-        uhash_close(gCommonDataCache);  /*   Table owns the contents, and will delete them. */
-        gCommonDataCache = nullptr;        /*   Cleanup is not thread safe.                */
+    ఒకవేళ (g_Common_దత్తాంశం_Cache) {             /* Delete the cache of user data mappings.  */
+        uhash_close(g_Common_దత్తాంశం_Cache);  /*   Table owns the contents, and will delete them. */
+        g_Common_దత్తాంశం_Cache = శూన్యసూచిక;        /*   Cleanup is not thread safe.                */
     }
-    gCommonDataCacheInitOnce.reset();
+    g_Common_దత్తాంశం_Cache_Init_Once.reset();
 
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != nullptr; ++i) {
+    కొరకు (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != శూన్యసూచిక; ++i) {
         udata_close(gCommonICUDataArray[i]);
-        gCommonICUDataArray[i] = nullptr;
+        gCommonICUDataArray[i] = శూన్యసూచిక;
     }
-    gHaveTriedToLoadCommonData = 0;
+    g_Have_Tried_గమ్యం_ఎక్కించు_Common_దత్తాంశం = 0;
 
-    return true;                   /* Everything was cleaned up */
+    తిరిగి నిజం;                   /* Everything was cleaned up */
 }
 
-static UBool U_CALLCONV
-findCommonICUDataByName(const char *inBasename, UErrorCode &err)
+స్థిర UBool U_CALLCONV
+కనుగొను_Common_ICUData_By_Name(స్థిరరాశి అక్షరం *లోపల_Basename, UError_సంకేతం &err)
 {
-    UBool found = false;
+    UBool దొరికింది = అబద్ధం;
     int32_t i;
 
-    UDataMemory  *pData = udata_findCachedData(inBasename, err);
-    if (U_FAILURE(err) || pData == nullptr)
-        return false;
+    UData_జ్ఞాపకం  *p_దత్తాంశం = udata_కనుగొను_Cached_దత్తాంశం(లోపల_Basename, err);
+    ఒకవేళ (U_FAILURE(err) || p_దత్తాంశం == శూన్యసూచిక)
+        తిరిగి అబద్ధం;
 
     {
-        Mutex lock;
-        for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-            if ((gCommonICUDataArray[i] != nullptr) && (gCommonICUDataArray[i]->pHeader == pData->pHeader)) {
+        Mutex తాళం;
+        కొరకు (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+            ఒకవేళ ((gCommonICUDataArray[i] != శూన్యసూచిక) && (gCommonICUDataArray[i]->p_శీర్షిక == p_దత్తాంశం->p_శీర్షిక)) {
                 /* The data pointer is already in the array. */
-                found = true;
-                break;
+                దొరికింది = నిజం;
+                ఆపు;
             }
         }
     }
-    return found;
+    తిరిగి దొరికింది;
 }
 
 
 /*
  * setCommonICUData.   Set a UDataMemory to be the global ICU Data
  */
-static UBool
-setCommonICUData(UDataMemory *pData,     /*  The new common data.  Belongs to caller, we copy it. */
+స్థిర UBool
+సమితి_Common_ICUData(UData_జ్ఞాపకం *p_దత్తాంశం,     /*  The new common data.  Belongs to caller, we copy it. */
                  UBool       warn,       /*  If true, set USING_DEFAULT warning if ICUData was    */
                                          /*    changed by another thread before we got to it.     */
-                 UErrorCode *pErr)
+                 UError_సంకేతం *pErr)
 {
-    UDataMemory  *newCommonData = UDataMemory_createNewInstance(pErr);
+    UData_జ్ఞాపకం  *new_Common_దత్తాంశం = UData_జ్ఞాపకం_create_New_Instance(pErr);
     int32_t i;
-    UBool didUpdate = false;
-    if (U_FAILURE(*pErr)) {
-        return false;
+    UBool didUpdate = అబద్ధం;
+    ఒకవేళ (U_FAILURE(*pErr)) {
+        తిరిగి అబద్ధం;
     }
 
     /*  For the assignment, other threads must cleanly see either the old            */
     /*    or the new, not some partially initialized new.  The old can not be        */
     /*    deleted - someone may still have a pointer to it lying around in           */
     /*    their locals.                                                              */
-    UDatamemory_assign(newCommonData, pData);
-    umtx_lock(nullptr);
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-        if (gCommonICUDataArray[i] == nullptr) {
-            gCommonICUDataArray[i] = newCommonData;
-            didUpdate = true;
-            break;
-        } else if (gCommonICUDataArray[i]->pHeader == pData->pHeader) {
+    UDatamemory_కేటాయించు(new_Common_దత్తాంశం, p_దత్తాంశం);
+    umtx_తాళం(శూన్యసూచిక);
+    కొరకు (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+        ఒకవేళ (gCommonICUDataArray[i] == శూన్యసూచిక) {
+            gCommonICUDataArray[i] = new_Common_దత్తాంశం;
+            didUpdate = నిజం;
+            ఆపు;
+        } లేకపోతే ఒకవేళ (gCommonICUDataArray[i]->p_శీర్షిక == p_దత్తాంశం->p_శీర్షిక) {
             /* The same data pointer is already in the array. */
-            break;
+            ఆపు;
         }
     }
-    umtx_unlock(nullptr);
+    umtx_unlock(శూన్యసూచిక);
 
-    if (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
+    ఒకవేళ (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
         *pErr = U_USING_DEFAULT_WARNING;
     }
-    if (didUpdate) {
-        ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
-    } else {
-        uprv_free(newCommonData);
+    ఒకవేళ (didUpdate) {
+        ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_UDATA, udata_cleanup);
+    } లేకపోతే {
+        uprv_free(new_Common_దత్తాంశం);
     }
-    return didUpdate;
+    తిరిగి didUpdate;
 }
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ఒకవేళ !defined(ICU_దత్తాంశం_DIR_WINDOWS)
 
-static UBool
-setCommonICUDataPointer(const void *pData, UBool /*warn*/, UErrorCode *pErrorCode) {
-    UDataMemory tData;
-    UDataMemory_init(&tData);
-    UDataMemory_setData(&tData, pData);
-    udata_checkCommonData(&tData, pErrorCode);
-    return setCommonICUData(&tData, false, pErrorCode);
+స్థిర UBool
+సమితి_Common_ICUData_సూచిక(స్థిరరాశి శూన్య *p_దత్తాంశం, UBool /*warn*/, UError_సంకేతం *p_Error_సంకేతం) {
+    UData_జ్ఞాపకం t_దత్తాంశం;
+    UData_జ్ఞాపకం_init(&t_దత్తాంశం);
+    UData_జ్ఞాపకం_సమితి_దత్తాంశం(&t_దత్తాంశం, p_దత్తాంశం);
+    udata_check_Common_దత్తాంశం(&t_దత్తాంశం, p_Error_సంకేతం);
+    తిరిగి సమితి_Common_ICUData(&t_దత్తాంశం, అబద్ధం, p_Error_సంకేతం);
 }
 
-#endif
+#అయితే_ముగింపు
 
-static const char *
-findBasename(const char *path) {
-    const char *basename=uprv_strrchr(path, U_FILE_SEP_CHAR);
-    if(basename==nullptr) {
-        return path;
-    } else {
-        return basename+1;
+స్థిర స్థిరరాశి అక్షరం *
+కనుగొను_Basename(స్థిరరాశి అక్షరం *మార్గం) {
+    స్థిరరాశి అక్షరం *basename=uprv_strrchr(మార్గం, U_FILE_SEP_CHAR);
+    ఒకవేళ(basename==శూన్యసూచిక) {
+        తిరిగి మార్గం;
+    } లేకపోతే {
+        తిరిగి basename+1;
     }
 }
 
-#ifdef UDATA_DEBUG
-static const char *
-packageNameFromPath(const char *path)
+#నిర్వచితమైతే UDATA_DEBUG
+స్థిర స్థిరరాశి అక్షరం *
+package_Name_From_మార్గం(స్థిరరాశి అక్షరం *మార్గం)
 {
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    ఒకవేళ((మార్గం == శూన్యసూచిక) || (*మార్గం == 0)) {
+        తిరిగి U_ICUDATA_NAME;
     }
 
-    path = findBasename(path);
+    మార్గం = కనుగొను_Basename(మార్గం);
 
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    ఒకవేళ((మార్గం == శూన్యసూచిక) || (*మార్గం == 0)) {
+        తిరిగి U_ICUDATA_NAME;
     }
 
-    return path;
+    తిరిగి మార్గం;
 }
-#endif
+#అయితే_ముగింపు
 
 /*----------------------------------------------------------------------*
  *                                                                      *
@@ -261,10 +261,10 @@ packageNameFromPath(const char *path)
  *                                                                      *
  *----------------------------------------------------------------------*/
 
-typedef struct DataCacheElement {
-    char          *name;
-    UDataMemory   *item;
-} DataCacheElement;
+రకనిర్వచనం నిర్మాణం దత్తాంశం_Cache_Element {
+    అక్షరం          *name;
+    UData_జ్ఞాపకం   *అంశం;
+} దత్తాంశం_Cache_Element;
 
 
 
@@ -273,130 +273,130 @@ typedef struct DataCacheElement {
  *         udata cleanup function closes the hash table; hash table in turn calls back to
  *         here for each entry.
  */
-static void U_CALLCONV DataCacheElement_deleter(void *pDCEl) {
-    DataCacheElement* p = static_cast<DataCacheElement*>(pDCEl);
-    udata_close(p->item);              /* unmaps storage */
+స్థిర శూన్య U_CALLCONV దత్తాంశం_Cache_Element_deleter(శూన్య *pDCEl) {
+    దత్తాంశం_Cache_Element* p = static_cast<దత్తాంశం_Cache_Element*>(pDCEl);
+    udata_close(p->అంశం);              /* unmaps storage */
     uprv_free(p->name);                /* delete the hash key string. */
     uprv_free(pDCEl);                  /* delete 'this'          */
 }
 
-static void U_CALLCONV udata_initHashTable(UErrorCode &err) {
-    U_ASSERT(gCommonDataCache == nullptr);
-    gCommonDataCache = uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &err);
-    if (U_FAILURE(err)) {
-       return;
+స్థిర శూన్య U_CALLCONV udata_init_Hash_పట్టిక(UError_సంకేతం &err) {
+    U_ASSERT(g_Common_దత్తాంశం_Cache == శూన్యసూచిక);
+    g_Common_దత్తాంశం_Cache = uhash_open(uhash_hashChars, uhash_compareChars, శూన్యసూచిక, &err);
+    ఒకవేళ (U_FAILURE(err)) {
+       తిరిగి;
     }
-    U_ASSERT(gCommonDataCache != nullptr);
-    uhash_setValueDeleter(gCommonDataCache, DataCacheElement_deleter);
-    ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
+    U_ASSERT(g_Common_దత్తాంశం_Cache != శూన్యసూచిక);
+    uhash_సమితి_విలువ_Deleter(g_Common_దత్తాంశం_Cache, దత్తాంశం_Cache_Element_deleter);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_UDATA, udata_cleanup);
 }
 
  /*   udata_getCacheHashTable()
   *     Get the hash table used to store the data cache entries.
   *     Lazy create it if it doesn't yet exist.
   */
-static UHashtable *udata_getHashTable(UErrorCode &err) {
-    umtx_initOnce(gCommonDataCacheInitOnce, &udata_initHashTable, err);
-    return gCommonDataCache;
+స్థిర UHashtable *udata_get_Hash_పట్టిక(UError_సంకేతం &err) {
+    umtx_initOnce(g_Common_దత్తాంశం_Cache_Init_Once, &udata_init_Hash_పట్టిక, err);
+    తిరిగి g_Common_దత్తాంశం_Cache;
 }
 
 
 
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err)
+స్థిర UData_జ్ఞాపకం *udata_కనుగొను_Cached_దత్తాంశం(స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం &err)
 {
     UHashtable        *htable;
-    UDataMemory       *retVal = nullptr;
-    DataCacheElement  *el;
-    const char        *baseName;
+    UData_జ్ఞాపకం       *retVal = శూన్యసూచిక;
+    దత్తాంశం_Cache_Element  *el;
+    స్థిరరాశి అక్షరం        *పునాది_Name;
 
-    htable = udata_getHashTable(err);
-    if (U_FAILURE(err)) {
-        return nullptr;
+    htable = udata_get_Hash_పట్టిక(err);
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    baseName = findBasename(path);   /* Cache remembers only the base name, not the full path. */
-    umtx_lock(nullptr);
-    el = static_cast<DataCacheElement*>(uhash_get(htable, baseName));
-    umtx_unlock(nullptr);
-    if (el != nullptr) {
-        retVal = el->item;
+    పునాది_Name = కనుగొను_Basename(మార్గం);   /* Cache remembers only the base name, not the full path. */
+    umtx_తాళం(శూన్యసూచిక);
+    el = static_cast<దత్తాంశం_Cache_Element*>(uhash_get(htable, పునాది_Name));
+    umtx_unlock(శూన్యసూచిక);
+    ఒకవేళ (el != శూన్యసూచిక) {
+        retVal = el->అంశం;
     }
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "Cache: [%s] -> %p\n", baseName, (void*) retVal);
-#endif
-    return retVal;
+#నిర్వచితమైతే UDATA_DEBUG
+    fprintf(stderr, "Cache: [%s] -> %p\n", పునాది_Name, (శూన్య*) retVal);
+#అయితే_ముగింపు
+    తిరిగి retVal;
 }
 
 
-static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UErrorCode *pErr) {
-    DataCacheElement *newElement;
-    const char       *baseName;
+స్థిర UData_జ్ఞాపకం *udata_cache_దత్తాంశం_అంశం(స్థిరరాశి అక్షరం *మార్గం, UData_జ్ఞాపకం *అంశం, UError_సంకేతం *pErr) {
+    దత్తాంశం_Cache_Element *newElement;
+    స్థిరరాశి అక్షరం       *పునాది_Name;
     int32_t           nameLen;
     UHashtable       *htable;
-    DataCacheElement *oldValue = nullptr;
-    UErrorCode        subErr = U_ZERO_ERROR;
+    దత్తాంశం_Cache_Element *old_విలువ = శూన్యసూచిక;
+    UError_సంకేతం        subErr = U_ZERO_ERROR;
 
-    htable = udata_getHashTable(*pErr);
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    htable = udata_get_Hash_పట్టిక(*pErr);
+    ఒకవేళ (U_FAILURE(*pErr)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     /* Create a new DataCacheElement - the thingy we store in the hash table -
      * and copy the supplied path and UDataMemoryItems into it.
      */
-    newElement = static_cast<DataCacheElement*>(uprv_malloc(sizeof(DataCacheElement)));
-    if (newElement == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    newElement = static_cast<దత్తాంశం_Cache_Element*>(uprv_malloc(పరిమాణం(దత్తాంశం_Cache_Element)));
+    ఒకవేళ (newElement == శూన్యసూచిక) {
+        *pErr = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    newElement->item = UDataMemory_createNewInstance(pErr);
-    if (U_FAILURE(*pErr)) {
+    newElement->అంశం = UData_జ్ఞాపకం_create_New_Instance(pErr);
+    ఒకవేళ (U_FAILURE(*pErr)) {
         uprv_free(newElement);
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
-    UDatamemory_assign(newElement->item, item);
+    UDatamemory_కేటాయించు(newElement->అంశం, అంశం);
 
-    baseName = findBasename(path);
-    nameLen = static_cast<int32_t>(uprv_strlen(baseName));
-    newElement->name = static_cast<char*>(uprv_malloc(nameLen + 1));
-    if (newElement->name == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR;
-        uprv_free(newElement->item);
+    పునాది_Name = కనుగొను_Basename(మార్గం);
+    nameLen = static_cast<int32_t>(uprv_strlen(పునాది_Name));
+    newElement->name = static_cast<అక్షరం*>(uprv_malloc(nameLen + 1));
+    ఒకవేళ (newElement->name == శూన్యసూచిక) {
+        *pErr = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        uprv_free(newElement->అంశం);
         uprv_free(newElement);
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
-    uprv_strcpy(newElement->name, baseName);
+    uprv_strcpy(newElement->name, పునాది_Name);
 
     /* Stick the new DataCacheElement into the hash table.
     */
-    umtx_lock(nullptr);
-    oldValue = static_cast<DataCacheElement*>(uhash_get(htable, path));
-    if (oldValue != nullptr) {
+    umtx_తాళం(శూన్యసూచిక);
+    old_విలువ = static_cast<దత్తాంశం_Cache_Element*>(uhash_get(htable, మార్గం));
+    ఒకవేళ (old_విలువ != శూన్యసూచిక) {
         subErr = U_USING_DEFAULT_WARNING;
     }
-    else {
+    లేకపోతే {
         uhash_put(
             htable,
             newElement->name,               /* Key   */
             newElement,                     /* Value */
             &subErr);
     }
-    umtx_unlock(nullptr);
+    umtx_unlock(శూన్యసూచిక);
 
-#ifdef UDATA_DEBUG
+#నిర్వచితమైతే UDATA_DEBUG
     fprintf(stderr, "Cache: [%s] <<< %p : %s. vFunc=%p\n", newElement->name, 
-    (void*) newElement->item, u_errorName(subErr), (void*) newElement->item->vFuncs);
-#endif
+    (శూన్య*) newElement->అంశం, u_errorName(subErr), (శూన్య*) newElement->అంశం->vFuncs);
+#అయితే_ముగింపు
 
-    if (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
+    ఒకవేళ (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
         *pErr = subErr; /* copy sub err unto fillin ONLY if something happens. */
         uprv_free(newElement->name);
-        uprv_free(newElement->item);
+        uprv_free(newElement->అంశం);
         uprv_free(newElement);
-        return oldValue ? oldValue->item : nullptr;
+        తిరిగి old_విలువ ? old_విలువ->అంశం : శూన్యసూచిక;
     }
 
-    return newElement->item;
+    తిరిగి newElement->అంశం;
 }
 
 /*----------------------------------------------------------------------*==============
@@ -408,28 +408,28 @@ static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UEr
 
 U_NAMESPACE_BEGIN
 
-class UDataPathIterator
+తరగతి UData_మార్గం_Iterator
 {
-public:
-    UDataPathIterator(const char *path, const char *pkg,
-                      const char *item, const char *suffix, UBool doCheckLastFour,
-                      UErrorCode *pErrorCode);
-    const char *next(UErrorCode *pErrorCode);
+బహిరంగ:
+    UData_మార్గం_Iterator(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *pkg,
+                      స్థిరరాశి అక్షరం *అంశం, స్థిరరాశి అక్షరం *suffix, UBool do_Check_చివరి_Four,
+                      UError_సంకేతం *p_Error_సంకేతం);
+    స్థిరరాశి అక్షరం *next(UError_సంకేతం *p_Error_సంకేతం);
 
-private:
-    const char *path;                              /* working path (u_icudata_Dir) */
-    const char *nextPath;                          /* path following this one */
-    const char *basename;                          /* item's basename (icudt22e_mt.res)*/
+అంతరంగ:
+    స్థిరరాశి అక్షరం *మార్గం;                              /* working path (u_icudata_Dir) */
+    స్థిరరాశి అక్షరం *తదుపరి_మార్గం;                          /* path following this one */
+    స్థిరరాశి అక్షరం *basename;                          /* item's basename (icudt22e_mt.res)*/
 
     StringPiece suffix;                            /* item suffix (can be null) */
 
     uint32_t    basenameLen;                       /* length of basename */
 
-    CharString  itemPath;                          /* path passed in with item name */
-    CharString  pathBuffer;                        /* output path for this it'ion */
+    CharString  అంశం_మార్గం;                          /* path passed in with item name */
+    CharString  మార్గం_బఫరు;                        /* output path for this it'ion */
     CharString  packageStub;                       /* example:  "/icudt28b". Will ignore that leaf in set paths. */
 
-    UBool       checkLastFour;                     /* if true then allow paths such as '/foo/myapp.dat'
+    UBool       check_చివరి_Four;                     /* if true then allow paths such as '/foo/myapp.dat'
                                                     * to match, checks last 4 chars of suffix with
                                                     * last 4 of path, then previous chars. */
 };
@@ -445,64 +445,64 @@ private:
  *  Note: inSuffix may also be the 'item' being searched for as well, (ex: "ibm-5348_P100-1997.cnv"), in which case 
  *        the 'item' parameter is often the same as pkg. (Though sometimes might have a tree part as well, ex: "icudt62l-curr").
  */
-UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
-                                     const char *item, const char *inSuffix, UBool doCheckLastFour,
-                                     UErrorCode *pErrorCode)
+UData_మార్గం_Iterator::UData_మార్గం_Iterator(స్థిరరాశి అక్షరం *లోపల_మార్గం, స్థిరరాశి అక్షరం *pkg,
+                                     స్థిరరాశి అక్షరం *అంశం, స్థిరరాశి అక్షరం *లోపల_Suffix, UBool do_Check_చివరి_Four,
+                                     UError_సంకేతం *p_Error_సంకేతం)
 {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "SUFFIX1=%s PATH=%s\n", inSuffix, inPath);
-#endif
+#నిర్వచితమైతే UDATA_DEBUG
+        fprintf(stderr, "SUFFIX1=%s PATH=%s\n", లోపల_Suffix, లోపల_మార్గం);
+#అయితే_ముగింపు
     /** Path **/
-    if(inPath == nullptr) {
-        path = u_getDataDirectory();
-    } else {
-        path = inPath;
+    ఒకవేళ(లోపల_మార్గం == శూన్యసూచిక) {
+        మార్గం = u_get_దత్తాంశం_Directory();
+    } లేకపోతే {
+        మార్గం = లోపల_మార్గం;
     }
 
     /** Package **/
-    if(pkg != nullptr) {
-      packageStub.append(U_FILE_SEP_CHAR, *pErrorCode).append(pkg, *pErrorCode);
-#ifdef UDATA_DEBUG
-      fprintf(stderr, "STUB=%s [%d]\n", packageStub.data(), packageStub.length());
-#endif
+    ఒకవేళ(pkg != శూన్యసూచిక) {
+      packageStub.append(U_FILE_SEP_CHAR, *p_Error_సంకేతం).append(pkg, *p_Error_సంకేతం);
+#నిర్వచితమైతే UDATA_DEBUG
+      fprintf(stderr, "STUB=%s [%d]\n", packageStub.దత్తాంశం(), packageStub.length());
+#అయితే_ముగింపు
     }
 
     /** Item **/
-    basename = findBasename(item);
+    basename = కనుగొను_Basename(అంశం);
     basenameLen = static_cast<int32_t>(uprv_strlen(basename));
 
     /** Item path **/
-    if(basename == item) {
-        nextPath = path;
-    } else {
-        itemPath.append(item, static_cast<int32_t>(basename - item), *pErrorCode);
-        nextPath = itemPath.data();
+    ఒకవేళ(basename == అంశం) {
+        తదుపరి_మార్గం = మార్గం;
+    } లేకపోతే {
+        అంశం_మార్గం.append(అంశం, static_cast<int32_t>(basename - అంశం), *p_Error_సంకేతం);
+        తదుపరి_మార్గం = అంశం_మార్గం.దత్తాంశం();
     }
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "SUFFIX=%s [%p]\n", inSuffix, (void*) inSuffix);
-#endif
+#నిర్వచితమైతే UDATA_DEBUG
+    fprintf(stderr, "SUFFIX=%s [%p]\n", లోపల_Suffix, (శూన్య*) లోపల_Suffix);
+#అయితే_ముగింపు
 
     /** Suffix  **/
-    if(inSuffix != nullptr) {
-        suffix = inSuffix;
-    } else {
+    ఒకవేళ(లోపల_Suffix != శూన్యసూచిక) {
+        suffix = లోపల_Suffix;
+    } లేకపోతే {
         suffix = "";
     }
 
-    checkLastFour = doCheckLastFour;
+    check_చివరి_Four = do_Check_చివరి_Four;
 
     /* pathBuffer will hold the output path strings returned by this iterator */
 
-#ifdef UDATA_DEBUG
+#నిర్వచితమైతే UDATA_DEBUG
     fprintf(stderr, "0: init %s -> [path=%s], [base=%s], [suff=%s], [itempath=%s], [nextpath=%s], [checklast4=%s]\n",
-            item,
-            path,
+            అంశం,
+            మార్గం,
             basename,
-            suffix.data(),
-            itemPath.data(),
-            nextPath,
-            checkLastFour?"true":"false");
-#endif
+            suffix.దత్తాంశం(),
+            అంశం_మార్గం.దత్తాంశం(),
+            తదుపరి_మార్గం,
+            check_చివరి_Four?"true":"false");
+#అయితే_ముగింపు
 }
 
 /**
@@ -512,124 +512,124 @@ UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
  * @param len  If set, pointer to the length of the returned path, for convenience. 
  * @return Pointer to the next path segment, or nullptr if there are no more.
  */
-const char *UDataPathIterator::next(UErrorCode *pErrorCode)
+స్థిరరాశి అక్షరం *UData_మార్గం_Iterator::next(UError_సంకేతం *p_Error_సంకేతం)
 {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    const char *currentPath = nullptr;
-    int32_t     pathLen = 0;
-    const char *pathBasename;
+    స్థిరరాశి అక్షరం *current_మార్గం = శూన్యసూచిక;
+    int32_t     మార్గం_Len = 0;
+    స్థిరరాశి అక్షరం *మార్గం_Basename;
 
-    do
+    చేయి
     {
-        if( nextPath == nullptr ) {
-            break;
+        ఒకవేళ( తదుపరి_మార్గం == శూన్యసూచిక ) {
+            ఆపు;
         }
-        currentPath = nextPath;
+        current_మార్గం = తదుపరి_మార్గం;
 
-        if(nextPath == itemPath.data()) { /* we were processing item's path. */
-            nextPath = path; /* start with regular path next tm. */
-            pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-        } else {
+        ఒకవేళ(తదుపరి_మార్గం == అంశం_మార్గం.దత్తాంశం()) { /* we were processing item's path. */
+            తదుపరి_మార్గం = మార్గం; /* start with regular path next tm. */
+            మార్గం_Len = static_cast<int32_t>(uprv_strlen(current_మార్గం));
+        } లేకపోతే {
             /* fix up next for next time */
-            nextPath = uprv_strchr(currentPath, U_PATH_SEP_CHAR);
-            if(nextPath == nullptr) {
+            తదుపరి_మార్గం = uprv_strchr(current_మార్గం, U_మార్గం_SEP_CHAR);
+            ఒకవేళ(తదుపరి_మార్గం == శూన్యసూచిక) {
                 /* segment: entire path */
-                pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-            } else {
+                మార్గం_Len = static_cast<int32_t>(uprv_strlen(current_మార్గం));
+            } లేకపోతే {
                 /* segment: until next segment */
-                pathLen = static_cast<int32_t>(nextPath - currentPath);
+                మార్గం_Len = static_cast<int32_t>(తదుపరి_మార్గం - current_మార్గం);
                 /* skip divider */
-                nextPath ++;
+                తదుపరి_మార్గం ++;
             }
         }
 
-        if(pathLen == 0) {
-            continue;
+        ఒకవేళ(మార్గం_Len == 0) {
+            కొనసాగు;
         }
 
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "rest of path (IDD) = %s\n", currentPath);
+#నిర్వచితమైతే UDATA_DEBUG
+        fprintf(stderr, "rest of path (IDD) = %s\n", current_మార్గం);
         fprintf(stderr, "                     ");
         { 
             int32_t qqq;
-            for(qqq=0;qqq<pathLen;qqq++)
+            కొరకు(qqq=0;qqq<మార్గం_Len;qqq++)
             {
                 fprintf(stderr, " ");
             }
 
             fprintf(stderr, "^\n");
         }
-#endif
-        pathBuffer.clear().append(currentPath, pathLen, *pErrorCode);
+#అయితే_ముగింపు
+        మార్గం_బఫరు.clear().append(current_మార్గం, మార్గం_Len, *p_Error_సంకేతం);
 
         /* check for .dat files */
-        pathBasename = findBasename(pathBuffer.data());
+        మార్గం_Basename = కనుగొను_Basename(మార్గం_బఫరు.దత్తాంశం());
 
-        if(checkLastFour && 
-           (pathLen>=4) &&
-           uprv_strncmp(pathBuffer.data() +(pathLen-4), suffix.data(), 4)==0 && /* suffix matches */
-           uprv_strncmp(findBasename(pathBuffer.data()), basename, basenameLen)==0  && /* base matches */
-           uprv_strlen(pathBasename)==(basenameLen+4)) { /* base+suffix = full len */
+        ఒకవేళ(check_చివరి_Four && 
+           (మార్గం_Len>=4) &&
+           uprv_strncmp(మార్గం_బఫరు.దత్తాంశం() +(మార్గం_Len-4), suffix.దత్తాంశం(), 4)==0 && /* suffix matches */
+           uprv_strncmp(కనుగొను_Basename(మార్గం_బఫరు.దత్తాంశం()), basename, basenameLen)==0  && /* base matches */
+           uprv_strlen(మార్గం_Basename)==(basenameLen+4)) { /* base+suffix = full len */
 
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "Have %s file on the path: %s\n", suffix.data(), pathBuffer.data());
-#endif
+#నిర్వచితమైతే UDATA_DEBUG
+            fprintf(stderr, "Have %s file on the path: %s\n", suffix.దత్తాంశం(), మార్గం_బఫరు.దత్తాంశం());
+#అయితే_ముగింపు
             /* do nothing */
         }
-        else 
+        లేకపోతే 
         {       /* regular dir path */
-            if(pathBuffer[pathLen-1] != U_FILE_SEP_CHAR) {
-                if((pathLen>=4) &&
-                   uprv_strncmp(pathBuffer.data()+(pathLen-4), ".dat", 4) == 0)
+            ఒకవేళ(మార్గం_బఫరు[మార్గం_Len-1] != U_FILE_SEP_CHAR) {
+                ఒకవేళ((మార్గం_Len>=4) &&
+                   uprv_strncmp(మార్గం_బఫరు.దత్తాంశం()+(మార్గం_Len-4), ".dat", 4) == 0)
                 {
-#ifdef UDATA_DEBUG
-                    fprintf(stderr, "skipping non-directory .dat file %s\n", pathBuffer.data());
-#endif
-                    continue;
+#నిర్వచితమైతే UDATA_DEBUG
+                    fprintf(stderr, "skipping non-directory .dat file %s\n", మార్గం_బఫరు.దత్తాంశం());
+#అయితే_ముగింపు
+                    కొనసాగు;
                 }
 
                 /* Check if it is a directory with the same name as our package */
-                if(!packageStub.isEmpty() &&
-                   (pathLen > packageStub.length()) &&
-                   !uprv_strcmp(pathBuffer.data() + pathLen - packageStub.length(), packageStub.data())) {
-#ifdef UDATA_DEBUG
-                  fprintf(stderr, "Found stub %s (will add package %s of len %d)\n", packageStub.data(), basename, basenameLen);
-#endif
-                  pathBuffer.truncate(pathLen - packageStub.length());
+                ఒకవేళ(!packageStub.is_ఖాళీలు() &&
+                   (మార్గం_Len > packageStub.length()) &&
+                   !uprv_strcmp(మార్గం_బఫరు.దత్తాంశం() + మార్గం_Len - packageStub.length(), packageStub.దత్తాంశం())) {
+#నిర్వచితమైతే UDATA_DEBUG
+                  fprintf(stderr, "Found stub %s (will add package %s of len %d)\n", packageStub.దత్తాంశం(), basename, basenameLen);
+#అయితే_ముగింపు
+                  మార్గం_బఫరు.truncate(మార్గం_Len - packageStub.length());
                 }
-                pathBuffer.append(U_FILE_SEP_CHAR, *pErrorCode);
+                మార్గం_బఫరు.append(U_FILE_SEP_CHAR, *p_Error_సంకేతం);
             }
 
             /* + basename */
-            pathBuffer.append(packageStub.data()+1, packageStub.length()-1, *pErrorCode);
+            మార్గం_బఫరు.append(packageStub.దత్తాంశం()+1, packageStub.length()-1, *p_Error_సంకేతం);
 
-            if (!suffix.empty())  /* tack on suffix */
+            ఒకవేళ (!suffix.empty())  /* tack on suffix */
             {
-                if (suffix.length() > 4) {
+                ఒకవేళ (suffix.length() > 4) {
                     // If the suffix is actually an item ("ibm-5348_P100-1997.cnv") and not an extension (".res")
                     // then we need to ensure that the path ends with a separator.
-                    pathBuffer.ensureEndsWithFileSeparator(*pErrorCode);
+                    మార్గం_బఫరు.ensure_చివర్లు_With_File_Separator(*p_Error_సంకేతం);
                 }
-                pathBuffer.append(suffix, *pErrorCode);
+                మార్గం_బఫరు.append(suffix, *p_Error_సంకేతం);
             }
         }
 
-#ifdef UDATA_DEBUG
-        fprintf(stderr, " -->  %s\n", pathBuffer.data());
-#endif
+#నిర్వచితమైతే UDATA_DEBUG
+        fprintf(stderr, " -->  %s\n", మార్గం_బఫరు.దత్తాంశం());
+#అయితే_ముగింపు
 
-        return pathBuffer.data();
+        తిరిగి మార్గం_బఫరు.దత్తాంశం();
 
-    } while(path);
+    } అయితే(మార్గం);
 
     /* fell way off the end */
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* ==================================================================================*/
 
@@ -641,10 +641,10 @@ U_NAMESPACE_END
  *      our common data.                                                *
  *                                                                      *
  *----------------------------------------------------------------------*/
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ఒకవేళ !defined(ICU_దత్తాంశం_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
-extern "C" const DataHeader U_DATA_API U_ICUDATA_ENTRY_POINT;
-#endif
+బాహ్య "C" స్థిరరాశి దత్తాంశం_శీర్షిక U_దత్తాంశం_API U_ICUDATA_నమోదు_బిందువు;
+#అయితే_ముగింపు
 
 /*
  * This would be a good place for weak-linkage declarations of
@@ -666,42 +666,42 @@ extern const void *uprv_getICUData_conversion() ATTRIBUTE_WEAK;
  *                       just return the cached UDataMem object.        *
  *                                                                      *
  *----------------------------------------------------------------------*/
-static UDataMemory *
-openCommonData(const char *path,          /*  Path from OpenChoice?          */
-               int32_t commonDataIndex,   /*  ICU Data (index >= 0) if path == nullptr */
-               UErrorCode *pErrorCode)
+స్థిర UData_జ్ఞాపకం *
+open_Common_దత్తాంశం(స్థిరరాశి అక్షరం *మార్గం,          /*  Path from OpenChoice?          */
+               int32_t common_దత్తాంశం_సూచీ,   /*  ICU Data (index >= 0) if path == nullptr */
+               UError_సంకేతం *p_Error_సంకేతం)
 {
-    UDataMemory tData;
-    const char *pathBuffer;
-    const char *inBasename;
+    UData_జ్ఞాపకం t_దత్తాంశం;
+    స్థిరరాశి అక్షరం *మార్గం_బఫరు;
+    స్థిరరాశి అక్షరం *లోపల_Basename;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    UDataMemory_init(&tData);
+    UData_జ్ఞాపకం_init(&t_దత్తాంశం);
 
     /* ??????? TODO revisit this */ 
-    if (commonDataIndex >= 0) {
+    ఒకవేళ (common_దత్తాంశం_సూచీ >= 0) {
         /* "mini-cache" for common ICU data */
-        if(commonDataIndex >= UPRV_LENGTHOF(gCommonICUDataArray)) {
-            return nullptr;
+        ఒకవేళ(common_దత్తాంశం_సూచీ >= UPRV_LENGTHOF(gCommonICUDataArray)) {
+            తిరిగి శూన్యసూచిక;
         }
         {
-            Mutex lock;
-            if(gCommonICUDataArray[commonDataIndex] != nullptr) {
-                return gCommonICUDataArray[commonDataIndex];
+            Mutex తాళం;
+            ఒకవేళ(gCommonICUDataArray[common_దత్తాంశం_సూచీ] != శూన్యసూచిక) {
+                తిరిగి gCommonICUDataArray[common_దత్తాంశం_సూచీ];
             }
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ఒకవేళ !defined(ICU_దత్తాంశం_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
             int32_t i;
-            for(i = 0; i < commonDataIndex; ++i) {
-                if(gCommonICUDataArray[i]->pHeader == &U_ICUDATA_ENTRY_POINT) {
+            కొరకు(i = 0; i < common_దత్తాంశం_సూచీ; ++i) {
+                ఒకవేళ(gCommonICUDataArray[i]->p_శీర్షిక == &U_ICUDATA_నమోదు_బిందువు) {
                     /* The linked-in data is already in the list. */
-                    return nullptr;
+                    తిరిగి శూన్యసూచిక;
                 }
             }
-#endif
+#అయితే_ముగింపు
         }
 
         /* Add the linked-in data to the list. */
@@ -717,14 +717,14 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
             setCommonICUDataPointer(uprv_getICUData_conversion(), false, pErrorCode);
         }
         */
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ఒకవేళ !defined(ICU_దత్తాంశం_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
-        setCommonICUDataPointer(&U_ICUDATA_ENTRY_POINT, false, pErrorCode);
+        సమితి_Common_ICUData_సూచిక(&U_ICUDATA_నమోదు_బిందువు, అబద్ధం, p_Error_సంకేతం);
         {
-            Mutex lock;
-            return gCommonICUDataArray[commonDataIndex];
+            Mutex తాళం;
+            తిరిగి gCommonICUDataArray[common_దత్తాంశం_సూచీ];
         }
-#endif
+#అయితే_ముగింపు
     }
 
 
@@ -732,68 +732,68 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
 
     /* Find the base name portion of the supplied path.   */
     /*   inBasename will be left pointing somewhere within the original path string.      */
-    inBasename = findBasename(path);
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "inBasename = %s\n", inBasename);
-#endif
+    లోపల_Basename = కనుగొను_Basename(మార్గం);
+#నిర్వచితమైతే UDATA_DEBUG
+    fprintf(stderr, "inBasename = %s\n", లోపల_Basename);
+#అయితే_ముగింపు
 
-    if(*inBasename==0) {
+    ఒకవేళ(*లోపల_Basename==0) {
         /* no basename.     This will happen if the original path was a directory name,   */
         /*    like  "a/b/c/".   (Fallback to separate files will still work.)             */
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "ocd: no basename in %s, bailing.\n", path);
-#endif
-        if (U_SUCCESS(*pErrorCode)) {
-            *pErrorCode=U_FILE_ACCESS_ERROR;
+#నిర్వచితమైతే UDATA_DEBUG
+        fprintf(stderr, "ocd: no basename in %s, bailing.\n", మార్గం);
+#అయితే_ముగింపు
+        ఒకవేళ (U_SUCCESS(*p_Error_సంకేతం)) {
+            *p_Error_సంకేతం=U_FILE_ACCESS_ERROR;
         }
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 
    /* Is the requested common data file already open and cached?                     */
    /*   Note that the cache is keyed by the base name only.  The rest of the path,   */
    /*     if any, is not considered.                                                 */
-    UDataMemory  *dataToReturn = udata_findCachedData(inBasename, *pErrorCode);
-    if (dataToReturn != nullptr || U_FAILURE(*pErrorCode)) {
-        return dataToReturn;
+    UData_జ్ఞాపకం  *దత్తాంశం_గమ్యం_Return = udata_కనుగొను_Cached_దత్తాంశం(లోపల_Basename, *p_Error_సంకేతం);
+    ఒకవేళ (దత్తాంశం_గమ్యం_Return != శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి దత్తాంశం_గమ్యం_Return;
     }
 
     /* Requested item is not in the cache.
      * Hunt it down, trying all the path locations
      */
 
-    UDataPathIterator iter(u_getDataDirectory(), inBasename, path, ".dat", true, pErrorCode);
+    UData_మార్గం_Iterator iter(u_get_దత్తాంశం_Directory(), లోపల_Basename, మార్గం, ".dat", నిజం, p_Error_సంకేతం);
 
-    while ((UDataMemory_isLoaded(&tData)==false) && (pathBuffer = iter.next(pErrorCode)) != nullptr)
+    అయితే ((UData_జ్ఞాపకం_is_Loaded(&t_దత్తాంశం)==అబద్ధం) && (మార్గం_బఫరు = iter.next(p_Error_సంకేతం)) != శూన్యసూచిక)
     {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "ocd: trying path %s - ", pathBuffer);
-#endif
-        uprv_mapFile(&tData, pathBuffer, pErrorCode);
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "%s\n", UDataMemory_isLoaded(&tData)?"LOADED":"not loaded");
-#endif
+#నిర్వచితమైతే UDATA_DEBUG
+        fprintf(stderr, "ocd: trying path %s - ", మార్గం_బఫరు);
+#అయితే_ముగింపు
+        uprv_mapFile(&t_దత్తాంశం, మార్గం_బఫరు, p_Error_సంకేతం);
+#నిర్వచితమైతే UDATA_DEBUG
+        fprintf(stderr, "%s\n", UData_జ్ఞాపకం_is_Loaded(&t_దత్తాంశం)?"LOADED":"not loaded");
+#అయితే_ముగింపు
     }
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if (!UDataMemory_isLoaded(&tData)) {
+    ఒకవేళ (!UData_జ్ఞాపకం_is_Loaded(&t_దత్తాంశం)) {
         /* no common data */
-        *pErrorCode=U_FILE_ACCESS_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం=U_FILE_ACCESS_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
     /* we have mapped a file, check its header */
-    udata_checkCommonData(&tData, pErrorCode);
+    udata_check_Common_దత్తాంశం(&t_దత్తాంశం, p_Error_సంకేతం);
 
 
     /* Cache the UDataMemory struct for this .dat file,
      *   so we won't need to hunt it down and map it again next time
      *   something is needed from it.                */
-    return udata_cacheDataItem(inBasename, &tData, pErrorCode);
+    తిరిగి udata_cache_దత్తాంశం_అంశం(లోపల_Basename, &t_దత్తాంశం, p_Error_సంకేతం);
 }
 
 
@@ -807,11 +807,11 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
  *                   return true if new data is loaded, false otherwise.*
  *                                                                      *
  *----------------------------------------------------------------------*/
-static UBool extendICUData(UErrorCode *pErr)
+స్థిర UBool extendICUData(UError_సంకేతం *pErr)
 {
-    UDataMemory   *pData;
-    UDataMemory   copyPData;
-    UBool         didUpdate = false;
+    UData_జ్ఞాపకం   *p_దత్తాంశం;
+    UData_జ్ఞాపకం   copyPData;
+    UBool         didUpdate = అబద్ధం;
 
     /*
      * There is a chance for a race condition here.
@@ -823,47 +823,47 @@ static UBool extendICUData(UErrorCode *pErr)
      * In this case, use a mutex to prevent the race.
      * Use a specific mutex to avoid nested locks of the global mutex.
      */
-#if MAP_IMPLEMENTATION==MAP_STDIO
-    static UMutex extendICUDataMutex;
-    umtx_lock(&extendICUDataMutex);
-#endif
-    if(!umtx_loadAcquire(gHaveTriedToLoadCommonData)) {
+#ఒకవేళ MAP_IMPLEMENTATION==MAP_STDIO
+    స్థిర UMutex extendICUDataMutex;
+    umtx_తాళం(&extendICUDataMutex);
+#అయితే_ముగింపు
+    ఒకవేళ(!umtx_ఎక్కించు_Acquire(g_Have_Tried_గమ్యం_ఎక్కించు_Common_దత్తాంశం)) {
         /* See if we can explicitly open a .dat file for the ICUData. */
-        pData = openCommonData(
+        p_దత్తాంశం = open_Common_దత్తాంశం(
                    U_ICUDATA_NAME,            /*  "icudt20l" , for example.          */
                    -1,                        /*  Pretend we're not opening ICUData  */
                    pErr);
 
         /* How about if there is no pData, eh... */
 
-       UDataMemory_init(&copyPData);
-       if(pData != nullptr) {
-          UDatamemory_assign(&copyPData, pData);
-          copyPData.map = nullptr;     /* The mapping for this data is owned by the hash table */
-          copyPData.mapAddr = nullptr; /*   which will unmap it when ICU is shut down.         */
+       UData_జ్ఞాపకం_init(&copyPData);
+       ఒకవేళ(p_దత్తాంశం != శూన్యసూచిక) {
+          UDatamemory_కేటాయించు(&copyPData, p_దత్తాంశం);
+          copyPData.map = శూన్యసూచిక;     /* The mapping for this data is owned by the hash table */
+          copyPData.mapAddr = శూన్యసూచిక; /*   which will unmap it when ICU is shut down.         */
                                        /* CommonICUData is also unmapped when ICU is shut down.*/
                                        /* To avoid unmapping the data twice, zero out the map  */
                                        /*   fields in the UDataMemory that we're assigning     */
                                        /*   to CommonICUData.                                  */
 
           didUpdate = /* no longer using this result */
-              setCommonICUData(&copyPData,/*  The new common data.                                */
-                       false,             /*  No warnings if write didn't happen                  */
+              సమితి_Common_ICUData(&copyPData,/*  The new common data.                                */
+                       అబద్ధం,             /*  No warnings if write didn't happen                  */
                        pErr);             /*  setCommonICUData honors errors; NOP if error set    */
         }
 
-        umtx_storeRelease(gHaveTriedToLoadCommonData, 1);
+        umtx_storeRelease(g_Have_Tried_గమ్యం_ఎక్కించు_Common_దత్తాంశం, 1);
     }
 
-    didUpdate = findCommonICUDataByName(U_ICUDATA_NAME, *pErr);  /* Return 'true' when a racing writes out the extended                 */
+    didUpdate = కనుగొను_Common_ICUData_By_Name(U_ICUDATA_NAME, *pErr);  /* Return 'true' when a racing writes out the extended                 */
                                                           /* data after another thread has failed to see it (in openCommonData), so     */
                                                           /* extended data can be examined.                                             */
                                                           /* Also handles a race through here before gHaveTriedToLoadCommonData is set. */
 
-#if MAP_IMPLEMENTATION==MAP_STDIO
+#ఒకవేళ MAP_IMPLEMENTATION==MAP_STDIO
     umtx_unlock(&extendICUDataMutex);
-#endif
-    return didUpdate;               /* Return true if ICUData pointer was updated.   */
+#అయితే_ముగింపు
+    తిరిగి didUpdate;               /* Return true if ICUData pointer was updated.   */
                                     /*   (Could potentially have been done by another thread racing */
                                     /*   us through here, but that's fine, we still return true    */
                                     /*   so that current thread will also examine extended data.   */
@@ -874,28 +874,28 @@ static UBool extendICUData(UErrorCode *pErr)
  *   udata_setCommonData                                                *
  *                                                                      *
  *----------------------------------------------------------------------*/
-U_CAPI void U_EXPORT2
-udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
-    UDataMemory dataMemory;
+U_CAPI శూన్య U_EXPORT2
+udata_సమితి_Common_దత్తాంశం(స్థిరరాశి శూన్య *దత్తాంశం, UError_సంకేతం *p_Error_సంకేతం) {
+    UData_జ్ఞాపకం దత్తాంశం_జ్ఞాపకం;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
 
-    if(data==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ(దత్తాంశం==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
     /* set the data pointer and test for validity */
-    UDataMemory_init(&dataMemory);
-    UDataMemory_setData(&dataMemory, data);
-    udata_checkCommonData(&dataMemory, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {return;}
+    UData_జ్ఞాపకం_init(&దత్తాంశం_జ్ఞాపకం);
+    UData_జ్ఞాపకం_సమితి_దత్తాంశం(&దత్తాంశం_జ్ఞాపకం, దత్తాంశం);
+    udata_check_Common_దత్తాంశం(&దత్తాంశం_జ్ఞాపకం, p_Error_సంకేతం);
+    ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {తిరిగి;}
 
     /* we have good data */
     /* Set it up as the ICU Common Data.  */
-    setCommonICUData(&dataMemory, true, pErrorCode);
+    సమితి_Common_ICUData(&దత్తాంశం_జ్ఞాపకం, నిజం, p_Error_సంకేతం);
 }
 
 /*---------------------------------------------------------------------------
@@ -903,23 +903,23 @@ udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
  *  udata_setAppData
  *
  *---------------------------------------------------------------------------- */
-U_CAPI void U_EXPORT2
-udata_setAppData(const char *path, const void *data, UErrorCode *err)
+U_CAPI శూన్య U_EXPORT2
+udata_సమితి_App_దత్తాంశం(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి శూన్య *దత్తాంశం, UError_సంకేతం *err)
 {
-    UDataMemory     udm;
+    UData_జ్ఞాపకం     udm;
 
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    ఒకవేళ(err==శూన్యసూచిక || U_FAILURE(*err)) {
+        తిరిగి;
     }
-    if(data==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ(దత్తాంశం==శూన్యసూచిక) {
+        *err=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    UDataMemory_init(&udm);
-    UDataMemory_setData(&udm, data);
-    udata_checkCommonData(&udm, err);
-    udata_cacheDataItem(path, &udm, err);
+    UData_జ్ఞాపకం_init(&udm);
+    UData_జ్ఞాపకం_సమితి_దత్తాంశం(&udm, దత్తాంశం);
+    udata_check_Common_దత్తాంశం(&udm, err);
+    udata_cache_దత్తాంశం_అంశం(మార్గం, &udm, err);
 }
 
 /*----------------------------------------------------------------------------*
@@ -933,119 +933,119 @@ udata_setAppData(const char *path, const void *data, UErrorCode *err)
  *                    Return nullptr on any sort of failure.                     *
  *                                                                            *
  *----------------------------------------------------------------------------*/
-static UDataMemory *
-checkDataItem
+స్థిర UData_జ్ఞాపకం *
+check_దత్తాంశం_అంశం
 (
- const DataHeader         *pHeader,         /* The data item to be checked.                */
- UDataMemoryIsAcceptable  *isAcceptable,    /* App's call-back function                    */
- void                     *context,         /*   pass-thru param for above.                */
- const char               *type,            /*   pass-thru param for above.                */
- const char               *name,            /*   pass-thru param for above.                */
- UErrorCode               *nonFatalErr,     /* Error code if this data was not acceptable  */
+ స్థిరరాశి దత్తాంశం_శీర్షిక         *p_శీర్షిక,         /* The data item to be checked.                */
+ UData_జ్ఞాపకం_Is_Acceptable  *isAcceptable,    /* App's call-back function                    */
+ శూన్య                     *context,         /*   pass-thru param for above.                */
+ స్థిరరాశి అక్షరం               *type,            /*   pass-thru param for above.                */
+ స్థిరరాశి అక్షరం               *name,            /*   pass-thru param for above.                */
+ UError_సంకేతం               *nonFatalErr,     /* Error code if this data was not acceptable  */
                                             /*   but openChoice should continue with       */
                                             /*   trying to get data from fallback path.    */
- UErrorCode               *fatalErr         /* Bad error, caller should return immediately */
+ UError_సంకేతం               *fatalErr         /* Bad error, caller should return immediately */
  )
 {
-    UDataMemory  *rDataMem = nullptr;          /* the new UDataMemory, to be returned.        */
+    UData_జ్ఞాపకం  *r_దత్తాంశం_Mem = శూన్యసూచిక;          /* the new UDataMemory, to be returned.        */
 
-    if (U_FAILURE(*fatalErr)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*fatalErr)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(pHeader->dataHeader.magic1==0xda &&
-        pHeader->dataHeader.magic2==0x27 &&
-        (isAcceptable==nullptr || isAcceptable(context, type, name, &pHeader->info))
+    ఒకవేళ(p_శీర్షిక->దత్తాంశం_శీర్షిక_2.magic1==0xda &&
+        p_శీర్షిక->దత్తాంశం_శీర్షిక_2.magic2==0x27 &&
+        (isAcceptable==శూన్యసూచిక || isAcceptable(context, type, name, &p_శీర్షిక->info))
     ) {
-        rDataMem=UDataMemory_createNewInstance(fatalErr);
-        if (U_FAILURE(*fatalErr)) {
-            return nullptr;
+        r_దత్తాంశం_Mem=UData_జ్ఞాపకం_create_New_Instance(fatalErr);
+        ఒకవేళ (U_FAILURE(*fatalErr)) {
+            తిరిగి శూన్యసూచిక;
         }
-        rDataMem->pHeader = pHeader;
-    } else {
+        r_దత్తాంశం_Mem->p_శీర్షిక = p_శీర్షిక;
+    } లేకపోతే {
         /* the data is not acceptable, look further */
         /* If we eventually find something good, this errorcode will be */
         /*    cleared out.                                              */
         *nonFatalErr=U_INVALID_FORMAT_ERROR;
     }
-    return rDataMem;
+    తిరిగి r_దత్తాంశం_Mem;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromIndividualFiles(const char *pkgName, 
-        const char *dataPath, const char *tocEntryPathSuffix,
+స్థిర UData_జ్ఞాపకం *do_ఎక్కించు_From_Individual_Files(స్థిరరాశి అక్షరం *pkgName, 
+        స్థిరరాశి అక్షరం *దత్తాంశం_మార్గం, స్థిరరాశి అక్షరం *toc_నమోదు_మార్గం_Suffix,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *subErrorCode,
-             UErrorCode *pErrorCode)
+            స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name,
+             UData_జ్ఞాపకం_Is_Acceptable *isAcceptable, శూన్య *context,
+             UError_సంకేతం *sub_Error_సంకేతం,
+             UError_సంకేతం *p_Error_సంకేతం)
 {
-    const char         *pathBuffer;
-    UDataMemory         dataMemory;
-    UDataMemory *pEntryData;
+    స్థిరరాశి అక్షరం         *మార్గం_బఫరు;
+    UData_జ్ఞాపకం         దత్తాంశం_జ్ఞాపకం;
+    UData_జ్ఞాపకం *p_నమోదు_దత్తాంశం;
 
     /* look in ind. files: package\nam.typ  ========================= */
     /* init path iterator for individual files */
-    UDataPathIterator iter(dataPath, pkgName, path, tocEntryPathSuffix, false, pErrorCode);
+    UData_మార్గం_Iterator iter(దత్తాంశం_మార్గం, pkgName, మార్గం, toc_నమోదు_మార్గం_Suffix, అబద్ధం, p_Error_సంకేతం);
 
-    while ((pathBuffer = iter.next(pErrorCode)) != nullptr)
+    అయితే ((మార్గం_బఫరు = iter.next(p_Error_సంకేతం)) != శూన్యసూచిక)
     {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "UDATA: trying individual file %s\n", pathBuffer);
-#endif
-        if (uprv_mapFile(&dataMemory, pathBuffer, pErrorCode))
+#నిర్వచితమైతే UDATA_DEBUG
+        fprintf(stderr, "UDATA: trying individual file %s\n", మార్గం_బఫరు);
+#అయితే_ముగింపు
+        ఒకవేళ (uprv_mapFile(&దత్తాంశం_జ్ఞాపకం, మార్గం_బఫరు, p_Error_సంకేతం))
         {
-            pEntryData = checkDataItem(dataMemory.pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
-            if (pEntryData != nullptr) {
+            p_నమోదు_దత్తాంశం = check_దత్తాంశం_అంశం(దత్తాంశం_జ్ఞాపకం.p_శీర్షిక, isAcceptable, context, type, name, sub_Error_సంకేతం, p_Error_సంకేతం);
+            ఒకవేళ (p_నమోదు_దత్తాంశం != శూన్యసూచిక) {
                 /* Data is good.
                 *  Hand off ownership of the backing memory to the user's UDataMemory.
                 *  and return it.   */
-                pEntryData->mapAddr = dataMemory.mapAddr;
-                pEntryData->map     = dataMemory.map;
-                pEntryData->length  = dataMemory.length;
+                p_నమోదు_దత్తాంశం->mapAddr = దత్తాంశం_జ్ఞాపకం.mapAddr;
+                p_నమోదు_దత్తాంశం->map     = దత్తాంశం_జ్ఞాపకం.map;
+                p_నమోదు_దత్తాంశం->length  = దత్తాంశం_జ్ఞాపకం.length;
 
-#ifdef UDATA_DEBUG
-                fprintf(stderr, "** Mapped file: %s\n", pathBuffer);
-#endif
-                return pEntryData;
+#నిర్వచితమైతే UDATA_DEBUG
+                fprintf(stderr, "** Mapped file: %s\n", మార్గం_బఫరు);
+#అయితే_ముగింపు
+                తిరిగి p_నమోదు_దత్తాంశం;
             }
 
             /* the data is not acceptable, or some error occurred.  Either way, unmap the memory */
-            udata_close(&dataMemory);
+            udata_close(&దత్తాంశం_జ్ఞాపకం);
 
             /* If we had a nasty error, bail out completely.  */
-            if (U_FAILURE(*pErrorCode)) {
-                return nullptr;
+            ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+                తిరిగి శూన్యసూచిక;
             }
 
             /* Otherwise remember that we found data but didn't like it for some reason  */
-            *subErrorCode=U_INVALID_FORMAT_ERROR;
+            *sub_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
         }
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "%s\n", UDataMemory_isLoaded(&dataMemory)?"LOADED":"not loaded");
-#endif
+#నిర్వచితమైతే UDATA_DEBUG
+        fprintf(stderr, "%s\n", UData_జ్ఞాపకం_is_Loaded(&దత్తాంశం_జ్ఞాపకం)?"LOADED":"not loaded");
+#అయితే_ముగింపు
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName*/, 
-        const char * /*dataPath*/, const char * /*tocEntryPathSuffix*/, const char *tocEntryName,
+స్థిర UData_జ్ఞాపకం *do_ఎక్కించు_From_Common_దత్తాంశం(UBool isICUData, స్థిరరాశి అక్షరం * /*pkgName*/, 
+        స్థిరరాశి అక్షరం * /*dataPath*/, స్థిరరాశి అక్షరం * /*tocEntryPathSuffix*/, స్థిరరాశి అక్షరం *toc_నమోదు_Name,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *subErrorCode,
-             UErrorCode *pErrorCode)
+            స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name,
+             UData_జ్ఞాపకం_Is_Acceptable *isAcceptable, శూన్య *context,
+             UError_సంకేతం *sub_Error_సంకేతం,
+             UError_సంకేతం *p_Error_సంకేతం)
 {
-    UDataMemory        *pEntryData;
-    const DataHeader   *pHeader;
-    UDataMemory        *pCommonData;
-    int32_t            commonDataIndex;
-    UBool              checkedExtendedICUData = false;
+    UData_జ్ఞాపకం        *p_నమోదు_దత్తాంశం;
+    స్థిరరాశి దత్తాంశం_శీర్షిక   *p_శీర్షిక;
+    UData_జ్ఞాపకం        *p_Common_దత్తాంశం;
+    int32_t            common_దత్తాంశం_సూచీ;
+    UBool              checkedExtendedICUData = అబద్ధం;
     /* try to get common data.  The loop is for platforms such as the 390 that do
      *  not initially load the full set of ICU data.  If the lookup of an ICU data item
      *  fails, the full (but slower to load) set is loaded, the and the loop repeats,
@@ -1055,49 +1055,49 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
      *  The loop also handles the fallback to a .dat file if the application linked
      *   to the stub data library rather than a real library.
      */
-    for (commonDataIndex = isICUData ? 0 : -1;;) {
-        pCommonData=openCommonData(path, commonDataIndex, subErrorCode); /** search for pkg **/
+    కొరకు (common_దత్తాంశం_సూచీ = isICUData ? 0 : -1;;) {
+        p_Common_దత్తాంశం=open_Common_దత్తాంశం(మార్గం, common_దత్తాంశం_సూచీ, sub_Error_సంకేతం); /** search for pkg **/
 
-        if(U_SUCCESS(*subErrorCode) && pCommonData!=nullptr) {
+        ఒకవేళ(U_SUCCESS(*sub_Error_సంకేతం) && p_Common_దత్తాంశం!=శూన్యసూచిక) {
             int32_t length;
 
             /* look up the data piece in the common data */
-            pHeader=pCommonData->vFuncs->Lookup(pCommonData, tocEntryName, &length, subErrorCode);
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "%s: pHeader=%p - %s\n", tocEntryName, (void*) pHeader, u_errorName(*subErrorCode));
-#endif
+            p_శీర్షిక=p_Common_దత్తాంశం->vFuncs->Lookup(p_Common_దత్తాంశం, toc_నమోదు_Name, &length, sub_Error_సంకేతం);
+#నిర్వచితమైతే UDATA_DEBUG
+            fprintf(stderr, "%s: pHeader=%p - %s\n", toc_నమోదు_Name, (శూన్య*) p_శీర్షిక, u_errorName(*sub_Error_సంకేతం));
+#అయితే_ముగింపు
 
-            if(pHeader!=nullptr) {
-                pEntryData = checkDataItem(pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
-#ifdef UDATA_DEBUG
-                fprintf(stderr, "pEntryData=%p\n", (void*) pEntryData);
-#endif
-                if (U_FAILURE(*pErrorCode)) {
-                    return nullptr;
+            ఒకవేళ(p_శీర్షిక!=శూన్యసూచిక) {
+                p_నమోదు_దత్తాంశం = check_దత్తాంశం_అంశం(p_శీర్షిక, isAcceptable, context, type, name, sub_Error_సంకేతం, p_Error_సంకేతం);
+#నిర్వచితమైతే UDATA_DEBUG
+                fprintf(stderr, "pEntryData=%p\n", (శూన్య*) p_నమోదు_దత్తాంశం);
+#అయితే_ముగింపు
+                ఒకవేళ (U_FAILURE(*p_Error_సంకేతం)) {
+                    తిరిగి శూన్యసూచిక;
                 }
-                if (pEntryData != nullptr) {
-                    pEntryData->length = length;
-                    return pEntryData;
+                ఒకవేళ (p_నమోదు_దత్తాంశం != శూన్యసూచిక) {
+                    p_నమోదు_దత్తాంశం->length = length;
+                    తిరిగి p_నమోదు_దత్తాంశం;
                 }
             }
         }
         // If we failed due to being out-of-memory, then stop early and report the error.
-        if (*subErrorCode == U_MEMORY_ALLOCATION_ERROR) {
-            *pErrorCode = *subErrorCode;
-            return nullptr;
+        ఒకవేళ (*sub_Error_సంకేతం == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+            *p_Error_సంకేతం = *sub_Error_సంకేతం;
+            తిరిగి శూన్యసూచిక;
         }
         /* Data wasn't found.  If we were looking for an ICUData item and there is
          * more data available, load it and try again,
          * otherwise break out of this loop. */
-        if (!isICUData) {
-            return nullptr;
-        } else if (pCommonData != nullptr) {
-            ++commonDataIndex;  /* try the next data package */
-        } else if ((!checkedExtendedICUData) && extendICUData(subErrorCode)) {
-            checkedExtendedICUData = true;
+        ఒకవేళ (!isICUData) {
+            తిరిగి శూన్యసూచిక;
+        } లేకపోతే ఒకవేళ (p_Common_దత్తాంశం != శూన్యసూచిక) {
+            ++common_దత్తాంశం_సూచీ;  /* try the next data package */
+        } లేకపోతే ఒకవేళ ((!checkedExtendedICUData) && extendICUData(sub_Error_సంకేతం)) {
+            checkedExtendedICUData = నిజం;
             /* try this data package slot again: it changed from nullptr to non-nullptr */
-        } else {
-            return nullptr;
+        } లేకపోతే {
+            తిరిగి శూన్యసూచిక;
         }
     }
 }
@@ -1105,8 +1105,8 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
 /*
  * Identify the Time Zone resources that are subject to special override data loading.
  */
-static UBool isTimeZoneFile(const char *name, const char *type) {
-    return ((uprv_strcmp(type, "res") == 0) &&
+స్థిర UBool is_సమయం_Zone_File(స్థిరరాశి అక్షరం *name, స్థిరరాశి అక్షరం *type) {
+    తిరిగి ((uprv_strcmp(type, "res") == 0) &&
             (uprv_strcmp(name, "zoneinfo64") == 0 ||
              uprv_strcmp(name, "timezoneTypes") == 0 ||
              uprv_strcmp(name, "windowsZones") == 0 ||
@@ -1145,104 +1145,104 @@ static UBool isTimeZoneFile(const char *name, const char *type) {
  * main data loading functions                                                *
  *                                                                            *
  *----------------------------------------------------------------------------*/
-static UDataMemory *
-doOpenChoice(const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *pErrorCode)
+స్థిర UData_జ్ఞాపకం *
+doOpenChoice(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name,
+             UData_జ్ఞాపకం_Is_Acceptable *isAcceptable, శూన్య *context,
+             UError_సంకేతం *p_Error_సంకేతం)
 {
-    UDataMemory         *retVal = nullptr;
+    UData_జ్ఞాపకం         *retVal = శూన్యసూచిక;
 
-    const char         *dataPath;
+    స్థిరరాశి అక్షరం         *దత్తాంశం_మార్గం;
 
-    int32_t             tocEntrySuffixIndex;
-    const char         *tocEntryPathSuffix;
-    UErrorCode          subErrorCode=U_ZERO_ERROR;
-    const char         *treeChar;
+    int32_t             toc_నమోదు_Suffix_సూచీ;
+    స్థిరరాశి అక్షరం         *toc_నమోదు_మార్గం_Suffix;
+    UError_సంకేతం          sub_Error_సంకేతం=U_ZERO_ERROR;
+    స్థిరరాశి అక్షరం         *వృక్షం_Char;
 
-    UBool               isICUData = false;
+    UBool               isICUData = అబద్ధం;
 
 
-    FileTracer::traceOpen(path, type, name);
+    FileTracer::traceOpen(మార్గం, type, name);
 
 
     /* Is this path ICU data? */
-    if(path == nullptr ||
-       !strcmp(path, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
-       !uprv_strncmp(path, U_ICUDATA_NAME U_TREE_SEPARATOR_STRING, /* "icudt26e-" */
-                     uprv_strlen(U_ICUDATA_NAME U_TREE_SEPARATOR_STRING)) ||  
-       !uprv_strncmp(path, U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING, /* "ICUDATA-" */
-                     uprv_strlen(U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING))) {
-      isICUData = true;
+    ఒకవేళ(మార్గం == శూన్యసూచిక ||
+       !strcmp(మార్గం, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
+       !uprv_strncmp(మార్గం, U_ICUDATA_NAME U_వృక్షం_SEPARATOR_STRING, /* "icudt26e-" */
+                     uprv_strlen(U_ICUDATA_NAME U_వృక్షం_SEPARATOR_STRING)) ||  
+       !uprv_strncmp(మార్గం, U_ICUDATA_ALIAS U_వృక్షం_SEPARATOR_STRING, /* "ICUDATA-" */
+                     uprv_strlen(U_ICUDATA_ALIAS U_వృక్షం_SEPARATOR_STRING))) {
+      isICUData = నిజం;
     }
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
+#ఒకవేళ (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
     /* remap from alternate path char to the main one */
-    CharString altSepPath;
-    if(path) {
-        if(uprv_strchr(path,U_FILE_ALT_SEP_CHAR) != nullptr) {
-            altSepPath.append(path, *pErrorCode);
-            char *p;
-            while ((p = uprv_strchr(altSepPath.data(), U_FILE_ALT_SEP_CHAR)) != nullptr) {
+    CharString alt_Sep_మార్గం;
+    ఒకవేళ(మార్గం) {
+        ఒకవేళ(uprv_strchr(మార్గం,U_FILE_ALT_SEP_CHAR) != శూన్యసూచిక) {
+            alt_Sep_మార్గం.append(మార్గం, *p_Error_సంకేతం);
+            అక్షరం *p;
+            అయితే ((p = uprv_strchr(alt_Sep_మార్గం.దత్తాంశం(), U_FILE_ALT_SEP_CHAR)) != శూన్యసూచిక) {
                 *p = U_FILE_SEP_CHAR;
             }
-#if defined (UDATA_DEBUG)
-            fprintf(stderr, "Changed path from [%s] to [%s]\n", path, altSepPath.data());
-#endif
-            path = altSepPath.data();
+#ఒకవేళ defined (UDATA_DEBUG)
+            fprintf(stderr, "Changed path from [%s] to [%s]\n", మార్గం, alt_Sep_మార్గం.దత్తాంశం());
+#అయితే_ముగింపు
+            మార్గం = alt_Sep_మార్గం.దత్తాంశం();
         }
     }
-#endif
+#అయితే_ముగింపు
 
-    CharString tocEntryName; /* entry name in tree format. ex:  'icudt28b/coll/ar.res' */
-    CharString tocEntryPath; /* entry name in path format. ex:  'icudt28b\\coll\\ar.res' */
+    CharString toc_నమోదు_Name; /* entry name in tree format. ex:  'icudt28b/coll/ar.res' */
+    CharString toc_నమోదు_మార్గం; /* entry name in path format. ex:  'icudt28b\\coll\\ar.res' */
 
     CharString pkgName;
-    CharString treeName;
+    CharString వృక్షం_Name;
 
     /* ======= Set up strings */
-    if(path==nullptr) {
-        pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-    } else {
-        const char *pkg;
-        const char *first;
-        pkg = uprv_strrchr(path, U_FILE_SEP_CHAR);
-        first = uprv_strchr(path, U_FILE_SEP_CHAR);
-        if(uprv_pathIsAbsolute(path) || (pkg != first)) { /* more than one slash in the path- not a tree name */
+    ఒకవేళ(మార్గం==శూన్యసూచిక) {
+        pkgName.append(U_ICUDATA_NAME, *p_Error_సంకేతం);
+    } లేకపోతే {
+        స్థిరరాశి అక్షరం *pkg;
+        స్థిరరాశి అక్షరం *first;
+        pkg = uprv_strrchr(మార్గం, U_FILE_SEP_CHAR);
+        first = uprv_strchr(మార్గం, U_FILE_SEP_CHAR);
+        ఒకవేళ(uprv_మార్గం_Is_Absolute(మార్గం) || (pkg != first)) { /* more than one slash in the path- not a tree name */
             /* see if this is an /absolute/path/to/package  path */
-            if(pkg) {
-                pkgName.append(pkg+1, *pErrorCode);
-            } else {
-                pkgName.append(path, *pErrorCode);
+            ఒకవేళ(pkg) {
+                pkgName.append(pkg+1, *p_Error_సంకేతం);
+            } లేకపోతే {
+                pkgName.append(మార్గం, *p_Error_సంకేతం);
             }
-        } else {
-            treeChar = uprv_strchr(path, U_TREE_SEPARATOR);
-            if(treeChar) { 
-                treeName.append(treeChar+1, *pErrorCode); /* following '-' */
-                if(isICUData) {
-                    pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
-                    pkgName.append(path, static_cast<int32_t>(treeChar - path), *pErrorCode);
-                    if (first == nullptr) {
+        } లేకపోతే {
+            వృక్షం_Char = uprv_strchr(మార్గం, U_వృక్షం_SEPARATOR);
+            ఒకవేళ(వృక్షం_Char) { 
+                వృక్షం_Name.append(వృక్షం_Char+1, *p_Error_సంకేతం); /* following '-' */
+                ఒకవేళ(isICUData) {
+                    pkgName.append(U_ICUDATA_NAME, *p_Error_సంకేతం);
+                } లేకపోతే {
+                    pkgName.append(మార్గం, static_cast<int32_t>(వృక్షం_Char - మార్గం), *p_Error_సంకేతం);
+                    ఒకవేళ (first == శూన్యసూచిక) {
                         /*
                         This user data has no path, but there is a tree name.
                         Look up the correct path from the data cache later.
                         */
-                        path = pkgName.data();
+                        మార్గం = pkgName.దత్తాంశం();
                     }
                 }
-            } else {
-                if(isICUData) {
-                    pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
-                    pkgName.append(path, *pErrorCode);
+            } లేకపోతే {
+                ఒకవేళ(isICUData) {
+                    pkgName.append(U_ICUDATA_NAME, *p_Error_సంకేతం);
+                } లేకపోతే {
+                    pkgName.append(మార్గం, *p_Error_సంకేతం);
                 }
             }
         }
     }
 
-#ifdef UDATA_DEBUG
-    fprintf(stderr, " P=%s T=%s\n", pkgName.data(), treeName.data());
-#endif
+#నిర్వచితమైతే UDATA_DEBUG
+    fprintf(stderr, " P=%s T=%s\n", pkgName.దత్తాంశం(), వృక్షం_Name.దత్తాంశం());
+#అయితే_ముగింపు
 
     /* setting up the entry name and file name 
      * Make up a full name by appending the type to the supplied
@@ -1250,201 +1250,201 @@ doOpenChoice(const char *path, const char *type, const char *name,
      */
 
     /* prepend the package */
-    tocEntryName.append(pkgName, *pErrorCode);
-    tocEntryPath.append(pkgName, *pErrorCode);
-    tocEntrySuffixIndex = tocEntryName.length();
+    toc_నమోదు_Name.append(pkgName, *p_Error_సంకేతం);
+    toc_నమోదు_మార్గం.append(pkgName, *p_Error_సంకేతం);
+    toc_నమోదు_Suffix_సూచీ = toc_నమోదు_Name.length();
 
-    if(!treeName.isEmpty()) {
-        tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
-        tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
+    ఒకవేళ(!వృక్షం_Name.is_ఖాళీలు()) {
+        toc_నమోదు_Name.append(U_వృక్షం_నమోదు_SEP_CHAR, *p_Error_సంకేతం).append(వృక్షం_Name, *p_Error_సంకేతం);
+        toc_నమోదు_మార్గం.append(U_FILE_SEP_CHAR, *p_Error_సంకేతం).append(వృక్షం_Name, *p_Error_సంకేతం);
     }
 
-    tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
-    tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
-    if(type!=nullptr && *type!=0) {
-        tocEntryName.append(".", *pErrorCode).append(type, *pErrorCode);
-        tocEntryPath.append(".", *pErrorCode).append(type, *pErrorCode);
+    toc_నమోదు_Name.append(U_వృక్షం_నమోదు_SEP_CHAR, *p_Error_సంకేతం).append(name, *p_Error_సంకేతం);
+    toc_నమోదు_మార్గం.append(U_FILE_SEP_CHAR, *p_Error_సంకేతం).append(name, *p_Error_సంకేతం);
+    ఒకవేళ(type!=శూన్యసూచిక && *type!=0) {
+        toc_నమోదు_Name.append(".", *p_Error_సంకేతం).append(type, *p_Error_సంకేతం);
+        toc_నమోదు_మార్గం.append(".", *p_Error_సంకేతం).append(type, *p_Error_సంకేతం);
     }
     // The +1 is for the U_FILE_SEP_CHAR that is always appended above.
-    tocEntryPathSuffix = tocEntryPath.data() + tocEntrySuffixIndex + 1; /* suffix starts here */
+    toc_నమోదు_మార్గం_Suffix = toc_నమోదు_మార్గం.దత్తాంశం() + toc_నమోదు_Suffix_సూచీ + 1; /* suffix starts here */
 
-#ifdef UDATA_DEBUG
-    fprintf(stderr, " tocEntryName = %s\n", tocEntryName.data());
-    fprintf(stderr, " tocEntryPath = %s\n", tocEntryPath.data());
-#endif
+#నిర్వచితమైతే UDATA_DEBUG
+    fprintf(stderr, " tocEntryName = %s\n", toc_నమోదు_Name.దత్తాంశం());
+    fprintf(stderr, " tocEntryPath = %s\n", toc_నమోదు_మార్గం.దత్తాంశం());
+#అయితే_ముగింపు
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
-    if(path == nullptr) {
-        path = COMMON_DATA_NAME; /* "icudt26e" */
+#ఒకవేళ !defined(ICU_దత్తాంశం_DIR_WINDOWS)
+    ఒకవేళ(మార్గం == శూన్యసూచిక) {
+        మార్గం = COMMON_దత్తాంశం_NAME; /* "icudt26e" */
     }
-#else
+#లేకపోతే
     // When using the Windows system data, we expects only a single data file.
-    path = COMMON_DATA_NAME; /* "icudt26e" */
-#endif
+    మార్గం = COMMON_దత్తాంశం_NAME; /* "icudt26e" */
+#అయితే_ముగింపు
 
     /************************ Begin loop looking for ind. files ***************/
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "IND: inBasename = %s, pkg=%s\n", "(n/a)", packageNameFromPath(path));
-#endif
+#నిర్వచితమైతే UDATA_DEBUG
+    fprintf(stderr, "IND: inBasename = %s, pkg=%s\n", "(n/a)", package_Name_From_మార్గం(మార్గం));
+#అయితే_ముగింపు
 
     /* End of dealing with a null basename */
-    dataPath = u_getDataDirectory();
+    దత్తాంశం_మార్గం = u_get_దత్తాంశం_Directory();
 
     /****    Time zone individual files override  */
-    if (isICUData && type != nullptr && isTimeZoneFile(name, type)) {
-        const char *tzFilesDir = u_getTimeZoneFilesDirectory(pErrorCode);
-        if (tzFilesDir[0] != 0) {
-#ifdef UDATA_DEBUG
+    ఒకవేళ (isICUData && type != శూన్యసూచిక && is_సమయం_Zone_File(name, type)) {
+        స్థిరరాశి అక్షరం *tzFilesDir = u_get_సమయం_Zone_Files_Directory(p_Error_సంకేతం);
+        ఒకవేళ (tzFilesDir[0] != 0) {
+#నిర్వచితమైతే UDATA_DEBUG
             fprintf(stderr, "Trying Time Zone Files directory = %s\n", tzFilesDir);
-#endif
-            retVal = doLoadFromIndividualFiles(/* pkgName.data() */ "", tzFilesDir, tocEntryPathSuffix,
-                            /* path */ "", type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+#అయితే_ముగింపు
+            retVal = do_ఎక్కించు_From_Individual_Files(/* pkgName.data() */ "", tzFilesDir, toc_నమోదు_మార్గం_Suffix,
+                            /*మార్గం*/ "", type, name, isAcceptable, context, &sub_Error_సంకేతం, p_Error_సంకేతం);
+            ఒకవేళ((retVal != శూన్యసూచిక) || U_FAILURE(*p_Error_సంకేతం)) {
+                తిరిగి retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  - only if packages are first. */
-    if(gDataFileAccess == UDATA_PACKAGES_FIRST) {
-#ifdef UDATA_DEBUG
+    ఒకవేళ(g_దత్తాంశం_File_Access == UDATA_PACKAGES_మొదటి) {
+#నిర్వచితమైతే UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_PACKAGES_FIRST)\n");
-#endif
+#అయితే_ముగింపు
         /* #2 */
-        retVal = doLoadFromCommonData(isICUData, 
-                            pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+        retVal = do_ఎక్కించు_From_Common_దత్తాంశం(isICUData, 
+                            pkgName.దత్తాంశం(), దత్తాంశం_మార్గం, toc_నమోదు_మార్గం_Suffix, toc_నమోదు_Name.దత్తాంశం(),
+                            మార్గం, type, name, isAcceptable, context, &sub_Error_సంకేతం, p_Error_సంకేతం);
+        ఒకవేళ((retVal != శూన్యసూచిక) || U_FAILURE(*p_Error_సంకేతం)) {
+            తిరిగి retVal;
         }
     }
 
     /****    INDIVIDUAL FILES  */
-    if((gDataFileAccess==UDATA_PACKAGES_FIRST) ||
-       (gDataFileAccess==UDATA_FILES_FIRST)) {
-#ifdef UDATA_DEBUG
+    ఒకవేళ((g_దత్తాంశం_File_Access==UDATA_PACKAGES_మొదటి) ||
+       (g_దత్తాంశం_File_Access==UDATA_FILES_మొదటి)) {
+#నిర్వచితమైతే UDATA_DEBUG
         fprintf(stderr, "Trying individual files\n");
-#endif
+#అయితే_ముగింపు
         /* Check to make sure that there is a dataPath to iterate over */
-        if ((dataPath && *dataPath) || !isICUData) {
-            retVal = doLoadFromIndividualFiles(pkgName.data(), dataPath, tocEntryPathSuffix,
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+        ఒకవేళ ((దత్తాంశం_మార్గం && *దత్తాంశం_మార్గం) || !isICUData) {
+            retVal = do_ఎక్కించు_From_Individual_Files(pkgName.దత్తాంశం(), దత్తాంశం_మార్గం, toc_నమోదు_మార్గం_Suffix,
+                            మార్గం, type, name, isAcceptable, context, &sub_Error_సంకేతం, p_Error_సంకేతం);
+            ఒకవేళ((retVal != శూన్యసూచిక) || U_FAILURE(*p_Error_సంకేతం)) {
+                తిరిగి retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  */
-    if((gDataFileAccess==UDATA_ONLY_PACKAGES) || 
-       (gDataFileAccess==UDATA_FILES_FIRST)) {
-#ifdef UDATA_DEBUG
+    ఒకవేళ((g_దత్తాంశం_File_Access==UDATA_ONLY_PACKAGES) || 
+       (g_దత్తాంశం_File_Access==UDATA_FILES_మొదటి)) {
+#నిర్వచితమైతే UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_ONLY_PACKAGES || UDATA_FILES_FIRST)\n");
-#endif
-        retVal = doLoadFromCommonData(isICUData,
-                            pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+#అయితే_ముగింపు
+        retVal = do_ఎక్కించు_From_Common_దత్తాంశం(isICUData,
+                            pkgName.దత్తాంశం(), దత్తాంశం_మార్గం, toc_నమోదు_మార్గం_Suffix, toc_నమోదు_Name.దత్తాంశం(),
+                            మార్గం, type, name, isAcceptable, context, &sub_Error_సంకేతం, p_Error_సంకేతం);
+        ఒకవేళ((retVal != శూన్యసూచిక) || U_FAILURE(*p_Error_సంకేతం)) {
+            తిరిగి retVal;
         }
     }
     
     /* Load from DLL.  If we haven't attempted package load, we also haven't had any chance to
         try a DLL (static or setCommonData/etc)  load.
          If we ever have a "UDATA_ONLY_FILES", add it to the or list here.  */  
-    if(gDataFileAccess==UDATA_NO_FILES) {
-#ifdef UDATA_DEBUG
+    ఒకవేళ(g_దత్తాంశం_File_Access==UDATA_NO_FILES) {
+#నిర్వచితమైతే UDATA_DEBUG
         fprintf(stderr, "Trying common data (UDATA_NO_FILES)\n");
-#endif
-        retVal = doLoadFromCommonData(isICUData,
-                            pkgName.data(), "", tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+#అయితే_ముగింపు
+        retVal = do_ఎక్కించు_From_Common_దత్తాంశం(isICUData,
+                            pkgName.దత్తాంశం(), "", toc_నమోదు_మార్గం_Suffix, toc_నమోదు_Name.దత్తాంశం(),
+                            మార్గం, type, name, isAcceptable, context, &sub_Error_సంకేతం, p_Error_సంకేతం);
+        ఒకవేళ((retVal != శూన్యసూచిక) || U_FAILURE(*p_Error_సంకేతం)) {
+            తిరిగి retVal;
         }
     }
 
     /* data not found */
-    if(U_SUCCESS(*pErrorCode)) {
-        if(U_SUCCESS(subErrorCode)) {
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం)) {
+        ఒకవేళ(U_SUCCESS(sub_Error_సంకేతం)) {
             /* file not found */
-            *pErrorCode=U_FILE_ACCESS_ERROR;
-        } else {
+            *p_Error_సంకేతం=U_FILE_ACCESS_ERROR;
+        } లేకపోతే {
             /* entry point not found or rejected */
-            *pErrorCode=subErrorCode;
+            *p_Error_సంకేతం=sub_Error_సంకేతం;
         }
     }
-    return retVal;
+    తిరిగి retVal;
 }
 
 
 
 /* API ---------------------------------------------------------------------- */
 
-U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
-           UErrorCode *pErrorCode) {
-#ifdef UDATA_DEBUG
-  fprintf(stderr, "udata_open(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
+U_CAPI UData_జ్ఞాపకం * U_EXPORT2
+udata_open(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name,
+           UError_సంకేతం *p_Error_సంకేతం) {
+#నిర్వచితమైతే UDATA_DEBUG
+  fprintf(stderr, "udata_open(): Opening: %s : %s . %s\n", (మార్గం?మార్గం:"nullptr"), name, type);
     fflush(stderr);
-#endif
+#అయితే_ముగింపు
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, nullptr, nullptr, pErrorCode);
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే ఒకవేళ(name==శూన్యసూచిక || *name==0) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే {
+        తిరిగి doOpenChoice(మార్గం, type, name, శూన్యసూచిక, శూన్యసూచిక, p_Error_సంకేతం);
     }
 }
 
 
 
-U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
-                 UDataMemoryIsAcceptable *isAcceptable, void *context,
-                 UErrorCode *pErrorCode) {
-#ifdef UDATA_DEBUG
-  fprintf(stderr, "udata_openChoice(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
-#endif
+U_CAPI UData_జ్ఞాపకం * U_EXPORT2
+udata_openChoice(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name,
+                 UData_జ్ఞాపకం_Is_Acceptable *isAcceptable, శూన్య *context,
+                 UError_సంకేతం *p_Error_సంకేతం) {
+#నిర్వచితమైతే UDATA_DEBUG
+  fprintf(stderr, "udata_openChoice(): Opening: %s : %s . %s\n", (మార్గం?మార్గం:"nullptr"), name, type);
+#అయితే_ముగింపు
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0 || isAcceptable==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, isAcceptable, context, pErrorCode);
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే ఒకవేళ(name==శూన్యసూచిక || *name==0 || isAcceptable==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే {
+        తిరిగి doOpenChoice(మార్గం, type, name, isAcceptable, context, p_Error_సంకేతం);
     }
 }
 
 
 
-U_CAPI void U_EXPORT2
-udata_getInfo(UDataMemory *pData, UDataInfo *pInfo) {
-    if(pInfo!=nullptr) {
-        if(pData!=nullptr && pData->pHeader!=nullptr) {
-            const UDataInfo *info=&pData->pHeader->info;
-            uint16_t dataInfoSize=udata_getInfoSize(info);
-            if(pInfo->size>dataInfoSize) {
-                pInfo->size=dataInfoSize;
+U_CAPI శూన్య U_EXPORT2
+udata_getInfo(UData_జ్ఞాపకం *p_దత్తాంశం, UDataInfo *pInfo) {
+    ఒకవేళ(pInfo!=శూన్యసూచిక) {
+        ఒకవేళ(p_దత్తాంశం!=శూన్యసూచిక && p_దత్తాంశం->p_శీర్షిక!=శూన్యసూచిక) {
+            స్థిరరాశి UDataInfo *info=&p_దత్తాంశం->p_శీర్షిక->info;
+            uint16_t దత్తాంశం_Info_కొలత=udata_get_Info_కొలత(info);
+            ఒకవేళ(pInfo->size>దత్తాంశం_Info_కొలత) {
+                pInfo->size=దత్తాంశం_Info_కొలత;
             }
-            uprv_memcpy((uint16_t *)pInfo+1, (const uint16_t *)info+1, pInfo->size-2);
-            if(info->isBigEndian!=U_IS_BIG_ENDIAN) {
+            uprv_memcpy((uint16_t *)pInfo+1, (స్థిరరాశి uint16_t *)info+1, pInfo->size-2);
+            ఒకవేళ(info->isBigEndian!=U_IS_BIG_ENDIAN) {
                 /* opposite endianness */
-                uint16_t x=info->reservedWord;
-                pInfo->reservedWord=(uint16_t)((x<<8)|(x>>8));
+                uint16_t x=info->reserved_మాట;
+                pInfo->reserved_మాట=(uint16_t)((x<<8)|(x>>8));
             }
-        } else {
+        } లేకపోతే {
             pInfo->size=0;
         }
     }
 }
 
 
-U_CAPI void U_EXPORT2 udata_setFileAccess(UDataFileAccess access, UErrorCode * /*status*/)
+U_CAPI శూన్య U_EXPORT2 udata_సమితి_File_Access(UDataFileAccess access, UError_సంకేతం * /*స్థితి*/)
 {
     // Note: this function is documented as not thread safe.
-    gDataFileAccess = access;
+    g_దత్తాంశం_File_Access = access;
 }

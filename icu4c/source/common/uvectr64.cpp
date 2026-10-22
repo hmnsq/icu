@@ -7,13 +7,13 @@
 ******************************************************************************
 */
 
-#include "uvectr64.h"
-#include "cmemory.h"
-#include "putilimp.h"
+#అన్తర్భావ "uvectr64.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "putilimp.h"
 
 U_NAMESPACE_BEGIN
 
-#define DEFAULT_CAPACITY 8
+#నిర్వచించు DEFAULT_సామర్థ్యం 8
 
 /*
  * Constants for hinting whether a key is an integer
@@ -23,166 +23,166 @@ U_NAMESPACE_BEGIN
  
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UVector64)
 
-UVector64::UVector64(UErrorCode &status) :
+UVector64::UVector64(UError_సంకేతం &స్థితి_2) :
     count(0),
     capacity(0),
-    maxCapacity(0),
-    elements(nullptr)
+    max_సామర్థ్యం(0),
+    elements(శూన్యసూచిక)
 {
-    _init(DEFAULT_CAPACITY, status);
+    _init(DEFAULT_సామర్థ్యం, స్థితి_2);
 }
 
-UVector64::UVector64(int32_t initialCapacity, UErrorCode &status) :
+UVector64::UVector64(int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2) :
     count(0),
     capacity(0),
-    maxCapacity(0),
-    elements(nullptr)
+    max_సామర్థ్యం(0),
+    elements(శూన్యసూచిక)
 {
-    _init(initialCapacity, status);
+    _init(initial_సామర్థ్యం, స్థితి_2);
 }
 
 
 
-void UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
+శూన్య UVector64::_init(int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
-        initialCapacity = DEFAULT_CAPACITY;
+    ఒకవేళ (initial_సామర్థ్యం < 1) {
+        initial_సామర్థ్యం = DEFAULT_సామర్థ్యం;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
-        initialCapacity = maxCapacity;
+    ఒకవేళ (max_సామర్థ్యం>0 && max_సామర్థ్యం<initial_సామర్థ్యం) {
+        initial_సామర్థ్యం = max_సామర్థ్యం;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) {
-        initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
+    ఒకవేళ (initial_సామర్థ్యం > static_cast<int32_t>(INT32_MAX / పరిమాణం(int64_t))) {
+        initial_సామర్థ్యం = uprv_min(DEFAULT_సామర్థ్యం, max_సామర్థ్యం);
     }
-    elements = static_cast<int64_t*>(uprv_malloc(sizeof(int64_t) * initialCapacity));
-    if (elements == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
-        capacity = initialCapacity;
+    elements = static_cast<int64_t*>(uprv_malloc(పరిమాణం(int64_t) * initial_సామర్థ్యం));
+    ఒకవేళ (elements == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    } లేకపోతే {
+        capacity = initial_సామర్థ్యం;
     }
 }
 
 UVector64::~UVector64() {
     uprv_free(elements);
-    elements = nullptr;
+    elements = శూన్యసూచిక;
 }
 
 /**
  * Assign this object to another (make this a copy of 'other').
  */
-void UVector64::assign(const UVector64& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
-        setSize(other.count);
-        for (int32_t i=0; i<other.count; ++i) {
+శూన్య UVector64::assign(స్థిరరాశి UVector64& other, UError_సంకేతం &ec) {
+    ఒకవేళ (ensure_సామర్థ్యం(other.count, ec)) {
+        సమితి_కొలత(other.count);
+        కొరకు (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
         }
     }
 }
 
 
-bool UVector64::operator==(const UVector64& other) {
+తార్కిక UVector64::క్రియాకారకం==(స్థిరరాశి UVector64& other) {
     int32_t i;
-    if (count != other.count) return false;
-    for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    ఒకవేళ (count != other.count) తిరిగి అబద్ధం;
+    కొరకు (i=0; i<count; ++i) {
+        ఒకవేళ (elements[i] != other.elements[i]) {
+            తిరిగి అబద్ధం;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 
-void UVector64::setElementAt(int64_t elem, int32_t index) {
-    if (0 <= index && index < count) {
-        elements[index] = elem;
+శూన్య UVector64::సమితి_Element_At(int64_t elem, int32_t సూచీ) {
+    ఒకవేళ (0 <= సూచీ && సూచీ < count) {
+        elements[సూచీ] = elem;
     }
     /* else index out of range */
 }
 
-void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status) {
+శూన్య UVector64::చొప్పించు_Element_At(int64_t elem, int32_t సూచీ, UError_సంకేతం &స్థితి_2) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
-        for (int32_t i=count; i>index; --i) {
+    ఒకవేళ (0 <= సూచీ && సూచీ <= count && ensure_సామర్థ్యం(count + 1, స్థితి_2)) {
+        కొరకు (int32_t i=count; i>సూచీ; --i) {
             elements[i] = elements[i-1];
         }
-        elements[index] = elem;
+        elements[సూచీ] = elem;
         ++count;
     }
     /* else index out of range */
 }
 
-void UVector64::removeAllElements() {
+శూన్య UVector64::removeAllElements() {
     count = 0;
 }
 
-UBool UVector64::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool UVector64::expand_సామర్థ్యం(int32_t minimum_సామర్థ్యం, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    if (minimumCapacity < 0) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    ఒకవేళ (minimum_సామర్థ్యం < 0) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి అబద్ధం;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    ఒకవేళ (capacity >= minimum_సామర్థ్యం) {
+        తిరిగి నిజం;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
-        status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+    ఒకవేళ (max_సామర్థ్యం>0 && minimum_సామర్థ్యం>max_సామర్థ్యం) {
+        స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+        తిరిగి అబద్ధం;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    ఒకవేళ (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి అబద్ధం;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
-        newCap = minimumCapacity;
+    ఒకవేళ (newCap < minimum_సామర్థ్యం) {
+        newCap = minimum_సామర్థ్యం;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
-        newCap = maxCapacity;
+    ఒకవేళ (max_సామర్థ్యం > 0 && newCap > max_సామర్థ్యం) {
+        newCap = max_సామర్థ్యం;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check
+    ఒకవేళ (newCap > static_cast<int32_t>(INT32_MAX / పరిమాణం(int64_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి అబద్ధం;
     }
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * newCap));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, పరిమాణం(int64_t) * newCap));
+    ఒకవేళ (newElems == శూన్యసూచిక) {
         // We keep the original contents on the memory failure on realloc.
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి అబద్ధం;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    తిరిగి నిజం;
 }
 
-void UVector64::setMaxCapacity(int32_t limit) {
-    U_ASSERT(limit >= 0);
-    if (limit < 0) {
-        limit = 0;
+శూన్య UVector64::సమితి_Max_సామర్థ్యం(int32_t హద్దు) {
+    U_ASSERT(హద్దు >= 0);
+    ఒకవేళ (హద్దు < 0) {
+        హద్దు = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check for realloc
+    ఒకవేళ (హద్దు > static_cast<int32_t>(INT32_MAX / పరిమాణం(int64_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        తిరిగి;
     }
-    maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    max_సామర్థ్యం = హద్దు;
+    ఒకవేళ (capacity <= max_సామర్థ్యం || max_సామర్థ్యం == 0) {
         // Current capacity is within the new limit.
-        return;
+        తిరిగి;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * maxCapacity));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, పరిమాణం(int64_t) * max_సామర్థ్యం));
+    ఒకవేళ (newElems == శూన్యసూచిక) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        తిరిగి;
     }
     elements = newElems;
-    capacity = maxCapacity;
-    if (count > capacity) {
+    capacity = max_సామర్థ్యం;
+    ఒకవేళ (count > capacity) {
         count = capacity;
     }
 }
@@ -193,22 +193,22 @@ void UVector64::setMaxCapacity(int32_t limit) {
  * newSize.  If newSize is larger, grow the array, filling in new
  * slots with nullptr.
  */
-void UVector64::setSize(int32_t newSize) {
+శూన్య UVector64::సమితి_కొలత(int32_t new_కొలత) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    ఒకవేళ (new_కొలత < 0) {
+        తిరిగి;
     }
-    if (newSize > count) {
-        UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+    ఒకవేళ (new_కొలత > count) {
+        UError_సంకేతం ec = U_ZERO_ERROR;
+        ఒకవేళ (!ensure_సామర్థ్యం(new_కొలత, ec)) {
+            తిరిగి;
         }
-        for (i=count; i<newSize; ++i) {
+        కొరకు (i=count; i<new_కొలత; ++i) {
             elements[i] = 0;
         }
     } 
-    count = newSize;
+    count = new_కొలత;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 

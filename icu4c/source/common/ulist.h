@@ -7,44 +7,44 @@
 ******************************************************************************
 */
 
-#ifndef ULIST_H
-#define ULIST_H
+#నిర్వచితం_కాకపోతే ULIST_H
+#నిర్వచించు ULIST_H
 
-#include "unicode/utypes.h"
-#include "unicode/uenum.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uenum.h"
 
-struct UList;
-typedef struct UList UList;
+నిర్మాణం UList;
+రకనిర్వచనం నిర్మాణం UList UList;
 
-U_CAPI UList * U_EXPORT2 ulist_createEmptyList(UErrorCode *status);
+U_CAPI UList * U_EXPORT2 ulist_create_ఖాళీలు_List(UError_సంకేతం *స్థితి_2);
 
-U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool forceDelete, UErrorCode *status);
+U_CAPI శూన్య U_EXPORT2 ulist_కూడు_అంశం_చివర_List(UList *list, స్థిరరాశి శూన్య *దత్తాంశం, UBool forceDelete, UError_సంకేతం *స్థితి_2);
 
-U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBool forceDelete, UErrorCode *status);
+U_CAPI శూన్య U_EXPORT2 ulist_కూడు_అంశం_Begin_List(UList *list, స్థిరరాశి శూన్య *దత్తాంశం, UBool forceDelete, UError_సంకేతం *స్థితి_2);
 
-U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const char *data, int32_t length);
+U_CAPI UBool U_EXPORT2 ulist_కలిగియుంది_String(స్థిరరాశి UList *list, స్థిరరాశి అక్షరం *దత్తాంశం, int32_t నిడివి);
 
-U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const char *data);
+U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, స్థిరరాశి అక్షరం *దత్తాంశం);
 
-U_CAPI void *U_EXPORT2 ulist_getNext(UList *list);
+U_CAPI శూన్య *U_EXPORT2 ulist_get_తదుపరి(UList *list);
 
-U_CAPI int32_t U_EXPORT2 ulist_getListSize(const UList *list);
+U_CAPI int32_t U_EXPORT2 ulist_get_List_కొలత(స్థిరరాశి UList *list);
 
-U_CAPI void U_EXPORT2 ulist_resetList(UList *list);
+U_CAPI శూన్య U_EXPORT2 ulist_resetList(UList *list);
 
-U_CAPI void U_EXPORT2 ulist_deleteList(UList *list);
+U_CAPI శూన్య U_EXPORT2 ulist_deleteList(UList *list);
 
 /*
  * The following are for use when creating UEnumeration object backed by UList.
  */
-U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en);
+U_CAPI శూన్య U_EXPORT2 ulist_close_keyword_విలువలు_iterator(UEnumeration *en);
 
-U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status);
+U_CAPI int32_t U_EXPORT2 ulist_లెక్క_keyword_విలువలు(UEnumeration *en, UError_సంకేతం *స్థితి_2);
 
-U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration* en, int32_t *resultLength, UErrorCode* status);
+U_CAPI స్థిరరాశి అక్షరం * U_EXPORT2 ulist_తదుపరి_keyword_విలువ(UEnumeration* en, int32_t *ఫలితం_నిడివి, UError_సంకేతం* స్థితి_2);
 
-U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration* en, UErrorCode* status);
+U_CAPI శూన్య U_EXPORT2 ulist_reset_keyword_విలువలు_iterator(UEnumeration* en, UError_సంకేతం* స్థితి_2);
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en);
 
-#endif
+#అయితే_ముగింపు

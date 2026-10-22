@@ -8,22 +8,22 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ఒకవేళ !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/resbund.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "servloc.h"
+#అన్తర్భావ "ustrfmt.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#నిర్వచించు UNDERSCORE_CHAR ((char16_t)0x005f)
+#నిర్వచించు AT_SIGN_CHAR    ((char16_t)64)
+#నిర్వచించు PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
@@ -31,49 +31,49 @@ U_NAMESPACE_BEGIN
  ******************************************************************
  */
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const UnicodeString& locale,
-                                               int32_t kind,
+Simple_Locale_కీలకం_Factory::Simple_Locale_కీలకం_Factory(UObject* obj_గమ్యం_Adopt,
+                                               స్థిరరాశి UnicodeString& locale,
+                                               int32_t రకం,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_కీలకం_Factory(coverage)
+  , _obj(obj_గమ్యం_Adopt)
   , _id(locale)
-  , _kind(kind)
+  , రకం_2(రకం)
 {
 }
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const Locale& locale,
-                                               int32_t kind,
+Simple_Locale_కీలకం_Factory::Simple_Locale_కీలకం_Factory(UObject* obj_గమ్యం_Adopt,
+                                               స్థిరరాశి Locale& locale,
+                                               int32_t రకం,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_కీలకం_Factory(coverage)
+  , _obj(obj_గమ్యం_Adopt)
   , _id()
-  , _kind(kind)
+  , రకం_2(రకం)
 {
     LocaleUtility::initNameFromLocale(locale, _id);
 }
 
-SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
+Simple_Locale_కీలకం_Factory::~Simple_Locale_కీలకం_Factory()
 {
-  delete _obj;
-  _obj = nullptr;
+  తొలగించు _obj;
+  _obj = శూన్యసూచిక;
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+Simple_Locale_కీలకం_Factory::create(స్థిరరాశి ICUService_కీలకం& కీలకం, స్థిరరాశి ICUService* service, UError_సంకేతం& స్థితి_2) స్థిరరాశి
 {
-    if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
-            UnicodeString keyID;
-            lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        స్థిరరాశి Locale_కీలకం& lkey = static_cast<స్థిరరాశి Locale_కీలకం&>(కీలకం);
+        ఒకవేళ (రకం_2 == Locale_కీలకం::రకం_ANY || రకం_2 == lkey.రకం()) {
+            UnicodeString కీలకం_ID;
+            lkey.currentID(కీలకం_ID);
+            ఒకవేళ (_id == కీలకం_ID) {
+                తిరిగి service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 //UBool
@@ -82,42 +82,42 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //    return id == _id;
 //}
 
-void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+శూన్య
+Simple_Locale_కీలకం_Factory::updateVisibleIDs(Hashtable& ఫలితం, UError_సంకేతం& స్థితి_2) స్థిరరాశి
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
-            result.remove(_id);
-        } else {
-            result.put(_id, (void*)this, status);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        ఒకవేళ (_coverage & 0x1) {
+            ఫలితం.remove(_id);
+        } లేకపోతే {
+            ఫలితం.put(_id, (శూన్య*)ఇది, స్థితి_2);
         }
     }
 }
 
-#ifdef SERVICE_DEBUG
+#నిర్వచితమైతే SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+Simple_Locale_కీలకం_Factory::debug(UnicodeString& ఫలితం) స్థిరరాశి
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", id: ");
-    result.append(_id);
-    result.append((UnicodeString)", kind: ");
-    result.append(_kind);
-    return result;
+    Locale_కీలకం_Factory::debug(ఫలితం);
+    ఫలితం.append((UnicodeString)", id: ");
+    ఫలితం.append(_id);
+    ఫలితం.append((UnicodeString)", kind: ");
+    ఫలితం.append(రకం_2);
+    తిరిగి ఫలితం;
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+Simple_Locale_కీలకం_Factory::debugClass(UnicodeString& ఫలితం) స్థిరరాశి
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    తిరిగి ఫలితం.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
-#endif
+#అయితే_ముగింపు
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleLocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Simple_Locale_కీలకం_Factory)
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#అయితే_ముగింపు
 
 

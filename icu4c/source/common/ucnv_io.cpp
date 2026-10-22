@@ -29,23 +29,23 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/udata.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/udata.h"
 
-#include "umutex.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "udataswp.h"
-#include "udatamem.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ucnv_io.h"
-#include "uenumimp.h"
-#include "ucln_cmn.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "uarrsort.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "udataswp.h"
+#అన్తర్భావ "udatamem.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ucnv_io.h"
+#అన్తర్భావ "uenumimp.h"
+#అన్తర్భావ "ucln_cmn.h"
 
 /* Format of cnvalias.icu -----------------------------------------------------
  *
@@ -167,202 +167,202 @@
 /**
  * Used by the UEnumeration API
  */
-typedef struct UAliasContext {
-    uint32_t listOffset;
+రకనిర్వచనం నిర్మాణం UAliasContext {
+    uint32_t list_స్థానభ్రంశం;
     uint32_t listIdx;
 } UAliasContext;
 
-static const char DATA_NAME[] = "cnvalias";
-static const char DATA_TYPE[] = "icu";
+స్థిర స్థిరరాశి అక్షరం దత్తాంశం_NAME[] = "cnvalias";
+స్థిర స్థిరరాశి అక్షరం దత్తాంశం_TYPE[] = "icu";
 
-static UDataMemory *gAliasData=nullptr;
-static icu::UInitOnce gAliasDataInitOnce {};
+స్థిర UData_జ్ఞాపకం *g_Alias_దత్తాంశం=శూన్యసూచిక;
+స్థిర icu::UInitOnce g_Alias_దత్తాంశం_Init_Once {};
 
-enum {
-    tocLengthIndex=0,
-    converterListIndex=1,
-    tagListIndex=2,
-    aliasListIndex=3,
-    untaggedConvArrayIndex=4,
-    taggedAliasArrayIndex=5,
-    taggedAliasListsIndex=6,
-    tableOptionsIndex=7,
-    stringTableIndex=8,
-    normalizedStringTableIndex=9,
-    offsetsCount,    /* length of the swapper's temporary offsets[] */
-    minTocLength=8 /* min. tocLength in the file, does not count the tocLengthIndex! */
+గణన {
+    toc_నిడివి_సూచీ=0,
+    converter_List_సూచీ=1,
+    ట్యాగ్_List_సూచీ=2,
+    alias_List_సూచీ=3,
+    untagged_Conv_Array_సూచీ=4,
+    tagged_Alias_Array_సూచీ=5,
+    tagged_Alias_Lists_సూచీ=6,
+    పట్టిక_Options_సూచీ=7,
+    string_పట్టిక_సూచీ=8,
+    normalized_String_పట్టిక_సూచీ=9,
+    offsets_లెక్క,    /* length of the swapper's temporary offsets[] */
+    min_Toc_నిడివి=8 /* min. tocLength in the file, does not count the tocLengthIndex! */
 };
 
-static const UConverterAliasOptions defaultTableOptions = {
+స్థిర స్థిరరాశి UConverterAliasOptions default_పట్టిక_Options = {
     UCNV_IO_UNNORMALIZED,
     0 /* containsCnvOptionInfo */
 };
-static UConverterAlias gMainTable;
+స్థిర UConverterAlias g_Main_పట్టిక;
 
-#define GET_STRING(idx) (const char *)(gMainTable.stringTable + (idx))
-#define GET_NORMALIZED_STRING(idx) (const char *)(gMainTable.normalizedStringTable + (idx))
+#నిర్వచించు GET_STRING(idx) (స్థిరరాశి అక్షరం *)(g_Main_పట్టిక.string_పట్టిక + (idx))
+#నిర్వచించు GET_NORMALIZED_STRING(idx) (స్థిరరాశి అక్షరం *)(g_Main_పట్టిక.normalized_String_పట్టిక + (idx))
 
-static UBool U_CALLCONV
-isAcceptable(void * /*context*/,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
-    return
+స్థిర UBool U_CALLCONV
+isAcceptable(శూన్య * /*context*/,
+             స్థిరరాశి అక్షరం * /*type*/, స్థిరరాశి అక్షరం * /*name*/,
+             స్థిరరాశి UDataInfo *pInfo) {
+    తిరిగి
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
-        pInfo->dataFormat[0]==0x43 &&   /* dataFormat="CvAl" */
-        pInfo->dataFormat[1]==0x76 &&
-        pInfo->dataFormat[2]==0x41 &&
-        pInfo->dataFormat[3]==0x6c &&
-        pInfo->formatVersion[0]==3;
+        pInfo->దత్తాంశం_Format[0]==0x43 &&   /* dataFormat="CvAl" */
+        pInfo->దత్తాంశం_Format[1]==0x76 &&
+        pInfo->దత్తాంశం_Format[2]==0x41 &&
+        pInfo->దత్తాంశం_Format[3]==0x6c &&
+        pInfo->format_సంస్కరణ[0]==3;
 }
 
-static UBool U_CALLCONV ucnv_io_cleanup()
+స్థిర UBool U_CALLCONV ucnv_io_cleanup()
 {
-    if (gAliasData) {
-        udata_close(gAliasData);
-        gAliasData = nullptr;
+    ఒకవేళ (g_Alias_దత్తాంశం) {
+        udata_close(g_Alias_దత్తాంశం);
+        g_Alias_దత్తాంశం = శూన్యసూచిక;
     }
-    gAliasDataInitOnce.reset();
+    g_Alias_దత్తాంశం_Init_Once.reset();
 
-    uprv_memset(&gMainTable, 0, sizeof(gMainTable));
+    uprv_memset(&g_Main_పట్టిక, 0, పరిమాణం(g_Main_పట్టిక));
 
-    return true;                   /* Everything was cleaned up */
+    తిరిగి నిజం;                   /* Everything was cleaned up */
 }
 
-static void U_CALLCONV initAliasData(UErrorCode &errCode) {
-    UDataMemory *data;
-    const uint16_t *table;
-    const uint32_t *sectionSizes;
-    uint32_t tableStart;
-    uint32_t currOffset;
-    int32_t sizeOfData;
-    int32_t sizeOfTOC;
+స్థిర శూన్య U_CALLCONV init_Alias_దత్తాంశం(UError_సంకేతం &err_సంకేతం) {
+    UData_జ్ఞాపకం *దత్తాంశం;
+    స్థిరరాశి uint16_t *పట్టిక;
+    స్థిరరాశి uint32_t *sectionSizes;
+    uint32_t పట్టిక_ప్రారంభం;
+    uint32_t curr_స్థానభ్రంశం;
+    int32_t కొలత_యొక్క_దత్తాంశం;
+    int32_t కొలత_యొక్క_TOC;
 
-    ucln_common_registerCleanup(UCLN_COMMON_UCNV_IO, ucnv_io_cleanup);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_UCNV_IO, ucnv_io_cleanup);
 
-    U_ASSERT(gAliasData == nullptr);
-    data = udata_openChoice(nullptr, DATA_TYPE, DATA_NAME, isAcceptable, nullptr, &errCode);
-    if (U_FAILURE(errCode)) {
-        return;
+    U_ASSERT(g_Alias_దత్తాంశం == శూన్యసూచిక);
+    దత్తాంశం = udata_openChoice(శూన్యసూచిక, దత్తాంశం_TYPE, దత్తాంశం_NAME, isAcceptable, శూన్యసూచిక, &err_సంకేతం);
+    ఒకవేళ (U_FAILURE(err_సంకేతం)) {
+        తిరిగి;
     }
 
-    sectionSizes = static_cast<const uint32_t*>(udata_getMemory(data));
-    int32_t dataLength = udata_getLength(data); // This is the length minus the UDataInfo size
-    UBool isDataLengthKnown = dataLength >= 0; // Only false when using a pointer table of contents (not files nor a common data archive)
-    if (isDataLengthKnown && dataLength <= int32_t(sizeof(sectionSizes[0]))) {
+    sectionSizes = static_cast<స్థిరరాశి uint32_t*>(udata_get_జ్ఞాపకం(దత్తాంశం));
+    int32_t దత్తాంశం_నిడివి = udata_get_నిడివి(దత్తాంశం); // This is the length minus the UDataInfo size
+    UBool is_దత్తాంశం_నిడివి_తెలిసిన = దత్తాంశం_నిడివి >= 0; // Only false when using a pointer table of contents (not files nor a common data archive)
+    ఒకవేళ (is_దత్తాంశం_నిడివి_తెలిసిన && దత్తాంశం_నిడివి <= int32_t(పరిమాణం(sectionSizes[0]))) {
         // We don't even have a TOC!
-        goto invalidFormat;
+        వెళ్ళు invalidFormat;
     }
-    table = reinterpret_cast<const uint16_t*>(sectionSizes);
-    tableStart = sectionSizes[0];
-    sizeOfTOC = int32_t((tableStart + 1) * sizeof(sectionSizes[0]));
-    if (tableStart < minTocLength || (isDataLengthKnown && dataLength <= sizeOfTOC)) {
+    పట్టిక = reinterpret_cast<స్థిరరాశి uint16_t*>(sectionSizes);
+    పట్టిక_ప్రారంభం = sectionSizes[0];
+    కొలత_యొక్క_TOC = int32_t((పట్టిక_ప్రారంభం + 1) * పరిమాణం(sectionSizes[0]));
+    ఒకవేళ (పట్టిక_ప్రారంభం < min_Toc_నిడివి || (is_దత్తాంశం_నిడివి_తెలిసిన && దత్తాంశం_నిడివి <= కొలత_యొక్క_TOC)) {
         // We don't have a whole TOC!
-        goto invalidFormat;
+        వెళ్ళు invalidFormat;
     }
-    gAliasData = data;
+    g_Alias_దత్తాంశం = దత్తాంశం;
 
-    gMainTable.converterListSize      = sectionSizes[1];
-    gMainTable.tagListSize            = sectionSizes[2];
-    gMainTable.aliasListSize          = sectionSizes[3];
-    gMainTable.untaggedConvArraySize  = sectionSizes[4];
-    gMainTable.taggedAliasArraySize   = sectionSizes[5];
-    gMainTable.taggedAliasListsSize   = sectionSizes[6];
-    gMainTable.optionTableSize        = sectionSizes[7];
-    gMainTable.stringTableSize        = sectionSizes[8];
+    g_Main_పట్టిక.converter_List_కొలత      = sectionSizes[1];
+    g_Main_పట్టిక.ట్యాగ్_List_కొలత            = sectionSizes[2];
+    g_Main_పట్టిక.alias_List_కొలత          = sectionSizes[3];
+    g_Main_పట్టిక.untagged_Conv_Array_కొలత  = sectionSizes[4];
+    g_Main_పట్టిక.tagged_Alias_Array_కొలత   = sectionSizes[5];
+    g_Main_పట్టిక.tagged_Alias_Lists_కొలత   = sectionSizes[6];
+    g_Main_పట్టిక.option_పట్టిక_కొలత        = sectionSizes[7];
+    g_Main_పట్టిక.string_పట్టిక_కొలత        = sectionSizes[8];
 
-    if (tableStart > minTocLength) {
-        gMainTable.normalizedStringTableSize = sectionSizes[9];
+    ఒకవేళ (పట్టిక_ప్రారంభం > min_Toc_నిడివి) {
+        g_Main_పట్టిక.normalized_String_పట్టిక_కొలత = sectionSizes[9];
     }
 
-    sizeOfData = sizeOfTOC;
-    for (uint32_t section = 1; section <= tableStart; section++) {
-        sizeOfData += sectionSizes[section] * sizeof(table[0]);
+    కొలత_యొక్క_దత్తాంశం = కొలత_యొక్క_TOC;
+    కొరకు (uint32_t section = 1; section <= పట్టిక_ప్రారంభం; section++) {
+        కొలత_యొక్క_దత్తాంశం += sectionSizes[section] * పరిమాణం(పట్టిక[0]);
     }
-    if (isDataLengthKnown && dataLength < sizeOfData) {
+    ఒకవేళ (is_దత్తాంశం_నిడివి_తెలిసిన && దత్తాంశం_నిడివి < కొలత_యొక్క_దత్తాంశం) {
         // Truncated file!
-        goto invalidFormat;
+        వెళ్ళు invalidFormat;
     }
     // There may be some extra padding at the end, or this is a new file format with extra data that we can't read yet.
 
-    currOffset = (tableStart + 1) * (sizeof(uint32_t)/sizeof(uint16_t));
-    gMainTable.converterList = table + currOffset;
+    curr_స్థానభ్రంశం = (పట్టిక_ప్రారంభం + 1) * (పరిమాణం(uint32_t)/పరిమాణం(uint16_t));
+    g_Main_పట్టిక.converterList = పట్టిక + curr_స్థానభ్రంశం;
 
-    currOffset += gMainTable.converterListSize;
-    gMainTable.tagList = table + currOffset;
+    curr_స్థానభ్రంశం += g_Main_పట్టిక.converter_List_కొలత;
+    g_Main_పట్టిక.ట్యాగ్_List = పట్టిక + curr_స్థానభ్రంశం;
 
-    currOffset += gMainTable.tagListSize;
-    gMainTable.aliasList = table + currOffset;
+    curr_స్థానభ్రంశం += g_Main_పట్టిక.ట్యాగ్_List_కొలత;
+    g_Main_పట్టిక.aliasList = పట్టిక + curr_స్థానభ్రంశం;
 
-    currOffset += gMainTable.aliasListSize;
-    gMainTable.untaggedConvArray = table + currOffset;
+    curr_స్థానభ్రంశం += g_Main_పట్టిక.alias_List_కొలత;
+    g_Main_పట్టిక.untaggedConvArray = పట్టిక + curr_స్థానభ్రంశం;
 
-    currOffset += gMainTable.untaggedConvArraySize;
-    gMainTable.taggedAliasArray = table + currOffset;
+    curr_స్థానభ్రంశం += g_Main_పట్టిక.untagged_Conv_Array_కొలత;
+    g_Main_పట్టిక.taggedAliasArray = పట్టిక + curr_స్థానభ్రంశం;
 
     /* aliasLists is a 1's based array, but it has a padding character */
-    currOffset += gMainTable.taggedAliasArraySize;
-    gMainTable.taggedAliasLists = table + currOffset;
+    curr_స్థానభ్రంశం += g_Main_పట్టిక.tagged_Alias_Array_కొలత;
+    g_Main_పట్టిక.taggedAliasLists = పట్టిక + curr_స్థానభ్రంశం;
 
-    currOffset += gMainTable.taggedAliasListsSize;
-    if (gMainTable.optionTableSize > 0
-        && reinterpret_cast<const UConverterAliasOptions*>(table + currOffset)->stringNormalizationType < UCNV_IO_NORM_TYPE_COUNT)
+    curr_స్థానభ్రంశం += g_Main_పట్టిక.tagged_Alias_Lists_కొలత;
+    ఒకవేళ (g_Main_పట్టిక.option_పట్టిక_కొలత > 0
+        && reinterpret_cast<స్థిరరాశి UConverterAliasOptions*>(పట్టిక + curr_స్థానభ్రంశం)->stringNormalizationType < UCNV_IO_NORM_TYPE_లెక్క)
     {
         /* Faster table */
-        gMainTable.optionTable = reinterpret_cast<const UConverterAliasOptions*>(table + currOffset);
+        g_Main_పట్టిక.option_పట్టిక = reinterpret_cast<స్థిరరాశి UConverterAliasOptions*>(పట్టిక + curr_స్థానభ్రంశం);
     }
-    else {
+    లేకపోతే {
         /* Smaller table, or I can't handle this normalization mode!
         Use the original slower table lookup. */
-        gMainTable.optionTable = &defaultTableOptions;
+        g_Main_పట్టిక.option_పట్టిక = &default_పట్టిక_Options;
     }
 
-    currOffset += gMainTable.optionTableSize;
-    gMainTable.stringTable = table + currOffset;
+    curr_స్థానభ్రంశం += g_Main_పట్టిక.option_పట్టిక_కొలత;
+    g_Main_పట్టిక.string_పట్టిక = పట్టిక + curr_స్థానభ్రంశం;
 
-    currOffset += gMainTable.stringTableSize;
-    gMainTable.normalizedStringTable = ((gMainTable.optionTable->stringNormalizationType == UCNV_IO_UNNORMALIZED)
-        ? gMainTable.stringTable : (table + currOffset));
+    curr_స్థానభ్రంశం += g_Main_పట్టిక.string_పట్టిక_కొలత;
+    g_Main_పట్టిక.normalized_String_పట్టిక = ((g_Main_పట్టిక.option_పట్టిక->stringNormalizationType == UCNV_IO_UNNORMALIZED)
+        ? g_Main_పట్టిక.string_పట్టిక : (పట్టిక + curr_స్థానభ్రంశం));
 
-    return;
+    తిరిగి;
 
 invalidFormat:
-    errCode = U_INVALID_FORMAT_ERROR;
-    udata_close(data);
+    err_సంకేతం = U_INVALID_FORMAT_ERROR;
+    udata_close(దత్తాంశం);
 }
 
 
-static UBool
-haveAliasData(UErrorCode *pErrorCode) {
-    umtx_initOnce(gAliasDataInitOnce, &initAliasData, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+స్థిర UBool
+have_Alias_దత్తాంశం(UError_సంకేతం *p_Error_సంకేతం) {
+    umtx_initOnce(g_Alias_దత్తాంశం_Init_Once, &init_Alias_దత్తాంశం, *p_Error_సంకేతం);
+    తిరిగి U_SUCCESS(*p_Error_సంకేతం);
 }
 
-static inline UBool
-isAlias(const char *alias, UErrorCode *pErrorCode) {
-    if(alias==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+స్థిర అంతఃవరుస UBool
+isAlias(స్థిరరాశి అక్షరం *alias, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(alias==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి అబద్ధం;
     }
-    return *alias != 0;
+    తిరిగి *alias != 0;
 }
 
-static uint32_t getTagNumber(const char *tagname) {
-    if (gMainTable.tagList) {
-        uint32_t tagNum;
-        for (tagNum = 0; tagNum < gMainTable.tagListSize; tagNum++) {
-            if (!uprv_stricmp(GET_STRING(gMainTable.tagList[tagNum]), tagname)) {
-                return tagNum;
+స్థిర uint32_t get_ట్యాగ్_సంఖ్య(స్థిరరాశి అక్షరం *tagname) {
+    ఒకవేళ (g_Main_పట్టిక.ట్యాగ్_List) {
+        uint32_t ట్యాగ్_అంకె;
+        కొరకు (ట్యాగ్_అంకె = 0; ట్యాగ్_అంకె < g_Main_పట్టిక.ట్యాగ్_List_కొలత; ట్యాగ్_అంకె++) {
+            ఒకవేళ (!uprv_stricmp(GET_STRING(g_Main_పట్టిక.ట్యాగ్_List[ట్యాగ్_అంకె]), tagname)) {
+                తిరిగి ట్యాగ్_అంకె;
             }
         }
     }
 
-    return UINT32_MAX;
+    తిరిగి UINT32_MAX;
 }
 
 /* character types relevant for ucnv_compareNames() */
-enum {
+గణన {
     UIGNORE,
     ZERO,
     NONZERO,
@@ -370,7 +370,7 @@ enum {
 };
 
 /* character types for ASCII 00..7F */
-static const uint8_t asciiTypes[128] = {
+స్థిర స్థిరరాశి uint8_t asciiTypes[128] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -381,10 +381,10 @@ static const uint8_t asciiTypes[128] = {
     0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a, 0, 0, 0, 0, 0
 };
 
-#define GET_ASCII_TYPE(c) ((int8_t)(c) >= 0 ? asciiTypes[(uint8_t)c] : (uint8_t)UIGNORE)
+#నిర్వచించు GET_ASCII_TYPE(c) ((int8_t)(c) >= 0 ? asciiTypes[(uint8_t)c] : (uint8_t)UIGNORE)
 
 /* character types for EBCDIC 80..FF */
-static const uint8_t ebcdicTypes[128] = {
+స్థిర స్థిరరాశి uint8_t ebcdicTypes[128] = {
     0,    0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0, 0, 0, 0, 0, 0,
     0,    0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0, 0, 0, 0, 0, 0,
     0,    0,    0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0, 0, 0, 0, 0, 0,
@@ -395,86 +395,86 @@ static const uint8_t ebcdicTypes[128] = {
     ZERO, NONZERO, NONZERO, NONZERO, NONZERO, NONZERO, NONZERO, NONZERO, NONZERO, NONZERO, 0, 0, 0, 0, 0, 0
 };
 
-#define GET_EBCDIC_TYPE(c) ((int8_t)(c) < 0 ? ebcdicTypes[(c)&0x7f] : (uint8_t)UIGNORE)
+#నిర్వచించు GET_EBCDIC_TYPE(c) ((int8_t)(c) < 0 ? ebcdicTypes[(c)&0x7f] : (uint8_t)UIGNORE)
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ఒకవేళ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define GET_CHAR_TYPE(c) GET_ASCII_TYPE(c)
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#లేదావేళ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define GET_CHAR_TYPE(c) GET_EBCDIC_TYPE(c)
-#else
+#లేకపోతే
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#అయితే_ముగింపు
 
 
 /* @see ucnv_compareNames */
-U_CAPI char* U_CALLCONV
-ucnv_io_stripASCIIForCompare(char* dst U_LIFETIME_BOUND, const char* name) {
-    char *dstItr = dst;
-    uint8_t type, nextType;
-    char c1;
-    UBool afterDigit = false;
+U_CAPI అక్షరం* U_CALLCONV
+ucnv_io_stripASCIIForCompare(అక్షరం* dst U_LIFETIME_BOUND, స్థిరరాశి అక్షరం* name) {
+    అక్షరం *dstItr = dst;
+    uint8_t type, తదుపరి_Type;
+    అక్షరం c1;
+    UBool afterDigit = అబద్ధం;
 
-    while ((c1 = *name++) != 0) {
+    అయితే ((c1 = *name++) != 0) {
         type = GET_ASCII_TYPE(c1);
-        switch (type) {
-        case UIGNORE:
-            afterDigit = false;
-            continue; /* ignore all but letters and digits */
-        case ZERO:
-            if (!afterDigit) {
-                nextType = GET_ASCII_TYPE(*name);
-                if (nextType == ZERO || nextType == NONZERO) {
-                    continue; /* ignore leading zero before another digit */
+        ఎంపిక (type) {
+        స్థితి UIGNORE:
+            afterDigit = అబద్ధం;
+            కొనసాగు; /* ignore all but letters and digits */
+        స్థితి ZERO:
+            ఒకవేళ (!afterDigit) {
+                తదుపరి_Type = GET_ASCII_TYPE(*name);
+                ఒకవేళ (తదుపరి_Type == ZERO || తదుపరి_Type == NONZERO) {
+                    కొనసాగు; /* ignore leading zero before another digit */
                 }
             }
-            break;
-        case NONZERO:
-            afterDigit = true;
-            break;
-        default:
-            c1 = (char)type; /* lowercased letter */
-            afterDigit = false;
-            break;
+            ఆపు;
+        స్థితి NONZERO:
+            afterDigit = నిజం;
+            ఆపు;
+        అప్రమేయ:
+            c1 = (అక్షరం)type; /* lowercased letter */
+            afterDigit = అబద్ధం;
+            ఆపు;
         }
         *dstItr++ = c1;
     }
     *dstItr = 0;
-    return dst;
+    తిరిగి dst;
 }
 
-U_CAPI char* U_CALLCONV
-ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name) {
-    char *dstItr = dst;
-    uint8_t type, nextType;
-    char c1;
-    UBool afterDigit = false;
+U_CAPI అక్షరం* U_CALLCONV
+ucnv_io_stripEBCDICForCompare(అక్షరం* dst U_LIFETIME_BOUND, స్థిరరాశి అక్షరం* name) {
+    అక్షరం *dstItr = dst;
+    uint8_t type, తదుపరి_Type;
+    అక్షరం c1;
+    UBool afterDigit = అబద్ధం;
 
-    while ((c1 = *name++) != 0) {
+    అయితే ((c1 = *name++) != 0) {
         type = GET_EBCDIC_TYPE(c1);
-        switch (type) {
-        case UIGNORE:
-            afterDigit = false;
-            continue; /* ignore all but letters and digits */
-        case ZERO:
-            if (!afterDigit) {
-                nextType = GET_EBCDIC_TYPE(*name);
-                if (nextType == ZERO || nextType == NONZERO) {
-                    continue; /* ignore leading zero before another digit */
+        ఎంపిక (type) {
+        స్థితి UIGNORE:
+            afterDigit = అబద్ధం;
+            కొనసాగు; /* ignore all but letters and digits */
+        స్థితి ZERO:
+            ఒకవేళ (!afterDigit) {
+                తదుపరి_Type = GET_EBCDIC_TYPE(*name);
+                ఒకవేళ (తదుపరి_Type == ZERO || తదుపరి_Type == NONZERO) {
+                    కొనసాగు; /* ignore leading zero before another digit */
                 }
             }
-            break;
-        case NONZERO:
-            afterDigit = true;
-            break;
-        default:
-            c1 = (char)type; /* lowercased letter */
-            afterDigit = false;
-            break;
+            ఆపు;
+        స్థితి NONZERO:
+            afterDigit = నిజం;
+            ఆపు;
+        అప్రమేయ:
+            c1 = (అక్షరం)type; /* lowercased letter */
+            afterDigit = అబద్ధం;
+            ఆపు;
         }
         *dstItr++ = c1;
     }
     *dstItr = 0;
-    return dst;
+    తిరిగి dst;
 }
 
 /**
@@ -498,72 +498,72 @@ ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name) {
  *
  * @see ucnv_io_stripForCompare
  */
-U_CAPI int U_EXPORT2
-ucnv_compareNames(const char *name1, const char *name2) {
-    int rc;
-    uint8_t type, nextType;
-    char c1, c2;
-    UBool afterDigit1 = false, afterDigit2 = false;
+U_CAPI పూర్ణాంకం U_EXPORT2
+ucnv_compare_పేర్లు(స్థిరరాశి అక్షరం *name1, స్థిరరాశి అక్షరం *name2) {
+    పూర్ణాంకం rc;
+    uint8_t type, తదుపరి_Type;
+    అక్షరం c1, c2;
+    UBool afterDigit1 = అబద్ధం, afterDigit2 = అబద్ధం;
 
-    for (;;) {
-        while ((c1 = *name1++) != 0) {
+    కొరకు (;;) {
+        అయితే ((c1 = *name1++) != 0) {
             type = GET_CHAR_TYPE(c1);
-            switch (type) {
-            case UIGNORE:
-                afterDigit1 = false;
-                continue; /* ignore all but letters and digits */
-            case ZERO:
-                if (!afterDigit1) {
-                    nextType = GET_CHAR_TYPE(*name1);
-                    if (nextType == ZERO || nextType == NONZERO) {
-                        continue; /* ignore leading zero before another digit */
+            ఎంపిక (type) {
+            స్థితి UIGNORE:
+                afterDigit1 = అబద్ధం;
+                కొనసాగు; /* ignore all but letters and digits */
+            స్థితి ZERO:
+                ఒకవేళ (!afterDigit1) {
+                    తదుపరి_Type = GET_CHAR_TYPE(*name1);
+                    ఒకవేళ (తదుపరి_Type == ZERO || తదుపరి_Type == NONZERO) {
+                        కొనసాగు; /* ignore leading zero before another digit */
                     }
                 }
-                break;
-            case NONZERO:
-                afterDigit1 = true;
-                break;
-            default:
-                c1 = (char)type; /* lowercased letter */
-                afterDigit1 = false;
-                break;
+                ఆపు;
+            స్థితి NONZERO:
+                afterDigit1 = నిజం;
+                ఆపు;
+            అప్రమేయ:
+                c1 = (అక్షరం)type; /* lowercased letter */
+                afterDigit1 = అబద్ధం;
+                ఆపు;
             }
-            break; /* deliver c1 */
+            ఆపు; /* deliver c1 */
         }
-        while ((c2 = *name2++) != 0) {
+        అయితే ((c2 = *name2++) != 0) {
             type = GET_CHAR_TYPE(c2);
-            switch (type) {
-            case UIGNORE:
-                afterDigit2 = false;
-                continue; /* ignore all but letters and digits */
-            case ZERO:
-                if (!afterDigit2) {
-                    nextType = GET_CHAR_TYPE(*name2);
-                    if (nextType == ZERO || nextType == NONZERO) {
-                        continue; /* ignore leading zero before another digit */
+            ఎంపిక (type) {
+            స్థితి UIGNORE:
+                afterDigit2 = అబద్ధం;
+                కొనసాగు; /* ignore all but letters and digits */
+            స్థితి ZERO:
+                ఒకవేళ (!afterDigit2) {
+                    తదుపరి_Type = GET_CHAR_TYPE(*name2);
+                    ఒకవేళ (తదుపరి_Type == ZERO || తదుపరి_Type == NONZERO) {
+                        కొనసాగు; /* ignore leading zero before another digit */
                     }
                 }
-                break;
-            case NONZERO:
-                afterDigit2 = true;
-                break;
-            default:
-                c2 = (char)type; /* lowercased letter */
-                afterDigit2 = false;
-                break;
+                ఆపు;
+            స్థితి NONZERO:
+                afterDigit2 = నిజం;
+                ఆపు;
+            అప్రమేయ:
+                c2 = (అక్షరం)type; /* lowercased letter */
+                afterDigit2 = అబద్ధం;
+                ఆపు;
             }
-            break; /* deliver c2 */
+            ఆపు; /* deliver c2 */
         }
 
         /* If we reach the ends of both strings then they match */
-        if ((c1|c2)==0) {
-            return 0;
+        ఒకవేళ ((c1|c2)==0) {
+            తిరిగి 0;
         }
 
         /* Case-insensitive comparison */
-        rc = (int)(unsigned char)c1 - (int)(unsigned char)c2;
-        if (rc != 0) {
-            return rc;
+        rc = (పూర్ణాంకం)(గుర్తులేని అక్షరం)c1 - (పూర్ణాంకం)(గుర్తులేని అక్షరం)c2;
+        ఒకవేళ (rc != 0) {
+            తిరిగి rc;
         }
     }
 }
@@ -572,18 +572,18 @@ ucnv_compareNames(const char *name1, const char *name2) {
  * search for an alias
  * return the converter number index for gConverterList
  */
-static inline uint32_t
-findConverter(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) {
-    uint32_t mid, start, limit;
-    uint32_t lastMid;
-    int result;
-    int isUnnormalized = (gMainTable.optionTable->stringNormalizationType == UCNV_IO_UNNORMALIZED);
-    char strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+స్థిర అంతఃవరుస uint32_t
+కనుగొను_Converter(స్థిరరాశి అక్షరం *alias, UBool *కలిగియుంది_Option, UError_సంకేతం *p_Error_సంకేతం) {
+    uint32_t mid, ప్రారంభం, హద్దు;
+    uint32_t చివరి_Mid;
+    పూర్ణాంకం ఫలితం;
+    పూర్ణాంకం isUnnormalized = (g_Main_పట్టిక.option_పట్టిక->stringNormalizationType == UCNV_IO_UNNORMALIZED);
+    అక్షరం strippedName[UCNV_MAX_CONVERTER_NAME_నిడివి];
 
-    if (!isUnnormalized) {
-        if (uprv_strlen(alias) >= UCNV_MAX_CONVERTER_NAME_LENGTH) {
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-            return UINT32_MAX;
+    ఒకవేళ (!isUnnormalized) {
+        ఒకవేళ (uprv_strlen(alias) >= UCNV_MAX_CONVERTER_NAME_నిడివి) {
+            *p_Error_సంకేతం = U_బఫరు_అధికప్రవాహం_ERROR;
+            తిరిగి UINT32_MAX;
         }
 
         /* Lower case and remove ignoreable characters. */
@@ -592,71 +592,71 @@ findConverter(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) 
     }
 
     /* do a binary search for the alias */
-    start = 0;
-    limit = gMainTable.untaggedConvArraySize;
-    mid = limit;
-    lastMid = UINT32_MAX;
+    ప్రారంభం = 0;
+    హద్దు = g_Main_పట్టిక.untagged_Conv_Array_కొలత;
+    mid = హద్దు;
+    చివరి_Mid = UINT32_MAX;
 
-    for (;;) {
-        mid = (start + limit) / 2;
-        if (lastMid == mid) {   /* Have we moved? */
-            break;  /* We haven't moved, and it wasn't found. */
+    కొరకు (;;) {
+        mid = (ప్రారంభం + హద్దు) / 2;
+        ఒకవేళ (చివరి_Mid == mid) {   /* Have we moved? */
+            ఆపు;  /* We haven't moved, and it wasn't found. */
         }
-        lastMid = mid;
-        if (isUnnormalized) {
-            result = ucnv_compareNames(alias, GET_STRING(gMainTable.aliasList[mid]));
+        చివరి_Mid = mid;
+        ఒకవేళ (isUnnormalized) {
+            ఫలితం = ucnv_compare_పేర్లు(alias, GET_STRING(g_Main_పట్టిక.aliasList[mid]));
         }
-        else {
-            result = uprv_strcmp(alias, GET_NORMALIZED_STRING(gMainTable.aliasList[mid]));
+        లేకపోతే {
+            ఫలితం = uprv_strcmp(alias, GET_NORMALIZED_STRING(g_Main_పట్టిక.aliasList[mid]));
         }
 
-        if (result < 0) {
-            limit = mid;
-        } else if (result > 0) {
-            start = mid;
-        } else {
+        ఒకవేళ (ఫలితం < 0) {
+            హద్దు = mid;
+        } లేకపోతే ఒకవేళ (ఫలితం > 0) {
+            ప్రారంభం = mid;
+        } లేకపోతే {
             /* Since the gencnval tool folds duplicates into one entry,
              * this alias in gAliasList is unique, but different standards
              * may map an alias to different converters.
              */
-            if (gMainTable.untaggedConvArray[mid] & UCNV_AMBIGUOUS_ALIAS_MAP_BIT) {
-                *pErrorCode = U_AMBIGUOUS_ALIAS_WARNING;
+            ఒకవేళ (g_Main_పట్టిక.untaggedConvArray[mid] & UCNV_AMBIGUOUS_ALIAS_MAP_బిట్టు) {
+                *p_Error_సంకేతం = U_AMBIGUOUS_ALIAS_WARNING;
             }
             /* State whether the canonical converter name contains an option.
             This information is contained in this list in order to maintain backward & forward compatibility. */
-            if (containsOption) {
-                UBool containsCnvOptionInfo = static_cast<UBool>(gMainTable.optionTable->containsCnvOptionInfo);
-                *containsOption = static_cast<UBool>((containsCnvOptionInfo
-                    && ((gMainTable.untaggedConvArray[mid] & UCNV_CONTAINS_OPTION_BIT) != 0))
-                    || !containsCnvOptionInfo);
+            ఒకవేళ (కలిగియుంది_Option) {
+                UBool కలిగియుంది_Cnv_Option_Info = static_cast<UBool>(g_Main_పట్టిక.option_పట్టిక->కలిగియుంది_Cnv_Option_Info);
+                *కలిగియుంది_Option = static_cast<UBool>((కలిగియుంది_Cnv_Option_Info
+                    && ((g_Main_పట్టిక.untaggedConvArray[mid] & UCNV_కలిగియుంది_OPTION_బిట్టు) != 0))
+                    || !కలిగియుంది_Cnv_Option_Info);
             }
-            return gMainTable.untaggedConvArray[mid] & UCNV_CONVERTER_INDEX_MASK;
+            తిరిగి g_Main_పట్టిక.untaggedConvArray[mid] & UCNV_CONVERTER_సూచీ_ముసుగు;
         }
     }
 
-    return UINT32_MAX;
+    తిరిగి UINT32_MAX;
 }
 
 /*
  * Is this alias in this list?
  * alias and listOffset should be non-nullptr.
  */
-static inline UBool
-isAliasInList(const char *alias, uint32_t listOffset) {
-    if (listOffset) {
+స్థిర అంతఃవరుస UBool
+is_Alias_లోపల_List(స్థిరరాశి అక్షరం *alias, uint32_t list_స్థానభ్రంశం) {
+    ఒకవేళ (list_స్థానభ్రంశం) {
         uint32_t currAlias;
-        uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
+        uint32_t list_లెక్క = g_Main_పట్టిక.taggedAliasLists[list_స్థానభ్రంశం];
         /* +1 to skip listCount */
-        const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
-        for (currAlias = 0; currAlias < listCount; currAlias++) {
-            if (currList[currAlias]
-                && ucnv_compareNames(alias, GET_STRING(currList[currAlias]))==0)
+        స్థిరరాశి uint16_t *currList = g_Main_పట్టిక.taggedAliasLists + list_స్థానభ్రంశం + 1;
+        కొరకు (currAlias = 0; currAlias < list_లెక్క; currAlias++) {
+            ఒకవేళ (currList[currAlias]
+                && ucnv_compare_పేర్లు(alias, GET_STRING(currList[currAlias]))==0)
             {
-                return true;
+                తిరిగి నిజం;
             }
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
 /*
@@ -665,39 +665,39 @@ isAliasInList(const char *alias, uint32_t listOffset) {
  * return the listOffset for gTaggedAliasLists. If it's 0,
  * the it couldn't be found, but the parameters are valid.
  */
-static uint32_t
-findTaggedAliasListsOffset(const char *alias, const char *standard, UErrorCode *pErrorCode) {
+స్థిర uint32_t
+కనుగొను_Tagged_Alias_Lists_స్థానభ్రంశం(స్థిరరాశి అక్షరం *alias, స్థిరరాశి అక్షరం *standard, UError_సంకేతం *p_Error_సంకేతం) {
     uint32_t idx;
-    uint32_t listOffset;
-    uint32_t convNum;
-    UErrorCode myErr = U_ZERO_ERROR;
-    uint32_t tagNum = getTagNumber(standard);
+    uint32_t list_స్థానభ్రంశం;
+    uint32_t conv_అంకె;
+    UError_సంకేతం myErr = U_ZERO_ERROR;
+    uint32_t ట్యాగ్_అంకె = get_ట్యాగ్_సంఖ్య(standard);
 
     /* Make a quick guess. Hopefully they used a TR22 canonical alias. */
-    convNum = findConverter(alias, nullptr, &myErr);
-    if (myErr != U_ZERO_ERROR) {
-        *pErrorCode = myErr;
+    conv_అంకె = కనుగొను_Converter(alias, శూన్యసూచిక, &myErr);
+    ఒకవేళ (myErr != U_ZERO_ERROR) {
+        *p_Error_సంకేతం = myErr;
     }
 
-    if (tagNum < (gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) && convNum < gMainTable.converterListSize) {
-        listOffset = gMainTable.taggedAliasArray[tagNum*gMainTable.converterListSize + convNum];
-        if (listOffset && gMainTable.taggedAliasLists[listOffset + 1]) {
-            return listOffset;
+    ఒకవేళ (ట్యాగ్_అంకె < (g_Main_పట్టిక.ట్యాగ్_List_కొలత - UCNV_అంకె_HIDDEN_ట్యాగులు) && conv_అంకె < g_Main_పట్టిక.converter_List_కొలత) {
+        list_స్థానభ్రంశం = g_Main_పట్టిక.taggedAliasArray[ట్యాగ్_అంకె*g_Main_పట్టిక.converter_List_కొలత + conv_అంకె];
+        ఒకవేళ (list_స్థానభ్రంశం && g_Main_పట్టిక.taggedAliasLists[list_స్థానభ్రంశం + 1]) {
+            తిరిగి list_స్థానభ్రంశం;
         }
-        if (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
+        ఒకవేళ (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
             /* Uh Oh! They used an ambiguous alias.
                We have to search the whole swiss cheese starting
                at the highest standard affinity.
                This may take a while.
             */
-            for (idx = 0; idx < gMainTable.taggedAliasArraySize; idx++) {
-                listOffset = gMainTable.taggedAliasArray[idx];
-                if (listOffset && isAliasInList(alias, listOffset)) {
-                    uint32_t currTagNum = idx/gMainTable.converterListSize;
-                    uint32_t currConvNum = (idx - currTagNum*gMainTable.converterListSize);
-                    uint32_t tempListOffset = gMainTable.taggedAliasArray[tagNum*gMainTable.converterListSize + currConvNum];
-                    if (tempListOffset && gMainTable.taggedAliasLists[tempListOffset + 1]) {
-                        return tempListOffset;
+            కొరకు (idx = 0; idx < g_Main_పట్టిక.tagged_Alias_Array_కొలత; idx++) {
+                list_స్థానభ్రంశం = g_Main_పట్టిక.taggedAliasArray[idx];
+                ఒకవేళ (list_స్థానభ్రంశం && is_Alias_లోపల_List(alias, list_స్థానభ్రంశం)) {
+                    uint32_t curr_ట్యాగ్_అంకె = idx/g_Main_పట్టిక.converter_List_కొలత;
+                    uint32_t curr_Conv_అంకె = (idx - curr_ట్యాగ్_అంకె*g_Main_పట్టిక.converter_List_కొలత);
+                    uint32_t తాత్కాలిక_List_స్థానభ్రంశం = g_Main_పట్టిక.taggedAliasArray[ట్యాగ్_అంకె*g_Main_పట్టిక.converter_List_కొలత + curr_Conv_అంకె];
+                    ఒకవేళ (తాత్కాలిక_List_స్థానభ్రంశం && g_Main_పట్టిక.taggedAliasLists[తాత్కాలిక_List_స్థానభ్రంశం + 1]) {
+                        తిరిగి తాత్కాలిక_List_స్థానభ్రంశం;
                     }
                     /* else keep on looking */
                     /* We could speed this up by starting on the next row
@@ -708,45 +708,45 @@ findTaggedAliasListsOffset(const char *alias, const char *standard, UErrorCode *
             /* The standard doesn't know about the alias */
         }
         /* else no default name */
-        return 0;
+        తిరిగి 0;
     }
     /* else converter or tag not found */
 
-    return UINT32_MAX;
+    తిరిగి UINT32_MAX;
 }
 
 /* Return the canonical name */
-static uint32_t
-findTaggedConverterNum(const char *alias, const char *standard, UErrorCode *pErrorCode) {
+స్థిర uint32_t
+కనుగొను_Tagged_Converter_అంకె(స్థిరరాశి అక్షరం *alias, స్థిరరాశి అక్షరం *standard, UError_సంకేతం *p_Error_సంకేతం) {
     uint32_t idx;
-    uint32_t listOffset;
-    uint32_t convNum;
-    UErrorCode myErr = U_ZERO_ERROR;
-    uint32_t tagNum = getTagNumber(standard);
+    uint32_t list_స్థానభ్రంశం;
+    uint32_t conv_అంకె;
+    UError_సంకేతం myErr = U_ZERO_ERROR;
+    uint32_t ట్యాగ్_అంకె = get_ట్యాగ్_సంఖ్య(standard);
 
     /* Make a quick guess. Hopefully they used a TR22 canonical alias. */
-    convNum = findConverter(alias, nullptr, &myErr);
-    if (myErr != U_ZERO_ERROR) {
-        *pErrorCode = myErr;
+    conv_అంకె = కనుగొను_Converter(alias, శూన్యసూచిక, &myErr);
+    ఒకవేళ (myErr != U_ZERO_ERROR) {
+        *p_Error_సంకేతం = myErr;
     }
 
-    if (tagNum < (gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) && convNum < gMainTable.converterListSize) {
-        listOffset = gMainTable.taggedAliasArray[tagNum*gMainTable.converterListSize + convNum];
-        if (listOffset && isAliasInList(alias, listOffset)) {
-            return convNum;
+    ఒకవేళ (ట్యాగ్_అంకె < (g_Main_పట్టిక.ట్యాగ్_List_కొలత - UCNV_అంకె_HIDDEN_ట్యాగులు) && conv_అంకె < g_Main_పట్టిక.converter_List_కొలత) {
+        list_స్థానభ్రంశం = g_Main_పట్టిక.taggedAliasArray[ట్యాగ్_అంకె*g_Main_పట్టిక.converter_List_కొలత + conv_అంకె];
+        ఒకవేళ (list_స్థానభ్రంశం && is_Alias_లోపల_List(alias, list_స్థానభ్రంశం)) {
+            తిరిగి conv_అంకె;
         }
-        if (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
+        ఒకవేళ (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
             /* Uh Oh! They used an ambiguous alias.
                We have to search one slice of the swiss cheese.
                We search only in the requested tag, not the whole thing.
                This may take a while.
             */
-            uint32_t convStart = (tagNum)*gMainTable.converterListSize;
-            uint32_t convLimit = (tagNum+1)*gMainTable.converterListSize;
-            for (idx = convStart; idx < convLimit; idx++) {
-                listOffset = gMainTable.taggedAliasArray[idx];
-                if (listOffset && isAliasInList(alias, listOffset)) {
-                    return idx-convStart;
+            uint32_t conv_ప్రారంభం = (ట్యాగ్_అంకె)*g_Main_పట్టిక.converter_List_కొలత;
+            uint32_t conv_హద్దు = (ట్యాగ్_అంకె+1)*g_Main_పట్టిక.converter_List_కొలత;
+            కొరకు (idx = conv_ప్రారంభం; idx < conv_హద్దు; idx++) {
+                list_స్థానభ్రంశం = g_Main_పట్టిక.taggedAliasArray[idx];
+                ఒకవేళ (list_స్థానభ్రంశం && is_Alias_లోపల_List(alias, list_స్థానభ్రంశం)) {
+                    తిరిగి idx-conv_ప్రారంభం;
                 }
             }
             /* The standard doesn't know about the alias */
@@ -755,175 +755,175 @@ findTaggedConverterNum(const char *alias, const char *standard, UErrorCode *pErr
     }
     /* else converter or tag not found */
 
-    return UINT32_MAX;
+    తిరిగి UINT32_MAX;
 }
 
-U_CAPI const char *
-ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) {
-    const char *aliasTmp = alias;
+U_CAPI స్థిరరాశి అక్షరం *
+ucnv_io_getConverterName(స్థిరరాశి అక్షరం *alias, UBool *కలిగియుంది_Option, UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి అక్షరం *aliasTmp = alias;
     int32_t i = 0;
-    for (i = 0; i < 2; i++) {
-        if (i == 1) {
+    కొరకు (i = 0; i < 2; i++) {
+        ఒకవేళ (i == 1) {
             /*
              * After the first unsuccess converter lookup, check to see if
              * the name begins with 'x-'. If it does, strip it off and try
              * again.  This behaviour is similar to how ICU4J does it.
              */
-            if (aliasTmp[0] == 'x' && aliasTmp[1] == '-') {
+            ఒకవేళ (aliasTmp[0] == 'x' && aliasTmp[1] == '-') {
                 aliasTmp = aliasTmp+2;
-            } else {
-                break;
+            } లేకపోతే {
+                ఆపు;
             }
         }
-        if(haveAliasData(pErrorCode) && isAlias(aliasTmp, pErrorCode)) {
-            uint32_t convNum = findConverter(aliasTmp, containsOption, pErrorCode);
-            if (convNum < gMainTable.converterListSize) {
-                return GET_STRING(gMainTable.converterList[convNum]);
+        ఒకవేళ(have_Alias_దత్తాంశం(p_Error_సంకేతం) && isAlias(aliasTmp, p_Error_సంకేతం)) {
+            uint32_t conv_అంకె = కనుగొను_Converter(aliasTmp, కలిగియుంది_Option, p_Error_సంకేతం);
+            ఒకవేళ (conv_అంకె < g_Main_పట్టిక.converter_List_కొలత) {
+                తిరిగి GET_STRING(g_Main_పట్టిక.converterList[conv_అంకె]);
             }
             /* else converter not found */
-        } else {
-            break;
+        } లేకపోతే {
+            ఆపు;
         }
     }
 
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 U_CDECL_BEGIN
 
 
-static int32_t U_CALLCONV
-ucnv_io_countStandardAliases(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
+స్థిర int32_t U_CALLCONV
+ucnv_io_లెక్క_Standard_Aliases(UEnumeration *enumerator, UError_సంకేతం * /*pErrorCode*/) {
     int32_t value = 0;
     UAliasContext *myContext = (UAliasContext *)(enumerator->context);
-    uint32_t listOffset = myContext->listOffset;
+    uint32_t list_స్థానభ్రంశం = myContext->list_స్థానభ్రంశం;
 
-    if (listOffset) {
-        value = gMainTable.taggedAliasLists[listOffset];
+    ఒకవేళ (list_స్థానభ్రంశం) {
+        value = g_Main_పట్టిక.taggedAliasLists[list_స్థానభ్రంశం];
     }
-    return value;
+    తిరిగి value;
 }
 
-static const char * U_CALLCONV
-ucnv_io_nextStandardAliases(UEnumeration *enumerator,
-                            int32_t* resultLength,
-                            UErrorCode * /*pErrorCode*/)
+స్థిర స్థిరరాశి అక్షరం * U_CALLCONV
+ucnv_io_తదుపరి_Standard_Aliases(UEnumeration *enumerator,
+                            int32_t* ఫలితం_నిడివి,
+                            UError_సంకేతం * /*pErrorCode*/)
 {
     UAliasContext *myContext = (UAliasContext *)(enumerator->context);
-    uint32_t listOffset = myContext->listOffset;
+    uint32_t list_స్థానభ్రంశం = myContext->list_స్థానభ్రంశం;
 
-    if (listOffset) {
-        uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
-        const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+    ఒకవేళ (list_స్థానభ్రంశం) {
+        uint32_t list_లెక్క = g_Main_పట్టిక.taggedAliasLists[list_స్థానభ్రంశం];
+        స్థిరరాశి uint16_t *currList = g_Main_పట్టిక.taggedAliasLists + list_స్థానభ్రంశం + 1;
 
-        if (myContext->listIdx < listCount) {
-            const char *myStr = GET_STRING(currList[myContext->listIdx++]);
-            if (resultLength) {
-                *resultLength = (int32_t)uprv_strlen(myStr);
+        ఒకవేళ (myContext->listIdx < list_లెక్క) {
+            స్థిరరాశి అక్షరం *myStr = GET_STRING(currList[myContext->listIdx++]);
+            ఒకవేళ (ఫలితం_నిడివి) {
+                *ఫలితం_నిడివి = (int32_t)uprv_strlen(myStr);
             }
-            return myStr;
+            తిరిగి myStr;
         }
     }
     /* Either we accessed a zero length list, or we enumerated too far. */
-    if (resultLength) {
-        *resultLength = 0;
+    ఒకవేళ (ఫలితం_నిడివి) {
+        *ఫలితం_నిడివి = 0;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-static void U_CALLCONV
-ucnv_io_resetStandardAliases(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
+స్థిర శూన్య U_CALLCONV
+ucnv_io_resetStandardAliases(UEnumeration *enumerator, UError_సంకేతం * /*pErrorCode*/) {
     ((UAliasContext *)(enumerator->context))->listIdx = 0;
 }
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ucnv_io_closeUEnumeration(UEnumeration *enumerator) {
     uprv_free(enumerator->context);
     uprv_free(enumerator);
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
 /* Enumerate the aliases for the specified converter and standard tag */
-static const UEnumeration gEnumAliases = {
-    nullptr,
-    nullptr,
+స్థిర స్థిరరాశి UEnumeration gEnumAliases = {
+    శూన్యసూచిక,
+    శూన్యసూచిక,
     ucnv_io_closeUEnumeration,
-    ucnv_io_countStandardAliases,
+    ucnv_io_లెక్క_Standard_Aliases,
     uenum_unextDefault,
-    ucnv_io_nextStandardAliases,
+    ucnv_io_తదుపరి_Standard_Aliases,
     ucnv_io_resetStandardAliases
 };
 
 U_CAPI UEnumeration * U_EXPORT2
-ucnv_openStandardNames(const char *convName,
-                       const char *standard,
-                       UErrorCode *pErrorCode)
+ucnv_open_Standard_పేర్లు(స్థిరరాశి అక్షరం *convName,
+                       స్థిరరాశి అక్షరం *standard,
+                       UError_సంకేతం *p_Error_సంకేతం)
 {
-    UEnumeration *myEnum = nullptr;
-    if (haveAliasData(pErrorCode) && isAlias(convName, pErrorCode)) {
-        uint32_t listOffset = findTaggedAliasListsOffset(convName, standard, pErrorCode);
+    UEnumeration *myEnum = శూన్యసూచిక;
+    ఒకవేళ (have_Alias_దత్తాంశం(p_Error_సంకేతం) && isAlias(convName, p_Error_సంకేతం)) {
+        uint32_t list_స్థానభ్రంశం = కనుగొను_Tagged_Alias_Lists_స్థానభ్రంశం(convName, standard, p_Error_సంకేతం);
 
         /* When listOffset == 0, we want to acknowledge that the
            converter name and standard are okay, but there
            is nothing to enumerate. */
-        if (listOffset < gMainTable.taggedAliasListsSize) {
+        ఒకవేళ (list_స్థానభ్రంశం < g_Main_పట్టిక.tagged_Alias_Lists_కొలత) {
             UAliasContext *myContext;
 
-            myEnum = static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration)));
-            if (myEnum == nullptr) {
-                *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+            myEnum = static_cast<UEnumeration *>(uprv_malloc(పరిమాణం(UEnumeration)));
+            ఒకవేళ (myEnum == శూన్యసూచిక) {
+                *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి శూన్యసూచిక;
             }
-            uprv_memcpy(myEnum, &gEnumAliases, sizeof(UEnumeration));
-            myContext = static_cast<UAliasContext *>(uprv_malloc(sizeof(UAliasContext)));
-            if (myContext == nullptr) {
-                *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+            uprv_memcpy(myEnum, &gEnumAliases, పరిమాణం(UEnumeration));
+            myContext = static_cast<UAliasContext *>(uprv_malloc(పరిమాణం(UAliasContext)));
+            ఒకవేళ (myContext == శూన్యసూచిక) {
+                *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
                 uprv_free(myEnum);
-                return nullptr;
+                తిరిగి శూన్యసూచిక;
             }
-            myContext->listOffset = listOffset;
+            myContext->list_స్థానభ్రంశం = list_స్థానభ్రంశం;
             myContext->listIdx = 0;
             myEnum->context = myContext;
         }
         /* else converter or tag not found */
     }
-    return myEnum;
+    తిరిగి myEnum;
 }
 
-static uint16_t
-ucnv_io_countAliases(const char *alias, UErrorCode *pErrorCode) {
-    if(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
-        uint32_t convNum = findConverter(alias, nullptr, pErrorCode);
-        if (convNum < gMainTable.converterListSize) {
+స్థిర uint16_t
+ucnv_io_లెక్క_Aliases(స్థిరరాశి అక్షరం *alias, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(have_Alias_దత్తాంశం(p_Error_సంకేతం) && isAlias(alias, p_Error_సంకేతం)) {
+        uint32_t conv_అంకె = కనుగొను_Converter(alias, శూన్యసూచిక, p_Error_సంకేతం);
+        ఒకవేళ (conv_అంకె < g_Main_పట్టిక.converter_List_కొలత) {
             /* tagListNum - 1 is the ALL tag */
-            int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + convNum];
+            int32_t list_స్థానభ్రంశం = g_Main_పట్టిక.taggedAliasArray[(g_Main_పట్టిక.ట్యాగ్_List_కొలత - 1)*g_Main_పట్టిక.converter_List_కొలత + conv_అంకె];
 
-            if (listOffset) {
-                return gMainTable.taggedAliasLists[listOffset];
+            ఒకవేళ (list_స్థానభ్రంశం) {
+                తిరిగి g_Main_పట్టిక.taggedAliasLists[list_స్థానభ్రంశం];
             }
             /* else this shouldn't happen. internal program error */
         }
         /* else converter not found */
     }
-    return 0;
+    తిరిగి 0;
 }
 
-static uint16_t
-ucnv_io_getAliases(const char *alias, uint16_t start, const char **aliases, UErrorCode *pErrorCode) {
-    if(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+స్థిర uint16_t
+ucnv_io_getAliases(స్థిరరాశి అక్షరం *alias, uint16_t ప్రారంభం, స్థిరరాశి అక్షరం **aliases, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(have_Alias_దత్తాంశం(p_Error_సంకేతం) && isAlias(alias, p_Error_సంకేతం)) {
         uint32_t currAlias;
-        uint32_t convNum = findConverter(alias, nullptr, pErrorCode);
-        if (convNum < gMainTable.converterListSize) {
+        uint32_t conv_అంకె = కనుగొను_Converter(alias, శూన్యసూచిక, p_Error_సంకేతం);
+        ఒకవేళ (conv_అంకె < g_Main_పట్టిక.converter_List_కొలత) {
             /* tagListNum - 1 is the ALL tag */
-            int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + convNum];
+            int32_t list_స్థానభ్రంశం = g_Main_పట్టిక.taggedAliasArray[(g_Main_పట్టిక.ట్యాగ్_List_కొలత - 1)*g_Main_పట్టిక.converter_List_కొలత + conv_అంకె];
 
-            if (listOffset) {
-                uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
+            ఒకవేళ (list_స్థానభ్రంశం) {
+                uint32_t list_లెక్క = g_Main_పట్టిక.taggedAliasLists[list_స్థానభ్రంశం];
                 /* +1 to skip listCount */
-                const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+                స్థిరరాశి uint16_t *currList = g_Main_పట్టిక.taggedAliasLists + list_స్థానభ్రంశం + 1;
 
-                for (currAlias = start; currAlias < listCount; currAlias++) {
+                కొరకు (currAlias = ప్రారంభం; currAlias < list_లెక్క; currAlias++) {
                     aliases[currAlias] = GET_STRING(currList[currAlias]);
                 }
             }
@@ -931,197 +931,197 @@ ucnv_io_getAliases(const char *alias, uint16_t start, const char **aliases, UErr
         }
         /* else converter not found */
     }
-    return 0;
+    తిరిగి 0;
 }
 
-static const char *
-ucnv_io_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode) {
-    if(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
-        uint32_t convNum = findConverter(alias, nullptr, pErrorCode);
-        if (convNum < gMainTable.converterListSize) {
+స్థిర స్థిరరాశి అక్షరం *
+ucnv_io_getAlias(స్థిరరాశి అక్షరం *alias, uint16_t n, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(have_Alias_దత్తాంశం(p_Error_సంకేతం) && isAlias(alias, p_Error_సంకేతం)) {
+        uint32_t conv_అంకె = కనుగొను_Converter(alias, శూన్యసూచిక, p_Error_సంకేతం);
+        ఒకవేళ (conv_అంకె < g_Main_పట్టిక.converter_List_కొలత) {
             /* tagListNum - 1 is the ALL tag */
-            int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + convNum];
+            int32_t list_స్థానభ్రంశం = g_Main_పట్టిక.taggedAliasArray[(g_Main_పట్టిక.ట్యాగ్_List_కొలత - 1)*g_Main_పట్టిక.converter_List_కొలత + conv_అంకె];
 
-            if (listOffset) {
-                uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
+            ఒకవేళ (list_స్థానభ్రంశం) {
+                uint32_t list_లెక్క = g_Main_పట్టిక.taggedAliasLists[list_స్థానభ్రంశం];
                 /* +1 to skip listCount */
-                const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+                స్థిరరాశి uint16_t *currList = g_Main_పట్టిక.taggedAliasLists + list_స్థానభ్రంశం + 1;
 
-                if (n < listCount)  {
-                    return GET_STRING(currList[n]);
+                ఒకవేళ (n < list_లెక్క)  {
+                    తిరిగి GET_STRING(currList[n]);
                 }
-                *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
+                *p_Error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
             }
             /* else this shouldn't happen. internal program error */
         }
         /* else converter not found */
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-static uint16_t
-ucnv_io_countStandards(UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode)) {
+స్థిర uint16_t
+ucnv_io_లెక్క_Standards(UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ (have_Alias_దత్తాంశం(p_Error_సంకేతం)) {
         /* Don't include the empty list */
-        return static_cast<uint16_t>(gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS);
+        తిరిగి static_cast<uint16_t>(g_Main_పట్టిక.ట్యాగ్_List_కొలత - UCNV_అంకె_HIDDEN_ట్యాగులు);
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-U_CAPI const char * U_EXPORT2
-ucnv_getStandard(uint16_t n, UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode)) {
-        if (n < gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) {
-            return GET_STRING(gMainTable.tagList[n]);
+U_CAPI స్థిరరాశి అక్షరం * U_EXPORT2
+ucnv_getStandard(uint16_t n, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ (have_Alias_దత్తాంశం(p_Error_సంకేతం)) {
+        ఒకవేళ (n < g_Main_పట్టిక.ట్యాగ్_List_కొలత - UCNV_అంకె_HIDDEN_ట్యాగులు) {
+            తిరిగి GET_STRING(g_Main_పట్టిక.ట్యాగ్_List[n]);
         }
-        *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
+        *p_Error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
     }
 
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-U_CAPI const char * U_EXPORT2
-ucnv_getStandardName(const char *alias, const char *standard, UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
-        uint32_t listOffset = findTaggedAliasListsOffset(alias, standard, pErrorCode);
+U_CAPI స్థిరరాశి అక్షరం * U_EXPORT2
+ucnv_getStandardName(స్థిరరాశి అక్షరం *alias, స్థిరరాశి అక్షరం *standard, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ (have_Alias_దత్తాంశం(p_Error_సంకేతం) && isAlias(alias, p_Error_సంకేతం)) {
+        uint32_t list_స్థానభ్రంశం = కనుగొను_Tagged_Alias_Lists_స్థానభ్రంశం(alias, standard, p_Error_సంకేతం);
 
-        if (0 < listOffset && listOffset < gMainTable.taggedAliasListsSize) {
-            const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+        ఒకవేళ (0 < list_స్థానభ్రంశం && list_స్థానభ్రంశం < g_Main_పట్టిక.tagged_Alias_Lists_కొలత) {
+            స్థిరరాశి uint16_t *currList = g_Main_పట్టిక.taggedAliasLists + list_స్థానభ్రంశం + 1;
 
             /* Get the preferred name from this list */
-            if (currList[0]) {
-                return GET_STRING(currList[0]);
+            ఒకవేళ (currList[0]) {
+                తిరిగి GET_STRING(currList[0]);
             }
             /* else someone screwed up the alias table. */
             /* *pErrorCode = U_INVALID_FORMAT_ERROR */
         }
     }
 
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 U_CAPI uint16_t U_EXPORT2
-ucnv_countAliases(const char *alias, UErrorCode *pErrorCode)
+ucnv_లెక్క_Aliases(స్థిరరాశి అక్షరం *alias, UError_సంకేతం *p_Error_సంకేతం)
 {
-    return ucnv_io_countAliases(alias, pErrorCode);
+    తిరిగి ucnv_io_లెక్క_Aliases(alias, p_Error_సంకేతం);
 }
 
 
-U_CAPI const char* U_EXPORT2
-ucnv_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ucnv_getAlias(స్థిరరాశి అక్షరం *alias, uint16_t n, UError_సంకేతం *p_Error_సంకేతం)
 {
-    return ucnv_io_getAlias(alias, n, pErrorCode);
+    తిరిగి ucnv_io_getAlias(alias, n, p_Error_సంకేతం);
 }
 
-U_CAPI void U_EXPORT2
-ucnv_getAliases(const char *alias, const char **aliases, UErrorCode *pErrorCode)
+U_CAPI శూన్య U_EXPORT2
+ucnv_getAliases(స్థిరరాశి అక్షరం *alias, స్థిరరాశి అక్షరం **aliases, UError_సంకేతం *p_Error_సంకేతం)
 {
-    ucnv_io_getAliases(alias, 0, aliases, pErrorCode);
+    ucnv_io_getAliases(alias, 0, aliases, p_Error_సంకేతం);
 }
 
 U_CAPI uint16_t U_EXPORT2
-ucnv_countStandards()
+ucnv_లెక్క_Standards()
 {
-    UErrorCode err = U_ZERO_ERROR;
-    return ucnv_io_countStandards(&err);
+    UError_సంకేతం err = U_ZERO_ERROR;
+    తిరిగి ucnv_io_లెక్క_Standards(&err);
 }
 
-U_CAPI const char * U_EXPORT2
-ucnv_getCanonicalName(const char *alias, const char *standard, UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
-        uint32_t convNum = findTaggedConverterNum(alias, standard, pErrorCode);
+U_CAPI స్థిరరాశి అక్షరం * U_EXPORT2
+ucnv_getCanonicalName(స్థిరరాశి అక్షరం *alias, స్థిరరాశి అక్షరం *standard, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ (have_Alias_దత్తాంశం(p_Error_సంకేతం) && isAlias(alias, p_Error_సంకేతం)) {
+        uint32_t conv_అంకె = కనుగొను_Tagged_Converter_అంకె(alias, standard, p_Error_సంకేతం);
 
-        if (convNum < gMainTable.converterListSize) {
-            return GET_STRING(gMainTable.converterList[convNum]);
+        ఒకవేళ (conv_అంకె < g_Main_పట్టిక.converter_List_కొలత) {
+            తిరిగి GET_STRING(g_Main_పట్టిక.converterList[conv_అంకె]);
         }
     }
 
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 U_CDECL_BEGIN
 
 
-static int32_t U_CALLCONV
-ucnv_io_countAllConverters(UEnumeration * /*enumerator*/, UErrorCode * /*pErrorCode*/) {
-    return gMainTable.converterListSize;
+స్థిర int32_t U_CALLCONV
+ucnv_io_లెక్క_All_Converters(UEnumeration * /*enumerator*/, UError_సంకేతం * /*pErrorCode*/) {
+    తిరిగి g_Main_పట్టిక.converter_List_కొలత;
 }
 
-static const char * U_CALLCONV
-ucnv_io_nextAllConverters(UEnumeration *enumerator,
-                            int32_t* resultLength,
-                            UErrorCode * /*pErrorCode*/)
+స్థిర స్థిరరాశి అక్షరం * U_CALLCONV
+ucnv_io_తదుపరి_All_Converters(UEnumeration *enumerator,
+                            int32_t* ఫలితం_నిడివి,
+                            UError_సంకేతం * /*pErrorCode*/)
 {
     uint16_t *myContext = (uint16_t *)(enumerator->context);
 
-    if (*myContext < gMainTable.converterListSize) {
-        const char *myStr = GET_STRING(gMainTable.converterList[(*myContext)++]);
-        if (resultLength) {
-            *resultLength = (int32_t)uprv_strlen(myStr);
+    ఒకవేళ (*myContext < g_Main_పట్టిక.converter_List_కొలత) {
+        స్థిరరాశి అక్షరం *myStr = GET_STRING(g_Main_పట్టిక.converterList[(*myContext)++]);
+        ఒకవేళ (ఫలితం_నిడివి) {
+            *ఫలితం_నిడివి = (int32_t)uprv_strlen(myStr);
         }
-        return myStr;
+        తిరిగి myStr;
     }
     /* Either we accessed a zero length list, or we enumerated too far. */
-    if (resultLength) {
-        *resultLength = 0;
+    ఒకవేళ (ఫలితం_నిడివి) {
+        *ఫలితం_నిడివి = 0;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-static void U_CALLCONV
-ucnv_io_resetAllConverters(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
+స్థిర శూన్య U_CALLCONV
+ucnv_io_resetAllConverters(UEnumeration *enumerator, UError_సంకేతం * /*pErrorCode*/) {
     *((uint16_t *)(enumerator->context)) = 0;
 }
-U_CDECL_END
-static const UEnumeration gEnumAllConverters = {
-    nullptr,
-    nullptr,
+U_CDECL_చివర
+స్థిర స్థిరరాశి UEnumeration gEnumAllConverters = {
+    శూన్యసూచిక,
+    శూన్యసూచిక,
     ucnv_io_closeUEnumeration,
-    ucnv_io_countAllConverters,
+    ucnv_io_లెక్క_All_Converters,
     uenum_unextDefault,
-    ucnv_io_nextAllConverters,
+    ucnv_io_తదుపరి_All_Converters,
     ucnv_io_resetAllConverters
 };
 
 U_CAPI UEnumeration * U_EXPORT2
-ucnv_openAllNames(UErrorCode *pErrorCode) {
-    UEnumeration *myEnum = nullptr;
-    if (haveAliasData(pErrorCode)) {
+ucnv_open_All_పేర్లు(UError_సంకేతం *p_Error_సంకేతం) {
+    UEnumeration *myEnum = శూన్యసూచిక;
+    ఒకవేళ (have_Alias_దత్తాంశం(p_Error_సంకేతం)) {
         uint16_t *myContext;
 
-        myEnum = static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration)));
-        if (myEnum == nullptr) {
-            *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+        myEnum = static_cast<UEnumeration *>(uprv_malloc(పరిమాణం(UEnumeration)));
+        ఒకవేళ (myEnum == శూన్యసూచిక) {
+            *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
-        uprv_memcpy(myEnum, &gEnumAllConverters, sizeof(UEnumeration));
-        myContext = static_cast<uint16_t *>(uprv_malloc(sizeof(uint16_t)));
-        if (myContext == nullptr) {
-            *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+        uprv_memcpy(myEnum, &gEnumAllConverters, పరిమాణం(UEnumeration));
+        myContext = static_cast<uint16_t *>(uprv_malloc(పరిమాణం(uint16_t)));
+        ఒకవేళ (myContext == శూన్యసూచిక) {
+            *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
             uprv_free(myEnum);
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
         *myContext = 0;
         myEnum->context = myContext;
     }
-    return myEnum;
+    తిరిగి myEnum;
 }
 
 U_CAPI uint16_t
-ucnv_io_countKnownConverters(UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode)) {
-        return (uint16_t)gMainTable.converterListSize;
+ucnv_io_లెక్క_తెలిసిన_Converters(UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ (have_Alias_దత్తాంశం(p_Error_సంకేతం)) {
+        తిరిగి (uint16_t)g_Main_పట్టిక.converter_List_కొలత;
     }
-    return 0;
+    తిరిగి 0;
 }
 
 /* alias table swapping ----------------------------------------------------- */
 
 U_CDECL_BEGIN
 
-typedef char * U_CALLCONV StripForCompareFn(char *dst, const char *name);
-U_CDECL_END
+రకనిర్వచనం అక్షరం * U_CALLCONV StripForCompareFn(అక్షరం *dst, స్థిరరాశి అక్షరం *name);
+U_CDECL_చివర
 
 
 /*
@@ -1131,164 +1131,164 @@ U_CDECL_END
  * after sorting this array by strings, the actual arrays are permutated
  * according to the sorting indexes
  */
-typedef struct TempRow {
-    uint16_t strIndex, sortIndex;
-} TempRow;
+రకనిర్వచనం నిర్మాణం తాత్కాలిక_అడ్డువరుస {
+    uint16_t str_సూచీ, క్రమీకరించు_సూచీ;
+} తాత్కాలిక_అడ్డువరుస;
 
-typedef struct TempAliasTable {
-    const char *chars;
-    TempRow *rows;
+రకనిర్వచనం నిర్మాణం తాత్కాలిక_Alias_పట్టిక {
+    స్థిరరాశి అక్షరం *chars;
+    తాత్కాలిక_అడ్డువరుస *అడ్డువరుసలు;
     uint16_t *resort;
     StripForCompareFn *stripForCompare;
-} TempAliasTable;
+} తాత్కాలిక_Alias_పట్టిక;
 
-enum {
-    STACK_ROW_CAPACITY=500
+గణన {
+    దొంతర_అడ్డువరుస_సామర్థ్యం=500
 };
 
-static int32_t U_CALLCONV
-io_compareRows(const void *context, const void *left, const void *right) {
-    char strippedLeft[UCNV_MAX_CONVERTER_NAME_LENGTH],
-         strippedRight[UCNV_MAX_CONVERTER_NAME_LENGTH];
+స్థిర int32_t U_CALLCONV
+io_compare_అడ్డువరుసలు(స్థిరరాశి శూన్య *context, స్థిరరాశి శూన్య *ఎడమ, స్థిరరాశి శూన్య *కుడి) {
+    అక్షరం stripped_ఎడమ[UCNV_MAX_CONVERTER_NAME_నిడివి],
+         stripped_కుడి[UCNV_MAX_CONVERTER_NAME_నిడివి];
 
-    TempAliasTable *tempTable=(TempAliasTable *)context;
-    const char *chars=tempTable->chars;
+    తాత్కాలిక_Alias_పట్టిక *తాత్కాలిక_పట్టిక=(తాత్కాలిక_Alias_పట్టిక *)context;
+    స్థిరరాశి అక్షరం *chars=తాత్కాలిక_పట్టిక->chars;
 
-    return static_cast<int32_t>(uprv_strcmp(
-        tempTable->stripForCompare(strippedLeft, chars + 2 * static_cast<const TempRow*>(left)->strIndex),
-        tempTable->stripForCompare(strippedRight, chars + 2 * static_cast<const TempRow*>(right)->strIndex)));
+    తిరిగి static_cast<int32_t>(uprv_strcmp(
+        తాత్కాలిక_పట్టిక->stripForCompare(stripped_ఎడమ, chars + 2 * static_cast<స్థిరరాశి తాత్కాలిక_అడ్డువరుస*>(ఎడమ)->str_సూచీ),
+        తాత్కాలిక_పట్టిక->stripForCompare(stripped_కుడి, chars + 2 * static_cast<స్థిరరాశి తాత్కాలిక_అడ్డువరుస*>(కుడి)->str_సూచీ)));
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_swapAliases(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
-                 UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+ucnv_మార్పిడి_Aliases(స్థిరరాశి UDataSwapper *ds,
+                 స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                 UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి UDataInfo *pInfo;
+    int32_t శీర్షిక_కొలత;
 
-    const uint16_t *inTable;
-    const uint32_t *inSectionSizes;
-    uint32_t toc[offsetsCount];
-    uint32_t offsets[offsetsCount]; /* 16-bit-addressed offsets from inTable/outTable */
-    uint32_t i, count, tocLength, topOffset;
+    స్థిరరాశి uint16_t *లోపల_పట్టిక;
+    స్థిరరాశి uint32_t *లోపల_Section_Sizes;
+    uint32_t toc[offsets_లెక్క];
+    uint32_t offsets[offsets_లెక్క]; /* 16-bit-addressed offsets from inTable/outTable */
+    uint32_t i, count, toc_నిడివి, శిఖరం_స్థానభ్రంశం;
 
-    TempRow rows[STACK_ROW_CAPACITY];
-    uint16_t resort[STACK_ROW_CAPACITY];
-    TempAliasTable tempTable;
+    తాత్కాలిక_అడ్డువరుస అడ్డువరుసలు[దొంతర_అడ్డువరుస_సామర్థ్యం];
+    uint16_t resort[దొంతర_అడ్డువరుస_సామర్థ్యం];
+    తాత్కాలిక_Alias_పట్టిక తాత్కాలిక_పట్టిక;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    శీర్షిక_కొలత=udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x43 &&   /* dataFormat="CvAl" */
-        pInfo->dataFormat[1]==0x76 &&
-        pInfo->dataFormat[2]==0x41 &&
-        pInfo->dataFormat[3]==0x6c &&
-        pInfo->formatVersion[0]==3
+    pInfo=(స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+4);
+    ఒకవేళ(!(
+        pInfo->దత్తాంశం_Format[0]==0x43 &&   /* dataFormat="CvAl" */
+        pInfo->దత్తాంశం_Format[1]==0x76 &&
+        pInfo->దత్తాంశం_Format[2]==0x41 &&
+        pInfo->దత్తాంశం_Format[3]==0x6c &&
+        pInfo->format_సంస్కరణ[0]==3
     )) {
         udata_printError(ds, "ucnv_swapAliases(): data format %02x.%02x.%02x.%02x (format version %02x) is not an alias table\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->దత్తాంశం_Format[0], pInfo->దత్తాంశం_Format[1],
+                         pInfo->దత్తాంశం_Format[2], pInfo->దత్తాంశం_Format[3],
+                         pInfo->format_సంస్కరణ[0]);
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
     /* an alias table must contain at least the table of contents array */
-    if(length>=0 && (length-headerSize)<4*(1+minTocLength)) {
+    ఒకవేళ(length>=0 && (length-శీర్షిక_కొలత)<4*(1+min_Toc_నిడివి)) {
         udata_printError(ds, "ucnv_swapAliases(): too few bytes (%d after header) for an alias table\n",
-                         length-headerSize);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+                         length-శీర్షిక_కొలత);
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
 
-    inSectionSizes=(const uint32_t *)((const char *)inData+headerSize);
-    inTable=(const uint16_t *)inSectionSizes;
-    uprv_memset(toc, 0, sizeof(toc));
-    toc[tocLengthIndex]=tocLength=ds->readUInt32(inSectionSizes[tocLengthIndex]);
-    if(tocLength<minTocLength || offsetsCount<=tocLength) {
-        udata_printError(ds, "ucnv_swapAliases(): table of contents contains unsupported number of sections (%u sections)\n", tocLength);
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+    లోపల_Section_Sizes=(స్థిరరాశి uint32_t *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+శీర్షిక_కొలత);
+    లోపల_పట్టిక=(స్థిరరాశి uint16_t *)లోపల_Section_Sizes;
+    uprv_memset(toc, 0, పరిమాణం(toc));
+    toc[toc_నిడివి_సూచీ]=toc_నిడివి=ds->readUInt32(లోపల_Section_Sizes[toc_నిడివి_సూచీ]);
+    ఒకవేళ(toc_నిడివి<min_Toc_నిడివి || offsets_లెక్క<=toc_నిడివి) {
+        udata_printError(ds, "ucnv_swapAliases(): table of contents contains unsupported number of sections (%u sections)\n", toc_నిడివి);
+        *p_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        తిరిగి 0;
     }
 
     /* read the known part of the table of contents */
-    for(i=converterListIndex; i<=tocLength; ++i) {
-        toc[i]=ds->readUInt32(inSectionSizes[i]);
+    కొరకు(i=converter_List_సూచీ; i<=toc_నిడివి; ++i) {
+        toc[i]=ds->readUInt32(లోపల_Section_Sizes[i]);
     }
 
     /* compute offsets */
-    uprv_memset(offsets, 0, sizeof(offsets));
-    offsets[converterListIndex]=2*(1+tocLength); /* count two 16-bit units per toc entry */
-    for(i=tagListIndex; i<=tocLength; ++i) {
+    uprv_memset(offsets, 0, పరిమాణం(offsets));
+    offsets[converter_List_సూచీ]=2*(1+toc_నిడివి); /* count two 16-bit units per toc entry */
+    కొరకు(i=ట్యాగ్_List_సూచీ; i<=toc_నిడివి; ++i) {
         offsets[i]=offsets[i-1]+toc[i-1];
     }
 
     /* compute the overall size of the after-header data, in numbers of 16-bit units */
-    topOffset=offsets[i-1]+toc[i-1];
+    శిఖరం_స్థానభ్రంశం=offsets[i-1]+toc[i-1];
 
-    if(length>=0) {
-        uint16_t *outTable;
-        const uint16_t *p, *p2;
+    ఒకవేళ(length>=0) {
+        uint16_t *బహిర్గతం_పట్టిక;
+        స్థిరరాశి uint16_t *p, *p2;
         uint16_t *q, *q2;
-        uint16_t oldIndex;
+        uint16_t old_సూచీ;
 
-        if((length-headerSize)<(2*(int32_t)topOffset)) {
+        ఒకవేళ((length-శీర్షిక_కొలత)<(2*(int32_t)శిఖరం_స్థానభ్రంశం)) {
             udata_printError(ds, "ucnv_swapAliases(): too few bytes (%d after header) for an alias table\n",
-                             length-headerSize);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+                             length-శీర్షిక_కొలత);
+            *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి 0;
         }
 
-        outTable=(uint16_t *)((char *)outData+headerSize);
+        బహిర్గతం_పట్టిక=(uint16_t *)((అక్షరం *)బహిర్గతం_దత్తాంశం+శీర్షిక_కొలత);
 
         /* swap the entire table of contents */
-        ds->swapArray32(ds, inTable, 4*(1+tocLength), outTable, pErrorCode);
+        ds->మార్పిడి_Array32(ds, లోపల_పట్టిక, 4*(1+toc_నిడివి), బహిర్గతం_పట్టిక, p_Error_సంకేతం);
 
         /* swap unormalized strings & normalized strings */
-        ds->swapInvChars(ds, inTable+offsets[stringTableIndex], 2*(int32_t)(toc[stringTableIndex]+toc[normalizedStringTableIndex]),
-                             outTable+offsets[stringTableIndex], pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        ds->మార్పిడి_Inv_Chars(ds, లోపల_పట్టిక+offsets[string_పట్టిక_సూచీ], 2*(int32_t)(toc[string_పట్టిక_సూచీ]+toc[normalized_String_పట్టిక_సూచీ]),
+                             బహిర్గతం_పట్టిక+offsets[string_పట్టిక_సూచీ], p_Error_సంకేతం);
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             udata_printError(ds, "ucnv_swapAliases().swapInvChars(charset names) failed\n");
-            return 0;
+            తిరిగి 0;
         }
 
-        if(ds->inCharset==ds->outCharset) {
+        ఒకవేళ(ds->లోపల_Charset==ds->బహిర్గతం_Charset) {
             /* no need to sort, just swap all 16-bit values together */
-            ds->swapArray16(ds,
-                            inTable+offsets[converterListIndex],
-                            2*(int32_t)(offsets[stringTableIndex]-offsets[converterListIndex]),
-                            outTable+offsets[converterListIndex],
-                            pErrorCode);
-        } else {
+            ds->మార్పిడి_Array16(ds,
+                            లోపల_పట్టిక+offsets[converter_List_సూచీ],
+                            2*(int32_t)(offsets[string_పట్టిక_సూచీ]-offsets[converter_List_సూచీ]),
+                            బహిర్గతం_పట్టిక+offsets[converter_List_సూచీ],
+                            p_Error_సంకేతం);
+        } లేకపోతే {
             /* allocate the temporary table for sorting */
-            count=toc[aliasListIndex];
+            count=toc[alias_List_సూచీ];
 
-            tempTable.chars=(const char *)(outTable+offsets[stringTableIndex]); /* sort by outCharset */
+            తాత్కాలిక_పట్టిక.chars=(స్థిరరాశి అక్షరం *)(బహిర్గతం_పట్టిక+offsets[string_పట్టిక_సూచీ]); /* sort by outCharset */
 
-            if(count<=STACK_ROW_CAPACITY) {
-                tempTable.rows=rows;
-                tempTable.resort=resort;
-            } else {
-                tempTable.rows=(TempRow *)uprv_malloc(count*sizeof(TempRow)+count*2);
-                if(tempTable.rows==nullptr) {
+            ఒకవేళ(count<=దొంతర_అడ్డువరుస_సామర్థ్యం) {
+                తాత్కాలిక_పట్టిక.అడ్డువరుసలు=అడ్డువరుసలు;
+                తాత్కాలిక_పట్టిక.resort=resort;
+            } లేకపోతే {
+                తాత్కాలిక_పట్టిక.అడ్డువరుసలు=(తాత్కాలిక_అడ్డువరుస *)uprv_malloc(count*పరిమాణం(తాత్కాలిక_అడ్డువరుస)+count*2);
+                ఒకవేళ(తాత్కాలిక_పట్టిక.అడ్డువరుసలు==శూన్యసూచిక) {
                     udata_printError(ds, "ucnv_swapAliases(): unable to allocate memory for sorting tables (max length: %u)\n",
                                      count);
-                    *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return 0;
+                    *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    తిరిగి 0;
                 }
-                tempTable.resort=(uint16_t *)(tempTable.rows+count);
+                తాత్కాలిక_పట్టిక.resort=(uint16_t *)(తాత్కాలిక_పట్టిక.అడ్డువరుసలు+count);
             }
 
-            if(ds->outCharset==U_ASCII_FAMILY) {
-                tempTable.stripForCompare=ucnv_io_stripASCIIForCompare;
-            } else /* U_EBCDIC_FAMILY */ {
-                tempTable.stripForCompare=ucnv_io_stripEBCDICForCompare;
+            ఒకవేళ(ds->బహిర్గతం_Charset==U_ASCII_FAMILY) {
+                తాత్కాలిక_పట్టిక.stripForCompare=ucnv_io_stripASCIIForCompare;
+            } లేకపోతే /* U_EBCDIC_FAMILY */ {
+                తాత్కాలిక_పట్టిక.stripForCompare=ucnv_io_stripEBCDICForCompare;
             }
 
             /*
@@ -1300,79 +1300,79 @@ ucnv_swapAliases(const UDataSwapper *ds,
              * sorting indexes and sort that.
              * Then we permutate and copy/swap the actual values.
              */
-            p=inTable+offsets[aliasListIndex];
-            q=outTable+offsets[aliasListIndex];
+            p=లోపల_పట్టిక+offsets[alias_List_సూచీ];
+            q=బహిర్గతం_పట్టిక+offsets[alias_List_సూచీ];
 
-            p2=inTable+offsets[untaggedConvArrayIndex];
-            q2=outTable+offsets[untaggedConvArrayIndex];
+            p2=లోపల_పట్టిక+offsets[untagged_Conv_Array_సూచీ];
+            q2=బహిర్గతం_పట్టిక+offsets[untagged_Conv_Array_సూచీ];
 
-            for(i=0; i<count; ++i) {
-                tempTable.rows[i].strIndex=ds->readUInt16(p[i]);
-                tempTable.rows[i].sortIndex=(uint16_t)i;
+            కొరకు(i=0; i<count; ++i) {
+                తాత్కాలిక_పట్టిక.అడ్డువరుసలు[i].str_సూచీ=ds->readUInt16(p[i]);
+                తాత్కాలిక_పట్టిక.అడ్డువరుసలు[i].క్రమీకరించు_సూచీ=(uint16_t)i;
             }
 
-            uprv_sortArray(tempTable.rows, (int32_t)count, sizeof(TempRow),
-                           io_compareRows, &tempTable,
-                           false, pErrorCode);
+            uprv_క్రమీకరించు_Array(తాత్కాలిక_పట్టిక.అడ్డువరుసలు, (int32_t)count, పరిమాణం(తాత్కాలిక_అడ్డువరుస),
+                           io_compare_అడ్డువరుసలు, &తాత్కాలిక_పట్టిక,
+                           అబద్ధం, p_Error_సంకేతం);
 
-            if(U_SUCCESS(*pErrorCode)) {
+            ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం)) {
                 /* copy/swap/permutate items */
-                if(p!=q) {
-                    for(i=0; i<count; ++i) {
-                        oldIndex=tempTable.rows[i].sortIndex;
-                        ds->swapArray16(ds, p+oldIndex, 2, q+i, pErrorCode);
-                        ds->swapArray16(ds, p2+oldIndex, 2, q2+i, pErrorCode);
+                ఒకవేళ(p!=q) {
+                    కొరకు(i=0; i<count; ++i) {
+                        old_సూచీ=తాత్కాలిక_పట్టిక.అడ్డువరుసలు[i].క్రమీకరించు_సూచీ;
+                        ds->మార్పిడి_Array16(ds, p+old_సూచీ, 2, q+i, p_Error_సంకేతం);
+                        ds->మార్పిడి_Array16(ds, p2+old_సూచీ, 2, q2+i, p_Error_సంకేతం);
                     }
-                } else {
+                } లేకపోతే {
                     /*
                      * If we swap in-place, then the permutation must use another
                      * temporary array (tempTable.resort)
                      * before the results are copied to the outBundle.
                      */
-                    uint16_t *r=tempTable.resort;
+                    uint16_t *r=తాత్కాలిక_పట్టిక.resort;
 
-                    for(i=0; i<count; ++i) {
-                        oldIndex=tempTable.rows[i].sortIndex;
-                        ds->swapArray16(ds, p+oldIndex, 2, r+i, pErrorCode);
+                    కొరకు(i=0; i<count; ++i) {
+                        old_సూచీ=తాత్కాలిక_పట్టిక.అడ్డువరుసలు[i].క్రమీకరించు_సూచీ;
+                        ds->మార్పిడి_Array16(ds, p+old_సూచీ, 2, r+i, p_Error_సంకేతం);
                     }
                     uprv_memcpy(q, r, 2*(size_t)count);
 
-                    for(i=0; i<count; ++i) {
-                        oldIndex=tempTable.rows[i].sortIndex;
-                        ds->swapArray16(ds, p2+oldIndex, 2, r+i, pErrorCode);
+                    కొరకు(i=0; i<count; ++i) {
+                        old_సూచీ=తాత్కాలిక_పట్టిక.అడ్డువరుసలు[i].క్రమీకరించు_సూచీ;
+                        ds->మార్పిడి_Array16(ds, p2+old_సూచీ, 2, r+i, p_Error_సంకేతం);
                     }
                     uprv_memcpy(q2, r, 2*(size_t)count);
                 }
             }
 
-            if(tempTable.rows!=rows) {
-                uprv_free(tempTable.rows);
+            ఒకవేళ(తాత్కాలిక_పట్టిక.అడ్డువరుసలు!=అడ్డువరుసలు) {
+                uprv_free(తాత్కాలిక_పట్టిక.అడ్డువరుసలు);
             }
 
-            if(U_FAILURE(*pErrorCode)) {
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                 udata_printError(ds, "ucnv_swapAliases().uprv_sortArray(%u items) failed\n",
                                  count);
-                return 0;
+                తిరిగి 0;
             }
 
             /* swap remaining 16-bit values */
-            ds->swapArray16(ds,
-                            inTable+offsets[converterListIndex],
-                            2*(int32_t)(offsets[aliasListIndex]-offsets[converterListIndex]),
-                            outTable+offsets[converterListIndex],
-                            pErrorCode);
-            ds->swapArray16(ds,
-                            inTable+offsets[taggedAliasArrayIndex],
-                            2*(int32_t)(offsets[stringTableIndex]-offsets[taggedAliasArrayIndex]),
-                            outTable+offsets[taggedAliasArrayIndex],
-                            pErrorCode);
+            ds->మార్పిడి_Array16(ds,
+                            లోపల_పట్టిక+offsets[converter_List_సూచీ],
+                            2*(int32_t)(offsets[alias_List_సూచీ]-offsets[converter_List_సూచీ]),
+                            బహిర్గతం_పట్టిక+offsets[converter_List_సూచీ],
+                            p_Error_సంకేతం);
+            ds->మార్పిడి_Array16(ds,
+                            లోపల_పట్టిక+offsets[tagged_Alias_Array_సూచీ],
+                            2*(int32_t)(offsets[string_పట్టిక_సూచీ]-offsets[tagged_Alias_Array_సూచీ]),
+                            బహిర్గతం_పట్టిక+offsets[tagged_Alias_Array_సూచీ],
+                            p_Error_సంకేతం);
         }
     }
 
-    return headerSize+2*(int32_t)topOffset;
+    తిరిగి శీర్షిక_కొలత+2*(int32_t)శిఖరం_స్థానభ్రంశం;
 }
 
-#endif
+#అయితే_ముగింపు
 
 
 /*

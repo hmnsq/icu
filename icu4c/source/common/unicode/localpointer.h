@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __LOCALPOINTER_H__
-#define __LOCALPOINTER_H__
+#నిర్వచితం_కాకపోతే __LOCALPOINTER_H__
+#నిర్వచించు __LOCALPOINTER_H__
 
 /**
  * \file
@@ -38,11 +38,11 @@
  * For details see https://icu.unicode.org/design/cpp/scoped_ptr
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include <memory>
+#అన్తర్భావ <memory>
 
 U_NAMESPACE_BEGIN
 
@@ -64,38 +64,38 @@ U_NAMESPACE_BEGIN
  * @see U_DEFINE_LOCAL_OPEN_POINTER
  * @stable ICU 4.4
  */
-template<typename T>
-class LocalPointerBase {
-public:
+మూస<typename T>
+class Local_సూచిక_పునాది {
+బహిరంగ:
     // No heap allocation. Use only on the stack.
-    static void* U_EXPORT2 operator new(size_t) = delete;
-    static void* U_EXPORT2 operator new[](size_t) = delete;
-    static void* U_EXPORT2 operator new(size_t, void*) = delete;
+    స్థిర శూన్య* U_EXPORT2 క్రియాకారకం new(size_t) = delete;
+    స్థిర శూన్య* U_EXPORT2 క్రియాకారకం new[](size_t) = delete;
+    స్థిర శూన్య* U_EXPORT2 క్రియాకారకం new(size_t, శూన్య*) = delete;
 
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    explicit LocalPointerBase(T *p=nullptr) : ptr(p) {}
+    explicit Local_సూచిక_పునాది(T *p=nullptr) : ptr(p) {}
     /**
      * Destructor deletes the object it owns.
      * Subclass must override: Base class does nothing.
      * @stable ICU 4.4
      */
-    ~LocalPointerBase() { /* delete ptr; */ }
+    ~Local_సూచిక_పునాది() { /* delete ptr; */ }
     /**
      * nullptr check.
      * @return true if ==nullptr
      * @stable ICU 4.4
      */
-    UBool isNull() const { return ptr==nullptr; }
+    UBool isNull() స్థిరరాశి { తిరిగి ptr==nullptr; }
     /**
      * nullptr check.
      * @return true if !=nullptr
      * @stable ICU 4.4
      */
-    UBool isValid() const { return ptr!=nullptr; }
+    UBool isValid() స్థిరరాశి { తిరిగి ptr!=nullptr; }
     /**
      * Comparison with a simple pointer, so that existing code
      * with ==nullptr need not be changed.
@@ -103,7 +103,7 @@ public:
      * @return true if this pointer value equals other
      * @stable ICU 4.4
      */
-    bool operator==(const T *other) const { return ptr==other; }
+    bool క్రియాకారకం==(స్థిరరాశి T *other) స్థిరరాశి { తిరిగి ptr==other; }
     /**
      * Comparison with a simple pointer, so that existing code
      * with !=nullptr need not be changed.
@@ -111,25 +111,25 @@ public:
      * @return true if this pointer value differs from other
      * @stable ICU 4.4
      */
-    bool operator!=(const T *other) const { return ptr!=other; }
+    bool క్రియాకారకం!=(స్థిరరాశి T *other) స్థిరరాశి { తిరిగి ptr!=other; }
     /**
      * Access without ownership change.
      * @return the pointer value
      * @stable ICU 4.4
      */
-    T* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    T* getAlias() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి ptr; }
     /**
      * Access without ownership change.
      * @return the pointer value as a reference
      * @stable ICU 4.4
      */
-    T& operator*() const U_LIFETIME_BOUND { return *ptr; }
+    T& క్రియాకారకం*() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి *ptr; }
     /**
      * Access without ownership change.
      * @return the pointer value
      * @stable ICU 4.4
      */
-    T* operator->() const U_LIFETIME_BOUND { return ptr; }
+    T* క్రియాకారకం->() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి ptr; }
     /**
      * Gives up ownership; the internal pointer becomes nullptr.
      * @return the pointer value;
@@ -139,7 +139,7 @@ public:
     T *orphan() {
         T *p=ptr;
         ptr=nullptr;
-        return p;
+        తిరిగి p;
     }
     /**
      * Deletes the object it owns,
@@ -148,23 +148,23 @@ public:
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    void adoptInstead(T *p) {
+    శూన్య adoptInstead(T *p) {
         // delete ptr;
         ptr=p;
     }
-protected:
+రక్షిత:
     /**
      * Actual pointer.
      * @internal
      */
     T *ptr;
-private:
+అంతరంగ:
     // No comparison operators with other LocalPointerBases.
-    bool operator==(const LocalPointerBase<T> &other) = delete;
-    bool operator!=(const LocalPointerBase<T> &other) = delete;
+    bool క్రియాకారకం==(స్థిరరాశి Local_సూచిక_పునాది<T> &other) = delete;
+    bool క్రియాకారకం!=(స్థిరరాశి Local_సూచిక_పునాది<T> &other) = delete;
     // No ownership sharing: No copy constructor, no assignment operator.
-    LocalPointerBase(const LocalPointerBase<T> &other) = delete;
-    void operator=(const LocalPointerBase<T> &other) = delete;
+    Local_సూచిక_పునాది(స్థిరరాశి Local_సూచిక_పునాది<T> &other) = delete;
+    శూన్య క్రియాకారకం=(స్థిరరాశి Local_సూచిక_పునాది<T> &other) = delete;
 };
 
 /**
@@ -185,17 +185,17 @@ private:
  * @see LocalPointerBase
  * @stable ICU 4.4
  */
-template<typename T>
-class LocalPointer : public LocalPointerBase<T> {
-public:
-    using LocalPointerBase<T>::operator*;
-    using LocalPointerBase<T>::operator->;
+మూస<typename T>
+class Local_సూచిక : బహిరంగ Local_సూచిక_పునాది<T> {
+బహిరంగ:
+    using Local_సూచిక_పునాది<T>::క్రియాకారకం*;
+    using Local_సూచిక_పునాది<T>::క్రియాకారకం->;
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    explicit LocalPointer(T *p=nullptr) : LocalPointerBase<T>(p) {}
+    explicit Local_సూచిక(T *p=nullptr) : Local_సూచిక_పునాది<T>(p) {}
     /**
      * Constructor takes ownership and reports an error if nullptr.
      *
@@ -209,9 +209,9 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 55
      */
-    LocalPointer(T *p, UErrorCode &errorCode) : LocalPointerBase<T>(p) {
-        if(p==nullptr && U_SUCCESS(errorCode)) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
+    Local_సూచిక(T *p, UError_సంకేతం &error_సంకేతం) : Local_సూచిక_పునాది<T>(p) {
+        ఒకవేళ(p==nullptr && U_SUCCESS(error_సంకేతం)) {
+            error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
         }
     }
     /**
@@ -219,7 +219,7 @@ public:
      * @param src source smart pointer
      * @stable ICU 56
      */
-    LocalPointer(LocalPointer<T> &&src) noexcept : LocalPointerBase<T>(src.ptr) {
+    Local_సూచిక(Local_సూచిక<T> &&src) noexcept : Local_సూచిక_పునాది<T>(src.ptr) {
         src.ptr=nullptr;
     }
 
@@ -233,15 +233,15 @@ public:
      * @param p The std::unique_ptr from which the pointer will be stolen.
      * @stable ICU 64
      */
-    explicit LocalPointer(std::unique_ptr<T> &&p)
-        : LocalPointerBase<T>(p.release()) {}
+    explicit Local_సూచిక(std::unique_ptr<T> &&p)
+        : Local_సూచిక_పునాది<T>(p.release()) {}
 
     /**
      * Destructor deletes the object it owns.
      * @stable ICU 4.4
      */
-    ~LocalPointer() {
-        delete LocalPointerBase<T>::ptr;
+    ~Local_సూచిక() {
+        delete Local_సూచిక_పునాది<T>::ptr;
     }
     /**
      * Move assignment operator, leaves src with isNull().
@@ -250,11 +250,11 @@ public:
      * @return *this
      * @stable ICU 56
      */
-    LocalPointer<T>& operator=(LocalPointer<T>&& src) noexcept U_LIFETIME_BOUND {
-        delete LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=src.ptr;
+    Local_సూచిక<T>& క్రియాకారకం=(Local_సూచిక<T>&& src) noexcept U_LIFETIME_BOUND {
+        delete Local_సూచిక_పునాది<T>::ptr;
+        Local_సూచిక_పునాది<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        తిరిగి *this;
     }
 
     /**
@@ -265,9 +265,9 @@ public:
      * @return *this
      * @stable ICU 64
      */
-    LocalPointer<T>& operator=(std::unique_ptr<T>&& p) noexcept U_LIFETIME_BOUND {
+    Local_సూచిక<T>& క్రియాకారకం=(std::unique_ptr<T>&& p) noexcept U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        తిరిగి *this;
     }
 
     /**
@@ -275,10 +275,10 @@ public:
      * @param other other smart pointer
      * @stable ICU 56
      */
-    void swap(LocalPointer<T> &other) noexcept {
-        T *temp=LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=other.ptr;
-        other.ptr=temp;
+    శూన్య మార్పిడి(Local_సూచిక<T> &other) noexcept {
+        T *తాత్కాలిక=Local_సూచిక_పునాది<T>::ptr;
+        Local_సూచిక_పునాది<T>::ptr=other.ptr;
+        other.ptr=తాత్కాలిక;
     }
     /**
      * Non-member LocalPointer swap function.
@@ -286,8 +286,8 @@ public:
      * @param p2 will get p1's pointer
      * @stable ICU 56
      */
-    friend inline void swap(LocalPointer<T> &p1, LocalPointer<T> &p2) noexcept {
-        p1.swap(p2);
+    మిత్ర అంతఃవరుస శూన్య మార్పిడి(Local_సూచిక<T> &p1, Local_సూచిక<T> &p2) noexcept {
+        p1.మార్పిడి(p2);
     }
     /**
      * Deletes the object it owns,
@@ -295,9 +295,9 @@ public:
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    void adoptInstead(T *p) {
-        delete LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=p;
+    శూన్య adoptInstead(T *p) {
+        delete Local_సూచిక_పునాది<T>::ptr;
+        Local_సూచిక_పునాది<T>::ptr=p;
     }
     /**
      * Deletes the object it owns,
@@ -314,14 +314,14 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 55
      */
-    void adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
-        if(U_SUCCESS(errorCode)) {
-            delete LocalPointerBase<T>::ptr;
-            LocalPointerBase<T>::ptr=p;
-            if(p==nullptr) {
-                errorCode=U_MEMORY_ALLOCATION_ERROR;
+    శూన్య adopt_Instead_And_Check_Error_సంకేతం(T *p, UError_సంకేతం &error_సంకేతం) {
+        ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+            delete Local_సూచిక_పునాది<T>::ptr;
+            Local_సూచిక_పునాది<T>::ptr=p;
+            ఒకవేళ(p==nullptr) {
+                error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
             }
-        } else {
+        } లేకపోతే {
             delete p;
         }
     }
@@ -337,8 +337,8 @@ public:
      *         icu::LocalPointer.
      * @stable ICU 64
      */
-    operator std::unique_ptr<T> () && {
-        return std::unique_ptr<T>(LocalPointerBase<T>::orphan());
+    క్రియాకారకం std::unique_ptr<T> () && {
+        తిరిగి std::unique_ptr<T>(Local_సూచిక_పునాది<T>::orphan());
     }
 };
 
@@ -360,17 +360,17 @@ public:
  * @see LocalPointerBase
  * @stable ICU 4.4
  */
-template<typename T>
-class LocalArray : public LocalPointerBase<T> {
-public:
-    using LocalPointerBase<T>::operator*;
-    using LocalPointerBase<T>::operator->;
+మూస<typename T>
+class LocalArray : బహిరంగ Local_సూచిక_పునాది<T> {
+బహిరంగ:
+    using Local_సూచిక_పునాది<T>::క్రియాకారకం*;
+    using Local_సూచిక_పునాది<T>::క్రియాకారకం->;
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an array of T objects that is adopted
      * @stable ICU 4.4
      */
-    explicit LocalArray(T *p=nullptr) : LocalPointerBase<T>(p) {}
+    explicit LocalArray(T *p=nullptr) : Local_సూచిక_పునాది<T>(p) {}
     /**
      * Constructor takes ownership and reports an error if nullptr.
      *
@@ -384,9 +384,9 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 56
      */
-    LocalArray(T *p, UErrorCode &errorCode) : LocalPointerBase<T>(p) {
-        if(p==nullptr && U_SUCCESS(errorCode)) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
+    LocalArray(T *p, UError_సంకేతం &error_సంకేతం) : Local_సూచిక_పునాది<T>(p) {
+        ఒకవేళ(p==nullptr && U_SUCCESS(error_సంకేతం)) {
+            error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
         }
     }
     /**
@@ -394,7 +394,7 @@ public:
      * @param src source smart pointer
      * @stable ICU 56
      */
-    LocalArray(LocalArray<T> &&src) noexcept : LocalPointerBase<T>(src.ptr) {
+    LocalArray(LocalArray<T> &&src) noexcept : Local_సూచిక_పునాది<T>(src.ptr) {
         src.ptr=nullptr;
     }
 
@@ -409,14 +409,14 @@ public:
      * @stable ICU 64
      */
     explicit LocalArray(std::unique_ptr<T[]> &&p)
-        : LocalPointerBase<T>(p.release()) {}
+        : Local_సూచిక_పునాది<T>(p.release()) {}
 
     /**
      * Destructor deletes the array it owns.
      * @stable ICU 4.4
      */
     ~LocalArray() {
-        delete[] LocalPointerBase<T>::ptr;
+        delete[] Local_సూచిక_పునాది<T>::ptr;
     }
     /**
      * Move assignment operator, leaves src with isNull().
@@ -425,11 +425,11 @@ public:
      * @return *this
      * @stable ICU 56
      */
-    LocalArray<T>& operator=(LocalArray<T>&& src) noexcept U_LIFETIME_BOUND {
-        delete[] LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=src.ptr;
+    LocalArray<T>& క్రియాకారకం=(LocalArray<T>&& src) noexcept U_LIFETIME_BOUND {
+        delete[] Local_సూచిక_పునాది<T>::ptr;
+        Local_సూచిక_పునాది<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        తిరిగి *this;
     }
 
     /**
@@ -440,9 +440,9 @@ public:
      * @return *this
      * @stable ICU 64
      */
-    LocalArray<T>& operator=(std::unique_ptr<T[]>&& p) noexcept U_LIFETIME_BOUND {
+    LocalArray<T>& క్రియాకారకం=(std::unique_ptr<T[]>&& p) noexcept U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        తిరిగి *this;
     }
 
     /**
@@ -450,10 +450,10 @@ public:
      * @param other other smart pointer
      * @stable ICU 56
      */
-    void swap(LocalArray<T> &other) noexcept {
-        T *temp=LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=other.ptr;
-        other.ptr=temp;
+    శూన్య మార్పిడి(LocalArray<T> &other) noexcept {
+        T *తాత్కాలిక=Local_సూచిక_పునాది<T>::ptr;
+        Local_సూచిక_పునాది<T>::ptr=other.ptr;
+        other.ptr=తాత్కాలిక;
     }
     /**
      * Non-member LocalArray swap function.
@@ -461,8 +461,8 @@ public:
      * @param p2 will get p1's pointer
      * @stable ICU 56
      */
-    friend inline void swap(LocalArray<T> &p1, LocalArray<T> &p2) noexcept {
-        p1.swap(p2);
+    మిత్ర అంతఃవరుస శూన్య మార్పిడి(LocalArray<T> &p1, LocalArray<T> &p2) noexcept {
+        p1.మార్పిడి(p2);
     }
     /**
      * Deletes the array it owns,
@@ -470,9 +470,9 @@ public:
      * @param p simple pointer to an array of T objects that is adopted
      * @stable ICU 4.4
      */
-    void adoptInstead(T *p) {
-        delete[] LocalPointerBase<T>::ptr;
-        LocalPointerBase<T>::ptr=p;
+    శూన్య adoptInstead(T *p) {
+        delete[] Local_సూచిక_పునాది<T>::ptr;
+        Local_సూచిక_పునాది<T>::ptr=p;
     }
     /**
      * Deletes the array it owns,
@@ -489,14 +489,14 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 56
      */
-    void adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
-        if(U_SUCCESS(errorCode)) {
-            delete[] LocalPointerBase<T>::ptr;
-            LocalPointerBase<T>::ptr=p;
-            if(p==nullptr) {
-                errorCode=U_MEMORY_ALLOCATION_ERROR;
+    శూన్య adopt_Instead_And_Check_Error_సంకేతం(T *p, UError_సంకేతం &error_సంకేతం) {
+        ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+            delete[] Local_సూచిక_పునాది<T>::ptr;
+            Local_సూచిక_పునాది<T>::ptr=p;
+            ఒకవేళ(p==nullptr) {
+                error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
             }
-        } else {
+        } లేకపోతే {
             delete[] p;
         }
     }
@@ -507,7 +507,7 @@ public:
      * @return reference to the array item
      * @stable ICU 4.4
      */
-    T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return LocalPointerBase<T>::ptr[i]; }
+    T& క్రియాకారకం[](ptrdiff_t i) స్థిరరాశి U_LIFETIME_BOUND { తిరిగి Local_సూచిక_పునాది<T>::ptr[i]; }
 
     /**
      * Conversion operator to a C++11 std::unique_ptr.
@@ -520,8 +520,8 @@ public:
      *         icu::LocalPointer.
      * @stable ICU 64
      */
-    operator std::unique_ptr<T[]> () && {
-        return std::unique_ptr<T[]>(LocalPointerBase<T>::orphan());
+    క్రియాకారకం std::unique_ptr<T[]> () && {
+        తిరిగి std::unique_ptr<T[]>(Local_సూచిక_పునాది<T>::orphan());
     }
 };
 
@@ -545,64 +545,64 @@ public:
  * @see LocalPointer
  * @stable ICU 4.4
  */
-#define U_DEFINE_LOCAL_OPEN_POINTER(LocalPointerClassName, Type, closeFunction) \
-    using LocalPointerClassName = internal::LocalOpenPointer<Type, closeFunction>
+#నిర్వచించు U_DEFINE_LOCAL_OPEN_సూచిక(Local_సూచిక_Class_Name, Type, closeFunction) \
+    using Local_సూచిక_Class_Name = అంతర్గత_2::Local_Open_సూచిక<Type, closeFunction>
 
-#ifndef U_IN_DOXYGEN
-namespace internal {
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
+namespace అంతర్గత_2 {
 /**
  * Implementation, do not use directly: use U_DEFINE_LOCAL_OPEN_POINTER.
  *
  * @see U_DEFINE_LOCAL_OPEN_POINTER
  * @internal
  */
-template <typename Type, auto closeFunction>
-class LocalOpenPointer : public LocalPointerBase<Type> {
-    using LocalPointerBase<Type>::ptr;
-public:
-    using LocalPointerBase<Type>::operator*;
-    using LocalPointerBase<Type>::operator->;
-    explicit LocalOpenPointer(Type *p=nullptr) : LocalPointerBase<Type>(p) {}
-    LocalOpenPointer(LocalOpenPointer &&src) noexcept
-            : LocalPointerBase<Type>(src.ptr) {
+మూస <typename Type, స్వయంచాలక closeFunction>
+class Local_Open_సూచిక : బహిరంగ Local_సూచిక_పునాది<Type> {
+    using Local_సూచిక_పునాది<Type>::ptr;
+బహిరంగ:
+    using Local_సూచిక_పునాది<Type>::క్రియాకారకం*;
+    using Local_సూచిక_పునాది<Type>::క్రియాకారకం->;
+    explicit Local_Open_సూచిక(Type *p=nullptr) : Local_సూచిక_పునాది<Type>(p) {}
+    Local_Open_సూచిక(Local_Open_సూచిక &&src) noexcept
+            : Local_సూచిక_పునాది<Type>(src.ptr) {
         src.ptr=nullptr;
     }
     /* TODO: Be agnostic of the deleter function signature from the user-provided std::unique_ptr? */
-    explicit LocalOpenPointer(std::unique_ptr<Type, decltype(closeFunction)> &&p)
-            : LocalPointerBase<Type>(p.release()) {}
-    ~LocalOpenPointer() { if (ptr != nullptr) { closeFunction(ptr); } }
-    LocalOpenPointer& operator=(LocalOpenPointer&& src) noexcept U_LIFETIME_BOUND {
-        if (ptr != nullptr) { closeFunction(ptr); }
-        LocalPointerBase<Type>::ptr=src.ptr;
+    explicit Local_Open_సూచిక(std::unique_ptr<Type, decltype(closeFunction)> &&p)
+            : Local_సూచిక_పునాది<Type>(p.release()) {}
+    ~Local_Open_సూచిక() { ఒకవేళ (ptr != nullptr) { closeFunction(ptr); } }
+    Local_Open_సూచిక& క్రియాకారకం=(Local_Open_సూచిక&& src) noexcept U_LIFETIME_BOUND {
+        ఒకవేళ (ptr != nullptr) { closeFunction(ptr); }
+        Local_సూచిక_పునాది<Type>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        తిరిగి *this;
     }
     /* TODO: Be agnostic of the deleter function signature from the user-provided std::unique_ptr? */
-    LocalOpenPointer&
-    operator=(std::unique_ptr<Type, decltype(closeFunction)>&& p) U_LIFETIME_BOUND {
+    Local_Open_సూచిక&
+    క్రియాకారకం=(std::unique_ptr<Type, decltype(closeFunction)>&& p) U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        తిరిగి *this;
     }
-    void swap(LocalOpenPointer &other) noexcept {
-        Type *temp=LocalPointerBase<Type>::ptr;
-        LocalPointerBase<Type>::ptr=other.ptr;
-        other.ptr=temp;
+    శూన్య మార్పిడి(Local_Open_సూచిక &other) noexcept {
+        Type *తాత్కాలిక=Local_సూచిక_పునాది<Type>::ptr;
+        Local_సూచిక_పునాది<Type>::ptr=other.ptr;
+        other.ptr=తాత్కాలిక;
     }
-    friend inline void swap(LocalOpenPointer &p1, LocalOpenPointer &p2) noexcept {
-        p1.swap(p2);
+    మిత్ర అంతఃవరుస శూన్య మార్పిడి(Local_Open_సూచిక &p1, Local_Open_సూచిక &p2) noexcept {
+        p1.మార్పిడి(p2);
     }
-    void adoptInstead(Type *p) {
-        if (ptr != nullptr) { closeFunction(ptr); }
+    శూన్య adoptInstead(Type *p) {
+        ఒకవేళ (ptr != nullptr) { closeFunction(ptr); }
         ptr=p;
     }
-    operator std::unique_ptr<Type, decltype(closeFunction)> () && {
-        return std::unique_ptr<Type, decltype(closeFunction)>(LocalPointerBase<Type>::orphan(), closeFunction);
+    క్రియాకారకం std::unique_ptr<Type, decltype(closeFunction)> () && {
+        తిరిగి std::unique_ptr<Type, decltype(closeFunction)>(Local_సూచిక_పునాది<Type>::orphan(), closeFunction);
     }
 };
 }  // namespace internal
-#endif
+#అయితే_ముగింపు
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  /* U_SHOW_CPLUSPLUS_API */
-#endif  /* __LOCALPOINTER_H__ */
+#అయితే_ముగింపు  /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు  /* __LOCALPOINTER_H__ */

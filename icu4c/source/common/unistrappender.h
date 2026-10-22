@@ -10,14 +10,14 @@
 ******************************************************************************
 */
 
-#ifndef __UNISTRAPPENDER_H__
-#define __UNISTRAPPENDER_H__
+#నిర్వచితం_కాకపోతే __UNISTRAPPENDER_H__
+#నిర్వచించు __UNISTRAPPENDER_H__
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -36,8 +36,8 @@ U_NAMESPACE_BEGIN
  *     // appender flushed automatically when it goes out of scope.
  * }
  */
-class UnicodeStringAppender : public UMemory {
-public:
+class UnicodeStringAppender : బహిరంగ UMemory {
+బహిరంగ:
     
     /**
      * dest is the UnicodeString being appended to. It must always
@@ -45,28 +45,28 @@ public:
      */
     UnicodeStringAppender(UnicodeString &dest) : fDest(&dest), fIdx(0) { }
 
-    inline void append(char16_t x) {
-        if (fIdx == UPRV_LENGTHOF(fBuffer)) {
-            fDest->append(fBuffer, 0, fIdx);
+    అంతఃవరుస శూన్య append(char16_t x) {
+        ఒకవేళ (fIdx == UPRV_LENGTHOF(f_బఫరు)) {
+            fDest->append(f_బఫరు, 0, fIdx);
             fIdx = 0;
         }
-        fBuffer[fIdx++] = x;
+        f_బఫరు[fIdx++] = x;
     }
 
-    inline void append(UChar32 x) {
-        if (fIdx >= UPRV_LENGTHOF(fBuffer) - 1) {
-            fDest->append(fBuffer, 0, fIdx);
+    అంతఃవరుస శూన్య append(UChar32 x) {
+        ఒకవేళ (fIdx >= UPRV_LENGTHOF(f_బఫరు) - 1) {
+            fDest->append(f_బఫరు, 0, fIdx);
             fIdx = 0;
         }
-        U16_APPEND_UNSAFE(fBuffer, fIdx, x);
+        U16_APPEND_UNSAFE(f_బఫరు, fIdx, x);
     }
 
     /**
      * Ensures that all appended characters have been written out to dest.
      */
-    inline void flush() {
-        if (fIdx) {
-            fDest->append(fBuffer, 0, fIdx);
+    అంతఃవరుస శూన్య flush() {
+        ఒకవేళ (fIdx) {
+            fDest->append(f_బఫరు, 0, fIdx);
         }
         fIdx = 0;
     }
@@ -77,14 +77,14 @@ public:
     ~UnicodeStringAppender() {
         flush();
     }
-private:
+అంతరంగ:
     UnicodeString *fDest;
     int32_t fIdx;
-    char16_t fBuffer[32];
-    UnicodeStringAppender(const UnicodeStringAppender &other);
-    UnicodeStringAppender &operator=(const UnicodeStringAppender &other);
+    char16_t f_బఫరు[32];
+    UnicodeStringAppender(స్థిరరాశి UnicodeStringAppender &other);
+    UnicodeStringAppender &క్రియాకారకం=(స్థిరరాశి UnicodeStringAppender &other);
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు

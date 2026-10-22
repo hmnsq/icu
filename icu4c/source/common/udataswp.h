@@ -20,18 +20,18 @@
 *   charset families (ASCII<->EBCDIC).
 */
 
-#ifndef __UDATASWP_H__
-#define __UDATASWP_H__
+#నిర్వచితం_కాకపోతే __UDATASWP_H__
+#నిర్వచించు __UDATASWP_H__
 
-#include <stdarg.h>
-#include "unicode/utypes.h"
+#అన్తర్భావ <stdarg.h>
+#అన్తర్భావ "unicode/utypes.h"
 
 /* forward declaration */
 
 U_CDECL_BEGIN
 
-struct UDataSwapper;
-typedef struct UDataSwapper UDataSwapper;
+నిర్మాణం UDataSwapper;
+రకనిర్వచనం నిర్మాణం UDataSwapper UDataSwapper;
 
 /**
  * Function type for data transformation.
@@ -86,37 +86,37 @@ typedef struct UDataSwapper UDataSwapper;
  * @see UDataSwapper
  * @internal ICU 2.8
  */
-typedef int32_t U_CALLCONV
-UDataSwapFn(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode);
+రకనిర్వచనం int32_t U_CALLCONV
+UData_మార్పిడి_Fn(స్థిరరాశి UDataSwapper *ds,
+            స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+            UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Convert one uint16_t from input to platform endianness.
  * @internal ICU 2.8
  */
-typedef uint16_t U_CALLCONV
+రకనిర్వచనం uint16_t U_CALLCONV
 UDataReadUInt16(uint16_t x);
 
 /**
  * Convert one uint32_t from input to platform endianness.
  * @internal ICU 2.8
  */
-typedef uint32_t U_CALLCONV
+రకనిర్వచనం uint32_t U_CALLCONV
 UDataReadUInt32(uint32_t x);
 
 /**
  * Convert one uint16_t from platform to input endianness.
  * @internal ICU 2.8
  */
-typedef void U_CALLCONV
+రకనిర్వచనం శూన్య U_CALLCONV
 UDataWriteUInt16(uint16_t *p, uint16_t x);
 
 /**
  * Convert one uint32_t from platform to input endianness.
  * @internal ICU 2.8
  */
-typedef void U_CALLCONV
+రకనిర్వచనం శూన్య U_CALLCONV
 UDataWriteUInt32(uint32_t *p, uint32_t x);
 
 /**
@@ -129,10 +129,10 @@ UDataWriteUInt32(uint32_t *p, uint32_t x);
  * Returns Unicode code point order for invariant characters.
  * @internal ICU 2.8
  */
-typedef int32_t U_CALLCONV
-UDataCompareInvChars(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
-                     const UChar *localString, int32_t localLength);
+రకనిర్వచనం int32_t U_CALLCONV
+UDataCompareInvChars(స్థిరరాశి UDataSwapper *ds,
+                     స్థిరరాశి అక్షరం *బహిర్గతం_String, int32_t బహిర్గతం_నిడివి,
+                     స్థిరరాశి UChar *localString, int32_t local_నిడివి);
 
 /**
  * Function for message output when an error occurs during data swapping.
@@ -145,18 +145,18 @@ UDataCompareInvChars(const UDataSwapper *ds,
  *
  * @internal ICU 2.8
  */
-typedef void U_CALLCONV
-UDataPrintError(void *context, const char *fmt, va_list args);
+రకనిర్వచనం శూన్య U_CALLCONV
+UDataPrintError(శూన్య *context, స్థిరరాశి అక్షరం *fmt, va_list వాదనలు_2);
 
-struct UDataSwapper {
+నిర్మాణం UDataSwapper {
     /** Input endianness. @internal ICU 2.8 */
-    UBool inIsBigEndian;
+    UBool లోపల_Is_Big_Endian;
     /** Input charset family. @see U_CHARSET_FAMILY @internal ICU 2.8 */
-    uint8_t inCharset;
+    uint8_t లోపల_Charset;
     /** Output endianness. @internal ICU 2.8 */
-    UBool outIsBigEndian;
+    UBool బహిర్గతం_Is_Big_Endian;
     /** Output charset family. @see U_CHARSET_FAMILY @internal ICU 2.8 */
-    uint8_t outCharset;
+    uint8_t బహిర్గతం_Charset;
 
     /* basic functions for reading data values */
 
@@ -177,13 +177,13 @@ struct UDataSwapper {
     /* basic functions for data transformations */
 
     /** Transform an array of 16-bit integers. @internal ICU 2.8 */
-    UDataSwapFn *swapArray16;
+    UData_మార్పిడి_Fn *మార్పిడి_Array16;
     /** Transform an array of 32-bit integers. @internal ICU 2.8 */
-    UDataSwapFn *swapArray32;
+    UData_మార్పిడి_Fn *మార్పిడి_Array32;
     /** Transform an array of 64-bit integers. @internal ICU 53 */
-    UDataSwapFn *swapArray64;
+    UData_మార్పిడి_Fn *మార్పిడి_Array64;
     /** Transform an invariant-character string. @internal ICU 2.8 */
-    UDataSwapFn *swapInvChars;
+    UData_మార్పిడి_Fn *మార్పిడి_Inv_Chars;
 
     /**
      * Function for message output when an error occurs during data swapping.
@@ -192,15 +192,15 @@ struct UDataSwapper {
      */
     UDataPrintError *printError;
     /** Context pointer for printError. @internal ICU 2.8 */
-    void *printErrorContext;
+    శూన్య *printErrorContext;
 };
 
-U_CDECL_END
+U_CDECL_చివర
 
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
-                  UBool outIsBigEndian, uint8_t outCharset,
-                  UErrorCode *pErrorCode);
+udata_openSwapper(UBool లోపల_Is_Big_Endian, uint8_t లోపల_Charset,
+                  UBool బహిర్గతం_Is_Big_Endian, uint8_t బహిర్గతం_Charset,
+                  UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Open a UDataSwapper for the given input data and the specified output
@@ -212,11 +212,11 @@ udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
  * @internal ICU 2.8
  */
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapperForInputData(const void *data, int32_t length,
-                              UBool outIsBigEndian, uint8_t outCharset,
-                              UErrorCode *pErrorCode);
+udata_open_Swapper_For_ఆదానం_దత్తాంశం(స్థిరరాశి శూన్య *దత్తాంశం, int32_t నిడివి,
+                              UBool బహిర్గతం_Is_Big_Endian, uint8_t బహిర్గతం_Charset,
+                              UError_సంకేతం *p_Error_సంకేతం);
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 udata_closeSwapper(UDataSwapper *ds);
 
 /**
@@ -229,23 +229,23 @@ udata_closeSwapper(UDataSwapper *ds);
  * @internal ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-udata_swapDataHeader(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode);
+udata_మార్పిడి_దత్తాంశం_శీర్షిక(స్థిరరాశి UDataSwapper *ds,
+                     స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+                     UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Convert one int16_t from input to platform endianness.
  * @internal ICU 2.8
  */
 U_CAPI int16_t U_EXPORT2
-udata_readInt16(const UDataSwapper *ds, int16_t x);
+udata_readInt16(స్థిరరాశి UDataSwapper *ds, int16_t x);
 
 /**
  * Convert one int32_t from input to platform endianness.
  * @internal ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-udata_readInt32(const UDataSwapper *ds, int32_t x);
+udata_readInt32(స్థిరరాశి UDataSwapper *ds, int32_t x);
 
 /**
  * Swap a block of invariant, NUL-terminated strings, but not padding
@@ -253,13 +253,13 @@ udata_readInt32(const UDataSwapper *ds, int32_t x);
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-udata_swapInvStringBlock(const UDataSwapper *ds,
-                         const void *inData, int32_t length, void *outData,
-                         UErrorCode *pErrorCode);
+udata_మార్పిడి_Inv_String_ఖండం(స్థిరరాశి UDataSwapper *ds,
+                         స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+                         UError_సంకేతం *p_Error_సంకేతం);
 
-U_CAPI void U_EXPORT2
-udata_printError(const UDataSwapper *ds,
-                 const char *fmt,
+U_CAPI శూన్య U_EXPORT2
+udata_printError(స్థిరరాశి UDataSwapper *ds,
+                 స్థిరరాశి అక్షరం *fmt,
                  ...);
 
 /* internal exports from putil.c -------------------------------------------- */
@@ -271,67 +271,67 @@ udata_printError(const UDataSwapper *ds,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_ebcdicFromAscii(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode);
+uprv_ebcdicFromAscii(స్థిరరాశి UDataSwapper *ds,
+                     స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+                     UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Copy invariant ASCII char * strings and verify they are invariant.
  * @internal
  */
 U_CFUNC int32_t
-uprv_copyAscii(const UDataSwapper *ds,
-               const void *inData, int32_t length, void *outData,
-               UErrorCode *pErrorCode);
+uprv_copyAscii(స్థిరరాశి UDataSwapper *ds,
+               స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+               UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Swap invariant char * strings EBCDIC->ASCII.
  * @internal
  */
 U_CFUNC int32_t
-uprv_asciiFromEbcdic(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode);
+uprv_asciiFromEbcdic(స్థిరరాశి UDataSwapper *ds,
+                     స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+                     UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Copy invariant EBCDIC char * strings and verify they are invariant.
  * @internal
  */
 U_CFUNC int32_t
-uprv_copyEbcdic(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
-                UErrorCode *pErrorCode);
+uprv_copyEbcdic(స్థిరరాశి UDataSwapper *ds,
+                స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+                UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Compare ASCII invariant char * with Unicode invariant UChar *
  * @internal
  */
 U_CFUNC int32_t
-uprv_compareInvAscii(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
-                     const UChar *localString, int32_t localLength);
+uprv_compareInvAscii(స్థిరరాశి UDataSwapper *ds,
+                     స్థిరరాశి అక్షరం *బహిర్గతం_String, int32_t బహిర్గతం_నిడివి,
+                     స్థిరరాశి UChar *localString, int32_t local_నిడివి);
 
 /**
  * Compare EBCDIC invariant char * with Unicode invariant UChar *
  * @internal
  */
 U_CFUNC int32_t
-uprv_compareInvEbcdic(const UDataSwapper *ds,
-                      const char *outString, int32_t outLength,
-                      const UChar *localString, int32_t localLength);
+uprv_compareInvEbcdic(స్థిరరాశి UDataSwapper *ds,
+                      స్థిరరాశి అక్షరం *బహిర్గతం_String, int32_t బహిర్గతం_నిడివి,
+                      స్థిరరాశి UChar *localString, int32_t local_నిడివి);
 
 /**
  * \def uprv_compareInvWithUChar
  * Compare an invariant-character strings with a UChar string
  * @internal
  */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ఒకవేళ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvAscii
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#లేదావేళ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvEbcdic
-#else
+#లేకపోతే
 #   error Unknown charset family!
-#endif
+#అయితే_ముగింపు
 
 // utrie_swap.cpp -----------------------------------------------------------***
 
@@ -340,40 +340,40 @@ uprv_compareInvEbcdic(const UDataSwapper *ds,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie_swap(const UDataSwapper *ds,
-           const void *inData, int32_t length, void *outData,
-           UErrorCode *pErrorCode);
+utrie_మార్పిడి(స్థిరరాశి UDataSwapper *ds,
+           స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+           UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Swaps a serialized UTrie2.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie2_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode);
+utrie2_మార్పిడి(స్థిరరాశి UDataSwapper *ds,
+            స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+            UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Swaps a serialized UCPTrie.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucptrie_swap(const UDataSwapper *ds,
-             const void *inData, int32_t length, void *outData,
-             UErrorCode *pErrorCode);
+ucptrie_మార్పిడి(స్థిరరాశి UDataSwapper *ds,
+             స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+             UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Swaps a serialized UTrie, UTrie2, or UCPTrie.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie_swapAnyVersion(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode);
+utrie_మార్పిడి_Any_సంస్కరణ(స్థిరరాశి UDataSwapper *ds,
+                     స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+                     UError_సంకేతం *p_Error_సంకేతం);
 
 /* material... -------------------------------------------------------------- */
 
-#if 0
+#ఒకవేళ 0
 
 /* udata.h */
 
@@ -392,13 +392,13 @@ utrie_swapAnyVersion(const UDataSwapper *ds,
  *
  * @internal ICU 2.8
  */
-U_CAPI UDataMemory * U_EXPORT2
-udata_openSwap(const char *path, const char *type, const char *name,
-               UDataMemoryIsAcceptable *isAcceptable, void *isAcceptableContext,
-               UDataSwapFn *swap,
-               UDataPrintError *printError, void *printErrorContext,
-               UErrorCode *pErrorCode);
+U_CAPI UData_జ్ఞాపకం * U_EXPORT2
+udata_open_మార్పిడి(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name,
+               UData_జ్ఞాపకం_Is_Acceptable *isAcceptable, శూన్య *isAcceptableContext,
+               UData_మార్పిడి_Fn *మార్పిడి,
+               UDataPrintError *printError, శూన్య *printErrorContext,
+               UError_సంకేతం *p_Error_సంకేతం);
 
-#endif
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు

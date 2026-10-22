@@ -10,13 +10,13 @@
 **********************************************************************
 */
 
-#include "uvectr32.h"
-#include "cmemory.h"
-#include "putilimp.h"
+#అన్తర్భావ "uvectr32.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "putilimp.h"
 
 U_NAMESPACE_BEGIN
 
-#define DEFAULT_CAPACITY 8
+#నిర్వచించు DEFAULT_సామర్థ్యం 8
 
 /*
  * Constants for hinting whether a key is an integer
@@ -26,245 +26,245 @@ U_NAMESPACE_BEGIN
  
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UVector32)
 
-UVector32::UVector32(UErrorCode &status) :
+UVector32::UVector32(UError_సంకేతం &స్థితి_2) :
     count(0),
     capacity(0),
-    maxCapacity(0),
-    elements(nullptr)
+    max_సామర్థ్యం(0),
+    elements(శూన్యసూచిక)
 {
-    _init(DEFAULT_CAPACITY, status);
+    _init(DEFAULT_సామర్థ్యం, స్థితి_2);
 }
 
-UVector32::UVector32(int32_t initialCapacity, UErrorCode &status) :
+UVector32::UVector32(int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2) :
     count(0),
     capacity(0),
-    maxCapacity(0),
-    elements(nullptr)
+    max_సామర్థ్యం(0),
+    elements(శూన్యసూచిక)
 {
-    _init(initialCapacity, status);
+    _init(initial_సామర్థ్యం, స్థితి_2);
 }
 
 
 
-void UVector32::_init(int32_t initialCapacity, UErrorCode &status) {
+శూన్య UVector32::_init(int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
-        initialCapacity = DEFAULT_CAPACITY;
+    ఒకవేళ (initial_సామర్థ్యం < 1) {
+        initial_సామర్థ్యం = DEFAULT_సామర్థ్యం;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
-        initialCapacity = maxCapacity;
+    ఒకవేళ (max_సామర్థ్యం>0 && max_సామర్థ్యం<initial_సామర్థ్యం) {
+        initial_సామర్థ్యం = max_సామర్థ్యం;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) {
-        initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
+    ఒకవేళ (initial_సామర్థ్యం > static_cast<int32_t>(INT32_MAX / పరిమాణం(int32_t))) {
+        initial_సామర్థ్యం = uprv_min(DEFAULT_సామర్థ్యం, max_సామర్థ్యం);
     }
-    elements = static_cast<int32_t*>(uprv_malloc(sizeof(int32_t) * initialCapacity));
-    if (elements == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
-        capacity = initialCapacity;
+    elements = static_cast<int32_t*>(uprv_malloc(పరిమాణం(int32_t) * initial_సామర్థ్యం));
+    ఒకవేళ (elements == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    } లేకపోతే {
+        capacity = initial_సామర్థ్యం;
     }
 }
 
 UVector32::~UVector32() {
     uprv_free(elements);
-    elements = nullptr;
+    elements = శూన్యసూచిక;
 }
 
 /**
  * Assign this object to another (make this a copy of 'other').
  */
-void UVector32::assign(const UVector32& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
-        setSize(other.count);
-        for (int32_t i=0; i<other.count; ++i) {
+శూన్య UVector32::assign(స్థిరరాశి UVector32& other, UError_సంకేతం &ec) {
+    ఒకవేళ (ensure_సామర్థ్యం(other.count, ec)) {
+        సమితి_కొలత(other.count);
+        కొరకు (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
         }
     }
 }
 
 
-bool UVector32::operator==(const UVector32& other) const {
+తార్కిక UVector32::క్రియాకారకం==(స్థిరరాశి UVector32& other) స్థిరరాశి {
     int32_t i;
-    if (count != other.count) return false;
-    for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    ఒకవేళ (count != other.count) తిరిగి అబద్ధం;
+    కొరకు (i=0; i<count; ++i) {
+        ఒకవేళ (elements[i] != other.elements[i]) {
+            తిరిగి అబద్ధం;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 
-void UVector32::setElementAt(int32_t elem, int32_t index) {
-    if (0 <= index && index < count) {
-        elements[index] = elem;
+శూన్య UVector32::సమితి_Element_At(int32_t elem, int32_t సూచీ) {
+    ఒకవేళ (0 <= సూచీ && సూచీ < count) {
+        elements[సూచీ] = elem;
     }
     /* else index out of range */
 }
 
-void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
+శూన్య UVector32::చొప్పించు_Element_At(int32_t elem, int32_t సూచీ, UError_సంకేతం &స్థితి_2) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
-        for (int32_t i=count; i>index; --i) {
+    ఒకవేళ (0 <= సూచీ && సూచీ <= count && ensure_సామర్థ్యం(count + 1, స్థితి_2)) {
+        కొరకు (int32_t i=count; i>సూచీ; --i) {
             elements[i] = elements[i-1];
         }
-        elements[index] = elem;
+        elements[సూచీ] = elem;
         ++count;
     }
     /* else index out of range */
 }
 
-UBool UVector32::containsAll(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) < 0) {
-            return false;
+UBool UVector32::కలిగియుంది_All(స్థిరరాశి UVector32& other) స్థిరరాశి {
+    కొరకు (int32_t i=0; i<other.size(); ++i) {
+        ఒకవేళ (సూచీ_యొక్క(other.elements[i]) < 0) {
+            తిరిగి అబద్ధం;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-UBool UVector32::containsNone(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) >= 0) {
-            return false;
+UBool UVector32::కలిగియుంది_None(స్థిరరాశి UVector32& other) స్థిరరాశి {
+    కొరకు (int32_t i=0; i<other.size(); ++i) {
+        ఒకవేళ (సూచీ_యొక్క(other.elements[i]) >= 0) {
+            తిరిగి అబద్ధం;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-UBool UVector32::removeAll(const UVector32& other) {
-    UBool changed = false;
-    for (int32_t i=0; i<other.size(); ++i) {
-        int32_t j = indexOf(other.elements[i]);
-        if (j >= 0) {
+UBool UVector32::removeAll(స్థిరరాశి UVector32& other) {
+    UBool మారింది = అబద్ధం;
+    కొరకు (int32_t i=0; i<other.size(); ++i) {
+        int32_t j = సూచీ_యొక్క(other.elements[i]);
+        ఒకవేళ (j >= 0) {
             removeElementAt(j);
-            changed = true;
+            మారింది = నిజం;
         }
     }
-    return changed;
+    తిరిగి మారింది;
 }
 
-UBool UVector32::retainAll(const UVector32& other) {
-    UBool changed = false;
-    for (int32_t j=size()-1; j>=0; --j) {
-        int32_t i = other.indexOf(elements[j]);
-        if (i < 0) {
+UBool UVector32::retainAll(స్థిరరాశి UVector32& other) {
+    UBool మారింది = అబద్ధం;
+    కొరకు (int32_t j=size()-1; j>=0; --j) {
+        int32_t i = other.సూచీ_యొక్క(elements[j]);
+        ఒకవేళ (i < 0) {
             removeElementAt(j);
-            changed = true;
+            మారింది = నిజం;
         }
     }
-    return changed;
+    తిరిగి మారింది;
 }
 
-void UVector32::removeElementAt(int32_t index) {
-    if (index >= 0) {
-        for (int32_t i=index; i<count-1; ++i) {
+శూన్య UVector32::removeElementAt(int32_t సూచీ) {
+    ఒకవేళ (సూచీ >= 0) {
+        కొరకు (int32_t i=సూచీ; i<count-1; ++i) {
             elements[i] = elements[i+1];
         }
         --count;
     }
 }
 
-void UVector32::removeAllElements() {
+శూన్య UVector32::removeAllElements() {
     count = 0;
 }
 
-UBool   UVector32::equals(const UVector32 &other) const {
-    int      i;
+UBool   UVector32::equals(స్థిరరాశి UVector32 &other) స్థిరరాశి {
+    పూర్ణాంకం      i;
 
-    if (this->count != other.count) {
-        return false;
+    ఒకవేళ (ఇది->count != other.count) {
+        తిరిగి అబద్ధం;
     }
-    for (i=0; i<count; i++) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    కొరకు (i=0; i<count; i++) {
+        ఒకవేళ (elements[i] != other.elements[i]) {
+            తిరిగి అబద్ధం;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 
 
 
-int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
+int32_t UVector32::సూచీ_యొక్క(int32_t కీలకం, int32_t ప్రారంభం_సూచీ) స్థిరరాశి {
     int32_t i;
-    for (i=startIndex; i<count; ++i) {
-        if (key == elements[i]) {
-            return i;
+    కొరకు (i=ప్రారంభం_సూచీ; i<count; ++i) {
+        ఒకవేళ (కీలకం == elements[i]) {
+            తిరిగి i;
         }
     }
-    return -1;
+    తిరిగి -1;
 }
 
 
-UBool UVector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool UVector32::expand_సామర్థ్యం(int32_t minimum_సామర్థ్యం, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    if (minimumCapacity < 0) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    ఒకవేళ (minimum_సామర్థ్యం < 0) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి అబద్ధం;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    ఒకవేళ (capacity >= minimum_సామర్థ్యం) {
+        తిరిగి నిజం;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
-        status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+    ఒకవేళ (max_సామర్థ్యం>0 && minimum_సామర్థ్యం>max_సామర్థ్యం) {
+        స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+        తిరిగి అబద్ధం;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    ఒకవేళ (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి అబద్ధం;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
-        newCap = minimumCapacity;
+    ఒకవేళ (newCap < minimum_సామర్థ్యం) {
+        newCap = minimum_సామర్థ్యం;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
-        newCap = maxCapacity;
+    ఒకవేళ (max_సామర్థ్యం > 0 && newCap > max_సామర్థ్యం) {
+        newCap = max_సామర్థ్యం;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check
+    ఒకవేళ (newCap > static_cast<int32_t>(INT32_MAX / పరిమాణం(int32_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి అబద్ధం;
     }
-    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * newCap));
-    if (newElems == nullptr) {
+    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, పరిమాణం(int32_t) * newCap));
+    ఒకవేళ (newElems == శూన్యసూచిక) {
         // We keep the original contents on the memory failure on realloc.
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి అబద్ధం;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    తిరిగి నిజం;
 }
 
-void UVector32::setMaxCapacity(int32_t limit) {
-    U_ASSERT(limit >= 0);
-    if (limit < 0) {
-        limit = 0;
+శూన్య UVector32::సమితి_Max_సామర్థ్యం(int32_t హద్దు) {
+    U_ASSERT(హద్దు >= 0);
+    ఒకవేళ (హద్దు < 0) {
+        హద్దు = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check for realloc
+    ఒకవేళ (హద్దు > static_cast<int32_t>(INT32_MAX / పరిమాణం(int32_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        తిరిగి;
     }
-    maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    max_సామర్థ్యం = హద్దు;
+    ఒకవేళ (capacity <= max_సామర్థ్యం || max_సామర్థ్యం == 0) {
         // Current capacity is within the new limit.
-        return;
+        తిరిగి;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
-    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * maxCapacity));
-    if (newElems == nullptr) {
+    int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, పరిమాణం(int32_t) * max_సామర్థ్యం));
+    ఒకవేళ (newElems == శూన్యసూచిక) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        తిరిగి;
     }
     elements = newElems;
-    capacity = maxCapacity;
-    if (count > capacity) {
+    capacity = max_సామర్థ్యం;
+    ఒకవేళ (count > capacity) {
         count = capacity;
     }
 }
@@ -275,21 +275,21 @@ void UVector32::setMaxCapacity(int32_t limit) {
  * newSize.  If newSize is larger, grow the array, filling in new
  * slots with nullptr.
  */
-void UVector32::setSize(int32_t newSize) {
+శూన్య UVector32::సమితి_కొలత(int32_t new_కొలత) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    ఒకవేళ (new_కొలత < 0) {
+        తిరిగి;
     }
-    if (newSize > count) {
-        UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+    ఒకవేళ (new_కొలత > count) {
+        UError_సంకేతం ec = U_ZERO_ERROR;
+        ఒకవేళ (!ensure_సామర్థ్యం(new_కొలత, ec)) {
+            తిరిగి;
         }
-        for (i=count; i<newSize; ++i) {
+        కొరకు (i=count; i<new_కొలత; ++i) {
             elements[i] = 0;
         }
     } 
-    count = newSize;
+    count = new_కొలత;
 }
 
 
@@ -300,26 +300,26 @@ void UVector32::setSize(int32_t newSize) {
  * as defined by 'compare'.  The current elements are assumed to
  * be sorted already.
  */
-void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
+శూన్య UVector32::sorted_చొప్పించు(int32_t tok, UError_సంకేతం& ec) {
     // Perform a binary search for the location to insert tok at.  Tok
     // will be inserted between two elements a and b such that a <=
     // tok && tok < b, where there is a 'virtual' elements[-1] always
     // less than tok and a 'virtual' elements[count] always greater
     // than tok.
     int32_t min = 0, max = count;
-    while (min != max) {
+    అయితే (min != max) {
         int32_t probe = (min + max) / 2;
         //int8_t c = (*compare)(elements[probe], tok);
         //if (c > 0) {
-        if (elements[probe] > tok) {
+        ఒకవేళ (elements[probe] > tok) {
             max = probe;
-        } else {
+        } లేకపోతే {
             // assert(c <= 0);
             min = probe + 1;
         }
     }
-    if (ensureCapacity(count + 1, ec)) {
-        for (int32_t i=count; i>min; --i) {
+    ఒకవేళ (ensure_సామర్థ్యం(count + 1, ec)) {
+        కొరకు (int32_t i=count; i>min; --i) {
             elements[i] = elements[i-1];
         }
         elements[min] = tok;
@@ -331,5 +331,5 @@ void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
 
 
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 

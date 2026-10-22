@@ -16,11 +16,11 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __BMPSET_H__
-#define __BMPSET_H__
+#నిర్వచితం_కాకపోతే __BMPSET_H__
+#నిర్వచించు __BMPSET_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uniset.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,45 +35,45 @@ U_NAMESPACE_BEGIN
  * Supplementary characters: Binary search over
  * the supplementary part of the parent set's inversion list.
  */
-class BMPSet : public UMemory {
-public:
-    BMPSet(const int32_t *parentList, int32_t parentListLength);
-    BMPSet(const BMPSet &otherBMPSet, const int32_t *newParentList, int32_t newParentListLength);
-    virtual ~BMPSet();
+class BMPSet : బహిరంగ UMemory {
+బహిరంగ:
+    BMPSet(స్థిరరాశి int32_t *మాతృ_List, int32_t మాతృ_List_నిడివి);
+    BMPSet(స్థిరరాశి BMPSet &otherBMPSet, స్థిరరాశి int32_t *new_మాతృ_List, int32_t new_మాతృ_List_నిడివి);
+    మాయా ~BMPSet();
 
-    virtual UBool contains(UChar32 c) const;
+    మాయా UBool కలిగియుంది(UChar32 c) స్థిరరాశి;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const char16_t *span(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    స్థిరరాశి char16_t *పరిధి(స్థిరరాశి char16_t *s, స్థిరరాశి char16_t *హద్దు, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which starts the span.
      */
-    const char16_t *spanBack(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    స్థిరరాశి char16_t *పరిధి_వెనుక(స్థిరరాశి char16_t *s, స్థిరరాశి char16_t *హద్దు, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const uint8_t *spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    స్థిరరాశి uint8_t *పరిధి_UTF8(స్థిరరాశి uint8_t *s, int32_t నిడివి, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The start of the span.
      */
-    int32_t spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t పరిధి_వెనుక_UTF8(స్థిరరాశి uint8_t *s, int32_t నిడివి, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి;
 
-private:
-    void initBits();
-    void overrideIllegal();
+అంతరంగ:
+    శూన్య init_బిట్లు();
+    శూన్య overrideIllegal();
 
     /**
      * Same as UnicodeSet::findCodePoint(UChar32 c) const except that the
@@ -92,17 +92,17 @@ private:
      * @return the smallest integer i in the range lo..hi,
      *         inclusive, such that c < list[i]
      */
-    int32_t findCodePoint(UChar32 c, int32_t lo, int32_t hi) const;
+    int32_t కనుగొను_సంకేతం_బిందువు(UChar32 c, int32_t lo, int32_t hi) స్థిరరాశి;
 
-    inline UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) const;
+    అంతఃవరుస UBool కలిగియుంది_Slow(UChar32 c, int32_t lo, int32_t hi) స్థిరరాశి;
 
     /*
      * One byte 0 or 1 per Latin-1 character.
      */
-    UBool latin1Contains[0x100];
+    UBool latin1_కలిగియుంది[0x100];
 
     /* true if contains(U+FFFD). */
-    UBool containsFFFD;
+    UBool కలిగియుంది_FFFD;
 
     /*
      * One bit per code point from U+0000..U+07FF.
@@ -134,7 +134,7 @@ private:
      * Bits for 0..7FF (non-shortest forms) and D800..DFFF are set to
      * the result of contains(FFFD) for faster validity checking at runtime.
      */
-    uint32_t bmpBlockBits[64];
+    uint32_t bmp_ఖండం_బిట్లు[64];
 
     /*
      * Inversion list indexes for restricted binary searches in
@@ -151,14 +151,14 @@ private:
      * for mixed BMP blocks and for supplementary code points.
      * The list is terminated with list[listLength-1]=0x110000.
      */
-    const int32_t *list;
-    int32_t listLength;
+    స్థిరరాశి int32_t *list;
+    int32_t list_నిడివి;
 };
 
-inline UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) const {
-    return findCodePoint(c, lo, hi) & 1;
+అంతఃవరుస UBool BMPSet::కలిగియుంది_Slow(UChar32 c, int32_t lo, int32_t hi) స్థిరరాశి {
+    తిరిగి కనుగొను_సంకేతం_బిందువు(c, lo, hi) & 1;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు

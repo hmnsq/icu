@@ -11,14 +11,14 @@
 **********************************************************************
 */
 
-#ifndef UVECTOR_H
-#define UVECTOR_H
+#నిర్వచితం_కాకపోతే UVECTOR_H
+#నిర్వచించు UVECTOR_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uarrsort.h"
-#include "uelement.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "uarrsort.h"
+#అన్తర్భావ "uelement.h"
 
 U_NAMESPACE_BEGIN
 
@@ -73,16 +73,16 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector : public UObject {
+class U_COMMON_API UVector : బహిరంగ UObject {
     // NOTE: UVector uses the UElement (union of void* and int32_t) as
     // its basic storage type.  It uses UElementsAreEqual as its
     // comparison function.  It uses UObjectDeleter as its deleter
     // function.  This allows sharing of support functions with UHashtable.
 
-private:
-    int32_t count = 0;
+అంతరంగ:
+    int32_t లెక్క = 0;
 
-    int32_t capacity = 0;
+    int32_t సామర్థ్యం = 0;
 
     UElement* elements = nullptr;
 
@@ -90,34 +90,34 @@ private:
 
     UElementsAreEqual *comparer = nullptr;
 
-public:
-    UVector(UErrorCode &status);
+బహిరంగ:
+    UVector(UError_సంకేతం &స్థితి_2);
 
-    UVector(int32_t initialCapacity, UErrorCode &status);
+    UVector(int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2);
 
-    UVector(UObjectDeleter *d, UElementsAreEqual *c, UErrorCode &status);
+    UVector(UObjectDeleter *d, UElementsAreEqual *c, UError_సంకేతం &స్థితి_2);
 
-    UVector(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status);
+    UVector(UObjectDeleter *d, UElementsAreEqual *c, int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2);
 
-    virtual ~UVector();
+    మాయా ~UVector();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector& other, UElementAssigner *assign, UErrorCode &ec);
+    శూన్య కేటాయించు(స్థిరరాశి UVector& other, UElementAssigner *కేటాయించు, UError_సంకేతం &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector& other) const;
+    bool క్రియాకారకం==(స్థిరరాశి UVector& other) స్థిరరాశి;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector& other) const {return !operator==(other);}
+    అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి UVector& other) స్థిరరాశి {తిరిగి !క్రియాకారకం==(other);}
 
     //------------------------------------------------------------
     // java.util.Vector API
@@ -128,7 +128,7 @@ public:
      * For use only with vectors that do not adopt their elements, which is to say,
      * have not set an element deleter function. See `adoptElement()`.
      */
-    void addElement(void *obj, UErrorCode &status);
+    శూన్య కూడు_Element(శూన్య *obj, UError_సంకేతం &స్థితి_2);
 
     /**
      * Add an element at the end of the vector.
@@ -143,55 +143,55 @@ public:
      * to see what the function is doing at call sites. Having a single combined function,
      * as in earlier versions of UVector, had proved to be error-prone.
      */
-    void adoptElement(void *obj, UErrorCode &status);
+    శూన్య adoptElement(శూన్య *obj, UError_సంకేతం &స్థితి_2);
 
-    void addElement(int32_t elem, UErrorCode &status);
+    శూన్య కూడు_Element(int32_t elem, UError_సంకేతం &స్థితి_2);
 
-    void setElementAt(void* obj, int32_t index);
+    శూన్య సమితి_Element_At(శూన్య* obj, int32_t సూచీ);
 
-    void setElementAt(int32_t elem, int32_t index);
+    శూన్య సమితి_Element_At(int32_t elem, int32_t సూచీ);
 
-    void insertElementAt(void* obj, int32_t index, UErrorCode &status);
+    శూన్య చొప్పించు_Element_At(శూన్య* obj, int32_t సూచీ, UError_సంకేతం &స్థితి_2);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    శూన్య చొప్పించు_Element_At(int32_t elem, int32_t సూచీ, UError_సంకేతం &స్థితి_2);
     
-    void* elementAt(int32_t index) const;
+    శూన్య* elementAt(int32_t సూచీ) స్థిరరాశి;
 
-    int32_t elementAti(int32_t index) const;
+    int32_t elementAti(int32_t సూచీ) స్థిరరాశి;
 
-    UBool equals(const UVector &other) const;
+    UBool equals(స్థిరరాశి UVector &other) స్థిరరాశి;
 
-    inline void* firstElement() const {return elementAt(0);}
+    అంతఃవరుస శూన్య* మొదటి_Element() స్థిరరాశి {తిరిగి elementAt(0);}
 
-    inline void* lastElement() const {return elementAt(count-1);}
+    అంతఃవరుస శూన్య* చివరి_Element() స్థిరరాశి {తిరిగి elementAt(లెక్క-1);}
 
-    inline int32_t lastElementi() const {return elementAti(count-1);}
+    అంతఃవరుస int32_t చివరి_Elementi() స్థిరరాశి {తిరిగి elementAti(లెక్క-1);}
 
-    int32_t indexOf(void* obj, int32_t startIndex = 0) const;
+    int32_t సూచీ_యొక్క(శూన్య* obj, int32_t ప్రారంభం_సూచీ = 0) స్థిరరాశి;
 
-    int32_t indexOf(int32_t obj, int32_t startIndex = 0) const;
+    int32_t సూచీ_యొక్క(int32_t obj, int32_t ప్రారంభం_సూచీ = 0) స్థిరరాశి;
 
-    inline UBool contains(void* obj) const {return indexOf(obj) >= 0;}
+    అంతఃవరుస UBool కలిగియుంది(శూన్య* obj) స్థిరరాశి {తిరిగి సూచీ_యొక్క(obj) >= 0;}
 
-    inline UBool contains(int32_t obj) const {return indexOf(obj) >= 0;}
+    అంతఃవరుస UBool కలిగియుంది(int32_t obj) స్థిరరాశి {తిరిగి సూచీ_యొక్క(obj) >= 0;}
 
-    UBool containsAll(const UVector& other) const;
+    UBool కలిగియుంది_All(స్థిరరాశి UVector& other) స్థిరరాశి;
 
-    UBool removeAll(const UVector& other);
+    UBool removeAll(స్థిరరాశి UVector& other);
 
-    UBool retainAll(const UVector& other);
+    UBool retainAll(స్థిరరాశి UVector& other);
 
-    void removeElementAt(int32_t index);
+    శూన్య removeElementAt(int32_t సూచీ);
 
-    UBool removeElement(void* obj);
+    UBool removeElement(శూన్య* obj);
 
-    void removeAllElements();
+    శూన్య removeAllElements();
 
-    inline int32_t size() const {return count;}
+    అంతఃవరుస int32_t కొలత_2() స్థిరరాశి {తిరిగి లెక్క;}
 
-    inline UBool isEmpty() const {return count == 0;}
+    అంతఃవరుస UBool is_ఖాళీలు() స్థిరరాశి {తిరిగి లెక్క == 0;}
 
-    UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    UBool ensure_సామర్థ్యం(int32_t minimum_సామర్థ్యం, UError_సంకేతం &స్థితి_2);
 
     /**
      * Change the size of this vector as follows: If newSize is
@@ -199,23 +199,23 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slots with nullptr.
      */
-    void setSize(int32_t newSize, UErrorCode &status);
+    శూన్య సమితి_కొలత(int32_t new_కొలత, UError_సంకేతం &స్థితి_2);
 
     /**
      * Fill in the given array with all elements of this vector.
      */
-    void** toArray(void** result) const;
+    శూన్య** గమ్యం_Array(శూన్య** ఫలితం) స్థిరరాశి;
 
     //------------------------------------------------------------
     // New API
     //------------------------------------------------------------
 
-    UObjectDeleter *setDeleter(UObjectDeleter *d);
-    bool hasDeleter() {return deleter != nullptr;}
+    UObjectDeleter *సమితి_Deleter(UObjectDeleter *d);
+    bool hasDeleter() {తిరిగి deleter != nullptr;}
 
-    UElementsAreEqual *setComparer(UElementsAreEqual *c);
+    UElementsAreEqual *సమితి_Comparer(UElementsAreEqual *c);
 
-    inline void* operator[](int32_t index) const {return elementAt(index);}
+    అంతఃవరుస శూన్య* క్రియాకారకం[](int32_t సూచీ) స్థిరరాశి {తిరిగి elementAt(సూచీ);}
 
     /**
      * Removes the element at the given index from this vector and
@@ -226,7 +226,7 @@ public:
      * index is out of range or if there is no item at the given index
      * then 0 is returned and the vector is unchanged.
      */
-    void* orphanElementAt(int32_t index);
+    శూన్య* orphanElementAt(int32_t సూచీ);
 
     /**
      * Returns true if this vector contains none of the elements
@@ -234,27 +234,27 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector& other) const;
+    UBool కలిగియుంది_None(స్థిరరాశి UVector& other) స్థిరరాశి;
 
     /**
      * Insert the given object into this vector at its sorted position
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(void* obj, UElementComparator *compare, UErrorCode& ec);
+    శూన్య sorted_చొప్పించు(శూన్య* obj, UElementComparator *compare, UError_సంకేతం& ec);
 
     /**
      * Insert the given integer into this vector at its sorted position
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(int32_t obj, UElementComparator *compare, UErrorCode& ec);
+    శూన్య sorted_చొప్పించు(int32_t obj, UElementComparator *compare, UError_సంకేతం& ec);
 
     /**
      * Sort the contents of the vector, assuming that the contents of the
      * vector are of type int32_t.
      */
-    void sorti(UErrorCode &ec);
+    శూన్య sorti(UError_సంకేతం &ec);
 
     /**
       * Sort the contents of this vector, using a caller-supplied function
@@ -262,7 +262,7 @@ public:
       *  UVector's UElementComparator function is different from the
       *  UComparator function type defined in uarrsort.h)
       */
-    void sort(UElementComparator *compare, UErrorCode &ec);
+    శూన్య క్రమీకరించు(UElementComparator *compare, UError_సంకేతం &ec);
 
     /**
      * Stable sort the contents of this vector using a caller-supplied function
@@ -270,29 +270,29 @@ public:
      * than UVector::sort() because an additional user parameter can be passed to
      * the comparison function.
      */
-    void sortWithUComparator(UComparator *compare, const void *context, UErrorCode &ec);
+    శూన్య క్రమీకరించు_With_UComparator(UComparator *compare, స్థిరరాశి శూన్య *context, UError_సంకేతం &ec);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    స్థిర UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    మాయా UClassID getDynamicClassID() స్థిరరాశి override;
 
-private:
-    int32_t indexOf(UElement key, int32_t startIndex = 0, int8_t hint = 0) const;
+అంతరంగ:
+    int32_t సూచీ_యొక్క(UElement కీలకం, int32_t ప్రారంభం_సూచీ = 0, int8_t hint = 0) స్థిరరాశి;
 
-    void sortedInsert(UElement e, UElementComparator *compare, UErrorCode& ec);
+    శూన్య sorted_చొప్పించు(UElement e, UElementComparator *compare, UError_సంకేతం& ec);
 
-public:
+బహిరంగ:
     // Disallow
-    UVector(const UVector&) = delete;
+    UVector(స్థిరరాశి UVector&) = delete;
 
     // Disallow
-    UVector& operator=(const UVector&) = delete;
+    UVector& క్రియాకారకం=(స్థిరరాశి UVector&) = delete;
 
 };
 
@@ -313,74 +313,74 @@ public:
  *
  * @author Alan Liu
  */
-class U_COMMON_API UStack : public UVector {
-public:
-    UStack(UErrorCode &status);
+class U_COMMON_API UStack : బహిరంగ UVector {
+బహిరంగ:
+    UStack(UError_సంకేతం &స్థితి_2);
 
-    UStack(int32_t initialCapacity, UErrorCode &status);
+    UStack(int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2);
 
-    UStack(UObjectDeleter *d, UElementsAreEqual *c, UErrorCode &status);
+    UStack(UObjectDeleter *d, UElementsAreEqual *c, UError_సంకేతం &స్థితి_2);
 
-    UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status);
+    UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2);
 
-    virtual ~UStack();
+    మాయా ~UStack();
 
     // It's okay not to have a virtual destructor (in UVector)
     // because UStack has no special cleanup to do.
 
-    inline UBool empty() const {return isEmpty();}
+    అంతఃవరుస UBool ఖాళీలు() స్థిరరాశి {తిరిగి is_ఖాళీలు();}
 
-    inline void* peek() const {return lastElement();}
+    అంతఃవరుస శూన్య* peek() స్థిరరాశి {తిరిగి చివరి_Element();}
 
-    inline int32_t peeki() const {return lastElementi();}
+    అంతఃవరుస int32_t peeki() స్థిరరాశి {తిరిగి చివరి_Elementi();}
     
     /**
      * Pop and return an element from the stack.
      * For stacks with a deleter function, the caller takes ownership
      * of the popped element.
      */
-    void* pop();
+    శూన్య* తీయి();
     
     int32_t popi();
     
-    inline void* push(void* obj, UErrorCode &status) {
-        if (hasDeleter()) {
-            adoptElement(obj, status);
-            return (U_SUCCESS(status)) ? obj : nullptr;
-        } else {
-            addElement(obj, status);
-            return obj;
+    అంతఃవరుస శూన్య* నెట్టు(శూన్య* obj, UError_సంకేతం &స్థితి_2) {
+        ఒకవేళ (hasDeleter()) {
+            adoptElement(obj, స్థితి_2);
+            తిరిగి (U_SUCCESS(స్థితి_2)) ? obj : nullptr;
+        } లేకపోతే {
+            కూడు_Element(obj, స్థితి_2);
+            తిరిగి obj;
         }
     }
 
-    inline int32_t push(int32_t i, UErrorCode &status) {
-        addElement(i, status);
-        return i;
+    అంతఃవరుస int32_t నెట్టు(int32_t i, UError_సంకేతం &స్థితి_2) {
+        కూడు_Element(i, స్థితి_2);
+        తిరిగి i;
     }
 
     /*
     If the object o occurs as an item in this stack,
     this method returns the 1-based distance from the top of the stack.
     */
-    int32_t search(void* obj) const;
+    int32_t శోధన(శూన్య* obj) స్థిరరాశి;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    స్థిర UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    మాయా UClassID getDynamicClassID() స్థిరరాశి override;
 
     // Disallow
-    UStack(const UStack&) = delete;
+    UStack(స్థిరరాశి UStack&) = delete;
 
     // Disallow
-    UStack& operator=(const UStack&) = delete;
+    UStack& క్రియాకారకం=(స్థిరరాశి UStack&) = delete;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు

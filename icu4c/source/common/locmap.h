@@ -23,18 +23,18 @@
 *============================================================================
 */
 
-#ifndef LOCMAP_H
-#define LOCMAP_H
+#నిర్వచితం_కాకపోతే LOCMAP_H
+#నిర్వచించు LOCMAP_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#define LANGUAGE_LCID(hostID) (uint16_t)(0x03FF & hostID)
+#నిర్వచించు LANGUAGE_LCID(hostID) (uint16_t)(0x03FF & hostID)
 
-U_CAPI int32_t uprv_convertToPosix(uint32_t hostid, char* posixID, int32_t posixIDCapacity, UErrorCode* status);
+U_CAPI int32_t uprv_convert_గమ్యం_Posix(uint32_t hostid, అక్షరం* posixID, int32_t posixIDCapacity, UError_సంకేతం* స్థితి_2);
 
 /* Don't call these functions directly. Use uloc_getLCID instead. */
-U_CAPI uint32_t uprv_convertToLCIDPlatform(const char* localeID, UErrorCode* status); // Leverage platform conversion if possible
-U_CAPI uint32_t uprv_convertToLCID(const char* langID, const char* posixID, UErrorCode* status);
+U_CAPI uint32_t uprv_convert_గమ్యం_LCIDPlatform(స్థిరరాశి అక్షరం* localeID, UError_సంకేతం* స్థితి_2); // Leverage platform conversion if possible
+U_CAPI uint32_t uprv_convert_గమ్యం_LCID(స్థిరరాశి అక్షరం* langID, స్థిరరాశి అక్షరం* posixID, UError_సంకేతం* స్థితి_2);
 
-#endif /* LOCMAP_H */
+#అయితే_ముగింపు /* LOCMAP_H */
 

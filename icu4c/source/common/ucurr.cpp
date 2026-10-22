@@ -7,54 +7,54 @@
 **********************************************************************
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#ఒకవేళ !UCONFIG_NO_FORMATTING
 
-#include <utility>
+#అన్తర్భావ <utility>
 
-#include "unicode/ucurr.h"
-#include "unicode/locid.h"
-#include "unicode/ures.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
-#include "unicode/usetiter.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "static_unicode_sets.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "ucln_cmn.h"
-#include "uenumimp.h"
-#include "uhash.h"
-#include "hash.h"
-#include "uinvchar.h"
-#include "uresimp.h"
-#include "ulist.h"
-#include "uresimp.h"
-#include "ureslocs.h"
-#include "ulocimp.h"
+#అన్తర్భావ "unicode/ucurr.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/parsepos.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/usetiter.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "static_unicode_sets.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "uenumimp.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "hash.h"
+#అన్తర్భావ "uinvchar.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "ulist.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "ureslocs.h"
+#అన్తర్భావ "ulocimp.h"
 
-using namespace icu;
+ఉపయోగించి నామాకాశ icu;
 
 //#define UCURR_DEBUG_EQUIV 1
-#ifdef UCURR_DEBUG_EQUIV
-#include "stdio.h"
-#endif
+#నిర్వచితమైతే UCURR_DEBUG_EQUIV
+#అన్తర్భావ "stdio.h"
+#అయితే_ముగింపు
 //#define UCURR_DEBUG 1
-#ifdef UCURR_DEBUG
-#include "stdio.h"
-#endif
+#నిర్వచితమైతే UCURR_DEBUG
+#అన్తర్భావ "stdio.h"
+#అయితే_ముగింపు
 
-typedef struct IsoCodeEntry {
-    const char16_t *isoCode; /* const because it's a reference to a resource bundle string. */
+రకనిర్వచనం నిర్మాణం Iso_సంకేతం_నమోదు {
+    స్థిరరాశి char16_t *iso_సంకేతం; /* const because it's a reference to a resource bundle string. */
     UDate from;
-    UDate to;
-} IsoCodeEntry;
+    UDate గమ్యం;
+} Iso_సంకేతం_నమోదు;
 
 //------------------------------------------------------------
 // Constants
@@ -63,225 +63,225 @@ typedef struct IsoCodeEntry {
 // defaults encoded in the meta data resource bundle.  If there is a
 // configuration/build error and these are not available, we use these
 // hard-coded defaults (which should be identical).
-static const int32_t LAST_RESORT_DATA[] = { 2, 0, 2, 0 };
+స్థిర స్థిరరాశి int32_t చివరి_RESORT_దత్తాంశం[] = { 2, 0, 2, 0 };
 
 // POW10[i] = 10^i, i=0..MAX_POW10
-static const int32_t POW10[] = { 1, 10, 100, 1000, 10000, 100000,
+స్థిర స్థిరరాశి int32_t POW10[] = { 1, 10, 100, 1000, 10000, 100000,
                                  1000000, 10000000, 100000000, 1000000000 };
 
-static const int32_t MAX_POW10 = UPRV_LENGTHOF(POW10) - 1;
+స్థిర స్థిరరాశి int32_t MAX_POW10 = UPRV_LENGTHOF(POW10) - 1;
 
-#define ISO_CURRENCY_CODE_LENGTH 3
+#నిర్వచించు ISO_CURRENCY_సంకేతం_నిడివి 3
 
 //------------------------------------------------------------
 // Resource tags
 //
 
-static const char CURRENCY_DATA[] = "supplementalData";
+స్థిర స్థిరరాశి అక్షరం CURRENCY_దత్తాంశం[] = "supplementalData";
 // Tag for meta-data, in root.
-static const char CURRENCY_META[] = "CurrencyMeta";
+స్థిర స్థిరరాశి అక్షరం CURRENCY_META[] = "CurrencyMeta";
 
 // Tag for map from countries to currencies, in root.
-static const char CURRENCY_MAP[] = "CurrencyMap";
+స్థిర స్థిరరాశి అక్షరం CURRENCY_MAP[] = "CurrencyMap";
 
 // Tag for default meta-data, in CURRENCY_META
-static const char DEFAULT_META[] = "DEFAULT";
+స్థిర స్థిరరాశి అక్షరం DEFAULT_META[] = "DEFAULT";
 
 // Variant delimiter
-static const char VAR_DELIM = '_';
+స్థిర స్థిరరాశి అక్షరం VAR_DELIM = '_';
 
 // Tag for localized display names (symbols) of currencies
-static const char CURRENCIES[] = "Currencies";
-static const char CURRENCIES_NARROW[] = "Currencies%narrow";
-static const char CURRENCIES_FORMAL[] = "Currencies%formal";
-static const char CURRENCIES_VARIANT[] = "Currencies%variant";
-static const char CURRENCYPLURALS[] = "CurrencyPlurals";
+స్థిర స్థిరరాశి అక్షరం CURRENCIES[] = "Currencies";
+స్థిర స్థిరరాశి అక్షరం CURRENCIES_NARROW[] = "Currencies%narrow";
+స్థిర స్థిరరాశి అక్షరం CURRENCIES_FORMAL[] = "Currencies%formal";
+స్థిర స్థిరరాశి అక్షరం CURRENCIES_VARIANT[] = "Currencies%variant";
+స్థిర స్థిరరాశి అక్షరం CURRENCYPLURALS[] = "CurrencyPlurals";
 
 // ISO codes mapping table
-static const UHashtable* gIsoCodes = nullptr;
-static icu::UInitOnce gIsoCodesInitOnce {};
+స్థిర స్థిరరాశి UHashtable* gIsoCodes = శూన్యసూచిక;
+స్థిర icu::UInitOnce gIsoCodesInitOnce {};
 
 // Currency symbol equivalances
-static const icu::Hashtable* gCurrSymbolsEquiv = nullptr;
-static icu::UInitOnce gCurrSymbolsEquivInitOnce {};
+స్థిర స్థిరరాశి icu::Hashtable* gCurrSymbolsEquiv = శూన్యసూచిక;
+స్థిర icu::UInitOnce gCurrSymbolsEquivInitOnce {};
 
 U_NAMESPACE_BEGIN
 
 // EquivIterator iterates over all strings that are equivalent to a given
 // string, s. Note that EquivIterator will never yield s itself.
-class EquivIterator : public icu::UMemory {
-public:
+తరగతి EquivIterator : బహిరంగ icu::UMemory {
+బహిరంగ:
     // Constructor. hash stores the equivalence relationships; s is the string
     // for which we find equivalent strings.
-    inline EquivIterator(const icu::Hashtable& hash, const icu::UnicodeString& s)
+    అంతఃవరుస EquivIterator(స్థిరరాశి icu::Hashtable& hash, స్థిరరాశి icu::UnicodeString& s)
         : _hash(hash) { 
-        _start = _current = &s;
+        ప్రారంభం_2 = _current = &s;
     }
-    inline ~EquivIterator() { }
+    అంతఃవరుస ~EquivIterator() { }
 
     // next returns the next equivalent string or nullptr if there are no more.
     // If s has no equivalent strings, next returns nullptr on the first call.
-    const icu::UnicodeString *next();
-private:
-    const icu::Hashtable& _hash;
-    const icu::UnicodeString* _start;
-    const icu::UnicodeString* _current;
+    స్థిరరాశి icu::UnicodeString *next();
+అంతరంగ:
+    స్థిరరాశి icu::Hashtable& _hash;
+    స్థిరరాశి icu::UnicodeString* ప్రారంభం_2;
+    స్థిరరాశి icu::UnicodeString* _current;
 };
 
-const icu::UnicodeString *
+స్థిరరాశి icu::UnicodeString *
 EquivIterator::next() {
-    const icu::UnicodeString* _next = static_cast<const icu::UnicodeString*>(_hash.get(*_current));
-    if (_next == nullptr) {
-        U_ASSERT(_current == _start);
-        return nullptr;
+    స్థిరరాశి icu::UnicodeString* తదుపరి_2 = static_cast<స్థిరరాశి icu::UnicodeString*>(_hash.get(*_current));
+    ఒకవేళ (తదుపరి_2 == శూన్యసూచిక) {
+        U_ASSERT(_current == ప్రారంభం_2);
+        తిరిగి శూన్యసూచిక;
     }
-    if (*_next == *_start) {
-        return nullptr;
+    ఒకవేళ (*తదుపరి_2 == *ప్రారంభం_2) {
+        తిరిగి శూన్యసూచిక;
     }
-    _current = _next;
-    return _next;
+    _current = తదుపరి_2;
+    తిరిగి తదుపరి_2;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 // makeEquivalent makes lhs and rhs equivalent by updating the equivalence
 // relations in hash accordingly.
-static void makeEquivalent(
-    const icu::UnicodeString &lhs,
-    const icu::UnicodeString &rhs,
-    icu::Hashtable* hash, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+స్థిర శూన్య makeEquivalent(
+    స్థిరరాశి icu::UnicodeString &lhs,
+    స్థిరరాశి icu::UnicodeString &rhs,
+    icu::Hashtable* hash, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    if (lhs == rhs) {
+    ఒకవేళ (lhs == rhs) {
         // already equivalent
-        return;
+        తిరిగి;
     }
-    icu::EquivIterator leftIter(*hash, lhs);
-    icu::EquivIterator rightIter(*hash, rhs);
-    const icu::UnicodeString *firstLeft = leftIter.next();
-    const icu::UnicodeString *firstRight = rightIter.next();
-    const icu::UnicodeString *nextLeft = firstLeft;
-    const icu::UnicodeString *nextRight = firstRight;
-    while (nextLeft != nullptr && nextRight != nullptr) {
-        if (*nextLeft == rhs || *nextRight == lhs) {
+    icu::EquivIterator ఎడమ_Iter(*hash, lhs);
+    icu::EquivIterator కుడి_Iter(*hash, rhs);
+    స్థిరరాశి icu::UnicodeString *మొదటి_ఎడమ = ఎడమ_Iter.next();
+    స్థిరరాశి icu::UnicodeString *మొదటి_కుడి = కుడి_Iter.next();
+    స్థిరరాశి icu::UnicodeString *తదుపరి_ఎడమ = మొదటి_ఎడమ;
+    స్థిరరాశి icu::UnicodeString *తదుపరి_కుడి = మొదటి_కుడి;
+    అయితే (తదుపరి_ఎడమ != శూన్యసూచిక && తదుపరి_కుడి != శూన్యసూచిక) {
+        ఒకవేళ (*తదుపరి_ఎడమ == rhs || *తదుపరి_కుడి == lhs) {
             // Already equivalent
-            return;
+            తిరిగి;
         }
-        nextLeft = leftIter.next();
-        nextRight = rightIter.next();
+        తదుపరి_ఎడమ = ఎడమ_Iter.next();
+        తదుపరి_కుడి = కుడి_Iter.next();
     }
     // Not equivalent. Must join.
-    icu::UnicodeString *newFirstLeft;
-    icu::UnicodeString *newFirstRight;
-    if (firstRight == nullptr && firstLeft == nullptr) {
+    icu::UnicodeString *new_మొదటి_ఎడమ;
+    icu::UnicodeString *new_మొదటి_కుడి;
+    ఒకవేళ (మొదటి_కుడి == శూన్యసూచిక && మొదటి_ఎడమ == శూన్యసూచిక) {
         // Neither lhs or rhs belong to an equivalence circle, so we form
         // a new equivalnce circle of just lhs and rhs.
-        newFirstLeft = new icu::UnicodeString(rhs);
-        newFirstRight = new icu::UnicodeString(lhs);
-    } else if (firstRight == nullptr) {
+        new_మొదటి_ఎడమ = కొత్త icu::UnicodeString(rhs);
+        new_మొదటి_కుడి = కొత్త icu::UnicodeString(lhs);
+    } లేకపోతే ఒకవేళ (మొదటి_కుడి == శూన్యసూచిక) {
         // lhs belongs to an equivalence circle, but rhs does not, so we link
         // rhs into lhs' circle.
-        newFirstLeft = new icu::UnicodeString(rhs);
-        newFirstRight = new icu::UnicodeString(*firstLeft);
-    } else if (firstLeft == nullptr) {
+        new_మొదటి_ఎడమ = కొత్త icu::UnicodeString(rhs);
+        new_మొదటి_కుడి = కొత్త icu::UnicodeString(*మొదటి_ఎడమ);
+    } లేకపోతే ఒకవేళ (మొదటి_ఎడమ == శూన్యసూచిక) {
         // rhs belongs to an equivlance circle, but lhs does not, so we link
         // lhs into rhs' circle.
-        newFirstLeft = new icu::UnicodeString(*firstRight);
-        newFirstRight = new icu::UnicodeString(lhs);
-    } else {
+        new_మొదటి_ఎడమ = కొత్త icu::UnicodeString(*మొదటి_కుడి);
+        new_మొదటి_కుడి = కొత్త icu::UnicodeString(lhs);
+    } లేకపోతే {
         // Both lhs and rhs belong to different equivalnce circles. We link
         // them together to form one single, larger equivalnce circle.
-        newFirstLeft = new icu::UnicodeString(*firstRight);
-        newFirstRight = new icu::UnicodeString(*firstLeft);
+        new_మొదటి_ఎడమ = కొత్త icu::UnicodeString(*మొదటి_కుడి);
+        new_మొదటి_కుడి = కొత్త icu::UnicodeString(*మొదటి_ఎడమ);
     }
-    if (newFirstLeft == nullptr || newFirstRight == nullptr) {
-        delete newFirstLeft;
-        delete newFirstRight;
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    ఒకవేళ (new_మొదటి_ఎడమ == శూన్యసూచిక || new_మొదటి_కుడి == శూన్యసూచిక) {
+        తొలగించు new_మొదటి_ఎడమ;
+        తొలగించు new_మొదటి_కుడి;
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    hash->put(lhs, (void *) newFirstLeft, status);
-    hash->put(rhs, (void *) newFirstRight, status);
+    hash->put(lhs, (శూన్య *) new_మొదటి_ఎడమ, స్థితి_2);
+    hash->put(rhs, (శూన్య *) new_మొదటి_కుడి, స్థితి_2);
 }
 
 // countEquivalent counts how many strings are equivalent to s.
 // hash stores all the equivalnce relations.
 // countEquivalent does not include s itself in the count.
-static int32_t countEquivalent(const icu::Hashtable &hash, const icu::UnicodeString &s) {
-    int32_t result = 0;
+స్థిర int32_t లెక్క_Equivalent(స్థిరరాశి icu::Hashtable &hash, స్థిరరాశి icu::UnicodeString &s) {
+    int32_t ఫలితం = 0;
     icu::EquivIterator iter(hash, s);
-    while (iter.next() != nullptr) {
-        ++result;
+    అయితే (iter.next() != శూన్యసూచిక) {
+        ++ఫలితం;
     }
-#ifdef UCURR_DEBUG_EQUIV
+#నిర్వచితమైతే UCURR_DEBUG_EQUIV
  {
-   char tmp[200];
+   అక్షరం tmp[200];
    s.extract(0,s.length(),tmp, "UTF-8");
-   printf("CountEquivalent('%s') = %d\n", tmp, result);
+   రాయి("CountEquivalent('%s') = %d\n", tmp, ఫలితం);
  }
-#endif
-    return result;
+#అయితే_ముగింపు
+    తిరిగి ఫలితం;
 }
 
-static const icu::Hashtable* getCurrSymbolsEquiv();
+స్థిర స్థిరరాశి icu::Hashtable* getCurrSymbolsEquiv();
 
 //------------------------------------------------------------
-// Code
+//సంకేతం
 
 /**
  * Cleanup callback func
  */
-static UBool U_CALLCONV 
+స్థిర UBool U_CALLCONV 
 isoCodes_cleanup()
 {
-    if (gIsoCodes != nullptr) {
+    ఒకవేళ (gIsoCodes != శూన్యసూచిక) {
         uhash_close(const_cast<UHashtable *>(gIsoCodes));
-        gIsoCodes = nullptr;
+        gIsoCodes = శూన్యసూచిక;
     }
     gIsoCodesInitOnce.reset();
-    return true;
+    తిరిగి నిజం;
 }
 
 /**
  * Cleanup callback func
  */
-static UBool U_CALLCONV 
+స్థిర UBool U_CALLCONV 
 currSymbolsEquiv_cleanup()
 {
-    delete const_cast<icu::Hashtable *>(gCurrSymbolsEquiv);
-    gCurrSymbolsEquiv = nullptr;
+    తొలగించు const_cast<icu::Hashtable *>(gCurrSymbolsEquiv);
+    gCurrSymbolsEquiv = శూన్యసూచిక;
     gCurrSymbolsEquivInitOnce.reset();
-    return true;
+    తిరిగి నిజం;
 }
 
 /**
  * Deleter for IsoCodeEntry
  */
-static void U_CALLCONV
-deleteIsoCodeEntry(void *obj) {
-    IsoCodeEntry* entry = static_cast<IsoCodeEntry*>(obj);
-    uprv_free(entry);
+స్థిర శూన్య U_CALLCONV
+delete_Iso_సంకేతం_నమోదు(శూన్య *obj) {
+    Iso_సంకేతం_నమోదు* నమోదు_2 = static_cast<Iso_సంకేతం_నమోదు*>(obj);
+    uprv_free(నమోదు_2);
 }
 
 /**
  * Deleter for gCurrSymbolsEquiv.
  */
-static void U_CALLCONV
-deleteUnicode(void *obj) {
-    icu::UnicodeString* entry = static_cast<icu::UnicodeString*>(obj);
-    delete entry;
+స్థిర శూన్య U_CALLCONV
+deleteUnicode(శూన్య *obj) {
+    icu::UnicodeString* నమోదు_2 = static_cast<icu::UnicodeString*>(obj);
+    తొలగించు నమోదు_2;
 }
 
 /**
  * Unfortunately, we have to convert the char16_t* currency code to char*
  * to use it as a resource key.
  */
-static inline char*
-myUCharsToChars(char* resultOfLen4, const char16_t* currency) {
-    u_UCharsToChars(currency, resultOfLen4, ISO_CURRENCY_CODE_LENGTH);
-    resultOfLen4[ISO_CURRENCY_CODE_LENGTH] = 0;
-    return resultOfLen4;
+స్థిర అంతఃవరుస అక్షరం*
+my_UChars_గమ్యం_Chars(అక్షరం* ఫలితం_యొక్క_Len4, స్థిరరాశి char16_t* currency) {
+    u_UChars_గమ్యం_Chars(currency, ఫలితం_యొక్క_Len4, ISO_CURRENCY_సంకేతం_నిడివి);
+    ఫలితం_యొక్క_Len4[ISO_CURRENCY_సంకేతం_నిడివి] = 0;
+    తిరిగి ఫలితం_యొక్క_Len4;
 }
 
 /**
@@ -292,58 +292,58 @@ myUCharsToChars(char* resultOfLen4, const char16_t* currency) {
  * except that they are those used in cash transactions ( cashDigits
  * and cashRounding ).
  */
-static const int32_t*
-_findMetaData(const char16_t* currency, UErrorCode& ec) {
+స్థిర స్థిరరాశి int32_t*
+కనుగొను_Meta_దత్తాంశం(స్థిరరాశి char16_t* currency, UError_సంకేతం& ec) {
 
-    if (currency == nullptr || *currency == 0) {
-        if (U_SUCCESS(ec)) {
-            ec = U_ILLEGAL_ARGUMENT_ERROR;
+    ఒకవేళ (currency == శూన్యసూచిక || *currency == 0) {
+        ఒకవేళ (U_SUCCESS(ec)) {
+            ec = U_ILLEGAL_వాదం_ERROR;
         }
-        return LAST_RESORT_DATA;
+        తిరిగి చివరి_RESORT_దత్తాంశం;
     }
 
     // Get CurrencyMeta resource out of root locale file.  [This may
     // move out of the root locale file later; if it does, update this
     // code.]
-    UResourceBundle* currencyData = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &ec);
-    LocalUResourceBundlePointer currencyMeta(ures_getByKey(currencyData, CURRENCY_META, currencyData, &ec));
+    UResourceBundle* currency_దత్తాంశం = ures_open_ప్రత్యక్ష(U_ICUDATA_CURR, CURRENCY_దత్తాంశం, &ec);
+    Local_UResource_Bundle_సూచిక currencyMeta(ures_get_By_కీలకం(currency_దత్తాంశం, CURRENCY_META, currency_దత్తాంశం, &ec));
 
-    if (U_FAILURE(ec)) {
+    ఒకవేళ (U_FAILURE(ec)) {
         // Config/build error; return hard-coded defaults
-        return LAST_RESORT_DATA;
+        తిరిగి చివరి_RESORT_దత్తాంశం;
     }
 
     // Look up our currency, or if that's not available, then DEFAULT
-    char buf[ISO_CURRENCY_CODE_LENGTH+1];
-    UErrorCode ec2 = U_ZERO_ERROR; // local error code: soft failure
-    LocalUResourceBundlePointer rb(ures_getByKey(currencyMeta.getAlias(), myUCharsToChars(buf, currency), nullptr, &ec2));
-      if (U_FAILURE(ec2)) {
-        rb.adoptInstead(ures_getByKey(currencyMeta.getAlias(),DEFAULT_META, nullptr, &ec));
-        if (U_FAILURE(ec)) {
+    అక్షరం buf[ISO_CURRENCY_సంకేతం_నిడివి+1];
+    UError_సంకేతం ec2 = U_ZERO_ERROR; // local error code: soft failure
+    Local_UResource_Bundle_సూచిక rb(ures_get_By_కీలకం(currencyMeta.getAlias(), my_UChars_గమ్యం_Chars(buf, currency), శూన్యసూచిక, &ec2));
+      ఒకవేళ (U_FAILURE(ec2)) {
+        rb.adoptInstead(ures_get_By_కీలకం(currencyMeta.getAlias(),DEFAULT_META, శూన్యసూచిక, &ec));
+        ఒకవేళ (U_FAILURE(ec)) {
             // Config/build error; return hard-coded defaults
-            return LAST_RESORT_DATA;
+            తిరిగి చివరి_RESORT_దత్తాంశం;
         }
     }
 
     int32_t len;
-    const int32_t *data = ures_getIntVector(rb.getAlias(), &len, &ec);
-    if (U_FAILURE(ec) || len != 4) {
+    స్థిరరాశి int32_t *దత్తాంశం = ures_get_Int_సదిశ(rb.getAlias(), &len, &ec);
+    ఒకవేళ (U_FAILURE(ec) || len != 4) {
         // Config/build error; return hard-coded defaults
-        if (U_SUCCESS(ec)) {
+        ఒకవేళ (U_SUCCESS(ec)) {
             ec = U_INVALID_FORMAT_ERROR;
         }
-        return LAST_RESORT_DATA;
+        తిరిగి చివరి_RESORT_దత్తాంశం;
     }
 
-    return data;
+    తిరిగి దత్తాంశం;
 }
 
 // -------------------------------------
 
-static CharString
-idForLocale(const char* locale, UErrorCode* ec)
+స్థిర CharString
+idForLocale(స్థిరరాశి అక్షరం* locale, UError_సంకేతం* ec)
 {
-    return ulocimp_getRegionForSupplementalData(locale, false, *ec);
+    తిరిగి ulocimp_get_Region_For_Supplemental_దత్తాంశం(locale, అబద్ధం, *ec);
 }
 
 // ------------------------------------------
@@ -355,119 +355,119 @@ idForLocale(const char* locale, UErrorCode* ec)
 // don't use ICUService since we don't need fallback
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV currency_cleanup();
-U_CDECL_END
+స్థిర UBool U_CALLCONV currency_cleanup();
+U_CDECL_చివర
 
-#if !UCONFIG_NO_SERVICE
-struct CReg;
+#ఒకవేళ !UCONFIG_NO_SERVICE
+నిర్మాణం CReg;
 
-static UMutex gCRegLock;
-static CReg* gCRegHead = nullptr;
+స్థిర UMutex g_CReg_తాళం;
+స్థిర CReg* g_CReg_తల = శూన్యసూచిక;
 
-struct CReg : public icu::UMemory {
+నిర్మాణం CReg : బహిరంగ icu::UMemory {
     CReg *next;
-    char16_t iso[ISO_CURRENCY_CODE_LENGTH+1];
-    char  id[ULOC_FULLNAME_CAPACITY];
+    char16_t iso[ISO_CURRENCY_సంకేతం_నిడివి+1];
+    అక్షరం  id[ULOC_FULLNAME_సామర్థ్యం];
 
-    CReg(const char16_t* _iso, const char* _id)
-        : next(nullptr)
+    CReg(స్థిరరాశి char16_t* _iso, స్థిరరాశి అక్షరం* _id)
+        : next(శూన్యసూచిక)
     {
-        uprv_strncpy(id, _id, sizeof(id)-1);
-        id[sizeof(id)-1] = 0;
-        u_memcpy(iso, _iso, ISO_CURRENCY_CODE_LENGTH);
-        iso[ISO_CURRENCY_CODE_LENGTH] = 0;
+        uprv_strncpy(id, _id, పరిమాణం(id)-1);
+        id[పరిమాణం(id)-1] = 0;
+        u_memcpy(iso, _iso, ISO_CURRENCY_సంకేతం_నిడివి);
+        iso[ISO_CURRENCY_సంకేతం_నిడివి] = 0;
     }
 
-    static UCurrRegistryKey reg(const char16_t* _iso, const char* _id, UErrorCode* status)
+    స్థిర UCurr_Registry_కీలకం reg(స్థిరరాశి char16_t* _iso, స్థిరరాశి అక్షరం* _id, UError_సంకేతం* స్థితి_2)
     {
-        if (status && U_SUCCESS(*status) && _iso && _id) {
-            CReg* n = new CReg(_iso, _id);
-            if (n) {
-                umtx_lock(&gCRegLock);
-                if (!gCRegHead) {
+        ఒకవేళ (స్థితి_2 && U_SUCCESS(*స్థితి_2) && _iso && _id) {
+            CReg* n = కొత్త CReg(_iso, _id);
+            ఒకవేళ (n) {
+                umtx_తాళం(&g_CReg_తాళం);
+                ఒకవేళ (!g_CReg_తల) {
                     /* register for the first time */
-                    ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+                    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
                 }
-                n->next = gCRegHead;
-                gCRegHead = n;
-                umtx_unlock(&gCRegLock);
-                return n;
+                n->next = g_CReg_తల;
+                g_CReg_తల = n;
+                umtx_unlock(&g_CReg_తాళం);
+                తిరిగి n;
             }
-            *status = U_MEMORY_ALLOCATION_ERROR;
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
         }
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 
-    static UBool unreg(UCurrRegistryKey key) {
-        UBool found = false;
-        umtx_lock(&gCRegLock);
+    స్థిర UBool unreg(UCurr_Registry_కీలకం కీలకం) {
+        UBool దొరికింది = అబద్ధం;
+        umtx_తాళం(&g_CReg_తాళం);
 
-        CReg** p = &gCRegHead;
-        while (*p) {
-            if (*p == key) {
-                *p = ((CReg*)key)->next;
-                delete (CReg*)key;
-                found = true;
-                break;
+        CReg** p = &g_CReg_తల;
+        అయితే (*p) {
+            ఒకవేళ (*p == కీలకం) {
+                *p = ((CReg*)కీలకం)->next;
+                తొలగించు (CReg*)కీలకం;
+                దొరికింది = నిజం;
+                ఆపు;
             }
             p = &((*p)->next);
         }
 
-        umtx_unlock(&gCRegLock);
-        return found;
+        umtx_unlock(&g_CReg_తాళం);
+        తిరిగి దొరికింది;
     }
 
-    static const char16_t* get(const char* id) {
-        const char16_t* result = nullptr;
-        umtx_lock(&gCRegLock);
-        CReg* p = gCRegHead;
+    స్థిర స్థిరరాశి char16_t* get(స్థిరరాశి అక్షరం* id) {
+        స్థిరరాశి char16_t* ఫలితం = శూన్యసూచిక;
+        umtx_తాళం(&g_CReg_తాళం);
+        CReg* p = g_CReg_తల;
 
         /* register cleanup of the mutex */
-        ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
-        while (p) {
-            if (uprv_strcmp(id, p->id) == 0) {
-                result = p->iso;
-                break;
+        ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+        అయితే (p) {
+            ఒకవేళ (uprv_strcmp(id, p->id) == 0) {
+                ఫలితం = p->iso;
+                ఆపు;
             }
             p = p->next;
         }
-        umtx_unlock(&gCRegLock);
-        return result;
+        umtx_unlock(&g_CReg_తాళం);
+        తిరిగి ఫలితం;
     }
 
     /* This doesn't need to be thread safe. It's for u_cleanup only. */
-    static void cleanup() {
-        while (gCRegHead) {
-            CReg* n = gCRegHead;
-            gCRegHead = gCRegHead->next;
-            delete n;
+    స్థిర శూన్య cleanup() {
+        అయితే (g_CReg_తల) {
+            CReg* n = g_CReg_తల;
+            g_CReg_తల = g_CReg_తల->next;
+            తొలగించు n;
         }
     }
 };
 
 // -------------------------------------
 
-U_CAPI UCurrRegistryKey U_EXPORT2
-ucurr_register(const char16_t* isoCode, const char* locale, UErrorCode *status)
+U_CAPI UCurr_Registry_కీలకం U_EXPORT2
+ucurr_రిజిస్టరు(స్థిరరాశి char16_t* iso_సంకేతం, స్థిరరాశి అక్షరం* locale, UError_సంకేతం *స్థితి_2)
 {
-    if (status && U_SUCCESS(*status)) {
-        CharString id = idForLocale(locale, status);
-        return CReg::reg(isoCode, id.data(), status);
+    ఒకవేళ (స్థితి_2 && U_SUCCESS(*స్థితి_2)) {
+        CharString id = idForLocale(locale, స్థితి_2);
+        తిరిగి CReg::reg(iso_సంకేతం, id.దత్తాంశం(), స్థితి_2);
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 // -------------------------------------
 
 U_CAPI UBool U_EXPORT2
-ucurr_unregister(UCurrRegistryKey key, UErrorCode* status)
+ucurr_unregister(UCurr_Registry_కీలకం కీలకం, UError_సంకేతం* స్థితి_2)
 {
-    if (status && U_SUCCESS(*status)) {
-        return CReg::unreg(key);
+    ఒకవేళ (స్థితి_2 && U_SUCCESS(*స్థితి_2)) {
+        తిరిగి CReg::unreg(కీలకం);
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
-#endif /* UCONFIG_NO_SERVICE */
+#అయితే_ముగింపు /* UCONFIG_NO_SERVICE */
 
 // -------------------------------------
 
@@ -477,14 +477,14 @@ ucurr_unregister(UCurrRegistryKey key, UErrorCode* status)
 /*The declaration here is needed so currency_cleanup()
  * can call this function.
  */
-static UBool U_CALLCONV
+స్థిర UBool U_CALLCONV
 currency_cache_cleanup();
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV currency_cleanup() {
-#if !UCONFIG_NO_SERVICE
+స్థిర UBool U_CALLCONV currency_cleanup() {
+#ఒకవేళ !UCONFIG_NO_SERVICE
     CReg::cleanup();
-#endif
+#అయితే_ముగింపు
     /*
      * There might be some cached currency data or isoCodes data.
      */
@@ -492,114 +492,114 @@ static UBool U_CALLCONV currency_cleanup() {
     isoCodes_cleanup();
     currSymbolsEquiv_cleanup();
 
-    return true;
+    తిరిగి నిజం;
 }
-U_CDECL_END
+U_CDECL_చివర
 
 // -------------------------------------
 
 U_CAPI int32_t U_EXPORT2
-ucurr_forLocale(const char* locale,
+ucurr_forLocale(స్థిరరాశి అక్షరం* locale,
                 char16_t* buff,
-                int32_t buffCapacity,
-                UErrorCode* ec) {
-    if (U_FAILURE(*ec)) { return 0; }
-    if (buffCapacity < 0 || (buff == nullptr && buffCapacity > 0)) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+                int32_t buff_సామర్థ్యం,
+                UError_సంకేతం* ec) {
+    ఒకవేళ (U_FAILURE(*ec)) { తిరిగి 0; }
+    ఒకవేళ (buff_సామర్థ్యం < 0 || (buff == శూన్యసూచిక && buff_సామర్థ్యం > 0)) {
+        *ec = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    UErrorCode localStatus = U_ZERO_ERROR;
-    CharString currency = ulocimp_getKeywordValue(locale, "currency", localStatus);
+    UError_సంకేతం local_స్థితి = U_ZERO_ERROR;
+    CharString currency = ulocimp_get_Keyword_విలువ(locale, "currency", local_స్థితి);
     int32_t resLen = currency.length();
 
-    if (U_SUCCESS(localStatus) && resLen == 3 && uprv_isInvariantString(currency.data(), resLen)) {
-        if (resLen < buffCapacity) {
-            T_CString_toUpperCase(currency.data());
-            u_charsToUChars(currency.data(), buff, resLen);
+    ఒకవేళ (U_SUCCESS(local_స్థితి) && resLen == 3 && uprv_isInvariantString(currency.దత్తాంశం(), resLen)) {
+        ఒకవేళ (resLen < buff_సామర్థ్యం) {
+            T_CString_గమ్యం_పై_Case(currency.దత్తాంశం());
+            u_chars_గమ్యం_UChars(currency.దత్తాంశం(), buff, resLen);
         }
-        return u_terminateUChars(buff, buffCapacity, resLen, ec);
+        తిరిగి u_terminateUChars(buff, buff_సామర్థ్యం, resLen, ec);
     }
 
     // get country or country_variant in `id'
     CharString id = idForLocale(locale, ec);
-    if (U_FAILURE(*ec)) {
-        return 0;
+    ఒకవేళ (U_FAILURE(*ec)) {
+        తిరిగి 0;
     }
 
-#if !UCONFIG_NO_SERVICE
-    const char16_t* result = CReg::get(id.data());
-    if (result) {
-        if(buffCapacity > u_strlen(result)) {
-            u_strcpy(buff, result);
+#ఒకవేళ !UCONFIG_NO_SERVICE
+    స్థిరరాశి char16_t* ఫలితం = CReg::get(id.దత్తాంశం());
+    ఒకవేళ (ఫలితం) {
+        ఒకవేళ(buff_సామర్థ్యం > u_strlen(ఫలితం)) {
+            u_strcpy(buff, ఫలితం);
         }
-        resLen = u_strlen(result);
-        return u_terminateUChars(buff, buffCapacity, resLen, ec);
+        resLen = u_strlen(ఫలితం);
+        తిరిగి u_terminateUChars(buff, buff_సామర్థ్యం, resLen, ec);
     }
-#endif
+#అయితే_ముగింపు
     // Remove variants, which is only needed for registration.
-    char *idDelim = uprv_strchr(id.data(), VAR_DELIM);
-    if (idDelim) {
-        id.truncate(idDelim - id.data());
+    అక్షరం *idDelim = uprv_strchr(id.దత్తాంశం(), VAR_DELIM);
+    ఒకవేళ (idDelim) {
+        id.truncate(idDelim - id.దత్తాంశం());
     }
 
-    const char16_t* s = nullptr;  // Currency code from data file.
-    if (id.isEmpty()) {
+    స్థిరరాశి char16_t* s = శూన్యసూచిక;  // Currency code from data file.
+    ఒకవేళ (id.is_ఖాళీలు()) {
         // No point looking in the data for an empty string.
         // This is what we would get.
-        localStatus = U_MISSING_RESOURCE_ERROR;
-    } else {
+        local_స్థితి = U_MISSING_RESOURCE_ERROR;
+    } లేకపోతే {
         // Look up the CurrencyMap element in the root bundle.
-        localStatus = U_ZERO_ERROR;
-        UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-        UResourceBundle *cm = ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus);
-        LocalUResourceBundlePointer countryArray(ures_getByKey(rb, id.data(), cm, &localStatus));
+        local_స్థితి = U_ZERO_ERROR;
+        UResourceBundle *rb = ures_open_ప్రత్యక్ష(U_ICUDATA_CURR, CURRENCY_దత్తాంశం, &local_స్థితి);
+        UResourceBundle *cm = ures_get_By_కీలకం(rb, CURRENCY_MAP, rb, &local_స్థితి);
+        Local_UResource_Bundle_సూచిక countryArray(ures_get_By_కీలకం(rb, id.దత్తాంశం(), cm, &local_స్థితి));
         // https://unicode-org.atlassian.net/browse/ICU-21997
         // Prefer to use currencies that are legal tender.
-        if (U_SUCCESS(localStatus)) {
-            int32_t arrayLength = ures_getSize(countryArray.getAlias());
-            for (int32_t i = 0; i < arrayLength; ++i) {
-                LocalUResourceBundlePointer currencyReq(
-                    ures_getByIndex(countryArray.getAlias(), i, nullptr, &localStatus));
+        ఒకవేళ (U_SUCCESS(local_స్థితి)) {
+            int32_t array_నిడివి = ures_get_కొలత(countryArray.getAlias());
+            కొరకు (int32_t i = 0; i < array_నిడివి; ++i) {
+                Local_UResource_Bundle_సూచిక currencyReq(
+                    ures_get_By_సూచీ(countryArray.getAlias(), i, శూన్యసూచిక, &local_స్థితి));
                 // The currency is legal tender if it is *not* marked with tender{"false"}.
-                UErrorCode tenderStatus = localStatus;
-                const char16_t *tender =
-                    ures_getStringByKey(currencyReq.getAlias(), "tender", nullptr, &tenderStatus);
-                bool isTender = U_FAILURE(tenderStatus) || u_strcmp(tender, u"false") != 0;
-                if (!isTender && s != nullptr) {
+                UError_సంకేతం tender_స్థితి = local_స్థితి;
+                స్థిరరాశి char16_t *tender =
+                    ures_get_String_By_కీలకం(currencyReq.getAlias(), "tender", శూన్యసూచిక, &tender_స్థితి);
+                తార్కిక isTender = U_FAILURE(tender_స్థితి) || u_strcmp(tender, u"false") != 0;
+                ఒకవేళ (!isTender && s != శూన్యసూచిక) {
                     // We already have a non-tender currency. Ignore all following non-tender ones.
-                    continue;
+                    కొనసాగు;
                 }
                 // Fetch the currency code.
-                s = ures_getStringByKey(currencyReq.getAlias(), "id", &resLen, &localStatus);
-                if (isTender) {
-                    break;
+                s = ures_get_String_By_కీలకం(currencyReq.getAlias(), "id", &resLen, &local_స్థితి);
+                ఒకవేళ (isTender) {
+                    ఆపు;
                 }
             }
-            if (U_SUCCESS(localStatus) && s == nullptr) {
-                localStatus = U_MISSING_RESOURCE_ERROR;
+            ఒకవేళ (U_SUCCESS(local_స్థితి) && s == శూన్యసూచిక) {
+                local_స్థితి = U_MISSING_RESOURCE_ERROR;
             }
         }
     }
 
-    if ((U_FAILURE(localStatus)) && strchr(id.data(), '_') != nullptr) {
+    ఒకవేళ ((U_FAILURE(local_స్థితి)) && strchr(id.దత్తాంశం(), '_') != శూన్యసూచిక) {
         // We don't know about it.  Check to see if we support the variant.
-        CharString parent = ulocimp_getParent(locale, *ec);
+        CharString మాతృ = ulocimp_get_మాతృ(locale, *ec);
         *ec = U_USING_FALLBACK_WARNING;
         // TODO: Loop over the parent rather than recursing and
         // looking again for a currency keyword.
-        return ucurr_forLocale(parent.data(), buff, buffCapacity, ec);
+        తిరిగి ucurr_forLocale(మాతృ.దత్తాంశం(), buff, buff_సామర్థ్యం, ec);
     }
-    if (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR) {
+    ఒకవేళ (*ec == U_ZERO_ERROR || local_స్థితి != U_ZERO_ERROR) {
         // There is nothing to fallback to. Report the failure/warning if possible.
-        *ec = localStatus;
+        *ec = local_స్థితి;
     }
-    if (U_SUCCESS(*ec)) {
-        if(buffCapacity > resLen) {
+    ఒకవేళ (U_SUCCESS(*ec)) {
+        ఒకవేళ(buff_సామర్థ్యం > resLen) {
             u_strcpy(buff, s);
         }
     }
-    return u_terminateUChars(buff, buffCapacity, resLen, ec);
+    తిరిగి u_terminateUChars(buff, buff_సామర్థ్యం, resLen, ec);
 }
 
 // end registration
@@ -611,19 +611,19 @@ ucurr_forLocale(const char* locale,
  * @return true if the fallback happened; false if locale is already
  * root ("").
  */
-static UBool fallback(CharString& loc) {
-    if (loc.isEmpty()) {
-        return false;
+స్థిర UBool fallback(CharString& loc) {
+    ఒకవేళ (loc.is_ఖాళీలు()) {
+        తిరిగి అబద్ధం;
     }
-    UErrorCode status = U_ZERO_ERROR;
-    if (loc == "en_GB") {
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    ఒకవేళ (loc == "en_GB") {
         // HACK: See #13368.  We need "en_GB" to fall back to "en_001" instead of "en"
         // in order to consume the correct data strings.  This hack will be removed
         // when proper data sink loading is implemented here.
         loc.truncate(3);
-        loc.append("001", status);
-    } else {
-        loc = ulocimp_getParent(loc.data(), status);
+        loc.append("001", స్థితి_2);
+    } లేకపోతే {
+        loc = ulocimp_get_మాతృ(loc.దత్తాంశం(), స్థితి_2);
     }
  /*
     char *i = uprv_strrchr(loc, '_');
@@ -632,17 +632,17 @@ static UBool fallback(CharString& loc) {
     }
     *i = 0;
  */
-    return true;
+    తిరిగి నిజం;
 }
 
 
-U_CAPI const char16_t* U_EXPORT2
-ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
-              const char* locale,
+U_CAPI స్థిరరాశి char16_t* U_EXPORT2
+ucurr_getName(స్థిరరాశి char16_t* currency U_LIFETIME_BOUND,
+              స్థిరరాశి అక్షరం* locale,
               UCurrNameStyle nameStyle,
               UBool* isChoiceFormat, // fillin
               int32_t* len, // fillin
-              UErrorCode* ec) {
+              UError_సంకేతం* ec) {
 
     // Look up the Currencies resource for the given locale.  The
     // Currencies locale data looks like this:
@@ -655,14 +655,14 @@ ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
     //|  }
     //|}
 
-    if (U_FAILURE(*ec)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*ec)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     int32_t choice = (int32_t) nameStyle;
-    if (choice < 0 || choice > 4) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ (choice < 0 || choice > 4) {
+        *ec = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
     // In the future, resource bundles may implement multi-level
@@ -676,62 +676,62 @@ ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
 
     // Use a separate UErrorCode here that does not propagate out of
     // this function.
-    UErrorCode ec2 = U_ZERO_ERROR;
+    UError_సంకేతం ec2 = U_ZERO_ERROR;
 
-    if (locale == nullptr) {
+    ఒకవేళ (locale == శూన్యసూచిక) {
         locale = uloc_getDefault();
     }
     CharString loc = ulocimp_getName(locale, ec2);
-    if (U_FAILURE(ec2)) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ (U_FAILURE(ec2)) {
+        *ec = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    char buf[ISO_CURRENCY_CODE_LENGTH+1];
-    myUCharsToChars(buf, currency);
+    అక్షరం buf[ISO_CURRENCY_సంకేతం_నిడివి+1];
+    my_UChars_గమ్యం_Chars(buf, currency);
     
     /* Normalize the keyword value to uppercase */
-    T_CString_toUpperCase(buf);
+    T_CString_గమ్యం_పై_Case(buf);
     
-    const char16_t* s = nullptr;
+    స్థిరరాశి char16_t* s = శూన్యసూచిక;
     ec2 = U_ZERO_ERROR;
-    LocalUResourceBundlePointer rb(ures_open(U_ICUDATA_CURR, loc.data(), &ec2));
+    Local_UResource_Bundle_సూచిక rb(ures_open(U_ICUDATA_CURR, loc.దత్తాంశం(), &ec2));
 
-    if (nameStyle == UCURR_NARROW_SYMBOL_NAME || nameStyle == UCURR_FORMAL_SYMBOL_NAME || nameStyle == UCURR_VARIANT_SYMBOL_NAME) {
-        CharString key;
-        switch (nameStyle) {
-        case UCURR_NARROW_SYMBOL_NAME:
-            key.append(CURRENCIES_NARROW, ec2);
-            break;
-        case UCURR_FORMAL_SYMBOL_NAME:
-            key.append(CURRENCIES_FORMAL, ec2);
-            break;
-        case UCURR_VARIANT_SYMBOL_NAME:
-            key.append(CURRENCIES_VARIANT, ec2);
-            break;
-        default:
+    ఒకవేళ (nameStyle == UCURR_NARROW_చిహ్నం_NAME || nameStyle == UCURR_FORMAL_చిహ్నం_NAME || nameStyle == UCURR_VARIANT_చిహ్నం_NAME) {
+        CharString కీలకం;
+        ఎంపిక (nameStyle) {
+        స్థితి UCURR_NARROW_చిహ్నం_NAME:
+            కీలకం.append(CURRENCIES_NARROW, ec2);
+            ఆపు;
+        స్థితి UCURR_FORMAL_చిహ్నం_NAME:
+            కీలకం.append(CURRENCIES_FORMAL, ec2);
+            ఆపు;
+        స్థితి UCURR_VARIANT_చిహ్నం_NAME:
+            కీలకం.append(CURRENCIES_VARIANT, ec2);
+            ఆపు;
+        అప్రమేయ:
             *ec = U_UNSUPPORTED_ERROR;
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
-        key.append("/", ec2);
-        key.append(buf, ec2);
-        s = ures_getStringByKeyWithFallback(rb.getAlias(), key.data(), len, &ec2);
-        if (ec2 == U_MISSING_RESOURCE_ERROR) {
+        కీలకం.append("/", ec2);
+        కీలకం.append(buf, ec2);
+        s = ures_get_String_By_కీలకం_With_Fallback(rb.getAlias(), కీలకం.దత్తాంశం(), len, &ec2);
+        ఒకవేళ (ec2 == U_MISSING_RESOURCE_ERROR) {
             *ec = U_USING_FALLBACK_WARNING;
             ec2 = U_ZERO_ERROR;
-            choice = UCURR_SYMBOL_NAME;
+            choice = UCURR_చిహ్నం_NAME;
         }
     }
-    if (s == nullptr) {
-        ures_getByKey(rb.getAlias(), CURRENCIES, rb.getAlias(), &ec2);
-        ures_getByKeyWithFallback(rb.getAlias(), buf, rb.getAlias(), &ec2);
-        s = ures_getStringByIndex(rb.getAlias(), choice, len, &ec2);
+    ఒకవేళ (s == శూన్యసూచిక) {
+        ures_get_By_కీలకం(rb.getAlias(), CURRENCIES, rb.getAlias(), &ec2);
+        ures_get_By_కీలకం_With_Fallback(rb.getAlias(), buf, rb.getAlias(), &ec2);
+        s = ures_get_String_By_సూచీ(rb.getAlias(), choice, len, &ec2);
     }
 
     // If we've succeeded we're done.  Otherwise, try to fallback.
     // If that fails (because we are already at root) then exit.
-    if (U_SUCCESS(ec2)) {
-        if (ec2 == U_USING_DEFAULT_WARNING
+    ఒకవేళ (U_SUCCESS(ec2)) {
+        ఒకవేళ (ec2 == U_USING_DEFAULT_WARNING
             || (ec2 == U_USING_FALLBACK_WARNING && *ec != U_USING_DEFAULT_WARNING)) {
             *ec = ec2;
         }
@@ -739,27 +739,27 @@ ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
 
     // We no longer support choice format data in names.  Data should not contain
     // choice patterns.
-    if (isChoiceFormat != nullptr) {
-        *isChoiceFormat = false;
+    ఒకవేళ (isChoiceFormat != శూన్యసూచిక) {
+        *isChoiceFormat = అబద్ధం;
     }
-    if (U_SUCCESS(ec2)) {
-        U_ASSERT(s != nullptr);
-        return s;
+    ఒకవేళ (U_SUCCESS(ec2)) {
+        U_ASSERT(s != శూన్యసూచిక);
+        తిరిగి s;
     }
 
     // If we fail to find a match, use the ISO 4217 code
     *len = u_strlen(currency); // Should == ISO_CURRENCY_CODE_LENGTH, but maybe not...?
     *ec = U_USING_DEFAULT_WARNING;
-    return currency;
+    తిరిగి currency;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ucurr_getPluralName(const char16_t* currency U_LIFETIME_BOUND,
-                    const char* locale,
+U_CAPI స్థిరరాశి char16_t* U_EXPORT2
+ucurr_getPluralName(స్థిరరాశి char16_t* currency U_LIFETIME_BOUND,
+                    స్థిరరాశి అక్షరం* locale,
                     UBool* isChoiceFormat,
-                    const char* pluralCount,
+                    స్థిరరాశి అక్షరం* plural_లెక్క,
                     int32_t* len, // fillin
-                    UErrorCode* ec) {
+                    UError_సంకేతం* ec) {
     // Look up the Currencies resource for the given locale.  The
     // Currencies locale data looks like this:
     //|en {
@@ -771,110 +771,110 @@ ucurr_getPluralName(const char16_t* currency U_LIFETIME_BOUND,
     //|  }
     //|}
 
-    if (U_FAILURE(*ec)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*ec)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     // Use a separate UErrorCode here that does not propagate out of
     // this function.
-    UErrorCode ec2 = U_ZERO_ERROR;
+    UError_సంకేతం ec2 = U_ZERO_ERROR;
 
-    if (locale == nullptr) {
+    ఒకవేళ (locale == శూన్యసూచిక) {
         locale = uloc_getDefault();
     }
     CharString loc = ulocimp_getName(locale, ec2);
-    if (U_FAILURE(ec2)) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ (U_FAILURE(ec2)) {
+        *ec = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    char buf[ISO_CURRENCY_CODE_LENGTH+1];
-    myUCharsToChars(buf, currency);
+    అక్షరం buf[ISO_CURRENCY_సంకేతం_నిడివి+1];
+    my_UChars_గమ్యం_Chars(buf, currency);
 
-    const char16_t* s = nullptr;
+    స్థిరరాశి char16_t* s = శూన్యసూచిక;
     ec2 = U_ZERO_ERROR;
-    UResourceBundle* rb = ures_open(U_ICUDATA_CURR, loc.data(), &ec2);
+    UResourceBundle* rb = ures_open(U_ICUDATA_CURR, loc.దత్తాంశం(), &ec2);
 
-    rb = ures_getByKey(rb, CURRENCYPLURALS, rb, &ec2);
+    rb = ures_get_By_కీలకం(rb, CURRENCYPLURALS, rb, &ec2);
 
     // Fetch resource with multi-level resource inheritance fallback
-    LocalUResourceBundlePointer curr(ures_getByKeyWithFallback(rb, buf, rb, &ec2));
+    Local_UResource_Bundle_సూచిక curr(ures_get_By_కీలకం_With_Fallback(rb, buf, rb, &ec2));
 
-    s = ures_getStringByKeyWithFallback(curr.getAlias(), pluralCount, len, &ec2);
-    if (U_FAILURE(ec2)) {
+    s = ures_get_String_By_కీలకం_With_Fallback(curr.getAlias(), plural_లెక్క, len, &ec2);
+    ఒకవేళ (U_FAILURE(ec2)) {
         //  fall back to "other"
         ec2 = U_ZERO_ERROR;
-        s = ures_getStringByKeyWithFallback(curr.getAlias(), "other", len, &ec2);     
-        if (U_FAILURE(ec2)) {
+        s = ures_get_String_By_కీలకం_With_Fallback(curr.getAlias(), "other", len, &ec2);     
+        ఒకవేళ (U_FAILURE(ec2)) {
             // fall back to long name in Currencies
-            return ucurr_getName(currency, locale, UCURR_LONG_NAME, 
+            తిరిగి ucurr_getName(currency, locale, UCURR_LONG_NAME, 
                                  isChoiceFormat, len, ec);
         }
     }
 
     // If we've succeeded we're done.  Otherwise, try to fallback.
     // If that fails (because we are already at root) then exit.
-    if (U_SUCCESS(ec2)) {
-        if (ec2 == U_USING_DEFAULT_WARNING
+    ఒకవేళ (U_SUCCESS(ec2)) {
+        ఒకవేళ (ec2 == U_USING_DEFAULT_WARNING
             || (ec2 == U_USING_FALLBACK_WARNING && *ec != U_USING_DEFAULT_WARNING)) {
             *ec = ec2;
         }
-        U_ASSERT(s != nullptr);
-        return s;
+        U_ASSERT(s != శూన్యసూచిక);
+        తిరిగి s;
     }
 
     // If we fail to find a match, use the ISO 4217 code
     *len = u_strlen(currency); // Should == ISO_CURRENCY_CODE_LENGTH, but maybe not...?
     *ec = U_USING_DEFAULT_WARNING;
-    return currency;
+    తిరిగి currency;
 }
 
 
 //========================================================================
 // Following are structure and function for parsing currency names
 
-#define NEED_TO_BE_DELETED 0x1
+#నిర్వచించు NEED_గమ్యం_BE_DELETED 0x1
 
 // TODO: a better way to define this?
-#define MAX_CURRENCY_NAME_LEN 100
+#నిర్వచించు MAX_CURRENCY_NAME_LEN 100
 
-typedef struct {
-    const char* IsoCode;  // key
-    char16_t* currencyName;  // value
+రకనిర్వచనం నిర్మాణం {
+    స్థిరరాశి అక్షరం* Iso_సంకేతం;  //కీలకం
+    char16_t* currencyName;  //విలువ
     int32_t currencyNameLen;  // value length
     int32_t flag;  // flags
 } CurrencyNameStruct;
 
 
-#ifndef MIN
-#define MIN(a,b) (((a)<(b)) ? (a) : (b))
-#endif
+#నిర్వచితం_కాకపోతే MIN
+#నిర్వచించు MIN(a,b) (((a)<(b)) ? (a) : (b))
+#అయితే_ముగింపు
 
-#ifndef MAX
-#define MAX(a,b) (((a)<(b)) ? (b) : (a))
-#endif
+#నిర్వచితం_కాకపోతే MAX
+#నిర్వచించు MAX(a,b) (((a)<(b)) ? (b) : (a))
+#అయితే_ముగింపు
 
 
 // Comparison function used in quick sort.
-static int U_CALLCONV currencyNameComparator(const void* a, const void* b) {
-    const CurrencyNameStruct* currName_1 = static_cast<const CurrencyNameStruct*>(a);
-    const CurrencyNameStruct* currName_2 = static_cast<const CurrencyNameStruct*>(b);
-    for (int32_t i = 0; 
+స్థిర పూర్ణాంకం U_CALLCONV currencyNameComparator(స్థిరరాశి శూన్య* a, స్థిరరాశి శూన్య* b) {
+    స్థిరరాశి CurrencyNameStruct* currName_1 = static_cast<స్థిరరాశి CurrencyNameStruct*>(a);
+    స్థిరరాశి CurrencyNameStruct* currName_2 = static_cast<స్థిరరాశి CurrencyNameStruct*>(b);
+    కొరకు (int32_t i = 0; 
          i < MIN(currName_1->currencyNameLen, currName_2->currencyNameLen);
          ++i) {
-        if (currName_1->currencyName[i] < currName_2->currencyName[i]) {
-            return -1;
+        ఒకవేళ (currName_1->currencyName[i] < currName_2->currencyName[i]) {
+            తిరిగి -1;
         }
-        if (currName_1->currencyName[i] > currName_2->currencyName[i]) {
-            return 1;
+        ఒకవేళ (currName_1->currencyName[i] > currName_2->currencyName[i]) {
+            తిరిగి 1;
         }
     }
-    if (currName_1->currencyNameLen < currName_2->currencyNameLen) {
-        return -1;
-    } else if (currName_1->currencyNameLen > currName_2->currencyNameLen) {
-        return 1;
+    ఒకవేళ (currName_1->currencyNameLen < currName_2->currencyNameLen) {
+        తిరిగి -1;
+    } లేకపోతే ఒకవేళ (currName_1->currencyNameLen > currName_2->currencyNameLen) {
+        తిరిగి 1;
     }
-    return 0;
+    తిరిగి 0;
 }
 
 
@@ -886,265 +886,265 @@ static int U_CALLCONV currencyNameComparator(const void* a, const void* b) {
 // For example, given locale as "en_US", the currency names get from resource
 // bundle in "en_US" and "en" are duplicated. The fallback mechanism will count
 // all currency names in "en_US" and "en".
-static void
-getCurrencyNameCount(const char* loc, int32_t* total_currency_name_count, int32_t* total_currency_symbol_count) {
+స్థిర శూన్య
+get_Currency_Name_లెక్క(స్థిరరాశి అక్షరం* loc, int32_t* మొత్తం_currency_name_లెక్క, int32_t* మొత్తం_currency_చిహ్నం_లెక్క) {
     U_NAMESPACE_USE
-    *total_currency_name_count = 0;
-    *total_currency_symbol_count = 0;
-    const char16_t* s = nullptr;
+    *మొత్తం_currency_name_లెక్క = 0;
+    *మొత్తం_currency_చిహ్నం_లెక్క = 0;
+    స్థిరరాశి char16_t* s = శూన్యసూచిక;
     CharString locale;
     {
-        UErrorCode status = U_ZERO_ERROR;
-        locale.append(loc, status);
-        if (U_FAILURE(status)) { return; }
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+        locale.append(loc, స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
     }
-    const icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
-    for (;;) {
-        UErrorCode ec2 = U_ZERO_ERROR;
+    స్థిరరాశి icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
+    కొరకు (;;) {
+        UError_సంకేతం ec2 = U_ZERO_ERROR;
         // TODO: ures_openDirect?
-        LocalUResourceBundlePointer rb(ures_open(U_ICUDATA_CURR, locale.data(), &ec2));
-        LocalUResourceBundlePointer curr(ures_getByKey(rb.getAlias(), CURRENCIES, nullptr, &ec2));
-        int32_t n = ures_getSize(curr.getAlias());
-        for (int32_t i=0; i<n; ++i) {
-            LocalUResourceBundlePointer names(ures_getByIndex(curr.getAlias(), i, nullptr, &ec2));
+        Local_UResource_Bundle_సూచిక rb(ures_open(U_ICUDATA_CURR, locale.దత్తాంశం(), &ec2));
+        Local_UResource_Bundle_సూచిక curr(ures_get_By_కీలకం(rb.getAlias(), CURRENCIES, శూన్యసూచిక, &ec2));
+        int32_t n = ures_get_కొలత(curr.getAlias());
+        కొరకు (int32_t i=0; i<n; ++i) {
+            Local_UResource_Bundle_సూచిక పేర్లు(ures_get_By_సూచీ(curr.getAlias(), i, శూన్యసూచిక, &ec2));
             int32_t len;
-            s = ures_getStringByIndex(names.getAlias(), UCURR_SYMBOL_NAME, &len, &ec2);
-            ++(*total_currency_symbol_count);  // currency symbol
-            if (currencySymbolsEquiv != nullptr) {
-                *total_currency_symbol_count += countEquivalent(*currencySymbolsEquiv, UnicodeString(true, s, len));
+            s = ures_get_String_By_సూచీ(పేర్లు.getAlias(), UCURR_చిహ్నం_NAME, &len, &ec2);
+            ++(*మొత్తం_currency_చిహ్నం_లెక్క);  // currency symbol
+            ఒకవేళ (currencySymbolsEquiv != శూన్యసూచిక) {
+                *మొత్తం_currency_చిహ్నం_లెక్క += లెక్క_Equivalent(*currencySymbolsEquiv, UnicodeString(నిజం, s, len));
             }
-            ++(*total_currency_symbol_count); // iso code
-            ++(*total_currency_name_count); // long name
+            ++(*మొత్తం_currency_చిహ్నం_లెక్క); // iso code
+            ++(*మొత్తం_currency_name_లెక్క); // long name
         }
 
         // currency plurals
-        UErrorCode ec3 = U_ZERO_ERROR;
-        LocalUResourceBundlePointer curr_p(ures_getByKey(rb.getAlias(), CURRENCYPLURALS, nullptr, &ec3));
-        n = ures_getSize(curr_p.getAlias());
-        for (int32_t i=0; i<n; ++i) {
-            LocalUResourceBundlePointer names(ures_getByIndex(curr_p.getAlias(), i, nullptr, &ec3));
-            *total_currency_name_count += ures_getSize(names.getAlias());
+        UError_సంకేతం ec3 = U_ZERO_ERROR;
+        Local_UResource_Bundle_సూచిక curr_p(ures_get_By_కీలకం(rb.getAlias(), CURRENCYPLURALS, శూన్యసూచిక, &ec3));
+        n = ures_get_కొలత(curr_p.getAlias());
+        కొరకు (int32_t i=0; i<n; ++i) {
+            Local_UResource_Bundle_సూచిక పేర్లు(ures_get_By_సూచీ(curr_p.getAlias(), i, శూన్యసూచిక, &ec3));
+            *మొత్తం_currency_name_లెక్క += ures_get_కొలత(పేర్లు.getAlias());
         }
 
-        if (!fallback(locale)) {
-            break;
+        ఒకవేళ (!fallback(locale)) {
+            ఆపు;
         }
     }
 }
 
-static char16_t*
-toUpperCase(const char16_t* source, int32_t len, const char* locale) {
-    char16_t* dest = nullptr;
-    UErrorCode ec = U_ZERO_ERROR;
-    int32_t destLen = u_strToUpper(dest, 0, source, len, locale, &ec);
+స్థిర char16_t*
+గమ్యం_పై_Case(స్థిరరాశి char16_t* ఆధారం, int32_t len, స్థిరరాశి అక్షరం* locale) {
+    char16_t* dest = శూన్యసూచిక;
+    UError_సంకేతం ec = U_ZERO_ERROR;
+    int32_t destLen = u_str_గమ్యం_పై(dest, 0, ఆధారం, len, locale, &ec);
 
     ec = U_ZERO_ERROR;
-    dest = static_cast<char16_t*>(uprv_malloc(sizeof(char16_t) * MAX(destLen, len)));
-    if (dest == nullptr) {
-        return nullptr;
+    dest = static_cast<char16_t*>(uprv_malloc(పరిమాణం(char16_t) * MAX(destLen, len)));
+    ఒకవేళ (dest == శూన్యసూచిక) {
+        తిరిగి శూన్యసూచిక;
     }
-    u_strToUpper(dest, destLen, source, len, locale, &ec);
-    if (U_FAILURE(ec)) {
-        u_memcpy(dest, source, len);
+    u_str_గమ్యం_పై(dest, destLen, ఆధారం, len, locale, &ec);
+    ఒకవేళ (U_FAILURE(ec)) {
+        u_memcpy(dest, ఆధారం, len);
     } 
-    return dest;
+    తిరిగి dest;
 }
 
 
-static void deleteCurrencyNames(CurrencyNameStruct* currencyNames, int32_t count);
+స్థిర శూన్య delete_Currency_పేర్లు(CurrencyNameStruct* currency_పేర్లు, int32_t count);
 // Collect all available currency names associated with the given locale
 // (enable fallback chain).
 // Read currenc names defined in resource bundle "Currencies" and
 // "CurrencyPlural", enable fallback chain.
 // return the malloc-ed currency name arrays and the total number of currency
 // names in the array.
-static void
-collectCurrencyNames(const char* locale, 
-                     CurrencyNameStruct** currencyNames, 
-                     int32_t* total_currency_name_count, 
+స్థిర శూన్య
+collect_Currency_పేర్లు(స్థిరరాశి అక్షరం* locale, 
+                     CurrencyNameStruct** currency_పేర్లు, 
+                     int32_t* మొత్తం_currency_name_లెక్క, 
                      CurrencyNameStruct** currencySymbols, 
-                     int32_t* total_currency_symbol_count, 
-                     UErrorCode& ec) {
-    if (U_FAILURE(ec)) {
-        *currencyNames = *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        return;
+                     int32_t* మొత్తం_currency_చిహ్నం_లెక్క, 
+                     UError_సంకేతం& ec) {
+    ఒకవేళ (U_FAILURE(ec)) {
+        *currency_పేర్లు = *currencySymbols = శూన్యసూచిక;
+        *మొత్తం_currency_name_లెక్క = *మొత్తం_currency_చిహ్నం_లెక్క = 0;
+        తిరిగి;
     }
     U_NAMESPACE_USE
-    const icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
+    స్థిరరాశి icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
     // Look up the Currencies resource for the given locale.
-    UErrorCode ec2 = U_ZERO_ERROR;
+    UError_సంకేతం ec2 = U_ZERO_ERROR;
 
-    if (locale == nullptr) {
+    ఒకవేళ (locale == శూన్యసూచిక) {
         locale = uloc_getDefault();
     }
     CharString loc = ulocimp_getName(locale, ec2);
-    if (U_FAILURE(ec2)) {
-        ec = U_ILLEGAL_ARGUMENT_ERROR;
-        *currencyNames = *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        return;
+    ఒకవేళ (U_FAILURE(ec2)) {
+        ec = U_ILLEGAL_వాదం_ERROR;
+        *currency_పేర్లు = *currencySymbols = శూన్యసూచిక;
+        *మొత్తం_currency_name_లెక్క = *మొత్తం_currency_చిహ్నం_లెక్క = 0;
+        తిరిగి;
     }
 
     // Get maximum currency name count first.
-    getCurrencyNameCount(loc.data(), total_currency_name_count, total_currency_symbol_count);
+    get_Currency_Name_లెక్క(loc.దత్తాంశం(), మొత్తం_currency_name_లెక్క, మొత్తం_currency_చిహ్నం_లెక్క);
 
-    *currencyNames = static_cast<CurrencyNameStruct*>(
-        uprv_malloc(sizeof(CurrencyNameStruct) * (*total_currency_name_count)));
-    if(*currencyNames == nullptr) {
-        *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        ec = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    *currency_పేర్లు = static_cast<CurrencyNameStruct*>(
+        uprv_malloc(పరిమాణం(CurrencyNameStruct) * (*మొత్తం_currency_name_లెక్క)));
+    ఒకవేళ(*currency_పేర్లు == శూన్యసూచిక) {
+        *currencySymbols = శూన్యసూచిక;
+        *మొత్తం_currency_name_లెక్క = *మొత్తం_currency_చిహ్నం_లెక్క = 0;
+        ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
     *currencySymbols = static_cast<CurrencyNameStruct*>(
-        uprv_malloc(sizeof(CurrencyNameStruct) * (*total_currency_symbol_count)));
+        uprv_malloc(పరిమాణం(CurrencyNameStruct) * (*మొత్తం_currency_చిహ్నం_లెక్క)));
 
-    if(*currencySymbols == nullptr) {
-        uprv_free(*currencyNames);
-        *currencyNames = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        ec = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    ఒకవేళ(*currencySymbols == శూన్యసూచిక) {
+        uprv_free(*currency_పేర్లు);
+        *currency_పేర్లు = శూన్యసూచిక;
+        *మొత్తం_currency_name_లెక్క = *మొత్తం_currency_చిహ్నం_లెక్క = 0;
+        ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
 
-    const char16_t* s = nullptr;  // currency name
-    char* iso = nullptr;  // currency ISO code
+    స్థిరరాశి char16_t* s = శూన్యసూచిక;  // currency name
+    అక్షరం* iso = శూన్యసూచిక;  // currency ISO code
 
-    *total_currency_name_count = 0;
-    *total_currency_symbol_count = 0;
+    *మొత్తం_currency_name_లెక్క = 0;
+    *మొత్తం_currency_చిహ్నం_లెక్క = 0;
 
-    UErrorCode ec3 = U_ZERO_ERROR;
-    UErrorCode ec4 = U_ZERO_ERROR;
+    UError_సంకేతం ec3 = U_ZERO_ERROR;
+    UError_సంకేతం ec4 = U_ZERO_ERROR;
 
     // Using hash to remove duplicates caused by locale fallback
-    LocalUHashtablePointer currencyIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &ec3));
-    LocalUHashtablePointer currencyPluralIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &ec4));
-    for (int32_t localeLevel = 0; ; ++localeLevel) {
+    Local_UHashtable_సూచిక currencyIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, శూన్యసూచిక, &ec3));
+    Local_UHashtable_సూచిక currencyPluralIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, శూన్యసూచిక, &ec4));
+    కొరకు (int32_t localeLevel = 0; ; ++localeLevel) {
         ec2 = U_ZERO_ERROR;
         // TODO: ures_openDirect
-        LocalUResourceBundlePointer rb(ures_open(U_ICUDATA_CURR, loc.data(), &ec2));
-        LocalUResourceBundlePointer curr(ures_getByKey(rb.getAlias(), CURRENCIES, nullptr, &ec2));
-        int32_t n = ures_getSize(curr.getAlias());
-        for (int32_t i=0; i<n; ++i) {
-            LocalUResourceBundlePointer names(ures_getByIndex(curr.getAlias(), i, nullptr, &ec2));
+        Local_UResource_Bundle_సూచిక rb(ures_open(U_ICUDATA_CURR, loc.దత్తాంశం(), &ec2));
+        Local_UResource_Bundle_సూచిక curr(ures_get_By_కీలకం(rb.getAlias(), CURRENCIES, శూన్యసూచిక, &ec2));
+        int32_t n = ures_get_కొలత(curr.getAlias());
+        కొరకు (int32_t i=0; i<n; ++i) {
+            Local_UResource_Bundle_సూచిక పేర్లు(ures_get_By_సూచీ(curr.getAlias(), i, శూన్యసూచిక, &ec2));
             int32_t len;
-            s = ures_getStringByIndex(names.getAlias(), UCURR_SYMBOL_NAME, &len, &ec2);
+            s = ures_get_String_By_సూచీ(పేర్లు.getAlias(), UCURR_చిహ్నం_NAME, &len, &ec2);
             // TODO: uhash_put wont change key/value?
-            iso = const_cast<char*>(ures_getKey(names.getAlias()));
-            if (localeLevel != 0 && uhash_get(currencyIsoCodes.getAlias(), iso) != nullptr) {
-                continue;
+            iso = const_cast<అక్షరం*>(ures_get_కీలకం(పేర్లు.getAlias()));
+            ఒకవేళ (localeLevel != 0 && uhash_get(currencyIsoCodes.getAlias(), iso) != శూన్యసూచిక) {
+                కొనసాగు;
             }
             uhash_put(currencyIsoCodes.getAlias(), iso, iso, &ec3); 
             // Add currency symbol.
-            (*currencySymbols)[(*total_currency_symbol_count)++] = {iso, const_cast<char16_t*>(s), len, 0};
+            (*currencySymbols)[(*మొత్తం_currency_చిహ్నం_లెక్క)++] = {iso, const_cast<char16_t*>(s), len, 0};
 
             // Add equivalent symbols
-            if (currencySymbolsEquiv != nullptr) {
-                UnicodeString str(true, s, len);
+            ఒకవేళ (currencySymbolsEquiv != శూన్యసూచిక) {
+                UnicodeString str(నిజం, s, len);
                 icu::EquivIterator iter(*currencySymbolsEquiv, str);
-                const UnicodeString *symbol;
-                while ((symbol = iter.next()) != nullptr) {
-                    (*currencySymbols)[(*total_currency_symbol_count)++]
-                        = {iso, const_cast<char16_t*>(symbol->getBuffer()), symbol->length(), 0};
+                స్థిరరాశి UnicodeString *చిహ్నం;
+                అయితే ((చిహ్నం = iter.next()) != శూన్యసూచిక) {
+                    (*currencySymbols)[(*మొత్తం_currency_చిహ్నం_లెక్క)++]
+                        = {iso, const_cast<char16_t*>(చిహ్నం->get_బఫరు()), చిహ్నం->length(), 0};
                 }
             }
 
             // Add currency long name.
-            s = ures_getStringByIndex(names.getAlias(), UCURR_LONG_NAME, &len, &ec2);
-            char16_t* upperName = toUpperCase(s, len, locale);
-            if (upperName == nullptr) {
-                ec = U_MEMORY_ALLOCATION_ERROR;
-                goto error;
+            s = ures_get_String_By_సూచీ(పేర్లు.getAlias(), UCURR_LONG_NAME, &len, &ec2);
+            char16_t* పై_Name = గమ్యం_పై_Case(s, len, locale);
+            ఒకవేళ (పై_Name == శూన్యసూచిక) {
+                ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                వెళ్ళు error;
             }
-            (*currencyNames)[(*total_currency_name_count)++] = {iso, upperName, len, NEED_TO_BE_DELETED};
+            (*currency_పేర్లు)[(*మొత్తం_currency_name_లెక్క)++] = {iso, పై_Name, len, NEED_గమ్యం_BE_DELETED};
 
             // put (iso, 3, and iso) in to array
             // Add currency ISO code.
-            char16_t* isoCode = static_cast<char16_t*>(uprv_malloc(sizeof(char16_t) * 3));
-            if (isoCode == nullptr) {
-                ec = U_MEMORY_ALLOCATION_ERROR;
-                goto error;
+            char16_t* iso_సంకేతం = static_cast<char16_t*>(uprv_malloc(పరిమాణం(char16_t) * 3));
+            ఒకవేళ (iso_సంకేతం == శూన్యసూచిక) {
+                ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                వెళ్ళు error;
             }
             // Must convert iso[] into Unicode
-            u_charsToUChars(iso, isoCode, 3);
-            (*currencySymbols)[(*total_currency_symbol_count)++] = {iso, isoCode, 3, NEED_TO_BE_DELETED};
+            u_chars_గమ్యం_UChars(iso, iso_సంకేతం, 3);
+            (*currencySymbols)[(*మొత్తం_currency_చిహ్నం_లెక్క)++] = {iso, iso_సంకేతం, 3, NEED_గమ్యం_BE_DELETED};
         }
 
         // currency plurals
-        UErrorCode ec5 = U_ZERO_ERROR;
-        LocalUResourceBundlePointer curr_p(ures_getByKey(rb.getAlias(), CURRENCYPLURALS, nullptr, &ec5));
-        n = ures_getSize(curr_p.getAlias());
-        for (int32_t i=0; i<n; ++i) {
-            LocalUResourceBundlePointer names(ures_getByIndex(curr_p.getAlias(), i, nullptr, &ec5));
-            iso = const_cast<char*>(ures_getKey(names.getAlias()));
+        UError_సంకేతం ec5 = U_ZERO_ERROR;
+        Local_UResource_Bundle_సూచిక curr_p(ures_get_By_కీలకం(rb.getAlias(), CURRENCYPLURALS, శూన్యసూచిక, &ec5));
+        n = ures_get_కొలత(curr_p.getAlias());
+        కొరకు (int32_t i=0; i<n; ++i) {
+            Local_UResource_Bundle_సూచిక పేర్లు(ures_get_By_సూచీ(curr_p.getAlias(), i, శూన్యసూచిక, &ec5));
+            iso = const_cast<అక్షరం*>(ures_get_కీలకం(పేర్లు.getAlias()));
             // Using hash to remove duplicated ISO codes in fallback chain.
-            if (localeLevel != 0 && uhash_get(currencyPluralIsoCodes.getAlias(), iso) != nullptr) {
-                continue;
+            ఒకవేళ (localeLevel != 0 && uhash_get(currencyPluralIsoCodes.getAlias(), iso) != శూన్యసూచిక) {
+                కొనసాగు;
             }
             uhash_put(currencyPluralIsoCodes.getAlias(), iso, iso, &ec4);
-            int32_t num = ures_getSize(names.getAlias());
+            int32_t num = ures_get_కొలత(పేర్లు.getAlias());
             int32_t len;
-            for (int32_t j = 0; j < num; ++j) {
+            కొరకు (int32_t j = 0; j < num; ++j) {
                 // TODO: remove duplicates between singular name and 
                 // currency long name?
-                s = ures_getStringByIndex(names.getAlias(), j, &len, &ec5);
-                char16_t* upperName = toUpperCase(s, len, locale);
-                if (upperName == nullptr) {
-                    ec = U_MEMORY_ALLOCATION_ERROR;
-                    goto error;
+                s = ures_get_String_By_సూచీ(పేర్లు.getAlias(), j, &len, &ec5);
+                char16_t* పై_Name = గమ్యం_పై_Case(s, len, locale);
+                ఒకవేళ (పై_Name == శూన్యసూచిక) {
+                    ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    వెళ్ళు error;
                 }
-                (*currencyNames)[(*total_currency_name_count)++] = {iso, upperName, len, NEED_TO_BE_DELETED};
+                (*currency_పేర్లు)[(*మొత్తం_currency_name_లెక్క)++] = {iso, పై_Name, len, NEED_గమ్యం_BE_DELETED};
             }
         }
 
-        if (!fallback(loc)) {
-            break;
+        ఒకవేళ (!fallback(loc)) {
+            ఆపు;
         }
     }
 
     // quick sort the struct
-    qsort(*currencyNames, *total_currency_name_count, 
-          sizeof(CurrencyNameStruct), currencyNameComparator);
-    qsort(*currencySymbols, *total_currency_symbol_count, 
-          sizeof(CurrencyNameStruct), currencyNameComparator);
+    qsort(*currency_పేర్లు, *మొత్తం_currency_name_లెక్క, 
+          పరిమాణం(CurrencyNameStruct), currencyNameComparator);
+    qsort(*currencySymbols, *మొత్తం_currency_చిహ్నం_లెక్క, 
+          పరిమాణం(CurrencyNameStruct), currencyNameComparator);
 
-#ifdef UCURR_DEBUG
-    printf("currency name count: %d\n", *total_currency_name_count);
-    for (int32_t index = 0; index < *total_currency_name_count; ++index) {
-        printf("index: %d\n", index);
-        printf("iso: %s\n", (*currencyNames)[index].IsoCode);
-        char curNameBuf[1024];
+#నిర్వచితమైతే UCURR_DEBUG
+    రాయి("currency name count: %d\n", *మొత్తం_currency_name_లెక్క);
+    కొరకు (int32_t సూచీ = 0; సూచీ < *మొత్తం_currency_name_లెక్క; ++సూచీ) {
+        రాయి("index: %d\n", సూచీ);
+        రాయి("iso: %s\n", (*currency_పేర్లు)[సూచీ].Iso_సంకేతం);
+        అక్షరం curNameBuf[1024];
         memset(curNameBuf, 0, 1024);
-        u_austrncpy(curNameBuf, (*currencyNames)[index].currencyName, (*currencyNames)[index].currencyNameLen);
-        printf("currencyName: %s\n", curNameBuf);
-        printf("len: %d\n", (*currencyNames)[index].currencyNameLen);
+        u_austrncpy(curNameBuf, (*currency_పేర్లు)[సూచీ].currencyName, (*currency_పేర్లు)[సూచీ].currencyNameLen);
+        రాయి("currencyName: %s\n", curNameBuf);
+        రాయి("len: %d\n", (*currency_పేర్లు)[సూచీ].currencyNameLen);
     }
-    printf("currency symbol count: %d\n", *total_currency_symbol_count);
-    for (int32_t index = 0; index < *total_currency_symbol_count; ++index) {
-        printf("index: %d\n", index);
-        printf("iso: %s\n", (*currencySymbols)[index].IsoCode);
-        char curNameBuf[1024];
+    రాయి("currency symbol count: %d\n", *మొత్తం_currency_చిహ్నం_లెక్క);
+    కొరకు (int32_t సూచీ = 0; సూచీ < *మొత్తం_currency_చిహ్నం_లెక్క; ++సూచీ) {
+        రాయి("index: %d\n", సూచీ);
+        రాయి("iso: %s\n", (*currencySymbols)[సూచీ].Iso_సంకేతం);
+        అక్షరం curNameBuf[1024];
         memset(curNameBuf, 0, 1024);
-        u_austrncpy(curNameBuf, (*currencySymbols)[index].currencyName, (*currencySymbols)[index].currencyNameLen);
-        printf("currencySymbol: %s\n", curNameBuf);
-        printf("len: %d\n", (*currencySymbols)[index].currencyNameLen);
+        u_austrncpy(curNameBuf, (*currencySymbols)[సూచీ].currencyName, (*currencySymbols)[సూచీ].currencyNameLen);
+        రాయి("currencySymbol: %s\n", curNameBuf);
+        రాయి("len: %d\n", (*currencySymbols)[సూచీ].currencyNameLen);
     }
-#endif
+#అయితే_ముగింపు
     // fail on hashtable errors
-    if (U_FAILURE(ec3)) {
+    ఒకవేళ (U_FAILURE(ec3)) {
       ec = ec3;
-    } else if (U_FAILURE(ec4)) {
+    } లేకపోతే ఒకవేళ (U_FAILURE(ec4)) {
       ec = ec4;
     }
 
   error:
     // clean up if we got error
-    if (U_FAILURE(ec)) {
-        deleteCurrencyNames(*currencyNames, *total_currency_name_count);
-        deleteCurrencyNames(*currencySymbols, *total_currency_symbol_count);
-        *currencyNames = *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
+    ఒకవేళ (U_FAILURE(ec)) {
+        delete_Currency_పేర్లు(*currency_పేర్లు, *మొత్తం_currency_name_లెక్క);
+        delete_Currency_పేర్లు(*currencySymbols, *మొత్తం_currency_చిహ్నం_లెక్క);
+        *currency_పేర్లు = *currencySymbols = శూన్యసూచిక;
+        *మొత్తం_currency_name_లెక్క = *మొత్తం_currency_చిహ్నం_లెక్క = 0;
     }
 }
 
@@ -1154,109 +1154,109 @@ collectCurrencyNames(const char* locale,
 // @param  key: input text char to compare against
 // @param  begin(IN/OUT): the begin index of matching range in currency names array
 // @param  end(IN/OUT): the end index of matching range in currency names array.
-static int32_t
-binarySearch(const CurrencyNameStruct* currencyNames, 
-             int32_t indexInCurrencyNames,
-             const char16_t key,
-             int32_t* begin, int32_t* end) {
-#ifdef UCURR_DEBUG
-    printf("key = %x\n", key);
-#endif
+స్థిర int32_t
+ద్విమాన_శోధన(స్థిరరాశి CurrencyNameStruct* currency_పేర్లు, 
+             int32_t సూచీ_లోపల_Currency_పేర్లు,
+             స్థిరరాశి char16_t కీలకం,
+             int32_t* begin, int32_t* చివర) {
+#నిర్వచితమైతే UCURR_DEBUG
+    రాయి("key = %x\n", కీలకం);
+#అయితే_ముగింపు
    int32_t first = *begin;
-   int32_t last = *end;
-   while (first <= last) {
-       int32_t mid = (first + last) / 2;  // compute mid point.
-       if (indexInCurrencyNames >= currencyNames[mid].currencyNameLen) {
+   int32_t చివరి = *చివర;
+   అయితే (first <= చివరి) {
+       int32_t mid = (first + చివరి) / 2;  // compute mid point.
+       ఒకవేళ (సూచీ_లోపల_Currency_పేర్లు >= currency_పేర్లు[mid].currencyNameLen) {
            first = mid + 1;
-       } else {
-           if (key > currencyNames[mid].currencyName[indexInCurrencyNames]) {
+       } లేకపోతే {
+           ఒకవేళ (కీలకం > currency_పేర్లు[mid].currencyName[సూచీ_లోపల_Currency_పేర్లు]) {
                first = mid + 1;
            }
-           else if (key < currencyNames[mid].currencyName[indexInCurrencyNames]) {
-               last = mid - 1;
+           లేకపోతే ఒకవేళ (కీలకం < currency_పేర్లు[mid].currencyName[సూచీ_లోపల_Currency_పేర్లు]) {
+               చివరి = mid - 1;
            }
-           else {
+           లేకపోతే {
                 // Find a match, and looking for ranges
                 // Now do two more binary searches. First, on the left side for
                 // the greatest L such that CurrencyNameStruct[L] < key.
                 int32_t L = *begin;
                 int32_t R = mid;
 
-#ifdef UCURR_DEBUG
-                printf("mid = %d\n", mid);
-#endif
-                while (L < R) {
+#నిర్వచితమైతే UCURR_DEBUG
+                రాయి("mid = %d\n", mid);
+#అయితే_ముగింపు
+                అయితే (L < R) {
                     int32_t M = (L + R) / 2;
-#ifdef UCURR_DEBUG
-                    printf("L = %d, R = %d, M = %d\n", L, R, M);
-#endif
-                    if (indexInCurrencyNames >= currencyNames[M].currencyNameLen) {
+#నిర్వచితమైతే UCURR_DEBUG
+                    రాయి("L = %d, R = %d, M = %d\n", L, R, M);
+#అయితే_ముగింపు
+                    ఒకవేళ (సూచీ_లోపల_Currency_పేర్లు >= currency_పేర్లు[M].currencyNameLen) {
                         L = M + 1;
-                    } else {
-                        if (currencyNames[M].currencyName[indexInCurrencyNames] < key) {
+                    } లేకపోతే {
+                        ఒకవేళ (currency_పేర్లు[M].currencyName[సూచీ_లోపల_Currency_పేర్లు] < కీలకం) {
                             L = M + 1;
-                        } else {
-#ifdef UCURR_DEBUG
-                            U_ASSERT(currencyNames[M].currencyName[indexInCurrencyNames] == key);
-#endif
+                        } లేకపోతే {
+#నిర్వచితమైతే UCURR_DEBUG
+                            U_ASSERT(currency_పేర్లు[M].currencyName[సూచీ_లోపల_Currency_పేర్లు] == కీలకం);
+#అయితే_ముగింపు
                             R = M;
                         }
                     }
                 }
-#ifdef UCURR_DEBUG
+#నిర్వచితమైతే UCURR_DEBUG
                 U_ASSERT(L == R);
-#endif
+#అయితే_ముగింపు
                 *begin = L;
-#ifdef UCURR_DEBUG
-                printf("begin = %d\n", *begin);
-                U_ASSERT(currencyNames[*begin].currencyName[indexInCurrencyNames] == key);
-#endif
+#నిర్వచితమైతే UCURR_DEBUG
+                రాయి("begin = %d\n", *begin);
+                U_ASSERT(currency_పేర్లు[*begin].currencyName[సూచీ_లోపల_Currency_పేర్లు] == కీలకం);
+#అయితే_ముగింపు
 
                 // Now for the second search, finding the least R such that
                 // key < CurrencyNameStruct[R].
                 L = mid;
-                R = *end;
-                while (L < R) {
+                R = *చివర;
+                అయితే (L < R) {
                     int32_t M = (L + R) / 2;
-#ifdef UCURR_DEBUG
-                    printf("L = %d, R = %d, M = %d\n", L, R, M);
-#endif
-                    if (currencyNames[M].currencyNameLen < indexInCurrencyNames) {
+#నిర్వచితమైతే UCURR_DEBUG
+                    రాయి("L = %d, R = %d, M = %d\n", L, R, M);
+#అయితే_ముగింపు
+                    ఒకవేళ (currency_పేర్లు[M].currencyNameLen < సూచీ_లోపల_Currency_పేర్లు) {
                         L = M + 1;
-                    } else {
-                        if (currencyNames[M].currencyName[indexInCurrencyNames] > key) {
+                    } లేకపోతే {
+                        ఒకవేళ (currency_పేర్లు[M].currencyName[సూచీ_లోపల_Currency_పేర్లు] > కీలకం) {
                             R = M;
-                        } else {
-#ifdef UCURR_DEBUG
-                            U_ASSERT(currencyNames[M].currencyName[indexInCurrencyNames] == key);
-#endif
+                        } లేకపోతే {
+#నిర్వచితమైతే UCURR_DEBUG
+                            U_ASSERT(currency_పేర్లు[M].currencyName[సూచీ_లోపల_Currency_పేర్లు] == కీలకం);
+#అయితే_ముగింపు
                             L = M + 1;
                         }
                     }
                 }
-#ifdef UCURR_DEBUG
+#నిర్వచితమైతే UCURR_DEBUG
                 U_ASSERT(L == R);
-#endif
-                if (currencyNames[R].currencyName[indexInCurrencyNames] > key) {
-                    *end = R - 1;
-                } else {
-                    *end = R;
+#అయితే_ముగింపు
+                ఒకవేళ (currency_పేర్లు[R].currencyName[సూచీ_లోపల_Currency_పేర్లు] > కీలకం) {
+                    *చివర = R - 1;
+                } లేకపోతే {
+                    *చివర = R;
                 }
-#ifdef UCURR_DEBUG
-                printf("end = %d\n", *end);
-#endif
+#నిర్వచితమైతే UCURR_DEBUG
+                రాయి("end = %d\n", *చివర);
+#అయితే_ముగింపు
 
                 // now, found the range. check whether there is exact match
-                if (currencyNames[*begin].currencyNameLen == indexInCurrencyNames + 1) {
-                    return *begin;  // find range and exact match.
+                ఒకవేళ (currency_పేర్లు[*begin].currencyNameLen == సూచీ_లోపల_Currency_పేర్లు + 1) {
+                    తిరిగి *begin;  // find range and exact match.
                 }
-                return -1;  // find range, but no exact match.
+                తిరిగి -1;  // find range, but no exact match.
            }
        }
    }
    *begin = -1;
-   *end = -1;
-   return -1;    // failed to find range.
+   *చివర = -1;
+   తిరిగి -1;    // failed to find range.
 }
 
 
@@ -1268,37 +1268,37 @@ binarySearch(const CurrencyNameStruct* currencyNames,
 //                              pass out the new max  matching length
 // @param  maxMatchIndex: the index in currencyName which has the longest
 //                        match with input text.
-static void
-linearSearch(const CurrencyNameStruct* currencyNames, 
-             int32_t begin, int32_t end,
-             const char16_t* text, int32_t textLen,
-             int32_t *partialMatchLen,
-             int32_t *maxMatchLen, int32_t* maxMatchIndex) {
-    int32_t initialPartialMatchLen = *partialMatchLen;
-    for (int32_t index = begin; index <= end; ++index) {
-        int32_t len = currencyNames[index].currencyNameLen;
-        if (len > *maxMatchLen && len <= textLen &&
-            uprv_memcmp(currencyNames[index].currencyName, text, len * sizeof(char16_t)) == 0) {
-            *partialMatchLen = MAX(*partialMatchLen, len);
-            *maxMatchIndex = index;
-            *maxMatchLen = len;
-#ifdef UCURR_DEBUG
-            printf("maxMatchIndex = %d, maxMatchLen = %d\n",
-                   *maxMatchIndex, *maxMatchLen);
-#endif
-        } else {
+స్థిర శూన్య
+రేఖీయ_శోధన(స్థిరరాశి CurrencyNameStruct* currency_పేర్లు, 
+             int32_t begin, int32_t చివర,
+             స్థిరరాశి char16_t* పాఠ్యం, int32_t పాఠ్యం_Len,
+             int32_t *partial_సరిపోలిక_Len,
+             int32_t *max_సరిపోలిక_Len, int32_t* max_సరిపోలిక_సూచీ) {
+    int32_t initial_Partial_సరిపోలిక_Len = *partial_సరిపోలిక_Len;
+    కొరకు (int32_t సూచీ = begin; సూచీ <= చివర; ++సూచీ) {
+        int32_t len = currency_పేర్లు[సూచీ].currencyNameLen;
+        ఒకవేళ (len > *max_సరిపోలిక_Len && len <= పాఠ్యం_Len &&
+            uprv_memcmp(currency_పేర్లు[సూచీ].currencyName, పాఠ్యం, len * పరిమాణం(char16_t)) == 0) {
+            *partial_సరిపోలిక_Len = MAX(*partial_సరిపోలిక_Len, len);
+            *max_సరిపోలిక_సూచీ = సూచీ;
+            *max_సరిపోలిక_Len = len;
+#నిర్వచితమైతే UCURR_DEBUG
+            రాయి("maxMatchIndex = %d, maxMatchLen = %d\n",
+                   *max_సరిపోలిక_సూచీ, *max_సరిపోలిక_Len);
+#అయితే_ముగింపు
+        } లేకపోతే {
             // Check for partial matches.
-            for (int32_t i=initialPartialMatchLen; i<MIN(len, textLen); i++) {
-                if (currencyNames[index].currencyName[i] != text[i]) {
-                    break;
+            కొరకు (int32_t i=initial_Partial_సరిపోలిక_Len; i<MIN(len, పాఠ్యం_Len); i++) {
+                ఒకవేళ (currency_పేర్లు[సూచీ].currencyName[i] != పాఠ్యం[i]) {
+                    ఆపు;
                 }
-                *partialMatchLen = MAX(*partialMatchLen, i + 1);
+                *partial_సరిపోలిక_Len = MAX(*partial_సరిపోలిక_Len, i + 1);
             }
         }
     }
 }
 
-#define LINEAR_SEARCH_THRESHOLD 10
+#నిర్వచించు రేఖీయ_శోధన_పరిమితి 10
 
 // Find longest match between "text" and currency names in "currencyNames".
 // @param  total_currency_count: total number of currency names in CurrencyNames.
@@ -1307,17 +1307,17 @@ linearSearch(const CurrencyNameStruct* currencyNames,
 //                              pass out the new max  matching length
 // @param  maxMatchIndex: the index in currencyName which has the longest
 //                        match with input text.
-static void
-searchCurrencyName(const CurrencyNameStruct* currencyNames, 
-                   int32_t total_currency_count,
-                   const char16_t* text, int32_t textLen,
-                   int32_t *partialMatchLen,
-                   int32_t* maxMatchLen, int32_t* maxMatchIndex) {
-    *maxMatchIndex = -1;
-    *maxMatchLen = 0;
-    int32_t matchIndex = -1;
-    int32_t binarySearchBegin = 0;
-    int32_t binarySearchEnd = total_currency_count - 1;
+స్థిర శూన్య
+శోధన_Currency_Name(స్థిరరాశి CurrencyNameStruct* currency_పేర్లు, 
+                   int32_t మొత్తం_currency_లెక్క,
+                   స్థిరరాశి char16_t* పాఠ్యం, int32_t పాఠ్యం_Len,
+                   int32_t *partial_సరిపోలిక_Len,
+                   int32_t* max_సరిపోలిక_Len, int32_t* max_సరిపోలిక_సూచీ) {
+    *max_సరిపోలిక_సూచీ = -1;
+    *max_సరిపోలిక_Len = 0;
+    int32_t సరిపోలిక_సూచీ = -1;
+    int32_t ద్విమాన_శోధన_Begin = 0;
+    int32_t ద్విమాన_శోధన_చివర = మొత్తం_currency_లెక్క - 1;
     // It is a variant of binary search.
     // For example, given the currency names in currencyNames array are:
     // A AB ABC AD AZ B BB BBEX BBEXYZ BS C D E....
@@ -1332,91 +1332,91 @@ searchCurrencyName(const CurrencyNameStruct* currencyNames,
     // maximum matching).
     // The 4th round returns the same range (the maximum matching is "BBEX").
     // The 5th round returns no matching range.
-    for (int32_t index = 0; index < textLen; ++index) {
+    కొరకు (int32_t సూచీ = 0; సూచీ < పాఠ్యం_Len; ++సూచీ) {
         // matchIndex saves the one with exact match till the current point.
         // [binarySearchBegin, binarySearchEnd] saves the matching range.
-        matchIndex = binarySearch(currencyNames, index,
-                                  text[index],
-                                  &binarySearchBegin, &binarySearchEnd);
-        if (binarySearchBegin == -1) { // did not find the range
-            break;
+        సరిపోలిక_సూచీ = ద్విమాన_శోధన(currency_పేర్లు, సూచీ,
+                                  పాఠ్యం[సూచీ],
+                                  &ద్విమాన_శోధన_Begin, &ద్విమాన_శోధన_చివర);
+        ఒకవేళ (ద్విమాన_శోధన_Begin == -1) { // did not find the range
+            ఆపు;
         }
-        *partialMatchLen = MAX(*partialMatchLen, index + 1);
-        if (matchIndex != -1) { 
+        *partial_సరిపోలిక_Len = MAX(*partial_సరిపోలిక_Len, సూచీ + 1);
+        ఒకవేళ (సరిపోలిక_సూచీ != -1) { 
             // find an exact match for text from text[0] to text[index] 
             // in currencyNames array.
-            *maxMatchLen = index + 1;
-            *maxMatchIndex = matchIndex;
+            *max_సరిపోలిక_Len = సూచీ + 1;
+            *max_సరిపోలిక_సూచీ = సరిపోలిక_సూచీ;
         }
-        if (binarySearchEnd - binarySearchBegin < LINEAR_SEARCH_THRESHOLD) {
+        ఒకవేళ (ద్విమాన_శోధన_చివర - ద్విమాన_శోధన_Begin < రేఖీయ_శోధన_పరిమితి) {
             // linear search if within threshold.
-            linearSearch(currencyNames, binarySearchBegin, binarySearchEnd,
-                         text, textLen,
-                         partialMatchLen,
-                         maxMatchLen, maxMatchIndex);
-            break;
+            రేఖీయ_శోధన(currency_పేర్లు, ద్విమాన_శోధన_Begin, ద్విమాన_శోధన_చివర,
+                         పాఠ్యం, పాఠ్యం_Len,
+                         partial_సరిపోలిక_Len,
+                         max_సరిపోలిక_Len, max_సరిపోలిక_సూచీ);
+            ఆపు;
         }
     }
 }
 
 //========================= currency name cache =====================
-typedef struct {
-    char locale[ULOC_FULLNAME_CAPACITY];  //key
+రకనిర్వచనం నిర్మాణం {
+    అక్షరం locale[ULOC_FULLNAME_సామర్థ్యం];  //key
     // currency names, case insensitive
-    CurrencyNameStruct* currencyNames;  // value
-    int32_t totalCurrencyNameCount;  // currency name count
+    CurrencyNameStruct* currency_పేర్లు;  //విలువ
+    int32_t మొత్తం_Currency_Name_లెక్క;  // currency name count
     // currency symbols and ISO code, case sensitive
-    CurrencyNameStruct* currencySymbols; // value
-    int32_t totalCurrencySymbolCount;  // count
+    CurrencyNameStruct* currencySymbols; //విలువ
+    int32_t మొత్తం_Currency_చిహ్నం_లెక్క;  //లెక్క
     // reference count.
     // reference count is set to 1 when an entry is put to cache.
     // it increases by 1 before accessing, and decreased by 1 after accessing.
     // The entry is deleted when ref count is zero, which means 
     // the entry is replaced out of cache and no process is accessing it.
-    int32_t refCount;
-} CurrencyNameCacheEntry;
+    int32_t ref_లెక్క;
+} Currency_Name_Cache_నమోదు;
 
 
-#define CURRENCY_NAME_CACHE_NUM 10
+#నిర్వచించు CURRENCY_NAME_CACHE_అంకె 10
 
 // Reserve 10 cache entries.
-static CurrencyNameCacheEntry* currCache[CURRENCY_NAME_CACHE_NUM] = {nullptr};
+స్థిర Currency_Name_Cache_నమోదు* currCache[CURRENCY_NAME_CACHE_అంకె] = {శూన్యసూచిక};
 // Using an index to indicate which entry to be replaced when cache is full.
 // It is a simple round-robin replacement strategy.
-static int8_t currentCacheEntryIndex = 0;
+స్థిర int8_t current_Cache_నమోదు_సూచీ = 0;
 
-static UMutex gCurrencyCacheMutex;
+స్థిర UMutex gCurrencyCacheMutex;
 
 // Cache deletion
-static void
-deleteCurrencyNames(CurrencyNameStruct* currencyNames, int32_t count) {
-    for (int32_t index = 0; index < count; ++index) {
-        if ( (currencyNames[index].flag & NEED_TO_BE_DELETED) ) {
-            uprv_free(currencyNames[index].currencyName);
+స్థిర శూన్య
+delete_Currency_పేర్లు(CurrencyNameStruct* currency_పేర్లు, int32_t count) {
+    కొరకు (int32_t సూచీ = 0; సూచీ < count; ++సూచీ) {
+        ఒకవేళ ( (currency_పేర్లు[సూచీ].flag & NEED_గమ్యం_BE_DELETED) ) {
+            uprv_free(currency_పేర్లు[సూచీ].currencyName);
         }
     }
-    uprv_free(currencyNames);
+    uprv_free(currency_పేర్లు);
 }
 
 
-static void
-deleteCacheEntry(CurrencyNameCacheEntry* entry) {
-    deleteCurrencyNames(entry->currencyNames, entry->totalCurrencyNameCount);
-    deleteCurrencyNames(entry->currencySymbols, entry->totalCurrencySymbolCount);
-    uprv_free(entry);
+స్థిర శూన్య
+delete_Cache_నమోదు(Currency_Name_Cache_నమోదు* నమోదు_2) {
+    delete_Currency_పేర్లు(నమోదు_2->currency_పేర్లు, నమోదు_2->మొత్తం_Currency_Name_లెక్క);
+    delete_Currency_పేర్లు(నమోదు_2->currencySymbols, నమోదు_2->మొత్తం_Currency_చిహ్నం_లెక్క);
+    uprv_free(నమోదు_2);
 }
 
 
 // Cache clean up
-static UBool U_CALLCONV
+స్థిర UBool U_CALLCONV
 currency_cache_cleanup() {
-    for (int32_t i = 0; i < CURRENCY_NAME_CACHE_NUM; ++i) {
-        if (currCache[i]) {
-            deleteCacheEntry(currCache[i]);
-            currCache[i] = nullptr;
+    కొరకు (int32_t i = 0; i < CURRENCY_NAME_CACHE_అంకె; ++i) {
+        ఒకవేళ (currCache[i]) {
+            delete_Cache_నమోదు(currCache[i]);
+            currCache[i] = శూన్యసూచిక;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 
@@ -1425,195 +1425,195 @@ currency_cache_cleanup() {
  * The refCount is automatically incremented.  It is the caller's responsibility
  * to decrement it when done!
  */
-static CurrencyNameCacheEntry*
-getCacheEntry(const char* locale, UErrorCode& ec) {
+స్థిర Currency_Name_Cache_నమోదు*
+get_Cache_నమోదు(స్థిరరాశి అక్షరం* locale, UError_సంకేతం& ec) {
 
-    int32_t total_currency_name_count = 0;
-    CurrencyNameStruct* currencyNames = nullptr;
-    int32_t total_currency_symbol_count = 0;
-    CurrencyNameStruct* currencySymbols = nullptr;
-    CurrencyNameCacheEntry* cacheEntry = nullptr;
+    int32_t మొత్తం_currency_name_లెక్క = 0;
+    CurrencyNameStruct* currency_పేర్లు = శూన్యసూచిక;
+    int32_t మొత్తం_currency_చిహ్నం_లెక్క = 0;
+    CurrencyNameStruct* currencySymbols = శూన్యసూచిక;
+    Currency_Name_Cache_నమోదు* cache_నమోదు = శూన్యసూచిక;
 
-    umtx_lock(&gCurrencyCacheMutex);
+    umtx_తాళం(&gCurrencyCacheMutex);
     // in order to handle racing correctly,
     // not putting 'search' in a separate function.
-    int8_t found = -1;
-    for (int8_t i = 0; i < CURRENCY_NAME_CACHE_NUM; ++i) {
-        if (currCache[i]!= nullptr &&
+    int8_t దొరికింది = -1;
+    కొరకు (int8_t i = 0; i < CURRENCY_NAME_CACHE_అంకె; ++i) {
+        ఒకవేళ (currCache[i]!= శూన్యసూచిక &&
             uprv_strcmp(locale, currCache[i]->locale) == 0) {
-            found = i;
-            break;
+            దొరికింది = i;
+            ఆపు;
         }
     }
-    if (found != -1) {
-        cacheEntry = currCache[found];
-        ++(cacheEntry->refCount);
+    ఒకవేళ (దొరికింది != -1) {
+        cache_నమోదు = currCache[దొరికింది];
+        ++(cache_నమోదు->ref_లెక్క);
     }
     umtx_unlock(&gCurrencyCacheMutex);
-    if (found == -1) {
-        collectCurrencyNames(locale, &currencyNames, &total_currency_name_count, &currencySymbols, &total_currency_symbol_count, ec);
-        if (U_FAILURE(ec)) {
-            return nullptr;
+    ఒకవేళ (దొరికింది == -1) {
+        collect_Currency_పేర్లు(locale, &currency_పేర్లు, &మొత్తం_currency_name_లెక్క, &currencySymbols, &మొత్తం_currency_చిహ్నం_లెక్క, ec);
+        ఒకవేళ (U_FAILURE(ec)) {
+            తిరిగి శూన్యసూచిక;
         }
-        umtx_lock(&gCurrencyCacheMutex);
+        umtx_తాళం(&gCurrencyCacheMutex);
         // check again.
-        for (int8_t i = 0; i < CURRENCY_NAME_CACHE_NUM; ++i) {
-            if (currCache[i]!= nullptr &&
+        కొరకు (int8_t i = 0; i < CURRENCY_NAME_CACHE_అంకె; ++i) {
+            ఒకవేళ (currCache[i]!= శూన్యసూచిక &&
                 uprv_strcmp(locale, currCache[i]->locale) == 0) {
-                found = i;
-                break;
+                దొరికింది = i;
+                ఆపు;
             }
         }
-        if (found == -1) {
+        ఒకవేళ (దొరికింది == -1) {
             // insert new entry to 
             // currentCacheEntryIndex % CURRENCY_NAME_CACHE_NUM
             // and remove the existing entry 
             // currentCacheEntryIndex % CURRENCY_NAME_CACHE_NUM
             // from cache.
-            cacheEntry = currCache[currentCacheEntryIndex];
-            if (cacheEntry) {
-                --(cacheEntry->refCount);
+            cache_నమోదు = currCache[current_Cache_నమోదు_సూచీ];
+            ఒకవేళ (cache_నమోదు) {
+                --(cache_నమోదు->ref_లెక్క);
                 // delete if the ref count is zero
-                if (cacheEntry->refCount == 0) {
-                    deleteCacheEntry(cacheEntry);
+                ఒకవేళ (cache_నమోదు->ref_లెక్క == 0) {
+                    delete_Cache_నమోదు(cache_నమోదు);
                 }
             }
-            cacheEntry = static_cast<CurrencyNameCacheEntry*>(uprv_malloc(sizeof(CurrencyNameCacheEntry)));
-            if (cacheEntry == nullptr) {
-                deleteCurrencyNames(currencyNames, total_currency_name_count);
-                deleteCurrencyNames(currencySymbols, total_currency_symbol_count);
-                ec = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+            cache_నమోదు = static_cast<Currency_Name_Cache_నమోదు*>(uprv_malloc(పరిమాణం(Currency_Name_Cache_నమోదు)));
+            ఒకవేళ (cache_నమోదు == శూన్యసూచిక) {
+                delete_Currency_పేర్లు(currency_పేర్లు, మొత్తం_currency_name_లెక్క);
+                delete_Currency_పేర్లు(currencySymbols, మొత్తం_currency_చిహ్నం_లెక్క);
+                ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి శూన్యసూచిక;
             }
-            currCache[currentCacheEntryIndex] = cacheEntry;
-            uprv_strcpy(cacheEntry->locale, locale);
-            cacheEntry->currencyNames = currencyNames;
-            cacheEntry->totalCurrencyNameCount = total_currency_name_count;
-            cacheEntry->currencySymbols = currencySymbols;
-            cacheEntry->totalCurrencySymbolCount = total_currency_symbol_count;
-            cacheEntry->refCount = 2; // one for cache, one for reference
-            currentCacheEntryIndex = (currentCacheEntryIndex + 1) % CURRENCY_NAME_CACHE_NUM;
-            ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
-        } else {
-            deleteCurrencyNames(currencyNames, total_currency_name_count);
-            deleteCurrencyNames(currencySymbols, total_currency_symbol_count);
-            cacheEntry = currCache[found];
-            ++(cacheEntry->refCount);
+            currCache[current_Cache_నమోదు_సూచీ] = cache_నమోదు;
+            uprv_strcpy(cache_నమోదు->locale, locale);
+            cache_నమోదు->currency_పేర్లు = currency_పేర్లు;
+            cache_నమోదు->మొత్తం_Currency_Name_లెక్క = మొత్తం_currency_name_లెక్క;
+            cache_నమోదు->currencySymbols = currencySymbols;
+            cache_నమోదు->మొత్తం_Currency_చిహ్నం_లెక్క = మొత్తం_currency_చిహ్నం_లెక్క;
+            cache_నమోదు->ref_లెక్క = 2; // one for cache, one for reference
+            current_Cache_నమోదు_సూచీ = (current_Cache_నమోదు_సూచీ + 1) % CURRENCY_NAME_CACHE_అంకె;
+            ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+        } లేకపోతే {
+            delete_Currency_పేర్లు(currency_పేర్లు, మొత్తం_currency_name_లెక్క);
+            delete_Currency_పేర్లు(currencySymbols, మొత్తం_currency_చిహ్నం_లెక్క);
+            cache_నమోదు = currCache[దొరికింది];
+            ++(cache_నమోదు->ref_లెక్క);
         }
         umtx_unlock(&gCurrencyCacheMutex);
     }
 
-    return cacheEntry;
+    తిరిగి cache_నమోదు;
 }
 
-static void releaseCacheEntry(CurrencyNameCacheEntry* cacheEntry) {
-    umtx_lock(&gCurrencyCacheMutex);
-    --(cacheEntry->refCount);
-    if (cacheEntry->refCount == 0) {  // remove
-        deleteCacheEntry(cacheEntry);
+స్థిర శూన్య release_Cache_నమోదు(Currency_Name_Cache_నమోదు* cache_నమోదు) {
+    umtx_తాళం(&gCurrencyCacheMutex);
+    --(cache_నమోదు->ref_లెక్క);
+    ఒకవేళ (cache_నమోదు->ref_లెక్క == 0) {  // remove
+        delete_Cache_నమోదు(cache_నమోదు);
     }
     umtx_unlock(&gCurrencyCacheMutex);
 }
 
-U_CAPI void
-uprv_parseCurrency(const char* locale,
-                   const icu::UnicodeString& text,
+U_CAPI శూన్య
+uprv_parseCurrency(స్థిరరాశి అక్షరం* locale,
+                   స్థిరరాశి icu::UnicodeString& పాఠ్యం,
                    icu::ParsePosition& pos,
                    int8_t type,
-                   int32_t* partialMatchLen,
-                   char16_t* result,
-                   UErrorCode& ec) {
+                   int32_t* partial_సరిపోలిక_Len,
+                   char16_t* ఫలితం,
+                   UError_సంకేతం& ec) {
     U_NAMESPACE_USE
-    if (U_FAILURE(ec)) {
-        return;
+    ఒకవేళ (U_FAILURE(ec)) {
+        తిరిగి;
     }
-    CurrencyNameCacheEntry* cacheEntry = getCacheEntry(locale, ec);
-    if (U_FAILURE(ec)) {
-        return;
+    Currency_Name_Cache_నమోదు* cache_నమోదు = get_Cache_నమోదు(locale, ec);
+    ఒకవేళ (U_FAILURE(ec)) {
+        తిరిగి;
     }
 
-    int32_t total_currency_name_count = cacheEntry->totalCurrencyNameCount;
-    CurrencyNameStruct* currencyNames = cacheEntry->currencyNames;
-    int32_t total_currency_symbol_count = cacheEntry->totalCurrencySymbolCount;
-    CurrencyNameStruct* currencySymbols = cacheEntry->currencySymbols;
+    int32_t మొత్తం_currency_name_లెక్క = cache_నమోదు->మొత్తం_Currency_Name_లెక్క;
+    CurrencyNameStruct* currency_పేర్లు = cache_నమోదు->currency_పేర్లు;
+    int32_t మొత్తం_currency_చిహ్నం_లెక్క = cache_నమోదు->మొత్తం_Currency_చిహ్నం_లెక్క;
+    CurrencyNameStruct* currencySymbols = cache_నమోదు->currencySymbols;
 
-    int32_t start = pos.getIndex();
+    int32_t ప్రారంభం = pos.get_సూచీ();
 
-    char16_t inputText[MAX_CURRENCY_NAME_LEN];
-    char16_t upperText[MAX_CURRENCY_NAME_LEN];
-    int32_t textLen = MIN(MAX_CURRENCY_NAME_LEN, text.length() - start);
-    text.extract(start, textLen, inputText);
-    UErrorCode ec1 = U_ZERO_ERROR;
-    textLen = u_strToUpper(upperText, MAX_CURRENCY_NAME_LEN, inputText, textLen, locale, &ec1);
+    char16_t ఆదానం_పాఠ్యం[MAX_CURRENCY_NAME_LEN];
+    char16_t పై_పాఠ్యం[MAX_CURRENCY_NAME_LEN];
+    int32_t పాఠ్యం_Len = MIN(MAX_CURRENCY_NAME_LEN, పాఠ్యం.length() - ప్రారంభం);
+    పాఠ్యం.extract(ప్రారంభం, పాఠ్యం_Len, ఆదానం_పాఠ్యం);
+    UError_సంకేతం ec1 = U_ZERO_ERROR;
+    పాఠ్యం_Len = u_str_గమ్యం_పై(పై_పాఠ్యం, MAX_CURRENCY_NAME_LEN, ఆదానం_పాఠ్యం, పాఠ్యం_Len, locale, &ec1);
 
     // Make sure partialMatchLen is initialized
-    *partialMatchLen = 0;
+    *partial_సరిపోలిక_Len = 0;
 
     int32_t max = 0;
-    int32_t matchIndex = -1;
+    int32_t సరిపోలిక_సూచీ = -1;
     // case in-sensitive comparison against currency names
-    searchCurrencyName(currencyNames, total_currency_name_count, 
-                       upperText, textLen, partialMatchLen, &max, &matchIndex);
+    శోధన_Currency_Name(currency_పేర్లు, మొత్తం_currency_name_లెక్క, 
+                       పై_పాఠ్యం, పాఠ్యం_Len, partial_సరిపోలిక_Len, &max, &సరిపోలిక_సూచీ);
 
-#ifdef UCURR_DEBUG
-    printf("search in names, max = %d, matchIndex = %d\n", max, matchIndex);
-#endif
+#నిర్వచితమైతే UCURR_DEBUG
+    రాయి("search in names, max = %d, matchIndex = %d\n", max, సరిపోలిక_సూచీ);
+#అయితే_ముగింపు
 
-    int32_t maxInSymbol = 0;
-    int32_t matchIndexInSymbol = -1;
-    if (type != UCURR_LONG_NAME) {  // not name only
+    int32_t max_లోపల_చిహ్నం = 0;
+    int32_t సరిపోలిక_సూచీ_లోపల_చిహ్నం = -1;
+    ఒకవేళ (type != UCURR_LONG_NAME) {  // not name only
         // case sensitive comparison against currency symbols and ISO code.
-        searchCurrencyName(currencySymbols, total_currency_symbol_count, 
-                           inputText, textLen,
-                           partialMatchLen,
-                           &maxInSymbol, &matchIndexInSymbol);
+        శోధన_Currency_Name(currencySymbols, మొత్తం_currency_చిహ్నం_లెక్క, 
+                           ఆదానం_పాఠ్యం, పాఠ్యం_Len,
+                           partial_సరిపోలిక_Len,
+                           &max_లోపల_చిహ్నం, &సరిపోలిక_సూచీ_లోపల_చిహ్నం);
     }
 
-#ifdef UCURR_DEBUG
-    printf("search in symbols, maxInSymbol = %d, matchIndexInSymbol = %d\n", maxInSymbol, matchIndexInSymbol);
-    if(matchIndexInSymbol != -1) {
-      printf("== ISO=%s\n", currencySymbols[matchIndexInSymbol].IsoCode);
+#నిర్వచితమైతే UCURR_DEBUG
+    రాయి("search in symbols, maxInSymbol = %d, matchIndexInSymbol = %d\n", max_లోపల_చిహ్నం, సరిపోలిక_సూచీ_లోపల_చిహ్నం);
+    ఒకవేళ(సరిపోలిక_సూచీ_లోపల_చిహ్నం != -1) {
+      రాయి("== ISO=%s\n", currencySymbols[సరిపోలిక_సూచీ_లోపల_చిహ్నం].Iso_సంకేతం);
     }
-#endif
+#అయితే_ముగింపు
 
-    if (max >= maxInSymbol && matchIndex != -1) {
-        u_charsToUChars(currencyNames[matchIndex].IsoCode, result, 4);
-        pos.setIndex(start + max);
-    } else if (maxInSymbol >= max && matchIndexInSymbol != -1) {
-        u_charsToUChars(currencySymbols[matchIndexInSymbol].IsoCode, result, 4);
-        pos.setIndex(start + maxInSymbol);
+    ఒకవేళ (max >= max_లోపల_చిహ్నం && సరిపోలిక_సూచీ != -1) {
+        u_chars_గమ్యం_UChars(currency_పేర్లు[సరిపోలిక_సూచీ].Iso_సంకేతం, ఫలితం, 4);
+        pos.సమితి_సూచీ(ప్రారంభం + max);
+    } లేకపోతే ఒకవేళ (max_లోపల_చిహ్నం >= max && సరిపోలిక_సూచీ_లోపల_చిహ్నం != -1) {
+        u_chars_గమ్యం_UChars(currencySymbols[సరిపోలిక_సూచీ_లోపల_చిహ్నం].Iso_సంకేతం, ఫలితం, 4);
+        pos.సమితి_సూచీ(ప్రారంభం + max_లోపల_చిహ్నం);
     }
 
     // decrease reference count
-    releaseCacheEntry(cacheEntry);
+    release_Cache_నమోదు(cache_నమోదు);
 }
 
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec) {
+శూన్య uprv_currencyLeads(స్థిరరాశి అక్షరం* locale, icu::Unicode_సమితి& ఫలితం, UError_సంకేతం& ec) {
     U_NAMESPACE_USE
-    if (U_FAILURE(ec)) {
-        return;
+    ఒకవేళ (U_FAILURE(ec)) {
+        తిరిగి;
     }
-    CurrencyNameCacheEntry* cacheEntry = getCacheEntry(locale, ec);
-    if (U_FAILURE(ec)) {
-        return;
-    }
-
-    for (int32_t i=0; i<cacheEntry->totalCurrencySymbolCount; i++) {
-        const CurrencyNameStruct& info = cacheEntry->currencySymbols[i];
-        UChar32 cp;
-        U16_GET(info.currencyName, 0, 0, info.currencyNameLen, cp);
-        result.add(cp);
+    Currency_Name_Cache_నమోదు* cache_నమోదు = get_Cache_నమోదు(locale, ec);
+    ఒకవేళ (U_FAILURE(ec)) {
+        తిరిగి;
     }
 
-    for (int32_t i=0; i<cacheEntry->totalCurrencyNameCount; i++) {
-        const CurrencyNameStruct& info = cacheEntry->currencyNames[i];
+    కొరకు (int32_t i=0; i<cache_నమోదు->మొత్తం_Currency_చిహ్నం_లెక్క; i++) {
+        స్థిరరాశి CurrencyNameStruct& info = cache_నమోదు->currencySymbols[i];
         UChar32 cp;
         U16_GET(info.currencyName, 0, 0, info.currencyNameLen, cp);
-        result.add(cp);
+        ఫలితం.కూడు(cp);
+    }
+
+    కొరకు (int32_t i=0; i<cache_నమోదు->మొత్తం_Currency_Name_లెక్క; i++) {
+        స్థిరరాశి CurrencyNameStruct& info = cache_నమోదు->currency_పేర్లు[i];
+        UChar32 cp;
+        U16_GET(info.currencyName, 0, 0, info.currencyNameLen, cp);
+        ఫలితం.కూడు(cp);
     }
 
     // decrease reference count
-    releaseCacheEntry(cacheEntry);
+    release_Cache_నమోదు(cache_నమోదు);
 }
 
 
@@ -1627,89 +1627,89 @@ void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode&
  * This is used for backward compatibility with old currency logic in
  * DecimalFormat and DecimalFormatSymbols.
  */
-U_CAPI void
-uprv_getStaticCurrencyName(const char16_t* iso, const char* loc,
-                           icu::UnicodeString& result, UErrorCode& ec)
+U_CAPI శూన్య
+uprv_getStaticCurrencyName(స్థిరరాశి char16_t* iso, స్థిరరాశి అక్షరం* loc,
+                           icu::UnicodeString& ఫలితం, UError_సంకేతం& ec)
 {
     U_NAMESPACE_USE
 
     int32_t len;
-    const char16_t* currname = ucurr_getName(iso, loc, UCURR_SYMBOL_NAME,
-                                          nullptr /* isChoiceFormat */, &len, &ec);
-    if (U_SUCCESS(ec)) {
-        result.setTo(currname, len);
+    స్థిరరాశి char16_t* currname = ucurr_getName(iso, loc, UCURR_చిహ్నం_NAME,
+                                          శూన్యసూచిక /* isChoiceFormat */, &len, &ec);
+    ఒకవేళ (U_SUCCESS(ec)) {
+        ఫలితం.సమితి_గమ్యం(currname, len);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigits(const char16_t* currency, UErrorCode* ec) {
-    return ucurr_getDefaultFractionDigitsForUsage(currency,UCURR_USAGE_STANDARD,ec);
+ucurr_getDefaultFractionDigits(స్థిరరాశి char16_t* currency, UError_సంకేతం* ec) {
+    తిరిగి ucurr_getDefaultFractionDigitsForUsage(currency,UCURR_USAGE_STANDARD,ec);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigitsForUsage(const char16_t* currency, const UCurrencyUsage usage, UErrorCode* ec) {
+ucurr_getDefaultFractionDigitsForUsage(స్థిరరాశి char16_t* currency, స్థిరరాశి UCurrencyUsage usage, UError_సంకేతం* ec) {
     int32_t fracDigits = 0;
-    if (U_SUCCESS(*ec)) {
-        switch (usage) {
-            case UCURR_USAGE_STANDARD:
-                fracDigits = (_findMetaData(currency, *ec))[0];
-                break;
-            case UCURR_USAGE_CASH:
-                fracDigits = (_findMetaData(currency, *ec))[2];
-                break;
-            default:
+    ఒకవేళ (U_SUCCESS(*ec)) {
+        ఎంపిక (usage) {
+            స్థితి UCURR_USAGE_STANDARD:
+                fracDigits = (కనుగొను_Meta_దత్తాంశం(currency, *ec))[0];
+                ఆపు;
+            స్థితి UCURR_USAGE_CASH:
+                fracDigits = (కనుగొను_Meta_దత్తాంశం(currency, *ec))[2];
+                ఆపు;
+            అప్రమేయ:
                 *ec = U_UNSUPPORTED_ERROR;
         }
     }
-    return fracDigits;
+    తిరిగి fracDigits;
 }
 
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrement(const char16_t* currency, UErrorCode* ec) {
-    return ucurr_getRoundingIncrementForUsage(currency, UCURR_USAGE_STANDARD, ec);
+U_CAPI ద్విగుణ U_EXPORT2
+ucurr_getRoundingIncrement(స్థిరరాశి char16_t* currency, UError_సంకేతం* ec) {
+    తిరిగి ucurr_getRoundingIncrementForUsage(currency, UCURR_USAGE_STANDARD, ec);
 }
 
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrementForUsage(const char16_t* currency, const UCurrencyUsage usage, UErrorCode* ec) {
-    double result = 0.0;
+U_CAPI ద్విగుణ U_EXPORT2
+ucurr_getRoundingIncrementForUsage(స్థిరరాశి char16_t* currency, స్థిరరాశి UCurrencyUsage usage, UError_సంకేతం* ec) {
+    ద్విగుణ ఫలితం = 0.0;
 
-    const int32_t *data = _findMetaData(currency, *ec);
-    if (U_SUCCESS(*ec)) {
+    స్థిరరాశి int32_t *దత్తాంశం = కనుగొను_Meta_దత్తాంశం(currency, *ec);
+    ఒకవేళ (U_SUCCESS(*ec)) {
         int32_t fracDigits;
         int32_t increment;
-        switch (usage) {
-            case UCURR_USAGE_STANDARD:
-                fracDigits = data[0];
-                increment = data[1];
-                break;
-            case UCURR_USAGE_CASH:
-                fracDigits = data[2];
-                increment = data[3];
-                break;
-            default:
+        ఎంపిక (usage) {
+            స్థితి UCURR_USAGE_STANDARD:
+                fracDigits = దత్తాంశం[0];
+                increment = దత్తాంశం[1];
+                ఆపు;
+            స్థితి UCURR_USAGE_CASH:
+                fracDigits = దత్తాంశం[2];
+                increment = దత్తాంశం[3];
+                ఆపు;
+            అప్రమేయ:
                 *ec = U_UNSUPPORTED_ERROR;
-                return result;
+                తిరిగి ఫలితం;
         }
 
         // If the meta data is invalid, return 0.0
-        if (fracDigits < 0 || fracDigits > MAX_POW10) {
+        ఒకవేళ (fracDigits < 0 || fracDigits > MAX_POW10) {
             *ec = U_INVALID_FORMAT_ERROR;
-        } else {
+        } లేకపోతే {
             // A rounding value of 0 or 1 indicates no rounding.
-            if (increment >= 2) {
+            ఒకవేళ (increment >= 2) {
                 // Return (increment) / 10^(fracDigits).  The only actual rounding data,
                 // as of this writing, is CHF { 2, 5 }.
-                result = double(increment) / POW10[fracDigits];
+                ఫలితం = ద్విగుణ(increment) / POW10[fracDigits];
             }
         }
     }
 
-    return result;
+    తిరిగి ఫలితం;
 }
 
 U_CDECL_BEGIN
 
-typedef struct UCurrencyContext {
+రకనిర్వచనం నిర్మాణం UCurrencyContext {
     uint32_t currType; /* UCurrCurrencyType */
     uint32_t listIdx;
 } UCurrencyContext;
@@ -1720,8 +1720,8 @@ You can look at the CLDR supplemental data or ISO-4217 for the meaning of some
 of these items.
 ISO-4217: http://www.iso.org/iso/en/prods-services/popstds/currencycodeslist.html
 */
-static const struct CurrencyList {
-    const char *currency;
+స్థిర స్థిరరాశి నిర్మాణం CurrencyList {
+    స్థిరరాశి అక్షరం *currency;
     uint32_t currType;
 } gCurrencyList[] = {
     {"ADP", UCURR_COMMON|UCURR_DEPRECATED},
@@ -2032,655 +2032,655 @@ static const struct CurrencyList {
     {"ZWG", UCURR_COMMON|UCURR_NON_DEPRECATED},
     {"ZWL", UCURR_COMMON|UCURR_DEPRECATED},
     {"ZWR", UCURR_COMMON|UCURR_DEPRECATED},
-    { nullptr, 0 } // Leave here to denote the end of the list.
+    { శూన్యసూచిక, 0 } // Leave here to denote the end of the list.
 };
 
-#define UCURR_MATCHES_BITMASK(variable, typeToMatch) \
-    ((typeToMatch) == UCURR_ALL || ((variable) & (typeToMatch)) == (typeToMatch))
+#నిర్వచించు UCURR_MATCHES_BITMASK(variable, type_గమ్యం_సరిపోలిక) \
+    ((type_గమ్యం_సరిపోలిక) == UCURR_ALL || ((variable) & (type_గమ్యం_సరిపోలిక)) == (type_గమ్యం_సరిపోలిక))
 
-static int32_t U_CALLCONV
-ucurr_countCurrencyList(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
+స్థిర int32_t U_CALLCONV
+ucurr_లెక్క_Currency_List(UEnumeration *enumerator, UError_సంకేతం * /*pErrorCode*/) {
     UCurrencyContext *myContext = (UCurrencyContext *)(enumerator->context);
     uint32_t currType = myContext->currType;
     int32_t count = 0;
 
     /* Count the number of items matching the type we are looking for. */
-    for (int32_t idx = 0; gCurrencyList[idx].currency != nullptr; idx++) {
-        if (UCURR_MATCHES_BITMASK(gCurrencyList[idx].currType, currType)) {
+    కొరకు (int32_t idx = 0; gCurrencyList[idx].currency != శూన్యసూచిక; idx++) {
+        ఒకవేళ (UCURR_MATCHES_BITMASK(gCurrencyList[idx].currType, currType)) {
             count++;
         }
     }
-    return count;
+    తిరిగి count;
 }
 
-static const char* U_CALLCONV
-ucurr_nextCurrencyList(UEnumeration *enumerator,
-                        int32_t* resultLength,
-                        UErrorCode * /*pErrorCode*/)
+స్థిర స్థిరరాశి అక్షరం* U_CALLCONV
+ucurr_తదుపరి_Currency_List(UEnumeration *enumerator,
+                        int32_t* ఫలితం_నిడివి,
+                        UError_సంకేతం * /*pErrorCode*/)
 {
     UCurrencyContext *myContext = (UCurrencyContext *)(enumerator->context);
 
     /* Find the next in the list that matches the type we are looking for. */
-    while (myContext->listIdx < UPRV_LENGTHOF(gCurrencyList)-1) {
-        const struct CurrencyList *currItem = &gCurrencyList[myContext->listIdx++];
-        if (UCURR_MATCHES_BITMASK(currItem->currType, myContext->currType))
+    అయితే (myContext->listIdx < UPRV_LENGTHOF(gCurrencyList)-1) {
+        స్థిరరాశి నిర్మాణం CurrencyList *curr_అంశం = &gCurrencyList[myContext->listIdx++];
+        ఒకవేళ (UCURR_MATCHES_BITMASK(curr_అంశం->currType, myContext->currType))
         {
-            if (resultLength) {
-                *resultLength = 3; /* Currency codes are only 3 chars long */
+            ఒకవేళ (ఫలితం_నిడివి) {
+                *ఫలితం_నిడివి = 3; /* Currency codes are only 3 chars long */
             }
-            return currItem->currency;
+            తిరిగి curr_అంశం->currency;
         }
     }
     /* We enumerated too far. */
-    if (resultLength) {
-        *resultLength = 0;
+    ఒకవేళ (ఫలితం_నిడివి) {
+        *ఫలితం_నిడివి = 0;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-static void U_CALLCONV
-ucurr_resetCurrencyList(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
+స్థిర శూన్య U_CALLCONV
+ucurr_resetCurrencyList(UEnumeration *enumerator, UError_సంకేతం * /*pErrorCode*/) {
     ((UCurrencyContext *)(enumerator->context))->listIdx = 0;
 }
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ucurr_closeCurrencyList(UEnumeration *enumerator) {
     uprv_free(enumerator->context);
     uprv_free(enumerator);
 }
 
-static void U_CALLCONV
-ucurr_createCurrencyList(UHashtable *isoCodes, UErrorCode* status){
-    UErrorCode localStatus = U_ZERO_ERROR;
+స్థిర శూన్య U_CALLCONV
+ucurr_createCurrencyList(UHashtable *isoCodes, UError_సంకేతం* స్థితి_2){
+    UError_సంకేతం local_స్థితి = U_ZERO_ERROR;
 
     // Look up the CurrencyMap element in the root bundle.
-    UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-    LocalUResourceBundlePointer currencyMapArray(ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus));
+    UResourceBundle *rb = ures_open_ప్రత్యక్ష(U_ICUDATA_CURR, CURRENCY_దత్తాంశం, &local_స్థితి);
+    Local_UResource_Bundle_సూచిక currencyMapArray(ures_get_By_కీలకం(rb, CURRENCY_MAP, rb, &local_స్థితి));
 
-    if (U_SUCCESS(localStatus)) {
+    ఒకవేళ (U_SUCCESS(local_స్థితి)) {
         // process each entry in currency map
-        for (int32_t i=0; i<ures_getSize(currencyMapArray.getAlias()); i++) {
+        కొరకు (int32_t i=0; i<ures_get_కొలత(currencyMapArray.getAlias()); i++) {
             // get the currency resource
-            LocalUResourceBundlePointer currencyArray(ures_getByIndex(currencyMapArray.getAlias(), i, nullptr, &localStatus));
+            Local_UResource_Bundle_సూచిక currencyArray(ures_get_By_సూచీ(currencyMapArray.getAlias(), i, శూన్యసూచిక, &local_స్థితి));
             // process each currency
-            if (U_SUCCESS(localStatus)) {
-                for (int32_t j=0; j<ures_getSize(currencyArray.getAlias()); j++) {
+            ఒకవేళ (U_SUCCESS(local_స్థితి)) {
+                కొరకు (int32_t j=0; j<ures_get_కొలత(currencyArray.getAlias()); j++) {
                     // get the currency resource
-                    LocalUResourceBundlePointer currencyRes(ures_getByIndex(currencyArray.getAlias(), j, nullptr, &localStatus));
-                    IsoCodeEntry *entry = (IsoCodeEntry*)uprv_malloc(sizeof(IsoCodeEntry));
-                    if (entry == nullptr) {
-                        *status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                    Local_UResource_Bundle_సూచిక currencyRes(ures_get_By_సూచీ(currencyArray.getAlias(), j, శూన్యసూచిక, &local_స్థితి));
+                    Iso_సంకేతం_నమోదు *నమోదు_2 = (Iso_సంకేతం_నమోదు*)uprv_malloc(పరిమాణం(Iso_సంకేతం_నమోదు));
+                    ఒకవేళ (నమోదు_2 == శూన్యసూచిక) {
+                        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                        తిరిగి;
                     }
 
                     // get the ISO code
-                    int32_t isoLength = 0;
-                    LocalUResourceBundlePointer idRes(ures_getByKey(currencyRes.getAlias(), "id", nullptr, &localStatus));
-                    if (idRes.isNull()) {
-                        continue;
+                    int32_t iso_నిడివి = 0;
+                    Local_UResource_Bundle_సూచిక idRes(ures_get_By_కీలకం(currencyRes.getAlias(), "id", శూన్యసూచిక, &local_స్థితి));
+                    ఒకవేళ (idRes.isNull()) {
+                        కొనసాగు;
                     }
-                    const char16_t *isoCode = ures_getString(idRes.getAlias(), &isoLength, &localStatus);
+                    స్థిరరాశి char16_t *iso_సంకేతం = ures_getString(idRes.getAlias(), &iso_నిడివి, &local_స్థితి);
 
                     // get from date
                     UDate fromDate = U_DATE_MIN;
-                    LocalUResourceBundlePointer fromRes(ures_getByKey(currencyRes.getAlias(), "from", nullptr, &localStatus));
+                    Local_UResource_Bundle_సూచిక fromRes(ures_get_By_కీలకం(currencyRes.getAlias(), "from", శూన్యసూచిక, &local_స్థితి));
 
-                    if (U_SUCCESS(localStatus)) {
-                        int32_t fromLength = 0;
-                        const int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
+                    ఒకవేళ (U_SUCCESS(local_స్థితి)) {
+                        int32_t from_నిడివి = 0;
+                        స్థిరరాశి int32_t *fromArray = ures_get_Int_సదిశ(fromRes.getAlias(), &from_నిడివి, &local_స్థితి);
                         int64_t currDate64 = ((uint64_t)fromArray[0]) << 32;
                         currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                         fromDate = (UDate)currDate64;
                     }
 
                     // get to date
-                    UDate toDate = U_DATE_MAX;
-                    localStatus = U_ZERO_ERROR;
-                    LocalUResourceBundlePointer toRes(ures_getByKey(currencyRes.getAlias(), "to", nullptr, &localStatus));
+                    UDate గమ్యం_Date = U_DATE_MAX;
+                    local_స్థితి = U_ZERO_ERROR;
+                    Local_UResource_Bundle_సూచిక గమ్యం_Res(ures_get_By_కీలకం(currencyRes.getAlias(), "to", శూన్యసూచిక, &local_స్థితి));
 
-                    if (U_SUCCESS(localStatus)) {
-                        int32_t toLength = 0;
-                        const int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
-                        int64_t currDate64 = (uint64_t)toArray[0] << 32;
-                        currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
-                        toDate = (UDate)currDate64;
+                    ఒకవేళ (U_SUCCESS(local_స్థితి)) {
+                        int32_t గమ్యం_నిడివి = 0;
+                        స్థిరరాశి int32_t *గమ్యం_Array = ures_get_Int_సదిశ(గమ్యం_Res.getAlias(), &గమ్యం_నిడివి, &local_స్థితి);
+                        int64_t currDate64 = (uint64_t)గమ్యం_Array[0] << 32;
+                        currDate64 |= ((int64_t)గమ్యం_Array[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
+                        గమ్యం_Date = (UDate)currDate64;
                     }
 
-                    entry->isoCode = isoCode;
-                    entry->from = fromDate;
-                    entry->to = toDate;
+                    నమోదు_2->iso_సంకేతం = iso_సంకేతం;
+                    నమోదు_2->from = fromDate;
+                    నమోదు_2->గమ్యం = గమ్యం_Date;
 
-                    localStatus = U_ZERO_ERROR;
-                    uhash_put(isoCodes, (char16_t *)isoCode, entry, &localStatus);
+                    local_స్థితి = U_ZERO_ERROR;
+                    uhash_put(isoCodes, (char16_t *)iso_సంకేతం, నమోదు_2, &local_స్థితి);
                 }
-            } else {
-                *status = localStatus;
+            } లేకపోతే {
+                *స్థితి_2 = local_స్థితి;
             }
         }
-    } else {
-        *status = localStatus;
+    } లేకపోతే {
+        *స్థితి_2 = local_స్థితి;
     }
 }
 
-static const UEnumeration gEnumCurrencyList = {
-    nullptr,
-    nullptr,
+స్థిర స్థిరరాశి UEnumeration gEnumCurrencyList = {
+    శూన్యసూచిక,
+    శూన్యసూచిక,
     ucurr_closeCurrencyList,
-    ucurr_countCurrencyList,
+    ucurr_లెక్క_Currency_List,
     uenum_unextDefault,
-    ucurr_nextCurrencyList,
+    ucurr_తదుపరి_Currency_List,
     ucurr_resetCurrencyList
 };
-U_CDECL_END
+U_CDECL_చివర
 
 
-static void U_CALLCONV initIsoCodes(UErrorCode &status) {
-    U_ASSERT(gIsoCodes == nullptr);
-    ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+స్థిర శూన్య U_CALLCONV initIsoCodes(UError_సంకేతం &స్థితి_2) {
+    U_ASSERT(gIsoCodes == శూన్యసూచిక);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
 
-    LocalUHashtablePointer isoCodes(uhash_open(uhash_hashUChars, uhash_compareUChars, nullptr, &status));
-    if (U_FAILURE(status)) {
-        return;
+    Local_UHashtable_సూచిక isoCodes(uhash_open(uhash_hashUChars, uhash_compareUChars, శూన్యసూచిక, &స్థితి_2));
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    uhash_setValueDeleter(isoCodes.getAlias(), deleteIsoCodeEntry);
+    uhash_సమితి_విలువ_Deleter(isoCodes.getAlias(), delete_Iso_సంకేతం_నమోదు);
 
-    ucurr_createCurrencyList(isoCodes.getAlias(), &status);
-    if (U_FAILURE(status)) {
-        return;
+    ucurr_createCurrencyList(isoCodes.getAlias(), &స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
     gIsoCodes = isoCodes.orphan();  // Note: gIsoCodes is const. Once set up here it is never altered,
                                     //       and read only access is safe without synchronization.
 }
 
-static void populateCurrSymbolsEquiv(icu::Hashtable *hash, UErrorCode &status) {
-    if (U_FAILURE(status)) { return; }
-    for (const auto& entry : unisets::kCurrencyEntries) {
-        UnicodeString exemplar(entry.exemplar);
-        const UnicodeSet* set = unisets::get(entry.key);
-        if (set == nullptr) { return; }
-        UnicodeSetIterator it(*set);
-        while (it.next()) {
+స్థిర శూన్య populateCurrSymbolsEquiv(icu::Hashtable *hash, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+    కొరకు (స్థిరరాశి స్వయంచాలక& నమోదు_2 : unisets::kCurrencyEntries) {
+        UnicodeString exemplar(నమోదు_2.exemplar);
+        స్థిరరాశి Unicode_సమితి* సమితి = unisets::get(నమోదు_2.కీలకం);
+        ఒకవేళ (సమితి == శూన్యసూచిక) { తిరిగి; }
+        Unicode_సమితి_Iterator it(*సమితి);
+        అయితే (it.next()) {
             UnicodeString value = it.getString();
-            if (value == exemplar) {
+            ఒకవేళ (value == exemplar) {
                 // No need to mark the exemplar character as an equivalent
-                continue;
+                కొనసాగు;
             }
-            makeEquivalent(exemplar, value, hash, status);
-            if (U_FAILURE(status)) { return; }
+            makeEquivalent(exemplar, value, hash, స్థితి_2);
+            ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
         }
     }
 }
 
-static void U_CALLCONV initCurrSymbolsEquiv() {
-    U_ASSERT(gCurrSymbolsEquiv == nullptr);
-    UErrorCode status = U_ZERO_ERROR;
-    ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
-    icu::Hashtable *temp = new icu::Hashtable(status);
-    if (temp == nullptr) {
-        return;
+స్థిర శూన్య U_CALLCONV initCurrSymbolsEquiv() {
+    U_ASSERT(gCurrSymbolsEquiv == శూన్యసూచిక);
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+    icu::Hashtable *తాత్కాలిక = కొత్త icu::Hashtable(స్థితి_2);
+    ఒకవేళ (తాత్కాలిక == శూన్యసూచిక) {
+        తిరిగి;
     }
-    if (U_FAILURE(status)) {
-        delete temp;
-        return;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తొలగించు తాత్కాలిక;
+        తిరిగి;
     }
-    temp->setValueDeleter(deleteUnicode);
-    populateCurrSymbolsEquiv(temp, status);
-    if (U_FAILURE(status)) {
-        delete temp;
-        return;
+    తాత్కాలిక->సమితి_విలువ_Deleter(deleteUnicode);
+    populateCurrSymbolsEquiv(తాత్కాలిక, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తొలగించు తాత్కాలిక;
+        తిరిగి;
     }
-    gCurrSymbolsEquiv = temp;
+    gCurrSymbolsEquiv = తాత్కాలిక;
 }
 
 U_CAPI UBool U_EXPORT2
-ucurr_isAvailable(const char16_t* isoCode, UDate from, UDate to, UErrorCode* eErrorCode) {
-    umtx_initOnce(gIsoCodesInitOnce, &initIsoCodes, *eErrorCode);
-    if (U_FAILURE(*eErrorCode)) {
-        return false;
+ucurr_is_అందుబాటు(స్థిరరాశి char16_t* iso_సంకేతం, UDate from, UDate గమ్యం, UError_సంకేతం* e_Error_సంకేతం) {
+    umtx_initOnce(gIsoCodesInitOnce, &initIsoCodes, *e_Error_సంకేతం);
+    ఒకవేళ (U_FAILURE(*e_Error_సంకేతం)) {
+        తిరిగి అబద్ధం;
     }
 
-    IsoCodeEntry* result = (IsoCodeEntry *) uhash_get(gIsoCodes, isoCode);
-    if (result == nullptr) {
-        return false;
-    } else if (from > to) {
-        *eErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
-    } else if  ((from > result->to) || (to < result->from)) {
-        return false;
+    Iso_సంకేతం_నమోదు* ఫలితం = (Iso_సంకేతం_నమోదు *) uhash_get(gIsoCodes, iso_సంకేతం);
+    ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+        తిరిగి అబద్ధం;
+    } లేకపోతే ఒకవేళ (from > గమ్యం) {
+        *e_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి అబద్ధం;
+    } లేకపోతే ఒకవేళ  ((from > ఫలితం->గమ్యం) || (గమ్యం < ఫలితం->from)) {
+        తిరిగి అబద్ధం;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-static const icu::Hashtable* getCurrSymbolsEquiv() {
+స్థిర స్థిరరాశి icu::Hashtable* getCurrSymbolsEquiv() {
     umtx_initOnce(gCurrSymbolsEquivInitOnce, &initCurrSymbolsEquiv);
-    return gCurrSymbolsEquiv;
+    తిరిగి gCurrSymbolsEquiv;
 }
 
 U_CAPI UEnumeration * U_EXPORT2
-ucurr_openISOCurrencies(uint32_t currType, UErrorCode *pErrorCode) {
-    UEnumeration *myEnum = nullptr;
+ucurr_openISOCurrencies(uint32_t currType, UError_సంకేతం *p_Error_సంకేతం) {
+    UEnumeration *myEnum = శూన్యసూచిక;
     UCurrencyContext *myContext;
 
-    myEnum = (UEnumeration*)uprv_malloc(sizeof(UEnumeration));
-    if (myEnum == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    myEnum = (UEnumeration*)uprv_malloc(పరిమాణం(UEnumeration));
+    ఒకవేళ (myEnum == శూన్యసూచిక) {
+        *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    uprv_memcpy(myEnum, &gEnumCurrencyList, sizeof(UEnumeration));
-    myContext = (UCurrencyContext*)uprv_malloc(sizeof(UCurrencyContext));
-    if (myContext == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+    uprv_memcpy(myEnum, &gEnumCurrencyList, పరిమాణం(UEnumeration));
+    myContext = (UCurrencyContext*)uprv_malloc(పరిమాణం(UCurrencyContext));
+    ఒకవేళ (myContext == శూన్యసూచిక) {
+        *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
         uprv_free(myEnum);
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
     myContext->currType = currType;
     myContext->listIdx = 0;
     myEnum->context = myContext;
-    return myEnum;
+    తిరిగి myEnum;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucurr_countCurrencies(const char* locale, 
+ucurr_లెక్క_Currencies(స్థిరరాశి అక్షరం* locale, 
                  UDate date, 
-                 UErrorCode* ec)
+                 UError_సంకేతం* ec)
 {
-    int32_t currCount = 0;
+    int32_t curr_లెక్క = 0;
 
-    if (ec != nullptr && U_SUCCESS(*ec)) 
+    ఒకవేళ (ec != శూన్యసూచిక && U_SUCCESS(*ec)) 
     {
         // local variables
-        UErrorCode localStatus = U_ZERO_ERROR;
+        UError_సంకేతం local_స్థితి = U_ZERO_ERROR;
 
         // get country or country_variant in `id'
         CharString id = idForLocale(locale, ec);
 
-        if (U_FAILURE(*ec))
+        ఒకవేళ (U_FAILURE(*ec))
         {
-            return 0;
+            తిరిగి 0;
         }
 
         // Remove variants, which is only needed for registration.
-        char *idDelim = strchr(id.data(), VAR_DELIM);
-        if (idDelim)
+        అక్షరం *idDelim = strchr(id.దత్తాంశం(), VAR_DELIM);
+        ఒకవేళ (idDelim)
         {
-            id.truncate(idDelim - id.data());
+            id.truncate(idDelim - id.దత్తాంశం());
         }
 
         // Look up the CurrencyMap element in the root bundle.
-        UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-        UResourceBundle *cm = ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus);
+        UResourceBundle *rb = ures_open_ప్రత్యక్ష(U_ICUDATA_CURR, CURRENCY_దత్తాంశం, &local_స్థితి);
+        UResourceBundle *cm = ures_get_By_కీలకం(rb, CURRENCY_MAP, rb, &local_స్థితి);
 
         // Using the id derived from the local, get the currency data
-        LocalUResourceBundlePointer countryArray(ures_getByKey(rb, id.data(), cm, &localStatus));
+        Local_UResource_Bundle_సూచిక countryArray(ures_get_By_కీలకం(rb, id.దత్తాంశం(), cm, &local_స్థితి));
 
         // process each currency to see which one is valid for the given date
-        if (U_SUCCESS(localStatus))
+        ఒకవేళ (U_SUCCESS(local_స్థితి))
         {
-            for (int32_t i=0; i<ures_getSize(countryArray.getAlias()); i++)
+            కొరకు (int32_t i=0; i<ures_get_కొలత(countryArray.getAlias()); i++)
             {
                 // get the currency resource
-                LocalUResourceBundlePointer currencyRes(ures_getByIndex(countryArray.getAlias(), i, nullptr, &localStatus));
+                Local_UResource_Bundle_సూచిక currencyRes(ures_get_By_సూచీ(countryArray.getAlias(), i, శూన్యసూచిక, &local_స్థితి));
 
                 // get the from date
-                int32_t fromLength = 0;
-                LocalUResourceBundlePointer fromRes(ures_getByKey(currencyRes.getAlias(), "from", nullptr, &localStatus));
-                const int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
+                int32_t from_నిడివి = 0;
+                Local_UResource_Bundle_సూచిక fromRes(ures_get_By_కీలకం(currencyRes.getAlias(), "from", శూన్యసూచిక, &local_స్థితి));
+                స్థిరరాశి int32_t *fromArray = ures_get_Int_సదిశ(fromRes.getAlias(), &from_నిడివి, &local_స్థితి);
 
                 int64_t currDate64 = (int64_t)((uint64_t)(fromArray[0]) << 32);
                 currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                 UDate fromDate = (UDate)currDate64;
 
-                if (ures_getSize(currencyRes.getAlias())> 2)
+                ఒకవేళ (ures_get_కొలత(currencyRes.getAlias())> 2)
                 {
-                    int32_t toLength = 0;
-                    LocalUResourceBundlePointer toRes(ures_getByKey(currencyRes.getAlias(), "to", nullptr, &localStatus));
-                    const int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
+                    int32_t గమ్యం_నిడివి = 0;
+                    Local_UResource_Bundle_సూచిక గమ్యం_Res(ures_get_By_కీలకం(currencyRes.getAlias(), "to", శూన్యసూచిక, &local_స్థితి));
+                    స్థిరరాశి int32_t *గమ్యం_Array = ures_get_Int_సదిశ(గమ్యం_Res.getAlias(), &గమ్యం_నిడివి, &local_స్థితి);
 
-                    currDate64 = (int64_t)toArray[0] << 32;
-                    currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
-                    UDate toDate = (UDate)currDate64;
+                    currDate64 = (int64_t)గమ్యం_Array[0] << 32;
+                    currDate64 |= ((int64_t)గమ్యం_Array[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
+                    UDate గమ్యం_Date = (UDate)currDate64;
 
-                    if ((fromDate <= date) && (date < toDate))
+                    ఒకవేళ ((fromDate <= date) && (date < గమ్యం_Date))
                     {
-                        currCount++;
+                        curr_లెక్క++;
                     }
                 }
-                else
+                లేకపోతే
                 {
-                    if (fromDate <= date)
+                    ఒకవేళ (fromDate <= date)
                     {
-                        currCount++;
+                        curr_లెక్క++;
                     }
                 }
             } // end For loop
         } // end if (U_SUCCESS(localStatus))
 
         // Check for errors
-        if (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR)
+        ఒకవేళ (*ec == U_ZERO_ERROR || local_స్థితి != U_ZERO_ERROR)
         {
             // There is nothing to fallback to. 
             // Report the failure/warning if possible.
-            *ec = localStatus;
+            *ec = local_స్థితి;
         }
 
-        if (U_SUCCESS(*ec))
+        ఒకవేళ (U_SUCCESS(*ec))
         {
             // no errors
-            return currCount;
+            తిరిగి curr_లెక్క;
         }
     }
 
     // If we got here, either error code is invalid or
     // some argument passed is no good.
-    return 0;
+    తిరిగి 0;
 }
 
 U_CAPI int32_t U_EXPORT2 
-ucurr_forLocaleAndDate(const char* locale, 
+ucurr_forLocaleAndDate(స్థిరరాశి అక్షరం* locale, 
                 UDate date, 
-                int32_t index,
+                int32_t సూచీ,
                 char16_t* buff,
-                int32_t buffCapacity, 
-                UErrorCode* ec)
+                int32_t buff_సామర్థ్యం, 
+                UError_సంకేతం* ec)
 {
     int32_t resLen = 0;
-	int32_t currIndex = 0;
-    const char16_t* s = nullptr;
+	int32_t curr_సూచీ = 0;
+    స్థిరరాశి char16_t* s = శూన్యసూచిక;
 
-    if (ec != nullptr && U_SUCCESS(*ec))
+    ఒకవేళ (ec != శూన్యసూచిక && U_SUCCESS(*ec))
     {
         // check the arguments passed
-        if ((buff && buffCapacity) || !buffCapacity )
+        ఒకవేళ ((buff && buff_సామర్థ్యం) || !buff_సామర్థ్యం )
         {
             // local variables
-            UErrorCode localStatus = U_ZERO_ERROR;
+            UError_సంకేతం local_స్థితి = U_ZERO_ERROR;
 
             // get country or country_variant in `id'
             CharString id = idForLocale(locale, ec);
-            if (U_FAILURE(*ec))
+            ఒకవేళ (U_FAILURE(*ec))
             {
-                return 0;
+                తిరిగి 0;
             }
 
             // Remove variants, which is only needed for registration.
-            char *idDelim = strchr(id.data(), VAR_DELIM);
-            if (idDelim)
+            అక్షరం *idDelim = strchr(id.దత్తాంశం(), VAR_DELIM);
+            ఒకవేళ (idDelim)
             {
-                id.truncate(idDelim - id.data());
+                id.truncate(idDelim - id.దత్తాంశం());
             }
 
             // Look up the CurrencyMap element in the root bundle.
-            UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-            UResourceBundle *cm = ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus);
+            UResourceBundle *rb = ures_open_ప్రత్యక్ష(U_ICUDATA_CURR, CURRENCY_దత్తాంశం, &local_స్థితి);
+            UResourceBundle *cm = ures_get_By_కీలకం(rb, CURRENCY_MAP, rb, &local_స్థితి);
 
             // Using the id derived from the local, get the currency data
-            LocalUResourceBundlePointer countryArray(ures_getByKey(rb, id.data(), cm, &localStatus));
+            Local_UResource_Bundle_సూచిక countryArray(ures_get_By_కీలకం(rb, id.దత్తాంశం(), cm, &local_స్థితి));
 
             // process each currency to see which one is valid for the given date
-            bool matchFound = false;
-            if (U_SUCCESS(localStatus))
+            తార్కిక సరిపోలిక_దొరికింది = అబద్ధం;
+            ఒకవేళ (U_SUCCESS(local_స్థితి))
             {
-                if ((index <= 0) || (index> ures_getSize(countryArray.getAlias())))
+                ఒకవేళ ((సూచీ <= 0) || (సూచీ> ures_get_కొలత(countryArray.getAlias())))
                 {
                     // requested index is out of bounds
-                    return 0;
+                    తిరిగి 0;
                 }
 
-                for (int32_t i=0; i<ures_getSize(countryArray.getAlias()); i++)
+                కొరకు (int32_t i=0; i<ures_get_కొలత(countryArray.getAlias()); i++)
                 {
                     // get the currency resource
-                    LocalUResourceBundlePointer currencyRes(ures_getByIndex(countryArray.getAlias(), i, nullptr, &localStatus));
-                    s = ures_getStringByKey(currencyRes.getAlias(), "id", &resLen, &localStatus);
+                    Local_UResource_Bundle_సూచిక currencyRes(ures_get_By_సూచీ(countryArray.getAlias(), i, శూన్యసూచిక, &local_స్థితి));
+                    s = ures_get_String_By_కీలకం(currencyRes.getAlias(), "id", &resLen, &local_స్థితి);
 
                     // get the from date
-                    int32_t fromLength = 0;
-                    LocalUResourceBundlePointer fromRes(ures_getByKey(currencyRes.getAlias(), "from", nullptr, &localStatus));
-                    const int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
+                    int32_t from_నిడివి = 0;
+                    Local_UResource_Bundle_సూచిక fromRes(ures_get_By_కీలకం(currencyRes.getAlias(), "from", శూన్యసూచిక, &local_స్థితి));
+                    స్థిరరాశి int32_t *fromArray = ures_get_Int_సదిశ(fromRes.getAlias(), &from_నిడివి, &local_స్థితి);
 
                     int64_t currDate64 = (int64_t)((uint64_t)fromArray[0] << 32);
                     currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                     UDate fromDate = (UDate)currDate64;
 
-                    if (ures_getSize(currencyRes.getAlias()) > 2)
+                    ఒకవేళ (ures_get_కొలత(currencyRes.getAlias()) > 2)
                     {
-                        int32_t toLength = 0;
-                        LocalUResourceBundlePointer toRes(ures_getByKey(currencyRes.getAlias(), "to", nullptr, &localStatus));
-                        const int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
+                        int32_t గమ్యం_నిడివి = 0;
+                        Local_UResource_Bundle_సూచిక గమ్యం_Res(ures_get_By_కీలకం(currencyRes.getAlias(), "to", శూన్యసూచిక, &local_స్థితి));
+                        స్థిరరాశి int32_t *గమ్యం_Array = ures_get_Int_సదిశ(గమ్యం_Res.getAlias(), &గమ్యం_నిడివి, &local_స్థితి);
 
-                        currDate64 = (int64_t)toArray[0] << 32;
-                        currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
-                        UDate toDate = (UDate)currDate64;
+                        currDate64 = (int64_t)గమ్యం_Array[0] << 32;
+                        currDate64 |= ((int64_t)గమ్యం_Array[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
+                        UDate గమ్యం_Date = (UDate)currDate64;
 
-                        if ((fromDate <= date) && (date < toDate))
+                        ఒకవేళ ((fromDate <= date) && (date < గమ్యం_Date))
                         {
-                            currIndex++;
-                            if (currIndex == index)
+                            curr_సూచీ++;
+                            ఒకవేళ (curr_సూచీ == సూచీ)
                             {
-                                matchFound = true;
+                                సరిపోలిక_దొరికింది = నిజం;
                             }
                         }
                     }
-                    else
+                    లేకపోతే
                     {
-                        if (fromDate <= date)
+                        ఒకవేళ (fromDate <= date)
                         {
-                            currIndex++;
-                            if (currIndex == index)
+                            curr_సూచీ++;
+                            ఒకవేళ (curr_సూచీ == సూచీ)
                             {
-                                matchFound = true;
+                                సరిపోలిక_దొరికింది = నిజం;
                             }
                         }
                     }
                     // check for loop exit
-                    if (matchFound)
+                    ఒకవేళ (సరిపోలిక_దొరికింది)
                     {
-                        break;
+                        ఆపు;
                     }
 
                 } // end For loop
             }
 
             // Check for errors
-            if (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR)
+            ఒకవేళ (*ec == U_ZERO_ERROR || local_స్థితి != U_ZERO_ERROR)
             {
                 // There is nothing to fallback to. 
                 // Report the failure/warning if possible.
-                *ec = localStatus;
+                *ec = local_స్థితి;
             }
 
-            if (U_SUCCESS(*ec))
+            ఒకవేళ (U_SUCCESS(*ec))
             {
                 // no errors
-                if((buffCapacity> resLen) && matchFound)
+                ఒకవేళ((buff_సామర్థ్యం> resLen) && సరిపోలిక_దొరికింది)
                 {
                     // write out the currency value
                     u_strcpy(buff, s);
                 }
-                else
+                లేకపోతే
                 {
-                    return 0;
+                    తిరిగి 0;
                 }
             }
 
             // return null terminated currency string
-            return u_terminateUChars(buff, buffCapacity, resLen, ec);
+            తిరిగి u_terminateUChars(buff, buff_సామర్థ్యం, resLen, ec);
         }
-        else
+        లేకపోతే
         {
             // illegal argument encountered
-            *ec = U_ILLEGAL_ARGUMENT_ERROR;
+            *ec = U_ILLEGAL_వాదం_ERROR;
         }
 
     }
 
     // If we got here, either error code is invalid or
     // some argument passed is no good.
-    return resLen;
+    తిరిగి resLen;
 }
 
-static const UEnumeration defaultKeywordValues = {
-    nullptr,
-    nullptr,
-    ulist_close_keyword_values_iterator,
-    ulist_count_keyword_values,
+స్థిర స్థిరరాశి UEnumeration default_Keyword_విలువలు = {
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    ulist_close_keyword_విలువలు_iterator,
+    ulist_లెక్క_keyword_విలువలు,
     uenum_unextDefault,
-    ulist_next_keyword_value, 
-    ulist_reset_keyword_values_iterator
+    ulist_తదుపరి_keyword_విలువ, 
+    ulist_reset_keyword_విలువలు_iterator
 };
 
-U_CAPI UEnumeration *U_EXPORT2 ucurr_getKeywordValuesForLocale(const char *key, const char *locale, UBool commonlyUsed, UErrorCode* status) {
+U_CAPI UEnumeration *U_EXPORT2 ucurr_get_Keyword_విలువలు_For_Locale(స్థిరరాశి అక్షరం *కీలకం, స్థిరరాశి అక్షరం *locale, UBool commonly_వాడిన, UError_సంకేతం* స్థితి_2) {
     // Resolve region
-    CharString prefRegion = ulocimp_getRegionForSupplementalData(locale, true, *status);
+    CharString prefRegion = ulocimp_get_Region_For_Supplemental_దత్తాంశం(locale, నిజం, *స్థితి_2);
 
     // Read value from supplementalData
-    UList *values = ulist_createEmptyList(status);
-    UList *otherValues = ulist_createEmptyList(status);
-    UEnumeration *en = (UEnumeration *)uprv_malloc(sizeof(UEnumeration));
-    if (U_FAILURE(*status) || en == nullptr) {
-        if (en == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+    UList *విలువలు = ulist_create_ఖాళీలు_List(స్థితి_2);
+    UList *other_విలువలు = ulist_create_ఖాళీలు_List(స్థితి_2);
+    UEnumeration *en = (UEnumeration *)uprv_malloc(పరిమాణం(UEnumeration));
+    ఒకవేళ (U_FAILURE(*స్థితి_2) || en == శూన్యసూచిక) {
+        ఒకవేళ (en == శూన్యసూచిక) {
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        } లేకపోతే {
             uprv_free(en);
         }
-        ulist_deleteList(values);
-        ulist_deleteList(otherValues);
-        return nullptr;
+        ulist_deleteList(విలువలు);
+        ulist_deleteList(other_విలువలు);
+        తిరిగి శూన్యసూచిక;
     }
-    memcpy(en, &defaultKeywordValues, sizeof(UEnumeration));
-    en->context = values;
+    జ్ఞాపకం_నకలు(en, &default_Keyword_విలువలు, పరిమాణం(UEnumeration));
+    en->context = విలువలు;
     
-    UResourceBundle* rb = ures_openDirect(U_ICUDATA_CURR, "supplementalData", status);
-    LocalUResourceBundlePointer bundle(ures_getByKey(rb, "CurrencyMap", rb, status));
-    StackUResourceBundle bundlekey, regbndl, curbndl, to;
+    UResourceBundle* rb = ures_open_ప్రత్యక్ష(U_ICUDATA_CURR, "supplementalData", స్థితి_2);
+    Local_UResource_Bundle_సూచిక bundle(ures_get_By_కీలకం(rb, "CurrencyMap", rb, స్థితి_2));
+    దొంతర_UResource_Bundle bundlekey, regbndl, curbndl, గమ్యం;
     
-    while (U_SUCCESS(*status) && ures_hasNext(bundle.getAlias())) {
-        ures_getNextResource(bundle.getAlias(), bundlekey.getAlias(), status);
-        if (U_FAILURE(*status)) {
-            break;
+    అయితే (U_SUCCESS(*స్థితి_2) && ures_has_తదుపరి(bundle.getAlias())) {
+        ures_get_తదుపరి_Resource(bundle.getAlias(), bundlekey.getAlias(), స్థితి_2);
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            ఆపు;
         }
-        const char *region = ures_getKey(bundlekey.getAlias());
+        స్థిరరాశి అక్షరం *region = ures_get_కీలకం(bundlekey.getAlias());
         UBool isPrefRegion = prefRegion == region;
-        if (!isPrefRegion && commonlyUsed) {
+        ఒకవేళ (!isPrefRegion && commonly_వాడిన) {
             // With commonlyUsed=true, we do not put
             // currencies for other regions in the
             // result list.
-            continue;
+            కొనసాగు;
         }
-        ures_getByKey(bundle.getAlias(), region, regbndl.getAlias(), status);
-        if (U_FAILURE(*status)) {
-            break;
+        ures_get_By_కీలకం(bundle.getAlias(), region, regbndl.getAlias(), స్థితి_2);
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            ఆపు;
         }
-        while (U_SUCCESS(*status) && ures_hasNext(regbndl.getAlias())) {
-            ures_getNextResource(regbndl.getAlias(), curbndl.getAlias(), status);
-            if (ures_getType(curbndl.getAlias()) != URES_TABLE) {
+        అయితే (U_SUCCESS(*స్థితి_2) && ures_has_తదుపరి(regbndl.getAlias())) {
+            ures_get_తదుపరి_Resource(regbndl.getAlias(), curbndl.getAlias(), స్థితి_2);
+            ఒకవేళ (ures_getType(curbndl.getAlias()) != URES_పట్టిక) {
                 // Currently, an empty ARRAY is mixed in.
-                continue;
+                కొనసాగు;
             }
-            char *curID = (char *)uprv_malloc(sizeof(char) * ULOC_KEYWORDS_CAPACITY);
-            if (curID == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+            అక్షరం *curID = (అక్షరం *)uprv_malloc(పరిమాణం(అక్షరం) * ULOC_KEYWORDS_సామర్థ్యం);
+            ఒకవేళ (curID == శూన్యసూచిక) {
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                ఆపు;
             }
-            int32_t curIDLength = ULOC_KEYWORDS_CAPACITY;
+            int32_t curIDLength = ULOC_KEYWORDS_సామర్థ్యం;
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-            ures_getUTF8StringByKey(curbndl.getAlias(), "id", curID, &curIDLength, true, status);
+#ఒకవేళ U_CHARSET_FAMILY==U_ASCII_FAMILY
+            ures_get_UTF8_String_By_కీలకం(curbndl.getAlias(), "id", curID, &curIDLength, నిజం, స్థితి_2);
             /* optimize - use the utf-8 string */
-#else
+#లేకపోతే
             {
-                       const char16_t* defString = ures_getStringByKey(curbndl.getAlias(), "id", &curIDLength, status);
-                       if(U_SUCCESS(*status)) {
-			   if(curIDLength+1 > ULOC_KEYWORDS_CAPACITY) {
-				*status = U_BUFFER_OVERFLOW_ERROR;
-			   } else {
-                           	u_UCharsToChars(defString, curID, curIDLength+1);
+                       స్థిరరాశి char16_t* defString = ures_get_String_By_కీలకం(curbndl.getAlias(), "id", &curIDLength, స్థితి_2);
+                       ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+			   ఒకవేళ(curIDLength+1 > ULOC_KEYWORDS_సామర్థ్యం) {
+				*స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+			   } లేకపోతే {
+                           	u_UChars_గమ్యం_Chars(defString, curID, curIDLength+1);
 			   }
                        }
             }
-#endif	
+#అయితే_ముగింపు	
 
-            if (U_FAILURE(*status)) {
-                break;
+            ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+                ఆపు;
             }
-            UBool hasTo = false;
-            ures_getByKey(curbndl.getAlias(), "to", to.getAlias(), status);
-            if (U_FAILURE(*status)) {
+            UBool has_గమ్యం = అబద్ధం;
+            ures_get_By_కీలకం(curbndl.getAlias(), "to", గమ్యం.getAlias(), స్థితి_2);
+            ఒకవేళ (U_FAILURE(*స్థితి_2)) {
                 // Do nothing here...
-                *status = U_ZERO_ERROR;
-            } else {
-                hasTo = true;
+                *స్థితి_2 = U_ZERO_ERROR;
+            } లేకపోతే {
+                has_గమ్యం = నిజం;
             }
-            if (isPrefRegion && !hasTo && !ulist_containsString(values, curID, (int32_t)uprv_strlen(curID))) {
+            ఒకవేళ (isPrefRegion && !has_గమ్యం && !ulist_కలిగియుంది_String(విలువలు, curID, (int32_t)uprv_strlen(curID))) {
                 // Currently active currency for the target country
-                ulist_addItemEndList(values, curID, true, status);
-            } else if (!ulist_containsString(otherValues, curID, (int32_t)uprv_strlen(curID)) && !commonlyUsed) {
-                ulist_addItemEndList(otherValues, curID, true, status);
-            } else {
+                ulist_కూడు_అంశం_చివర_List(విలువలు, curID, నిజం, స్థితి_2);
+            } లేకపోతే ఒకవేళ (!ulist_కలిగియుంది_String(other_విలువలు, curID, (int32_t)uprv_strlen(curID)) && !commonly_వాడిన) {
+                ulist_కూడు_అంశం_చివర_List(other_విలువలు, curID, నిజం, స్థితి_2);
+            } లేకపోతే {
                 uprv_free(curID);
             }
         }
         
     }
-    if (U_SUCCESS(*status)) {
-        if (commonlyUsed) {
-            if (ulist_getListSize(values) == 0) {
+    ఒకవేళ (U_SUCCESS(*స్థితి_2)) {
+        ఒకవేళ (commonly_వాడిన) {
+            ఒకవేళ (ulist_get_List_కొలత(విలువలు) == 0) {
                 // This could happen if no valid region is supplied in the input
                 // locale. In this case, we use the CLDR's default.
                 uenum_close(en);
-                en = ucurr_getKeywordValuesForLocale(key, "und", true, status);
+                en = ucurr_get_Keyword_విలువలు_For_Locale(కీలకం, "und", నిజం, స్థితి_2);
             }
-        } else {
+        } లేకపోతే {
             // Consolidate the list
-            char *value = nullptr;
-            ulist_resetList(otherValues);
-            while ((value = (char *)ulist_getNext(otherValues)) != nullptr) {
-                if (!ulist_containsString(values, value, (int32_t)uprv_strlen(value))) {
-                    char *tmpValue = (char *)uprv_malloc(sizeof(char) * ULOC_KEYWORDS_CAPACITY);
-                    if (tmpValue == nullptr) {
-                        *status = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+            అక్షరం *value = శూన్యసూచిక;
+            ulist_resetList(other_విలువలు);
+            అయితే ((value = (అక్షరం *)ulist_get_తదుపరి(other_విలువలు)) != శూన్యసూచిక) {
+                ఒకవేళ (!ulist_కలిగియుంది_String(విలువలు, value, (int32_t)uprv_strlen(value))) {
+                    అక్షరం *tmp_విలువ = (అక్షరం *)uprv_malloc(పరిమాణం(అక్షరం) * ULOC_KEYWORDS_సామర్థ్యం);
+                    ఒకవేళ (tmp_విలువ == శూన్యసూచిక) {
+                        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                        ఆపు;
                     }
-                    uprv_memcpy(tmpValue, value, uprv_strlen(value) + 1);
-                    ulist_addItemEndList(values, tmpValue, true, status);
-                    if (U_FAILURE(*status)) {
-                        break;
+                    uprv_memcpy(tmp_విలువ, value, uprv_strlen(value) + 1);
+                    ulist_కూడు_అంశం_చివర_List(విలువలు, tmp_విలువ, నిజం, స్థితి_2);
+                    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+                        ఆపు;
                     }
                 }
             }
         }
         ulist_resetList((UList *)(en->context));
-    } else {
-        ulist_deleteList(values);
+    } లేకపోతే {
+        ulist_deleteList(విలువలు);
         uprv_free(en);
-        values = nullptr;
-        en = nullptr;
+        విలువలు = శూన్యసూచిక;
+        en = శూన్యసూచిక;
     }
-    ulist_deleteList(otherValues);
-    return en;
+    ulist_deleteList(other_విలువలు);
+    తిరిగి en;
 }
 
 
 U_CAPI int32_t U_EXPORT2
-ucurr_getNumericCode(const char16_t* currency) {
-    int32_t code = 0;
-    if (currency && u_strlen(currency) == ISO_CURRENCY_CODE_LENGTH) {
-        UErrorCode status = U_ZERO_ERROR;
+ucurr_get_Numeric_సంకేతం(స్థిరరాశి char16_t* currency) {
+    int32_t సంకేతం_2 = 0;
+    ఒకవేళ (currency && u_strlen(currency) == ISO_CURRENCY_సంకేతం_నిడివి) {
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
 
-        UResourceBundle* bundle = ures_openDirect(nullptr, "currencyNumericCodes", &status);
-        LocalUResourceBundlePointer codeMap(ures_getByKey(bundle, "codeMap", bundle, &status));
-        if (U_SUCCESS(status)) {
-            char alphaCode[ISO_CURRENCY_CODE_LENGTH+1];
-            myUCharsToChars(alphaCode, currency);
-            T_CString_toUpperCase(alphaCode);
-            ures_getByKey(codeMap.getAlias(), alphaCode, codeMap.getAlias(), &status);
-            int tmpCode = ures_getInt(codeMap.getAlias(), &status);
-            if (U_SUCCESS(status)) {
-                code = tmpCode;
+        UResourceBundle* bundle = ures_open_ప్రత్యక్ష(శూన్యసూచిక, "currencyNumericCodes", &స్థితి_2);
+        Local_UResource_Bundle_సూచిక సంకేతం_Map(ures_get_By_కీలకం(bundle, "codeMap", bundle, &స్థితి_2));
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+            అక్షరం alpha_సంకేతం[ISO_CURRENCY_సంకేతం_నిడివి+1];
+            my_UChars_గమ్యం_Chars(alpha_సంకేతం, currency);
+            T_CString_గమ్యం_పై_Case(alpha_సంకేతం);
+            ures_get_By_కీలకం(సంకేతం_Map.getAlias(), alpha_సంకేతం, సంకేతం_Map.getAlias(), &స్థితి_2);
+            పూర్ణాంకం tmp_సంకేతం = ures_getInt(సంకేతం_Map.getAlias(), &స్థితి_2);
+            ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+                సంకేతం_2 = tmp_సంకేతం;
             }
         }
     }
-    return code;
+    తిరిగి సంకేతం_2;
 }
-#endif /* #if !UCONFIG_NO_FORMATTING */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_FORMATTING */
 
 //eof

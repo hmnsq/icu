@@ -19,52 +19,52 @@
  *----------------------------------------------------------------------------*/
 /* Defines _XOPEN_SOURCE for access to POSIX functions.
  * Must be before any other #includes. */
-#include "uposixdefs.h"
+#అన్తర్భావ "uposixdefs.h"
 
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "udatamem.h"
-#include "umapfile.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "udatamem.h"
+#అన్తర్భావ "umapfile.h"
 
 /* memory-mapping base definitions ------------------------------------------ */
 
-#if MAP_IMPLEMENTATION==MAP_WIN32
-#ifndef WIN32_LEAN_AND_MEAN
-#   define WIN32_LEAN_AND_MEAN
-#endif
+#ఒకవేళ MAP_IMPLEMENTATION==MAP_WIN32
+#నిర్వచితం_కాకపోతే WIN32_LEAN_AND_సగటు
+#   define WIN32_LEAN_AND_సగటు
+#అయితే_ముగింపు
 #   define VC_EXTRALEAN
 #   define NOUSER
 #   define NOSERVICE
 #   define NOIME
 #   define NOMCX
 
-#   if U_PLATFORM_HAS_WINUWP_API == 1
+#   ఒకవేళ U_PLATFORM_HAS_WINUWP_API == 1
         // Some previous versions of the Windows 10 SDK don't expose various APIs for UWP applications
         // to use, even though UWP apps are allowed to call and use them.  Temporarily change the
         // WINAPI family partition below to Desktop, so that function declarations are visible for UWP.
 #       include <winapifamily.h>
-#       if !(WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM))
-#           pragma push_macro("WINAPI_PARTITION_DESKTOP")
-#           undef WINAPI_PARTITION_DESKTOP
-#           define WINAPI_PARTITION_DESKTOP 1
-#           define CHANGED_WINAPI_PARTITION_DESKTOP_VALUE
+#       ఒకవేళ !(WINAPI_FAMILY_విభజన(WINAPI_విభజన_DESKTOP | WINAPI_విభజన_SYSTEM))
+#           pragma నెట్టు_macro("WINAPI_PARTITION_DESKTOP")
+#           undef WINAPI_విభజన_DESKTOP
+#           define WINAPI_విభజన_DESKTOP 1
+#           define మారింది_WINAPI_విభజన_DESKTOP_విలువ
 #       endif
 #   endif
 
 #   include <windows.h>
 
-#   if U_PLATFORM_HAS_WINUWP_API == 1 && defined(CHANGED_WINAPI_PARTITION_DESKTOP_VALUE)
-#       pragma pop_macro("WINAPI_PARTITION_DESKTOP")
+#   ఒకవేళ U_PLATFORM_HAS_WINUWP_API == 1 && defined(మారింది_WINAPI_విభజన_DESKTOP_విలువ)
+#       pragma తీయి_macro("WINAPI_PARTITION_DESKTOP")
 #   endif
 
 #   include "cmemory.h"
 
-typedef HANDLE MemoryMap;
+రకనిర్వచనం HANDLE జ్ఞాపకం_Map;
 
-#   define IS_MAP(map) ((map)!=nullptr)
+#   define IS_MAP(map) ((map)!=శూన్యసూచిక)
 
-#elif MAP_IMPLEMENTATION==MAP_POSIX
-    typedef size_t MemoryMap;
+#లేదావేళ MAP_IMPLEMENTATION==MAP_POSIX
+    రకనిర్వచనం size_t జ్ఞాపకం_Map;
 
 #   define IS_MAP(map) ((map)!=0)
 
@@ -74,16 +74,16 @@ typedef HANDLE MemoryMap;
 #   include <fcntl.h>
 
 #   ifndef MAP_FAILED
-#       define MAP_FAILED ((void*)-1)
+#       define MAP_FAILED ((శూన్య*)-1)
 #   endif
-#elif MAP_IMPLEMENTATION==MAP_STDIO
+#లేదావేళ MAP_IMPLEMENTATION==MAP_STDIO
 #   include <stdio.h>
 #   include "cmemory.h"
 
-    typedef void *MemoryMap;
+    రకనిర్వచనం శూన్య *జ్ఞాపకం_Map;
 
-#   define IS_MAP(map) ((map)!=nullptr)
-#endif
+#   define IS_MAP(map) ((map)!=శూన్యసూచిక)
+#అయితే_ముగింపు
 
 /*----------------------------------------------------------------------------*
  *                                                                            *
@@ -91,187 +91,187 @@ typedef HANDLE MemoryMap;
  *                           functions used by the rest of the implementation.*
  *                                                                            *
  *----------------------------------------------------------------------------*/
-#if MAP_IMPLEMENTATION==MAP_NONE
+#ఒకవేళ MAP_IMPLEMENTATION==MAP_NONE
     U_CFUNC UBool
-    uprv_mapFile(UDataMemory *pData, const char *path, UErrorCode *status) {
-        if (U_FAILURE(*status)) {
-            return false;
+    uprv_mapFile(UData_జ్ఞాపకం *p_దత్తాంశం, స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం *స్థితి_2) {
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            తిరిగి అబద్ధం;
         }
-        UDataMemory_init(pData); /* Clear the output struct. */
-        return false;            /* no file access */
+        UData_జ్ఞాపకం_init(p_దత్తాంశం); /* Clear the output struct. */
+        తిరిగి అబద్ధం;            /* no file access */
     }
 
-    U_CFUNC void uprv_unmapFile(UDataMemory *pData) {
+    U_CFUNC శూన్య uprv_unmapFile(UData_జ్ఞాపకం *p_దత్తాంశం) {
         /* nothing to do */
     }
-#elif MAP_IMPLEMENTATION==MAP_WIN32
+#లేదావేళ MAP_IMPLEMENTATION==MAP_WIN32
     U_CFUNC UBool
     uprv_mapFile(
-         UDataMemory *pData,    /* Fill in with info on the result doing the mapping. */
+         UData_జ్ఞాపకం *p_దత్తాంశం,    /* Fill in with info on the result doing the mapping. */
                                 /*   Output only; any original contents are cleared.  */
-         const char *path,      /* File path to be opened/mapped.                     */
-         UErrorCode *status     /* Error status, used to report out-of-memory errors. */
+         స్థిరరాశి అక్షరం *మార్గం,      /* File path to be opened/mapped.                     */
+         UError_సంకేతం *స్థితి_2     /* Error status, used to report out-of-memory errors. */
          )
     {
-        if (U_FAILURE(*status)) {
-            return false;
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            తిరిగి అబద్ధం;
         }
 
-        HANDLE map = nullptr;
-        HANDLE file = INVALID_HANDLE_VALUE;
-        DWORD fileLength = 0;
+        HANDLE map = శూన్యసూచిక;
+        HANDLE file = INVALID_HANDLE_విలువ;
+        DWORD file_నిడివి = 0;
 
-        UDataMemory_init(pData); /* Clear the output struct.        */
+        UData_జ్ఞాపకం_init(p_దత్తాంశం); /* Clear the output struct.        */
 
         /* open the input file */
-#if U_PLATFORM_HAS_WINUWP_API == 0
+#ఒకవేళ U_PLATFORM_HAS_WINUWP_API == 0
         // Note: In the non-UWP code-path (ie: Win32), the value of the path variable might have come from 
         // the CRT 'getenv' function, and would be therefore be encoded in the default ANSI code page.
         // This means that we can't call the *W version of API below, whereas in the UWP code-path
         // there is no 'getenv' call, and thus the string will be only UTF-8/Invariant characters.
-        file=CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, nullptr,
+        file=CreateFileA(మార్గం, GENERIC_READ, FILE_SHARE_READ, శూన్యసూచిక,
             OPEN_EXISTING,
-            FILE_ATTRIBUTE_NORMAL|FILE_FLAG_RANDOM_ACCESS, nullptr);
-#else
+            FILE_ATTRIBUTE_సాధారణ|FILE_FLAG_RANDOM_ACCESS, శూన్యసూచిక);
+#లేకపోతే
         // Convert from UTF-8 string to UTF-16 string.
-        wchar_t utf16Path[MAX_PATH];
-        int32_t pathUtf16Len = 0;
-        u_strFromUTF8(reinterpret_cast<char16_t*>(utf16Path), static_cast<int32_t>(UPRV_LENGTHOF(utf16Path)), &pathUtf16Len, path, -1, status);
+        wchar_t utf16_మార్గం[MAX_మార్గం];
+        int32_t మార్గం_Utf16_Len = 0;
+        u_strFromUTF8(reinterpret_cast<char16_t*>(utf16_మార్గం), static_cast<int32_t>(UPRV_LENGTHOF(utf16_మార్గం)), &మార్గం_Utf16_Len, మార్గం, -1, స్థితి_2);
 
-        if (U_FAILURE(*status)) {
-            return false;
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            తిరిగి అబద్ధం;
         }
-        if (*status == U_STRING_NOT_TERMINATED_WARNING) {
+        ఒకవేళ (*స్థితి_2 == U_STRING_NOT_TERMINATED_WARNING) {
             // Report back an error instead of a warning.
-            *status = U_BUFFER_OVERFLOW_ERROR;
-            return false;
+            *స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+            తిరిగి అబద్ధం;
         }
 
-        file = CreateFileW(utf16Path, GENERIC_READ, FILE_SHARE_READ, nullptr,
+        file = CreateFileW(utf16_మార్గం, GENERIC_READ, FILE_SHARE_READ, శూన్యసూచిక,
             OPEN_EXISTING,
-            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS, nullptr);
-#endif
-        if (file == INVALID_HANDLE_VALUE) {
+            FILE_ATTRIBUTE_సాధారణ | FILE_FLAG_RANDOM_ACCESS, శూన్యసూచిక);
+#అయితే_ముగింపు
+        ఒకవేళ (file == INVALID_HANDLE_విలువ) {
             // If we failed to open the file due to an out-of-memory error, then we want
             // to report that error back to the caller.
-            if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
+            ఒకవేళ (HRESULT_FROM_WIN32(Get_చివరి_Error()) == E_OUTOFMEMORY) {
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
             }
-            return false;
+            తిరిగి అబద్ధం;
         }
 
-        fileLength = GetFileSize(file, nullptr);
+        file_నిడివి = Get_File_కొలత(file, శూన్యసూచిక);
 
         // Note: We use nullptr/nullptr for lpAttributes parameter below.
         // This means our handle cannot be inherited and we will get the default security descriptor.
         /* create an unnamed Windows file-mapping object for the specified file */
-        map = CreateFileMappingW(file, nullptr, PAGE_READONLY, 0, 0, nullptr);
+        map = CreateFileMappingW(file, శూన్యసూచిక, పుట_READONLY, 0, 0, శూన్యసూచిక);
 
         CloseHandle(file);
-        if (map == nullptr) {
+        ఒకవేళ (map == శూన్యసూచిక) {
             // If we failed to create the mapping due to an out-of-memory error, then 
             // we want to report that error back to the caller.
-            if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
+            ఒకవేళ (HRESULT_FROM_WIN32(Get_చివరి_Error()) == E_OUTOFMEMORY) {
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
             }
-            return false;
+            తిరిగి అబద్ధం;
         }
 
         /* map a view of the file into our address space */
-        pData->pHeader = reinterpret_cast<const DataHeader *>(MapViewOfFile(map, FILE_MAP_READ, 0, 0, 0));
-        if (pData->pHeader == nullptr) {
+        p_దత్తాంశం->p_శీర్షిక = reinterpret_cast<స్థిరరాశి దత్తాంశం_శీర్షిక *>(Map_View_యొక్క_File(map, FILE_MAP_READ, 0, 0, 0));
+        ఒకవేళ (p_దత్తాంశం->p_శీర్షిక == శూన్యసూచిక) {
             CloseHandle(map);
-            return false;
+            తిరిగి అబద్ధం;
         }
-        pData->map = map;
-        pData->length = fileLength;
+        p_దత్తాంశం->map = map;
+        p_దత్తాంశం->length = file_నిడివి;
 
-        return true;
+        తిరిగి నిజం;
     }
 
-    U_CFUNC void
-    uprv_unmapFile(UDataMemory *pData) {
-        if (pData != nullptr && pData->map != nullptr) {
-            UnmapViewOfFile(pData->pHeader);
-            CloseHandle(pData->map);
-            pData->pHeader = nullptr;
-            pData->map = nullptr;
+    U_CFUNC శూన్య
+    uprv_unmapFile(UData_జ్ఞాపకం *p_దత్తాంశం) {
+        ఒకవేళ (p_దత్తాంశం != శూన్యసూచిక && p_దత్తాంశం->map != శూన్యసూచిక) {
+            Unmap_View_యొక్క_File(p_దత్తాంశం->p_శీర్షిక);
+            CloseHandle(p_దత్తాంశం->map);
+            p_దత్తాంశం->p_శీర్షిక = శూన్యసూచిక;
+            p_దత్తాంశం->map = శూన్యసూచిక;
         }
     }
 
 
 
-#elif MAP_IMPLEMENTATION==MAP_POSIX
+#లేదావేళ MAP_IMPLEMENTATION==MAP_POSIX
     U_CFUNC UBool
-    uprv_mapFile(UDataMemory *pData, const char *path, UErrorCode *status) {
-        int fd;
-        int length;
-        struct stat mystat;
-        void *data;
+    uprv_mapFile(UData_జ్ఞాపకం *p_దత్తాంశం, స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం *స్థితి_2) {
+        పూర్ణాంకం fd;
+        పూర్ణాంకం length;
+        నిర్మాణం stat mystat;
+        శూన్య *దత్తాంశం;
 
-        if (U_FAILURE(*status)) {
-            return false;
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            తిరిగి అబద్ధం;
         }
 
-        UDataMemory_init(pData); /* Clear the output struct.        */
+        UData_జ్ఞాపకం_init(p_దత్తాంశం); /* Clear the output struct.        */
 
         /* open the file */
-        fd=open(path, O_RDONLY);
-        if(fd==-1) {
-            return false;
+        fd=open(మార్గం, O_RDONLY);
+        ఒకవేళ(fd==-1) {
+            తిరిగి అబద్ధం;
         }
 
         /* determine the length of the file */
-        if(stat(path, &mystat)!=0 || mystat.st_size<=0) {
+        ఒకవేళ(stat(మార్గం, &mystat)!=0 || mystat.st_size<=0) {
             close(fd);
-            return false;
+            తిరిగి అబద్ధం;
         }
         length=mystat.st_size;
 
         /* get a view of the mapping */
-#if U_PLATFORM != U_PF_HPUX
-        data=mmap(nullptr, length, PROT_READ, MAP_SHARED, fd, 0);
-#else
-        data=mmap(nullptr, length, PROT_READ, MAP_PRIVATE, fd, 0);
-#endif
+#ఒకవేళ U_PLATFORM != U_PF_HPUX
+        దత్తాంశం=mmap(శూన్యసూచిక, length, PROT_READ, MAP_SHARED, fd, 0);
+#లేకపోతే
+        దత్తాంశం=mmap(శూన్యసూచిక, length, PROT_READ, MAP_వ్యక్తిగత, fd, 0);
+#అయితే_ముగింపు
         close(fd); /* no longer needed */
-        if(data==MAP_FAILED) {
+        ఒకవేళ(దత్తాంశం==MAP_FAILED) {
             // Possibly check the errno value for ENOMEM, and report U_MEMORY_ALLOCATION_ERROR?
-            return false;
+            తిరిగి అబద్ధం;
         }
 
-        pData->map = (char *)data + length;
-        pData->pHeader=(const DataHeader *)data;
-        pData->mapAddr = data;
-        pData->length = length;
-#if U_PLATFORM == U_PF_IPHONE || U_PLATFORM == U_PF_ANDROID
+        p_దత్తాంశం->map = (అక్షరం *)దత్తాంశం + length;
+        p_దత్తాంశం->p_శీర్షిక=(స్థిరరాశి దత్తాంశం_శీర్షిక *)దత్తాంశం;
+        p_దత్తాంశం->mapAddr = దత్తాంశం;
+        p_దత్తాంశం->length = length;
+#ఒకవేళ U_PLATFORM == U_PF_IPHONE || U_PLATFORM == U_PF_ANDROID
     // Apparently supported from Android 23 and higher:
     //   https://github.com/ggml-org/llama.cpp/pull/3631
     // Checking for the flag itself is safer than checking for __ANDROID_API__.
 #   ifdef POSIX_MADV_RANDOM
-        posix_madvise(data, length, POSIX_MADV_RANDOM);
+        posix_madvise(దత్తాంశం, length, POSIX_MADV_RANDOM);
 #   endif
-#endif
-        return true;
+#అయితే_ముగింపు
+        తిరిగి నిజం;
     }
 
-    U_CFUNC void
-    uprv_unmapFile(UDataMemory *pData) {
-        if(pData!=nullptr && pData->map!=nullptr) {
-            size_t dataLen = (char *)pData->map - (char *)pData->mapAddr;
-            if(munmap(pData->mapAddr, dataLen)==-1) {
+    U_CFUNC శూన్య
+    uprv_unmapFile(UData_జ్ఞాపకం *p_దత్తాంశం) {
+        ఒకవేళ(p_దత్తాంశం!=శూన్యసూచిక && p_దత్తాంశం->map!=శూన్యసూచిక) {
+            size_t దత్తాంశం_Len = (అక్షరం *)p_దత్తాంశం->map - (అక్షరం *)p_దత్తాంశం->mapAddr;
+            ఒకవేళ(munmap(p_దత్తాంశం->mapAddr, దత్తాంశం_Len)==-1) {
             }
-            pData->pHeader=nullptr;
-            pData->map=nullptr;
-            pData->mapAddr=nullptr;
+            p_దత్తాంశం->p_శీర్షిక=శూన్యసూచిక;
+            p_దత్తాంశం->map=శూన్యసూచిక;
+            p_దత్తాంశం->mapAddr=శూన్యసూచిక;
         }
     }
 
 
 
-#elif MAP_IMPLEMENTATION==MAP_STDIO
+#లేదావేళ MAP_IMPLEMENTATION==MAP_STDIO
     /* copy of the filestrm.c/T_FileStream_size() implementation */
-    static int32_t
+    స్థిర int32_t
     umap_fsize(FILE *f) {
         int32_t savedPos = ftell(f);
         int32_t size = 0;
@@ -281,65 +281,65 @@ typedef HANDLE MemoryMap;
         fseek(f, 0, SEEK_END);
         size = (int32_t)ftell(f);
         fseek(f, savedPos, SEEK_SET);
-        return size;
+        తిరిగి size;
     }
 
     U_CFUNC UBool
-    uprv_mapFile(UDataMemory *pData, const char *path, UErrorCode *status) {
+    uprv_mapFile(UData_జ్ఞాపకం *p_దత్తాంశం, స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం *స్థితి_2) {
         FILE *file;
-        int32_t fileLength;
-        void *p;
+        int32_t file_నిడివి;
+        శూన్య *p;
 
-        if (U_FAILURE(*status)) {
-            return false;
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            తిరిగి అబద్ధం;
         }
 
-        UDataMemory_init(pData); /* Clear the output struct.        */
+        UData_జ్ఞాపకం_init(p_దత్తాంశం); /* Clear the output struct.        */
         /* open the input file */
-        file=fopen(path, "rb");
-        if(file==nullptr) {
-            return false;
+        file=fopen(మార్గం, "rb");
+        ఒకవేళ(file==శూన్యసూచిక) {
+            తిరిగి అబద్ధం;
         }
 
         /* get the file length */
-        fileLength=umap_fsize(file);
-        if(ferror(file) || fileLength<=20) {
+        file_నిడివి=umap_fsize(file);
+        ఒకవేళ(ferror(file) || file_నిడివి<=20) {
             fclose(file);
-            return false;
+            తిరిగి అబద్ధం;
         }
 
         /* allocate the memory to hold the file data */
-        p=uprv_malloc(fileLength);
-        if(p==nullptr) {
+        p=uprv_malloc(file_నిడివి);
+        ఒకవేళ(p==శూన్యసూచిక) {
             fclose(file);
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి అబద్ధం;
         }
 
         /* read the file */
-        if(fileLength!=fread(p, 1, fileLength, file)) {
+        ఒకవేళ(file_నిడివి!=fread(p, 1, file_నిడివి, file)) {
             uprv_free(p);
             fclose(file);
-            return false;
+            తిరిగి అబద్ధం;
         }
 
         fclose(file);
-        pData->map=p;
-        pData->pHeader=(const DataHeader *)p;
-        pData->mapAddr=p;
-        pData->length = fileLength;
-        return true;
+        p_దత్తాంశం->map=p;
+        p_దత్తాంశం->p_శీర్షిక=(స్థిరరాశి దత్తాంశం_శీర్షిక *)p;
+        p_దత్తాంశం->mapAddr=p;
+        p_దత్తాంశం->length = file_నిడివి;
+        తిరిగి నిజం;
     }
 
-    U_CFUNC void
-    uprv_unmapFile(UDataMemory *pData) {
-        if(pData!=nullptr && pData->map!=nullptr) {
-            uprv_free(pData->map);
-            pData->map     = nullptr;
-            pData->mapAddr = nullptr;
-            pData->pHeader = nullptr;
+    U_CFUNC శూన్య
+    uprv_unmapFile(UData_జ్ఞాపకం *p_దత్తాంశం) {
+        ఒకవేళ(p_దత్తాంశం!=శూన్యసూచిక && p_దత్తాంశం->map!=శూన్యసూచిక) {
+            uprv_free(p_దత్తాంశం->map);
+            p_దత్తాంశం->map     = శూన్యసూచిక;
+            p_దత్తాంశం->mapAddr = శూన్యసూచిక;
+            p_దత్తాంశం->p_శీర్షిక = శూన్యసూచిక;
         }
     }
-#else
-#   error MAP_IMPLEMENTATION is set incorrectly
-#endif
+#లేకపోతే
+#   error MAP_IMPLEMENTATION is సమితి incorrectly
+#అయితే_ముగింపు

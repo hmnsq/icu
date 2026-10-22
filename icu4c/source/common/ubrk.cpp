@@ -7,20 +7,20 @@
 ********************************************************************************
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/ubrk.h"
+#అన్తర్భావ "unicode/ubrk.h"
 
-#include "unicode/brkiter.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "unicode/uchriter.h"
-#include "unicode/rbbi.h"
-#include "rbbirb.h"
-#include "uassert.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/brkiter.h"
+#అన్తర్భావ "unicode/uloc.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/uchriter.h"
+#అన్తర్భావ "unicode/rbbi.h"
+#అన్తర్భావ "rbbirb.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "cmemory.h"
 
 U_NAMESPACE_USE
 
@@ -32,57 +32,57 @@ U_NAMESPACE_USE
 //------------------------------------------------------------------------------
 U_CAPI UBreakIterator* U_EXPORT2
 ubrk_open(UBreakIteratorType type,
-      const char *locale,
-      const char16_t *text,
-      int32_t textLength,
-      UErrorCode *status)
+      స్థిరరాశి అక్షరం *locale,
+      స్థిరరాశి char16_t *పాఠ్యం,
+      int32_t పాఠ్యం_నిడివి,
+      UError_సంకేతం *స్థితి_2)
 {
 
-  if (U_FAILURE(*status)) return nullptr;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) తిరిగి శూన్యసూచిక;
 
-  BreakIterator *result = nullptr;
+  BreakIterator *ఫలితం = శూన్యసూచిక;
 
-  switch(type) {
+  ఎంపిక(type) {
 
-  case UBRK_CHARACTER:
-    result = BreakIterator::createCharacterInstance(Locale(locale), *status);
-    break;
+  స్థితి UBRK_CHARACTER:
+    ఫలితం = BreakIterator::createCharacterInstance(Locale(locale), *స్థితి_2);
+    ఆపు;
 
-  case UBRK_WORD:
-    result = BreakIterator::createWordInstance(Locale(locale), *status);
-    break;
+  స్థితి UBRK_మాట:
+    ఫలితం = BreakIterator::create_మాట_Instance(Locale(locale), *స్థితి_2);
+    ఆపు;
 
-  case UBRK_LINE:
-    result = BreakIterator::createLineInstance(Locale(locale), *status);
-    break;
+  స్థితి UBRK_పంక్తి:
+    ఫలితం = BreakIterator::create_పంక్తి_Instance(Locale(locale), *స్థితి_2);
+    ఆపు;
 
-  case UBRK_SENTENCE:
-    result = BreakIterator::createSentenceInstance(Locale(locale), *status);
-    break;
+  స్థితి UBRK_SENTENCE:
+    ఫలితం = BreakIterator::createSentenceInstance(Locale(locale), *స్థితి_2);
+    ఆపు;
 
-  case UBRK_TITLE:
-    result = BreakIterator::createTitleInstance(Locale(locale), *status);
-    break;
+  స్థితి UBRK_TITLE:
+    ఫలితం = BreakIterator::createTitleInstance(Locale(locale), *స్థితి_2);
+    ఆపు;
 
-  default:
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
+  అప్రమేయ:
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
   }
 
   // check for allocation error
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
-  if (result == nullptr) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
 
 
-  UBreakIterator *uBI = (UBreakIterator *)result;
-  if (text != nullptr) {
-      ubrk_setText(uBI, text, textLength, status);
+  UBreakIterator *uBI = (UBreakIterator *)ఫలితం;
+  ఒకవేళ (పాఠ్యం != శూన్యసూచిక) {
+      ubrk_సమితి_పాఠ్యం(uBI, పాఠ్యం, పాఠ్యం_నిడివి, స్థితి_2);
   }
-  return uBI;
+  తిరిగి uBI;
 }
 
 
@@ -94,119 +94,119 @@ ubrk_open(UBreakIteratorType type,
 //
 //------------------------------------------------------------------------------
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openRules(  const char16_t     *rules,
-                       int32_t       rulesLength,
-                 const char16_t     *text,
-                       int32_t       textLength,
+ubrk_open_నియమాలు(  స్థిరరాశి char16_t     *నియమాలు,
+                       int32_t       నియమాలు_నిడివి,
+                 స్థిరరాశి char16_t     *పాఠ్యం,
+                       int32_t       పాఠ్యం_నిడివి,
                        UParseError  *parseErr,
-                       UErrorCode   *status)  {
+                       UError_సంకేతం   *స్థితి_2)  {
 
-    if (status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    ఒకవేళ (స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి శూన్యసూచిక;
     }
 
-    BreakIterator *result = nullptr;
-    UnicodeString ruleString(rules, rulesLength);
-    result = RBBIRuleBuilder::createRuleBasedBreakIterator(ruleString, parseErr, *status);
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    BreakIterator *ఫలితం = శూన్యసూచిక;
+    UnicodeString నియమం_String(నియమాలు, నియమాలు_నిడివి);
+    ఫలితం = RBBIRuleBuilder::create_నియమం_Based_Break_Iterator(నియమం_String, parseErr, *స్థితి_2);
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    UBreakIterator *uBI = (UBreakIterator *)result;
-    if (text != nullptr) {
-        ubrk_setText(uBI, text, textLength, status);
+    UBreakIterator *uBI = (UBreakIterator *)ఫలితం;
+    ఒకవేళ (పాఠ్యం != శూన్యసూచిక) {
+        ubrk_సమితి_పాఠ్యం(uBI, పాఠ్యం, పాఠ్యం_నిడివి, స్థితి_2);
     }
-    return uBI;
+    తిరిగి uBI;
 }
 
 
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
-                     const char16_t *  text, int32_t textLength,
-                     UErrorCode *   status)
+ubrk_open_ద్విమాన_నియమాలు(స్థిరరాశి uint8_t *ద్విమాన_నియమాలు, int32_t నియమాలు_నిడివి,
+                     స్థిరరాశి char16_t *  పాఠ్యం, int32_t పాఠ్యం_నిడివి,
+                     UError_సంకేతం *   స్థితి_2)
 {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if (rulesLength < 0) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ (నియమాలు_నిడివి < 0) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    LocalPointer<RuleBasedBreakIterator> lpRBBI(new RuleBasedBreakIterator(binaryRules, rulesLength, *status), *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    Local_సూచిక<నియమం_Based_Break_Iterator> lpRBBI(కొత్త నియమం_Based_Break_Iterator(ద్విమాన_నియమాలు, నియమాలు_నిడివి, *స్థితి_2), *స్థితి_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
     UBreakIterator *uBI = reinterpret_cast<UBreakIterator *>(lpRBBI.orphan());
-    if (text != nullptr) {
-        ubrk_setText(uBI, text, textLength, status);
+    ఒకవేళ (పాఠ్యం != శూన్యసూచిక) {
+        ubrk_సమితి_పాఠ్యం(uBI, పాఠ్యం, పాఠ్యం_నిడివి, స్థితి_2);
     }
-    return uBI;
+    తిరిగి uBI;
 }
 
 
 U_CAPI UBreakIterator * U_EXPORT2
-ubrk_safeClone(
-          const UBreakIterator *bi,
-          void * /*stackBuffer*/,
-          int32_t *pBufferSize,
-          UErrorCode *status)
+ubrk_సురక్షిత_Clone(
+          స్థిరరాశి UBreakIterator *bi,
+          శూన్య * /*stackBuffer*/,
+          int32_t *p_బఫరు_కొలత,
+          UError_సంకేతం *స్థితి_2)
 {
-    if (status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    ఒకవేళ (స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి శూన్యసూచిక;
     }
-    if (bi == nullptr) {
-       *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ (bi == శూన్యసూచిక) {
+       *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    if (pBufferSize != nullptr) {
-        int32_t inputSize = *pBufferSize;
-        *pBufferSize = 1;
-        if (inputSize == 0) {
-            return nullptr;  // preflighting for deprecated functionality
+    ఒకవేళ (p_బఫరు_కొలత != శూన్యసూచిక) {
+        int32_t ఆదానం_కొలత = *p_బఫరు_కొలత;
+        *p_బఫరు_కొలత = 1;
+        ఒకవేళ (ఆదానం_కొలత == 0) {
+            తిరిగి శూన్యసూచిక;  // preflighting for deprecated functionality
         }
     }
     BreakIterator *newBI = ((BreakIterator *)bi)->clone();
-    if (newBI == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-    } else if (pBufferSize != nullptr) {
-        *status = U_SAFECLONE_ALLOCATED_WARNING;
+    ఒకవేళ (newBI == శూన్యసూచిక) {
+        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    } లేకపోతే ఒకవేళ (p_బఫరు_కొలత != శూన్యసూచిక) {
+        *స్థితి_2 = U_SAFECLONE_ALLOCATED_WARNING;
     }
-    return (UBreakIterator *)newBI;
+    తిరిగి (UBreakIterator *)newBI;
 }
 
 U_CAPI UBreakIterator * U_EXPORT2
-ubrk_clone(const UBreakIterator *bi, UErrorCode *status) {
-    return ubrk_safeClone(bi, nullptr, nullptr, status);
+ubrk_clone(స్థిరరాశి UBreakIterator *bi, UError_సంకేతం *స్థితి_2) {
+    తిరిగి ubrk_సురక్షిత_Clone(bi, శూన్యసూచిక, శూన్యసూచిక, స్థితి_2);
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ubrk_close(UBreakIterator *bi)
 {
-    delete (BreakIterator *)bi;
+    తొలగించు (BreakIterator *)bi;
 }
 
-U_CAPI void U_EXPORT2
-ubrk_setText(UBreakIterator* bi,
-             const char16_t*    text,
-             int32_t         textLength,
-             UErrorCode*     status)
+U_CAPI శూన్య U_EXPORT2
+ubrk_సమితి_పాఠ్యం(UBreakIterator* bi,
+             స్థిరరాశి char16_t*    పాఠ్యం,
+             int32_t         పాఠ్యం_నిడివి,
+             UError_సంకేతం*     స్థితి_2)
 {
     UText  ut = UTEXT_INITIALIZER;
-    utext_openUChars(&ut, text, textLength, status);
-    ((BreakIterator*)bi)->setText(&ut, *status);
+    utext_openUChars(&ut, పాఠ్యం, పాఠ్యం_నిడివి, స్థితి_2);
+    ((BreakIterator*)bi)->సమితి_పాఠ్యం(&ut, *స్థితి_2);
     // A stack allocated UText wrapping a char16_t * string
     //   can be dumped without explicitly closing it.
 }
 
 
 
-U_CAPI void U_EXPORT2
-ubrk_setUText(UBreakIterator *bi,
-             UText          *text,
-             UErrorCode     *status)
+U_CAPI శూన్య U_EXPORT2
+ubrk_సమితి_UText(UBreakIterator *bi,
+             UText          *పాఠ్యం,
+             UError_సంకేతం     *స్థితి_2)
 {
-  ((BreakIterator*)bi)->setText(text, *status);
+  ((BreakIterator*)bi)->సమితి_పాఠ్యం(పాఠ్యం, *స్థితి_2);
 }
 
 
@@ -214,148 +214,148 @@ ubrk_setUText(UBreakIterator *bi,
 
 
 U_CAPI int32_t U_EXPORT2
-ubrk_current(const UBreakIterator *bi)
+ubrk_current(స్థిరరాశి UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->current();
+  తిరిగి ((BreakIterator*)bi)->current();
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_next(UBreakIterator *bi)
+ubrk_తదుపరి(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->next();
+  తిరిగి ((BreakIterator*)bi)->next();
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_previous(UBreakIterator *bi)
+ubrk_మునుపటి(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->previous();
+  తిరిగి ((BreakIterator*)bi)->మునుపటి();
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_first(UBreakIterator *bi)
+ubrk_మొదటి(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->first();
+  తిరిగి ((BreakIterator*)bi)->first();
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_last(UBreakIterator *bi)
+ubrk_చివరి(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->last();
+  తిరిగి ((BreakIterator*)bi)->చివరి();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_preceding(UBreakIterator *bi,
-           int32_t offset)
+           int32_t స్థానభ్రంశం)
 {
 
-  return ((BreakIterator*)bi)->preceding(offset);
+  తిరిగి ((BreakIterator*)bi)->preceding(స్థానభ్రంశం);
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_following(UBreakIterator *bi,
-           int32_t offset)
+           int32_t స్థానభ్రంశం)
 {
 
-  return ((BreakIterator*)bi)->following(offset);
+  తిరిగి ((BreakIterator*)bi)->following(స్థానభ్రంశం);
 }
 
-U_CAPI const char* U_EXPORT2
-ubrk_getAvailable(int32_t index)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ubrk_get_అందుబాటు(int32_t సూచీ)
 {
 
-  return uloc_getAvailable(index);
+  తిరిగి uloc_get_అందుబాటు(సూచీ);
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_countAvailable()
+ubrk_లెక్క_అందుబాటు()
 {
 
-  return uloc_countAvailable();
+  తిరిగి uloc_లెక్క_అందుబాటు();
 }
 
 
 U_CAPI  UBool U_EXPORT2
-ubrk_isBoundary(UBreakIterator *bi, int32_t offset)
+ubrk_isBoundary(UBreakIterator *bi, int32_t స్థానభ్రంశం)
 {
-    return ((BreakIterator*)bi)->isBoundary(offset);
+    తిరిగి ((BreakIterator*)bi)->isBoundary(స్థానభ్రంశం);
 }
 
 
 U_CAPI  int32_t U_EXPORT2
-ubrk_getRuleStatus(UBreakIterator *bi)
+ubrk_get_నియమం_స్థితి(UBreakIterator *bi)
 {
-    return ((BreakIterator*)bi)->getRuleStatus();
+    తిరిగి ((BreakIterator*)bi)->get_నియమం_స్థితి();
 }
 
 U_CAPI  int32_t U_EXPORT2
-ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, UErrorCode *status)
+ubrk_get_నియమం_స్థితి_Vec(UBreakIterator *bi, int32_t *fill_లోపల_Vec, int32_t capacity, UError_సంకేతం *స్థితి_2)
 {
-    return ((BreakIterator*)bi)->getRuleStatusVec(fillInVec, capacity, *status);
+    తిరిగి ((BreakIterator*)bi)->get_నియమం_స్థితి_Vec(fill_లోపల_Vec, capacity, *స్థితి_2);
 }
 
 
-U_CAPI const char* U_EXPORT2
-ubrk_getLocaleByType(const UBreakIterator* bi U_LIFETIME_BOUND,
-                     ULocDataLocaleType type,
-                     UErrorCode* status)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ubrk_getLocaleByType(స్థిరరాశి UBreakIterator* bi U_LIFETIME_BOUND,
+                     ULoc_దత్తాంశం_Locale_Type type,
+                     UError_సంకేతం* స్థితి_2)
 {
-    if (bi == nullptr) {
-        if (U_SUCCESS(*status)) {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
+    ఒకవేళ (bi == శూన్యసూచిక) {
+        ఒకవేళ (U_SUCCESS(*స్థితి_2)) {
+            *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
         }
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
-    return ((BreakIterator*)bi)->getLocaleID(type, *status);
+    తిరిగి ((BreakIterator*)bi)->getLocaleID(type, *స్థితి_2);
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ubrk_refreshUText(UBreakIterator *bi,
-                       UText          *text,
-                       UErrorCode     *status)
+                       UText          *పాఠ్యం,
+                       UError_సంకేతం     *స్థితి_2)
 {
     BreakIterator *bii = reinterpret_cast<BreakIterator *>(bi);
-    bii->refreshInputText(text, *status);
+    bii->refresh_ఆదానం_పాఠ్యం(పాఠ్యం, *స్థితి_2);
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_getBinaryRules(UBreakIterator *bi,
-                    uint8_t *       binaryRules, int32_t rulesCapacity,
-                    UErrorCode *    status)
+ubrk_get_ద్విమాన_నియమాలు(UBreakIterator *bi,
+                    uint8_t *       ద్విమాన_నియమాలు, int32_t నియమాలు_సామర్థ్యం,
+                    UError_సంకేతం *    స్థితి_2)
 {
-    if (U_FAILURE(*status)) {
-        return 0;
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి 0;
     }
-    if ((binaryRules == nullptr && rulesCapacity > 0) || rulesCapacity < 0) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ ((ద్విమాన_నియమాలు == శూన్యసూచిక && నియమాలు_సామర్థ్యం > 0) || నియమాలు_సామర్థ్యం < 0) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    RuleBasedBreakIterator* rbbi;
-    if ((rbbi = dynamic_cast<RuleBasedBreakIterator*>(reinterpret_cast<BreakIterator*>(bi))) == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    నియమం_Based_Break_Iterator* rbbi;
+    ఒకవేళ ((rbbi = dynamic_cast<నియమం_Based_Break_Iterator*>(reinterpret_cast<BreakIterator*>(bi))) == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    uint32_t rulesLength;
-    const uint8_t * returnedRules = rbbi->getBinaryRules(rulesLength);
-    if (rulesLength > INT32_MAX) {
-        *status = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    uint32_t నియమాలు_నిడివి;
+    స్థిరరాశి uint8_t * returned_నియమాలు = rbbi->get_ద్విమాన_నియమాలు(నియమాలు_నిడివి);
+    ఒకవేళ (నియమాలు_నిడివి > INT32_MAX) {
+        *స్థితి_2 = U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
-    if (binaryRules != nullptr) { // if not preflighting
+    ఒకవేళ (ద్విమాన_నియమాలు != శూన్యసూచిక) { // if not preflighting
         // Here we know rulesLength <= INT32_MAX and rulesCapacity >= 0, can cast safely
-        if ((int32_t)rulesLength > rulesCapacity) {
-            *status = U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            uprv_memcpy(binaryRules, returnedRules, rulesLength);
+        ఒకవేళ ((int32_t)నియమాలు_నిడివి > నియమాలు_సామర్థ్యం) {
+            *స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+        } లేకపోతే {
+            uprv_memcpy(ద్విమాన_నియమాలు, returned_నియమాలు, నియమాలు_నిడివి);
         }
     }
-    return (int32_t)rulesLength;
+    తిరిగి (int32_t)నియమాలు_నిడివి;
 }
 
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_BREAK_ITERATION */

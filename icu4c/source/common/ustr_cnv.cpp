@@ -18,89 +18,89 @@
 *   Character conversion functions moved here from ustring.c
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "umutex.h"
-#include "ustr_cnv.h"
-#include "ucnv_bld.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "ustr_cnv.h"
+#అన్తర్భావ "ucnv_bld.h"
 
 /* mutexed access to a shared default converter ----------------------------- */
 
-static UConverter *gDefaultConverter = nullptr;
+స్థిర UConverter *gDefaultConverter = శూన్యసూచిక;
 
 U_CAPI UConverter* U_EXPORT2
-u_getDefaultConverter(UErrorCode *status)
+u_getDefaultConverter(UError_సంకేతం *స్థితి_2)
 {
-    UConverter *converter = nullptr;
+    UConverter *converter = శూన్యసూచిక;
     
-    if (gDefaultConverter != nullptr) {
-        icu::umtx_lock(nullptr);
+    ఒకవేళ (gDefaultConverter != శూన్యసూచిక) {
+        icu::umtx_తాళం(శూన్యసూచిక);
         
         /* need to check to make sure it wasn't taken out from under us */
-        if (gDefaultConverter != nullptr) {
+        ఒకవేళ (gDefaultConverter != శూన్యసూచిక) {
             converter = gDefaultConverter;
-            gDefaultConverter = nullptr;
+            gDefaultConverter = శూన్యసూచిక;
         }
-        icu::umtx_unlock(nullptr);
+        icu::umtx_unlock(శూన్యసూచిక);
     }
 
     /* if the cache was empty, create a converter */
-    if(converter == nullptr) {
-        converter = ucnv_open(nullptr, status);
-        if(U_FAILURE(*status)) {
+    ఒకవేళ(converter == శూన్యసూచిక) {
+        converter = ucnv_open(శూన్యసూచిక, స్థితి_2);
+        ఒకవేళ(U_FAILURE(*స్థితి_2)) {
             ucnv_close(converter);
-            converter = nullptr;
+            converter = శూన్యసూచిక;
         }
     }
 
-    return converter;
+    తిరిగి converter;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 u_releaseDefaultConverter(UConverter *converter)
 {
-    if(gDefaultConverter == nullptr) {
-        if (converter != nullptr) {
+    ఒకవేళ(gDefaultConverter == శూన్యసూచిక) {
+        ఒకవేళ (converter != శూన్యసూచిక) {
             ucnv_reset(converter);
         }
         ucnv_enableCleanup();
-        icu::umtx_lock(nullptr);
-        if(gDefaultConverter == nullptr) {
+        icu::umtx_తాళం(శూన్యసూచిక);
+        ఒకవేళ(gDefaultConverter == శూన్యసూచిక) {
             gDefaultConverter = converter;
-            converter = nullptr;
+            converter = శూన్యసూచిక;
         }
-        icu::umtx_unlock(nullptr);
+        icu::umtx_unlock(శూన్యసూచిక);
     }
 
-    if(converter != nullptr) {
+    ఒకవేళ(converter != శూన్యసూచిక) {
         ucnv_close(converter);
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 u_flushDefaultConverter()
 {
-    UConverter *converter = nullptr;
+    UConverter *converter = శూన్యసూచిక;
     
-    if (gDefaultConverter != nullptr) {
-        icu::umtx_lock(nullptr);
+    ఒకవేళ (gDefaultConverter != శూన్యసూచిక) {
+        icu::umtx_తాళం(శూన్యసూచిక);
         
         /* need to check to make sure it wasn't taken out from under us */
-        if (gDefaultConverter != nullptr) {
+        ఒకవేళ (gDefaultConverter != శూన్యసూచిక) {
             converter = gDefaultConverter;
-            gDefaultConverter = nullptr;
+            gDefaultConverter = శూన్యసూచిక;
         }
-        icu::umtx_unlock(nullptr);
+        icu::umtx_unlock(శూన్యసూచిక);
     }
 
     /* if the cache was populated, flush it */
-    if(converter != nullptr) {
+    ఒకవేళ(converter != శూన్యసూచిక) {
          ucnv_close(converter);
     }
 }
@@ -109,130 +109,130 @@ u_flushDefaultConverter()
 /* conversions between char* and char16_t* ------------------------------------- */
 
 /* maximum string length for u_uastrcpy() and u_austrcpy() implementations */
-#define MAX_STRLEN 0x0FFFFFFF
+#నిర్వచించు MAX_STRLEN 0x0FFFFFFF
 
 /*
  returns the minimum of (the length of the null-terminated string) and n.
 */
-static int32_t u_astrnlen(const char *s1, int32_t n)
+స్థిర int32_t u_astrnlen(స్థిరరాశి అక్షరం *s1, int32_t n)
 {
     int32_t len = 0;
 
-    if (s1)
+    ఒకవేళ (s1)
     {
-        while (n-- && *(s1++))
+        అయితే (n-- && *(s1++))
         {
             len++;
         }
     }
-    return len;
+    తిరిగి len;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2, int32_t n)
+u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, స్థిరరాశి అక్షరం* s2, int32_t n)
 {
-  char16_t *target = ucs1;
-  UErrorCode err = U_ZERO_ERROR;
+  char16_t *లక్ష్యం = ucs1;
+  UError_సంకేతం err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  ఒకవేళ(U_SUCCESS(err) && cnv != శూన్యసూచిక) {
     ucnv_reset(cnv);
-    ucnv_toUnicode(cnv,
-                   &target,
+    ucnv_గమ్యం_Unicode(cnv,
+                   &లక్ష్యం,
                    ucs1+n,
                    &s2,
                    s2+u_astrnlen(s2, n),
-                   nullptr,
-                   true,
+                   శూన్యసూచిక,
+                   నిజం,
                    &err);
     ucnv_reset(cnv); /* be good citizens */
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
+    ఒకవేళ(U_FAILURE(err) && (err != U_బఫరు_అధికప్రవాహం_ERROR) ) {
       *ucs1 = 0; /* failure */
     }
-    if(target < (ucs1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
-      *target = 0;  /* terminate */
+    ఒకవేళ(లక్ష్యం < (ucs1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
+      *లక్ష్యం = 0;  /* terminate */
     }
-  } else {
+  } లేకపోతే {
     *ucs1 = 0;
   }
-  return ucs1;
+  తిరిగి ucs1;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2)
+u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, స్థిరరాశి అక్షరం* s2)
 {
-  UErrorCode err = U_ZERO_ERROR;
+  UError_సంకేతం err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
-    ucnv_toUChars(cnv,
+  ఒకవేళ(U_SUCCESS(err) && cnv != శూన్యసూచిక) {
+    ucnv_గమ్యం_UChars(cnv,
                     ucs1,
                     MAX_STRLEN,
                     s2,
                     (int32_t)uprv_strlen(s2),
                     &err);
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err)) {
+    ఒకవేళ(U_FAILURE(err)) {
       *ucs1 = 0;
     }
-  } else {
+  } లేకపోతే {
     *ucs1 = 0;
   }
-  return ucs1;
+  తిరిగి ucs1;
 }
 
 /*
  returns the minimum of (the length of the null-terminated string) and n.
 */
-static int32_t u_ustrnlen(const char16_t *ucs1, int32_t n)
+స్థిర int32_t u_ustrnlen(స్థిరరాశి char16_t *ucs1, int32_t n)
 {
     int32_t len = 0;
 
-    if (ucs1)
+    ఒకవేళ (ucs1)
     {
-        while (n-- && *(ucs1++))
+        అయితే (n-- && *(ucs1++))
         {
             len++;
         }
     }
-    return len;
+    తిరిగి len;
 }
 
-U_CAPI char* U_EXPORT2
-u_austrncpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2, int32_t n)
+U_CAPI అక్షరం* U_EXPORT2
+u_austrncpy(అక్షరం* s1 U_LIFETIME_BOUND, స్థిరరాశి char16_t* ucs2, int32_t n)
 {
-  char *target = s1;
-  UErrorCode err = U_ZERO_ERROR;
+  అక్షరం *లక్ష్యం = s1;
+  UError_సంకేతం err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  ఒకవేళ(U_SUCCESS(err) && cnv != శూన్యసూచిక) {
     ucnv_reset(cnv);
     ucnv_fromUnicode(cnv,
-                  &target,
+                  &లక్ష్యం,
                   s1+n,
                   &ucs2,
                   ucs2+u_ustrnlen(ucs2, n),
-                  nullptr,
-                  true,
+                  శూన్యసూచిక,
+                  నిజం,
                   &err);
     ucnv_reset(cnv); /* be good citizens */
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
+    ఒకవేళ(U_FAILURE(err) && (err != U_బఫరు_అధికప్రవాహం_ERROR) ) {
       *s1 = 0; /* failure */
     }
-    if(target < (s1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
-      *target = 0;  /* terminate */
+    ఒకవేళ(లక్ష్యం < (s1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
+      *లక్ష్యం = 0;  /* terminate */
     }
-  } else {
+  } లేకపోతే {
     *s1 = 0;
   }
-  return s1;
+  తిరిగి s1;
 }
 
-U_CAPI char* U_EXPORT2
-u_austrcpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2)
+U_CAPI అక్షరం* U_EXPORT2
+u_austrcpy(అక్షరం* s1 U_LIFETIME_BOUND, స్థిరరాశి char16_t* ucs2)
 {
-  UErrorCode err = U_ZERO_ERROR;
+  UError_సంకేతం err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  ఒకవేళ(U_SUCCESS(err) && cnv != శూన్యసూచిక) {
     int32_t len = ucnv_fromUChars(cnv,
                   s1,
                   MAX_STRLEN,
@@ -241,10 +241,10 @@ u_austrcpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2)
                   &err);
     u_releaseDefaultConverter(cnv);
     s1[len] = 0;
-  } else {
+  } లేకపోతే {
     *s1 = 0;
   }
-  return s1;
+  తిరిగి s1;
 }
 
-#endif
+#అయితే_ముగింపు

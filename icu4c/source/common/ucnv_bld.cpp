@@ -21,128 +21,128 @@
  *   06/29/2000  helena      Major rewrite of the callback interface.
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "unicode/ucnv.h"
-#include "unicode/uloc.h"
-#include "mutex.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "utracimp.h"
-#include "ucnv_io.h"
-#include "ucnv_bld.h"
-#include "ucnvmbcs.h"
-#include "ucnv_ext.h"
-#include "ucnv_cnv.h"
-#include "ucnv_imp.h"
-#include "uhash.h"
-#include "umutex.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ucln_cmn.h"
-#include "ustr_cnv.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/uloc.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "utracimp.h"
+#అన్తర్భావ "ucnv_io.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnvmbcs.h"
+#అన్తర్భావ "ucnv_ext.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "ucnv_imp.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "ustr_cnv.h"
 
 
-#if 0
-#include <stdio.h>
-extern void UCNV_DEBUG_LOG(char *what, char *who, void *p, int l);
-#define UCNV_DEBUG_LOG(x,y,z) UCNV_DEBUG_LOG(x,y,z,__LINE__)
-#else
+#ఒకవేళ 0
+#అన్తర్భావ <stdio.h>
+బాహ్య శూన్య UCNV_DEBUG_LOG(అక్షరం *what, అక్షరం *who, శూన్య *p, పూర్ణాంకం l);
+#నిర్వచించు UCNV_DEBUG_LOG(x,y,z) UCNV_DEBUG_LOG(x,y,z,__LINE__)
+#లేకపోతే
 # define UCNV_DEBUG_LOG(x,y,z)
-#endif
+#అయితే_ముగింపు
 
-static const UConverterSharedData * const
-converterData[UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES]={
-    nullptr, nullptr,
+స్థిర స్థిరరాశి UConverter_Shared_దత్తాంశం * స్థిరరాశి
+converter_దత్తాంశం[UCNV_సంఖ్య_యొక్క_SUPPORTED_CONVERTER_TYPES]={
+    శూన్యసూచిక, శూన్యసూచిక,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
-    nullptr,
-#else
+#ఒకవేళ UCONFIG_NO_LEGACY_CONVERSION
+    శూన్యసూచిక,
+#లేకపోతే
     &_MBCSData,
-#endif
+#అయితే_ముగింపు
 
-    &_Latin1Data,
-    &_UTF8Data, &_UTF16BEData, &_UTF16LEData,
-#if UCONFIG_ONLY_HTML_CONVERSION
-    nullptr, nullptr,
-#else
+    &Latin1_దత్తాంశం,
+    &UTF8_దత్తాంశం, &_UTF16BEData, &_UTF16LEData,
+#ఒకవేళ UCONFIG_ONLY_HTML_CONVERSION
+    శూన్యసూచిక, శూన్యసూచిక,
+#లేకపోతే
     &_UTF32BEData, &_UTF32LEData,
-#endif
-    nullptr,
+#అయితే_ముగింపు
+    శూన్యసూచిక,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
-    nullptr,
-#else
-    &_ISO2022Data,
-#endif
+#ఒకవేళ UCONFIG_NO_LEGACY_CONVERSION
+    శూన్యసూచిక,
+#లేకపోతే
+    &ISO2022_దత్తాంశం,
+#అయితే_ముగింపు
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-    nullptr,
-#else
+#ఒకవేళ UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+    శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక,
+    శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక,
+    శూన్యసూచిక,
+#లేకపోతే
     &_LMBCSData1,&_LMBCSData2, &_LMBCSData3, &_LMBCSData4, &_LMBCSData5, &_LMBCSData6,
     &_LMBCSData8,&_LMBCSData11,&_LMBCSData16,&_LMBCSData17,&_LMBCSData18,&_LMBCSData19,
     &_HZData,
-#endif
+#అయితే_ముగింపు
 
-#if UCONFIG_ONLY_HTML_CONVERSION
-    nullptr,
-#else
+#ఒకవేళ UCONFIG_ONLY_HTML_CONVERSION
+    శూన్యసూచిక,
+#లేకపోతే
     &_SCSUData,
-#endif
+#అయితే_ముగింపు
 
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
-    nullptr,
-#else
+#ఒకవేళ UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+    శూన్యసూచిక,
+#లేకపోతే
     &_ISCIIData,
-#endif
+#అయితే_ముగింపు
 
     &_ASCIIData,
-#if UCONFIG_ONLY_HTML_CONVERSION
-    nullptr, nullptr, &_UTF16Data, nullptr, nullptr, nullptr,
-#else
-    &_UTF7Data, &_Bocu1Data, &_UTF16Data, &_UTF32Data, &_CESU8Data, &_IMAPData,
-#endif
+#ఒకవేళ UCONFIG_ONLY_HTML_CONVERSION
+    శూన్యసూచిక, శూన్యసూచిక, &UTF16_దత్తాంశం, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక,
+#లేకపోతే
+    &UTF7_దత్తాంశం, &Bocu1_దత్తాంశం, &UTF16_దత్తాంశం, &UTF32_దత్తాంశం, &CESU8_దత్తాంశం, &_IMAPData,
+#అయితే_ముగింపు
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
-    nullptr,
-#else
-    &_CompoundTextData
-#endif
+#ఒకవేళ UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+    శూన్యసూచిక,
+#లేకపోతే
+    &Compound_పాఠ్యం_దత్తాంశం
+#అయితే_ముగింపు
 };
 
 /* Please keep this in binary sorted order for getAlgorithmicTypeFromName.
    Also the name should be in lower case and all spaces, dashes and underscores
    removed
 */
-static struct {
-  const char *name;
-  const UConverterType type;
-} const cnvNameType[] = {
-#if !UCONFIG_ONLY_HTML_CONVERSION
+స్థిర నిర్మాణం {
+  స్థిరరాశి అక్షరం *name;
+  స్థిరరాశి UConverterType type;
+} స్థిరరాశి cnvNameType[] = {
+#ఒకవేళ !UCONFIG_ONLY_HTML_CONVERSION
   { "bocu1", UCNV_BOCU1 },
   { "cesu8", UCNV_CESU8 },
-#endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#అయితే_ముగింపు
+#ఒకవేళ !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "hz",UCNV_HZ },
-#endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#అయితే_ముగింపు
+#ఒకవేళ !UCONFIG_ONLY_HTML_CONVERSION
   { "imapmailboxname", UCNV_IMAP_MAILBOX },
-#endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#అయితే_ముగింపు
+#ఒకవేళ !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "iscii", UCNV_ISCII },
-#endif
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#అయితే_ముగింపు
+#ఒకవేళ !UCONFIG_NO_LEGACY_CONVERSION
   { "iso2022", UCNV_ISO_2022 },
-#endif
+#అయితే_ముగింపు
   { "iso88591", UCNV_LATIN_1 },
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ఒకవేళ !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "lmbcs1", UCNV_LMBCS_1 },
   { "lmbcs11",UCNV_LMBCS_11 },
   { "lmbcs16",UCNV_LMBCS_16 },
@@ -155,58 +155,58 @@ static struct {
   { "lmbcs5", UCNV_LMBCS_5 },
   { "lmbcs6", UCNV_LMBCS_6 },
   { "lmbcs8", UCNV_LMBCS_8 },
-#endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#అయితే_ముగింపు
+#ఒకవేళ !UCONFIG_ONLY_HTML_CONVERSION
   { "scsu", UCNV_SCSU },
-#endif
+#అయితే_ముగింపు
   { "usascii", UCNV_US_ASCII },
   { "utf16", UCNV_UTF16 },
   { "utf16be", UCNV_UTF16_BigEndian },
   { "utf16le", UCNV_UTF16_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#ఒకవేళ U_IS_BIG_ENDIAN
   { "utf16oppositeendian", UCNV_UTF16_LittleEndian },
   { "utf16platformendian", UCNV_UTF16_BigEndian },
-#else
+#లేకపోతే
   { "utf16oppositeendian", UCNV_UTF16_BigEndian},
   { "utf16platformendian", UCNV_UTF16_LittleEndian },
-#endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#అయితే_ముగింపు
+#ఒకవేళ !UCONFIG_ONLY_HTML_CONVERSION
   { "utf32", UCNV_UTF32 },
   { "utf32be", UCNV_UTF32_BigEndian },
   { "utf32le", UCNV_UTF32_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#ఒకవేళ U_IS_BIG_ENDIAN
   { "utf32oppositeendian", UCNV_UTF32_LittleEndian },
   { "utf32platformendian", UCNV_UTF32_BigEndian },
-#else
+#లేకపోతే
   { "utf32oppositeendian", UCNV_UTF32_BigEndian },
   { "utf32platformendian", UCNV_UTF32_LittleEndian },
-#endif
-#endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#అయితే_ముగింపు
+#అయితే_ముగింపు
+#ఒకవేళ !UCONFIG_ONLY_HTML_CONVERSION
   { "utf7", UCNV_UTF7 },
-#endif
+#అయితే_ముగింపు
   { "utf8", UCNV_UTF8 },
-#if !UCONFIG_ONLY_HTML_CONVERSION
-  { "x11compoundtext", UCNV_COMPOUND_TEXT}
-#endif
+#ఒకవేళ !UCONFIG_ONLY_HTML_CONVERSION
+  { "x11compoundtext", UCNV_COMPOUND_పాఠ్యం}
+#అయితే_ముగింపు
 };
 
 
 /*initializes some global variables */
-static UHashtable *SHARED_DATA_HASHTABLE = nullptr;
-static icu::UMutex cnvCacheMutex;
+స్థిర UHashtable *SHARED_దత్తాంశం_HASHTABLE = శూన్యసూచిక;
+స్థిర icu::UMutex cnvCacheMutex;
 /*  Note:  the global mutex is used for      */
 /*         reference count updates.          */
 
-static const char **gAvailableConverters = nullptr;
-static uint16_t gAvailableConverterCount = 0;
-static icu::UInitOnce gAvailableConvertersInitOnce {};
+స్థిర స్థిరరాశి అక్షరం **g_అందుబాటు_Converters = శూన్యసూచిక;
+స్థిర uint16_t g_అందుబాటు_Converter_లెక్క = 0;
+స్థిర icu::UInitOnce g_అందుబాటు_Converters_Init_Once {};
 
-#if !U_CHARSET_IS_UTF8
+#ఒకవేళ !U_CHARSET_IS_UTF8
 
 /* This contains the resolved converter name. So no further alias lookup is needed again. */
-static char gDefaultConverterNameBuffer[UCNV_MAX_CONVERTER_NAME_LENGTH + 1]; /* +1 for nullptr */
-static const char *gDefaultConverterName = nullptr;
+స్థిర అక్షరం g_Default_Converter_Name_బఫరు[UCNV_MAX_CONVERTER_NAME_నిడివి + 1]; /* +1 for nullptr */
+స్థిర స్థిరరాశి అక్షరం *gDefaultConverterName = శూన్యసూచిక;
 
 /*
 If the default converter is an algorithmic converter, this is the cached value.
@@ -214,156 +214,156 @@ We don't cache a full UConverter and clone it because ucnv_clone doesn't have
 less overhead than an algorithmic open. We don't cache non-algorithmic converters
 because ucnv_flushCache must be able to unload the default converter and its table.
 */
-static const UConverterSharedData *gDefaultAlgorithmicSharedData = nullptr;
+స్థిర స్థిరరాశి UConverter_Shared_దత్తాంశం *g_Default_Algorithmic_Shared_దత్తాంశం = శూన్యసూచిక;
 
 /* Does gDefaultConverterName have a converter option and require extra parsing? */
-static UBool gDefaultConverterContainsOption;
+స్థిర UBool g_Default_Converter_కలిగియుంది_Option;
 
-#endif  /* !U_CHARSET_IS_UTF8 */
+#అయితే_ముగింపు  /* !U_CHARSET_IS_UTF8 */
 
-static const char DATA_TYPE[] = "cnv";
+స్థిర స్థిరరాశి అక్షరం దత్తాంశం_TYPE[] = "cnv";
 
 /* ucnv_flushAvailableConverterCache. This is only called from ucnv_cleanup().
  *                       If it is ever to be called from elsewhere, synchronization
  *                       will need to be considered.
  */
-static void
-ucnv_flushAvailableConverterCache() {
-    gAvailableConverterCount = 0;
-    if (gAvailableConverters) {
-        uprv_free(const_cast<char**>(gAvailableConverters));
-        gAvailableConverters = nullptr;
+స్థిర శూన్య
+ucnv_flush_అందుబాటు_Converter_Cache() {
+    g_అందుబాటు_Converter_లెక్క = 0;
+    ఒకవేళ (g_అందుబాటు_Converters) {
+        uprv_free(const_cast<అక్షరం**>(g_అందుబాటు_Converters));
+        g_అందుబాటు_Converters = శూన్యసూచిక;
     }
-    gAvailableConvertersInitOnce.reset();
+    g_అందుబాటు_Converters_Init_Once.reset();
 }
 
 /* ucnv_cleanup - delete all storage held by the converter cache, except any  */
 /*                in use by open converters.                                  */
 /*                Not thread safe.                                            */
 /*                Not supported API.                                          */
-static UBool U_CALLCONV ucnv_cleanup() {
+స్థిర UBool U_CALLCONV ucnv_cleanup() {
     ucnv_flushCache();
-    if (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
-        uhash_close(SHARED_DATA_HASHTABLE);
-        SHARED_DATA_HASHTABLE = nullptr;
+    ఒకవేళ (SHARED_దత్తాంశం_HASHTABLE != శూన్యసూచిక && uhash_లెక్క(SHARED_దత్తాంశం_HASHTABLE) == 0) {
+        uhash_close(SHARED_దత్తాంశం_HASHTABLE);
+        SHARED_దత్తాంశం_HASHTABLE = శూన్యసూచిక;
     }
 
     /* Isn't called from flushCache because other threads may have preexisting references to the table. */
-    ucnv_flushAvailableConverterCache();
+    ucnv_flush_అందుబాటు_Converter_Cache();
 
-#if !U_CHARSET_IS_UTF8
-    gDefaultConverterName = nullptr;
-    gDefaultConverterNameBuffer[0] = 0;
-    gDefaultConverterContainsOption = false;
-    gDefaultAlgorithmicSharedData = nullptr;
-#endif
+#ఒకవేళ !U_CHARSET_IS_UTF8
+    gDefaultConverterName = శూన్యసూచిక;
+    g_Default_Converter_Name_బఫరు[0] = 0;
+    g_Default_Converter_కలిగియుంది_Option = అబద్ధం;
+    g_Default_Algorithmic_Shared_దత్తాంశం = శూన్యసూచిక;
+#అయితే_ముగింపు
 
-    return (SHARED_DATA_HASHTABLE == nullptr);
+    తిరిగి (SHARED_దత్తాంశం_HASHTABLE == శూన్యసూచిక);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ucnv_enableCleanup() {
-    ucln_common_registerCleanup(UCLN_COMMON_UCNV, ucnv_cleanup);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_UCNV, ucnv_cleanup);
 }
 
-static UBool U_CALLCONV
-isCnvAcceptable(void * /*context*/,
-                const char * /*type*/, const char * /*name*/,
-                const UDataInfo *pInfo) {
-    return
+స్థిర UBool U_CALLCONV
+isCnvAcceptable(శూన్య * /*context*/,
+                స్థిరరాశి అక్షరం * /*type*/, స్థిరరాశి అక్షరం * /*name*/,
+                స్థిరరాశి UDataInfo *pInfo) {
+    తిరిగి
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
         pInfo->sizeofUChar==U_SIZEOF_UCHAR &&
-        pInfo->dataFormat[0]==0x63 &&   /* dataFormat="cnvt" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x76 &&
-        pInfo->dataFormat[3]==0x74 &&
-        pInfo->formatVersion[0]==6;  /* Everything will be version 6 */
+        pInfo->దత్తాంశం_Format[0]==0x63 &&   /* dataFormat="cnvt" */
+        pInfo->దత్తాంశం_Format[1]==0x6e &&
+        pInfo->దత్తాంశం_Format[2]==0x76 &&
+        pInfo->దత్తాంశం_Format[3]==0x74 &&
+        pInfo->format_సంస్కరణ[0]==6;  /* Everything will be version 6 */
 }
 
 /**
  * Un flatten shared data from a UDATA..
  */
-static UConverterSharedData*
-ucnv_data_unFlattenClone(UConverterLoadArgs *pArgs, UDataMemory *pData, UErrorCode *status)
+స్థిర UConverter_Shared_దత్తాంశం*
+ucnv_దత్తాంశం_un_Flatten_Clone(UConverter_ఎక్కించు_వాదనలు *p_వాదనలు, UData_జ్ఞాపకం *p_దత్తాంశం, UError_సంకేతం *స్థితి_2)
 {
     /* UDataInfo info; -- necessary only if some converters have different formatVersion */
-    const uint8_t* raw = static_cast<const uint8_t*>(udata_getMemory(pData));
-    const UConverterStaticData* source = reinterpret_cast<const UConverterStaticData*>(raw);
-    UConverterSharedData *data;
-    UConverterType type = static_cast<UConverterType>(source->conversionType);
+    స్థిరరాశి uint8_t* raw = static_cast<స్థిరరాశి uint8_t*>(udata_get_జ్ఞాపకం(p_దత్తాంశం));
+    స్థిరరాశి UConverter_Static_దత్తాంశం* ఆధారం = reinterpret_cast<స్థిరరాశి UConverter_Static_దత్తాంశం*>(raw);
+    UConverter_Shared_దత్తాంశం *దత్తాంశం;
+    UConverterType type = static_cast<UConverterType>(ఆధారం->conversionType);
 
-    if(U_FAILURE(*status))
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*స్థితి_2))
+        తిరిగి శూన్యసూచిక;
 
-    if (static_cast<uint16_t>(type) >= UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES ||
-        converterData[type] == nullptr ||
-        !converterData[type]->isReferenceCounted ||
-        converterData[type]->referenceCounter != 1 ||
-        source->structSize != sizeof(UConverterStaticData))
+    ఒకవేళ (static_cast<uint16_t>(type) >= UCNV_సంఖ్య_యొక్క_SUPPORTED_CONVERTER_TYPES ||
+        converter_దత్తాంశం[type] == శూన్యసూచిక ||
+        !converter_దత్తాంశం[type]->isReferenceCounted ||
+        converter_దత్తాంశం[type]->referenceCounter != 1 ||
+        ఆధారం->struct_కొలత != పరిమాణం(UConverter_Static_దత్తాంశం))
     {
-        *status = U_INVALID_TABLE_FORMAT;
-        return nullptr;
+        *స్థితి_2 = U_INVALID_పట్టిక_FORMAT;
+        తిరిగి శూన్యసూచిక;
     }
 
-    data = static_cast<UConverterSharedData*>(uprv_malloc(sizeof(UConverterSharedData)));
-    if(data == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    దత్తాంశం = static_cast<UConverter_Shared_దత్తాంశం*>(uprv_malloc(పరిమాణం(UConverter_Shared_దత్తాంశం)));
+    ఒకవేళ(దత్తాంశం == శూన్యసూచిక) {
+        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
     /* copy initial values from the static structure for this type */
-    uprv_memcpy(data, converterData[type], sizeof(UConverterSharedData));
+    uprv_memcpy(దత్తాంశం, converter_దత్తాంశం[type], పరిమాణం(UConverter_Shared_దత్తాంశం));
 
-    data->staticData = source;
+    దత్తాంశం->static_దత్తాంశం = ఆధారం;
 
-    data->sharedDataCached = false;
+    దత్తాంశం->shared_దత్తాంశం_Cached = అబద్ధం;
 
     /* fill in fields from the loaded data */
-    data->dataMemory = (void*)pData; /* for future use */
+    దత్తాంశం->దత్తాంశం_జ్ఞాపకం = (శూన్య*)p_దత్తాంశం; /* for future use */
 
-    if(data->impl->load != nullptr) {
-        data->impl->load(data, pArgs, raw + source->structSize, status);
-        if(U_FAILURE(*status)) {
-            uprv_free(data);
-            return nullptr;
+    ఒకవేళ(దత్తాంశం->impl->load != శూన్యసూచిక) {
+        దత్తాంశం->impl->load(దత్తాంశం, p_వాదనలు, raw + ఆధారం->struct_కొలత, స్థితి_2);
+        ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+            uprv_free(దత్తాంశం);
+            తిరిగి శూన్యసూచిక;
         }
     }
-    return data;
+    తిరిగి దత్తాంశం;
 }
 
 /*Takes an alias name gets an actual converter file name
  *goes to disk and opens it.
  *allocates the memory and returns a new UConverter object
  */
-static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, UErrorCode * err)
+స్థిర UConverter_Shared_దత్తాంశం *createConverterFromFile(UConverter_ఎక్కించు_వాదనలు *p_వాదనలు, UError_సంకేతం * err)
 {
-    UDataMemory *data;
-    UConverterSharedData *sharedData;
+    UData_జ్ఞాపకం *దత్తాంశం;
+    UConverter_Shared_దత్తాంశం *shared_దత్తాంశం;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_LOAD);
+    UTRACE_నమోదు_OC(UTRACE_UCNV_ఎక్కించు);
 
-    if (U_FAILURE (*err)) {
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+    ఒకవేళ (U_FAILURE (*err)) {
+        UTRACE_EXIT_స్థితి(*err);
+        తిరిగి శూన్యసూచిక;
     }
 
-    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "load converter %s from package %s", pArgs->name, pArgs->pkg);
+    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "load converter %s from package %s", p_వాదనలు->name, p_వాదనలు->pkg);
 
-    data = udata_openChoice(pArgs->pkg, DATA_TYPE, pArgs->name, isCnvAcceptable, nullptr, err);
-    if(U_FAILURE(*err))
+    దత్తాంశం = udata_openChoice(p_వాదనలు->pkg, దత్తాంశం_TYPE, p_వాదనలు->name, isCnvAcceptable, శూన్యసూచిక, err);
+    ఒకవేళ(U_FAILURE(*err))
     {
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        UTRACE_EXIT_స్థితి(*err);
+        తిరిగి శూన్యసూచిక;
     }
 
-    sharedData = ucnv_data_unFlattenClone(pArgs, data, err);
-    if(U_FAILURE(*err))
+    shared_దత్తాంశం = ucnv_దత్తాంశం_un_Flatten_Clone(p_వాదనలు, దత్తాంశం, err);
+    ఒకవేళ(U_FAILURE(*err))
     {
-        udata_close(data);
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        udata_close(దత్తాంశం);
+        UTRACE_EXIT_స్థితి(*err);
+        తిరిగి శూన్యసూచిక;
     }
 
     /*
@@ -373,47 +373,47 @@ static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, 
      * in the first place, or just set the pkg field to "".
      */
 
-    UTRACE_EXIT_PTR_STATUS(sharedData, *err);
-    return sharedData;
+    UTRACE_EXIT_PTR_స్థితి(shared_దత్తాంశం, *err);
+    తిరిగి shared_దత్తాంశం;
 }
 
 /*returns a converter type from a string
  */
-static const UConverterSharedData *
-getAlgorithmicTypeFromName(const char *realName)
+స్థిర స్థిరరాశి UConverter_Shared_దత్తాంశం *
+getAlgorithmicTypeFromName(స్థిరరాశి అక్షరం *realName)
 {
-    uint32_t mid, start, limit;
-    uint32_t lastMid;
-    int result;
-    char strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    uint32_t mid, ప్రారంభం, హద్దు;
+    uint32_t చివరి_Mid;
+    పూర్ణాంకం ఫలితం;
+    అక్షరం strippedName[UCNV_MAX_CONVERTER_NAME_నిడివి];
 
     /* Lower case and remove ignoreable characters. */
     ucnv_io_stripForCompare(strippedName, realName);
 
     /* do a binary search for the alias */
-    start = 0;
-    limit = UPRV_LENGTHOF(cnvNameType);
-    mid = limit;
-    lastMid = UINT32_MAX;
+    ప్రారంభం = 0;
+    హద్దు = UPRV_LENGTHOF(cnvNameType);
+    mid = హద్దు;
+    చివరి_Mid = UINT32_MAX;
 
-    for (;;) {
-        mid = (start + limit) / 2;
-        if (lastMid == mid) {   /* Have we moved? */
-            break;  /* We haven't moved, and it wasn't found. */
+    కొరకు (;;) {
+        mid = (ప్రారంభం + హద్దు) / 2;
+        ఒకవేళ (చివరి_Mid == mid) {   /* Have we moved? */
+            ఆపు;  /* We haven't moved, and it wasn't found. */
         }
-        lastMid = mid;
-        result = uprv_strcmp(strippedName, cnvNameType[mid].name);
+        చివరి_Mid = mid;
+        ఫలితం = uprv_strcmp(strippedName, cnvNameType[mid].name);
 
-        if (result < 0) {
-            limit = mid;
-        } else if (result > 0) {
-            start = mid;
-        } else {
-            return converterData[cnvNameType[mid].type];
+        ఒకవేళ (ఫలితం < 0) {
+            హద్దు = mid;
+        } లేకపోతే ఒకవేళ (ఫలితం > 0) {
+            ప్రారంభం = mid;
+        } లేకపోతే {
+            తిరిగి converter_దత్తాంశం[cnvNameType[mid].type];
         }
     }
 
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 /*
@@ -424,7 +424,7 @@ getAlgorithmicTypeFromName(const char *realName)
 * this should be 4.
 * Larger numbers reduce the number of hash collisions, but use more memory.
 */
-#define UCNV_CACHE_LOAD_FACTOR 2
+#నిర్వచించు UCNV_CACHE_ఎక్కించు_గుణకం 2
 
 /* Puts the shared data in the static hashtable SHARED_DATA_HASHTABLE */
 /*   Will always be called with the cnvCacheMutex already being held   */
@@ -432,22 +432,22 @@ getAlgorithmicTypeFromName(const char *realName)
 /* Stores the shared data in the SHARED_DATA_HASHTABLE
  * @param data The shared data
  */
-static void
-ucnv_shareConverterData(UConverterSharedData * data)
+స్థిర శూన్య
+ucnv_share_Converter_దత్తాంశం(UConverter_Shared_దత్తాంశం * దత్తాంశం)
 {
-    UErrorCode err = U_ZERO_ERROR;
+    UError_సంకేతం err = U_ZERO_ERROR;
     /*Lazy evaluates the Hashtable itself */
     /*void *sanity = nullptr;*/
 
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    ఒకవేళ (SHARED_దత్తాంశం_HASHTABLE == శూన్యసూచిక)
     {
-        SHARED_DATA_HASHTABLE = uhash_openSize(uhash_hashChars, uhash_compareChars, nullptr,
-                            ucnv_io_countKnownConverters(&err)*UCNV_CACHE_LOAD_FACTOR,
+        SHARED_దత్తాంశం_HASHTABLE = uhash_open_కొలత(uhash_hashChars, uhash_compareChars, శూన్యసూచిక,
+                            ucnv_io_లెక్క_తెలిసిన_Converters(&err)*UCNV_CACHE_ఎక్కించు_గుణకం,
                             &err);
         ucnv_enableCleanup();
 
-        if (U_FAILURE(err))
-            return;
+        ఒకవేళ (U_FAILURE(err))
+            తిరిగి;
     }
 
     /* ### check to see if the element is not already there! */
@@ -462,14 +462,14 @@ ucnv_shareConverterData(UConverterSharedData * data)
     */
 
     /* Mark it shared */
-    data->sharedDataCached = true;
+    దత్తాంశం->shared_దత్తాంశం_Cached = నిజం;
 
-    uhash_put(SHARED_DATA_HASHTABLE,
-            (void*) data->staticData->name, /* Okay to cast away const as long as
+    uhash_put(SHARED_దత్తాంశం_HASHTABLE,
+            (శూన్య*) దత్తాంశం->static_దత్తాంశం->name, /* Okay to cast away const as long as
             keyDeleter == nullptr */
-            data,
+            దత్తాంశం,
             &err);
-    UCNV_DEBUG_LOG("put", data->staticData->name,data);
+    UCNV_DEBUG_LOG("put", దత్తాంశం->static_దత్తాంశం->name,దత్తాంశం);
 
 }
 
@@ -479,21 +479,21 @@ ucnv_shareConverterData(UConverterSharedData * data)
  * @param name The name of the shared data
  * @return the shared data from the SHARED_DATA_HASHTABLE
  */
-static UConverterSharedData *
-ucnv_getSharedConverterData(const char *name)
+స్థిర UConverter_Shared_దత్తాంశం *
+ucnv_get_Shared_Converter_దత్తాంశం(స్థిరరాశి అక్షరం *name)
 {
     /*special case when no Table has yet been created we return nullptr */
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    ఒకవేళ (SHARED_దత్తాంశం_HASHTABLE == శూన్యసూచిక)
     {
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
-    else
+    లేకపోతే
     {
-        UConverterSharedData *rc;
+        UConverter_Shared_దత్తాంశం *rc;
 
-        rc = static_cast<UConverterSharedData*>(uhash_get(SHARED_DATA_HASHTABLE, name));
+        rc = static_cast<UConverter_Shared_దత్తాంశం*>(uhash_get(SHARED_దత్తాంశం_HASHTABLE, name));
         UCNV_DEBUG_LOG("get",name,rc);
-        return rc;
+        తిరిగి rc;
     }
 }
 
@@ -508,73 +508,73 @@ ucnv_getSharedConverterData(const char *name)
  * @return if not it frees all the memory stemming from sharedConverterData and
  * returns true, otherwise returns false
  */
-static UBool
-ucnv_deleteSharedConverterData(UConverterSharedData * deadSharedData)
+స్థిర UBool
+ucnv_delete_Shared_Converter_దత్తాంశం(UConverter_Shared_దత్తాంశం * dead_Shared_దత్తాంశం)
 {
-    UTRACE_ENTRY_OC(UTRACE_UCNV_UNLOAD);
-    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "unload converter %s shared data %p", deadSharedData->staticData->name, deadSharedData);
+    UTRACE_నమోదు_OC(UTRACE_UCNV_UNLOAD);
+    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "unload converter %s shared data %p", dead_Shared_దత్తాంశం->static_దత్తాంశం->name, dead_Shared_దత్తాంశం);
 
-    if (deadSharedData->referenceCounter > 0) {
-        UTRACE_EXIT_VALUE((int32_t)false);
-        return false;
+    ఒకవేళ (dead_Shared_దత్తాంశం->referenceCounter > 0) {
+        UTRACE_EXIT_విలువ((int32_t)అబద్ధం);
+        తిరిగి అబద్ధం;
     }
 
-    if (deadSharedData->impl->unload != nullptr) {
-        deadSharedData->impl->unload(deadSharedData);
+    ఒకవేళ (dead_Shared_దత్తాంశం->impl->unload != శూన్యసూచిక) {
+        dead_Shared_దత్తాంశం->impl->unload(dead_Shared_దత్తాంశం);
     }
 
-    if(deadSharedData->dataMemory != nullptr)
+    ఒకవేళ(dead_Shared_దత్తాంశం->దత్తాంశం_జ్ఞాపకం != శూన్యసూచిక)
     {
-        UDataMemory *data = (UDataMemory*)deadSharedData->dataMemory;
-        udata_close(data);
+        UData_జ్ఞాపకం *దత్తాంశం = (UData_జ్ఞాపకం*)dead_Shared_దత్తాంశం->దత్తాంశం_జ్ఞాపకం;
+        udata_close(దత్తాంశం);
     }
 
-    uprv_free(deadSharedData);
+    uprv_free(dead_Shared_దత్తాంశం);
 
-    UTRACE_EXIT_VALUE((int32_t)true);
-    return true;
+    UTRACE_EXIT_విలువ((int32_t)నిజం);
+    తిరిగి నిజం;
 }
 
 /**
  * Load a non-algorithmic converter.
  * If pkg==nullptr, then this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-UConverterSharedData *
-ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
-    UConverterSharedData *mySharedConverterData;
+UConverter_Shared_దత్తాంశం *
+ucnv_ఎక్కించు(UConverter_ఎక్కించు_వాదనలు *p_వాదనలు, UError_సంకేతం *err) {
+    UConverter_Shared_దత్తాంశం *my_Shared_Converter_దత్తాంశం;
 
-    if(err == nullptr || U_FAILURE(*err)) {
-        return nullptr;
+    ఒకవేళ(err == శూన్యసూచిక || U_FAILURE(*err)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(pArgs->pkg != nullptr && *pArgs->pkg != 0) {
+    ఒకవేళ(p_వాదనలు->pkg != శూన్యసూచిక && *p_వాదనలు->pkg != 0) {
         /* application-provided converters are not currently cached */
-        return createConverterFromFile(pArgs, err);
+        తిరిగి createConverterFromFile(p_వాదనలు, err);
     }
 
-    mySharedConverterData = ucnv_getSharedConverterData(pArgs->name);
-    if (mySharedConverterData == nullptr)
+    my_Shared_Converter_దత్తాంశం = ucnv_get_Shared_Converter_దత్తాంశం(p_వాదనలు->name);
+    ఒకవేళ (my_Shared_Converter_దత్తాంశం == శూన్యసూచిక)
     {
         /*Not cached, we need to stream it in from file */
-        mySharedConverterData = createConverterFromFile(pArgs, err);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        my_Shared_Converter_దత్తాంశం = createConverterFromFile(p_వాదనలు, err);
+        ఒకవేళ (U_FAILURE (*err) || (my_Shared_Converter_దత్తాంశం == శూన్యసూచిక))
         {
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
-        else if (!pArgs->onlyTestIsLoadable)
+        లేకపోతే ఒకవేళ (!p_వాదనలు->onlyTestIsLoadable)
         {
             /* share it with other library clients */
-            ucnv_shareConverterData(mySharedConverterData);
+            ucnv_share_Converter_దత్తాంశం(my_Shared_Converter_దత్తాంశం);
         }
     }
-    else
+    లేకపోతే
     {
         /* The data for this converter was already in the cache.            */
         /* Update the reference counter on the shared data: one more client */
-        mySharedConverterData->referenceCounter++;
+        my_Shared_Converter_దత్తాంశం->referenceCounter++;
     }
 
-    return mySharedConverterData;
+    తిరిగి my_Shared_Converter_దత్తాంశం;
 }
 
 /**
@@ -582,35 +582,35 @@ ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
  * It must be sharedData->isReferenceCounted
  * and this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-U_CAPI void
-ucnv_unload(UConverterSharedData *sharedData) {
-    if(sharedData != nullptr) {
-        if (sharedData->referenceCounter > 0) {
-            sharedData->referenceCounter--;
+U_CAPI శూన్య
+ucnv_unload(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం) {
+    ఒకవేళ(shared_దత్తాంశం != శూన్యసూచిక) {
+        ఒకవేళ (shared_దత్తాంశం->referenceCounter > 0) {
+            shared_దత్తాంశం->referenceCounter--;
         }
 
-        if((sharedData->referenceCounter <= 0)&&(sharedData->sharedDataCached == false)) {
-            ucnv_deleteSharedConverterData(sharedData);
+        ఒకవేళ((shared_దత్తాంశం->referenceCounter <= 0)&&(shared_దత్తాంశం->shared_దత్తాంశం_Cached == అబద్ధం)) {
+            ucnv_delete_Shared_Converter_దత్తాంశం(shared_దత్తాంశం);
         }
     }
 }
 
-U_CFUNC void
-ucnv_unloadSharedDataIfReady(UConverterSharedData *sharedData)
+U_CFUNC శూన్య
+ucnv_unload_Shared_దత్తాంశం_If_Ready(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
-        umtx_lock(&cnvCacheMutex);
-        ucnv_unload(sharedData);
+    ఒకవేళ(shared_దత్తాంశం != శూన్యసూచిక && shared_దత్తాంశం->isReferenceCounted) {
+        umtx_తాళం(&cnvCacheMutex);
+        ucnv_unload(shared_దత్తాంశం);
         umtx_unlock(&cnvCacheMutex);
     }
 }
 
-U_CFUNC void
-ucnv_incrementRefCount(UConverterSharedData *sharedData)
+U_CFUNC శూన్య
+ucnv_increment_Ref_లెక్క(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
-        umtx_lock(&cnvCacheMutex);
-        sharedData->referenceCounter++;
+    ఒకవేళ(shared_దత్తాంశం != శూన్యసూచిక && shared_దత్తాంశం->isReferenceCounted) {
+        umtx_తాళం(&cnvCacheMutex);
+        shared_దత్తాంశం->referenceCounter++;
         umtx_unlock(&cnvCacheMutex);
     }
 }
@@ -622,80 +622,80 @@ ucnv_incrementRefCount(UConverterSharedData *sharedData)
  * otherwise the existing values in pPieces remain.
  * *pArgs will be set to the pPieces values.
  */
-static void
-parseConverterOptions(const char *inName,
+స్థిర శూన్య
+parseConverterOptions(స్థిరరాశి అక్షరం *లోపల_Name,
                       UConverterNamePieces *pPieces,
-                      UConverterLoadArgs *pArgs,
-                      UErrorCode *err)
+                      UConverter_ఎక్కించు_వాదనలు *p_వాదనలు,
+                      UError_సంకేతం *err)
 {
-    char *cnvName = pPieces->cnvName;
-    char c;
+    అక్షరం *cnvName = pPieces->cnvName;
+    అక్షరం c;
     int32_t len = 0;
 
-    pArgs->name=inName;
-    pArgs->locale=pPieces->locale;
-    pArgs->options=pPieces->options;
+    p_వాదనలు->name=లోపల_Name;
+    p_వాదనలు->locale=pPieces->locale;
+    p_వాదనలు->options=pPieces->options;
 
     /* copy the converter name itself to cnvName */
-    while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
-        if (++len>=UCNV_MAX_CONVERTER_NAME_LENGTH) {
-            *err = U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
+    అయితే((c=*లోపల_Name)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+        ఒకవేళ (++len>=UCNV_MAX_CONVERTER_NAME_నిడివి) {
+            *err = U_ILLEGAL_వాదం_ERROR;    /* bad name */
             pPieces->cnvName[0]=0;
-            return;
+            తిరిగి;
         }
         *cnvName++=c;
-        inName++;
+        లోపల_Name++;
     }
     *cnvName=0;
-    pArgs->name=pPieces->cnvName;
+    p_వాదనలు->name=pPieces->cnvName;
 
     /* parse options. No more name copying should occur. */
-    while((c=*inName)!=0) {
-        if(c==UCNV_OPTION_SEP_CHAR) {
-            ++inName;
+    అయితే((c=*లోపల_Name)!=0) {
+        ఒకవేళ(c==UCNV_OPTION_SEP_CHAR) {
+            ++లోపల_Name;
         }
 
         /* inName is behind an option separator */
-        if(uprv_strncmp(inName, "locale=", 7)==0) {
+        ఒకవేళ(uprv_strncmp(లోపల_Name, "locale=", 7)==0) {
             /* do not modify locale itself in case we have multiple locale options */
-            char *dest=pPieces->locale;
+            అక్షరం *dest=pPieces->locale;
 
             /* copy the locale option value */
-            inName+=7;
+            లోపల_Name+=7;
             len=0;
-            while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
-                ++inName;
+            అయితే((c=*లోపల_Name)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+                ++లోపల_Name;
 
-                if(++len>=ULOC_FULLNAME_CAPACITY) {
-                    *err=U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
+                ఒకవేళ(++len>=ULOC_FULLNAME_సామర్థ్యం) {
+                    *err=U_ILLEGAL_వాదం_ERROR;    /* bad name */
                     pPieces->locale[0]=0;
-                    return;
+                    తిరిగి;
                 }
 
                 *dest++=c;
             }
             *dest=0;
-        } else if(uprv_strncmp(inName, "version=", 8)==0) {
+        } లేకపోతే ఒకవేళ(uprv_strncmp(లోపల_Name, "version=", 8)==0) {
             /* copy the version option value into bits 3..0 of pPieces->options */
-            inName+=8;
-            c=*inName;
-            if(c==0) {
-                pArgs->options=(pPieces->options&=~UCNV_OPTION_VERSION);
-                return;
-            } else if (static_cast<uint8_t>(c - '0') < 10) {
-                pArgs->options = pPieces->options = (pPieces->options & ~UCNV_OPTION_VERSION) | static_cast<uint32_t>(c - '0');
-                ++inName;
+            లోపల_Name+=8;
+            c=*లోపల_Name;
+            ఒకవేళ(c==0) {
+                p_వాదనలు->options=(pPieces->options&=~UCNV_OPTION_సంస్కరణ);
+                తిరిగి;
+            } లేకపోతే ఒకవేళ (static_cast<uint8_t>(c - '0') < 10) {
+                p_వాదనలు->options = pPieces->options = (pPieces->options & ~UCNV_OPTION_సంస్కరణ) | static_cast<uint32_t>(c - '0');
+                ++లోపల_Name;
             }
-        } else if(uprv_strncmp(inName, "swaplfnl", 8)==0) {
-            inName+=8;
-            pArgs->options=(pPieces->options|=UCNV_OPTION_SWAP_LFNL);
+        } లేకపోతే ఒకవేళ(uprv_strncmp(లోపల_Name, "swaplfnl", 8)==0) {
+            లోపల_Name+=8;
+            p_వాదనలు->options=(pPieces->options|=UCNV_OPTION_మార్పిడి_LFNL);
         /* add processing for new options here with another } else if(uprv_strncmp(inName, "option-name=", XX)==0) { */
-        } else {
+        } లేకపోతే {
             /* ignore any other options until we define some */
-            while(((c = *inName++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
+            అయితే(((c = *లోపల_Name++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
             }
-            if(c==0) {
-                return;
+            ఒకవేళ(c==0) {
+                తిరిగి;
             }
         }
     }
@@ -708,324 +708,324 @@ parseConverterOptions(const char *inName,
  * -Call dataConverter initializer (Data=true, Cached=true)
  * -Call AlgorithmicConverter initializer (Data=false, Cached=true)
  */
-U_CFUNC UConverterSharedData *
-ucnv_loadSharedData(const char *converterName,
+U_CFUNC UConverter_Shared_దత్తాంశం *
+ucnv_ఎక్కించు_Shared_దత్తాంశం(స్థిరరాశి అక్షరం *converterName,
                     UConverterNamePieces *pPieces,
-                    UConverterLoadArgs *pArgs,
-                    UErrorCode * err) {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs;
-    UConverterSharedData *mySharedConverterData = nullptr;
-    UErrorCode internalErrorCode = U_ZERO_ERROR;
-    UBool mayContainOption = true;
-    UBool checkForAlgorithmic = true;
+                    UConverter_ఎక్కించు_వాదనలు *p_వాదనలు,
+                    UError_సంకేతం * err) {
+    UConverterNamePieces దొంతర_Pieces;
+    UConverter_ఎక్కించు_వాదనలు దొంతర_వాదనలు;
+    UConverter_Shared_దత్తాంశం *my_Shared_Converter_దత్తాంశం = శూన్యసూచిక;
+    UError_సంకేతం అంతర్గత_Error_సంకేతం = U_ZERO_ERROR;
+    UBool mayContainOption = నిజం;
+    UBool checkForAlgorithmic = నిజం;
 
-    if (U_FAILURE (*err)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE (*err)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(pPieces == nullptr) {
-        if(pArgs != nullptr) {
+    ఒకవేళ(pPieces == శూన్యసూచిక) {
+        ఒకవేళ(p_వాదనలు != శూన్యసూచిక) {
             /*
              * Bad: We may set pArgs pointers to stackPieces fields
              * which will be invalid after this function returns.
              */
-            *err = U_INTERNAL_PROGRAM_ERROR;
-            return nullptr;
+            *err = U_అంతర్గత_కార్యక్రమం_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
-        pPieces = &stackPieces;
+        pPieces = &దొంతర_Pieces;
     }
-    if(pArgs == nullptr) {
-        uprv_memset(&stackArgs, 0, sizeof(stackArgs));
-        stackArgs.size = (int32_t)sizeof(stackArgs);
-        pArgs = &stackArgs;
+    ఒకవేళ(p_వాదనలు == శూన్యసూచిక) {
+        uprv_memset(&దొంతర_వాదనలు, 0, పరిమాణం(దొంతర_వాదనలు));
+        దొంతర_వాదనలు.size = (int32_t)పరిమాణం(దొంతర_వాదనలు);
+        p_వాదనలు = &దొంతర_వాదనలు;
     }
 
     pPieces->cnvName[0] = 0;
     pPieces->locale[0] = 0;
     pPieces->options = 0;
 
-    pArgs->name = converterName;
-    pArgs->locale = pPieces->locale;
-    pArgs->options = pPieces->options;
+    p_వాదనలు->name = converterName;
+    p_వాదనలు->locale = pPieces->locale;
+    p_వాదనలు->options = pPieces->options;
 
     /* In case "name" is nullptr we want to open the default converter. */
-    if (converterName == nullptr) {
-#if U_CHARSET_IS_UTF8
-        pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
-#else
+    ఒకవేళ (converterName == శూన్యసూచిక) {
+#ఒకవేళ U_CHARSET_IS_UTF8
+        p_వాదనలు->name = "UTF-8";
+        తిరిగి (UConverter_Shared_దత్తాంశం *)converter_దత్తాంశం[UCNV_UTF8];
+#లేకపోతే
         /* Call ucnv_getDefaultName first to query the name from the OS. */
-        pArgs->name = ucnv_getDefaultName();
-        if (pArgs->name == nullptr) {
+        p_వాదనలు->name = ucnv_getDefaultName();
+        ఒకవేళ (p_వాదనలు->name == శూన్యసూచిక) {
             *err = U_MISSING_RESOURCE_ERROR;
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
-        mySharedConverterData = (UConverterSharedData *)gDefaultAlgorithmicSharedData;
-        checkForAlgorithmic = false;
-        mayContainOption = gDefaultConverterContainsOption;
+        my_Shared_Converter_దత్తాంశం = (UConverter_Shared_దత్తాంశం *)g_Default_Algorithmic_Shared_దత్తాంశం;
+        checkForAlgorithmic = అబద్ధం;
+        mayContainOption = g_Default_Converter_కలిగియుంది_Option;
         /* the default converter name is already canonical */
-#endif
+#అయితే_ముగింపు
     }
-    else if(UCNV_FAST_IS_UTF8(converterName)) {
+    లేకపోతే ఒకవేళ(UCNV_FAST_IS_UTF8(converterName)) {
         /* fastpath for UTF-8 */
-        pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
+        p_వాదనలు->name = "UTF-8";
+        తిరిగి (UConverter_Shared_దత్తాంశం *)converter_దత్తాంశం[UCNV_UTF8];
     }
-    else {
+    లేకపోతే {
         /* separate the converter name from the options */
-        parseConverterOptions(converterName, pPieces, pArgs, err);
-        if (U_FAILURE(*err)) {
+        parseConverterOptions(converterName, pPieces, p_వాదనలు, err);
+        ఒకవేళ (U_FAILURE(*err)) {
             /* Very bad name used. */
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
 
         /* get the canonical converter name */
-        pArgs->name = ucnv_io_getConverterName(pArgs->name, &mayContainOption, &internalErrorCode);
-        if (U_FAILURE(internalErrorCode) || pArgs->name == nullptr) {
+        p_వాదనలు->name = ucnv_io_getConverterName(p_వాదనలు->name, &mayContainOption, &అంతర్గత_Error_సంకేతం);
+        ఒకవేళ (U_FAILURE(అంతర్గత_Error_సంకేతం) || p_వాదనలు->name == శూన్యసూచిక) {
             /*
             * set the input name in case the converter was added
             * without updating the alias table, or when there is no alias table
             */
-            pArgs->name = pPieces->cnvName;
-        } else if (internalErrorCode == U_AMBIGUOUS_ALIAS_WARNING) {
+            p_వాదనలు->name = pPieces->cnvName;
+        } లేకపోతే ఒకవేళ (అంతర్గత_Error_సంకేతం == U_AMBIGUOUS_ALIAS_WARNING) {
             *err = U_AMBIGUOUS_ALIAS_WARNING;
         }
     }
 
     /* separate the converter name from the options */
-    if(mayContainOption && pArgs->name != pPieces->cnvName) {
-        parseConverterOptions(pArgs->name, pPieces, pArgs, err);
+    ఒకవేళ(mayContainOption && p_వాదనలు->name != pPieces->cnvName) {
+        parseConverterOptions(p_వాదనలు->name, pPieces, p_వాదనలు, err);
     }
 
     /* get the shared data for an algorithmic converter, if it is one */
-    if (checkForAlgorithmic) {
-        mySharedConverterData = (UConverterSharedData *)getAlgorithmicTypeFromName(pArgs->name);
+    ఒకవేళ (checkForAlgorithmic) {
+        my_Shared_Converter_దత్తాంశం = (UConverter_Shared_దత్తాంశం *)getAlgorithmicTypeFromName(p_వాదనలు->name);
     }
-    if (mySharedConverterData == nullptr)
+    ఒకవేళ (my_Shared_Converter_దత్తాంశం == శూన్యసూచిక)
     {
         /* it is a data-based converter, get its shared data.               */
         /* Hold the cnvCacheMutex through the whole process of checking the */
         /*   converter data cache, and adding new entries to the cache      */
         /*   to prevent other threads from modifying the cache during the   */
         /*   process.                                                       */
-        pArgs->nestedLoads=1;
-        pArgs->pkg=nullptr;
+        p_వాదనలు->nestedLoads=1;
+        p_వాదనలు->pkg=శూన్యసూచిక;
 
-        umtx_lock(&cnvCacheMutex);
-        mySharedConverterData = ucnv_load(pArgs, err);
+        umtx_తాళం(&cnvCacheMutex);
+        my_Shared_Converter_దత్తాంశం = ucnv_ఎక్కించు(p_వాదనలు, err);
         umtx_unlock(&cnvCacheMutex);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        ఒకవేళ (U_FAILURE (*err) || (my_Shared_Converter_దత్తాంశం == శూన్యసూచిక))
         {
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
     }
 
-    return mySharedConverterData;
+    తిరిగి my_Shared_Converter_దత్తాంశం;
 }
 
 U_CAPI UConverter*
 ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
-                     const char* converterName,
-                     UErrorCode* err)
+                     స్థిరరాశి అక్షరం* converterName,
+                     UError_సంకేతం* err)
 {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
-    UConverterSharedData *mySharedConverterData;
+    UConverterNamePieces దొంతర_Pieces;
+    UConverter_ఎక్కించు_వాదనలు దొంతర_వాదనలు=UCNV_ఎక్కించు_వాదనలు_INITIALIZER;
+    UConverter_Shared_దత్తాంశం *my_Shared_Converter_దత్తాంశం;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
+    UTRACE_నమోదు_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    ఒకవేళ(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open converter %s", converterName);
 
-        mySharedConverterData = ucnv_loadSharedData(converterName, &stackPieces, &stackArgs, err);
+        my_Shared_Converter_దత్తాంశం = ucnv_ఎక్కించు_Shared_దత్తాంశం(converterName, &దొంతర_Pieces, &దొంతర_వాదనలు, err);
 
-        myUConverter = ucnv_createConverterFromSharedData(
-            myUConverter, mySharedConverterData,
-            &stackArgs,
+        myUConverter = ucnv_create_Converter_From_Shared_దత్తాంశం(
+            myUConverter, my_Shared_Converter_దత్తాంశం,
+            &దొంతర_వాదనలు,
             err);
 
-        if(U_SUCCESS(*err)) {
-            UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-            return myUConverter;
+        ఒకవేళ(U_SUCCESS(*err)) {
+            UTRACE_EXIT_PTR_స్థితి(myUConverter, *err);
+            తిరిగి myUConverter;
         }
     }
 
     /* exit with error */
-    UTRACE_EXIT_STATUS(*err);
-    return nullptr;
+    UTRACE_EXIT_స్థితి(*err);
+    తిరిగి శూన్యసూచిక;
 }
 
 U_CFUNC UBool
-ucnv_canCreateConverter(const char *converterName, UErrorCode *err) {
+ucnv_canCreateConverter(స్థిరరాశి అక్షరం *converterName, UError_సంకేతం *err) {
     UConverter myUConverter;
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
-    UConverterSharedData *mySharedConverterData;
+    UConverterNamePieces దొంతర_Pieces;
+    UConverter_ఎక్కించు_వాదనలు దొంతర_వాదనలు=UCNV_ఎక్కించు_వాదనలు_INITIALIZER;
+    UConverter_Shared_దత్తాంశం *my_Shared_Converter_దత్తాంశం;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
+    UTRACE_నమోదు_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    ఒకవేళ(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "test if can open converter %s", converterName);
 
-        stackArgs.onlyTestIsLoadable=true;
-        mySharedConverterData = ucnv_loadSharedData(converterName, &stackPieces, &stackArgs, err);
-        ucnv_createConverterFromSharedData(
-            &myUConverter, mySharedConverterData,
-            &stackArgs,
+        దొంతర_వాదనలు.onlyTestIsLoadable=నిజం;
+        my_Shared_Converter_దత్తాంశం = ucnv_ఎక్కించు_Shared_దత్తాంశం(converterName, &దొంతర_Pieces, &దొంతర_వాదనలు, err);
+        ucnv_create_Converter_From_Shared_దత్తాంశం(
+            &myUConverter, my_Shared_Converter_దత్తాంశం,
+            &దొంతర_వాదనలు,
             err);
-        ucnv_unloadSharedDataIfReady(mySharedConverterData);
+        ucnv_unload_Shared_దత్తాంశం_If_Ready(my_Shared_Converter_దత్తాంశం);
     }
 
-    UTRACE_EXIT_STATUS(*err);
-    return U_SUCCESS(*err);
+    UTRACE_EXIT_స్థితి(*err);
+    తిరిగి U_SUCCESS(*err);
 }
 
 UConverter*
 ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
                                 UConverterType type,
-                                const char* locale,
+                                స్థిరరాశి అక్షరం* locale,
                                 uint32_t options,
-                                UErrorCode* err) {
+                                UError_సంకేతం* err) {
     UConverter *cnv;
-    const UConverterSharedData *sharedData;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    స్థిరరాశి UConverter_Shared_దత్తాంశం *shared_దత్తాంశం;
+    UConverter_ఎక్కించు_వాదనలు దొంతర_వాదనలు=UCNV_ఎక్కించు_వాదనలు_INITIALIZER;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_ALGORITHMIC);
+    UTRACE_నమోదు_OC(UTRACE_UCNV_OPEN_ALGORITHMIC);
     UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open algorithmic converter type %d", (int32_t)type);
 
-    if(type<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=type) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+    ఒకవేళ(type<0 || UCNV_సంఖ్య_యొక్క_SUPPORTED_CONVERTER_TYPES<=type) {
+        *err = U_ILLEGAL_వాదం_ERROR;
+        UTRACE_EXIT_స్థితి(U_ILLEGAL_వాదం_ERROR);
+        తిరిగి శూన్యసూచిక;
     }
 
-    sharedData = converterData[type];
-    if(sharedData == nullptr || sharedData->isReferenceCounted) {
+    shared_దత్తాంశం = converter_దత్తాంశం[type];
+    ఒకవేళ(shared_దత్తాంశం == శూన్యసూచిక || shared_దత్తాంశం->isReferenceCounted) {
         /* not a valid type, or not an algorithmic converter */
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+        *err = U_ILLEGAL_వాదం_ERROR;
+        UTRACE_EXIT_స్థితి(U_ILLEGAL_వాదం_ERROR);
+        తిరిగి శూన్యసూచిక;
     }
 
-    stackArgs.name = "";
-    stackArgs.options = options;
-    stackArgs.locale=locale;
-    cnv = ucnv_createConverterFromSharedData(
-            myUConverter, const_cast<UConverterSharedData*>(sharedData),
-            &stackArgs, err);
+    దొంతర_వాదనలు.name = "";
+    దొంతర_వాదనలు.options = options;
+    దొంతర_వాదనలు.locale=locale;
+    cnv = ucnv_create_Converter_From_Shared_దత్తాంశం(
+            myUConverter, const_cast<UConverter_Shared_దత్తాంశం*>(shared_దత్తాంశం),
+            &దొంతర_వాదనలు, err);
 
-    UTRACE_EXIT_PTR_STATUS(cnv, *err);
-    return cnv;
+    UTRACE_EXIT_PTR_స్థితి(cnv, *err);
+    తిరిగి cnv;
 }
 
 U_CFUNC UConverter*
-ucnv_createConverterFromPackage(const char *packageName, const char *converterName, UErrorCode * err)
+ucnv_createConverterFromPackage(స్థిరరాశి అక్షరం *packageName, స్థిరరాశి అక్షరం *converterName, UError_సంకేతం * err)
 {
     UConverter *myUConverter;
-    UConverterSharedData *mySharedConverterData;
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    UConverter_Shared_దత్తాంశం *my_Shared_Converter_దత్తాంశం;
+    UConverterNamePieces దొంతర_Pieces;
+    UConverter_ఎక్కించు_వాదనలు దొంతర_వాదనలు=UCNV_ఎక్కించు_వాదనలు_INITIALIZER;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_PACKAGE);
+    UTRACE_నమోదు_OC(UTRACE_UCNV_OPEN_PACKAGE);
 
-    if(U_FAILURE(*err)) {
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*err)) {
+        UTRACE_EXIT_స్థితి(*err);
+        తిరిగి శూన్యసూచిక;
     }
 
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "open converter %s from package %s", converterName, packageName);
 
     /* first, get the options out of the converterName string */
-    stackPieces.cnvName[0] = 0;
-    stackPieces.locale[0] = 0;
-    stackPieces.options = 0;
-    parseConverterOptions(converterName, &stackPieces, &stackArgs, err);
-    if (U_FAILURE(*err)) {
+    దొంతర_Pieces.cnvName[0] = 0;
+    దొంతర_Pieces.locale[0] = 0;
+    దొంతర_Pieces.options = 0;
+    parseConverterOptions(converterName, &దొంతర_Pieces, &దొంతర_వాదనలు, err);
+    ఒకవేళ (U_FAILURE(*err)) {
         /* Very bad name used. */
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        UTRACE_EXIT_స్థితి(*err);
+        తిరిగి శూన్యసూచిక;
     }
-    stackArgs.nestedLoads=1;
-    stackArgs.pkg=packageName;
+    దొంతర_వాదనలు.nestedLoads=1;
+    దొంతర_వాదనలు.pkg=packageName;
 
     /* open the data, unflatten the shared structure */
-    mySharedConverterData = createConverterFromFile(&stackArgs, err);
+    my_Shared_Converter_దత్తాంశం = createConverterFromFile(&దొంతర_వాదనలు, err);
 
-    if (U_FAILURE(*err)) {
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*err)) {
+        UTRACE_EXIT_స్థితి(*err);
+        తిరిగి శూన్యసూచిక;
     }
 
     /* create the actual converter */
-    myUConverter = ucnv_createConverterFromSharedData(nullptr, mySharedConverterData, &stackArgs, err);
+    myUConverter = ucnv_create_Converter_From_Shared_దత్తాంశం(శూన్యసూచిక, my_Shared_Converter_దత్తాంశం, &దొంతర_వాదనలు, err);
 
-    if (U_FAILURE(*err)) {
+    ఒకవేళ (U_FAILURE(*err)) {
         ucnv_close(myUConverter);
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        UTRACE_EXIT_స్థితి(*err);
+        తిరిగి శూన్యసూచిక;
     }
 
-    UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-    return myUConverter;
+    UTRACE_EXIT_PTR_స్థితి(myUConverter, *err);
+    తిరిగి myUConverter;
 }
 
 
 U_CFUNC UConverter*
-ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
-                                   UConverterSharedData* mySharedConverterData,
-                                   UConverterLoadArgs* pArgs,
-                                   UErrorCode* err)
+ucnv_create_Converter_From_Shared_దత్తాంశం(UConverter* myUConverter U_LIFETIME_BOUND,
+                                   UConverter_Shared_దత్తాంశం* my_Shared_Converter_దత్తాంశం,
+                                   UConverter_ఎక్కించు_వాదనలు* p_వాదనలు,
+                                   UError_సంకేతం* err)
 {
     UBool isCopyLocal;
 
-    if(U_FAILURE(*err)) {
-        ucnv_unloadSharedDataIfReady(mySharedConverterData);
-        return myUConverter;
+    ఒకవేళ(U_FAILURE(*err)) {
+        ucnv_unload_Shared_దత్తాంశం_If_Ready(my_Shared_Converter_దత్తాంశం);
+        తిరిగి myUConverter;
     }
-    if(myUConverter == nullptr)
+    ఒకవేళ(myUConverter == శూన్యసూచిక)
     {
-        myUConverter = (UConverter *) uprv_malloc (sizeof (UConverter));
-        if(myUConverter == nullptr)
+        myUConverter = (UConverter *) uprv_malloc (పరిమాణం (UConverter));
+        ఒకవేళ(myUConverter == శూన్యసూచిక)
         {
-            *err = U_MEMORY_ALLOCATION_ERROR;
-            ucnv_unloadSharedDataIfReady(mySharedConverterData);
-            return nullptr;
+            *err = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            ucnv_unload_Shared_దత్తాంశం_If_Ready(my_Shared_Converter_దత్తాంశం);
+            తిరిగి శూన్యసూచిక;
         }
-        isCopyLocal = false;
-    } else {
-        isCopyLocal = true;
+        isCopyLocal = అబద్ధం;
+    } లేకపోతే {
+        isCopyLocal = నిజం;
     }
 
     /* initialize the converter */
-    uprv_memset(myUConverter, 0, sizeof(UConverter));
+    uprv_memset(myUConverter, 0, పరిమాణం(UConverter));
     myUConverter->isCopyLocal = isCopyLocal;
     /*myUConverter->isExtraLocal = false;*/ /* Set by the memset call */
-    myUConverter->sharedData = mySharedConverterData;
-    myUConverter->options = pArgs->options;
-    if(!pArgs->onlyTestIsLoadable) {
+    myUConverter->shared_దత్తాంశం = my_Shared_Converter_దత్తాంశం;
+    myUConverter->options = p_వాదనలు->options;
+    ఒకవేళ(!p_వాదనలు->onlyTestIsLoadable) {
         myUConverter->preFromUFirstCP = U_SENTINEL;
-        myUConverter->fromCharErrorBehaviour = UCNV_TO_U_DEFAULT_CALLBACK;
+        myUConverter->fromCharErrorBehaviour = UCNV_గమ్యం_U_DEFAULT_CALLBACK;
         myUConverter->fromUCharErrorBehaviour = UCNV_FROM_U_DEFAULT_CALLBACK;
-        myUConverter->toUnicodeStatus = mySharedConverterData->toUnicodeStatus;
-        myUConverter->maxBytesPerUChar = mySharedConverterData->staticData->maxBytesPerChar;
-        myUConverter->subChar1 = mySharedConverterData->staticData->subChar1;
-        myUConverter->subCharLen = mySharedConverterData->staticData->subCharLen;
+        myUConverter->గమ్యం_Unicode_స్థితి = my_Shared_Converter_దత్తాంశం->గమ్యం_Unicode_స్థితి;
+        myUConverter->max_బైట్లు_చొప్పున_UChar = my_Shared_Converter_దత్తాంశం->static_దత్తాంశం->max_బైట్లు_చొప్పున_Char;
+        myUConverter->subChar1 = my_Shared_Converter_దత్తాంశం->static_దత్తాంశం->subChar1;
+        myUConverter->subCharLen = my_Shared_Converter_దత్తాంశం->static_దత్తాంశం->subCharLen;
         myUConverter->subChars = (uint8_t *)myUConverter->subUChars;
-        uprv_memcpy(myUConverter->subChars, mySharedConverterData->staticData->subChar, myUConverter->subCharLen);
-        myUConverter->toUCallbackReason = UCNV_ILLEGAL; /* default reason to invoke (*fromCharErrorBehaviour) */
+        uprv_memcpy(myUConverter->subChars, my_Shared_Converter_దత్తాంశం->static_దత్తాంశం->subChar, myUConverter->subCharLen);
+        myUConverter->గమ్యం_UCallback_Reason = UCNV_ILLEGAL; /* default reason to invoke (*fromCharErrorBehaviour) */
     }
 
-    if(mySharedConverterData->impl->open != nullptr) {
-        mySharedConverterData->impl->open(myUConverter, pArgs, err);
-        if(U_FAILURE(*err) && !pArgs->onlyTestIsLoadable) {
+    ఒకవేళ(my_Shared_Converter_దత్తాంశం->impl->open != శూన్యసూచిక) {
+        my_Shared_Converter_దత్తాంశం->impl->open(myUConverter, p_వాదనలు, err);
+        ఒకవేళ(U_FAILURE(*err) && !p_వాదనలు->onlyTestIsLoadable) {
             /* don't ucnv_close() if onlyTestIsLoadable because not fully initialized */
             ucnv_close(myUConverter);
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
     }
 
-    return myUConverter;
+    తిరిగి myUConverter;
 }
 
 /*Frees all shared immutable objects that aren't referred to (reference count = 0)
@@ -1033,14 +1033,14 @@ ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
 U_CAPI int32_t U_EXPORT2
 ucnv_flushCache ()
 {
-    UConverterSharedData *mySharedData = nullptr;
+    UConverter_Shared_దత్తాంశం *my_Shared_దత్తాంశం = శూన్యసూచిక;
     int32_t pos;
-    int32_t tableDeletedNum = 0;
-    const UHashElement *e;
+    int32_t పట్టిక_Deleted_అంకె = 0;
+    స్థిరరాశి UHashElement *e;
     /*UErrorCode status = U_ILLEGAL_ARGUMENT_ERROR;*/
-    int32_t i, remaining;
+    int32_t i, మిగిలిన;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_FLUSH_CACHE);
+    UTRACE_నమోదు_OC(UTRACE_UCNV_FLUSH_CACHE);
 
     /* Close the default converter without creating a new one so that everything will be flushed. */
     u_flushDefaultConverter();
@@ -1048,9 +1048,9 @@ ucnv_flushCache ()
     /*if shared data hasn't even been lazy evaluated yet
     * return 0
     */
-    if (SHARED_DATA_HASHTABLE == nullptr) {
-        UTRACE_EXIT_VALUE((int32_t)0);
-        return 0;
+    ఒకవేళ (SHARED_దత్తాంశం_HASHTABLE == శూన్యసూచిక) {
+        UTRACE_EXIT_విలువ((int32_t)0);
+        తిరిగి 0;
     }
 
     /*creates an enumeration to iterate through every element in the
@@ -1064,7 +1064,7 @@ ucnv_flushCache ()
     *                   because the sequence of looking up in the cache + incrementing
     *                   is protected by cnvCacheMutex.
     */
-    umtx_lock(&cnvCacheMutex);
+    umtx_తాళం(&cnvCacheMutex);
     /*
      * double loop: A delta/extension-only converter has a pointer to its base table's
      * shared data; the first iteration of the outer loop may see the delta converter
@@ -1072,67 +1072,67 @@ ucnv_flushCache ()
      * converter's reference counter down to 0.
      */
     i = 0;
-    do {
-        remaining = 0;
-        pos = UHASH_FIRST;
-        while ((e = uhash_nextElement (SHARED_DATA_HASHTABLE, &pos)) != nullptr)
+    చేయి {
+        మిగిలిన = 0;
+        pos = UHASH_మొదటి;
+        అయితే ((e = uhash_తదుపరి_Element (SHARED_దత్తాంశం_HASHTABLE, &pos)) != శూన్యసూచిక)
         {
-            mySharedData = (UConverterSharedData *) e->value.pointer;
+            my_Shared_దత్తాంశం = (UConverter_Shared_దత్తాంశం *) e->value.సూచిక;
             /*deletes only if reference counter == 0 */
-            if (mySharedData->referenceCounter == 0)
+            ఒకవేళ (my_Shared_దత్తాంశం->referenceCounter == 0)
             {
-                tableDeletedNum++;
+                పట్టిక_Deleted_అంకె++;
 
-                UCNV_DEBUG_LOG("del",mySharedData->staticData->name,mySharedData);
+                UCNV_DEBUG_LOG("del",my_Shared_దత్తాంశం->static_దత్తాంశం->name,my_Shared_దత్తాంశం);
 
-                uhash_removeElement(SHARED_DATA_HASHTABLE, e);
-                mySharedData->sharedDataCached = false;
-                ucnv_deleteSharedConverterData (mySharedData);
-            } else {
-                ++remaining;
+                uhash_removeElement(SHARED_దత్తాంశం_HASHTABLE, e);
+                my_Shared_దత్తాంశం->shared_దత్తాంశం_Cached = అబద్ధం;
+                ucnv_delete_Shared_Converter_దత్తాంశం (my_Shared_దత్తాంశం);
+            } లేకపోతే {
+                ++మిగిలిన;
             }
         }
-    } while(++i == 1 && remaining > 0);
+    } అయితే(++i == 1 && మిగిలిన > 0);
     umtx_unlock(&cnvCacheMutex);
 
-    UTRACE_DATA1(UTRACE_INFO, "ucnv_flushCache() exits with %d converters remaining", remaining);
+    UTRACE_DATA1(UTRACE_INFO, "ucnv_flushCache() exits with %d converters remaining", మిగిలిన);
 
-    UTRACE_EXIT_VALUE(tableDeletedNum);
-    return tableDeletedNum;
+    UTRACE_EXIT_విలువ(పట్టిక_Deleted_అంకె);
+    తిరిగి పట్టిక_Deleted_అంకె;
 }
 
 /* available converters list --------------------------------------------------- */
 
-static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
-    U_ASSERT(gAvailableConverterCount == 0);
-    U_ASSERT(gAvailableConverters == nullptr);
+స్థిర శూన్య U_CALLCONV init_అందుబాటు_Converters_List(UError_సంకేతం &err_సంకేతం) {
+    U_ASSERT(g_అందుబాటు_Converter_లెక్క == 0);
+    U_ASSERT(g_అందుబాటు_Converters == శూన్యసూచిక);
 
     ucnv_enableCleanup();
-    UEnumeration *allConvEnum = ucnv_openAllNames(&errCode);
-    int32_t allConverterCount = uenum_count(allConvEnum, &errCode);
-    if (U_FAILURE(errCode)) {
-        return;
+    UEnumeration *allConvEnum = ucnv_open_All_పేర్లు(&err_సంకేతం);
+    int32_t all_Converter_లెక్క = uenum_లెక్క(allConvEnum, &err_సంకేతం);
+    ఒకవేళ (U_FAILURE(err_సంకేతం)) {
+        తిరిగి;
     }
 
     /* We can't have more than "*converterTable" converters to open */
-    gAvailableConverters = static_cast<const char**>(uprv_malloc(allConverterCount * sizeof(char*)));
-    if (!gAvailableConverters) {
-        errCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    g_అందుబాటు_Converters = static_cast<స్థిరరాశి అక్షరం**>(uprv_malloc(all_Converter_లెక్క * పరిమాణం(అక్షరం*)));
+    ఒకవేళ (!g_అందుబాటు_Converters) {
+        err_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
 
     /* Open the default converter to make sure that it has first dibs in the hash table. */
-    UErrorCode localStatus = U_ZERO_ERROR;
-    UConverter tempConverter;
-    ucnv_close(ucnv_createConverter(&tempConverter, nullptr, &localStatus));
+    UError_సంకేతం local_స్థితి = U_ZERO_ERROR;
+    UConverter తాత్కాలిక_Converter;
+    ucnv_close(ucnv_createConverter(&తాత్కాలిక_Converter, శూన్యసూచిక, &local_స్థితి));
 
-    gAvailableConverterCount = 0;
+    g_అందుబాటు_Converter_లెక్క = 0;
 
-    for (int32_t idx = 0; idx < allConverterCount; idx++) {
-        localStatus = U_ZERO_ERROR;
-        const char *converterName = uenum_next(allConvEnum, nullptr, &localStatus);
-        if (ucnv_canCreateConverter(converterName, &localStatus)) {
-            gAvailableConverters[gAvailableConverterCount++] = converterName;
+    కొరకు (int32_t idx = 0; idx < all_Converter_లెక్క; idx++) {
+        local_స్థితి = U_ZERO_ERROR;
+        స్థిరరాశి అక్షరం *converterName = uenum_తదుపరి(allConvEnum, శూన్యసూచిక, &local_స్థితి);
+        ఒకవేళ (ucnv_canCreateConverter(converterName, &local_స్థితి)) {
+            g_అందుబాటు_Converters[g_అందుబాటు_Converter_లెక్క++] = converterName;
         }
     }
 
@@ -1140,33 +1140,33 @@ static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
 }
 
 
-static UBool haveAvailableConverterList(UErrorCode *pErrorCode) {
-    umtx_initOnce(gAvailableConvertersInitOnce, &initAvailableConvertersList, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+స్థిర UBool have_అందుబాటు_Converter_List(UError_సంకేతం *p_Error_సంకేతం) {
+    umtx_initOnce(g_అందుబాటు_Converters_Init_Once, &init_అందుబాటు_Converters_List, *p_Error_సంకేతం);
+    తిరిగి U_SUCCESS(*p_Error_సంకేతం);
 }
 
 U_CFUNC uint16_t
-ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        return gAvailableConverterCount;
+ucnv_bld_లెక్క_అందుబాటు_Converters(UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ (have_అందుబాటు_Converter_List(p_Error_సంకేతం)) {
+        తిరిగి g_అందుబాటు_Converter_లెక్క;
     }
-    return 0;
+    తిరిగి 0;
 }
 
-U_CFUNC const char *
-ucnv_bld_getAvailableConverter(uint16_t n, UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        if (n < gAvailableConverterCount) {
-            return gAvailableConverters[n];
+U_CFUNC స్థిరరాశి అక్షరం *
+ucnv_bld_get_అందుబాటు_Converter(uint16_t n, UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ (have_అందుబాటు_Converter_List(p_Error_సంకేతం)) {
+        ఒకవేళ (n < g_అందుబాటు_Converter_లెక్క) {
+            తిరిగి g_అందుబాటు_Converters[n];
         }
-        *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
+        *p_Error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 /* default converter name --------------------------------------------------- */
 
-#if !U_CHARSET_IS_UTF8
+#ఒకవేళ !U_CHARSET_IS_UTF8
 /*
 Copy the canonical converter name.
 ucnv_getDefaultName must be thread safe, which can call this function.
@@ -1179,45 +1179,45 @@ would be the same type of default converter for a successive string.
 Since the name is a returned via ucnv_getDefaultName without copying,
 you shouldn't be modifying or deleting the string from a separate thread.
 */
-static inline void
-internalSetName(const char *name, UErrorCode *status) {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+స్థిర అంతఃవరుస శూన్య
+అంతర్గత_సమితి_Name(స్థిరరాశి అక్షరం *name, UError_సంకేతం *స్థితి_2) {
+    UConverterNamePieces దొంతర_Pieces;
+    UConverter_ఎక్కించు_వాదనలు దొంతర_వాదనలు=UCNV_ఎక్కించు_వాదనలు_INITIALIZER;
     int32_t length=(int32_t)(uprv_strlen(name));
-    UBool containsOption = (UBool)(uprv_strchr(name, UCNV_OPTION_SEP_CHAR) != nullptr);
-    const UConverterSharedData *algorithmicSharedData;
+    UBool కలిగియుంది_Option = (UBool)(uprv_strchr(name, UCNV_OPTION_SEP_CHAR) != శూన్యసూచిక);
+    స్థిరరాశి UConverter_Shared_దత్తాంశం *algorithmic_Shared_దత్తాంశం;
 
-    stackArgs.name = name;
-    if(containsOption) {
-        stackPieces.cnvName[0] = 0;
-        stackPieces.locale[0] = 0;
-        stackPieces.options = 0;
-        parseConverterOptions(name, &stackPieces, &stackArgs, status);
-        if(U_FAILURE(*status)) {
-            return;
+    దొంతర_వాదనలు.name = name;
+    ఒకవేళ(కలిగియుంది_Option) {
+        దొంతర_Pieces.cnvName[0] = 0;
+        దొంతర_Pieces.locale[0] = 0;
+        దొంతర_Pieces.options = 0;
+        parseConverterOptions(name, &దొంతర_Pieces, &దొంతర_వాదనలు, స్థితి_2);
+        ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+            తిరిగి;
         }
     }
-    algorithmicSharedData = getAlgorithmicTypeFromName(stackArgs.name);
+    algorithmic_Shared_దత్తాంశం = getAlgorithmicTypeFromName(దొంతర_వాదనలు.name);
 
-    umtx_lock(&cnvCacheMutex);
+    umtx_తాళం(&cnvCacheMutex);
 
-    gDefaultAlgorithmicSharedData = algorithmicSharedData;
-    gDefaultConverterContainsOption = containsOption;
-    uprv_memcpy(gDefaultConverterNameBuffer, name, length);
-    gDefaultConverterNameBuffer[length]=0;
+    g_Default_Algorithmic_Shared_దత్తాంశం = algorithmic_Shared_దత్తాంశం;
+    g_Default_Converter_కలిగియుంది_Option = కలిగియుంది_Option;
+    uprv_memcpy(g_Default_Converter_Name_బఫరు, name, length);
+    g_Default_Converter_Name_బఫరు[length]=0;
 
     /* gDefaultConverterName MUST be the last global var set by this function.  */
     /*    It is the variable checked in ucnv_getDefaultName() to see if initialization is required. */
     //    But there is nothing here preventing that from being reordered, either by the compiler
     //             or hardware. I'm adding the mutex to ucnv_getDefaultName for now. UMTX_CHECK is not enough.
     //             -- Andy
-    gDefaultConverterName = gDefaultConverterNameBuffer;
+    gDefaultConverterName = g_Default_Converter_Name_బఫరు;
 
     ucnv_enableCleanup();
 
     umtx_unlock(&cnvCacheMutex);
 }
-#endif
+#అయితే_ముగింపు
 
 /*
  * In order to be really thread-safe, the get function would have to take
@@ -1227,86 +1227,86 @@ internalSetName(const char *name, UErrorCode *status) {
  * It assumes that setting a pointer is atomic.
  */
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI స్థిరరాశి అక్షరం*  U_EXPORT2
 ucnv_getDefaultName() {
-#if U_CHARSET_IS_UTF8
-    return "UTF-8";
-#else
+#ఒకవేళ U_CHARSET_IS_UTF8
+    తిరిగి "UTF-8";
+#లేకపోతే
     /* local variable to be thread-safe */
-    const char *name;
+    స్థిరరాశి అక్షరం *name;
 
     /*
     Concurrent calls to ucnv_getDefaultName must be thread safe,
     but ucnv_setDefaultName is not thread safe.
     */
     {
-        icu::Mutex lock(&cnvCacheMutex);
+        icu::Mutex తాళం(&cnvCacheMutex);
         name = gDefaultConverterName;
     }
-    if(name==nullptr) {
-        UErrorCode errorCode = U_ZERO_ERROR;
-        UConverter *cnv = nullptr;
+    ఒకవేళ(name==శూన్యసూచిక) {
+        UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
+        UConverter *cnv = శూన్యసూచిక;
 
         name = uprv_getDefaultCodepage();
 
         /* if the name is there, test it out and get the canonical name with options */
-        if(name != nullptr) {
-            cnv = ucnv_open(name, &errorCode);
-            if(U_SUCCESS(errorCode) && cnv != nullptr) {
-                name = ucnv_getName(cnv, &errorCode);
+        ఒకవేళ(name != శూన్యసూచిక) {
+            cnv = ucnv_open(name, &error_సంకేతం);
+            ఒకవేళ(U_SUCCESS(error_సంకేతం) && cnv != శూన్యసూచిక) {
+                name = ucnv_getName(cnv, &error_సంకేతం);
             }
         }
 
-        if(name == nullptr || name[0] == 0
-            || U_FAILURE(errorCode) || cnv == nullptr
-            || uprv_strlen(name)>=sizeof(gDefaultConverterNameBuffer))
+        ఒకవేళ(name == శూన్యసూచిక || name[0] == 0
+            || U_FAILURE(error_సంకేతం) || cnv == శూన్యసూచిక
+            || uprv_strlen(name)>=పరిమాణం(g_Default_Converter_Name_బఫరు))
         {
             /* Panic time, let's use a fallback. */
-#if (U_CHARSET_FAMILY == U_ASCII_FAMILY)
+#ఒకవేళ (U_CHARSET_FAMILY == U_ASCII_FAMILY)
             name = "US-ASCII";
             /* there is no 'algorithmic' converter for EBCDIC */
-#elif U_PLATFORM == U_PF_OS390
-            name = "ibm-1047_P100-1995" UCNV_SWAP_LFNL_OPTION_STRING;
-#else
+#లేదావేళ U_PLATFORM == U_PF_OS390
+            name = "ibm-1047_P100-1995" UCNV_మార్పిడి_LFNL_OPTION_STRING;
+#లేకపోతే
             name = "ibm-37_P100-1995";
-#endif
+#అయితే_ముగింపు
         }
 
-        internalSetName(name, &errorCode);
+        అంతర్గత_సమితి_Name(name, &error_సంకేతం);
 
         /* The close may make the current name go away. */
         ucnv_close(cnv);
     }
 
-    return name;
-#endif
+    తిరిగి name;
+#అయితే_ముగింపు
 }
 
-#if U_CHARSET_IS_UTF8
-U_CAPI void U_EXPORT2 ucnv_setDefaultName(const char *) {}
-#else
+#ఒకవేళ U_CHARSET_IS_UTF8
+U_CAPI శూన్య U_EXPORT2 ucnv_సమితి_Default_Name(స్థిరరాశి అక్షరం *) {}
+#లేకపోతే
 /*
 This function is not thread safe, and it can't be thread safe.
 See internalSetName or the API reference for details.
 */
-U_CAPI void U_EXPORT2
-ucnv_setDefaultName(const char *converterName) {
-    if(converterName==nullptr) {
+U_CAPI శూన్య U_EXPORT2
+ucnv_సమితి_Default_Name(స్థిరరాశి అక్షరం *converterName) {
+    ఒకవేళ(converterName==శూన్యసూచిక) {
         /* reset to the default codepage */
-        gDefaultConverterName=nullptr;
-    } else {
-        UErrorCode errorCode = U_ZERO_ERROR;
-        UConverter *cnv = nullptr;
-        const char *name = nullptr;
+        gDefaultConverterName=శూన్యసూచిక;
+    } లేకపోతే {
+        UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
+        UConverter *cnv = శూన్యసూచిక;
+        స్థిరరాశి అక్షరం *name = శూన్యసూచిక;
 
         /* if the name is there, test it out and get the canonical name with options */
-        cnv = ucnv_open(converterName, &errorCode);
-        if(U_SUCCESS(errorCode) && cnv != nullptr) {
-            name = ucnv_getName(cnv, &errorCode);
+        cnv = ucnv_open(converterName, &error_సంకేతం);
+        ఒకవేళ(U_SUCCESS(error_సంకేతం) && cnv != శూన్యసూచిక) {
+            name = ucnv_getName(cnv, &error_సంకేతం);
         }
 
-        if(U_SUCCESS(errorCode) && name!=nullptr) {
-            internalSetName(name, &errorCode);
+        ఒకవేళ(U_SUCCESS(error_సంకేతం) && name!=శూన్యసూచిక) {
+            అంతర్గత_సమితి_Name(name, &error_సంకేతం);
         }
         /* else this converter is bad to use. Don't change it to a bad value. */
 
@@ -1317,175 +1317,175 @@ ucnv_setDefaultName(const char *converterName) {
         u_flushDefaultConverter();
     }
 }
-#endif
+#అయితే_ముగింపు
 
 /* data swapping ------------------------------------------------------------ */
 
 /* most of this might belong more properly into ucnvmbcs.c, but that is so large */
 
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#ఒకవేళ !UCONFIG_NO_LEGACY_CONVERSION
 
 U_CAPI int32_t U_EXPORT2
-ucnv_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+ucnv_మార్పిడి(స్థిరరాశి UDataSwapper *ds,
+          స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+          UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి UDataInfo *pInfo;
+    int32_t శీర్షిక_కొలత;
 
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+    స్థిరరాశి uint8_t *లోపల_బైట్లు;
+    uint8_t *బహిర్గతం_బైట్లు;
 
-    uint32_t offset, count, staticDataSize;
+    uint32_t స్థానభ్రంశం, count, static_దత్తాంశం_కొలత;
     int32_t size;
 
-    const UConverterStaticData *inStaticData;
-    UConverterStaticData *outStaticData;
+    స్థిరరాశి UConverter_Static_దత్తాంశం *లోపల_Static_దత్తాంశం;
+    UConverter_Static_దత్తాంశం *బహిర్గతం_Static_దత్తాంశం;
 
-    const _MBCSHeader *inMBCSHeader;
-    _MBCSHeader *outMBCSHeader;
-    _MBCSHeader mbcsHeader;
-    uint32_t mbcsHeaderLength;
-    UBool noFromU=false;
+    స్థిరరాశి _MBCSHeader *లోపల_MBCSHeader;
+    _MBCSHeader *బహిర్గతం_MBCSHeader;
+    _MBCSHeader mbcs_శీర్షిక;
+    uint32_t mbcs_శీర్షిక_నిడివి;
+    UBool noFromU=అబద్ధం;
 
     uint8_t outputType;
 
-    int32_t maxFastUChar, mbcsIndexLength;
+    int32_t maxFastUChar, mbcs_సూచీ_నిడివి;
 
-    const int32_t *inExtIndexes;
-    int32_t extOffset;
+    స్థిరరాశి int32_t *లోపల_Ext_Indexes;
+    int32_t ext_స్థానభ్రంశం;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    శీర్షిక_కొలత=udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x63 &&   /* dataFormat="cnvt" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x76 &&
-        pInfo->dataFormat[3]==0x74 &&
-        pInfo->formatVersion[0]==6 &&
-        pInfo->formatVersion[1]>=2
+    pInfo=(స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+4);
+    ఒకవేళ(!(
+        pInfo->దత్తాంశం_Format[0]==0x63 &&   /* dataFormat="cnvt" */
+        pInfo->దత్తాంశం_Format[1]==0x6e &&
+        pInfo->దత్తాంశం_Format[2]==0x76 &&
+        pInfo->దత్తాంశం_Format[3]==0x74 &&
+        pInfo->format_సంస్కరణ[0]==6 &&
+        pInfo->format_సంస్కరణ[1]>=2
     )) {
         udata_printError(ds, "ucnv_swap(): data format %02x.%02x.%02x.%02x (format version %02x.%02x) is not recognized as an ICU .cnv conversion table\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0], pInfo->formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->దత్తాంశం_Format[0], pInfo->దత్తాంశం_Format[1],
+                         pInfo->దత్తాంశం_Format[2], pInfo->దత్తాంశం_Format[3],
+                         pInfo->format_సంస్కరణ[0], pInfo->format_సంస్కరణ[1]);
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes=(outData == nullptr) ? nullptr : (uint8_t *)outData+headerSize;
+    లోపల_బైట్లు=(స్థిరరాశి uint8_t *)లోపల_దత్తాంశం+శీర్షిక_కొలత;
+    బహిర్గతం_బైట్లు=(బహిర్గతం_దత్తాంశం == శూన్యసూచిక) ? శూన్యసూచిక : (uint8_t *)బహిర్గతం_దత్తాంశం+శీర్షిక_కొలత;
 
     /* read the initial UConverterStaticData structure after the UDataInfo header */
-    inStaticData=(const UConverterStaticData *)inBytes;
-    outStaticData=(UConverterStaticData *)outBytes;
+    లోపల_Static_దత్తాంశం=(స్థిరరాశి UConverter_Static_దత్తాంశం *)లోపల_బైట్లు;
+    బహిర్గతం_Static_దత్తాంశం=(UConverter_Static_దత్తాంశం *)బహిర్గతం_బైట్లు;
 
-    if(length<0) {
-        staticDataSize=ds->readUInt32(inStaticData->structSize);
-    } else {
-        length-=headerSize;
-        if( length<(int32_t)sizeof(UConverterStaticData) ||
-            (uint32_t)length<(staticDataSize=ds->readUInt32(inStaticData->structSize))
+    ఒకవేళ(length<0) {
+        static_దత్తాంశం_కొలత=ds->readUInt32(లోపల_Static_దత్తాంశం->struct_కొలత);
+    } లేకపోతే {
+        length-=శీర్షిక_కొలత;
+        ఒకవేళ( length<(int32_t)పరిమాణం(UConverter_Static_దత్తాంశం) ||
+            (uint32_t)length<(static_దత్తాంశం_కొలత=ds->readUInt32(లోపల_Static_దత్తాంశం->struct_కొలత))
         ) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after header) for an ICU .cnv conversion table\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి 0;
         }
     }
 
-    if(length>=0) {
+    ఒకవేళ(length>=0) {
         /* swap the static data */
-        if(inStaticData!=outStaticData) {
-            uprv_memcpy(outStaticData, inStaticData, staticDataSize);
+        ఒకవేళ(లోపల_Static_దత్తాంశం!=బహిర్గతం_Static_దత్తాంశం) {
+            uprv_memcpy(బహిర్గతం_Static_దత్తాంశం, లోపల_Static_దత్తాంశం, static_దత్తాంశం_కొలత);
         }
 
-        ds->swapArray32(ds, &inStaticData->structSize, 4,
-                           &outStaticData->structSize, pErrorCode);
-        ds->swapArray32(ds, &inStaticData->codepage, 4,
-                           &outStaticData->codepage, pErrorCode);
+        ds->మార్పిడి_Array32(ds, &లోపల_Static_దత్తాంశం->struct_కొలత, 4,
+                           &బహిర్గతం_Static_దత్తాంశం->struct_కొలత, p_Error_సంకేతం);
+        ds->మార్పిడి_Array32(ds, &లోపల_Static_దత్తాంశం->codepage, 4,
+                           &బహిర్గతం_Static_దత్తాంశం->codepage, p_Error_సంకేతం);
 
-        ds->swapInvChars(ds, inStaticData->name, (int32_t)uprv_strlen(inStaticData->name),
-                            outStaticData->name, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        ds->మార్పిడి_Inv_Chars(ds, లోపల_Static_దత్తాంశం->name, (int32_t)uprv_strlen(లోపల_Static_దత్తాంశం->name),
+                            బహిర్గతం_Static_దత్తాంశం->name, p_Error_సంకేతం);
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             udata_printError(ds, "ucnv_swap(): error swapping converter name\n");
-            return 0;
+            తిరిగి 0;
         }
     }
 
-    inBytes+=staticDataSize;
-    if (outBytes != nullptr) outBytes+=staticDataSize;
-    if(length>=0) {
-        length-=(int32_t)staticDataSize;
+    లోపల_బైట్లు+=static_దత్తాంశం_కొలత;
+    ఒకవేళ (బహిర్గతం_బైట్లు != శూన్యసూచిక) బహిర్గతం_బైట్లు+=static_దత్తాంశం_కొలత;
+    ఒకవేళ(length>=0) {
+        length-=(int32_t)static_దత్తాంశం_కొలత;
     }
 
     /* check for supported conversionType values */
-    if(inStaticData->conversionType==UCNV_MBCS) {
+    ఒకవేళ(లోపల_Static_దత్తాంశం->conversionType==UCNV_MBCS) {
         /* swap MBCS data */
-        inMBCSHeader=(const _MBCSHeader *)inBytes;
-        outMBCSHeader=(_MBCSHeader *)outBytes;
+        లోపల_MBCSHeader=(స్థిరరాశి _MBCSHeader *)లోపల_బైట్లు;
+        బహిర్గతం_MBCSHeader=(_MBCSHeader *)బహిర్గతం_బైట్లు;
 
-        if(0<=length && length<(int32_t)sizeof(_MBCSHeader)) {
+        ఒకవేళ(0<=length && length<(int32_t)పరిమాణం(_MBCSHeader)) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                 length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి 0;
         }
-        if(inMBCSHeader->version[0]==4 && inMBCSHeader->version[1]>=1) {
-            mbcsHeaderLength=MBCS_HEADER_V4_LENGTH;
-        } else if(inMBCSHeader->version[0]==5 && inMBCSHeader->version[1]>=3 &&
-                  ((mbcsHeader.options=ds->readUInt32(inMBCSHeader->options))&
-                   MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK)==0
+        ఒకవేళ(లోపల_MBCSHeader->సంస్కరణ[0]==4 && లోపల_MBCSHeader->సంస్కరణ[1]>=1) {
+            mbcs_శీర్షిక_నిడివి=MBCS_శీర్షిక_V4_నిడివి;
+        } లేకపోతే ఒకవేళ(లోపల_MBCSHeader->సంస్కరణ[0]==5 && లోపల_MBCSHeader->సంస్కరణ[1]>=3 &&
+                  ((mbcs_శీర్షిక.options=ds->readUInt32(లోపల_MBCSHeader->options))&
+                   MBCS_OPT_UNKNOWN_INCOMPATIBLE_ముసుగు)==0
         ) {
-            mbcsHeaderLength=mbcsHeader.options&MBCS_OPT_LENGTH_MASK;
-            noFromU = (mbcsHeader.options & MBCS_OPT_NO_FROM_U) != 0;
-        } else {
+            mbcs_శీర్షిక_నిడివి=mbcs_శీర్షిక.options&MBCS_OPT_నిడివి_ముసుగు;
+            noFromU = (mbcs_శీర్షిక.options & MBCS_OPT_NO_FROM_U) != 0;
+        } లేకపోతే {
             udata_printError(ds, "ucnv_swap(): unsupported _MBCSHeader.version %d.%d\n",
-                             inMBCSHeader->version[0], inMBCSHeader->version[1]);
-            *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+                             లోపల_MBCSHeader->సంస్కరణ[0], లోపల_MBCSHeader->సంస్కరణ[1]);
+            *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+            తిరిగి 0;
         }
 
-        uprv_memcpy(mbcsHeader.version, inMBCSHeader->version, 4);
-        mbcsHeader.countStates=         ds->readUInt32(inMBCSHeader->countStates);
-        mbcsHeader.countToUFallbacks=   ds->readUInt32(inMBCSHeader->countToUFallbacks);
-        mbcsHeader.offsetToUCodeUnits=  ds->readUInt32(inMBCSHeader->offsetToUCodeUnits);
-        mbcsHeader.offsetFromUTable=    ds->readUInt32(inMBCSHeader->offsetFromUTable);
-        mbcsHeader.offsetFromUBytes=    ds->readUInt32(inMBCSHeader->offsetFromUBytes);
-        mbcsHeader.flags=               ds->readUInt32(inMBCSHeader->flags);
-        mbcsHeader.fromUBytesLength=    ds->readUInt32(inMBCSHeader->fromUBytesLength);
+        uprv_memcpy(mbcs_శీర్షిక.సంస్కరణ, లోపల_MBCSHeader->సంస్కరణ, 4);
+        mbcs_శీర్షిక.లెక్క_స్థితులు=         ds->readUInt32(లోపల_MBCSHeader->లెక్క_స్థితులు);
+        mbcs_శీర్షిక.లెక్క_గమ్యం_UFallbacks=   ds->readUInt32(లోపల_MBCSHeader->లెక్క_గమ్యం_UFallbacks);
+        mbcs_శీర్షిక.స్థానభ్రంశం_గమ్యం_UCode_Units=  ds->readUInt32(లోపల_MBCSHeader->స్థానభ్రంశం_గమ్యం_UCode_Units);
+        mbcs_శీర్షిక.స్థానభ్రంశం_From_UTable=    ds->readUInt32(లోపల_MBCSHeader->స్థానభ్రంశం_From_UTable);
+        mbcs_శీర్షిక.స్థానభ్రంశం_From_UBytes=    ds->readUInt32(లోపల_MBCSHeader->స్థానభ్రంశం_From_UBytes);
+        mbcs_శీర్షిక.flags=               ds->readUInt32(లోపల_MBCSHeader->flags);
+        mbcs_శీర్షిక.from_UBytes_నిడివి=    ds->readUInt32(లోపల_MBCSHeader->from_UBytes_నిడివి);
         /* mbcsHeader.options have been read above */
 
-        extOffset=(int32_t)(mbcsHeader.flags>>8);
-        outputType=(uint8_t)mbcsHeader.flags;
-        if(noFromU && outputType==MBCS_OUTPUT_1) {
+        ext_స్థానభ్రంశం=(int32_t)(mbcs_శీర్షిక.flags>>8);
+        outputType=(uint8_t)mbcs_శీర్షిక.flags;
+        ఒకవేళ(noFromU && outputType==MBCS_OUTPUT_1) {
             udata_printError(ds, "ucnv_swap(): unsupported combination of makeconv --small with SBCS\n");
-            *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+            తిరిగి 0;
         }
 
         /* make sure that the output type is known */
-        switch(outputType) {
-        case MBCS_OUTPUT_1:
-        case MBCS_OUTPUT_2:
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4:
-        case MBCS_OUTPUT_3_EUC:
-        case MBCS_OUTPUT_4_EUC:
-        case MBCS_OUTPUT_2_SISO:
-        case MBCS_OUTPUT_EXT_ONLY:
+        ఎంపిక(outputType) {
+        స్థితి MBCS_OUTPUT_1:
+        స్థితి MBCS_OUTPUT_2:
+        స్థితి MBCS_OUTPUT_3:
+        స్థితి MBCS_OUTPUT_4:
+        స్థితి MBCS_OUTPUT_3_EUC:
+        స్థితి MBCS_OUTPUT_4_EUC:
+        స్థితి MBCS_OUTPUT_2_SISO:
+        స్థితి MBCS_OUTPUT_EXT_ONLY:
             /* OK */
-            break;
-        default:
+            ఆపు;
+        అప్రమేయ:
             udata_printError(ds, "ucnv_swap(): unsupported MBCS output type 0x%x\n",
                              outputType);
-            *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+            తిరిగి 0;
         }
 
         /* calculate the length of the MBCS data */
@@ -1497,196 +1497,196 @@ ucnv_swap(const UDataSwapper *ds,
          * where maxFastUChar=((mbcsHeader.version[2]<<8)|0xff).
          */
         maxFastUChar=0;
-        mbcsIndexLength=0;
-        if( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
-            mbcsHeader.version[1]>=3 && (maxFastUChar=mbcsHeader.version[2])!=0
+        mbcs_సూచీ_నిడివి=0;
+        ఒకవేళ( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
+            mbcs_శీర్షిక.సంస్కరణ[1]>=3 && (maxFastUChar=mbcs_శీర్షిక.సంస్కరణ[2])!=0
         ) {
             maxFastUChar=(maxFastUChar<<8)|0xff;
-            mbcsIndexLength=((maxFastUChar+1)>>6)*2;  /* number of bytes */
+            mbcs_సూచీ_నిడివి=((maxFastUChar+1)>>6)*2;  /* number of bytes */
         }
 
-        if(extOffset==0) {
-            size=(int32_t)(mbcsHeader.offsetFromUBytes+mbcsIndexLength);
-            if(!noFromU) {
-                size+=(int32_t)mbcsHeader.fromUBytesLength;
+        ఒకవేళ(ext_స్థానభ్రంశం==0) {
+            size=(int32_t)(mbcs_శీర్షిక.స్థానభ్రంశం_From_UBytes+mbcs_సూచీ_నిడివి);
+            ఒకవేళ(!noFromU) {
+                size+=(int32_t)mbcs_శీర్షిక.from_UBytes_నిడివి;
             }
 
             /* avoid compiler warnings - not otherwise necessary, and the value does not matter */
-            inExtIndexes=nullptr;
-        } else {
+            లోపల_Ext_Indexes=శూన్యసూచిక;
+        } లేకపోతే {
             /* there is extension data after the base data, see ucnv_ext.h */
-            if(length>=0 && length<(extOffset+UCNV_EXT_INDEXES_MIN_LENGTH*4)) {
+            ఒకవేళ(length>=0 && length<(ext_స్థానభ్రంశం+UCNV_EXT_INDEXES_MIN_నిడివి*4)) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table with extension data\n",
                                  length);
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+                తిరిగి 0;
             }
 
-            inExtIndexes=(const int32_t *)(inBytes+extOffset);
-            size=extOffset+udata_readInt32(ds, inExtIndexes[UCNV_EXT_SIZE]);
+            లోపల_Ext_Indexes=(స్థిరరాశి int32_t *)(లోపల_బైట్లు+ext_స్థానభ్రంశం);
+            size=ext_స్థానభ్రంశం+udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_కొలత]);
         }
 
-        if(length>=0) {
-            if(length<size) {
+        ఒకవేళ(length>=0) {
+            ఒకవేళ(length<size) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                  length);
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+                తిరిగి 0;
             }
 
             /* copy the data for inaccessible bytes */
-            if(inBytes!=outBytes) {
-                uprv_memcpy(outBytes, inBytes, size);
+            ఒకవేళ(లోపల_బైట్లు!=బహిర్గతం_బైట్లు) {
+                uprv_memcpy(బహిర్గతం_బైట్లు, లోపల_బైట్లు, size);
             }
 
             /* swap the MBCSHeader, except for the version field */
-            count=mbcsHeaderLength*4;
-            ds->swapArray32(ds, &inMBCSHeader->countStates, count-4,
-                               &outMBCSHeader->countStates, pErrorCode);
+            count=mbcs_శీర్షిక_నిడివి*4;
+            ds->మార్పిడి_Array32(ds, &లోపల_MBCSHeader->లెక్క_స్థితులు, count-4,
+                               &బహిర్గతం_MBCSHeader->లెక్క_స్థితులు, p_Error_సంకేతం);
 
-            if(outputType==MBCS_OUTPUT_EXT_ONLY) {
+            ఒకవేళ(outputType==MBCS_OUTPUT_EXT_ONLY) {
                 /*
                  * extension-only file,
                  * contains a base name instead of normal base table data
                  */
 
                 /* swap the base name, between the header and the extension data */
-                const char *inBaseName=(const char *)inBytes+count;
-                char *outBaseName=(char *)outBytes+count;
-                ds->swapInvChars(ds, inBaseName, (int32_t)uprv_strlen(inBaseName),
-                                    outBaseName, pErrorCode);
-            } else {
+                స్థిరరాశి అక్షరం *లోపల_పునాది_Name=(స్థిరరాశి అక్షరం *)లోపల_బైట్లు+count;
+                అక్షరం *బహిర్గతం_పునాది_Name=(అక్షరం *)బహిర్గతం_బైట్లు+count;
+                ds->మార్పిడి_Inv_Chars(ds, లోపల_పునాది_Name, (int32_t)uprv_strlen(లోపల_పునాది_Name),
+                                    బహిర్గతం_పునాది_Name, p_Error_సంకేతం);
+            } లేకపోతే {
                 /* normal file with base table data */
 
                 /* swap the state table, 1kB per state */
-                offset=count;
-                count=mbcsHeader.countStates*1024;
-                ds->swapArray32(ds, inBytes+offset, (int32_t)count,
-                                   outBytes+offset, pErrorCode);
+                స్థానభ్రంశం=count;
+                count=mbcs_శీర్షిక.లెక్క_స్థితులు*1024;
+                ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+స్థానభ్రంశం, (int32_t)count,
+                                   బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* swap the toUFallbacks[] */
-                offset+=count;
-                count=mbcsHeader.countToUFallbacks*8;
-                ds->swapArray32(ds, inBytes+offset, (int32_t)count,
-                                   outBytes+offset, pErrorCode);
+                స్థానభ్రంశం+=count;
+                count=mbcs_శీర్షిక.లెక్క_గమ్యం_UFallbacks*8;
+                ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+స్థానభ్రంశం, (int32_t)count,
+                                   బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* swap the unicodeCodeUnits[] */
-                offset=mbcsHeader.offsetToUCodeUnits;
-                count=mbcsHeader.offsetFromUTable-offset;
-                ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                   outBytes+offset, pErrorCode);
+                స్థానభ్రంశం=mbcs_శీర్షిక.స్థానభ్రంశం_గమ్యం_UCode_Units;
+                count=mbcs_శీర్షిక.స్థానభ్రంశం_From_UTable-స్థానభ్రంశం;
+                ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, (int32_t)count,
+                                   బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* offset to the stage 1 table, independent of the outputType */
-                offset=mbcsHeader.offsetFromUTable;
+                స్థానభ్రంశం=mbcs_శీర్షిక.స్థానభ్రంశం_From_UTable;
 
-                if(outputType==MBCS_OUTPUT_1) {
+                ఒకవేళ(outputType==MBCS_OUTPUT_1) {
                     /* SBCS: swap the fromU tables, all 16 bits wide */
-                    count=(mbcsHeader.offsetFromUBytes-offset)+mbcsHeader.fromUBytesLength;
-                    ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                       outBytes+offset, pErrorCode);
-                } else {
+                    count=(mbcs_శీర్షిక.స్థానభ్రంశం_From_UBytes-స్థానభ్రంశం)+mbcs_శీర్షిక.from_UBytes_నిడివి;
+                    ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, (int32_t)count,
+                                       బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
+                } లేకపోతే {
                     /* otherwise: swap the stage tables separately */
 
                     /* stage 1 table: uint16_t[0x440 or 0x40] */
-                    if(inStaticData->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
+                    ఒకవేళ(లోపల_Static_దత్తాంశం->unicode_ముసుగు&UCNV_HAS_SUPPLEMENTARY) {
                         count=0x440*2; /* for all of Unicode */
-                    } else {
+                    } లేకపోతే {
                         count=0x40*2; /* only BMP */
                     }
-                    ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                       outBytes+offset, pErrorCode);
+                    ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, (int32_t)count,
+                                       బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                     /* stage 2 table: uint32_t[] */
-                    offset+=count;
-                    count=mbcsHeader.offsetFromUBytes-offset;
-                    ds->swapArray32(ds, inBytes+offset, (int32_t)count,
-                                       outBytes+offset, pErrorCode);
+                    స్థానభ్రంశం+=count;
+                    count=mbcs_శీర్షిక.స్థానభ్రంశం_From_UBytes-స్థానభ్రంశం;
+                    ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+స్థానభ్రంశం, (int32_t)count,
+                                       బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                     /* stage 3/result bytes: sometimes uint16_t[] or uint32_t[] */
-                    offset=mbcsHeader.offsetFromUBytes;
-                    count= noFromU ? 0 : mbcsHeader.fromUBytesLength;
-                    switch(outputType) {
-                    case MBCS_OUTPUT_2:
-                    case MBCS_OUTPUT_3_EUC:
-                    case MBCS_OUTPUT_2_SISO:
-                        ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                           outBytes+offset, pErrorCode);
-                        break;
-                    case MBCS_OUTPUT_4:
-                        ds->swapArray32(ds, inBytes+offset, (int32_t)count,
-                                           outBytes+offset, pErrorCode);
-                        break;
-                    default:
+                    స్థానభ్రంశం=mbcs_శీర్షిక.స్థానభ్రంశం_From_UBytes;
+                    count= noFromU ? 0 : mbcs_శీర్షిక.from_UBytes_నిడివి;
+                    ఎంపిక(outputType) {
+                    స్థితి MBCS_OUTPUT_2:
+                    స్థితి MBCS_OUTPUT_3_EUC:
+                    స్థితి MBCS_OUTPUT_2_SISO:
+                        ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, (int32_t)count,
+                                           బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
+                        ఆపు;
+                    స్థితి MBCS_OUTPUT_4:
+                        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+స్థానభ్రంశం, (int32_t)count,
+                                           బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
+                        ఆపు;
+                    అప్రమేయ:
                         /* just uint8_t[], nothing to swap */
-                        break;
+                        ఆపు;
                     }
 
-                    if(mbcsIndexLength!=0) {
-                        offset+=count;
-                        count=mbcsIndexLength;
-                        ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                           outBytes+offset, pErrorCode);
+                    ఒకవేళ(mbcs_సూచీ_నిడివి!=0) {
+                        స్థానభ్రంశం+=count;
+                        count=mbcs_సూచీ_నిడివి;
+                        ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, (int32_t)count,
+                                           బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
                     }
                 }
             }
 
-            if(extOffset!=0) {
+            ఒకవేళ(ext_స్థానభ్రంశం!=0) {
                 /* swap the extension data */
-                inBytes+=extOffset;
-                outBytes+=extOffset;
+                లోపల_బైట్లు+=ext_స్థానభ్రంశం;
+                బహిర్గతం_బైట్లు+=ext_స్థానభ్రంశం;
 
                 /* swap toUTable[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_LENGTH]);
-                ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
+                స్థానభ్రంశం=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_గమ్యం_U_సూచీ]);
+                length=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_గమ్యం_U_నిడివి]);
+                ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+స్థానభ్రంశం, length*4, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* swap toUUChars[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_UCHARS_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_UCHARS_LENGTH]);
-                ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
+                స్థానభ్రంశం=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_గమ్యం_U_UCHARS_సూచీ]);
+                length=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_గమ్యం_U_UCHARS_నిడివి]);
+                ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, length*2, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* swap fromUTableUChars[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_UCHARS_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_LENGTH]);
-                ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
+                స్థానభ్రంశం=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_FROM_U_UCHARS_సూచీ]);
+                length=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_FROM_U_నిడివి]);
+                ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, length*2, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* swap fromUTableValues[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_VALUES_INDEX]);
+                స్థానభ్రంశం=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_FROM_U_విలువలు_సూచీ]);
                 /* same length as for fromUTableUChars[] */
-                ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
+                ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+స్థానభ్రంశం, length*4, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* no need to swap fromUBytes[] */
 
                 /* swap fromUStage12[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_12_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_12_LENGTH]);
-                ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
+                స్థానభ్రంశం=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_12_సూచీ]);
+                length=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_12_నిడివి]);
+                ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, length*2, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* swap fromUStage3[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_LENGTH]);
-                ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
+                స్థానభ్రంశం=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_3_సూచీ]);
+                length=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_3_నిడివి]);
+                ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, length*2, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* swap fromUStage3b[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3B_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3B_LENGTH]);
-                ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
+                స్థానభ్రంశం=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_3_B_సూచీ]);
+                length=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_3_B_నిడివి]);
+                ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+స్థానభ్రంశం, length*4, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
 
                 /* swap indexes[] */
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_INDEXES_LENGTH]);
-                ds->swapArray32(ds, inBytes, length*4, outBytes, pErrorCode);
+                length=udata_readInt32(ds, లోపల_Ext_Indexes[UCNV_EXT_INDEXES_నిడివి]);
+                ds->మార్పిడి_Array32(ds, లోపల_బైట్లు, length*4, బహిర్గతం_బైట్లు, p_Error_సంకేతం);
             }
         }
-    } else {
+    } లేకపోతే {
         udata_printError(ds, "ucnv_swap(): unknown conversionType=%d!=UCNV_MBCS\n",
-                         inStaticData->conversionType);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         లోపల_Static_దత్తాంశం->conversionType);
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    return headerSize+(int32_t)staticDataSize+size;
+    తిరిగి శీర్షిక_కొలత+(int32_t)static_దత్తాంశం_కొలత+size;
 }
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_LEGACY_CONVERSION */
 
-#endif
+#అయితే_ముగింపు

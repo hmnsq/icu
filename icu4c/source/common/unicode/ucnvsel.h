@@ -18,21 +18,21 @@
  * Started 09-April-2008
  */
 
-#ifndef __ICU_UCNV_SEL_H__
-#define __ICU_UCNV_SEL_H__
+#నిర్వచితం_కాకపోతే __ICU_UCNV_SEL_H__
+#నిర్వచించు __ICU_UCNV_SEL_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/uset.h"
-#include "unicode/utf16.h"
-#include "unicode/uenum.h"
-#include "unicode/ucnv.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "unicode/uenum.h"
+#అన్తర్భావ "unicode/ucnv.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+#అన్తర్భావ "unicode/localpointer.h"
+#అయితే_ముగింపు   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -46,12 +46,12 @@
  * from the serialized form.
  */
 
-struct UConverterSelector;
+నిర్మాణం UConverterSelector;
 /**
  * @{
  * Typedef for selector data structure.
  */
-typedef struct UConverterSelector UConverterSelector;
+రకనిర్వచనం నిర్మాణం UConverterSelector UConverterSelector;
 /** @} */
 
 /**
@@ -77,9 +77,9 @@ typedef struct UConverterSelector UConverterSelector;
  * @stable ICU 4.2
  */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
-             const USet* excludedCodePoints,
-             const UConverterUnicodeSet whichSet, UErrorCode* status);
+ucnvsel_open(స్థిరరాశి అక్షరం* స్థిరరాశి*  converterList, int32_t converter_List_కొలత,
+             స్థిరరాశి USet* excluded_సంకేతం_Points,
+             స్థిరరాశి UConverter_Unicode_సమితి which_సమితి, UError_సంకేతం* స్థితి_2);
 
 /**
  * Closes a selector.
@@ -94,10 +94,10 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
  *
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ucnvsel_close(UConverterSelector *sel);
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -110,11 +110,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUConverterSelectorPointer, UConverterSelector, ucnvsel_close);
+U_DEFINE_LOCAL_OPEN_సూచిక(Local_UConverter_Selector_సూచిక, UConverterSelector, ucnvsel_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 
 /**
  * Open a selector from its serialized form.
@@ -132,7 +132,7 @@ U_NAMESPACE_END
  * @stable ICU 4.2
  */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND, int32_t length, UErrorCode* status);
+ucnvsel_openFromSerialized(స్థిరరాశి శూన్య* బఫరు U_LIFETIME_BOUND, int32_t నిడివి, UError_సంకేతం* స్థితి_2);
 
 /**
  * Serialize a selector into a linear buffer.
@@ -149,8 +149,8 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND, int32_t length, 
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-ucnvsel_serialize(const UConverterSelector* sel,
-                  void* buffer, int32_t bufferCapacity, UErrorCode* status);
+ucnvsel_serialize(స్థిరరాశి UConverterSelector* sel,
+                  శూన్య* బఫరు, int32_t బఫరు_సామర్థ్యం, UError_సంకేతం* స్థితి_2);
 
 /**
  * Select converters that can map all characters in a UTF-16 string,
@@ -167,10 +167,10 @@ ucnvsel_serialize(const UConverterSelector* sel,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
-                        const UChar* s,
-                        int32_t length,
-                        UErrorCode* status);
+ucnvsel_selectForString(స్థిరరాశి UConverterSelector* sel U_LIFETIME_BOUND,
+                        స్థిరరాశి UChar* s,
+                        int32_t నిడివి,
+                        UError_సంకేతం* స్థితి_2);
 
 /**
  * Select converters that can map all characters in a UTF-8 string,
@@ -187,11 +187,11 @@ ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
-                      const char* s,
-                      int32_t length,
-                      UErrorCode* status);
+ucnvsel_selectForUTF8(స్థిరరాశి UConverterSelector* sel U_LIFETIME_BOUND,
+                      స్థిరరాశి అక్షరం* s,
+                      int32_t నిడివి,
+                      UError_సంకేతం* స్థితి_2);
 
-#endif  /* !UCONFIG_NO_CONVERSION */
+#అయితే_ముగింపు  /* !UCONFIG_NO_CONVERSION */
 
-#endif  /* __ICU_UCNV_SEL_H__ */
+#అయితే_ముగింపు  /* __ICU_UCNV_SEL_H__ */

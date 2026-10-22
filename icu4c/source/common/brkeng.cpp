@@ -7,33 +7,33 @@
  ************************************************************************************
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uchar.h"
-#include "unicode/uniset.h"
-#include "unicode/chariter.h"
-#include "unicode/ures.h"
-#include "unicode/udata.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/uscript.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/bytestrie.h"
-#include "unicode/rbbi.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/chariter.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/uscript.h"
+#అన్తర్భావ "unicode/ucharstrie.h"
+#అన్తర్భావ "unicode/bytestrie.h"
+#అన్తర్భావ "unicode/rbbi.h"
 
-#include "brkeng.h"
-#include "cmemory.h"
-#include "dictbe.h"
-#include "lstmbe.h"
-#include "charstr.h"
-#include "dictionarydata.h"
-#include "mutex.h"
-#include "uvector.h"
-#include "umutex.h"
-#include "uresimp.h"
-#include "ubrkimpl.h"
+#అన్తర్భావ "brkeng.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "dictbe.h"
+#అన్తర్భావ "lstmbe.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "dictionarydata.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "uvector.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "ubrkimpl.h"
 
 U_NAMESPACE_BEGIN
 
@@ -61,51 +61,51 @@ LanguageBreakFactory::~LanguageBreakFactory() {
  ******************************************************************
  */
 
-UnhandledEngine::UnhandledEngine(UErrorCode &status) : fHandled(nullptr) {
-    (void)status;
+UnhandledEngine::UnhandledEngine(UError_సంకేతం &స్థితి_2) : fHandled(శూన్యసూచిక) {
+    (శూన్య)స్థితి_2;
 }
 
 UnhandledEngine::~UnhandledEngine() {
-    delete fHandled;
-    fHandled = nullptr;
+    తొలగించు fHandled;
+    fHandled = శూన్యసూచిక;
 }
 
 UBool
-UnhandledEngine::handles(UChar32 c, const char* locale) const {
-    (void)locale; // Unused
-    return fHandled && fHandled->contains(c);
+UnhandledEngine::handles(UChar32 c, స్థిరరాశి అక్షరం* locale) స్థిరరాశి {
+    (శూన్య)locale; //వాడని
+    తిరిగి fHandled && fHandled->కలిగియుంది(c);
 }
 
 int32_t
-UnhandledEngine::findBreaks( UText *text,
-                             int32_t startPos,
-                             int32_t endPos,
+UnhandledEngine::కనుగొను_Breaks( UText *పాఠ్యం,
+                             int32_t ప్రారంభం_Pos,
+                             int32_t చివర_Pos,
                              UVector32 &/*foundBreaks*/,
                              UBool /* isPhraseBreaking */,
-                             UErrorCode &status) const {
-    if (U_FAILURE(status)) return 0;
-    utext_setNativeIndex(text, startPos);
-    UChar32 c = utext_current32(text);
-    while (static_cast<int32_t>(utext_getNativeIndex(text)) < endPos && fHandled->contains(c)) {
-        utext_next32(text);            // TODO:  recast loop to work with post-increment operations.
-        c = utext_current32(text);
+                             UError_సంకేతం &స్థితి_2) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి 0;
+    utext_సమితి_Native_సూచీ(పాఠ్యం, ప్రారంభం_Pos);
+    UChar32 c = utext_current32(పాఠ్యం);
+    అయితే (static_cast<int32_t>(utext_get_Native_సూచీ(పాఠ్యం)) < చివర_Pos && fHandled->కలిగియుంది(c)) {
+        utext_next32(పాఠ్యం);            // TODO:  recast loop to work with post-increment operations.
+        c = utext_current32(పాఠ్యం);
     }
-    return 0;
+    తిరిగి 0;
 }
 
-void
+శూన్య
 UnhandledEngine::handleCharacter(UChar32 c) {
-    if (fHandled == nullptr) {
-        fHandled = new UnicodeSet();
-        if (fHandled == nullptr) {
-            return;
+    ఒకవేళ (fHandled == శూన్యసూచిక) {
+        fHandled = కొత్త Unicode_సమితి();
+        ఒకవేళ (fHandled == శూన్యసూచిక) {
+            తిరిగి;
         }
     }
-    if (!fHandled->contains(c)) {
-        UErrorCode status = U_ZERO_ERROR;
+    ఒకవేళ (!fHandled->కలిగియుంది(c)) {
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
         // Apply the entire script of the character.
-        int32_t script = u_getIntPropertyValue(c, UCHAR_SCRIPT);
-        fHandled->applyIntPropertyValue(UCHAR_SCRIPT, script, status);
+        int32_t script = u_get_Int_Property_విలువ(c, UCHAR_SCRIPT);
+        fHandled->apply_Int_Property_విలువ(UCHAR_SCRIPT, script, స్థితి_2);
     }
 }
 
@@ -113,255 +113,255 @@ UnhandledEngine::handleCharacter(UChar32 c) {
  ******************************************************************
  */
 
-ICULanguageBreakFactory::ICULanguageBreakFactory(UErrorCode &/*status*/) {
-    fEngines = nullptr;
+ICULanguageBreakFactory::ICULanguageBreakFactory(UError_సంకేతం &/*స్థితి*/) {
+    fEngines = శూన్యసూచిక;
 }
 
 ICULanguageBreakFactory::~ICULanguageBreakFactory() {
-    delete fEngines;
+    తొలగించు fEngines;
 }
 
-void ICULanguageBreakFactory::ensureEngines(UErrorCode& status) {
-    static UMutex gBreakEngineMutex;
+శూన్య ICULanguageBreakFactory::ensureEngines(UError_సంకేతం& స్థితి_2) {
+    స్థిర UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
-    if (fEngines == nullptr) {
-        LocalPointer<UStack>  engines(new UStack(uprv_deleteUObject, nullptr, status), status);
-        if (U_SUCCESS(status)) {
+    ఒకవేళ (fEngines == శూన్యసూచిక) {
+        Local_సూచిక<UStack>  engines(కొత్త UStack(uprv_deleteUObject, శూన్యసూచిక, స్థితి_2), స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
             fEngines = engines.orphan();
         }
     }
 }
 
-const LanguageBreakEngine *
-ICULanguageBreakFactory::getEngineFor(UChar32 c, const char* locale) {
-    const LanguageBreakEngine *lbe = nullptr;
-    UErrorCode  status = U_ZERO_ERROR;
-    ensureEngines(status);
-    if (U_FAILURE(status) ) {
+స్థిరరాశి LanguageBreakEngine *
+ICULanguageBreakFactory::getEngineFor(UChar32 c, స్థిరరాశి అక్షరం* locale) {
+    స్థిరరాశి LanguageBreakEngine *lbe = శూన్యసూచిక;
+    UError_సంకేతం  స్థితి_2 = U_ZERO_ERROR;
+    ensureEngines(స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2) ) {
         // Note: no way to return error code to caller.
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 
-    static UMutex gBreakEngineMutex;
+    స్థిర UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
     int32_t i = fEngines->size();
-    while (--i >= 0) {
-        lbe = static_cast<const LanguageBreakEngine*>(fEngines->elementAt(i));
-        if (lbe != nullptr && lbe->handles(c, locale)) {
-            return lbe;
+    అయితే (--i >= 0) {
+        lbe = static_cast<స్థిరరాశి LanguageBreakEngine*>(fEngines->elementAt(i));
+        ఒకవేళ (lbe != శూన్యసూచిక && lbe->handles(c, locale)) {
+            తిరిగి lbe;
         }
     }
 
     // We didn't find an engine. Create one.
-    lbe = loadEngineFor(c, locale);
-    if (lbe != nullptr) {
-        fEngines->push((void *)lbe, status);
+    lbe = ఎక్కించు_Engine_For(c, locale);
+    ఒకవేళ (lbe != శూన్యసూచిక) {
+        fEngines->push((శూన్య *)lbe, స్థితి_2);
     }
-    return U_SUCCESS(status) ? lbe : nullptr;
+    తిరిగి U_SUCCESS(స్థితి_2) ? lbe : శూన్యసూచిక;
 }
 
-const LanguageBreakEngine *
-ICULanguageBreakFactory::loadEngineFor(UChar32 c, const char*) {
-    UErrorCode status = U_ZERO_ERROR;
-    UScriptCode code = uscript_getScript(c, &status);
-    if (U_SUCCESS(status)) {
-        const LanguageBreakEngine *engine = nullptr;
+స్థిరరాశి LanguageBreakEngine *
+ICULanguageBreakFactory::ఎక్కించు_Engine_For(UChar32 c, స్థిరరాశి అక్షరం*) {
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    UScript_సంకేతం సంకేతం_2 = uscript_getScript(c, &స్థితి_2);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        స్థిరరాశి LanguageBreakEngine *engine = శూన్యసూచిక;
         // Try to use LSTM first
-        const LSTMData *data = CreateLSTMDataForScript(code, status);
-        if (U_SUCCESS(status)) {
-            if (data != nullptr) {
-                engine = CreateLSTMBreakEngine(code, data, status);
-                if (U_SUCCESS(status) && engine != nullptr) {
-                    return engine;
+        స్థిరరాశి LSTMData *దత్తాంశం = CreateLSTMDataForScript(సంకేతం_2, స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+            ఒకవేళ (దత్తాంశం != శూన్యసూచిక) {
+                engine = CreateLSTMBreakEngine(సంకేతం_2, దత్తాంశం, స్థితి_2);
+                ఒకవేళ (U_SUCCESS(స్థితి_2) && engine != శూన్యసూచిక) {
+                    తిరిగి engine;
                 }
-                if (engine != nullptr) {
-                    delete engine;
-                    engine = nullptr;
-                } else {
-                    DeleteLSTMData(data);
+                ఒకవేళ (engine != శూన్యసూచిక) {
+                    తొలగించు engine;
+                    engine = శూన్యసూచిక;
+                } లేకపోతే {
+                    DeleteLSTMData(దత్తాంశం);
                 }
             }
         }
-        status = U_ZERO_ERROR;  // fallback to dictionary based
-        DictionaryMatcher *m = loadDictionaryMatcherFor(code);
-        if (m != nullptr) {
-            switch(code) {
-            case USCRIPT_THAI:
-                engine = new ThaiBreakEngine(m, status);
-                break;
-            case USCRIPT_LAO:
-                engine = new LaoBreakEngine(m, status);
-                break;
-            case USCRIPT_MYANMAR:
-                engine = new BurmeseBreakEngine(m, status);
-                break;
-            case USCRIPT_KHMER:
-                engine = new KhmerBreakEngine(m, status);
-                break;
+        స్థితి_2 = U_ZERO_ERROR;  // fallback to dictionary based
+        DictionaryMatcher *m = ఎక్కించు_Dictionary_Matcher_For(సంకేతం_2);
+        ఒకవేళ (m != శూన్యసూచిక) {
+            ఎంపిక(సంకేతం_2) {
+            స్థితి USCRIPT_THAI:
+                engine = కొత్త ThaiBreakEngine(m, స్థితి_2);
+                ఆపు;
+            స్థితి USCRIPT_LAO:
+                engine = కొత్త LaoBreakEngine(m, స్థితి_2);
+                ఆపు;
+            స్థితి USCRIPT_MYANMAR:
+                engine = కొత్త BurmeseBreakEngine(m, స్థితి_2);
+                ఆపు;
+            స్థితి USCRIPT_KHMER:
+                engine = కొత్త KhmerBreakEngine(m, స్థితి_2);
+                ఆపు;
 
-#if !UCONFIG_NO_NORMALIZATION
+#ఒకవేళ !UCONFIG_NO_NORMALIZATION
                 // CJK not available w/o normalization
-            case USCRIPT_HANGUL:
-                engine = new CjkBreakEngine(m, kKorean, status);
-                break;
+            స్థితి USCRIPT_HANGUL:
+                engine = కొత్త CjkBreakEngine(m, kKorean, స్థితి_2);
+                ఆపు;
 
             // use same BreakEngine and dictionary for both Chinese and Japanese
-            case USCRIPT_HIRAGANA:
-            case USCRIPT_KATAKANA:
-            case USCRIPT_HAN:
-                engine = new CjkBreakEngine(m, kChineseJapanese, status);
-                break;
-#if 0
+            స్థితి USCRIPT_HIRAGANA:
+            స్థితి USCRIPT_KATAKANA:
+            స్థితి USCRIPT_HAN:
+                engine = కొత్త CjkBreakEngine(m, kChineseJapanese, స్థితి_2);
+                ఆపు;
+#ఒకవేళ 0
             // TODO: Have to get some characters with script=common handled
             // by CjkBreakEngine (e.g. U+309B). Simply subjecting
             // them to CjkBreakEngine does not work. The engine has to
             // special-case them.
-            case USCRIPT_COMMON:
+            స్థితి USCRIPT_COMMON:
             {
-                UBlockCode block = ublock_getCode(code);
-                if (block == UBLOCK_HIRAGANA || block == UBLOCK_KATAKANA)
-                   engine = new CjkBreakEngine(dict, kChineseJapanese, status);
-                break;
+                UBlock_సంకేతం ఖండం = ublock_get_సంకేతం(సంకేతం_2);
+                ఒకవేళ (ఖండం == UBLOCK_HIRAGANA || ఖండం == UBLOCK_KATAKANA)
+                   engine = కొత్త CjkBreakEngine(dict, kChineseJapanese, స్థితి_2);
+                ఆపు;
             }
-#endif
-#endif
+#అయితే_ముగింపు
+#అయితే_ముగింపు
 
-            default:
-                break;
+            అప్రమేయ:
+                ఆపు;
             }
-            if (engine == nullptr) {
-                delete m;
+            ఒకవేళ (engine == శూన్యసూచిక) {
+                తొలగించు m;
             }
-            else if (U_FAILURE(status)) {
-                delete engine;
-                engine = nullptr;
+            లేకపోతే ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తొలగించు engine;
+                engine = శూన్యసూచిక;
             }
-            return engine;
+            తిరిగి engine;
         }
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 DictionaryMatcher *
-ICULanguageBreakFactory::loadDictionaryMatcherFor(UScriptCode script) { 
-    UErrorCode status = U_ZERO_ERROR;
+ICULanguageBreakFactory::ఎక్కించు_Dictionary_Matcher_For(UScript_సంకేతం script) { 
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
     // open root from brkitr tree.
-    UResourceBundle *b = ures_open(U_ICUDATA_BRKITR, "", &status);
-    b = ures_getByKeyWithFallback(b, "dictionaries", b, &status);
+    UResourceBundle *b = ures_open(U_ICUDATA_BRKITR, "", &స్థితి_2);
+    b = ures_get_By_కీలకం_With_Fallback(b, "dictionaries", b, &స్థితి_2);
     int32_t dictnlength = 0;
-    const char16_t *dictfname =
-        ures_getStringByKeyWithFallback(b, uscript_getShortName(script), &dictnlength, &status);
-    if (U_FAILURE(status)) {
+    స్థిరరాశి char16_t *dictfname =
+        ures_get_String_By_కీలకం_With_Fallback(b, uscript_getShortName(script), &dictnlength, &స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
         ures_close(b);
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
     CharString dictnbuf;
     CharString ext;
-    const char16_t *extStart = u_memrchr(dictfname, 0x002e, dictnlength);  // last dot
-    if (extStart != nullptr) {
-        int32_t len = static_cast<int32_t>(extStart - dictfname);
-        ext.appendInvariantChars(UnicodeString(false, extStart + 1, dictnlength - len - 1), status);
+    స్థిరరాశి char16_t *ext_ప్రారంభం = u_memrchr(dictfname, 0x002e, dictnlength);  // last dot
+    ఒకవేళ (ext_ప్రారంభం != శూన్యసూచిక) {
+        int32_t len = static_cast<int32_t>(ext_ప్రారంభం - dictfname);
+        ext.appendInvariantChars(UnicodeString(అబద్ధం, ext_ప్రారంభం + 1, dictnlength - len - 1), స్థితి_2);
         dictnlength = len;
     }
-    dictnbuf.appendInvariantChars(UnicodeString(false, dictfname, dictnlength), status);
+    dictnbuf.appendInvariantChars(UnicodeString(అబద్ధం, dictfname, dictnlength), స్థితి_2);
     ures_close(b);
 
-    UDataMemory *file = udata_open(U_ICUDATA_BRKITR, ext.data(), dictnbuf.data(), &status);
-    if (U_SUCCESS(status)) {
+    UData_జ్ఞాపకం *file = udata_open(U_ICUDATA_BRKITR, ext.దత్తాంశం(), dictnbuf.దత్తాంశం(), &స్థితి_2);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
         // build trie
-        const uint8_t* data = static_cast<const uint8_t*>(udata_getMemory(file));
-        const int32_t* indexes = reinterpret_cast<const int32_t*>(data);
-        const int32_t offset = indexes[DictionaryData::IX_STRING_TRIE_OFFSET];
-        const int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
-        DictionaryMatcher *m = nullptr;
-        if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
-            const int32_t transform = indexes[DictionaryData::IX_TRANSFORM];
-            const char* characters = reinterpret_cast<const char*>(data + offset);
-            m = new BytesDictionaryMatcher(characters, transform, file);
+        స్థిరరాశి uint8_t* దత్తాంశం = static_cast<స్థిరరాశి uint8_t*>(udata_get_జ్ఞాపకం(file));
+        స్థిరరాశి int32_t* indexes = reinterpret_cast<స్థిరరాశి int32_t*>(దత్తాంశం);
+        స్థిరరాశి int32_t స్థానభ్రంశం = indexes[Dictionary_దత్తాంశం::IX_STRING_TRIE_స్థానభ్రంశం];
+        స్థిరరాశి int32_t trieType = indexes[Dictionary_దత్తాంశం::IX_TRIE_TYPE] & Dictionary_దత్తాంశం::TRIE_TYPE_ముసుగు;
+        DictionaryMatcher *m = శూన్యసూచిక;
+        ఒకవేళ (trieType == Dictionary_దత్తాంశం::TRIE_TYPE_బైట్లు) {
+            స్థిరరాశి int32_t transform = indexes[Dictionary_దత్తాంశం::IX_TRANSFORM];
+            స్థిరరాశి అక్షరం* characters = reinterpret_cast<స్థిరరాశి అక్షరం*>(దత్తాంశం + స్థానభ్రంశం);
+            m = కొత్త బైట్లు_Dictionary_Matcher(characters, transform, file);
         }
-        else if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
-            const char16_t* characters = reinterpret_cast<const char16_t*>(data + offset);
-            m = new UCharsDictionaryMatcher(characters, file);
+        లేకపోతే ఒకవేళ (trieType == Dictionary_దత్తాంశం::TRIE_TYPE_UCHARS) {
+            స్థిరరాశి char16_t* characters = reinterpret_cast<స్థిరరాశి char16_t*>(దత్తాంశం + స్థానభ్రంశం);
+            m = కొత్త UCharsDictionaryMatcher(characters, file);
         }
-        if (m == nullptr) {
+        ఒకవేళ (m == శూన్యసూచిక) {
             // no matcher exists to take ownership - either we are an invalid 
             // type or memory allocation failed
             udata_close(file);
         }
-        return m;
-    } else if (dictfname != nullptr) {
+        తిరిగి m;
+    } లేకపోతే ఒకవేళ (dictfname != శూన్యసూచిక) {
         // we don't have a dictionary matcher.
         // returning nullptr here will cause us to fail to find a dictionary break engine, as expected
-        status = U_ZERO_ERROR;
-        return nullptr;
+        స్థితి_2 = U_ZERO_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 
-void ICULanguageBreakFactory::addExternalEngine(
-        ExternalBreakEngine* external, UErrorCode& status) {
-    LocalPointer<ExternalBreakEngine> engine(external, status);
-    ensureEngines(status);
-    LocalPointer<BreakEngineWrapper> wrapper(
-        new BreakEngineWrapper(engine.orphan(), status), status);
-    static UMutex gBreakEngineMutex;
+శూన్య ICULanguageBreakFactory::కూడు_External_Engine(
+        ExternalBreakEngine* external, UError_సంకేతం& స్థితి_2) {
+    Local_సూచిక<ExternalBreakEngine> engine(external, స్థితి_2);
+    ensureEngines(స్థితి_2);
+    Local_సూచిక<BreakEngineWrapper> wrapper(
+        కొత్త BreakEngineWrapper(engine.orphan(), స్థితి_2), స్థితి_2);
+    స్థిర UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
-    fEngines->push(wrapper.getAlias(), status);
+    fEngines->push(wrapper.getAlias(), స్థితి_2);
     wrapper.orphan();
 }
 
 BreakEngineWrapper::BreakEngineWrapper(
-    ExternalBreakEngine* engine, UErrorCode &status) : delegate(engine, status) {
+    ExternalBreakEngine* engine, UError_సంకేతం &స్థితి_2) : delegate(engine, స్థితి_2) {
 }
 
 BreakEngineWrapper::~BreakEngineWrapper() {
 }
 
-UBool BreakEngineWrapper::handles(UChar32 c, const char* locale) const {
-    return delegate->isFor(c, locale);
+UBool BreakEngineWrapper::handles(UChar32 c, స్థిరరాశి అక్షరం* locale) స్థిరరాశి {
+    తిరిగి delegate->isFor(c, locale);
 }
 
-int32_t BreakEngineWrapper::findBreaks(
-    UText *text,
-    int32_t startPos,
-    int32_t endPos,
-    UVector32 &foundBreaks,
+int32_t BreakEngineWrapper::కనుగొను_Breaks(
+    UText *పాఠ్యం,
+    int32_t ప్రారంభం_Pos,
+    int32_t చివర_Pos,
+    UVector32 &దొరికింది_Breaks,
     UBool /* isPhraseBreaking */,
-    UErrorCode &status) const {
-    if (U_FAILURE(status)) return 0;
-    int32_t result = 0;
+    UError_సంకేతం &స్థితి_2) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి 0;
+    int32_t ఫలితం = 0;
 
     // Find the span of characters included in the set.
     //   The span to break begins at the current position in the text, and
     //   extends towards the start or end of the text, depending on 'reverse'.
 
-    utext_setNativeIndex(text, startPos);
-    int32_t start = static_cast<int32_t>(utext_getNativeIndex(text));
+    utext_సమితి_Native_సూచీ(పాఠ్యం, ప్రారంభం_Pos);
+    int32_t ప్రారంభం = static_cast<int32_t>(utext_get_Native_సూచీ(పాఠ్యం));
     int32_t current;
-    int32_t rangeStart;
-    int32_t rangeEnd;
-    UChar32 c = utext_current32(text);
-    while ((current = static_cast<int32_t>(utext_getNativeIndex(text))) < endPos && delegate->handles(c)) {
-        utext_next32(text);         // TODO:  recast loop for postincrement
-        c = utext_current32(text);
+    int32_t range_ప్రారంభం;
+    int32_t range_చివర;
+    UChar32 c = utext_current32(పాఠ్యం);
+    అయితే ((current = static_cast<int32_t>(utext_get_Native_సూచీ(పాఠ్యం))) < చివర_Pos && delegate->handles(c)) {
+        utext_next32(పాఠ్యం);         // TODO:  recast loop for postincrement
+        c = utext_current32(పాఠ్యం);
     }
-    rangeStart = start;
-    rangeEnd = current;
-    int32_t beforeSize = foundBreaks.size();
-    int32_t additionalCapacity = rangeEnd - rangeStart + 1;
+    range_ప్రారంభం = ప్రారంభం;
+    range_చివర = current;
+    int32_t before_కొలత = దొరికింది_Breaks.size();
+    int32_t additional_సామర్థ్యం = range_చివర - range_ప్రారంభం + 1;
     // enlarge to contains (rangeEnd-rangeStart+1) more items
-    foundBreaks.ensureCapacity(beforeSize+additionalCapacity, status);
-    if (U_FAILURE(status)) return 0;
-    foundBreaks.setSize(beforeSize + beforeSize+additionalCapacity);
-    result = delegate->fillBreaks(text, rangeStart, rangeEnd, foundBreaks.getBuffer()+beforeSize,
-                                  additionalCapacity, status);
-    if (U_FAILURE(status)) return 0;
-    foundBreaks.setSize(beforeSize + result);
-    utext_setNativeIndex(text, current);
-    return result;
+    దొరికింది_Breaks.ensure_సామర్థ్యం(before_కొలత+additional_సామర్థ్యం, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి 0;
+    దొరికింది_Breaks.సమితి_కొలత(before_కొలత + before_కొలత+additional_సామర్థ్యం);
+    ఫలితం = delegate->fillBreaks(పాఠ్యం, range_ప్రారంభం, range_చివర, దొరికింది_Breaks.get_బఫరు()+before_కొలత,
+                                  additional_సామర్థ్యం, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి 0;
+    దొరికింది_Breaks.సమితి_కొలత(before_కొలత + ఫలితం);
+    utext_సమితి_Native_సూచీ(పాఠ్యం, current);
+    తిరిగి ఫలితం;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_BREAK_ITERATION */

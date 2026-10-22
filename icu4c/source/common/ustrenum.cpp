@@ -10,142 +10,142 @@
 * Since: ICU 2.4
 **********************************************************************
 */
-#include "utypeinfo.h"  // for 'typeid' to work 
+#అన్తర్భావ "utypeinfo.h"  // for 'typeid' to work 
 
-#include "unicode/ustring.h"
-#include "unicode/strenum.h"
-#include "unicode/putil.h"
-#include "uenumimp.h"
-#include "ustrenum.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/strenum.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "uenumimp.h"
+#అన్తర్భావ "ustrenum.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "uassert.h"
 
 U_NAMESPACE_BEGIN
 // StringEnumeration implementation ---------------------------------------- ***
 
 StringEnumeration::StringEnumeration()
-    : chars(charsBuffer), charsCapacity(sizeof(charsBuffer)) {
+    : chars(chars_బఫరు), chars_సామర్థ్యం(పరిమాణం(chars_బఫరు)) {
 }
 
 StringEnumeration::~StringEnumeration() {
-    if (chars != nullptr && chars != charsBuffer) {
+    ఒకవేళ (chars != శూన్యసూచిక && chars != chars_బఫరు) {
         uprv_free(chars);
     }
 }
 
 // StringEnumeration base class clone() default implementation, does not clone
 StringEnumeration *
-StringEnumeration::clone() const {
-  return nullptr;
+StringEnumeration::clone() స్థిరరాశి {
+  తిరిగి శూన్యసూచిక;
 }
 
-const char*
-StringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+స్థిరరాశి అక్షరం*
+StringEnumeration::next(int32_t* ఫలితం_నిడివి, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND {
+    స్థిరరాశి UnicodeString *s=snext(స్థితి_2);
+    ఒకవేళ(U_SUCCESS(స్థితి_2) && s!=శూన్యసూచిక) {
         unistr=*s;
-        ensureCharsCapacity(unistr.length()+1, status);
-        if(U_SUCCESS(status)) {
-            if(resultLength!=nullptr) {
-                *resultLength=unistr.length();
+        ensure_Chars_సామర్థ్యం(unistr.length()+1, స్థితి_2);
+        ఒకవేళ(U_SUCCESS(స్థితి_2)) {
+            ఒకవేళ(ఫలితం_నిడివి!=శూన్యసూచిక) {
+                *ఫలితం_నిడివి=unistr.length();
             }
-            unistr.extract(0, INT32_MAX, chars, charsCapacity, US_INV);
-            return chars;
+            unistr.extract(0, INT32_MAX, chars, chars_సామర్థ్యం, US_INV);
+            తిరిగి chars;
         }
     }
 
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-const char16_t*
-StringEnumeration::unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+స్థిరరాశి char16_t*
+StringEnumeration::unext(int32_t* ఫలితం_నిడివి, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND {
+    స్థిరరాశి UnicodeString *s=snext(స్థితి_2);
+    ఒకవేళ(U_SUCCESS(స్థితి_2) && s!=శూన్యసూచిక) {
         unistr=*s;
-        if(resultLength!=nullptr) {
-            *resultLength=unistr.length();
+        ఒకవేళ(ఫలితం_నిడివి!=శూన్యసూచిక) {
+            *ఫలితం_నిడివి=unistr.length();
         }
-        return unistr.getTerminatedBuffer();
+        తిరిగి unistr.get_Terminated_బఫరు();
     }
 
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-const UnicodeString*
-StringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
+స్థిరరాశి UnicodeString*
+StringEnumeration::snext(UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND {
     int32_t length;
-    const char *s=next(&length, status);
-    return setChars(s, length, status);
+    స్థిరరాశి అక్షరం *s=next(&length, స్థితి_2);
+    తిరిగి సమితి_Chars(s, length, స్థితి_2);
 }
 
-void
-StringEnumeration::ensureCharsCapacity(int32_t capacity, UErrorCode &status) {
-    if(U_SUCCESS(status) && capacity>charsCapacity) {
-        if(capacity<(charsCapacity+charsCapacity/2)) {
+శూన్య
+StringEnumeration::ensure_Chars_సామర్థ్యం(int32_t capacity, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ(U_SUCCESS(స్థితి_2) && capacity>chars_సామర్థ్యం) {
+        ఒకవేళ(capacity<(chars_సామర్థ్యం+chars_సామర్థ్యం/2)) {
             // avoid allocation thrashing
-            capacity=charsCapacity+charsCapacity/2;
+            capacity=chars_సామర్థ్యం+chars_సామర్థ్యం/2;
         }
-        if(chars!=charsBuffer) {
+        ఒకవేళ(chars!=chars_బఫరు) {
             uprv_free(chars);
         }
-        chars = static_cast<char*>(uprv_malloc(capacity));
-        if(chars==nullptr) {
-            chars=charsBuffer;
-            charsCapacity=sizeof(charsBuffer);
-            status=U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            charsCapacity=capacity;
+        chars = static_cast<అక్షరం*>(uprv_malloc(capacity));
+        ఒకవేళ(chars==శూన్యసూచిక) {
+            chars=chars_బఫరు;
+            chars_సామర్థ్యం=పరిమాణం(chars_బఫరు);
+            స్థితి_2=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        } లేకపోతే {
+            chars_సామర్థ్యం=capacity;
         }
     }
 }
 
 UnicodeString*
-StringEnumeration::setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND {
-    if(U_SUCCESS(status) && s!=nullptr) {
-        if(length<0) {
+StringEnumeration::సమితి_Chars(స్థిరరాశి అక్షరం* s, int32_t length, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND {
+    ఒకవేళ(U_SUCCESS(స్థితి_2) && s!=శూన్యసూచిక) {
+        ఒకవేళ(length<0) {
             length = static_cast<int32_t>(uprv_strlen(s));
         }
 
-        char16_t *buffer=unistr.getBuffer(length+1);
-        if(buffer!=nullptr) {
-            u_charsToUChars(s, buffer, length);
-            buffer[length]=0;
-            unistr.releaseBuffer(length);
-            return &unistr;
-        } else {
-            status=U_MEMORY_ALLOCATION_ERROR;
+        char16_t *బఫరు=unistr.get_బఫరు(length+1);
+        ఒకవేళ(బఫరు!=శూన్యసూచిక) {
+            u_chars_గమ్యం_UChars(s, బఫరు, length);
+            బఫరు[length]=0;
+            unistr.release_బఫరు(length);
+            తిరిగి &unistr;
+        } లేకపోతే {
+            స్థితి_2=U_జ్ఞాపకం_కేటాయింపు_ERROR;
         }
     }
 
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
-bool
-StringEnumeration::operator==(const StringEnumeration& that)const {
-    return typeid(*this) == typeid(that); 
+తార్కిక
+StringEnumeration::క్రియాకారకం==(స్థిరరాశి StringEnumeration& that)స్థిరరాశి {
+    తిరిగి typeid(*ఇది) == typeid(that); 
 }
 
-bool
-StringEnumeration::operator!=(const StringEnumeration& that)const {
-    return !operator==(that);
+తార్కిక
+StringEnumeration::క్రియాకారకం!=(స్థిరరాశి StringEnumeration& that)స్థిరరాశి {
+    తిరిగి !క్రియాకారకం==(that);
 }
 
 // UStringEnumeration implementation --------------------------------------- ***
 
 UStringEnumeration * U_EXPORT2
 UStringEnumeration::fromUEnumeration(
-        UEnumeration *uenumToAdopt, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        uenum_close(uenumToAdopt);
-        return nullptr;
+        UEnumeration *uenum_గమ్యం_Adopt, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        uenum_close(uenum_గమ్యం_Adopt);
+        తిరిగి శూన్యసూచిక;
     }
-    UStringEnumeration *result = new UStringEnumeration(uenumToAdopt);
-    if (result == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        uenum_close(uenumToAdopt);
-        return nullptr;
+    UStringEnumeration *ఫలితం = కొత్త UStringEnumeration(uenum_గమ్యం_Adopt);
+    ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        uenum_close(uenum_గమ్యం_Adopt);
+        తిరిగి శూన్యసూచిక;
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 UStringEnumeration::UStringEnumeration(UEnumeration* _uenum) :
@@ -157,83 +157,83 @@ UStringEnumeration::~UStringEnumeration() {
     uenum_close(uenum);
 }
 
-int32_t UStringEnumeration::count(UErrorCode& status) const {
-    return uenum_count(uenum, &status);
+int32_t UStringEnumeration::count(UError_సంకేతం& స్థితి_2) స్థిరరాశి {
+    తిరిగి uenum_లెక్క(uenum, &స్థితి_2);
 }
 
-const char* UStringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    return uenum_next(uenum, resultLength, &status);
+స్థిరరాశి అక్షరం* UStringEnumeration::next(int32_t* ఫలితం_నిడివి, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND {
+    తిరిగి uenum_తదుపరి(uenum, ఫలితం_నిడివి, &స్థితి_2);
 }
 
-const UnicodeString* UStringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
+స్థిరరాశి UnicodeString* UStringEnumeration::snext(UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND {
     int32_t length;
-    const char16_t* str = uenum_unext(uenum, &length, &status);
-    if (str == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    స్థిరరాశి char16_t* str = uenum_unext(uenum, &length, &స్థితి_2);
+    ఒకవేళ (str == శూన్యసూచిక || U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    return &unistr.setTo(str, length);
+    తిరిగి &unistr.సమితి_గమ్యం(str, length);
 }
 
-void UStringEnumeration::reset(UErrorCode& status) {
-    uenum_reset(uenum, &status);
+శూన్య UStringEnumeration::reset(UError_సంకేతం& స్థితి_2) {
+    uenum_reset(uenum, &స్థితి_2);
 }
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UStringEnumeration)
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 // C wrapper --------------------------------------------------------------- ***
 
-#define THIS(en) ((icu::StringEnumeration*)(en->context))
+#నిర్వచించు THIS(en) ((icu::StringEnumeration*)(en->context))
 
 U_CDECL_BEGIN
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ustrenum_close(UEnumeration* en) {
-    delete THIS(en);
+    తొలగించు THIS(en);
     uprv_free(en);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static int32_t U_CALLCONV
-ustrenum_count(UEnumeration* en,
-               UErrorCode* ec)
+స్థిర int32_t U_CALLCONV
+ustrenum_లెక్క(UEnumeration* en,
+               UError_సంకేతం* ec)
 {
-    return THIS(en)->count(*ec);
+    తిరిగి THIS(en)->count(*ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static const char16_t* U_CALLCONV
+స్థిర స్థిరరాశి char16_t* U_CALLCONV
 ustrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
-               int32_t* resultLength,
-               UErrorCode* ec)
+               int32_t* ఫలితం_నిడివి,
+               UError_సంకేతం* ec)
 {
-    return THIS(en)->unext(resultLength, *ec);
+    తిరిగి THIS(en)->unext(ఫలితం_నిడివి, *ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static const char* U_CALLCONV
-ustrenum_next(UEnumeration* en U_LIFETIME_BOUND,
-              int32_t* resultLength,
-              UErrorCode* ec)
+స్థిర స్థిరరాశి అక్షరం* U_CALLCONV
+ustrenum_తదుపరి(UEnumeration* en U_LIFETIME_BOUND,
+              int32_t* ఫలితం_నిడివి,
+              UError_సంకేతం* ec)
 {
-    return THIS(en)->next(resultLength, *ec);
+    తిరిగి THIS(en)->next(ఫలితం_నిడివి, *ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ustrenum_reset(UEnumeration* en,
-               UErrorCode* ec)
+               UError_సంకేతం* ec)
 {
     THIS(en)->reset(*ec);
 }
@@ -242,17 +242,17 @@ ustrenum_reset(UEnumeration* en,
  * Pseudo-vtable for UEnumeration wrapper around StringEnumeration.
  * The StringEnumeration pointer will be stored in 'context'.
  */
-static const UEnumeration USTRENUM_VT = {
-    nullptr,
-    nullptr, // store StringEnumeration pointer here
+స్థిర స్థిరరాశి UEnumeration USTRENUM_VT = {
+    శూన్యసూచిక,
+    శూన్యసూచిక, // store StringEnumeration pointer here
     ustrenum_close,
-    ustrenum_count,
+    ustrenum_లెక్క,
     ustrenum_unext,
-    ustrenum_next,
+    ustrenum_తదుపరి,
     ustrenum_reset
 };
 
-U_CDECL_END
+U_CDECL_చివర
 
 /**
  * Given a StringEnumeration, wrap it in a UEnumeration.  The
@@ -260,140 +260,140 @@ U_CDECL_END
  * delete it (regardless of error status).
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec) { 
-    UEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && adopted != nullptr) {
-        result = (UEnumeration*) uprv_malloc(sizeof(UEnumeration));
-        if (result == nullptr) {
-            *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            uprv_memcpy(result, &USTRENUM_VT, sizeof(USTRENUM_VT));
-            result->context = adopted;
+uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UError_సంకేతం* ec) { 
+    UEnumeration* ఫలితం = శూన్యసూచిక;
+    ఒకవేళ (U_SUCCESS(*ec) && adopted != శూన్యసూచిక) {
+        ఫలితం = (UEnumeration*) uprv_malloc(పరిమాణం(UEnumeration));
+        ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+            *ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        } లేకపోతే {
+            uprv_memcpy(ఫలితం, &USTRENUM_VT, పరిమాణం(USTRENUM_VT));
+            ఫలితం->context = adopted;
         }
     }
-    if (result == nullptr) {
-        delete adopted;
+    ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+        తొలగించు adopted;
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 // C wrapper --------------------------------------------------------------- ***
 
 U_CDECL_BEGIN
 
-typedef struct UCharStringEnumeration {
+రకనిర్వచనం నిర్మాణం UCharStringEnumeration {
     UEnumeration uenum;
-    int32_t index, count;
+    int32_t సూచీ, count;
 } UCharStringEnumeration;
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ucharstrenum_close(UEnumeration* en) {
     uprv_free(en);
 }
 
-static int32_t U_CALLCONV
-ucharstrenum_count(UEnumeration* en,
-                   UErrorCode* /*ec*/) {
-    return ((UCharStringEnumeration*)en)->count;
+స్థిర int32_t U_CALLCONV
+ucharstrenum_లెక్క(UEnumeration* en,
+                   UError_సంకేతం* /*ec*/) {
+    తిరిగి ((UCharStringEnumeration*)en)->count;
 }
 
-static const char16_t* U_CALLCONV
+స్థిర స్థిరరాశి char16_t* U_CALLCONV
 ucharstrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
-                  UErrorCode* /*ec*/) {
+                  int32_t* ఫలితం_నిడివి,
+                  UError_సంకేతం* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    ఒకవేళ (e->సూచీ >= e->count) {
+        తిరిగి శూన్యసూచిక;
     }
-    const char16_t* result = ((const char16_t**)e->uenum.context)[e->index++];
-    if (resultLength) {
-        *resultLength = u_strlen(result);
+    స్థిరరాశి char16_t* ఫలితం = ((స్థిరరాశి char16_t**)e->uenum.context)[e->సూచీ++];
+    ఒకవేళ (ఫలితం_నిడివి) {
+        *ఫలితం_నిడివి = u_strlen(ఫలితం);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 
-static const char* U_CALLCONV
-ucharstrenum_next(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
-                  UErrorCode* /*ec*/) {
+స్థిర స్థిరరాశి అక్షరం* U_CALLCONV
+ucharstrenum_తదుపరి(UEnumeration* en U_LIFETIME_BOUND,
+                  int32_t* ఫలితం_నిడివి,
+                  UError_సంకేతం* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    ఒకవేళ (e->సూచీ >= e->count) {
+        తిరిగి శూన్యసూచిక;
     }
-    const char* result = ((const char**)e->uenum.context)[e->index++];
-    if (resultLength) {
-        *resultLength = (int32_t)uprv_strlen(result);
+    స్థిరరాశి అక్షరం* ఫలితం = ((స్థిరరాశి అక్షరం**)e->uenum.context)[e->సూచీ++];
+    ఒకవేళ (ఫలితం_నిడివి) {
+        *ఫలితం_నిడివి = (int32_t)uprv_strlen(ఫలితం);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ucharstrenum_reset(UEnumeration* en,
-                   UErrorCode* /*ec*/) {
-    ((UCharStringEnumeration*)en)->index = 0;
+                   UError_సంకేతం* /*ec*/) {
+    ((UCharStringEnumeration*)en)->సూచీ = 0;
 }
 
-static const UEnumeration UCHARSTRENUM_VT = {
-    nullptr,
-    nullptr, // store StringEnumeration pointer here
+స్థిర స్థిరరాశి UEnumeration UCHARSTRENUM_VT = {
+    శూన్యసూచిక,
+    శూన్యసూచిక, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_లెక్క,
     uenum_unextDefault,
-    ucharstrenum_next,
+    ucharstrenum_తదుపరి,
     ucharstrenum_reset
 };
 
-static const UEnumeration UCHARSTRENUM_U_VT = {
-    nullptr,
-    nullptr, // store StringEnumeration pointer here
+స్థిర స్థిరరాశి UEnumeration UCHARSTRENUM_U_VT = {
+    శూన్యసూచిక,
+    శూన్యసూచిక, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_లెక్క,
     ucharstrenum_unext,
-    uenum_nextDefault,
+    uenum_తదుపరి_Default,
     ucharstrenum_reset
 };
 
-U_CDECL_END
+U_CDECL_చివర
 
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
+uenum_open_Char_అక్షరశ్రేణులు_Enumeration(U_LIFETIME_BOUND స్థిరరాశి అక్షరం* స్థిరరాశి అక్షరశ్రేణులు[],
                                  int32_t count,
-                                 UErrorCode* ec) {
-    UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
-        result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
-            *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            U_ASSERT((char*)result==(char*)(&result->uenum));
-            uprv_memcpy(result, &UCHARSTRENUM_VT, sizeof(UCHARSTRENUM_VT));
-            result->uenum.context = (void*)strings;
-            result->index = 0;
-            result->count = count;
+                                 UError_సంకేతం* ec) {
+    UCharStringEnumeration* ఫలితం = శూన్యసూచిక;
+    ఒకవేళ (U_SUCCESS(*ec) && count >= 0 && (count == 0 || అక్షరశ్రేణులు != శూన్యసూచిక)) {
+        ఫలితం = (UCharStringEnumeration*) uprv_malloc(పరిమాణం(UCharStringEnumeration));
+        ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+            *ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        } లేకపోతే {
+            U_ASSERT((అక్షరం*)ఫలితం==(అక్షరం*)(&ఫలితం->uenum));
+            uprv_memcpy(ఫలితం, &UCHARSTRENUM_VT, పరిమాణం(UCHARSTRENUM_VT));
+            ఫలితం->uenum.context = (శూన్య*)అక్షరశ్రేణులు;
+            ఫలితం->సూచీ = 0;
+            ఫలితం->count = count;
         }
     }
-    return (UEnumeration*) result;
+    తిరిగి (UEnumeration*) ఫలితం;
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const char16_t* const strings[],
+uenum_open_UChar_అక్షరశ్రేణులు_Enumeration(U_LIFETIME_BOUND స్థిరరాశి char16_t* స్థిరరాశి అక్షరశ్రేణులు[],
                                   int32_t count,
-                                  UErrorCode* ec) {
-    UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
-        result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
-            *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            U_ASSERT((char*)result==(char*)(&result->uenum));
-            uprv_memcpy(result, &UCHARSTRENUM_U_VT, sizeof(UCHARSTRENUM_U_VT));
-            result->uenum.context = (void*)strings;
-            result->index = 0;
-            result->count = count;
+                                  UError_సంకేతం* ec) {
+    UCharStringEnumeration* ఫలితం = శూన్యసూచిక;
+    ఒకవేళ (U_SUCCESS(*ec) && count >= 0 && (count == 0 || అక్షరశ్రేణులు != శూన్యసూచిక)) {
+        ఫలితం = (UCharStringEnumeration*) uprv_malloc(పరిమాణం(UCharStringEnumeration));
+        ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+            *ec = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        } లేకపోతే {
+            U_ASSERT((అక్షరం*)ఫలితం==(అక్షరం*)(&ఫలితం->uenum));
+            uprv_memcpy(ఫలితం, &UCHARSTRENUM_U_VT, పరిమాణం(UCHARSTRENUM_U_VT));
+            ఫలితం->uenum.context = (శూన్య*)అక్షరశ్రేణులు;
+            ఫలితం->సూచీ = 0;
+            ఫలితం->count = count;
         }
     }
-    return (UEnumeration*) result;
+    తిరిగి (UEnumeration*) ఫలితం;
 }
 
 

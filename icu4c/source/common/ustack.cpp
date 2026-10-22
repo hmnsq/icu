@@ -7,56 +7,56 @@
 **********************************************************************
 */
 
-#include "uvector.h"
+#అన్తర్భావ "uvector.h"
 
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UStack)
 
-UStack::UStack(UErrorCode &status) :
-    UVector(status)
+UStack::UStack(UError_సంకేతం &స్థితి_2) :
+    UVector(స్థితి_2)
 {
 }
 
-UStack::UStack(int32_t initialCapacity, UErrorCode &status) :
-    UVector(initialCapacity, status)
+UStack::UStack(int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2) :
+    UVector(initial_సామర్థ్యం, స్థితి_2)
 {
 }
 
-UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, UErrorCode &status) :
-    UVector(d, c, status)
+UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, UError_సంకేతం &స్థితి_2) :
+    UVector(d, c, స్థితి_2)
 {
 }
 
-UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status) :
-    UVector(d, c, initialCapacity, status)
+UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2) :
+    UVector(d, c, initial_సామర్థ్యం, స్థితి_2)
 {
 }
 
 UStack::~UStack() {}
 
-void* UStack::pop() {
+శూన్య* UStack::pop() {
     int32_t n = size() - 1;
-    void* result = nullptr;
-    if (n >= 0) {
-        result = orphanElementAt(n);
+    శూన్య* ఫలితం = శూన్యసూచిక;
+    ఒకవేళ (n >= 0) {
+        ఫలితం = orphanElementAt(n);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 int32_t UStack::popi() {
     int32_t n = size() - 1;
-    int32_t result = 0;
-    if (n >= 0) {
-        result = elementAti(n);
+    int32_t ఫలితం = 0;
+    ఒకవేళ (n >= 0) {
+        ఫలితం = elementAti(n);
         removeElementAt(n);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-int32_t UStack::search(void* obj) const {
-    int32_t i = indexOf(obj);
-    return (i >= 0) ? size() - i : i;
+int32_t UStack::search(శూన్య* obj) స్థిరరాశి {
+    int32_t i = సూచీ_యొక్క(obj);
+    తిరిగి (i >= 0) ? size() - i : i;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

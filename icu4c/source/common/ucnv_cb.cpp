@@ -20,44 +20,44 @@
  *
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv_cb.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/ucnv_cb.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "cmemory.h"
 
 /* need to update the offsets when the target moves. */
 /* Note: Recursion may occur in the cb functions, be sure to update the offsets correctly
 if you don't use ucnv_cbXXX functions.  Make sure you don't use the same callback within
 the same call stack if the complexity arises. */
-U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                       const char* source,
+U_CAPI శూన్య  U_EXPORT2
+ucnv_cb_From_UWrite_బైట్లు (UConverter_From_Unicode_వాదనలు *వాదనలు_2,
+                       స్థిరరాశి అక్షరం* ఆధారం,
                        int32_t length,
-                       int32_t offsetIndex,
-                       UErrorCode * err)
+                       int32_t స్థానభ్రంశం_సూచీ,
+                       UError_సంకేతం * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    ఒకవేళ(U_FAILURE(*err)) {
+        తిరిగి;
     }
 
-    ucnv_fromUWriteBytes(
-        args->converter,
-        source, length,
-        &args->target, args->targetLimit,
-        &args->offsets, offsetIndex,
+    ucnv_from_UWrite_బైట్లు(
+        వాదనలు_2->converter,
+        ఆధారం, length,
+        &వాదనలు_2->లక్ష్యం, వాదనలు_2->లక్ష్యం_హద్దు,
+        &వాదనలు_2->offsets, స్థానభ్రంశం_సూచీ,
         err);
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
-                             const char16_t** source,
-                             const char16_t*  sourceLimit,
-                             int32_t offsetIndex,
-                             UErrorCode * err)
+U_CAPI శూన్య  U_EXPORT2
+ucnv_cbFromUWriteUChars(UConverter_From_Unicode_వాదనలు *వాదనలు_2,
+                             స్థిరరాశి char16_t** ఆధారం,
+                             స్థిరరాశి char16_t*  ఆధారం_హద్దు,
+                             int32_t స్థానభ్రంశం_సూచీ,
+                             UError_సంకేతం * err)
 {
     /*
     This is a fun one.  Recursion can occur - we're basically going to
@@ -71,30 +71,30 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     into this.
     */
 
-    char *oldTarget;
+    అక్షరం *old_లక్ష్యం;
 
-    if(U_FAILURE(*err))
+    ఒకవేళ(U_FAILURE(*err))
     {
-        return;
+        తిరిగి;
     }
 
-    oldTarget = args->target;
+    old_లక్ష్యం = వాదనలు_2->లక్ష్యం;
 
-    ucnv_fromUnicode(args->converter,
-        &args->target,
-        args->targetLimit,
-        source,
-        sourceLimit,
-        nullptr, /* no offsets */
-        false, /* no flush */
+    ucnv_fromUnicode(వాదనలు_2->converter,
+        &వాదనలు_2->లక్ష్యం,
+        వాదనలు_2->లక్ష్యం_హద్దు,
+        ఆధారం,
+        ఆధారం_హద్దు,
+        శూన్యసూచిక, /* no offsets */
+        అబద్ధం, /* no flush */
         err);
 
-    if(args->offsets)
+    ఒకవేళ(వాదనలు_2->offsets)
     {
-        while (args->target != oldTarget)  /* if it moved at all.. */
+        అయితే (వాదనలు_2->లక్ష్యం != old_లక్ష్యం)  /* if it moved at all.. */
         {
-            *(args->offsets)++ = offsetIndex;
-            oldTarget++;
+            *(వాదనలు_2->offsets)++ = స్థానభ్రంశం_సూచీ;
+            old_లక్ష్యం++;
         }
     }
 
@@ -102,30 +102,30 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     Note, if you did something like used a Stop subcallback, things would get interesting.
     In fact, here's where we want to return the partially consumed in-source!
     */
-    if(*err == U_BUFFER_OVERFLOW_ERROR)
+    ఒకవేళ(*err == U_బఫరు_అధికప్రవాహం_ERROR)
     /* && (*source < sourceLimit && args->target >= args->targetLimit)
     -- S. Hrcek */
     {
         /* Overflowed the target.  Now, we'll write into the charErrorBuffer.
         It's a fixed size. If we overflow it... Hmm */
-        char *newTarget;
-        const char *newTargetLimit;
-        UErrorCode err2 = U_ZERO_ERROR;
+        అక్షరం *new_లక్ష్యం;
+        స్థిరరాశి అక్షరం *new_లక్ష్యం_హద్దు;
+        UError_సంకేతం err2 = U_ZERO_ERROR;
 
         int8_t errBuffLen;
 
-        errBuffLen  = args->converter->charErrorBufferLength;
+        errBuffLen  = వాదనలు_2->converter->char_Error_బఫరు_నిడివి;
 
         /* start the new target at the first free slot in the errbuff.. */
-        newTarget = (char *)(args->converter->charErrorBuffer + errBuffLen);
+        new_లక్ష్యం = (అక్షరం *)(వాదనలు_2->converter->char_Error_బఫరు + errBuffLen);
 
-        newTargetLimit = (char *)(args->converter->charErrorBuffer +
-            sizeof(args->converter->charErrorBuffer));
+        new_లక్ష్యం_హద్దు = (అక్షరం *)(వాదనలు_2->converter->char_Error_బఫరు +
+            పరిమాణం(వాదనలు_2->converter->char_Error_బఫరు));
 
-        if(newTarget >= newTargetLimit)
+        ఒకవేళ(new_లక్ష్యం >= new_లక్ష్యం_హద్దు)
         {
-            *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            *err = U_అంతర్గత_కార్యక్రమం_ERROR;
+            తిరిగి;
         }
 
         /* We're going to tell the converter that the errbuff len is empty.
@@ -133,31 +133,31 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         itself.  If the errbuff is needed by the converter this time,
         we're hosed - we're out of space! */
 
-        args->converter->charErrorBufferLength = 0;
+        వాదనలు_2->converter->char_Error_బఫరు_నిడివి = 0;
 
-        ucnv_fromUnicode(args->converter,
-                         &newTarget,
-                         newTargetLimit,
-                         source,
-                         sourceLimit,
-                         nullptr,
-                         false,
+        ucnv_fromUnicode(వాదనలు_2->converter,
+                         &new_లక్ష్యం,
+                         new_లక్ష్యం_హద్దు,
+                         ఆధారం,
+                         ఆధారం_హద్దు,
+                         శూన్యసూచిక,
+                         అబద్ధం,
                          &err2);
 
         /* We can go ahead and overwrite the  length here. We know just how
         to recalculate it. */
 
-        args->converter->charErrorBufferLength = (int8_t)(
-            newTarget - (char*)args->converter->charErrorBuffer);
+        వాదనలు_2->converter->char_Error_బఫరు_నిడివి = (int8_t)(
+            new_లక్ష్యం - (అక్షరం*)వాదనలు_2->converter->char_Error_బఫరు);
 
-        if((newTarget >= newTargetLimit) || (err2 == U_BUFFER_OVERFLOW_ERROR))
+        ఒకవేళ((new_లక్ష్యం >= new_లక్ష్యం_హద్దు) || (err2 == U_బఫరు_అధికప్రవాహం_ERROR))
         {
             /* now we're REALLY in trouble.
             Internal program error - callback shouldn't have written this much
             data!
             */
-            *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            *err = U_అంతర్గత_కార్యక్రమం_ERROR;
+            తిరిగి;
         }
         /*else {*/
             /* sub errs could be invalid/truncated/illegal chars or w/e.
@@ -173,25 +173,25 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     }
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
-                           int32_t offsetIndex,
-                           UErrorCode * err)
+U_CAPI శూన్య  U_EXPORT2
+ucnv_cbFromUWriteSub (UConverter_From_Unicode_వాదనలు *వాదనలు_2,
+                           int32_t స్థానభ్రంశం_సూచీ,
+                           UError_సంకేతం * err)
 {
     UConverter *converter;
     int32_t length;
 
-    if(U_FAILURE(*err)) {
-        return;
+    ఒకవేళ(U_FAILURE(*err)) {
+        తిరిగి;
     }
-    converter = args->converter;
+    converter = వాదనలు_2->converter;
     length = converter->subCharLen;
 
-    if(length == 0) {
-        return;
+    ఒకవేళ(length == 0) {
+        తిరిగి;
     }
 
-    if(length < 0) {
+    ఒకవేళ(length < 0) {
         /*
          * Write/convert the substitution string. Its real length is -length.
          * Unlike the escape callback, we need not change the converter's
@@ -200,62 +200,62 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
          * and will not recurse.
          * At worst we should get a U_BUFFER_OVERFLOW_ERROR.
          */
-        const char16_t *source = (const char16_t *)converter->subChars;
-        ucnv_cbFromUWriteUChars(args, &source, source - length, offsetIndex, err);
-        return;
+        స్థిరరాశి char16_t *ఆధారం = (స్థిరరాశి char16_t *)converter->subChars;
+        ucnv_cbFromUWriteUChars(వాదనలు_2, &ఆధారం, ఆధారం - length, స్థానభ్రంశం_సూచీ, err);
+        తిరిగి;
     }
 
-    if(converter->sharedData->impl->writeSub!=nullptr) {
-        converter->sharedData->impl->writeSub(args, offsetIndex, err);
+    ఒకవేళ(converter->shared_దత్తాంశం->impl->writeSub!=శూన్యసూచిక) {
+        converter->shared_దత్తాంశం->impl->writeSub(వాదనలు_2, స్థానభ్రంశం_సూచీ, err);
     }
-    else if(converter->subChar1!=0 && (uint16_t)converter->invalidUCharBuffer[0]<=(uint16_t)0xffu) {
+    లేకపోతే ఒకవేళ(converter->subChar1!=0 && (uint16_t)converter->invalid_UChar_బఫరు[0]<=(uint16_t)0xffu) {
         /*
         TODO: Is this untestable because the MBCS converter has a writeSub function to call
         and the other converters don't use subChar1?
         */
-        ucnv_cbFromUWriteBytes(args,
-                               (const char *)&converter->subChar1, 1,
-                               offsetIndex, err);
+        ucnv_cb_From_UWrite_బైట్లు(వాదనలు_2,
+                               (స్థిరరాశి అక్షరం *)&converter->subChar1, 1,
+                               స్థానభ్రంశం_సూచీ, err);
     }
-    else {
-        ucnv_cbFromUWriteBytes(args,
-                               (const char *)converter->subChars, length,
-                               offsetIndex, err);
+    లేకపోతే {
+        ucnv_cb_From_UWrite_బైట్లు(వాదనలు_2,
+                               (స్థిరరాశి అక్షరం *)converter->subChars, length,
+                               స్థానభ్రంశం_సూచీ, err);
     }
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
-                            const char16_t* source,
+U_CAPI శూన్య  U_EXPORT2
+ucnv_cb_గమ్యం_UWrite_UChars (UConverter_గమ్యం_Unicode_వాదనలు *వాదనలు_2,
+                            స్థిరరాశి char16_t* ఆధారం,
                             int32_t length,
-                            int32_t offsetIndex,
-                            UErrorCode * err)
+                            int32_t స్థానభ్రంశం_సూచీ,
+                            UError_సంకేతం * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    ఒకవేళ(U_FAILURE(*err)) {
+        తిరిగి;
     }
 
-    ucnv_toUWriteUChars(
-        args->converter,
-        source, length,
-        &args->target, args->targetLimit,
-        &args->offsets, offsetIndex,
+    ucnv_గమ్యం_UWrite_UChars(
+        వాదనలు_2->converter,
+        ఆధారం, length,
+        &వాదనలు_2->లక్ష్యం, వాదనలు_2->లక్ష్యం_హద్దు,
+        &వాదనలు_2->offsets, స్థానభ్రంశం_సూచీ,
         err);
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
-                         int32_t offsetIndex,
-                       UErrorCode * err)
+U_CAPI శూన్య  U_EXPORT2
+ucnv_cb_గమ్యం_UWrite_Sub (UConverter_గమ్యం_Unicode_వాదనలు *వాదనలు_2,
+                         int32_t స్థానభ్రంశం_సూచీ,
+                       UError_సంకేతం * err)
 {
-    static const char16_t kSubstituteChar1 = 0x1A, kSubstituteChar = 0xFFFD;
+    స్థిర స్థిరరాశి char16_t kSubstituteChar1 = 0x1A, kSubstituteChar = 0xFFFD;
 
     /* could optimize this case, just one uchar */
-    if(args->converter->invalidCharLength == 1 && args->converter->subChar1 != 0) {
-        ucnv_cbToUWriteUChars(args, &kSubstituteChar1, 1, offsetIndex, err);
-    } else {
-        ucnv_cbToUWriteUChars(args, &kSubstituteChar, 1, offsetIndex, err);
+    ఒకవేళ(వాదనలు_2->converter->invalid_Char_నిడివి == 1 && వాదనలు_2->converter->subChar1 != 0) {
+        ucnv_cb_గమ్యం_UWrite_UChars(వాదనలు_2, &kSubstituteChar1, 1, స్థానభ్రంశం_సూచీ, err);
+    } లేకపోతే {
+        ucnv_cb_గమ్యం_UWrite_UChars(వాదనలు_2, &kSubstituteChar, 1, స్థానభ్రంశం_సూచీ, err);
     }
 }
 
-#endif
+#అయితే_ముగింపు

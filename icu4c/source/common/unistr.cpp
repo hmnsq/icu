@@ -20,83 +20,83 @@
 ******************************************************************************
 */
 
-#include <string_view>
+#అన్తర్భావ <string_view>
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/putil.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/unistr.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "uelement.h"
-#include "ustr_imp.h"
-#include "umutex.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/appendable.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/utf.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "uelement.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "uassert.h"
 
-#if 0
+#ఒకవేళ 0
 
-#include <iostream>
-using namespace std;
+#అన్తర్భావ <iostream>
+ఉపయోగించి నామాకాశ std;
 
 //DEBUGGING
-void
-print(const UnicodeString& s,
-      const char *name)
+శూన్య
+print(స్థిరరాశి UnicodeString& s,
+      స్థిరరాశి అక్షరం *name)
 {
   char16_t c;
-  cout << name << ":|";
-  for(int i = 0; i < s.length(); ++i) {
+  బయటకు << name << ":|";
+  కొరకు(పూర్ణాంకం i = 0; i < s.length(); ++i) {
     c = s[i];
-    if(c>= 0x007E || c < 0x0020)
-      cout << "[0x" << hex << s[i] << "]";
-    else
-      cout << (char) s[i];
+    ఒకవేళ(c>= 0x007E || c < 0x0020)
+      బయటకు << "[0x" << hex << s[i] << "]";
+    లేకపోతే
+      బయటకు << (అక్షరం) s[i];
   }
-  cout << '|' << endl;
+  బయటకు << '|' << పంక్తి_ముగింపు;
 }
 
-void
-print(const char16_t *s,
+శూన్య
+print(స్థిరరాశి char16_t *s,
       int32_t len,
-      const char *name)
+      స్థిరరాశి అక్షరం *name)
 {
   char16_t c;
-  cout << name << ":|";
-  for(int i = 0; i < len; ++i) {
+  బయటకు << name << ":|";
+  కొరకు(పూర్ణాంకం i = 0; i < len; ++i) {
     c = s[i];
-    if(c>= 0x007E || c < 0x0020)
-      cout << "[0x" << hex << s[i] << "]";
-    else
-      cout << (char) s[i];
+    ఒకవేళ(c>= 0x007E || c < 0x0020)
+      బయటకు << "[0x" << hex << s[i] << "]";
+    లేకపోతే
+      బయటకు << (అక్షరం) s[i];
   }
-  cout << '|' << endl;
+  బయటకు << '|' << పంక్తి_ముగింపు;
 }
 // END DEBUGGING
-#endif
+#అయితే_ముగింపు
 
 // Local function definitions for now
 
 // need to copy areas that may overlap
-static
-inline void
-us_arrayCopy(const char16_t *src, int32_t srcStart,
-         char16_t *dst, int32_t dstStart, int32_t count)
+స్థిర
+అంతఃవరుస శూన్య
+us_arrayCopy(స్థిరరాశి char16_t *src, int32_t src_ప్రారంభం,
+         char16_t *dst, int32_t dst_ప్రారంభం, int32_t count)
 {
-  if(count>0) {
-    uprv_memmove(dst+dstStart, src+srcStart, (size_t)count*sizeof(*src));
+  ఒకవేళ(count>0) {
+    uprv_memmove(dst+dst_ప్రారంభం, src+src_ప్రారంభం, (size_t)count*పరిమాణం(*src));
   }
 }
 
 // u_unescapeAt() callback to get a char16_t from a UnicodeString
 U_CDECL_BEGIN
-static char16_t U_CALLCONV
-UnicodeString_charAt(int32_t offset, void *context) {
-    return ((icu::UnicodeString*) context)->charAt(offset);
+స్థిర char16_t U_CALLCONV
+UnicodeString_charAt(int32_t స్థానభ్రంశం, శూన్య *context) {
+    తిరిగి ((icu::UnicodeString*) context)->charAt(స్థానభ్రంశం);
 }
-U_CDECL_END
+U_CDECL_చివర
 
 U_NAMESPACE_BEGIN
 
@@ -108,32 +108,32 @@ Replaceable::~Replaceable() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeString)
 
 UnicodeString U_EXPORT2
-operator+ (const UnicodeString &s1, const UnicodeString &s2) {
-  int32_t sumLengths;
-  if (uprv_add32_overflow(s1.length(), s2.length(), &sumLengths)) {
+క్రియాకారకం+ (స్థిరరాశి UnicodeString &s1, స్థిరరాశి UnicodeString &s2) {
+  int32_t కూడిక_Lengths;
+  ఒకవేళ (uprv_add32_అధికప్రవాహం(s1.length(), s2.length(), &కూడిక_Lengths)) {
     UnicodeString bogus;
-    bogus.setToBogus();
-    return bogus;
+    bogus.సమితి_గమ్యం_Bogus();
+    తిరిగి bogus;
   }
-  if (sumLengths != INT32_MAX) {
-    ++sumLengths;  // space for a terminating NUL if we need one
+  ఒకవేళ (కూడిక_Lengths != INT32_MAX) {
+    ++కూడిక_Lengths;  // space for a terminating NUL if we need one
   }
-  return UnicodeString(sumLengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
+  తిరిగి UnicodeString(కూడిక_Lengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
 }
 
 U_COMMON_API UnicodeString U_EXPORT2
-unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2) {
-  int32_t sumLengths;
-  if (s2.length() > INT32_MAX ||
-      uprv_add32_overflow(s1.length(), static_cast<int32_t>(s2.length()), &sumLengths)) {
+unistr_అంతర్గత_Concat(స్థిరరాశి UnicodeString &s1, std::u16string_view s2) {
+  int32_t కూడిక_Lengths;
+  ఒకవేళ (s2.length() > INT32_MAX ||
+      uprv_add32_అధికప్రవాహం(s1.length(), static_cast<int32_t>(s2.length()), &కూడిక_Lengths)) {
     UnicodeString bogus;
-    bogus.setToBogus();
-    return bogus;
+    bogus.సమితి_గమ్యం_Bogus();
+    తిరిగి bogus;
   }
-  if (sumLengths != INT32_MAX) {
-    ++sumLengths;  // space for a terminating NUL if we need one
+  ఒకవేళ (కూడిక_Lengths != INT32_MAX) {
+    ++కూడిక_Lengths;  // space for a terminating NUL if we need one
   }
-  return UnicodeString(sumLengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
+  తిరిగి UnicodeString(కూడిక_Lengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
 }
 
 
@@ -142,24 +142,24 @@ unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2) {
 //                               have a chance to automatically inline.
 //========================================
 
-void
-UnicodeString::addRef() {
+శూన్య
+UnicodeString::కూడు_Ref() {
   umtx_atomic_inc(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1);
 }
 
 int32_t
 UnicodeString::removeRef() {
-  return umtx_atomic_dec(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1);
+  తిరిగి umtx_atomic_dec(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1);
 }
 
 int32_t
-UnicodeString::refCount() const {
-  return umtx_loadAcquire(*(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1));
+UnicodeString::ref_లెక్క() స్థిరరాశి {
+  తిరిగి umtx_ఎక్కించు_Acquire(*(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1));
 }
 
-void
+శూన్య
 UnicodeString::releaseArray() {
-  if((fUnion.fFields.fLengthAndFlags & kRefCounted) && removeRef() == 0) {
+  ఒకవేళ((fUnion.fFields.f_నిడివి_And_Flags & kRefCounted) && removeRef() == 0) {
     uprv_free(reinterpret_cast<int32_t*>(fUnion.fFields.fArray) - 1);
   }
 }
@@ -173,219 +173,219 @@ UnicodeString::releaseArray() {
 // The default constructor is inline in unistr.h.
 
 UnicodeString::UnicodeString(int32_t capacity, UChar32 c, int32_t count) {
-  fUnion.fFields.fLengthAndFlags = 0;
-  if (count <= 0 || static_cast<uint32_t>(c) > 0x10ffff) {
+  fUnion.fFields.f_నిడివి_And_Flags = 0;
+  ఒకవేళ (count <= 0 || static_cast<uint32_t>(c) > 0x10ffff) {
     // just allocate and do not do anything else
     allocate(capacity);
-  } else if(c <= 0xffff) {
+  } లేకపోతే ఒకవేళ(c <= 0xffff) {
     int32_t length = count;
-    if(capacity < length) {
+    ఒకవేళ(capacity < length) {
       capacity = length;
     }
-    if(allocate(capacity)) {
-      char16_t *array = getArrayStart();
+    ఒకవేళ(allocate(capacity)) {
+      char16_t *array = get_Array_ప్రారంభం();
       char16_t unit = static_cast<char16_t>(c);
-      for(int32_t i = 0; i < length; ++i) {
+      కొరకు(int32_t i = 0; i < length; ++i) {
         array[i] = unit;
       }
-      setLength(length);
+      సమితి_నిడివి(length);
     }
-  } else {  // supplementary code point, write surrogate pairs
-    if(count > (INT32_MAX / 2)) {
+  } లేకపోతే {  // supplementary code point, write surrogate pairs
+    ఒకవేళ(count > (INT32_MAX / 2)) {
       // We would get more than 2G UChars.
       allocate(capacity);
-      return;
+      తిరిగి;
     }
     int32_t length = count * 2;
-    if(capacity < length) {
+    ఒకవేళ(capacity < length) {
       capacity = length;
     }
-    if(allocate(capacity)) {
-      char16_t *array = getArrayStart();
+    ఒకవేళ(allocate(capacity)) {
+      char16_t *array = get_Array_ప్రారంభం();
       char16_t lead = U16_LEAD(c);
       char16_t trail = U16_TRAIL(c);
-      for(int32_t i = 0; i < length; i += 2) {
+      కొరకు(int32_t i = 0; i < length; i += 2) {
         array[i] = lead;
         array[i + 1] = trail;
       }
-      setLength(length);
+      సమితి_నిడివి(length);
     }
   }
 }
 
 UnicodeString::UnicodeString(char16_t ch) {
-  fUnion.fFields.fLengthAndFlags = kLength1 | kShortString;
-  fUnion.fStackFields.fBuffer[0] = ch;
+  fUnion.fFields.f_నిడివి_And_Flags = kLength1 | kShortString;
+  fUnion.f_దొంతర_Fields.f_బఫరు[0] = ch;
 }
 
 UnicodeString::UnicodeString(UChar32 ch) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+  fUnion.fFields.f_నిడివి_And_Flags = kShortString;
   int32_t i = 0;
-  UBool isError = false;
-  U16_APPEND(fUnion.fStackFields.fBuffer, i, US_STACKBUF_SIZE, ch, isError);
+  UBool isError = అబద్ధం;
+  U16_APPEND(fUnion.f_దొంతర_Fields.f_బఫరు, i, US_STACKBUF_కొలత, ch, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError then i==0 which is what we want anyway.
-  if(!isError) {
-    setShortLength(i);
+  ఒకవేళ(!isError) {
+    సమితి_Short_నిడివి(i);
   }
 }
 
-UnicodeString::UnicodeString(const char16_t *text,
-                             int32_t textLength) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  doAppend(text, 0, textLength);
+UnicodeString::UnicodeString(స్థిరరాశి char16_t *పాఠ్యం,
+                             int32_t పాఠ్యం_నిడివి) {
+  fUnion.fFields.f_నిడివి_And_Flags = kShortString;
+  doAppend(పాఠ్యం, 0, పాఠ్యం_నిడివి);
 }
 
 UnicodeString::UnicodeString(UBool isTerminated,
-                             ConstChar16Ptr textPtr U_LIFETIME_BOUND,
-                             int32_t textLength) {
-  fUnion.fFields.fLengthAndFlags = kReadonlyAlias;
-  const char16_t *text = textPtr;
-  if(text == nullptr) {
+                             ConstChar16Ptr పాఠ్యం_Ptr U_LIFETIME_BOUND,
+                             int32_t పాఠ్యం_నిడివి) {
+  fUnion.fFields.f_నిడివి_And_Flags = kReadonlyAlias;
+  స్థిరరాశి char16_t *పాఠ్యం = పాఠ్యం_Ptr;
+  ఒకవేళ(పాఠ్యం == శూన్యసూచిక) {
     // treat as an empty string, do not alias
-    setToEmpty();
-  } else if(textLength < -1 ||
-            (textLength == -1 && !isTerminated) ||
-            (textLength >= 0 && isTerminated && text[textLength] != 0)
+    సమితి_గమ్యం_ఖాళీలు();
+  } లేకపోతే ఒకవేళ(పాఠ్యం_నిడివి < -1 ||
+            (పాఠ్యం_నిడివి == -1 && !isTerminated) ||
+            (పాఠ్యం_నిడివి >= 0 && isTerminated && పాఠ్యం[పాఠ్యం_నిడివి] != 0)
   ) {
-    setToBogus();
-  } else {
-    if(textLength == -1) {
+    సమితి_గమ్యం_Bogus();
+  } లేకపోతే {
+    ఒకవేళ(పాఠ్యం_నిడివి == -1) {
       // text is terminated, or else it would have failed the above test
-      textLength = u_strlen(text);
+      పాఠ్యం_నిడివి = u_strlen(పాఠ్యం);
     }
-    setArray(const_cast<char16_t *>(text), textLength,
-             isTerminated ? textLength + 1 : textLength);
+    సమితి_Array(const_cast<char16_t *>(పాఠ్యం), పాఠ్యం_నిడివి,
+             isTerminated ? పాఠ్యం_నిడివి + 1 : పాఠ్యం_నిడివి);
   }
 }
 
 UnicodeString::UnicodeString(char16_t* buff U_LIFETIME_BOUND,
-                             int32_t buffLength,
-                             int32_t buffCapacity) {
-  fUnion.fFields.fLengthAndFlags = kWritableAlias;
-  if(buff == nullptr) {
+                             int32_t buff_నిడివి,
+                             int32_t buff_సామర్థ్యం) {
+  fUnion.fFields.f_నిడివి_And_Flags = kWritableAlias;
+  ఒకవేళ(buff == శూన్యసూచిక) {
     // treat as an empty string, do not alias
-    setToEmpty();
-  } else if(buffLength < -1 || buffCapacity < 0 || buffLength > buffCapacity) {
-    setToBogus();
-  } else {
-    if(buffLength == -1) {
+    సమితి_గమ్యం_ఖాళీలు();
+  } లేకపోతే ఒకవేళ(buff_నిడివి < -1 || buff_సామర్థ్యం < 0 || buff_నిడివి > buff_సామర్థ్యం) {
+    సమితి_గమ్యం_Bogus();
+  } లేకపోతే {
+    ఒకవేళ(buff_నిడివి == -1) {
       // fLength = u_strlen(buff); but do not look beyond buffCapacity
-      const char16_t *p = buff, *limit = buff + buffCapacity;
-      while(p != limit && *p != 0) {
+      స్థిరరాశి char16_t *p = buff, *హద్దు = buff + buff_సామర్థ్యం;
+      అయితే(p != హద్దు && *p != 0) {
         ++p;
       }
-      buffLength = static_cast<int32_t>(p - buff);
+      buff_నిడివి = static_cast<int32_t>(p - buff);
     }
-    setArray(buff, buffLength, buffCapacity);
+    సమితి_Array(buff, buff_నిడివి, buff_సామర్థ్యం);
   }
 }
 
-UnicodeString::UnicodeString(const char *src, int32_t length, EInvariant) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  if(src==nullptr) {
+UnicodeString::UnicodeString(స్థిరరాశి అక్షరం *src, int32_t length, EInvariant) {
+  fUnion.fFields.f_నిడివి_And_Flags = kShortString;
+  ఒకవేళ(src==శూన్యసూచిక) {
     // treat as an empty string
-  } else {
-    if(length<0) {
+  } లేకపోతే {
+    ఒకవేళ(length<0) {
       length = static_cast<int32_t>(uprv_strlen(src));
     }
-    if(cloneArrayIfNeeded(length, length, false)) {
-      u_charsToUChars(src, getArrayStart(), length);
-      setLength(length);
-    } else {
-      setToBogus();
+    ఒకవేళ(cloneArrayIfNeeded(length, length, అబద్ధం)) {
+      u_chars_గమ్యం_UChars(src, get_Array_ప్రారంభం(), length);
+      సమితి_నిడివి(length);
+    } లేకపోతే {
+      సమితి_గమ్యం_Bogus();
     }
   }
 }
 
 UnicodeString
-UnicodeString::readOnlyAliasFromU16StringView(std::u16string_view text U_LIFETIME_BOUND) {
-  UnicodeString result;
-  if (text.length() <= INT32_MAX) {
-    result.setTo(false, text.data(), static_cast<int32_t>(text.length()));
-  } else {
-    result.setToBogus();
+UnicodeString::readOnlyAliasFromU16StringView(std::u16string_view పాఠ్యం U_LIFETIME_BOUND) {
+  UnicodeString ఫలితం;
+  ఒకవేళ (పాఠ్యం.length() <= INT32_MAX) {
+    ఫలితం.సమితి_గమ్యం(అబద్ధం, పాఠ్యం.దత్తాంశం(), static_cast<int32_t>(పాఠ్యం.length()));
+  } లేకపోతే {
+    ఫలితం.సమితి_గమ్యం_Bogus();
   }
-  return result;
+  తిరిగి ఫలితం;
 }
 
 UnicodeString
-UnicodeString::readOnlyAliasFromUnicodeString(const UnicodeString& text U_LIFETIME_BOUND) {
-  UnicodeString result;
-  if (text.isBogus()) {
-    result.setToBogus();
-  } else {
-    result.setTo(false, text.getBuffer(), text.length());
+UnicodeString::readOnlyAliasFromUnicodeString(స్థిరరాశి UnicodeString& పాఠ్యం U_LIFETIME_BOUND) {
+  UnicodeString ఫలితం;
+  ఒకవేళ (పాఠ్యం.isBogus()) {
+    ఫలితం.సమితి_గమ్యం_Bogus();
+  } లేకపోతే {
+    ఫలితం.సమితి_గమ్యం(అబద్ధం, పాఠ్యం.get_బఫరు(), పాఠ్యం.length());
   }
-  return result;
+  తిరిగి ఫలితం;
 }
 
-#if U_CHARSET_IS_UTF8
+#ఒకవేళ U_CHARSET_IS_UTF8
 
-UnicodeString::UnicodeString(const char *codepageData) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  if (codepageData != nullptr) {
-    setToUTF8(codepageData);
+UnicodeString::UnicodeString(స్థిరరాశి అక్షరం *codepage_దత్తాంశం) {
+  fUnion.fFields.f_నిడివి_And_Flags = kShortString;
+  ఒకవేళ (codepage_దత్తాంశం != శూన్యసూచిక) {
+    సమితి_గమ్యం_UTF8(codepage_దత్తాంశం);
   }
 }
 
-UnicodeString::UnicodeString(const char *codepageData, int32_t dataLength) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+UnicodeString::UnicodeString(స్థిరరాశి అక్షరం *codepage_దత్తాంశం, int32_t దత్తాంశం_నిడివి) {
+  fUnion.fFields.f_నిడివి_And_Flags = kShortString;
   // if there's nothing to convert, do nothing
-  if (codepageData == nullptr || dataLength == 0 || dataLength < -1) {
-    return;
+  ఒకవేళ (codepage_దత్తాంశం == శూన్యసూచిక || దత్తాంశం_నిడివి == 0 || దత్తాంశం_నిడివి < -1) {
+    తిరిగి;
   }
-  if(dataLength == -1) {
-    dataLength = static_cast<int32_t>(uprv_strlen(codepageData));
+  ఒకవేళ(దత్తాంశం_నిడివి == -1) {
+    దత్తాంశం_నిడివి = static_cast<int32_t>(uprv_strlen(codepage_దత్తాంశం));
   }
-  setToUTF8(StringPiece(codepageData, dataLength));
+  సమితి_గమ్యం_UTF8(StringPiece(codepage_దత్తాంశం, దత్తాంశం_నిడివి));
 }
 
 // else see unistr_cnv.cpp
-#endif
+#అయితే_ముగింపు
 
-UnicodeString::UnicodeString(const UnicodeString& that) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+UnicodeString::UnicodeString(స్థిరరాశి UnicodeString& that) {
+  fUnion.fFields.f_నిడివి_And_Flags = kShortString;
   copyFrom(that);
 }
 
 UnicodeString::UnicodeString(UnicodeString &&src) noexcept {
-  copyFieldsFrom(src, true);
+  copyFieldsFrom(src, నిజం);
 }
 
-UnicodeString::UnicodeString(const UnicodeString& that,
-                             int32_t srcStart) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  setTo(that, srcStart);
+UnicodeString::UnicodeString(స్థిరరాశి UnicodeString& that,
+                             int32_t src_ప్రారంభం) {
+  fUnion.fFields.f_నిడివి_And_Flags = kShortString;
+  సమితి_గమ్యం(that, src_ప్రారంభం);
 }
 
-UnicodeString::UnicodeString(const UnicodeString& that,
-                             int32_t srcStart,
-                             int32_t srcLength) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  setTo(that, srcStart, srcLength);
+UnicodeString::UnicodeString(స్థిరరాశి UnicodeString& that,
+                             int32_t src_ప్రారంభం,
+                             int32_t src_నిడివి) {
+  fUnion.fFields.f_నిడివి_And_Flags = kShortString;
+  సమితి_గమ్యం(that, src_ప్రారంభం, src_నిడివి);
 }
 
 // Replaceable base class clone() default implementation, does not clone
 Replaceable *
-Replaceable::clone() const {
-  return nullptr;
+Replaceable::clone() స్థిరరాశి {
+  తిరిగి శూన్యసూచిక;
 }
 
 // UnicodeString overrides clone() with a real implementation
 UnicodeString *
-UnicodeString::clone() const {
-  LocalPointer<UnicodeString> clonedString(new UnicodeString(*this));
-  return clonedString.isValid() && !clonedString->isBogus() ? clonedString.orphan() : nullptr;
+UnicodeString::clone() స్థిరరాశి {
+  Local_సూచిక<UnicodeString> clonedString(కొత్త UnicodeString(*ఇది));
+  తిరిగి clonedString.isValid() && !clonedString->isBogus() ? clonedString.orphan() : శూన్యసూచిక;
 }
 
 //========================================
 // array allocation
 //========================================
 
-namespace {
+నామాకాశ {
 
-const int32_t kGrowSize = 128;
+స్థిరరాశి int32_t k_Grow_కొలత = 128;
 
 // The number of bytes for one int32_t reference counter and capacity UChars
 // must fit into a 32-bit size_t (at least when on a 32-bit platform).
@@ -394,14 +394,14 @@ const int32_t kGrowSize = 128;
 // This means that capacity must be at most (0xfffffff0 - 4) / 2 - 1 = 0x7ffffff5.
 // (With more complicated checks we could go up to 0x7ffffffd without rounding up,
 // but that does not seem worth it.)
-const int32_t kMaxCapacity = 0x7ffffff5;
+స్థిరరాశి int32_t k_Max_సామర్థ్యం = 0x7ffffff5;
 
-int32_t getGrowCapacity(int32_t newLength) {
-  int32_t growSize = (newLength >> 2) + kGrowSize;
-  if(growSize <= (kMaxCapacity - newLength)) {
-    return newLength + growSize;
-  } else {
-    return kMaxCapacity;
+int32_t get_Grow_సామర్థ్యం(int32_t new_నిడివి) {
+  int32_t grow_కొలత = (new_నిడివి >> 2) + k_Grow_కొలత;
+  ఒకవేళ(grow_కొలత <= (k_Max_సామర్థ్యం - new_నిడివి)) {
+    తిరిగి new_నిడివి + grow_కొలత;
+  } లేకపోతే {
+    తిరిగి k_Max_సామర్థ్యం;
   }
 }
 
@@ -409,72 +409,72 @@ int32_t getGrowCapacity(int32_t newLength) {
 
 UBool
 UnicodeString::allocate(int32_t capacity) {
-  if(capacity <= US_STACKBUF_SIZE) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    return true;
+  ఒకవేళ(capacity <= US_STACKBUF_కొలత) {
+    fUnion.fFields.f_నిడివి_And_Flags = kShortString;
+    తిరిగి నిజం;
   }
-  if(capacity <= kMaxCapacity) {
+  ఒకవేళ(capacity <= k_Max_సామర్థ్యం) {
     ++capacity;  // for the NUL
     // Switch to size_t which is unsigned so that we can allocate up to 4GB.
     // Reference counter + UChars.
-    size_t numBytes = sizeof(int32_t) + static_cast<size_t>(capacity) * U_SIZEOF_UCHAR;
+    size_t అంకె_బైట్లు = పరిమాణం(int32_t) + static_cast<size_t>(capacity) * U_SIZEOF_UCHAR;
     // Round up to a multiple of 16.
-    numBytes = (numBytes + 15) & ~15;
-    int32_t* array = static_cast<int32_t*>(uprv_malloc(numBytes));
-    if(array != nullptr) {
+    అంకె_బైట్లు = (అంకె_బైట్లు + 15) & ~15;
+    int32_t* array = static_cast<int32_t*>(uprv_malloc(అంకె_బైట్లు));
+    ఒకవేళ(array != శూన్యసూచిక) {
       // set initial refCount and point behind the refCount
       *array++ = 1;
-      numBytes -= sizeof(int32_t);
+      అంకె_బైట్లు -= పరిమాణం(int32_t);
 
       // have fArray point to the first char16_t
       fUnion.fFields.fArray = reinterpret_cast<char16_t*>(array);
-      fUnion.fFields.fCapacity = static_cast<int32_t>(numBytes / U_SIZEOF_UCHAR);
-      fUnion.fFields.fLengthAndFlags = kLongString;
-      return true;
+      fUnion.fFields.f_సామర్థ్యం = static_cast<int32_t>(అంకె_బైట్లు / U_SIZEOF_UCHAR);
+      fUnion.fFields.f_నిడివి_And_Flags = kLongString;
+      తిరిగి నిజం;
     }
   }
-  fUnion.fFields.fLengthAndFlags = kIsBogus;
-  fUnion.fFields.fArray = nullptr;
-  fUnion.fFields.fCapacity = 0;
-  return false;
+  fUnion.fFields.f_నిడివి_And_Flags = kIsBogus;
+  fUnion.fFields.fArray = శూన్యసూచిక;
+  fUnion.fFields.f_సామర్థ్యం = 0;
+  తిరిగి అబద్ధం;
 }
 
 //========================================
 // Destructor
 //========================================
 
-#ifdef UNISTR_COUNT_FINAL_STRING_LENGTHS
-static u_atomic_int32_t finalLengthCounts[0x400];  // UnicodeString::kMaxShortLength+1
-static u_atomic_int32_t beyondCount(0);
+#నిర్వచితమైతే UNISTR_లెక్క_FINAL_STRING_LENGTHS
+స్థిర u_atomic_int32_t final_నిడివి_Counts[0x400];  // UnicodeString::kMaxShortLength+1
+స్థిర u_atomic_int32_t beyond_లెక్క(0);
 
-U_CAPI void unistr_printLengths() {
+U_CAPI శూన్య unistr_printLengths() {
   int32_t i;
-  for(i = 0; i <= 59; ++i) {
-    printf("%2d,  %9d\n", i, (int32_t)finalLengthCounts[i]);
+  కొరకు(i = 0; i <= 59; ++i) {
+    రాయి("%2d,  %9d\n", i, (int32_t)final_నిడివి_Counts[i]);
   }
-  int32_t beyond = beyondCount;
-  for(; i < UPRV_LENGTHOF(finalLengthCounts); ++i) {
-    beyond += finalLengthCounts[i];
+  int32_t beyond = beyond_లెక్క;
+  కొరకు(; i < UPRV_LENGTHOF(final_నిడివి_Counts); ++i) {
+    beyond += final_నిడివి_Counts[i];
   }
-  printf(">59, %9d\n", beyond);
+  రాయి(">59, %9d\n", beyond);
 }
-#endif
+#అయితే_ముగింపు
 
 UnicodeString::~UnicodeString()
 {
-#ifdef UNISTR_COUNT_FINAL_STRING_LENGTHS
+#నిర్వచితమైతే UNISTR_లెక్క_FINAL_STRING_LENGTHS
   // Count lengths of strings at the end of their lifetime.
   // Useful for discussion of a desirable stack buffer size.
   // Count the contents length, not the optional NUL terminator nor further capacity.
   // Ignore open-buffer strings and strings which alias external storage.
-  if((fUnion.fFields.fLengthAndFlags&(kOpenGetBuffer|kReadonlyAlias|kWritableAlias)) == 0) {
-    if(hasShortLength()) {
-      umtx_atomic_inc(finalLengthCounts + getShortLength());
-    } else {
-      umtx_atomic_inc(&beyondCount);
+  ఒకవేళ((fUnion.fFields.f_నిడివి_And_Flags&(k_Open_Get_బఫరు|kReadonlyAlias|kWritableAlias)) == 0) {
+    ఒకవేళ(has_Short_నిడివి()) {
+      umtx_atomic_inc(final_నిడివి_Counts + get_Short_నిడివి());
+    } లేకపోతే {
+      umtx_atomic_inc(&beyond_లెక్క);
     }
   }
-#endif
+#అయితే_ముగింపు
 
   releaseArray();
 }
@@ -484,41 +484,41 @@ UnicodeString::~UnicodeString()
 //========================================
 
 UnicodeString UnicodeString::fromUTF8(StringPiece utf8) {
-  UnicodeString result;
-  result.setToUTF8(utf8);
-  return result;
+  UnicodeString ఫలితం;
+  ఫలితం.సమితి_గమ్యం_UTF8(utf8);
+  తిరిగి ఫలితం;
 }
 
-UnicodeString UnicodeString::fromUTF32(const UChar32 *utf32, int32_t length) {
-  UnicodeString result;
+UnicodeString UnicodeString::fromUTF32(స్థిరరాశి UChar32 *utf32, int32_t length) {
+  UnicodeString ఫలితం;
   int32_t capacity;
   // Most UTF-32 strings will be BMP-only and result in a same-length
   // UTF-16 string. We overestimate the capacity just slightly,
   // just in case there are a few supplementary characters.
-  if(length <= US_STACKBUF_SIZE) {
-    capacity = US_STACKBUF_SIZE;
-  } else {
+  ఒకవేళ(length <= US_STACKBUF_కొలత) {
+    capacity = US_STACKBUF_కొలత;
+  } లేకపోతే {
     capacity = length + (length >> 4) + 4;
   }
-  do {
-    char16_t *utf16 = result.getBuffer(capacity);
+  చేయి {
+    char16_t *utf16 = ఫలితం.get_బఫరు(capacity);
     int32_t length16;
-    UErrorCode errorCode = U_ZERO_ERROR;
-    u_strFromUTF32WithSub(utf16, result.getCapacity(), &length16,
+    UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
+    u_strFromUTF32WithSub(utf16, ఫలితం.get_సామర్థ్యం(), &length16,
         utf32, length,
         0xfffd,  // Substitution character.
-        nullptr,    // Don't care about number of substitutions.
-        &errorCode);
-    result.releaseBuffer(length16);
-    if(errorCode == U_BUFFER_OVERFLOW_ERROR) {
+        శూన్యసూచిక,    // Don't care about number of substitutions.
+        &error_సంకేతం);
+    ఫలితం.release_బఫరు(length16);
+    ఒకవేళ(error_సంకేతం == U_బఫరు_అధికప్రవాహం_ERROR) {
       capacity = length16 + 1;  // +1 for the terminating NUL.
-      continue;
-    } else if(U_FAILURE(errorCode)) {
-      result.setToBogus();
+      కొనసాగు;
+    } లేకపోతే ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+      ఫలితం.సమితి_గమ్యం_Bogus();
     }
-    break;
-  } while(true);
-  return result;
+    ఆపు;
+  } అయితే(నిజం);
+  తిరిగి ఫలితం;
 }
 
 //========================================
@@ -526,271 +526,271 @@ UnicodeString UnicodeString::fromUTF32(const UChar32 *utf32, int32_t length) {
 //========================================
 
 UnicodeString&
-UnicodeString::operator=(const UnicodeString& src) U_LIFETIME_BOUND {
-  return copyFrom(src);
+UnicodeString::క్రియాకారకం=(స్థిరరాశి UnicodeString& src) U_LIFETIME_BOUND {
+  తిరిగి copyFrom(src);
 }
 
 UnicodeString&
-UnicodeString::fastCopyFrom(const UnicodeString& src) U_LIFETIME_BOUND {
-  return copyFrom(src, true);
+UnicodeString::fastCopyFrom(స్థిరరాశి UnicodeString& src) U_LIFETIME_BOUND {
+  తిరిగి copyFrom(src, నిజం);
 }
 
 UnicodeString&
-UnicodeString::copyFrom(const UnicodeString& src, UBool fastCopy) U_LIFETIME_BOUND {
+UnicodeString::copyFrom(స్థిరరాశి UnicodeString& src, UBool fastCopy) U_LIFETIME_BOUND {
   // if assigning to ourselves, do nothing
-  if(this == &src) {
-    return *this;
+  ఒకవేళ(ఇది == &src) {
+    తిరిగి *ఇది;
   }
 
   // is the right side bogus?
-  if(src.isBogus()) {
-    setToBogus();
-    return *this;
+  ఒకవేళ(src.isBogus()) {
+    సమితి_గమ్యం_Bogus();
+    తిరిగి *ఇది;
   }
 
   // delete the current contents
   releaseArray();
 
-  if(src.isEmpty()) {
+  ఒకవేళ(src.is_ఖాళీలు()) {
     // empty string - use the stack buffer
-    setToEmpty();
-    return *this;
+    సమితి_గమ్యం_ఖాళీలు();
+    తిరిగి *ఇది;
   }
 
   // fLength>0 and not an "open" src.getBuffer(minCapacity)
-  fUnion.fFields.fLengthAndFlags = src.fUnion.fFields.fLengthAndFlags;
-  switch(src.fUnion.fFields.fLengthAndFlags & kAllStorageFlags) {
-  case kShortString:
+  fUnion.fFields.f_నిడివి_And_Flags = src.fUnion.fFields.f_నిడివి_And_Flags;
+  ఎంపిక(src.fUnion.fFields.f_నిడివి_And_Flags & kAllStorageFlags) {
+  స్థితి kShortString:
     // short string using the stack buffer, do the same
-    uprv_memcpy(fUnion.fStackFields.fBuffer, src.fUnion.fStackFields.fBuffer,
-                getShortLength() * U_SIZEOF_UCHAR);
-    break;
-  case kLongString:
+    uprv_memcpy(fUnion.f_దొంతర_Fields.f_బఫరు, src.fUnion.f_దొంతర_Fields.f_బఫరు,
+                get_Short_నిడివి() * U_SIZEOF_UCHAR);
+    ఆపు;
+  స్థితి kLongString:
     // src uses a refCounted string buffer, use that buffer with refCount
     // src is const, use a cast - we don't actually change it
-    const_cast<UnicodeString &>(src).addRef();
+    const_cast<UnicodeString &>(src).కూడు_Ref();
     // copy all fields, share the reference-counted buffer
     fUnion.fFields.fArray = src.fUnion.fFields.fArray;
-    fUnion.fFields.fCapacity = src.fUnion.fFields.fCapacity;
-    if(!hasShortLength()) {
-      fUnion.fFields.fLength = src.fUnion.fFields.fLength;
+    fUnion.fFields.f_సామర్థ్యం = src.fUnion.fFields.f_సామర్థ్యం;
+    ఒకవేళ(!has_Short_నిడివి()) {
+      fUnion.fFields.f_నిడివి = src.fUnion.fFields.f_నిడివి;
     }
-    break;
-  case kReadonlyAlias:
-    if(fastCopy) {
+    ఆపు;
+  స్థితి kReadonlyAlias:
+    ఒకవేళ(fastCopy) {
       // src is a readonly alias, do the same
       // -> maintain the readonly alias as such
       fUnion.fFields.fArray = src.fUnion.fFields.fArray;
-      fUnion.fFields.fCapacity = src.fUnion.fFields.fCapacity;
-      if(!hasShortLength()) {
-        fUnion.fFields.fLength = src.fUnion.fFields.fLength;
+      fUnion.fFields.f_సామర్థ్యం = src.fUnion.fFields.f_సామర్థ్యం;
+      ఒకవేళ(!has_Short_నిడివి()) {
+        fUnion.fFields.f_నిడివి = src.fUnion.fFields.f_నిడివి;
       }
-      break;
+      ఆపు;
     }
     // else if(!fastCopy) fall through to case kWritableAlias
     // -> allocate a new buffer and copy the contents
     U_FALLTHROUGH;
-  case kWritableAlias: {
+  స్థితి kWritableAlias: {
     // src is a writable alias; we make a copy of that instead
-    int32_t srcLength = src.length();
-    if(allocate(srcLength)) {
-      u_memcpy(getArrayStart(), src.getArrayStart(), srcLength);
-      setLength(srcLength);
-      break;
+    int32_t src_నిడివి = src.length();
+    ఒకవేళ(allocate(src_నిడివి)) {
+      u_memcpy(get_Array_ప్రారంభం(), src.get_Array_ప్రారంభం(), src_నిడివి);
+      సమితి_నిడివి(src_నిడివి);
+      ఆపు;
     }
     // if there is not enough memory, then fall through to setting to bogus
     U_FALLTHROUGH;
   }
-  default:
+  అప్రమేయ:
     // if src is bogus, set ourselves to bogus
     // do not call setToBogus() here because fArray and flags are not consistent here
-    fUnion.fFields.fLengthAndFlags = kIsBogus;
-    fUnion.fFields.fArray = nullptr;
-    fUnion.fFields.fCapacity = 0;
-    break;
+    fUnion.fFields.f_నిడివి_And_Flags = kIsBogus;
+    fUnion.fFields.fArray = శూన్యసూచిక;
+    fUnion.fFields.f_సామర్థ్యం = 0;
+    ఆపు;
   }
 
-  return *this;
+  తిరిగి *ఇది;
 }
 
-UnicodeString& UnicodeString::operator=(UnicodeString&& src) noexcept U_LIFETIME_BOUND {
+UnicodeString& UnicodeString::క్రియాకారకం=(UnicodeString&& src) noexcept U_LIFETIME_BOUND {
   // No explicit check for self move assignment, consistent with standard library.
   // Self move assignment causes no crash nor leak but might make the object bogus.
   releaseArray();
-  copyFieldsFrom(src, true);
-  return *this;
+  copyFieldsFrom(src, నిజం);
+  తిరిగి *ఇది;
 }
 
 // Same as move assignment except without memory management.
-void UnicodeString::copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept {
-  int16_t lengthAndFlags = fUnion.fFields.fLengthAndFlags = src.fUnion.fFields.fLengthAndFlags;
-  if(lengthAndFlags & kUsingStackBuffer) {
+శూన్య UnicodeString::copyFieldsFrom(UnicodeString &src, UBool సమితి_Src_గమ్యం_Bogus) noexcept {
+  int16_t నిడివి_And_Flags = fUnion.fFields.f_నిడివి_And_Flags = src.fUnion.fFields.f_నిడివి_And_Flags;
+  ఒకవేళ(నిడివి_And_Flags & k_Using_దొంతర_బఫరు) {
     // Short string using the stack buffer, copy the contents.
     // Check for self assignment to prevent "overlap in memcpy" warnings,
     // although it should be harmless to copy a buffer to itself exactly.
-    if(this != &src) {
-      uprv_memcpy(fUnion.fStackFields.fBuffer, src.fUnion.fStackFields.fBuffer,
-                  getShortLength() * U_SIZEOF_UCHAR);
+    ఒకవేళ(ఇది != &src) {
+      uprv_memcpy(fUnion.f_దొంతర_Fields.f_బఫరు, src.fUnion.f_దొంతర_Fields.f_బఫరు,
+                  get_Short_నిడివి() * U_SIZEOF_UCHAR);
     }
-  } else {
+  } లేకపోతే {
     // In all other cases, copy all fields.
     fUnion.fFields.fArray = src.fUnion.fFields.fArray;
-    fUnion.fFields.fCapacity = src.fUnion.fFields.fCapacity;
-    if(!hasShortLength()) {
-      fUnion.fFields.fLength = src.fUnion.fFields.fLength;
+    fUnion.fFields.f_సామర్థ్యం = src.fUnion.fFields.f_సామర్థ్యం;
+    ఒకవేళ(!has_Short_నిడివి()) {
+      fUnion.fFields.f_నిడివి = src.fUnion.fFields.f_నిడివి;
     }
-    if(setSrcToBogus) {
+    ఒకవేళ(సమితి_Src_గమ్యం_Bogus) {
       // Set src to bogus without releasing any memory.
-      src.fUnion.fFields.fLengthAndFlags = kIsBogus;
-      src.fUnion.fFields.fArray = nullptr;
-      src.fUnion.fFields.fCapacity = 0;
+      src.fUnion.fFields.f_నిడివి_And_Flags = kIsBogus;
+      src.fUnion.fFields.fArray = శూన్యసూచిక;
+      src.fUnion.fFields.f_సామర్థ్యం = 0;
     }
   }
 }
 
-void UnicodeString::swap(UnicodeString &other) noexcept {
-  UnicodeString temp;  // Empty short string: Known not to need releaseArray().
+శూన్య UnicodeString::swap(UnicodeString &other) noexcept {
+  UnicodeString తాత్కాలిక;  // Empty short string: Known not to need releaseArray().
   // Copy fields without resetting source values in between.
-  temp.copyFieldsFrom(*this, false);
-  this->copyFieldsFrom(other, false);
-  other.copyFieldsFrom(temp, false);
+  తాత్కాలిక.copyFieldsFrom(*ఇది, అబద్ధం);
+  ఇది->copyFieldsFrom(other, అబద్ధం);
+  other.copyFieldsFrom(తాత్కాలిక, అబద్ధం);
   // Set temp to an empty string so that other's memory is not released twice.
-  temp.fUnion.fFields.fLengthAndFlags = kShortString;
+  తాత్కాలిక.fUnion.fFields.f_నిడివి_And_Flags = kShortString;
 }
 
 //========================================
 // Miscellaneous operations
 //========================================
 
-UnicodeString UnicodeString::unescape() const {
-    UnicodeString result(length(), static_cast<UChar32>(0), static_cast<int32_t>(0)); // construct with capacity
-    if (result.isBogus()) {
-        return result;
+UnicodeString UnicodeString::unescape() స్థిరరాశి {
+    UnicodeString ఫలితం(length(), static_cast<UChar32>(0), static_cast<int32_t>(0)); // construct with capacity
+    ఒకవేళ (ఫలితం.isBogus()) {
+        తిరిగి ఫలితం;
     }
-    const char16_t *array = getBuffer();
+    స్థిరరాశి char16_t *array = get_బఫరు();
     int32_t len = length();
     int32_t prev = 0;
-    for (int32_t i=0;;) {
-        if (i == len) {
-            result.append(array, prev, len - prev);
-            break;
+    కొరకు (int32_t i=0;;) {
+        ఒకవేళ (i == len) {
+            ఫలితం.append(array, prev, len - prev);
+            ఆపు;
         }
-        if (array[i++] == 0x5C /*'\\'*/) {
-            result.append(array, prev, (i - 1) - prev);
+        ఒకవేళ (array[i++] == 0x5C /*'\\'*/) {
+            ఫలితం.append(array, prev, (i - 1) - prev);
             UChar32 c = unescapeAt(i); // advances i
-            if (c < 0) {
-                result.remove(); // return empty string
-                break; // invalid escape sequence
+            ఒకవేళ (c < 0) {
+                ఫలితం.remove(); // return empty string
+                ఆపు; // invalid escape sequence
             }
-            result.append(c);
+            ఫలితం.append(c);
             prev = i;
         }
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-UChar32 UnicodeString::unescapeAt(int32_t &offset) const {
-    return u_unescapeAt(UnicodeString_charAt, &offset, length(), (void*)this);
+UChar32 UnicodeString::unescapeAt(int32_t &స్థానభ్రంశం) స్థిరరాశి {
+    తిరిగి u_unescapeAt(UnicodeString_charAt, &స్థానభ్రంశం, length(), (శూన్య*)ఇది);
 }
 
 //========================================
 // Read-only implementation
 //========================================
 UBool
-UnicodeString::doEquals(const char16_t *text, int32_t len) const {
+UnicodeString::doEquals(స్థిరరాశి char16_t *పాఠ్యం, int32_t len) స్థిరరాశి {
   // Requires: this not bogus and have same lengths.
   // Byte-wise comparison works for equality regardless of endianness.
-  return uprv_memcmp(getArrayStart(), text, len * U_SIZEOF_UCHAR) == 0;
+  తిరిగి uprv_memcmp(get_Array_ప్రారంభం(), పాఠ్యం, len * U_SIZEOF_UCHAR) == 0;
 }
 
 UBool
-UnicodeString::doEqualsSubstring( int32_t start,
+UnicodeString::doEqualsSubstring( int32_t ప్రారంభం,
               int32_t length,
-              const char16_t *srcChars,
-              int32_t srcStart,
-              int32_t srcLength) const
+              స్థిరరాశి char16_t *srcChars,
+              int32_t src_ప్రారంభం,
+              int32_t src_నిడివి) స్థిరరాశి
 {
   // compare illegal string values
-  if(isBogus()) {
-    return false;
+  ఒకవేళ(isBogus()) {
+    తిరిగి అబద్ధం;
   }
   
   // pin indices to legal values
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
-  if(srcChars == nullptr) {
+  ఒకవేళ(srcChars == శూన్యసూచిక) {
     // treat const char16_t *srcChars==nullptr as an empty string
-    return length == 0 ? true : false;
+    తిరిగి length == 0 ? నిజం : అబద్ధం;
   }
 
   // get the correct pointer
-  const char16_t *chars = getArrayStart();
+  స్థిరరాశి char16_t *chars = get_Array_ప్రారంభం();
 
-  chars += start;
-  srcChars += srcStart;
+  chars += ప్రారంభం;
+  srcChars += src_ప్రారంభం;
 
   // get the srcLength if necessary
-  if(srcLength < 0) {
-    srcLength = u_strlen(srcChars + srcStart);
+  ఒకవేళ(src_నిడివి < 0) {
+    src_నిడివి = u_strlen(srcChars + src_ప్రారంభం);
   }
 
-  if (length != srcLength) {
-    return false;
+  ఒకవేళ (length != src_నిడివి) {
+    తిరిగి అబద్ధం;
   }
 
-  if(length == 0 || chars == srcChars) {
-    return true;
+  ఒకవేళ(length == 0 || chars == srcChars) {
+    తిరిగి నిజం;
   }
 
-  return u_memcmp(chars, srcChars, srcLength) == 0;
+  తిరిగి u_memcmp(chars, srcChars, src_నిడివి) == 0;
 }
 
 int8_t
-UnicodeString::doCompare( int32_t start,
+UnicodeString::doCompare( int32_t ప్రారంభం,
               int32_t length,
-              const char16_t *srcChars,
-              int32_t srcStart,
-              int32_t srcLength) const
+              స్థిరరాశి char16_t *srcChars,
+              int32_t src_ప్రారంభం,
+              int32_t src_నిడివి) స్థిరరాశి
 {
   // compare illegal string values
-  if(isBogus()) {
-    return -1;
+  ఒకవేళ(isBogus()) {
+    తిరిగి -1;
   }
   
   // pin indices to legal values
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
-  if(srcChars == nullptr) {
+  ఒకవేళ(srcChars == శూన్యసూచిక) {
     // treat const char16_t *srcChars==nullptr as an empty string
-    return length == 0 ? 0 : 1;
+    తిరిగి length == 0 ? 0 : 1;
   }
 
   // get the correct pointer
-  const char16_t *chars = getArrayStart();
+  స్థిరరాశి char16_t *chars = get_Array_ప్రారంభం();
 
-  chars += start;
-  srcChars += srcStart;
+  chars += ప్రారంభం;
+  srcChars += src_ప్రారంభం;
 
-  int32_t minLength;
-  int8_t lengthResult;
+  int32_t min_నిడివి;
+  int8_t నిడివి_ఫలితం;
 
   // get the srcLength if necessary
-  if(srcLength < 0) {
-    srcLength = u_strlen(srcChars + srcStart);
+  ఒకవేళ(src_నిడివి < 0) {
+    src_నిడివి = u_strlen(srcChars + src_ప్రారంభం);
   }
 
   // are we comparing different lengths?
-  if(length != srcLength) {
-    if(length < srcLength) {
-      minLength = length;
-      lengthResult = -1;
-    } else {
-      minLength = srcLength;
-      lengthResult = 1;
+  ఒకవేళ(length != src_నిడివి) {
+    ఒకవేళ(length < src_నిడివి) {
+      min_నిడివి = length;
+      నిడివి_ఫలితం = -1;
+    } లేకపోతే {
+      min_నిడివి = src_నిడివి;
+      నిడివి_ఫలితం = 1;
     }
-  } else {
-    minLength = length;
-    lengthResult = 0;
+  } లేకపోతే {
+    min_నిడివి = length;
+    నిడివి_ఫలితం = 0;
   }
 
   /*
@@ -801,439 +801,439 @@ UnicodeString::doCompare( int32_t start,
    * does not become 0 itself
    */
 
-  if(minLength > 0 && chars != srcChars) {
-    int32_t result;
+  ఒకవేళ(min_నిడివి > 0 && chars != srcChars) {
+    int32_t ఫలితం;
 
-#   if U_IS_BIG_ENDIAN 
+#   ఒకవేళ U_IS_BIG_ENDIAN 
       // big-endian: byte comparison works
-      result = uprv_memcmp(chars, srcChars, minLength * sizeof(char16_t));
-      if(result != 0) {
-        return (int8_t)(result >> 15 | 1);
+      ఫలితం = uprv_memcmp(chars, srcChars, min_నిడివి * పరిమాణం(char16_t));
+      ఒకవేళ(ఫలితం != 0) {
+        తిరిగి (int8_t)(ఫలితం >> 15 | 1);
       }
-#   else
+#   లేకపోతే
       // little-endian: compare char16_t units
-      do {
-        result = static_cast<int32_t>(*(chars++)) - static_cast<int32_t>(*(srcChars++));
-        if(result != 0) {
-          return static_cast<int8_t>(result >> 15 | 1);
+      చేయి {
+        ఫలితం = static_cast<int32_t>(*(chars++)) - static_cast<int32_t>(*(srcChars++));
+        ఒకవేళ(ఫలితం != 0) {
+          తిరిగి static_cast<int8_t>(ఫలితం >> 15 | 1);
         }
-      } while(--minLength > 0);
+      } అయితే(--min_నిడివి > 0);
 #   endif
   }
-  return lengthResult;
+  తిరిగి నిడివి_ఫలితం;
 }
 
 /* String compare in code point order - doCompare() compares in code unit order. */
 int8_t
-UnicodeString::doCompareCodePointOrder(int32_t start,
+UnicodeString::do_Compare_సంకేతం_బిందువు_క్రమం(int32_t ప్రారంభం,
                                        int32_t length,
-                                       const char16_t *srcChars,
-                                       int32_t srcStart,
-                                       int32_t srcLength) const
+                                       స్థిరరాశి char16_t *srcChars,
+                                       int32_t src_ప్రారంభం,
+                                       int32_t src_నిడివి) స్థిరరాశి
 {
   // compare illegal string values
   // treat const char16_t *srcChars==nullptr as an empty string
-  if(isBogus()) {
-    return -1;
+  ఒకవేళ(isBogus()) {
+    తిరిగి -1;
   }
 
   // pin indices to legal values
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
-  if(srcChars == nullptr) {
-    srcStart = srcLength = 0;
+  ఒకవేళ(srcChars == శూన్యసూచిక) {
+    src_ప్రారంభం = src_నిడివి = 0;
   }
 
-  int32_t diff = uprv_strCompare(getArrayStart() + start, length, (srcChars!=nullptr)?(srcChars + srcStart):nullptr, srcLength, false, true);
+  int32_t diff = uprv_strCompare(get_Array_ప్రారంభం() + ప్రారంభం, length, (srcChars!=శూన్యసూచిక)?(srcChars + src_ప్రారంభం):శూన్యసూచిక, src_నిడివి, అబద్ధం, నిజం);
   /* translate the 32-bit result into an 8-bit one */
-  if(diff!=0) {
-    return static_cast<int8_t>(diff >> 15 | 1);
-  } else {
-    return 0;
+  ఒకవేళ(diff!=0) {
+    తిరిగి static_cast<int8_t>(diff >> 15 | 1);
+  } లేకపోతే {
+    తిరిగి 0;
   }
 }
 
 int32_t
-UnicodeString::getLength() const {
-    return length();
+UnicodeString::get_నిడివి() స్థిరరాశి {
+    తిరిగి length();
 }
 
 char16_t
-UnicodeString::getCharAt(int32_t offset) const {
-  return charAt(offset);
+UnicodeString::getCharAt(int32_t స్థానభ్రంశం) స్థిరరాశి {
+  తిరిగి charAt(స్థానభ్రంశం);
 }
 
 UChar32
-UnicodeString::getChar32At(int32_t offset) const {
-  return char32At(offset);
+UnicodeString::getChar32At(int32_t స్థానభ్రంశం) స్థిరరాశి {
+  తిరిగి char32At(స్థానభ్రంశం);
 }
 
 UChar32
-UnicodeString::char32At(int32_t offset) const
+UnicodeString::char32At(int32_t స్థానభ్రంశం) స్థిరరాశి
 {
   int32_t len = length();
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(len)) {
-    const char16_t *array = getArrayStart();
+  ఒకవేళ (static_cast<uint32_t>(స్థానభ్రంశం) < static_cast<uint32_t>(len)) {
+    స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
     UChar32 c;
-    U16_GET(array, 0, offset, len, c);
-    return c;
-  } else {
-    return kInvalidUChar;
+    U16_GET(array, 0, స్థానభ్రంశం, len, c);
+    తిరిగి c;
+  } లేకపోతే {
+    తిరిగి kInvalidUChar;
   }
 }
 
 int32_t
-UnicodeString::getChar32Start(int32_t offset) const {
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
-    const char16_t *array = getArrayStart();
-    U16_SET_CP_START(array, 0, offset);
-    return offset;
-  } else {
-    return 0;
+UnicodeString::get_Char32_ప్రారంభం(int32_t స్థానభ్రంశం) స్థిరరాశి {
+  ఒకవేళ (static_cast<uint32_t>(స్థానభ్రంశం) < static_cast<uint32_t>(length())) {
+    స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+    U16_సమితి_CP_ప్రారంభం(array, 0, స్థానభ్రంశం);
+    తిరిగి స్థానభ్రంశం;
+  } లేకపోతే {
+    తిరిగి 0;
   }
 }
 
 int32_t
-UnicodeString::getChar32Limit(int32_t offset) const {
+UnicodeString::get_Char32_హద్దు(int32_t స్థానభ్రంశం) స్థిరరాశి {
   int32_t len = length();
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(len)) {
-    const char16_t *array = getArrayStart();
-    U16_SET_CP_LIMIT(array, 0, offset, len);
-    return offset;
-  } else {
-    return len;
+  ఒకవేళ (static_cast<uint32_t>(స్థానభ్రంశం) < static_cast<uint32_t>(len)) {
+    స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+    U16_సమితి_CP_హద్దు(array, 0, స్థానభ్రంశం, len);
+    తిరిగి స్థానభ్రంశం;
+  } లేకపోతే {
+    తిరిగి len;
   }
 }
 
 int32_t
-UnicodeString::countChar32(int32_t start, int32_t length) const {
-  pinIndices(start, length);
+UnicodeString::లెక్క_Char32(int32_t ప్రారంభం, int32_t length) స్థిరరాశి {
+  pinIndices(ప్రారంభం, length);
   // if(isBogus()) then fArray==0 and start==0 - u_countChar32() checks for nullptr
-  return u_countChar32(getArrayStart()+start, length);
+  తిరిగి u_లెక్క_Char32(get_Array_ప్రారంభం()+ప్రారంభం, length);
 }
 
 UBool
-UnicodeString::hasMoreChar32Than(int32_t start, int32_t length, int32_t number) const {
-  pinIndices(start, length);
+UnicodeString::has_మరిన్ని_Char32_Than(int32_t ప్రారంభం, int32_t length, int32_t number) స్థిరరాశి {
+  pinIndices(ప్రారంభం, length);
   // if(isBogus()) then fArray==0 and start==0 - u_strHasMoreChar32Than() checks for nullptr
-  return u_strHasMoreChar32Than(getArrayStart()+start, length, number);
+  తిరిగి u_str_Has_మరిన్ని_Char32_Than(get_Array_ప్రారంభం()+ప్రారంభం, length, number);
 }
 
 int32_t
-UnicodeString::moveIndex32(int32_t index, int32_t delta) const {
+UnicodeString::moveIndex32(int32_t సూచీ, int32_t delta) స్థిరరాశి {
   // pin index
   int32_t len = length();
-  if(index<0) {
-    index=0;
-  } else if(index>len) {
-    index=len;
+  ఒకవేళ(సూచీ<0) {
+    సూచీ=0;
+  } లేకపోతే ఒకవేళ(సూచీ>len) {
+    సూచీ=len;
   }
 
-  const char16_t *array = getArrayStart();
-  if(delta>0) {
-    U16_FWD_N(array, index, len, delta);
-  } else {
-    U16_BACK_N(array, 0, index, -delta);
+  స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+  ఒకవేళ(delta>0) {
+    U16_FWD_N(array, సూచీ, len, delta);
+  } లేకపోతే {
+    U16_వెనుక_N(array, 0, సూచీ, -delta);
   }
 
-  return index;
+  తిరిగి సూచీ;
 }
 
-void
-UnicodeString::doExtract(int32_t start,
+శూన్య
+UnicodeString::do_వెలికితీయి(int32_t ప్రారంభం,
              int32_t length,
              char16_t *dst,
-             int32_t dstStart) const
+             int32_t dst_ప్రారంభం) స్థిరరాశి
 {
   // pin indices to legal values
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
   // do not copy anything if we alias dst itself
-  const char16_t *array = getArrayStart();
-  if(array + start != dst + dstStart) {
-    us_arrayCopy(array, start, dst, dstStart, length);
+  స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+  ఒకవేళ(array + ప్రారంభం != dst + dst_ప్రారంభం) {
+    us_arrayCopy(array, ప్రారంభం, dst, dst_ప్రారంభం, length);
   }
 }
 
 int32_t
-UnicodeString::extract(Char16Ptr dest, int32_t destCapacity,
-                       UErrorCode &errorCode) const {
+UnicodeString::extract(Char16Ptr dest, int32_t dest_సామర్థ్యం,
+                       UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
   int32_t len = length();
-  if(U_SUCCESS(errorCode)) {
-    if (isBogus() || destCapacity < 0 || (destCapacity > 0 && dest == nullptr)) {
-      errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else {
-      const char16_t *array = getArrayStart();
-      if(len>0 && len<=destCapacity && array!=dest) {
+  ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+    ఒకవేళ (isBogus() || dest_సామర్థ్యం < 0 || (dest_సామర్థ్యం > 0 && dest == శూన్యసూచిక)) {
+      error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+    } లేకపోతే {
+      స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+      ఒకవేళ(len>0 && len<=dest_సామర్థ్యం && array!=dest) {
         u_memcpy(dest, array, len);
       }
-      return u_terminateUChars(dest, destCapacity, len, &errorCode);
+      తిరిగి u_terminateUChars(dest, dest_సామర్థ్యం, len, &error_సంకేతం);
     }
   }
 
-  return len;
+  తిరిగి len;
 }
 
 int32_t
-UnicodeString::extract(int32_t start,
+UnicodeString::extract(int32_t ప్రారంభం,
                        int32_t length,
-                       char *target,
-                       int32_t targetCapacity,
-                       enum EInvariant) const
+                       అక్షరం *లక్ష్యం,
+                       int32_t లక్ష్యం_సామర్థ్యం,
+                       గణన EInvariant) స్థిరరాశి
 {
   // if the arguments are illegal, then do nothing
-  if(targetCapacity < 0 || (targetCapacity > 0 && target == nullptr)) {
-    return 0;
+  ఒకవేళ(లక్ష్యం_సామర్థ్యం < 0 || (లక్ష్యం_సామర్థ్యం > 0 && లక్ష్యం == శూన్యసూచిక)) {
+    తిరిగి 0;
   }
 
   // pin the indices to legal values
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
-  if(length <= targetCapacity) {
-    u_UCharsToChars(getArrayStart() + start, target, length);
+  ఒకవేళ(length <= లక్ష్యం_సామర్థ్యం) {
+    u_UChars_గమ్యం_Chars(get_Array_ప్రారంభం() + ప్రారంభం, లక్ష్యం, length);
   }
-  UErrorCode status = U_ZERO_ERROR;
-  return u_terminateChars(target, targetCapacity, length, &status);
+  UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+  తిరిగి u_terminateChars(లక్ష్యం, లక్ష్యం_సామర్థ్యం, length, &స్థితి_2);
 }
 
 UnicodeString
-UnicodeString::tempSubString(int32_t start, int32_t len) const U_LIFETIME_BOUND {
-  pinIndices(start, len);
-  const char16_t *array = getBuffer();  // not getArrayStart() to check kIsBogus & kOpenGetBuffer
-  if(array==nullptr) {
-    array=fUnion.fStackFields.fBuffer;  // anything not nullptr because that would make an empty string
+UnicodeString::తాత్కాలిక_Sub_String(int32_t ప్రారంభం, int32_t len) స్థిరరాశి U_LIFETIME_BOUND {
+  pinIndices(ప్రారంభం, len);
+  స్థిరరాశి char16_t *array = get_బఫరు();  // not getArrayStart() to check kIsBogus & kOpenGetBuffer
+  ఒకవేళ(array==శూన్యసూచిక) {
+    array=fUnion.f_దొంతర_Fields.f_బఫరు;  // anything not nullptr because that would make an empty string
     len=-2;  // bogus result string
   }
-  return UnicodeString(false, array + start, len);
+  తిరిగి UnicodeString(అబద్ధం, array + ప్రారంభం, len);
 }
 
 int32_t
-UnicodeString::toUTF8(int32_t start, int32_t len,
-                      char *target, int32_t capacity) const {
-  pinIndices(start, len);
+UnicodeString::గమ్యం_UTF8(int32_t ప్రారంభం, int32_t len,
+                      అక్షరం *లక్ష్యం, int32_t capacity) స్థిరరాశి {
+  pinIndices(ప్రారంభం, len);
   int32_t length8;
-  UErrorCode errorCode = U_ZERO_ERROR;
-  u_strToUTF8WithSub(target, capacity, &length8,
-                     getBuffer() + start, len,
+  UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
+  u_str_గమ్యం_UTF8_With_Sub(లక్ష్యం, capacity, &length8,
+                     get_బఫరు() + ప్రారంభం, len,
                      0xFFFD,  // Standard substitution character.
-                     nullptr,    // Don't care about number of substitutions.
-                     &errorCode);
-  return length8;
+                     శూన్యసూచిక,    // Don't care about number of substitutions.
+                     &error_సంకేతం);
+  తిరిగి length8;
 }
 
-#if U_CHARSET_IS_UTF8
+#ఒకవేళ U_CHARSET_IS_UTF8
 
 int32_t
-UnicodeString::extract(int32_t start, int32_t len,
-                       char *target, uint32_t dstSize) const {
+UnicodeString::extract(int32_t ప్రారంభం, int32_t len,
+                       అక్షరం *లక్ష్యం, uint32_t dst_కొలత) స్థిరరాశి {
   // if the arguments are illegal, then do nothing
-  if (/*dstSize < 0 || */(dstSize > 0 && target == nullptr)) {
-    return 0;
+  ఒకవేళ (/*dstSize < 0 || */(dst_కొలత > 0 && లక్ష్యం == శూన్యసూచిక)) {
+    తిరిగి 0;
   }
-  return toUTF8(start, len, target, dstSize <= 0x7fffffff ? static_cast<int32_t>(dstSize) : 0x7fffffff);
+  తిరిగి గమ్యం_UTF8(ప్రారంభం, len, లక్ష్యం, dst_కొలత <= 0x7fffffff ? static_cast<int32_t>(dst_కొలత) : 0x7fffffff);
 }
 
 // else see unistr_cnv.cpp
-#endif
+#అయితే_ముగింపు
 
-void 
-UnicodeString::extractBetween(int32_t start,
-                  int32_t limit,
-                  UnicodeString& target) const {
-  pinIndex(start);
-  pinIndex(limit);
-  doExtract(start, limit - start, target);
+శూన్య 
+UnicodeString::వెలికితీయి_Between(int32_t ప్రారంభం,
+                  int32_t హద్దు,
+                  UnicodeString& లక్ష్యం) స్థిరరాశి {
+  pin_సూచీ(ప్రారంభం);
+  pin_సూచీ(హద్దు);
+  do_వెలికితీయి(ప్రారంభం, హద్దు - ప్రారంభం, లక్ష్యం);
 }
 
 // When converting from UTF-16 to UTF-8, the result will have at most 3 times
 // as many bytes as the source has UChars.
 // The "worst cases" are writing systems like Indic, Thai and CJK with
 // 3:1 bytes:UChars.
-void
-UnicodeString::toUTF8(ByteSink &sink) const {
+శూన్య
+UnicodeString::గమ్యం_UTF8(ByteSink &sink) స్థిరరాశి {
   int32_t length16 = length();
-  if(length16 != 0) {
-    char stackBuffer[1024];
-    int32_t capacity = static_cast<int32_t>(sizeof(stackBuffer));
-    UBool utf8IsOwned = false;
-    char *utf8 = sink.GetAppendBuffer(length16 < capacity ? length16 : capacity,
+  ఒకవేళ(length16 != 0) {
+    అక్షరం దొంతర_బఫరు[1024];
+    int32_t capacity = static_cast<int32_t>(పరిమాణం(దొంతర_బఫరు));
+    UBool utf8IsOwned = అబద్ధం;
+    అక్షరం *utf8 = sink.Get_Append_బఫరు(length16 < capacity ? length16 : capacity,
                                       3*length16,
-                                      stackBuffer, capacity,
+                                      దొంతర_బఫరు, capacity,
                                       &capacity);
     int32_t length8 = 0;
-    UErrorCode errorCode = U_ZERO_ERROR;
-    u_strToUTF8WithSub(utf8, capacity, &length8,
-                       getBuffer(), length16,
+    UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
+    u_str_గమ్యం_UTF8_With_Sub(utf8, capacity, &length8,
+                       get_బఫరు(), length16,
                        0xFFFD,  // Standard substitution character.
-                       nullptr,    // Don't care about number of substitutions.
-                       &errorCode);
-    if(errorCode == U_BUFFER_OVERFLOW_ERROR) {
-      utf8 = static_cast<char*>(uprv_malloc(length8));
-      if(utf8 != nullptr) {
-        utf8IsOwned = true;
-        errorCode = U_ZERO_ERROR;
-        u_strToUTF8WithSub(utf8, length8, &length8,
-                           getBuffer(), length16,
+                       శూన్యసూచిక,    // Don't care about number of substitutions.
+                       &error_సంకేతం);
+    ఒకవేళ(error_సంకేతం == U_బఫరు_అధికప్రవాహం_ERROR) {
+      utf8 = static_cast<అక్షరం*>(uprv_malloc(length8));
+      ఒకవేళ(utf8 != శూన్యసూచిక) {
+        utf8IsOwned = నిజం;
+        error_సంకేతం = U_ZERO_ERROR;
+        u_str_గమ్యం_UTF8_With_Sub(utf8, length8, &length8,
+                           get_బఫరు(), length16,
                            0xFFFD,  // Standard substitution character.
-                           nullptr,    // Don't care about number of substitutions.
-                           &errorCode);
-      } else {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
+                           శూన్యసూచిక,    // Don't care about number of substitutions.
+                           &error_సంకేతం);
+      } లేకపోతే {
+        error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
       }
     }
-    if(U_SUCCESS(errorCode)) {
+    ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
       sink.Append(utf8, length8);
       sink.Flush();
     }
-    if(utf8IsOwned) {
+    ఒకవేళ(utf8IsOwned) {
       uprv_free(utf8);
     }
   }
 }
 
 int32_t
-UnicodeString::toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) const {
+UnicodeString::గమ్యం_UTF32(UChar32 *utf32, int32_t capacity, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
   int32_t length32=0;
-  if(U_SUCCESS(errorCode)) {
+  ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
     // getBuffer() and u_strToUTF32WithSub() check for illegal arguments.
-    u_strToUTF32WithSub(utf32, capacity, &length32,
-        getBuffer(), length(),
+    u_str_గమ్యం_UTF32_With_Sub(utf32, capacity, &length32,
+        get_బఫరు(), length(),
         0xfffd,  // Substitution character.
-        nullptr,    // Don't care about number of substitutions.
-        &errorCode);
+        శూన్యసూచిక,    // Don't care about number of substitutions.
+        &error_సంకేతం);
   }
-  return length32;
+  తిరిగి length32;
 }
 
 int32_t 
-UnicodeString::indexOf(const char16_t *srcChars,
-               int32_t srcStart,
-               int32_t srcLength,
-               int32_t start,
-               int32_t length) const
+UnicodeString::సూచీ_యొక్క(స్థిరరాశి char16_t *srcChars,
+               int32_t src_ప్రారంభం,
+               int32_t src_నిడివి,
+               int32_t ప్రారంభం,
+               int32_t length) స్థిరరాశి
 {
-  if (isBogus() || srcChars == nullptr || srcStart < 0 || srcLength == 0) {
-    return -1;
+  ఒకవేళ (isBogus() || srcChars == శూన్యసూచిక || src_ప్రారంభం < 0 || src_నిడివి == 0) {
+    తిరిగి -1;
   }
 
   // UnicodeString does not find empty substrings
-  if(srcLength < 0 && srcChars[srcStart] == 0) {
-    return -1;
+  ఒకవేళ(src_నిడివి < 0 && srcChars[src_ప్రారంభం] == 0) {
+    తిరిగి -1;
   }
 
   // get the indices within bounds
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
   // find the first occurrence of the substring
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_strFindFirst(array + start, length, srcChars + srcStart, srcLength);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+  స్థిరరాశి char16_t *సరిపోలిక = u_str_కనుగొను_మొదటి(array + ప్రారంభం, length, srcChars + src_ప్రారంభం, src_నిడివి);
+  ఒకవేళ(సరిపోలిక == శూన్యసూచిక) {
+    తిరిగి -1;
+  } లేకపోతే {
+    తిరిగి static_cast<int32_t>(సరిపోలిక - array);
   }
 }
 
 int32_t
-UnicodeString::doIndexOf(char16_t c,
-             int32_t start,
-             int32_t length) const
+UnicodeString::do_సూచీ_యొక్క(char16_t c,
+             int32_t ప్రారంభం,
+             int32_t length) స్థిరరాశి
 {
   // pin indices
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
   // find the first occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memchr(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+  స్థిరరాశి char16_t *సరిపోలిక = u_memchr(array + ప్రారంభం, c, length);
+  ఒకవేళ(సరిపోలిక == శూన్యసూచిక) {
+    తిరిగి -1;
+  } లేకపోతే {
+    తిరిగి static_cast<int32_t>(సరిపోలిక - array);
   }
 }
 
 int32_t
-UnicodeString::doIndexOf(UChar32 c,
-                         int32_t start,
-                         int32_t length) const {
+UnicodeString::do_సూచీ_యొక్క(UChar32 c,
+                         int32_t ప్రారంభం,
+                         int32_t length) స్థిరరాశి {
   // pin indices
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
   // find the first occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memchr32(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+  స్థిరరాశి char16_t *సరిపోలిక = u_memchr32(array + ప్రారంభం, c, length);
+  ఒకవేళ(సరిపోలిక == శూన్యసూచిక) {
+    తిరిగి -1;
+  } లేకపోతే {
+    తిరిగి static_cast<int32_t>(సరిపోలిక - array);
   }
 }
 
 int32_t 
-UnicodeString::lastIndexOf(const char16_t *srcChars,
-               int32_t srcStart,
-               int32_t srcLength,
-               int32_t start,
-               int32_t length) const
+UnicodeString::చివరి_సూచీ_యొక్క(స్థిరరాశి char16_t *srcChars,
+               int32_t src_ప్రారంభం,
+               int32_t src_నిడివి,
+               int32_t ప్రారంభం,
+               int32_t length) స్థిరరాశి
 {
-  if (isBogus() || srcChars == nullptr || srcStart < 0 || srcLength == 0) {
-    return -1;
+  ఒకవేళ (isBogus() || srcChars == శూన్యసూచిక || src_ప్రారంభం < 0 || src_నిడివి == 0) {
+    తిరిగి -1;
   }
 
   // UnicodeString does not find empty substrings
-  if(srcLength < 0 && srcChars[srcStart] == 0) {
-    return -1;
+  ఒకవేళ(src_నిడివి < 0 && srcChars[src_ప్రారంభం] == 0) {
+    తిరిగి -1;
   }
 
   // get the indices within bounds
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
   // find the last occurrence of the substring
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_strFindLast(array + start, length, srcChars + srcStart, srcLength);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+  స్థిరరాశి char16_t *సరిపోలిక = u_str_కనుగొను_చివరి(array + ప్రారంభం, length, srcChars + src_ప్రారంభం, src_నిడివి);
+  ఒకవేళ(సరిపోలిక == శూన్యసూచిక) {
+    తిరిగి -1;
+  } లేకపోతే {
+    తిరిగి static_cast<int32_t>(సరిపోలిక - array);
   }
 }
 
 int32_t
-UnicodeString::doLastIndexOf(char16_t c,
-                 int32_t start,
-                 int32_t length) const
+UnicodeString::do_చివరి_సూచీ_యొక్క(char16_t c,
+                 int32_t ప్రారంభం,
+                 int32_t length) స్థిరరాశి
 {
-  if(isBogus()) {
-    return -1;
+  ఒకవేళ(isBogus()) {
+    తిరిగి -1;
   }
 
   // pin indices
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
   // find the last occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memrchr(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+  స్థిరరాశి char16_t *సరిపోలిక = u_memrchr(array + ప్రారంభం, c, length);
+  ఒకవేళ(సరిపోలిక == శూన్యసూచిక) {
+    తిరిగి -1;
+  } లేకపోతే {
+    తిరిగి static_cast<int32_t>(సరిపోలిక - array);
   }
 }
 
 int32_t
-UnicodeString::doLastIndexOf(UChar32 c,
-                             int32_t start,
-                             int32_t length) const {
+UnicodeString::do_చివరి_సూచీ_యొక్క(UChar32 c,
+                             int32_t ప్రారంభం,
+                             int32_t length) స్థిరరాశి {
   // pin indices
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
   // find the last occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memrchr32(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  స్థిరరాశి char16_t *array = get_Array_ప్రారంభం();
+  స్థిరరాశి char16_t *సరిపోలిక = u_memrchr32(array + ప్రారంభం, c, length);
+  ఒకవేళ(సరిపోలిక == శూన్యసూచిక) {
+    తిరిగి -1;
+  } లేకపోతే {
+    తిరిగి static_cast<int32_t>(సరిపోలిక - array);
   }
 }
 
@@ -1242,79 +1242,79 @@ UnicodeString::doLastIndexOf(UChar32 c,
 //========================================
 
 UnicodeString&
-UnicodeString::findAndReplace(int32_t start,
+UnicodeString::కనుగొను_And_Replace(int32_t ప్రారంభం,
                               int32_t length,
-                              const UnicodeString& oldText,
-                              int32_t oldStart,
-                              int32_t oldLength,
-                              const UnicodeString& newText,
-                              int32_t newStart,
-                              int32_t newLength) U_LIFETIME_BOUND
+                              స్థిరరాశి UnicodeString& old_పాఠ్యం,
+                              int32_t old_ప్రారంభం,
+                              int32_t old_నిడివి,
+                              స్థిరరాశి UnicodeString& new_పాఠ్యం,
+                              int32_t new_ప్రారంభం,
+                              int32_t new_నిడివి) U_LIFETIME_BOUND
 {
-  if(isBogus() || oldText.isBogus() || newText.isBogus()) {
-    return *this;
+  ఒకవేళ(isBogus() || old_పాఠ్యం.isBogus() || new_పాఠ్యం.isBogus()) {
+    తిరిగి *ఇది;
   }
 
-  pinIndices(start, length);
-  oldText.pinIndices(oldStart, oldLength);
-  newText.pinIndices(newStart, newLength);
+  pinIndices(ప్రారంభం, length);
+  old_పాఠ్యం.pinIndices(old_ప్రారంభం, old_నిడివి);
+  new_పాఠ్యం.pinIndices(new_ప్రారంభం, new_నిడివి);
 
-  if(oldLength == 0) {
-    return *this;
+  ఒకవేళ(old_నిడివి == 0) {
+    తిరిగి *ఇది;
   }
 
-  while(length > 0 && length >= oldLength) {
-    int32_t pos = indexOf(oldText, oldStart, oldLength, start, length);
-    if(pos < 0) {
+  అయితే(length > 0 && length >= old_నిడివి) {
+    int32_t pos = సూచీ_యొక్క(old_పాఠ్యం, old_ప్రారంభం, old_నిడివి, ప్రారంభం, length);
+    ఒకవేళ(pos < 0) {
       // no more oldText's here: done
-      break;
-    } else {
+      ఆపు;
+    } లేకపోతే {
       // we found oldText, replace it by newText and go beyond it
-      replace(pos, oldLength, newText, newStart, newLength);
-      length -= pos + oldLength - start;
-      start = pos + newLength;
+      replace(pos, old_నిడివి, new_పాఠ్యం, new_ప్రారంభం, new_నిడివి);
+      length -= pos + old_నిడివి - ప్రారంభం;
+      ప్రారంభం = pos + new_నిడివి;
     }
   }
 
-  return *this;
+  తిరిగి *ఇది;
 }
 
 
-void
-UnicodeString::setToBogus()
+శూన్య
+UnicodeString::సమితి_గమ్యం_Bogus()
 {
   releaseArray();
 
-  fUnion.fFields.fLengthAndFlags = kIsBogus;
-  fUnion.fFields.fArray = nullptr;
-  fUnion.fFields.fCapacity = 0;
+  fUnion.fFields.f_నిడివి_And_Flags = kIsBogus;
+  fUnion.fFields.fArray = శూన్యసూచిక;
+  fUnion.fFields.f_సామర్థ్యం = 0;
 }
 
 // turn a bogus string into an empty one
-void
+శూన్య
 UnicodeString::unBogus() {
-  if(fUnion.fFields.fLengthAndFlags & kIsBogus) {
-    setToEmpty();
+  ఒకవేళ(fUnion.fFields.f_నిడివి_And_Flags & kIsBogus) {
+    సమితి_గమ్యం_ఖాళీలు();
   }
 }
 
-const char16_t*
-UnicodeString::getTerminatedBuffer() U_LIFETIME_BOUND {
-  if(!isWritable()) {
-    return nullptr;
+స్థిరరాశి char16_t*
+UnicodeString::get_Terminated_బఫరు() U_LIFETIME_BOUND {
+  ఒకవేళ(!isWritable()) {
+    తిరిగి శూన్యసూచిక;
   }
-  char16_t *array = getArrayStart();
+  char16_t *array = get_Array_ప్రారంభం();
   int32_t len = length();
-  if(len < getCapacity()) {
-    if(fUnion.fFields.fLengthAndFlags & kBufferIsReadonly) {
+  ఒకవేళ(len < get_సామర్థ్యం()) {
+    ఒకవేళ(fUnion.fFields.f_నిడివి_And_Flags & k_బఫరు_Is_Readonly) {
       // If len<capacity on a read-only alias, then array[len] is
       // either the original NUL (if constructed with (true, s, length))
       // or one of the original string contents characters (if later truncated),
       // therefore we can assume that array[len] is initialized memory.
-      if(array[len] == 0) {
-        return array;
+      ఒకవేళ(array[len] == 0) {
+        తిరిగి array;
       }
-    } else if(((fUnion.fFields.fLengthAndFlags & kRefCounted) == 0 || refCount() == 1)) {
+    } లేకపోతే ఒకవేళ(((fUnion.fFields.f_నిడివి_And_Flags & kRefCounted) == 0 || ref_లెక్క() == 1)) {
       // kRefCounted: Do not write the NUL if the buffer is shared.
       // That is mostly safe, except when the length of one copy was modified
       // without copy-on-write, e.g., via truncate(newLength) or remove().
@@ -1324,385 +1324,385 @@ UnicodeString::getTerminatedBuffer() U_LIFETIME_BOUND {
       // Do not test if there is a NUL already because it might be uninitialized memory.
       // (That would be safe, but tools like valgrind & Purify would complain.)
       array[len] = 0;
-      return array;
+      తిరిగి array;
     }
   }
-  if(len<INT32_MAX && cloneArrayIfNeeded(len+1)) {
-    array = getArrayStart();
+  ఒకవేళ(len<INT32_MAX && cloneArrayIfNeeded(len+1)) {
+    array = get_Array_ప్రారంభం();
     array[len] = 0;
-    return array;
-  } else {
-    return nullptr;
+    తిరిగి array;
+  } లేకపోతే {
+    తిరిగి శూన్యసూచిక;
   }
 }
 
 // setTo() analogous to the readonly-aliasing constructor with the same signature
 UnicodeString&
-UnicodeString::setTo(UBool isTerminated,
-                     ConstChar16Ptr textPtr U_LIFETIME_BOUND,
-                     int32_t textLength) U_LIFETIME_BOUND
+UnicodeString::సమితి_గమ్యం(UBool isTerminated,
+                     ConstChar16Ptr పాఠ్యం_Ptr U_LIFETIME_BOUND,
+                     int32_t పాఠ్యం_నిడివి) U_LIFETIME_BOUND
 {
-  if(fUnion.fFields.fLengthAndFlags & kOpenGetBuffer) {
+  ఒకవేళ(fUnion.fFields.f_నిడివి_And_Flags & k_Open_Get_బఫరు) {
     // do not modify a string that has an "open" getBuffer(minCapacity)
-    return *this;
+    తిరిగి *ఇది;
   }
 
-  const char16_t *text = textPtr;
-  if(text == nullptr) {
+  స్థిరరాశి char16_t *పాఠ్యం = పాఠ్యం_Ptr;
+  ఒకవేళ(పాఠ్యం == శూన్యసూచిక) {
     // treat as an empty string, do not alias
     releaseArray();
-    setToEmpty();
-    return *this;
+    సమితి_గమ్యం_ఖాళీలు();
+    తిరిగి *ఇది;
   }
 
-  if( textLength < -1 ||
-      (textLength == -1 && !isTerminated) ||
-      (textLength >= 0 && isTerminated && text[textLength] != 0)
+  ఒకవేళ( పాఠ్యం_నిడివి < -1 ||
+      (పాఠ్యం_నిడివి == -1 && !isTerminated) ||
+      (పాఠ్యం_నిడివి >= 0 && isTerminated && పాఠ్యం[పాఠ్యం_నిడివి] != 0)
   ) {
-    setToBogus();
-    return *this;
+    సమితి_గమ్యం_Bogus();
+    తిరిగి *ఇది;
   }
 
   releaseArray();
 
-  if(textLength == -1) {
+  ఒకవేళ(పాఠ్యం_నిడివి == -1) {
     // text is terminated, or else it would have failed the above test
-    textLength = u_strlen(text);
+    పాఠ్యం_నిడివి = u_strlen(పాఠ్యం);
   }
-  fUnion.fFields.fLengthAndFlags = kReadonlyAlias;
-  setArray(const_cast<char16_t*>(text), textLength, isTerminated ? textLength + 1 : textLength);
-  return *this;
+  fUnion.fFields.f_నిడివి_And_Flags = kReadonlyAlias;
+  సమితి_Array(const_cast<char16_t*>(పాఠ్యం), పాఠ్యం_నిడివి, isTerminated ? పాఠ్యం_నిడివి + 1 : పాఠ్యం_నిడివి);
+  తిరిగి *ఇది;
 }
 
 // setTo() analogous to the writable-aliasing constructor with the same signature
 UnicodeString&
-UnicodeString::setTo(char16_t* buffer,
-                     int32_t buffLength U_LIFETIME_BOUND,
-                     int32_t buffCapacity) U_LIFETIME_BOUND {
-  if(fUnion.fFields.fLengthAndFlags & kOpenGetBuffer) {
+UnicodeString::సమితి_గమ్యం(char16_t* బఫరు,
+                     int32_t buff_నిడివి U_LIFETIME_BOUND,
+                     int32_t buff_సామర్థ్యం) U_LIFETIME_BOUND {
+  ఒకవేళ(fUnion.fFields.f_నిడివి_And_Flags & k_Open_Get_బఫరు) {
     // do not modify a string that has an "open" getBuffer(minCapacity)
-    return *this;
+    తిరిగి *ఇది;
   }
 
-  if(buffer == nullptr) {
+  ఒకవేళ(బఫరు == శూన్యసూచిక) {
     // treat as an empty string, do not alias
     releaseArray();
-    setToEmpty();
-    return *this;
+    సమితి_గమ్యం_ఖాళీలు();
+    తిరిగి *ఇది;
   }
 
-  if(buffLength < -1 || buffCapacity < 0 || buffLength > buffCapacity) {
-    setToBogus();
-    return *this;
-  } else if(buffLength == -1) {
+  ఒకవేళ(buff_నిడివి < -1 || buff_సామర్థ్యం < 0 || buff_నిడివి > buff_సామర్థ్యం) {
+    సమితి_గమ్యం_Bogus();
+    తిరిగి *ఇది;
+  } లేకపోతే ఒకవేళ(buff_నిడివి == -1) {
     // buffLength = u_strlen(buff); but do not look beyond buffCapacity
-    const char16_t *p = buffer, *limit = buffer + buffCapacity;
-    while(p != limit && *p != 0) {
+    స్థిరరాశి char16_t *p = బఫరు, *హద్దు = బఫరు + buff_సామర్థ్యం;
+    అయితే(p != హద్దు && *p != 0) {
       ++p;
     }
-    buffLength = static_cast<int32_t>(p - buffer);
+    buff_నిడివి = static_cast<int32_t>(p - బఫరు);
   }
 
   releaseArray();
 
-  fUnion.fFields.fLengthAndFlags = kWritableAlias;
-  setArray(buffer, buffLength, buffCapacity);
-  return *this;
+  fUnion.fFields.f_నిడివి_And_Flags = kWritableAlias;
+  సమితి_Array(బఫరు, buff_నిడివి, buff_సామర్థ్యం);
+  తిరిగి *ఇది;
 }
 
-UnicodeString& UnicodeString::setToUTF8(StringPiece utf8) U_LIFETIME_BOUND {
+UnicodeString& UnicodeString::సమితి_గమ్యం_UTF8(StringPiece utf8) U_LIFETIME_BOUND {
   unBogus();
   int32_t length = utf8.length();
   int32_t capacity;
   // The UTF-16 string will be at most as long as the UTF-8 string.
-  if(length <= US_STACKBUF_SIZE) {
-    capacity = US_STACKBUF_SIZE;
-  } else {
+  ఒకవేళ(length <= US_STACKBUF_కొలత) {
+    capacity = US_STACKBUF_కొలత;
+  } లేకపోతే {
     capacity = length + 1;  // +1 for the terminating NUL.
   }
-  char16_t *utf16 = getBuffer(capacity);
+  char16_t *utf16 = get_బఫరు(capacity);
   int32_t length16;
-  UErrorCode errorCode = U_ZERO_ERROR;
-  u_strFromUTF8WithSub(utf16, getCapacity(), &length16,
-      utf8.data(), length,
+  UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
+  u_strFromUTF8WithSub(utf16, get_సామర్థ్యం(), &length16,
+      utf8.దత్తాంశం(), length,
       0xfffd,  // Substitution character.
-      nullptr,    // Don't care about number of substitutions.
-      &errorCode);
-  releaseBuffer(length16);
-  if(U_FAILURE(errorCode)) {
-    setToBogus();
+      శూన్యసూచిక,    // Don't care about number of substitutions.
+      &error_సంకేతం);
+  release_బఫరు(length16);
+  ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+    సమితి_గమ్యం_Bogus();
   }
-  return *this;
+  తిరిగి *ఇది;
 }
 
 UnicodeString&
-UnicodeString::setCharAt(int32_t offset, char16_t c) U_LIFETIME_BOUND
+UnicodeString::సమితి_Char_At(int32_t స్థానభ్రంశం, char16_t c) U_LIFETIME_BOUND
 {
   int32_t len = length();
-  if(cloneArrayIfNeeded() && len > 0) {
-    if(offset < 0) {
-      offset = 0;
-    } else if(offset >= len) {
-      offset = len - 1;
+  ఒకవేళ(cloneArrayIfNeeded() && len > 0) {
+    ఒకవేళ(స్థానభ్రంశం < 0) {
+      స్థానభ్రంశం = 0;
+    } లేకపోతే ఒకవేళ(స్థానభ్రంశం >= len) {
+      స్థానభ్రంశం = len - 1;
     }
 
-    getArrayStart()[offset] = c;
+    get_Array_ప్రారంభం()[స్థానభ్రంశం] = c;
   }
-  return *this;
+  తిరిగి *ఇది;
 }
 
 UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
+UnicodeString::replace(int32_t ప్రారంభం,
+                       int32_t నిడివి_4,
                        UChar32 srcChar) U_LIFETIME_BOUND {
-  char16_t buffer[U16_MAX_LENGTH];
+  char16_t బఫరు[U16_MAX_నిడివి];
   int32_t count = 0;
-  UBool isError = false;
-  U16_APPEND(buffer, count, U16_MAX_LENGTH, srcChar, isError);
+  UBool isError = అబద్ధం;
+  U16_APPEND(బఫరు, count, U16_MAX_నిడివి, srcChar, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError (srcChar is not a valid code point) then count==0 which means
   // we remove the source segment rather than replacing it with srcChar.
-  return doReplace(start, _length, buffer, 0, isError ? 0 : count);
+  తిరిగి doReplace(ప్రారంభం, నిడివి_4, బఫరు, 0, isError ? 0 : count);
 }
 
 UnicodeString&
 UnicodeString::append(UChar32 srcChar) U_LIFETIME_BOUND {
-  char16_t buffer[U16_MAX_LENGTH];
-  int32_t _length = 0;
-  UBool isError = false;
-  U16_APPEND(buffer, _length, U16_MAX_LENGTH, srcChar, isError);
+  char16_t బఫరు[U16_MAX_నిడివి];
+  int32_t నిడివి_4 = 0;
+  UBool isError = అబద్ధం;
+  U16_APPEND(బఫరు, నిడివి_4, U16_MAX_నిడివి, srcChar, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError then _length==0 which turns the doAppend() into a no-op anyway.
-  return isError ? *this : doAppend(buffer, 0, _length);
+  తిరిగి isError ? *ఇది : doAppend(బఫరు, 0, నిడివి_4);
 }
 
 UnicodeString&
-UnicodeString::doReplace(int32_t start,
+UnicodeString::doReplace(int32_t ప్రారంభం,
                          int32_t length,
-                         const UnicodeString& src,
-                         int32_t srcStart,
-                         int32_t srcLength) U_LIFETIME_BOUND
+                         స్థిరరాశి UnicodeString& src,
+                         int32_t src_ప్రారంభం,
+                         int32_t src_నిడివి) U_LIFETIME_BOUND
 {
   // pin the indices to legal values
-  src.pinIndices(srcStart, srcLength);
+  src.pinIndices(src_ప్రారంభం, src_నిడివి);
 
   // get the characters from src
   // and replace the range in ourselves with them
-  return doReplace(start, length, src.getArrayStart(), srcStart, srcLength);
+  తిరిగి doReplace(ప్రారంభం, length, src.get_Array_ప్రారంభం(), src_ప్రారంభం, src_నిడివి);
 }
 
 UnicodeString&
-UnicodeString::doReplace(int32_t start,
+UnicodeString::doReplace(int32_t ప్రారంభం,
                          int32_t length,
-                         const char16_t* srcChars,
-                         int32_t srcStart,
-                         int32_t srcLength) U_LIFETIME_BOUND
+                         స్థిరరాశి char16_t* srcChars,
+                         int32_t src_ప్రారంభం,
+                         int32_t src_నిడివి) U_LIFETIME_BOUND
 {
-  if(!isWritable()) {
-    return *this;
+  ఒకవేళ(!isWritable()) {
+    తిరిగి *ఇది;
   }
 
-  int32_t oldLength = this->length();
+  int32_t old_నిడివి = ఇది->length();
 
   // optimize (read-only alias).remove(0, start) and .remove(start, end)
-  if((fUnion.fFields.fLengthAndFlags&kBufferIsReadonly) && srcLength == 0) {
-    if(start == 0) {
+  ఒకవేళ((fUnion.fFields.f_నిడివి_And_Flags&k_బఫరు_Is_Readonly) && src_నిడివి == 0) {
+    ఒకవేళ(ప్రారంభం == 0) {
       // remove prefix by adjusting the array pointer
-      pinIndex(length);
+      pin_సూచీ(length);
       fUnion.fFields.fArray += length;
-      fUnion.fFields.fCapacity -= length;
-      setLength(oldLength - length);
-      return *this;
-    } else {
-      pinIndex(start);
-      if(length >= (oldLength - start)) {
+      fUnion.fFields.f_సామర్థ్యం -= length;
+      సమితి_నిడివి(old_నిడివి - length);
+      తిరిగి *ఇది;
+    } లేకపోతే {
+      pin_సూచీ(ప్రారంభం);
+      ఒకవేళ(length >= (old_నిడివి - ప్రారంభం)) {
         // remove suffix by reducing the length (like truncate())
-        setLength(start);
-        fUnion.fFields.fCapacity = start;  // not NUL-terminated any more
-        return *this;
+        సమితి_నిడివి(ప్రారంభం);
+        fUnion.fFields.f_సామర్థ్యం = ప్రారంభం;  // not NUL-terminated any more
+        తిరిగి *ఇది;
       }
     }
   }
 
-  if(start == oldLength) {
-    return doAppend(srcChars, srcStart, srcLength);
+  ఒకవేళ(ప్రారంభం == old_నిడివి) {
+    తిరిగి doAppend(srcChars, src_ప్రారంభం, src_నిడివి);
   }
 
-  if (srcChars == nullptr) {
-    srcLength = 0;
-  } else {
+  ఒకవేళ (srcChars == శూన్యసూచిక) {
+    src_నిడివి = 0;
+  } లేకపోతే {
     // Perform all remaining operations relative to srcChars + srcStart.
     // From this point forward, do not use srcStart.
-    srcChars += srcStart;
-    if (srcLength < 0) {
+    srcChars += src_ప్రారంభం;
+    ఒకవేళ (src_నిడివి < 0) {
       // get the srcLength if necessary
-      srcLength = u_strlen(srcChars);
+      src_నిడివి = u_strlen(srcChars);
     }
   }
 
   // pin the indices to legal values
-  pinIndices(start, length);
+  pinIndices(ప్రారంభం, length);
 
   // Calculate the size of the string after the replace.
   // Avoid int32_t overflow.
-  int32_t newLength = oldLength - length;
-  if(srcLength > (INT32_MAX - newLength)) {
-    setToBogus();
-    return *this;
+  int32_t new_నిడివి = old_నిడివి - length;
+  ఒకవేళ(src_నిడివి > (INT32_MAX - new_నిడివి)) {
+    సమితి_గమ్యం_Bogus();
+    తిరిగి *ఇది;
   }
-  newLength += srcLength;
+  new_నిడివి += src_నిడివి;
 
   // Check for insertion into ourself
-  const char16_t *oldArray = getArrayStart();
-  if (isBufferWritable() &&
-      oldArray < srcChars + srcLength &&
-      srcChars < oldArray + oldLength) {
+  స్థిరరాశి char16_t *oldArray = get_Array_ప్రారంభం();
+  ఒకవేళ (is_బఫరు_Writable() &&
+      oldArray < srcChars + src_నిడివి &&
+      srcChars < oldArray + old_నిడివి) {
     // Copy into a new UnicodeString and start over
-    UnicodeString copy(srcChars, srcLength);
-    if (copy.isBogus()) {
-      setToBogus();
-      return *this;
+    UnicodeString copy(srcChars, src_నిడివి);
+    ఒకవేళ (copy.isBogus()) {
+      సమితి_గమ్యం_Bogus();
+      తిరిగి *ఇది;
     }
-    return doReplace(start, length, copy.getArrayStart(), 0, srcLength);
+    తిరిగి doReplace(ప్రారంభం, length, copy.get_Array_ప్రారంభం(), 0, src_నిడివి);
   }
 
   // cloneArrayIfNeeded(doCopyArray=false) may change fArray but will not copy the current contents;
   // therefore we need to keep the current fArray
-  char16_t oldStackBuffer[US_STACKBUF_SIZE];
-  if((fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) && (newLength > US_STACKBUF_SIZE)) {
+  char16_t old_దొంతర_బఫరు[US_STACKBUF_కొలత];
+  ఒకవేళ((fUnion.fFields.f_నిడివి_And_Flags&k_Using_దొంతర_బఫరు) && (new_నిడివి > US_STACKBUF_కొలత)) {
     // copy the stack buffer contents because it will be overwritten with
     // fUnion.fFields values
-    u_memcpy(oldStackBuffer, oldArray, oldLength);
-    oldArray = oldStackBuffer;
+    u_memcpy(old_దొంతర_బఫరు, oldArray, old_నిడివి);
+    oldArray = old_దొంతర_బఫరు;
   }
 
   // clone our array and allocate a bigger array if needed
-  int32_t *bufferToDelete = nullptr;
-  if(!cloneArrayIfNeeded(newLength, getGrowCapacity(newLength),
-                         false, &bufferToDelete)
+  int32_t *బఫరు_గమ్యం_Delete = శూన్యసూచిక;
+  ఒకవేళ(!cloneArrayIfNeeded(new_నిడివి, get_Grow_సామర్థ్యం(new_నిడివి),
+                         అబద్ధం, &బఫరు_గమ్యం_Delete)
   ) {
-    return *this;
+    తిరిగి *ఇది;
   }
 
   // now do the replace
 
-  char16_t *newArray = getArrayStart();
-  if(newArray != oldArray) {
+  char16_t *newArray = get_Array_ప్రారంభం();
+  ఒకవేళ(newArray != oldArray) {
     // if fArray changed, then we need to copy everything except what will change
-    us_arrayCopy(oldArray, 0, newArray, 0, start);
-    us_arrayCopy(oldArray, start + length,
-                 newArray, start + srcLength,
-                 oldLength - (start + length));
-  } else if(length != srcLength) {
+    us_arrayCopy(oldArray, 0, newArray, 0, ప్రారంభం);
+    us_arrayCopy(oldArray, ప్రారంభం + length,
+                 newArray, ప్రారంభం + src_నిడివి,
+                 old_నిడివి - (ప్రారంభం + length));
+  } లేకపోతే ఒకవేళ(length != src_నిడివి) {
     // fArray did not change; copy only the portion that isn't changing, leaving a hole
-    us_arrayCopy(oldArray, start + length,
-                 newArray, start + srcLength,
-                 oldLength - (start + length));
+    us_arrayCopy(oldArray, ప్రారంభం + length,
+                 newArray, ప్రారంభం + src_నిడివి,
+                 old_నిడివి - (ప్రారంభం + length));
   }
 
   // now fill in the hole with the new string
-  us_arrayCopy(srcChars, 0, newArray, start, srcLength);
+  us_arrayCopy(srcChars, 0, newArray, ప్రారంభం, src_నిడివి);
 
-  setLength(newLength);
+  సమితి_నిడివి(new_నిడివి);
 
   // delayed delete in case srcChars == fArray when we started, and
   // to keep oldArray alive for the above operations
-  if (bufferToDelete) {
-    uprv_free(bufferToDelete);
+  ఒకవేళ (బఫరు_గమ్యం_Delete) {
+    uprv_free(బఫరు_గమ్యం_Delete);
   }
 
-  return *this;
+  తిరిగి *ఇది;
 }
 
 UnicodeString&
-UnicodeString::doReplace(int32_t start, int32_t length, std::u16string_view src) U_LIFETIME_BOUND {
-  if (!isWritable()) {
-    return *this;
+UnicodeString::doReplace(int32_t ప్రారంభం, int32_t length, std::u16string_view src) U_LIFETIME_BOUND {
+  ఒకవేళ (!isWritable()) {
+    తిరిగి *ఇది;
   }
-  if (src.length() > INT32_MAX) {
-    setToBogus();
-    return *this;
+  ఒకవేళ (src.length() > INT32_MAX) {
+    సమితి_గమ్యం_Bogus();
+    తిరిగి *ఇది;
   }
-  return doReplace(start, length, src.data(), 0, static_cast<int32_t>(src.length()));
+  తిరిగి doReplace(ప్రారంభం, length, src.దత్తాంశం(), 0, static_cast<int32_t>(src.length()));
 }
 
 // Versions of doReplace() only for append() variants.
 // doReplace() and doAppend() optimize for different cases.
 
 UnicodeString&
-UnicodeString::doAppend(const UnicodeString& src,
-                        int32_t srcStart,
-                        int32_t srcLength) U_LIFETIME_BOUND {
-  if(srcLength == 0) {
-    return *this;
+UnicodeString::doAppend(స్థిరరాశి UnicodeString& src,
+                        int32_t src_ప్రారంభం,
+                        int32_t src_నిడివి) U_LIFETIME_BOUND {
+  ఒకవేళ(src_నిడివి == 0) {
+    తిరిగి *ఇది;
   }
 
   // pin the indices to legal values
-  src.pinIndices(srcStart, srcLength);
-  return doAppend(src.getArrayStart(), srcStart, srcLength);
+  src.pinIndices(src_ప్రారంభం, src_నిడివి);
+  తిరిగి doAppend(src.get_Array_ప్రారంభం(), src_ప్రారంభం, src_నిడివి);
 }
 
 UnicodeString&
-UnicodeString::doAppend(const char16_t* srcChars,
-                        int32_t srcStart,
-                        int32_t srcLength) U_LIFETIME_BOUND {
-  if(!isWritable() || srcLength == 0 || srcChars == nullptr) {
-    return *this;
+UnicodeString::doAppend(స్థిరరాశి char16_t* srcChars,
+                        int32_t src_ప్రారంభం,
+                        int32_t src_నిడివి) U_LIFETIME_BOUND {
+  ఒకవేళ(!isWritable() || src_నిడివి == 0 || srcChars == శూన్యసూచిక) {
+    తిరిగి *ఇది;
   }
 
   // Perform all remaining operations relative to srcChars + srcStart.
   // From this point forward, do not use srcStart.
-  srcChars += srcStart;
+  srcChars += src_ప్రారంభం;
 
-  if(srcLength < 0) {
+  ఒకవేళ(src_నిడివి < 0) {
     // get the srcLength if necessary
-    if((srcLength = u_strlen(srcChars)) == 0) {
-      return *this;
+    ఒకవేళ((src_నిడివి = u_strlen(srcChars)) == 0) {
+      తిరిగి *ఇది;
     }
   }
 
-  int32_t oldLength = length();
-  int32_t newLength;
+  int32_t old_నిడివి = length();
+  int32_t new_నిడివి;
 
-  if (srcLength <= getCapacity() - oldLength && isBufferWritable()) {
-    newLength = oldLength + srcLength;
+  ఒకవేళ (src_నిడివి <= get_సామర్థ్యం() - old_నిడివి && is_బఫరు_Writable()) {
+    new_నిడివి = old_నిడివి + src_నిడివి;
     // Faster than a memmove
-    if (srcLength <= 4) {
-      char16_t *arr = getArrayStart();
-      arr[oldLength] = srcChars[0];
-      if (srcLength > 1) arr[oldLength+1] = srcChars[1];
-      if (srcLength > 2) arr[oldLength+2] = srcChars[2];
-      if (srcLength > 3) arr[oldLength+3] = srcChars[3];
-      setLength(newLength);
-      return *this;
+    ఒకవేళ (src_నిడివి <= 4) {
+      char16_t *arr = get_Array_ప్రారంభం();
+      arr[old_నిడివి] = srcChars[0];
+      ఒకవేళ (src_నిడివి > 1) arr[old_నిడివి+1] = srcChars[1];
+      ఒకవేళ (src_నిడివి > 2) arr[old_నిడివి+2] = srcChars[2];
+      ఒకవేళ (src_నిడివి > 3) arr[old_నిడివి+3] = srcChars[3];
+      సమితి_నిడివి(new_నిడివి);
+      తిరిగి *ఇది;
     }
-  } else {
-    if (uprv_add32_overflow(oldLength, srcLength, &newLength)) {
-      setToBogus();
-      return *this;
+  } లేకపోతే {
+    ఒకవేళ (uprv_add32_అధికప్రవాహం(old_నిడివి, src_నిడివి, &new_నిడివి)) {
+      సమితి_గమ్యం_Bogus();
+      తిరిగి *ఇది;
     }
 
     // Check for append onto ourself
-    const char16_t* oldArray = getArrayStart();
-    if (isBufferWritable() &&
-        oldArray < srcChars + srcLength &&
-        srcChars < oldArray + oldLength) {
+    స్థిరరాశి char16_t* oldArray = get_Array_ప్రారంభం();
+    ఒకవేళ (is_బఫరు_Writable() &&
+        oldArray < srcChars + src_నిడివి &&
+        srcChars < oldArray + old_నిడివి) {
       // Copy into a new UnicodeString and start over
-      UnicodeString copy(srcChars, srcLength);
-      if (copy.isBogus()) {
-        setToBogus();
-        return *this;
+      UnicodeString copy(srcChars, src_నిడివి);
+      ఒకవేళ (copy.isBogus()) {
+        సమితి_గమ్యం_Bogus();
+        తిరిగి *ఇది;
       }
-      return doAppend(copy.getArrayStart(), 0, srcLength);
+      తిరిగి doAppend(copy.get_Array_ప్రారంభం(), 0, src_నిడివి);
     }
 
     // optimize append() onto a large-enough, owned string
-    if (!cloneArrayIfNeeded(newLength, getGrowCapacity(newLength))) {
-      return *this;
+    ఒకవేళ (!cloneArrayIfNeeded(new_నిడివి, get_Grow_సామర్థ్యం(new_నిడివి))) {
+      తిరిగి *ఇది;
     }
   }
 
-  char16_t *newArray = getArrayStart();
+  char16_t *newArray = get_Array_ప్రారంభం();
   // Do not copy characters when
   //   char16_t *buffer=str.getAppendBuffer(...);
   // is followed by
@@ -1710,50 +1710,50 @@ UnicodeString::doAppend(const char16_t* srcChars,
   // or
   //   str.appendString(buffer, length)
   // or similar.
-  if(srcChars != newArray + oldLength) {
-    us_arrayCopy(srcChars, 0, newArray, oldLength, srcLength);
+  ఒకవేళ(srcChars != newArray + old_నిడివి) {
+    us_arrayCopy(srcChars, 0, newArray, old_నిడివి, src_నిడివి);
   }
-  setLength(newLength);
+  సమితి_నిడివి(new_నిడివి);
 
-  return *this;
+  తిరిగి *ఇది;
 }
 
 UnicodeString&
 UnicodeString::doAppend(std::u16string_view src) U_LIFETIME_BOUND {
-  if (!isWritable() || src.empty()) {
-    return *this;
+  ఒకవేళ (!isWritable() || src.empty()) {
+    తిరిగి *ఇది;
   }
-  if (src.length() > INT32_MAX) {
-    setToBogus();
-    return *this;
+  ఒకవేళ (src.length() > INT32_MAX) {
+    సమితి_గమ్యం_Bogus();
+    తిరిగి *ఇది;
   }
-  return doAppend(src.data(), 0, static_cast<int32_t>(src.length()));
+  తిరిగి doAppend(src.దత్తాంశం(), 0, static_cast<int32_t>(src.length()));
 }
 
 /**
  * Replaceable API
  */
-void
-UnicodeString::handleReplaceBetween(int32_t start,
-                                    int32_t limit,
-                                    const UnicodeString& text) {
-    replaceBetween(start, limit, text);
+శూన్య
+UnicodeString::handleReplaceBetween(int32_t ప్రారంభం,
+                                    int32_t హద్దు,
+                                    స్థిరరాశి UnicodeString& పాఠ్యం) {
+    replaceBetween(ప్రారంభం, హద్దు, పాఠ్యం);
 }
 
 /**
  * Replaceable API
  */
-void 
-UnicodeString::copy(int32_t start, int32_t limit, int32_t dest) {
-    if (limit <= start) {
-        return; // Nothing to do; avoid bogus malloc call
+శూన్య 
+UnicodeString::copy(int32_t ప్రారంభం, int32_t హద్దు, int32_t dest) {
+    ఒకవేళ (హద్దు <= ప్రారంభం) {
+        తిరిగి; // Nothing to do; avoid bogus malloc call
     }
-    char16_t* text = static_cast<char16_t*>(uprv_malloc(sizeof(char16_t) * (limit - start)));
+    char16_t* పాఠ్యం = static_cast<char16_t*>(uprv_malloc(పరిమాణం(char16_t) * (హద్దు - ప్రారంభం)));
     // Check to make sure text is not null.
-    if (text != nullptr) {
-	    extractBetween(start, limit, text, 0);
-	    insert(dest, text, 0, limit - start);    
-	    uprv_free(text);
+    ఒకవేళ (పాఠ్యం != శూన్యసూచిక) {
+	    వెలికితీయి_Between(ప్రారంభం, హద్దు, పాఠ్యం, 0);
+	    insert(dest, పాఠ్యం, 0, హద్దు - ప్రారంభం);    
+	    uprv_free(పాఠ్యం);
     }
 }
 
@@ -1763,101 +1763,101 @@ UnicodeString::copy(int32_t start, int32_t limit, int32_t dest) {
  * NOTE: This is for the Replaceable class.  There is no rep.cpp,
  * so we implement this function here.
  */
-UBool Replaceable::hasMetaData() const {
-    return true;
+UBool Replaceable::has_Meta_దత్తాంశం() స్థిరరాశి {
+    తిరిగి నిజం;
 }
 
 /**
  * Replaceable API
  */
-UBool UnicodeString::hasMetaData() const {
-    return false;
+UBool UnicodeString::has_Meta_దత్తాంశం() స్థిరరాశి {
+    తిరిగి అబద్ధం;
 }
 
 UnicodeString&
-UnicodeString::doReverse(int32_t start, int32_t length) U_LIFETIME_BOUND {
-  if(length <= 1 || !cloneArrayIfNeeded()) {
-    return *this;
+UnicodeString::do_తిరగేయి(int32_t ప్రారంభం, int32_t length) U_LIFETIME_BOUND {
+  ఒకవేళ(length <= 1 || !cloneArrayIfNeeded()) {
+    తిరిగి *ఇది;
   }
 
   // pin the indices to legal values
-  pinIndices(start, length);
-  if(length <= 1) {  // pinIndices() might have shrunk the length
-    return *this;
+  pinIndices(ప్రారంభం, length);
+  ఒకవేళ(length <= 1) {  // pinIndices() might have shrunk the length
+    తిరిగి *ఇది;
   }
 
-  char16_t *left = getArrayStart() + start;
-  char16_t *right = left + length - 1;  // -1 for inclusive boundary (length>=2)
+  char16_t *ఎడమ = get_Array_ప్రారంభం() + ప్రారంభం;
+  char16_t *కుడి = ఎడమ + length - 1;  // -1 for inclusive boundary (length>=2)
   char16_t swap;
-  UBool hasSupplementary = false;
+  UBool hasSupplementary = అబద్ధం;
 
   // Before the loop we know left<right because length>=2.
-  do {
-    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(swap = *left));
-    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left++ = *right));
-    *right-- = swap;
-  } while(left < right);
+  చేయి {
+    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(swap = *ఎడమ));
+    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*ఎడమ++ = *కుడి));
+    *కుడి-- = swap;
+  } అయితే(ఎడమ < కుడి);
   // Make sure to test the middle code unit of an odd-length string.
   // Redundant if the length is even.
-  hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left));
+  hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*ఎడమ));
 
   /* if there are supplementary code points in the reversed range, then re-swap their surrogates */
-  if(hasSupplementary) {
+  ఒకవేళ(hasSupplementary) {
     char16_t swap2;
 
-    left = getArrayStart() + start;
-    right = left + length - 1; // -1 so that we can look at *(left+1) if left<right
-    while(left < right) {
-      if(U16_IS_TRAIL(swap = *left) && U16_IS_LEAD(swap2 = *(left + 1))) {
-        *left++ = swap2;
-        *left++ = swap;
-      } else {
-        ++left;
+    ఎడమ = get_Array_ప్రారంభం() + ప్రారంభం;
+    కుడి = ఎడమ + length - 1; // -1 so that we can look at *(left+1) if left<right
+    అయితే(ఎడమ < కుడి) {
+      ఒకవేళ(U16_IS_TRAIL(swap = *ఎడమ) && U16_IS_LEAD(swap2 = *(ఎడమ + 1))) {
+        *ఎడమ++ = swap2;
+        *ఎడమ++ = swap;
+      } లేకపోతే {
+        ++ఎడమ;
       }
     }
   }
 
-  return *this;
+  తిరిగి *ఇది;
 }
 
 UBool 
-UnicodeString::padLeading(int32_t targetLength,
+UnicodeString::padLeading(int32_t లక్ష్యం_నిడివి,
                           char16_t padChar)
 {
-  int32_t oldLength = length();
-  if(oldLength >= targetLength || !cloneArrayIfNeeded(targetLength)) {
-    return false;
-  } else {
+  int32_t old_నిడివి = length();
+  ఒకవేళ(old_నిడివి >= లక్ష్యం_నిడివి || !cloneArrayIfNeeded(లక్ష్యం_నిడివి)) {
+    తిరిగి అబద్ధం;
+  } లేకపోతే {
     // move contents up by padding width
-    char16_t *array = getArrayStart();
-    int32_t start = targetLength - oldLength;
-    us_arrayCopy(array, 0, array, start, oldLength);
+    char16_t *array = get_Array_ప్రారంభం();
+    int32_t ప్రారంభం = లక్ష్యం_నిడివి - old_నిడివి;
+    us_arrayCopy(array, 0, array, ప్రారంభం, old_నిడివి);
 
     // fill in padding character
-    while(--start >= 0) {
-      array[start] = padChar;
+    అయితే(--ప్రారంభం >= 0) {
+      array[ప్రారంభం] = padChar;
     }
-    setLength(targetLength);
-    return true;
+    సమితి_నిడివి(లక్ష్యం_నిడివి);
+    తిరిగి నిజం;
   }
 }
 
 UBool 
-UnicodeString::padTrailing(int32_t targetLength,
+UnicodeString::padTrailing(int32_t లక్ష్యం_నిడివి,
                            char16_t padChar)
 {
-  int32_t oldLength = length();
-  if(oldLength >= targetLength || !cloneArrayIfNeeded(targetLength)) {
-    return false;
-  } else {
+  int32_t old_నిడివి = length();
+  ఒకవేళ(old_నిడివి >= లక్ష్యం_నిడివి || !cloneArrayIfNeeded(లక్ష్యం_నిడివి)) {
+    తిరిగి అబద్ధం;
+  } లేకపోతే {
     // fill in padding character
-    char16_t *array = getArrayStart();
-    int32_t length = targetLength;
-    while(--length >= oldLength) {
+    char16_t *array = get_Array_ప్రారంభం();
+    int32_t length = లక్ష్యం_నిడివి;
+    అయితే(--length >= old_నిడివి) {
       array[length] = padChar;
     }
-    setLength(targetLength);
-    return true;
+    సమితి_నిడివి(లక్ష్యం_నిడివి);
+    తిరిగి నిజం;
   }
 }
 
@@ -1865,15 +1865,15 @@ UnicodeString::padTrailing(int32_t targetLength,
 // Hashing
 //========================================
 int32_t
-UnicodeString::doHashCode() const
+UnicodeString::do_Hash_సంకేతం() స్థిరరాశి
 {
     /* Delegate hash computation to uhash.  This makes UnicodeString
      * hashing consistent with char16_t* hashing.  */
-    int32_t hashCode = ustr_hashUCharsN(getArrayStart(), length());
-    if (hashCode == kInvalidHashCode) {
-        hashCode = kEmptyHashCode;
+    int32_t hash_సంకేతం = ustr_hashUCharsN(get_Array_ప్రారంభం(), length());
+    ఒకవేళ (hash_సంకేతం == k_Invalid_Hash_సంకేతం) {
+        hash_సంకేతం = k_ఖాళీలు_Hash_సంకేతం;
     }
-    return hashCode;
+    తిరిగి hash_సంకేతం;
 }
 
 //========================================
@@ -1881,33 +1881,33 @@ UnicodeString::doHashCode() const
 //========================================
 
 char16_t*
-UnicodeString::getBuffer(int32_t minCapacity) U_LIFETIME_BOUND {
-  if(minCapacity>=-1 && cloneArrayIfNeeded(minCapacity)) {
-    fUnion.fFields.fLengthAndFlags|=kOpenGetBuffer;
-    setZeroLength();
-    return getArrayStart();
-  } else {
-    return nullptr;
+UnicodeString::get_బఫరు(int32_t min_సామర్థ్యం) U_LIFETIME_BOUND {
+  ఒకవేళ(min_సామర్థ్యం>=-1 && cloneArrayIfNeeded(min_సామర్థ్యం)) {
+    fUnion.fFields.f_నిడివి_And_Flags|=k_Open_Get_బఫరు;
+    సమితి_Zero_నిడివి();
+    తిరిగి get_Array_ప్రారంభం();
+  } లేకపోతే {
+    తిరిగి శూన్యసూచిక;
   }
 }
 
-void
-UnicodeString::releaseBuffer(int32_t newLength) {
-  if(fUnion.fFields.fLengthAndFlags&kOpenGetBuffer && newLength>=-1) {
+శూన్య
+UnicodeString::release_బఫరు(int32_t new_నిడివి) {
+  ఒకవేళ(fUnion.fFields.f_నిడివి_And_Flags&k_Open_Get_బఫరు && new_నిడివి>=-1) {
     // set the new fLength
-    int32_t capacity=getCapacity();
-    if(newLength==-1) {
+    int32_t capacity=get_సామర్థ్యం();
+    ఒకవేళ(new_నిడివి==-1) {
       // the new length is the string length, capped by fCapacity
-      const char16_t *array=getArrayStart(), *p=array, *limit=array+capacity;
-      while(p<limit && *p!=0) {
+      స్థిరరాశి char16_t *array=get_Array_ప్రారంభం(), *p=array, *హద్దు=array+capacity;
+      అయితే(p<హద్దు && *p!=0) {
         ++p;
       }
-      newLength = static_cast<int32_t>(p - array);
-    } else if(newLength>capacity) {
-      newLength=capacity;
+      new_నిడివి = static_cast<int32_t>(p - array);
+    } లేకపోతే ఒకవేళ(new_నిడివి>capacity) {
+      new_నిడివి=capacity;
     }
-    setLength(newLength);
-    fUnion.fFields.fLengthAndFlags&=~kOpenGetBuffer;
+    సమితి_నిడివి(new_నిడివి);
+    fUnion.fFields.f_నిడివి_And_Flags&=~k_Open_Get_బఫరు;
   }
 }
 
@@ -1915,22 +1915,22 @@ UnicodeString::releaseBuffer(int32_t newLength) {
 // Miscellaneous
 //========================================
 UBool
-UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
-                                  int32_t growCapacity,
+UnicodeString::cloneArrayIfNeeded(int32_t new_సామర్థ్యం,
+                                  int32_t grow_సామర్థ్యం,
                                   UBool doCopyArray,
-                                  int32_t **pBufferToDelete,
+                                  int32_t **p_బఫరు_గమ్యం_Delete,
                                   UBool forceClone) {
   // default parameters need to be static, therefore
   // the defaults are -1 to have convenience defaults
-  if(newCapacity == -1) {
-    newCapacity = getCapacity();
+  ఒకవేళ(new_సామర్థ్యం == -1) {
+    new_సామర్థ్యం = get_సామర్థ్యం();
   }
 
   // while a getBuffer(minCapacity) is "open",
   // prevent any modifications of the string by returning false here
   // if the string is bogus, then only an assignment or similar can revive it
-  if(!isWritable()) {
-    return false;
+  ఒకవేళ(!isWritable()) {
+    తిరిగి అబద్ధం;
   }
 
   /*
@@ -1940,94 +1940,94 @@ UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
    * the buffer is too small.
    * Return false if memory could not be allocated.
    */
-  if(forceClone ||
-     fUnion.fFields.fLengthAndFlags & kBufferIsReadonly ||
-     (fUnion.fFields.fLengthAndFlags & kRefCounted && refCount() > 1) ||
-     newCapacity > getCapacity()
+  ఒకవేళ(forceClone ||
+     fUnion.fFields.f_నిడివి_And_Flags & k_బఫరు_Is_Readonly ||
+     (fUnion.fFields.f_నిడివి_And_Flags & kRefCounted && ref_లెక్క() > 1) ||
+     new_సామర్థ్యం > get_సామర్థ్యం()
   ) {
     // check growCapacity for default value and use of the stack buffer
-    if(growCapacity < 0) {
-      growCapacity = newCapacity;
-    } else if(newCapacity <= US_STACKBUF_SIZE && growCapacity > US_STACKBUF_SIZE) {
-      growCapacity = US_STACKBUF_SIZE;
-    } else if(newCapacity > growCapacity) {
-      setToBogus();
-      return false;  // bad inputs
+    ఒకవేళ(grow_సామర్థ్యం < 0) {
+      grow_సామర్థ్యం = new_సామర్థ్యం;
+    } లేకపోతే ఒకవేళ(new_సామర్థ్యం <= US_STACKBUF_కొలత && grow_సామర్థ్యం > US_STACKBUF_కొలత) {
+      grow_సామర్థ్యం = US_STACKBUF_కొలత;
+    } లేకపోతే ఒకవేళ(new_సామర్థ్యం > grow_సామర్థ్యం) {
+      సమితి_గమ్యం_Bogus();
+      తిరిగి అబద్ధం;  // bad inputs
     }
-    if(growCapacity > kMaxCapacity) {
-      setToBogus();
-      return false;
+    ఒకవేళ(grow_సామర్థ్యం > k_Max_సామర్థ్యం) {
+      సమితి_గమ్యం_Bogus();
+      తిరిగి అబద్ధం;
     }
 
     // save old values
-    char16_t oldStackBuffer[US_STACKBUF_SIZE];
+    char16_t old_దొంతర_బఫరు[US_STACKBUF_కొలత];
     char16_t *oldArray;
-    int32_t oldLength = length();
-    int16_t flags = fUnion.fFields.fLengthAndFlags;
+    int32_t old_నిడివి = length();
+    int16_t flags = fUnion.fFields.f_నిడివి_And_Flags;
 
-    if(flags&kUsingStackBuffer) {
+    ఒకవేళ(flags&k_Using_దొంతర_బఫరు) {
       U_ASSERT(!(flags&kRefCounted)); /* kRefCounted and kUsingStackBuffer are mutally exclusive */
-      if(doCopyArray && growCapacity > US_STACKBUF_SIZE) {
+      ఒకవేళ(doCopyArray && grow_సామర్థ్యం > US_STACKBUF_కొలత) {
         // copy the stack buffer contents because it will be overwritten with
         // fUnion.fFields values
-        us_arrayCopy(fUnion.fStackFields.fBuffer, 0, oldStackBuffer, 0, oldLength);
-        oldArray = oldStackBuffer;
-      } else {
-        oldArray = nullptr; // no need to copy from the stack buffer to itself
+        us_arrayCopy(fUnion.f_దొంతర_Fields.f_బఫరు, 0, old_దొంతర_బఫరు, 0, old_నిడివి);
+        oldArray = old_దొంతర_బఫరు;
+      } లేకపోతే {
+        oldArray = శూన్యసూచిక; // no need to copy from the stack buffer to itself
       }
-    } else {
+    } లేకపోతే {
       oldArray = fUnion.fFields.fArray;
-      U_ASSERT(oldArray!=nullptr); /* when stack buffer is not used, oldArray must have a non-nullptr reference */
+      U_ASSERT(oldArray!=శూన్యసూచిక); /* when stack buffer is not used, oldArray must have a non-nullptr reference */
     }
 
     // allocate a new array
-    if(allocate(growCapacity) ||
-       (newCapacity < growCapacity && allocate(newCapacity))
+    ఒకవేళ(allocate(grow_సామర్థ్యం) ||
+       (new_సామర్థ్యం < grow_సామర్థ్యం && allocate(new_సామర్థ్యం))
     ) {
-      if(doCopyArray) {
+      ఒకవేళ(doCopyArray) {
         // copy the contents
         // do not copy more than what fits - it may be smaller than before
-        int32_t minLength = oldLength;
-        newCapacity = getCapacity();
-        if(newCapacity < minLength) {
-          minLength = newCapacity;
+        int32_t min_నిడివి = old_నిడివి;
+        new_సామర్థ్యం = get_సామర్థ్యం();
+        ఒకవేళ(new_సామర్థ్యం < min_నిడివి) {
+          min_నిడివి = new_సామర్థ్యం;
         }
-        if(oldArray != nullptr) {
-          us_arrayCopy(oldArray, 0, getArrayStart(), 0, minLength);
+        ఒకవేళ(oldArray != శూన్యసూచిక) {
+          us_arrayCopy(oldArray, 0, get_Array_ప్రారంభం(), 0, min_నిడివి);
         }
-        setLength(minLength);
-      } else {
-        setZeroLength();
+        సమితి_నిడివి(min_నిడివి);
+      } లేకపోతే {
+        సమితి_Zero_నిడివి();
       }
 
       // release the old array
-      if(flags & kRefCounted) {
+      ఒకవేళ(flags & kRefCounted) {
         // the array is refCounted; decrement and release if 0
-        u_atomic_int32_t* pRefCount = reinterpret_cast<u_atomic_int32_t*>(oldArray) - 1;
-        if(umtx_atomic_dec(pRefCount) == 0) {
-          if (pBufferToDelete == nullptr) {
+        u_atomic_int32_t* p_Ref_లెక్క = reinterpret_cast<u_atomic_int32_t*>(oldArray) - 1;
+        ఒకవేళ(umtx_atomic_dec(p_Ref_లెక్క) == 0) {
+          ఒకవేళ (p_బఫరు_గమ్యం_Delete == శూన్యసూచిక) {
               // Note: cast to (void *) is needed with MSVC, where u_atomic_int32_t
               // is defined as volatile. (Volatile has useful non-standard behavior
               //   with this compiler.)
-            uprv_free((void *)pRefCount);
-          } else {
+            uprv_free((శూన్య *)p_Ref_లెక్క);
+          } లేకపోతే {
             // the caller requested to delete it himself
-            *pBufferToDelete = reinterpret_cast<int32_t*>(pRefCount);
+            *p_బఫరు_గమ్యం_Delete = reinterpret_cast<int32_t*>(p_Ref_లెక్క);
           }
         }
       }
-    } else {
+    } లేకపోతే {
       // not enough memory for growCapacity and not even for the smaller newCapacity
       // reset the old values for setToBogus() to release the array
-      if(!(flags&kUsingStackBuffer)) {
+      ఒకవేళ(!(flags&k_Using_దొంతర_బఫరు)) {
         fUnion.fFields.fArray = oldArray;
       }
-      fUnion.fFields.fLengthAndFlags = flags;
-      setToBogus();
-      return false;
+      fUnion.fFields.f_నిడివి_And_Flags = flags;
+      సమితి_గమ్యం_Bogus();
+      తిరిగి అబద్ధం;
     }
   }
-  return true;
+  తిరిగి నిజం;
 }
 
 // UnicodeStringAppendable ------------------------------------------------- ***
@@ -2035,75 +2035,75 @@ UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
 UnicodeStringAppendable::~UnicodeStringAppendable() {}
 
 UBool
-UnicodeStringAppendable::appendCodeUnit(char16_t c) {
-  return str.doAppend(&c, 0, 1).isWritable();
+UnicodeStringAppendable::append_సంకేతం_Unit(char16_t c) {
+  తిరిగి str.doAppend(&c, 0, 1).isWritable();
 }
 
 UBool
-UnicodeStringAppendable::appendCodePoint(UChar32 c) {
-  char16_t buffer[U16_MAX_LENGTH];
-  int32_t cLength = 0;
-  UBool isError = false;
-  U16_APPEND(buffer, cLength, U16_MAX_LENGTH, c, isError);
-  return !isError && str.doAppend(buffer, 0, cLength).isWritable();
+UnicodeStringAppendable::append_సంకేతం_బిందువు(UChar32 c) {
+  char16_t బఫరు[U16_MAX_నిడివి];
+  int32_t c_నిడివి = 0;
+  UBool isError = అబద్ధం;
+  U16_APPEND(బఫరు, c_నిడివి, U16_MAX_నిడివి, c, isError);
+  తిరిగి !isError && str.doAppend(బఫరు, 0, c_నిడివి).isWritable();
 }
 
 UBool
-UnicodeStringAppendable::appendString(const char16_t *s, int32_t length) {
-  return str.doAppend(s, 0, length).isWritable();
+UnicodeStringAppendable::appendString(స్థిరరాశి char16_t *s, int32_t length) {
+  తిరిగి str.doAppend(s, 0, length).isWritable();
 }
 
 UBool
-UnicodeStringAppendable::reserveAppendCapacity(int32_t appendCapacity) {
-  return str.cloneArrayIfNeeded(str.length() + appendCapacity);
+UnicodeStringAppendable::reserve_Append_సామర్థ్యం(int32_t append_సామర్థ్యం) {
+  తిరిగి str.cloneArrayIfNeeded(str.length() + append_సామర్థ్యం);
 }
 
-char16_t* UnicodeStringAppendable::getAppendBuffer(int32_t minCapacity,
-                                                   int32_t desiredCapacityHint,
+char16_t* UnicodeStringAppendable::get_Append_బఫరు(int32_t min_సామర్థ్యం,
+                                                   int32_t desired_సామర్థ్యం_Hint,
                                                    char16_t* scratch U_LIFETIME_BOUND,
-                                                   int32_t scratchCapacity,
-                                                   int32_t* resultCapacity) U_LIFETIME_BOUND {
-  if(minCapacity < 1 || scratchCapacity < minCapacity) {
-    *resultCapacity = 0;
-    return nullptr;
+                                                   int32_t scratch_సామర్థ్యం,
+                                                   int32_t* ఫలితం_సామర్థ్యం) U_LIFETIME_BOUND {
+  ఒకవేళ(min_సామర్థ్యం < 1 || scratch_సామర్థ్యం < min_సామర్థ్యం) {
+    *ఫలితం_సామర్థ్యం = 0;
+    తిరిగి శూన్యసూచిక;
   }
-  int32_t oldLength = str.length();
-  if(minCapacity <= (kMaxCapacity - oldLength) &&
-      desiredCapacityHint <= (kMaxCapacity - oldLength) &&
-      str.cloneArrayIfNeeded(oldLength + minCapacity, oldLength + desiredCapacityHint)) {
-    *resultCapacity = str.getCapacity() - oldLength;
-    return str.getArrayStart() + oldLength;
+  int32_t old_నిడివి = str.length();
+  ఒకవేళ(min_సామర్థ్యం <= (k_Max_సామర్థ్యం - old_నిడివి) &&
+      desired_సామర్థ్యం_Hint <= (k_Max_సామర్థ్యం - old_నిడివి) &&
+      str.cloneArrayIfNeeded(old_నిడివి + min_సామర్థ్యం, old_నిడివి + desired_సామర్థ్యం_Hint)) {
+    *ఫలితం_సామర్థ్యం = str.get_సామర్థ్యం() - old_నిడివి;
+    తిరిగి str.get_Array_ప్రారంభం() + old_నిడివి;
   }
-  *resultCapacity = scratchCapacity;
-  return scratch;
+  *ఫలితం_సామర్థ్యం = scratch_సామర్థ్యం;
+  తిరిగి scratch;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashUnicodeString(const UElement key) {
-    const UnicodeString *str = (const UnicodeString*) key.pointer;
-    return (str == nullptr) ? 0 : str->hashCode();
+uhash_hashUnicodeString(స్థిరరాశి UElement కీలకం) {
+    స్థిరరాశి UnicodeString *str = (స్థిరరాశి UnicodeString*) కీలకం.సూచిక;
+    తిరిగి (str == శూన్యసూచిక) ? 0 : str->hash_సంకేతం();
 }
 
 // Moved here from uhash_us.cpp so that using a UVector of UnicodeString*
 // does not depend on hashtable code.
 U_CAPI UBool U_EXPORT2
-uhash_compareUnicodeString(const UElement key1, const UElement key2) {
-    const UnicodeString *str1 = (const UnicodeString*) key1.pointer;
-    const UnicodeString *str2 = (const UnicodeString*) key2.pointer;
-    if (str1 == str2) {
-        return true;
+uhash_compareUnicodeString(స్థిరరాశి UElement key1, స్థిరరాశి UElement key2) {
+    స్థిరరాశి UnicodeString *str1 = (స్థిరరాశి UnicodeString*) key1.సూచిక;
+    స్థిరరాశి UnicodeString *str2 = (స్థిరరాశి UnicodeString*) key2.సూచిక;
+    ఒకవేళ (str1 == str2) {
+        తిరిగి నిజం;
     }
-    if (str1 == nullptr || str2 == nullptr) {
-        return false;
+    ఒకవేళ (str1 == శూన్యసూచిక || str2 == శూన్యసూచిక) {
+        తిరిగి అబద్ధం;
     }
-    return *str1 == *str2;
+    తిరిగి *str1 == *str2;
 }
 
-#ifdef U_STATIC_IMPLEMENTATION
+#నిర్వచితమైతే U_STATIC_IMPLEMENTATION
 /*
 This should never be called. It is defined here to make sure that the
 virtual vector deleting destructor is defined within unistr.cpp.
@@ -2111,12 +2111,12 @@ The vector deleting destructor is already a part of UObject,
 but defining it here makes sure that it is included with this object file.
 This makes sure that static library dependencies are kept to a minimum.
 */
-#if defined(__clang__) || U_GCC_MAJOR_MINOR >= 1100
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-static void uprv_UnicodeStringDummy() {
-    delete [] (new UnicodeString[2]);
+#ఒకవేళ defined(__clang__) || U_GCC_MAJOR_MINOR >= 1100
+#సూచన GCC diagnostic push
+#సూచన GCC diagnostic ignored "-Wunused-function"
+స్థిర శూన్య uprv_UnicodeStringDummy() {
+    తొలగించు [] (కొత్త UnicodeString[2]);
 }
-#pragma GCC diagnostic pop
-#endif
-#endif
+#సూచన GCC diagnostic pop
+#అయితే_ముగింపు
+#అయితే_ముగింపు

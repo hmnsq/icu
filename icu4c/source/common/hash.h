@@ -10,13 +10,13 @@
 ******************************************************************************
 */
 
-#ifndef HASH_H
-#define HASH_H
+#నిర్వచితం_కాకపోతే HASH_H
+#నిర్వచించు HASH_H
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uhash.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "uhash.h"
 
 U_NAMESPACE_BEGIN
 
@@ -27,21 +27,21 @@ U_NAMESPACE_BEGIN
  *
  * Hashtable is an INTERNAL CLASS.
  */
-class U_COMMON_API Hashtable : public UMemory {
+class U_COMMON_API Hashtable : బహిరంగ UMemory {
     UHashtable* hash;
     UHashtable hashObj;
 
-    inline void init(UHashFunction *keyHash, UKeyComparator *keyComp, UValueComparator *valueComp, UErrorCode& status);
+    అంతఃవరుస శూన్య init(UHashFunction *కీలకం_Hash, UKeyComparator *కీలకం_Comp, UValueComparator *విలువ_Comp, UError_సంకేతం& స్థితి_2);
 
-    inline void initSize(UHashFunction *keyHash, UKeyComparator *keyComp, UValueComparator *valueComp, int32_t size, UErrorCode& status);
+    అంతఃవరుస శూన్య init_కొలత(UHashFunction *కీలకం_Hash, UKeyComparator *కీలకం_Comp, UValueComparator *విలువ_Comp, int32_t కొలత_2, UError_సంకేతం& స్థితి_2);
 
-public:
+బహిరంగ:
     /**
      * Construct a hashtable
      * @param ignoreKeyCase If true, keys are case insensitive.
      * @param status Error code
     */
-    inline Hashtable(UBool ignoreKeyCase, UErrorCode& status);
+    అంతఃవరుస Hashtable(UBool ignore_కీలకం_Case, UError_సంకేతం& స్థితి_2);
 
     /**
      * Construct a hashtable
@@ -49,7 +49,7 @@ public:
      * @param size initial size allocation
      * @param status Error code
     */
-    inline Hashtable(UBool ignoreKeyCase, int32_t size, UErrorCode& status);
+    అంతఃవరుస Hashtable(UBool ignore_కీలకం_Case, int32_t కొలత_2, UError_సంకేతం& స్థితి_2);
 
     /**
      * Construct a hashtable
@@ -57,211 +57,211 @@ public:
      * @param valueComp Comparator for comparing the values
      * @param status Error code
     */
-    inline Hashtable(UKeyComparator *keyComp, UValueComparator *valueComp, UErrorCode& status);
+    అంతఃవరుస Hashtable(UKeyComparator *కీలకం_Comp, UValueComparator *విలువ_Comp, UError_సంకేతం& స్థితి_2);
 
     /**
      * Construct a hashtable
      * @param status Error code
     */
-    inline Hashtable(UErrorCode& status);
+    అంతఃవరుస Hashtable(UError_సంకేతం& స్థితి_2);
 
     /**
      * Construct a hashtable, _disregarding any error_.  Use this constructor
      * with caution.
      */
-    inline Hashtable();
+    అంతఃవరుస Hashtable();
 
     /**
      * Non-virtual destructor; make this virtual if Hashtable is subclassed
      * in the future.
      */
-    inline ~Hashtable();
+    అంతఃవరుస ~Hashtable();
 
-    inline UObjectDeleter *setValueDeleter(UObjectDeleter *fn);
+    అంతఃవరుస UObjectDeleter *సమితి_విలువ_Deleter(UObjectDeleter *fn);
 
-    inline int32_t count() const;
+    అంతఃవరుస int32_t లెక్క() స్థిరరాశి;
 
-    inline void* put(const UnicodeString& key, void* value, UErrorCode& status);
+    అంతఃవరుస శూన్య* put(స్థిరరాశి UnicodeString& కీలకం, శూన్య* విలువ_2, UError_సంకేతం& స్థితి_2);
 
-    inline int32_t puti(const UnicodeString& key, int32_t value, UErrorCode& status);
+    అంతఃవరుస int32_t puti(స్థిరరాశి UnicodeString& కీలకం, int32_t విలువ_2, UError_సంకేతం& స్థితి_2);
 
-    inline int32_t putiAllowZero(const UnicodeString& key, int32_t value, UErrorCode& status);
+    అంతఃవరుస int32_t putiAllowZero(స్థిరరాశి UnicodeString& కీలకం, int32_t విలువ_2, UError_సంకేతం& స్థితి_2);
 
-    inline void* get(const UnicodeString& key) const;
+    అంతఃవరుస శూన్య* get(స్థిరరాశి UnicodeString& కీలకం) స్థిరరాశి;
 
-    inline int32_t geti(const UnicodeString& key) const;
+    అంతఃవరుస int32_t geti(స్థిరరాశి UnicodeString& కీలకం) స్థిరరాశి;
 
-    inline int32_t getiAndFound(const UnicodeString& key, UBool &found) const;
+    అంతఃవరుస int32_t geti_And_దొరికింది(స్థిరరాశి UnicodeString& కీలకం, UBool &దొరికింది) స్థిరరాశి;
 
-    inline void* remove(const UnicodeString& key);
+    అంతఃవరుస శూన్య* remove(స్థిరరాశి UnicodeString& కీలకం);
 
-    inline int32_t removei(const UnicodeString& key);
+    అంతఃవరుస int32_t removei(స్థిరరాశి UnicodeString& కీలకం);
 
-    inline void removeAll();
+    అంతఃవరుస శూన్య removeAll();
 
-    inline UBool containsKey(const UnicodeString& key) const;
+    అంతఃవరుస UBool కలిగియుంది_కీలకం(స్థిరరాశి UnicodeString& కీలకం) స్థిరరాశి;
 
-    inline const UHashElement* find(const UnicodeString& key) const;
+    అంతఃవరుస స్థిరరాశి UHashElement* కనుగొను(స్థిరరాశి UnicodeString& కీలకం) స్థిరరాశి;
 
     /**
      * @param pos - must be UHASH_FIRST on first call, and untouched afterwards.
      * @see uhash_nextElement
      */
-    inline const UHashElement* nextElement(int32_t& pos) const;
+    అంతఃవరుస స్థిరరాశి UHashElement* తదుపరి_Element(int32_t& pos) స్థిరరాశి;
 
-    inline UKeyComparator* setKeyComparator(UKeyComparator*keyComp);
+    అంతఃవరుస UKeyComparator* సమితి_కీలకం_Comparator(UKeyComparator*కీలకం_Comp);
 
-    inline UValueComparator* setValueComparator(UValueComparator* valueComp);
+    అంతఃవరుస UValueComparator* సమితి_విలువ_Comparator(UValueComparator* విలువ_Comp);
 
-    inline UBool equals(const Hashtable& that) const;
-private:
-    Hashtable(const Hashtable &other) = delete; // forbid copying of this class
-    Hashtable &operator=(const Hashtable &other) = delete; // forbid copying of this class
+    అంతఃవరుస UBool equals(స్థిరరాశి Hashtable& that) స్థిరరాశి;
+అంతరంగ:
+    Hashtable(స్థిరరాశి Hashtable &other) = delete; // forbid copying of this class
+    Hashtable &క్రియాకారకం=(స్థిరరాశి Hashtable &other) = delete; // forbid copying of this class
 };
 
 /*********************************************************************
  * Implementation
  ********************************************************************/
 
-inline void Hashtable::init(UHashFunction *keyHash, UKeyComparator *keyComp,
-                            UValueComparator *valueComp, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+అంతఃవరుస శూన్య Hashtable::init(UHashFunction *కీలకం_Hash, UKeyComparator *కీలకం_Comp,
+                            UValueComparator *విలువ_Comp, UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    uhash_init(&hashObj, keyHash, keyComp, valueComp, &status);
-    if (U_SUCCESS(status)) {
+    uhash_init(&hashObj, కీలకం_Hash, కీలకం_Comp, విలువ_Comp, &స్థితి_2);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
         hash = &hashObj;
-        uhash_setKeyDeleter(hash, uprv_deleteUObject);
+        uhash_సమితి_కీలకం_Deleter(hash, uprv_deleteUObject);
     }
 }
 
-inline void Hashtable::initSize(UHashFunction *keyHash, UKeyComparator *keyComp,
-                                UValueComparator *valueComp, int32_t size, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+అంతఃవరుస శూన్య Hashtable::init_కొలత(UHashFunction *కీలకం_Hash, UKeyComparator *కీలకం_Comp,
+                                UValueComparator *విలువ_Comp, int32_t కొలత_2, UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    uhash_initSize(&hashObj, keyHash, keyComp, valueComp, size, &status);
-    if (U_SUCCESS(status)) {
+    uhash_init_కొలత(&hashObj, కీలకం_Hash, కీలకం_Comp, విలువ_Comp, కొలత_2, &స్థితి_2);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
         hash = &hashObj;
-        uhash_setKeyDeleter(hash, uprv_deleteUObject);
+        uhash_సమితి_కీలకం_Deleter(hash, uprv_deleteUObject);
     }
 }
 
-inline Hashtable::Hashtable(UKeyComparator *keyComp, UValueComparator *valueComp,
-                 UErrorCode& status) : hash(nullptr) {
-    init( uhash_hashUnicodeString, keyComp, valueComp, status);
+అంతఃవరుస Hashtable::Hashtable(UKeyComparator *కీలకం_Comp, UValueComparator *విలువ_Comp,
+                 UError_సంకేతం& స్థితి_2) : hash(nullptr) {
+    init( uhash_hashUnicodeString, కీలకం_Comp, విలువ_Comp, స్థితి_2);
 }
 
-inline Hashtable::Hashtable(UBool ignoreKeyCase, UErrorCode& status)
+అంతఃవరుస Hashtable::Hashtable(UBool ignore_కీలకం_Case, UError_సంకేతం& స్థితి_2)
  : hash(nullptr)
 {
-    init(ignoreKeyCase ? uhash_hashCaselessUnicodeString
+    init(ignore_కీలకం_Case ? uhash_hashCaselessUnicodeString
                         : uhash_hashUnicodeString,
-            ignoreKeyCase ? uhash_compareCaselessUnicodeString
+            ignore_కీలకం_Case ? uhash_compareCaselessUnicodeString
                         : uhash_compareUnicodeString,
             nullptr,
-            status);
+            స్థితి_2);
 }
 
-inline Hashtable::Hashtable(UBool ignoreKeyCase, int32_t size, UErrorCode& status)
+అంతఃవరుస Hashtable::Hashtable(UBool ignore_కీలకం_Case, int32_t కొలత_2, UError_సంకేతం& స్థితి_2)
  : hash(nullptr)
 {
-    initSize(ignoreKeyCase ? uhash_hashCaselessUnicodeString
+    init_కొలత(ignore_కీలకం_Case ? uhash_hashCaselessUnicodeString
                         : uhash_hashUnicodeString,
-            ignoreKeyCase ? uhash_compareCaselessUnicodeString
+            ignore_కీలకం_Case ? uhash_compareCaselessUnicodeString
                         : uhash_compareUnicodeString,
-            nullptr, size,
-            status);
+            nullptr, కొలత_2,
+            స్థితి_2);
 }
 
-inline Hashtable::Hashtable(UErrorCode& status)
+అంతఃవరుస Hashtable::Hashtable(UError_సంకేతం& స్థితి_2)
  : hash(nullptr)
 {
-    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, status);
+    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, స్థితి_2);
 }
 
-inline Hashtable::Hashtable()
+అంతఃవరుస Hashtable::Hashtable()
  : hash(nullptr)
 {
-    UErrorCode status = U_ZERO_ERROR;
-    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, status);
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, స్థితి_2);
 }
 
-inline Hashtable::~Hashtable() {
-    if (hash != nullptr) {
+అంతఃవరుస Hashtable::~Hashtable() {
+    ఒకవేళ (hash != nullptr) {
         uhash_close(hash);
     }
 }
 
-inline UObjectDeleter *Hashtable::setValueDeleter(UObjectDeleter *fn) {
-    return uhash_setValueDeleter(hash, fn);
+అంతఃవరుస UObjectDeleter *Hashtable::సమితి_విలువ_Deleter(UObjectDeleter *fn) {
+    తిరిగి uhash_సమితి_విలువ_Deleter(hash, fn);
 }
 
-inline int32_t Hashtable::count() const {
-    return uhash_count(hash);
+అంతఃవరుస int32_t Hashtable::లెక్క() స్థిరరాశి {
+    తిరిగి uhash_లెక్క(hash);
 }
 
-inline void* Hashtable::put(const UnicodeString& key, void* value, UErrorCode& status) {
-    return uhash_put(hash, new UnicodeString(key), value, &status);
+అంతఃవరుస శూన్య* Hashtable::put(స్థిరరాశి UnicodeString& కీలకం, శూన్య* విలువ_2, UError_సంకేతం& స్థితి_2) {
+    తిరిగి uhash_put(hash, new UnicodeString(కీలకం), విలువ_2, &స్థితి_2);
 }
 
-inline int32_t Hashtable::puti(const UnicodeString& key, int32_t value, UErrorCode& status) {
-    return uhash_puti(hash, new UnicodeString(key), value, &status);
+అంతఃవరుస int32_t Hashtable::puti(స్థిరరాశి UnicodeString& కీలకం, int32_t విలువ_2, UError_సంకేతం& స్థితి_2) {
+    తిరిగి uhash_puti(hash, new UnicodeString(కీలకం), విలువ_2, &స్థితి_2);
 }
 
-inline int32_t Hashtable::putiAllowZero(const UnicodeString& key, int32_t value,
-                                        UErrorCode& status) {
-    return uhash_putiAllowZero(hash, new UnicodeString(key), value, &status);
+అంతఃవరుస int32_t Hashtable::putiAllowZero(స్థిరరాశి UnicodeString& కీలకం, int32_t విలువ_2,
+                                        UError_సంకేతం& స్థితి_2) {
+    తిరిగి uhash_putiAllowZero(hash, new UnicodeString(కీలకం), విలువ_2, &స్థితి_2);
 }
 
-inline void* Hashtable::get(const UnicodeString& key) const {
-    return uhash_get(hash, &key);
+అంతఃవరుస శూన్య* Hashtable::get(స్థిరరాశి UnicodeString& కీలకం) స్థిరరాశి {
+    తిరిగి uhash_get(hash, &కీలకం);
 }
 
-inline int32_t Hashtable::geti(const UnicodeString& key) const {
-    return uhash_geti(hash, &key);
+అంతఃవరుస int32_t Hashtable::geti(స్థిరరాశి UnicodeString& కీలకం) స్థిరరాశి {
+    తిరిగి uhash_geti(hash, &కీలకం);
 }
 
-inline int32_t Hashtable::getiAndFound(const UnicodeString& key, UBool &found) const {
-    return uhash_getiAndFound(hash, &key, &found);
+అంతఃవరుస int32_t Hashtable::geti_And_దొరికింది(స్థిరరాశి UnicodeString& కీలకం, UBool &దొరికింది) స్థిరరాశి {
+    తిరిగి uhash_geti_And_దొరికింది(hash, &కీలకం, &దొరికింది);
 }
 
-inline void* Hashtable::remove(const UnicodeString& key) {
-    return uhash_remove(hash, &key);
+అంతఃవరుస శూన్య* Hashtable::remove(స్థిరరాశి UnicodeString& కీలకం) {
+    తిరిగి uhash_remove(hash, &కీలకం);
 }
 
-inline int32_t Hashtable::removei(const UnicodeString& key) {
-    return uhash_removei(hash, &key);
+అంతఃవరుస int32_t Hashtable::removei(స్థిరరాశి UnicodeString& కీలకం) {
+    తిరిగి uhash_removei(hash, &కీలకం);
 }
 
-inline UBool Hashtable::containsKey(const UnicodeString& key) const {
-    return uhash_containsKey(hash, &key);
+అంతఃవరుస UBool Hashtable::కలిగియుంది_కీలకం(స్థిరరాశి UnicodeString& కీలకం) స్థిరరాశి {
+    తిరిగి uhash_కలిగియుంది_కీలకం(hash, &కీలకం);
 }
 
-inline const UHashElement* Hashtable::find(const UnicodeString& key) const {
-    return uhash_find(hash, &key);
+అంతఃవరుస స్థిరరాశి UHashElement* Hashtable::కనుగొను(స్థిరరాశి UnicodeString& కీలకం) స్థిరరాశి {
+    తిరిగి uhash_కనుగొను(hash, &కీలకం);
 }
 
-inline const UHashElement* Hashtable::nextElement(int32_t& pos) const {
-    return uhash_nextElement(hash, &pos);
+అంతఃవరుస స్థిరరాశి UHashElement* Hashtable::తదుపరి_Element(int32_t& pos) స్థిరరాశి {
+    తిరిగి uhash_తదుపరి_Element(hash, &pos);
 }
 
-inline void Hashtable::removeAll() {
+అంతఃవరుస శూన్య Hashtable::removeAll() {
     uhash_removeAll(hash);
 }
 
-inline UKeyComparator* Hashtable::setKeyComparator(UKeyComparator*keyComp){
-    return uhash_setKeyComparator(hash, keyComp);
+అంతఃవరుస UKeyComparator* Hashtable::సమితి_కీలకం_Comparator(UKeyComparator*కీలకం_Comp){
+    తిరిగి uhash_సమితి_కీలకం_Comparator(hash, కీలకం_Comp);
 }
 
-inline UValueComparator* Hashtable::setValueComparator(UValueComparator* valueComp){
-    return uhash_setValueComparator(hash, valueComp);
+అంతఃవరుస UValueComparator* Hashtable::సమితి_విలువ_Comparator(UValueComparator* విలువ_Comp){
+    తిరిగి uhash_సమితి_విలువ_Comparator(hash, విలువ_Comp);
 }
 
-inline UBool Hashtable::equals(const Hashtable& that)const{
-   return uhash_equals(hash, that.hash);
+అంతఃవరుస UBool Hashtable::equals(స్థిరరాశి Hashtable& that)స్థిరరాశి{
+   తిరిగి uhash_equals(hash, that.hash);
 }
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 

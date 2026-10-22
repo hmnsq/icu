@@ -18,61 +18,61 @@
 *   Character conversion functions moved here from uresbund.c
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ures.h"
-#include "uinvchar.h"
-#include "ustr_cnv.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "uinvchar.h"
+#అన్తర్భావ "ustr_cnv.h"
 
 U_CAPI UResourceBundle * U_EXPORT2
-ures_openU(const char16_t *myPath,
-           const char *localeID, 
-           UErrorCode *status)
+ures_openU(స్థిరరాశి char16_t *my_మార్గం,
+           స్థిరరాశి అక్షరం *localeID, 
+           UError_సంకేతం *స్థితి_2)
 {
-    char pathBuffer[1024];
+    అక్షరం మార్గం_బఫరు[1024];
     int32_t length;
-    char *path = pathBuffer;
+    అక్షరం *మార్గం = మార్గం_బఫరు;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ(స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(myPath==nullptr) {
-        path = nullptr;
+    ఒకవేళ(my_మార్గం==శూన్యసూచిక) {
+        మార్గం = శూన్యసూచిక;
     }
-    else {
-        length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
-            *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+    లేకపోతే {
+        length=u_strlen(my_మార్గం);
+        ఒకవేళ(length>=(int32_t)పరిమాణం(మార్గం_బఫరు)) {
+            *స్థితి_2=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి శూన్యసూచిక;
+        } లేకపోతే ఒకవేళ(uprv_isInvariantUString(my_మార్గం, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
-            u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+            u_UChars_గమ్యం_Chars(my_మార్గం, మార్గం, length+1); /* length+1 to include the NUL */
+        } లేకపోతే {
+#ఒకవేళ !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
-            UConverter *cnv=u_getDefaultConverter(status);
-            length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
+            UConverter *cnv=u_getDefaultConverter(స్థితి_2);
+            length=ucnv_fromUChars(cnv, మార్గం, (int32_t)పరిమాణం(మార్గం_బఫరు), my_మార్గం, length, స్థితి_2);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+                తిరిగి శూన్యసూచిక;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            ఒకవేళ(length>=(int32_t)పరిమాణం(మార్గం_బఫరు)) {
                 /* not NUL-terminated - path too long */
-                *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                *స్థితి_2=U_ILLEGAL_వాదం_ERROR;
+                తిరిగి శూన్యసూచిక;
             }
-#else
+#లేకపోతే
             /* the default converter is not available */
-            *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
-#endif
+            *స్థితి_2=U_UNSUPPORTED_ERROR;
+            తిరిగి శూన్యసూచిక;
+#అయితే_ముగింపు
         }
     }
 
-    return ures_open(path, localeID, status);
+    తిరిగి ures_open(మార్గం, localeID, స్థితి_2);
 }

@@ -18,12 +18,12 @@
 */
 
 
-#ifndef ICUPLUGIMP_H
-#define ICUPLUGIMP_H
+#నిర్వచితం_కాకపోతే ICUPLUGIMP_H
+#నిర్వచించు ICUPLUGIMP_H
 
-#include "unicode/icuplug.h"
+#అన్తర్భావ "unicode/icuplug.h"
 
-#if UCONFIG_ENABLE_PLUGINS
+#ఒకవేళ UCONFIG_ENABLE_PLUGINS
 
 /*========================*/
 /** @{ Library Manipulation  
@@ -36,8 +36,8 @@
  * @return the library pointer, or NULL
  * @internal internal use only
  */
-U_CAPI void * U_EXPORT2
-uplug_openLibrary(const char *libName, UErrorCode *status);
+U_CAPI శూన్య * U_EXPORT2
+uplug_openLibrary(స్థిరరాశి అక్షరం *libName, UError_సంకేతం *స్థితి_2);
 
 /**
  * Close a library, if its reference count is 0
@@ -45,8 +45,8 @@ uplug_openLibrary(const char *libName, UErrorCode *status);
  * @param status error code
  * @internal internal use only
  */
-U_CAPI void U_EXPORT2
-uplug_closeLibrary(void *lib, UErrorCode *status);
+U_CAPI శూన్య U_EXPORT2
+uplug_closeLibrary(శూన్య *lib, UError_సంకేతం *స్థితి_2);
 
 /**
  * Get a library's name, or NULL if not found.
@@ -55,8 +55,8 @@ uplug_closeLibrary(void *lib, UErrorCode *status);
  * @return the library name, or NULL if not found.
  * @internal internal use only
  */
-U_CAPI  char * U_EXPORT2
-uplug_findLibrary(void *lib, UErrorCode *status);
+U_CAPI  అక్షరం * U_EXPORT2
+uplug_కనుగొను_Library(శూన్య *lib, UError_సంకేతం *స్థితి_2);
 
 /** @} */
 
@@ -69,25 +69,25 @@ uplug_findLibrary(void *lib, UErrorCode *status);
  * @param status error result
  * @internal - Internal use only.
  */
-U_CAPI void U_EXPORT2
-uplug_init(UErrorCode *status);
+U_CAPI శూన్య U_EXPORT2
+uplug_init(UError_సంకేతం *స్థితి_2);
 
 /**
  * Get raw plug N
  * @internal - Internal use only
  */ 
-U_CAPI UPlugData* U_EXPORT2
-uplug_getPlugInternal(int32_t n);
+U_CAPI UPlug_దత్తాంశం* U_EXPORT2
+uplug_get_Plug_అంతర్గత(int32_t n);
 
 /**
  * Get the name of the plugin file. 
  * @internal - Internal use only.
  */
-U_CAPI const char* U_EXPORT2
-uplug_getPluginFile(void);
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uplug_getPluginFile(శూన్య);
 
 /** @} */
 
-#endif
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు

@@ -16,14 +16,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UDATA_H__
-#define __UDATA_H__
+#నిర్వచితం_కాకపోతే __UDATA_H__
+#నిర్వచించు __UDATA_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+#అన్తర్భావ "unicode/localpointer.h"
+#అయితే_ముగింపు   // U_SHOW_CPLUSPLUS_API
 
 U_CDECL_BEGIN
 
@@ -42,38 +42,38 @@ U_CDECL_BEGIN
  * See the User Guide Data Management chapter.
  */
  
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
 /**
  * Character used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR '-'
+#నిర్వచించు U_వృక్షం_SEPARATOR '-'
 
 /**
  * String used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR_STRING "-"
+#నిర్వచించు U_వృక్షం_SEPARATOR_STRING "-"
 
 /**
  * Character used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_CHAR '/'
+#నిర్వచించు U_వృక్షం_నమోదు_SEP_CHAR '/'
 
 /**
  * String used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_STRING "/"
+#నిర్వచించు U_వృక్షం_నమోదు_SEP_STRING "/"
 
 /**
  * Alias for standard ICU data 
  * @internal ICU 3.0
  */
-#define U_ICUDATA_ALIAS "ICUDATA"
+#నిర్వచించు U_ICUDATA_ALIAS "ICUDATA"
 
-#endif /* U_HIDE_INTERNAL_API */
+#అయితే_ముగింపు /* U_HIDE_INTERNAL_API */
 
 /**
  * UDataInfo contains the properties about the requested data.
@@ -113,14 +113,14 @@ U_CDECL_BEGIN
  *
  * @stable ICU 2.0
  */
-typedef struct {
+రకనిర్వచనం నిర్మాణం {
     /** sizeof(UDataInfo)
      *  @stable ICU 2.0 */
-    uint16_t size;
+    uint16_t కొలత_2;
 
     /** unused, set to 0 
      *  @stable ICU 2.0*/
-    uint16_t reservedWord;
+    uint16_t reserved_మాట;
 
     /* platform data properties */
     /** 0 for little-endian machine, 1 for big-endian
@@ -141,15 +141,15 @@ typedef struct {
 
     /** data format identifier 
      *  @stable ICU 2.0*/
-    uint8_t dataFormat[4];
+    uint8_t దత్తాంశం_Format[4];
 
     /** versions: [0] major [1] minor [2] milli [3] micro 
      *  @stable ICU 2.0*/
-    uint8_t formatVersion[4];
+    uint8_t format_సంస్కరణ[4];
 
     /** versions: [0] major [1] minor [2] milli [3] micro 
      *  @stable ICU 2.0*/
-    uint8_t dataVersion[4];
+    uint8_t దత్తాంశం_సంస్కరణ[4];
 } UDataInfo;
 
 /* API for reading data -----------------------------------------------------*/
@@ -158,7 +158,7 @@ typedef struct {
  * Forward declaration of the data memory type.
  * @stable ICU 2.0
  */
-typedef struct UDataMemory UDataMemory;
+రకనిర్వచనం నిర్మాణం UData_జ్ఞాపకం UData_జ్ఞాపకం;
 
 /**
  * Callback function for udata_openChoice().
@@ -173,10 +173,10 @@ typedef struct UDataMemory UDataMemory;
  * @return true if the current data memory is acceptable
  * @stable ICU 2.0
  */
-typedef UBool U_CALLCONV
-UDataMemoryIsAcceptable(void *context,
-                        const char *type, const char *name,
-                        const UDataInfo *pInfo);
+రకనిర్వచనం UBool U_CALLCONV
+UData_జ్ఞాపకం_Is_Acceptable(శూన్య *context,
+                        స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name,
+                        స్థిరరాశి UDataInfo *pInfo);
 
 
 /**
@@ -200,9 +200,9 @@ UDataMemoryIsAcceptable(void *context,
  * @see udata_openChoice
  * @stable ICU 2.0
  */
-U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
-           UErrorCode *pErrorCode);
+U_CAPI UData_జ్ఞాపకం * U_EXPORT2
+udata_open(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name,
+           UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Data loading function.
@@ -252,10 +252,10 @@ udata_open(const char *path, const char *type, const char *name,
  *         to get a pointer to the actual data.
  * @stable ICU 2.0
  */
-U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
-                 UDataMemoryIsAcceptable *isAcceptable, void *context,
-                 UErrorCode *pErrorCode);
+U_CAPI UData_జ్ఞాపకం * U_EXPORT2
+udata_openChoice(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name,
+                 UData_జ్ఞాపకం_Is_Acceptable *isAcceptable, శూన్య *context,
+                 UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Close the data memory.
@@ -264,8 +264,8 @@ udata_openChoice(const char *path, const char *type, const char *name,
  * @param pData The pointer to data memory object
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_close(UDataMemory *pData);
+U_CAPI శూన్య U_EXPORT2
+udata_close(UData_జ్ఞాపకం *p_దత్తాంశం);
 
 /**
  * Get the pointer to the actual data inside the data memory.
@@ -276,8 +276,8 @@ udata_close(UDataMemory *pData);
  * @param pData The pointer to data memory object
  * @stable ICU 2.0
  */
-U_CAPI const void* U_EXPORT2
-udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI స్థిరరాశి శూన్య* U_EXPORT2
+udata_get_జ్ఞాపకం(UData_జ్ఞాపకం* p_దత్తాంశం U_LIFETIME_BOUND);
 
 /**
  * Get the information from the data memory header.
@@ -297,8 +297,8 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND);
  * adjusted and only part of the structure will be filled.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_getInfo(UDataMemory *pData, UDataInfo *pInfo);
+U_CAPI శూన్య U_EXPORT2
+udata_getInfo(UData_జ్ఞాపకం *p_దత్తాంశం, UDataInfo *pInfo);
 
 /**
  * This function bypasses the normal ICU data loading process and
@@ -343,8 +343,8 @@ udata_getInfo(UDataMemory *pData, UDataInfo *pInfo);
  * @param err outgoing error status <code>U_USING_DEFAULT_WARNING, U_UNSUPPORTED_ERROR</code>
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_setCommonData(const void *data, UErrorCode *err);
+U_CAPI శూన్య U_EXPORT2
+udata_సమితి_Common_దత్తాంశం(స్థిరరాశి శూన్య *దత్తాంశం, UError_సంకేతం *err);
 
 
 /**
@@ -374,33 +374,33 @@ udata_setCommonData(const void *data, UErrorCode *err);
  * @see udata_setCommonData
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_setAppData(const char *packageName, const void *data, UErrorCode *err);
+U_CAPI శూన్య U_EXPORT2
+udata_సమితి_App_దత్తాంశం(స్థిరరాశి అక్షరం *packageName, స్థిరరాశి శూన్య *దత్తాంశం, UError_సంకేతం *err);
 
 /**
  * Possible settings for udata_setFileAccess()
  * @see udata_setFileAccess
  * @stable ICU 3.4
  */
-typedef enum UDataFileAccess {
+రకనిర్వచనం గణన UDataFileAccess {
     /** ICU looks for data in single files first, then in packages. (default) @stable ICU 3.4 */
-    UDATA_FILES_FIRST,
+    UDATA_FILES_మొదటి,
     /** An alias for the default access mode. @stable ICU 3.4 */
-    UDATA_DEFAULT_ACCESS = UDATA_FILES_FIRST,
+    UDATA_DEFAULT_ACCESS = UDATA_FILES_మొదటి,
     /** ICU only loads data from packages, not from single files. @stable ICU 3.4 */
     UDATA_ONLY_PACKAGES,
     /** ICU loads data from packages first, and only from single files
         if the data cannot be found in a package. @stable ICU 3.4 */
-    UDATA_PACKAGES_FIRST,
+    UDATA_PACKAGES_మొదటి,
     /** ICU does not access the file system for data loading. @stable ICU 3.4 */
     UDATA_NO_FILES,
-#ifndef U_HIDE_DEPRECATED_API
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
     /**
      * Number of real UDataFileAccess values.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UDATA_FILE_ACCESS_COUNT
-#endif  // U_HIDE_DEPRECATED_API
+    UDATA_FILE_ACCESS_లెక్క
+#అయితే_ముగింపు  // U_HIDE_DEPRECATED_API
 } UDataFileAccess;
 
 /**
@@ -413,12 +413,12 @@ typedef enum UDataFileAccess {
  * @see UDataFileAccess
  * @stable ICU 3.4 
  */
-U_CAPI void U_EXPORT2
-udata_setFileAccess(UDataFileAccess access, UErrorCode *status);
+U_CAPI శూన్య U_EXPORT2
+udata_సమితి_File_Access(UDataFileAccess access, UError_సంకేతం *స్థితి_2);
 
-U_CDECL_END
+U_CDECL_చివర
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -431,10 +431,10 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUDataMemoryPointer, UDataMemory, udata_close);
+U_DEFINE_LOCAL_OPEN_సూచిక(Local_UData_జ్ఞాపకం_సూచిక, UData_జ్ఞాపకం, udata_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // U_SHOW_CPLUSPLUS_API
+#అయితే_ముగింపు  // U_SHOW_CPLUSPLUS_API
 
-#endif
+#అయితే_ముగింపు

@@ -22,16 +22,16 @@
 ******************************************************************************
 */
 
-#ifndef URES_H
-#define URES_H
+#నిర్వచితం_కాకపోతే URES_H
+#నిర్వచించు URES_H
 
-#include "unicode/char16ptr.h"
-#include "unicode/utypes.h"
-#include "unicode/uloc.h"
+#అన్తర్భావ "unicode/char16ptr.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uloc.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+#అన్తర్భావ "unicode/localpointer.h"
+#అయితే_ముగింపు   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -55,19 +55,19 @@
  * UResourceBundle is an opaque type for handles for resource bundles in C APIs.
  * @stable ICU 2.0
  */
-struct UResourceBundle;
+నిర్మాణం UResourceBundle;
 
 /**
  * @stable ICU 2.0
  */
-typedef struct UResourceBundle UResourceBundle;
+రకనిర్వచనం నిర్మాణం UResourceBundle UResourceBundle;
 
 /**
  * Numeric constants for types of resource items.
  * @see ures_getType
  * @stable ICU 2.0
  */
-typedef enum {
+రకనిర్వచనం గణన {
     /** Resource type constant for "no resource". @stable ICU 2.6 */
     URES_NONE=-1,
 
@@ -75,10 +75,10 @@ typedef enum {
     URES_STRING=0,
 
     /** Resource type constant for binary data. @stable ICU 2.6 */
-    URES_BINARY=1,
+    URES_ద్విమాన=1,
 
     /** Resource type constant for tables of key-value pairs. @stable ICU 2.6 */
-    URES_TABLE=2,
+    URES_పట్టిక=2,
 
     /**
      * Resource type constant for aliases;
@@ -106,16 +106,16 @@ typedef enum {
      * @see ures_getIntVector
      * @stable ICU 2.6
      */
-    URES_INT_VECTOR = 14,
-#ifndef U_HIDE_DEPRECATED_API
+    URES_INT_సదిశ = 14,
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_NONE=URES_NONE,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_STRING=URES_STRING,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_BINARY=URES_BINARY,
+    RES_ద్విమాన=URES_ద్విమాన,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_TABLE=URES_TABLE,
+    RES_పట్టిక=URES_పట్టిక,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_ALIAS=URES_ALIAS,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
@@ -123,7 +123,7 @@ typedef enum {
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_ARRAY=URES_ARRAY,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_INT_VECTOR=URES_INT_VECTOR,
+    RES_INT_సదిశ=URES_INT_సదిశ,
     /** @deprecated ICU 2.6 Not used. */
     RES_RESERVED=15,
 
@@ -131,8 +131,8 @@ typedef enum {
      * One more than the highest normal UResType value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    URES_LIMIT = 16
-#endif  // U_HIDE_DEPRECATED_API
+    URES_హద్దు = 16
+#అయితే_ముగింపు  // U_HIDE_DEPRECATED_API
 } UResType;
 
 /*
@@ -168,9 +168,9 @@ typedef enum {
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_open(const char*    packageName,
-          const char*  locale,
-          UErrorCode*     status);
+ures_open(స్థిరరాశి అక్షరం*    packageName,
+          స్థిరరాశి అక్షరం*  locale,
+          UError_సంకేతం*     స్థితి_2);
 
 
 /** This function does not care what kind of localeID is passed in. It simply opens a bundle with
@@ -191,9 +191,9 @@ ures_open(const char*    packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openDirect(const char* packageName,
-                const char* locale,
-                UErrorCode* status);
+ures_open_ప్రత్యక్ష(స్థిరరాశి అక్షరం* packageName,
+                స్థిరరాశి అక్షరం* locale,
+                UError_సంకేతం* స్థితి_2);
 
 /**
  * Same as ures_open() but takes a const UChar *path.
@@ -214,11 +214,11 @@ ures_openDirect(const char* packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openU(const UChar* packageName,
-           const char* locale,
-           UErrorCode* status);
+ures_openU(స్థిరరాశి UChar* packageName,
+           స్థిరరాశి అక్షరం* locale,
+           UError_సంకేతం* స్థితి_2);
 
-#ifndef U_HIDE_DEPRECATED_API
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
 /**
  * Returns the number of strings/arrays in resource bundles.
  * Better to use ures_getSize, as this function will be deprecated.
@@ -236,10 +236,10 @@ ures_openU(const UChar* packageName,
  * @deprecated ICU 2.8 User ures_getSize instead
  */
 U_DEPRECATED int32_t U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                     const char* resourceKey,
-                     UErrorCode* err);
-#endif  /* U_HIDE_DEPRECATED_API */
+ures_లెక్క_Array_వస్తువులు(స్థిరరాశి UResourceBundle* resourceBundle,
+                     స్థిరరాశి అక్షరం* resource_కీలకం,
+                     UError_సంకేతం* err);
+#అయితే_ముగింపు  /* U_HIDE_DEPRECATED_API */
 
 /**
  * Close a resource bundle, all pointers returned from the various ures_getXXX calls
@@ -249,10 +249,10 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
  * @see ures_open
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ures_close(UResourceBundle* resourceBundle);
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -265,13 +265,13 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUResourceBundlePointer, UResourceBundle, ures_close);
+U_DEFINE_LOCAL_OPEN_సూచిక(Local_UResource_Bundle_సూచిక, UResourceBundle, ures_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 
-#ifndef U_HIDE_DEPRECATED_API
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
 /**
  * Return the version number associated with this ResourceBundle as a string. Please
  * use ures_getVersion as this function is going to be deprecated.
@@ -282,9 +282,9 @@ U_NAMESPACE_END
  * @see ures_getVersion
  * @deprecated ICU 2.8 Use ures_getVersion instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
-#endif  /* U_HIDE_DEPRECATED_API */
+U_DEPRECATED స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_సంస్కరణ_సంఖ్య(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+#అయితే_ముగింపు  /* U_HIDE_DEPRECATED_API */
 
 /**
  * Return the version number associated with this ResourceBundle as an
@@ -295,11 +295,11 @@ ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  *                    as specified in the resource bundle or its parent.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ures_getVersion(const UResourceBundle* resB,
-                UVersionInfo versionInfo);
+U_CAPI శూన్య U_EXPORT2
+ures_get_సంస్కరణ(స్థిరరాశి UResourceBundle* resB,
+                UVersionInfo సంస్కరణ_Info);
 
-#ifndef U_HIDE_DEPRECATED_API
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
 /**
  * Return the name of the Locale associated with this ResourceBundle. This API allows
  * you to query for the real locale of the resource. For example, if you requested
@@ -312,9 +312,9 @@ ures_getVersion(const UResourceBundle* resB,
  * @return  A Locale name
  * @deprecated ICU 2.8 Use ures_getLocaleByType instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
-#endif  /* U_HIDE_DEPRECATED_API */
+U_DEPRECATED స్థిరరాశి అక్షరం* U_EXPORT2
+ures_getLocale(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND, UError_సంకేతం* స్థితి_2);
+#అయితే_ముగింపు  /* U_HIDE_DEPRECATED_API */
 
 /**
  * Return the name of the Locale associated with this ResourceBundle.
@@ -328,13 +328,13 @@ ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCod
  * @return  A Locale name
  * @stable ICU 2.8
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
-                     ULocDataLocaleType type,
-                     UErrorCode* status);
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_getLocaleByType(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+                     ULoc_దత్తాంశం_Locale_Type type,
+                     UError_సంకేతం* స్థితి_2);
 
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
 /**
  * Same as ures_open() but uses the fill-in parameter instead of allocating a new bundle.
  *
@@ -351,12 +351,12 @@ ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @param status The error code.
  * @internal
  */
-U_CAPI void U_EXPORT2
-ures_openFillIn(UResourceBundle *r,
-                const char* packageName,
-                const char* localeID,
-                UErrorCode* status);
-#endif  /* U_HIDE_INTERNAL_API */
+U_CAPI శూన్య U_EXPORT2
+ures_open_Fill_లోపల(UResourceBundle *r,
+                స్థిరరాశి అక్షరం* packageName,
+                స్థిరరాశి అక్షరం* localeID,
+                UError_సంకేతం* స్థితి_2);
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
 
 /**
  * Returns a string from a string resource type
@@ -375,10 +375,10 @@ ures_openFillIn(UResourceBundle *r,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI స్థిరరాశి UChar* U_EXPORT2
+ures_getString(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
-               UErrorCode* status);
+               UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns a UTF-8 string from a string resource.
@@ -427,12 +427,12 @@ ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
-                   int32_t* length,
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_getUTF8String(స్థిరరాశి UResourceBundle* resB,
+                   అక్షరం* dest U_LIFETIME_BOUND,
+                   int32_t* నిడివి,
                    UBool forceCopy,
-                   UErrorCode* status);
+                   UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns a binary data from a binary resource.
@@ -451,10 +451,10 @@ ures_getUTF8String(const UResourceBundle* resB,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI స్థిరరాశి uint8_t* U_EXPORT2
+ures_get_ద్విమాన(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
-               UErrorCode* status);
+               UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns a 32 bit integer array from a resource.
@@ -473,10 +473,10 @@ ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI స్థిరరాశి int32_t* U_EXPORT2
+ures_get_Int_సదిశ(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                   int32_t* len,
-                  UErrorCode* status);
+                  UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns an unsigned integer from a resource.
@@ -495,8 +495,8 @@ ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI uint32_t U_EXPORT2
-ures_getUInt(const UResourceBundle* resourceBundle,
-             UErrorCode *status);
+ures_getUInt(స్థిరరాశి UResourceBundle* resourceBundle,
+             UError_సంకేతం *స్థితి_2);
 
 /**
  * Returns a signed integer from a resource.
@@ -515,8 +515,8 @@ ures_getUInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getInt(const UResourceBundle* resourceBundle,
-            UErrorCode *status);
+ures_getInt(స్థిరరాశి UResourceBundle* resourceBundle,
+            UError_సంకేతం *స్థితి_2);
 
 /**
  * Returns the size of a resource. Size for scalar types is always 1,
@@ -529,7 +529,7 @@ ures_getInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getSize(const UResourceBundle *resourceBundle);
+ures_get_కొలత(స్థిరరాశి UResourceBundle *resourceBundle);
 
 /**
  * Returns the type of a resource. Available types are defined in enum UResType
@@ -540,7 +540,7 @@ ures_getSize(const UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UResType U_EXPORT2
-ures_getType(const UResourceBundle *resourceBundle);
+ures_getType(స్థిరరాశి UResourceBundle *resourceBundle);
 
 /**
  * Returns the key associated with a given resource. Not all the resources have a key - only
@@ -550,8 +550,8 @@ ures_getType(const UResourceBundle *resourceBundle);
  * @return a key associated to this resource, or NULL if it doesn't have a key
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_కీలకం(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 
 /* ITERATION API
     This API provides means for iterating through a resource
@@ -563,7 +563,7 @@ ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  * @param resourceBundle a resource
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ures_resetIterator(UResourceBundle *resourceBundle);
 
 /**
@@ -574,7 +574,7 @@ ures_resetIterator(UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UBool U_EXPORT2
-ures_hasNext(const UResourceBundle *resourceBundle);
+ures_has_తదుపరి(స్థిరరాశి UResourceBundle *resourceBundle);
 
 /**
  * Returns the next resource in a given resource or NULL if there are no more resources
@@ -589,9 +589,9 @@ ures_hasNext(const UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getNextResource(UResourceBundle* resourceBundle,
-                     UResourceBundle* fillIn U_LIFETIME_BOUND,
-                     UErrorCode* status);
+ures_get_తదుపరి_Resource(UResourceBundle* resourceBundle,
+                     UResourceBundle* fill_లోపల U_LIFETIME_BOUND,
+                     UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns the next string in a given resource or NULL if there are no more resources
@@ -605,11 +605,11 @@ ures_getNextResource(UResourceBundle* resourceBundle,
  * @return a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI స్థిరరాశి UChar* U_EXPORT2
+ures_get_తదుపరి_String(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
-                   UErrorCode* status);
+                   స్థిరరాశి అక్షరం** కీలకం,
+                   UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns the resource in a given resource at the specified index. Features a fill-in parameter.
@@ -624,10 +624,10 @@ ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByIndex(const UResourceBundle* resourceBundle,
-                int32_t indexR,
-                UResourceBundle* fillIn U_LIFETIME_BOUND,
-                UErrorCode* status);
+ures_get_By_సూచీ(స్థిరరాశి UResourceBundle* resourceBundle,
+                int32_t సూచీ_R,
+                UResourceBundle* fill_లోపల U_LIFETIME_BOUND,
+                UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns the string in a given resource at the specified index.
@@ -640,11 +640,11 @@ ures_getByIndex(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
-                      int32_t indexS,
+U_CAPI స్థిరరాశి UChar* U_EXPORT2
+ures_get_String_By_సూచీ(స్థిరరాశి UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+                      int32_t సూచీ_S,
                       int32_t* len,
-                      UErrorCode* status);
+                      UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns a UTF-8 string from a resource at the specified index.
@@ -694,13 +694,13 @@ ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByIndex(const UResourceBundle* resB,
-                          int32_t stringIndex,
-                          char* dest U_LIFETIME_BOUND,
-                          int32_t* pLength,
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_UTF8_String_By_సూచీ(స్థిరరాశి UResourceBundle* resB,
+                          int32_t string_సూచీ,
+                          అక్షరం* dest U_LIFETIME_BOUND,
+                          int32_t* p_నిడివి,
                           UBool forceCopy,
-                          UErrorCode* status);
+                          UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns a resource in a given resource that has a given key. This procedure works only with table
@@ -715,10 +715,10 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resourceBundle,
-              const char* key,
-              UResourceBundle* fillIn U_LIFETIME_BOUND,
-              UErrorCode* status);
+ures_get_By_కీలకం(స్థిరరాశి UResourceBundle* resourceBundle,
+              స్థిరరాశి అక్షరం* కీలకం,
+              UResourceBundle* fill_లోపల U_LIFETIME_BOUND,
+              UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns a string in a given resource that has a given key. This procedure works only with table
@@ -732,11 +732,11 @@ ures_getByKey(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* key,
+U_CAPI స్థిరరాశి UChar* U_EXPORT2
+ures_get_String_By_కీలకం(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND,
+                    స్థిరరాశి అక్షరం* కీలకం,
                     int32_t* len,
-                    UErrorCode* status);
+                    UError_సంకేతం* స్థితి_2);
 
 /**
  * Returns a UTF-8 string from a resource and a key.
@@ -788,16 +788,16 @@ ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
-                        int32_t* pLength,
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ures_get_UTF8_String_By_కీలకం(స్థిరరాశి UResourceBundle* resB,
+                        స్థిరరాశి అక్షరం* కీలకం,
+                        అక్షరం* dest U_LIFETIME_BOUND,
+                        int32_t* p_నిడివి,
                         UBool forceCopy,
-                        UErrorCode* status);
+                        UError_సంకేతం* స్థితి_2);
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/unistr.h"
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+#అన్తర్భావ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 /**
@@ -811,17 +811,17 @@ U_NAMESPACE_BEGIN
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* status) {
-    UnicodeString result;
+అంతఃవరుస UnicodeString
+ures_getUnicodeString(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND, UError_సంకేతం* స్థితి_2) {
+    UnicodeString ఫలితం;
     int32_t len = 0;
-    const char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    స్థిరరాశి char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, స్థితి_2));
+    ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+        ఫలితం.సమితి_గమ్యం(true, r, len);
+    } లేకపోతే {
+        ఫలితం.సమితి_గమ్యం_Bogus();
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 /**
@@ -836,19 +836,19 @@ ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* 
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
-                          const char** key,
-                          UErrorCode* status) {
-    UnicodeString result;
+అంతఃవరుస UnicodeString
+ures_get_తదుపరి_Unicode_String(UResourceBundle* resB U_LIFETIME_BOUND,
+                          స్థిరరాశి అక్షరం** కీలకం,
+                          UError_సంకేతం* స్థితి_2) {
+    UnicodeString ఫలితం;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    స్థిరరాశి char16_t* r = ConstChar16Ptr(ures_get_తదుపరి_String(resB, &len, కీలకం, స్థితి_2));
+    ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+        ఫలితం.సమితి_గమ్యం(true, r, len);
+    } లేకపోతే {
+        ఫలితం.సమితి_గమ్యం_Bogus();
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 /**
@@ -860,19 +860,19 @@ ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
-                             int32_t indexS,
-                             UErrorCode* status) {
-    UnicodeString result;
+అంతఃవరుస UnicodeString
+ures_get_Unicode_String_By_సూచీ(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND,
+                             int32_t సూచీ_S,
+                             UError_సంకేతం* స్థితి_2) {
+    UnicodeString ఫలితం;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    స్థిరరాశి char16_t* r = ConstChar16Ptr(ures_get_String_By_సూచీ(resB, సూచీ_S, &len, స్థితి_2));
+    ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+        ఫలితం.సమితి_గమ్యం(true, r, len);
+    } లేకపోతే {
+        ఫలితం.సమితి_గమ్యం_Bogus();
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 /**
@@ -885,24 +885,24 @@ ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                           const char* key,
-                           UErrorCode* status) {
-    UnicodeString result;
+అంతఃవరుస UnicodeString
+ures_get_Unicode_String_By_కీలకం(స్థిరరాశి UResourceBundle* resB U_LIFETIME_BOUND,
+                           స్థిరరాశి అక్షరం* కీలకం,
+                           UError_సంకేతం* స్థితి_2) {
+    UnicodeString ఫలితం;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    స్థిరరాశి char16_t* r = ConstChar16Ptr(ures_get_String_By_కీలకం(resB, కీలకం, &len, స్థితి_2));
+    ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+        ఫలితం.సమితి_గమ్యం(true, r, len);
+    } లేకపోతే {
+        ఫలితం.సమితి_గమ్యం_Bogus();
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 
 /**
  * Create a string enumerator, owned by the caller, of all locales located within
@@ -913,8 +913,8 @@ U_NAMESPACE_END
  * @stable ICU 3.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *packageName, UErrorCode *status);
+ures_open_అందుబాటు_Locales(స్థిరరాశి అక్షరం *packageName, UError_సంకేతం *స్థితి_2);
 
 
-#endif /*_URES*/
+#అయితే_ముగింపు /*_URES*/
 /*eof*/

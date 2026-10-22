@@ -14,40 +14,40 @@
 *   created by: Michael Ow
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "ucnv_imp.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ucnvmbcs.h"
-#include "cstring.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "unicode/ucnv_err.h"
+#అన్తర్భావ "unicode/ucnv_cb.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "ucnv_imp.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "ucnvmbcs.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
 
-typedef enum {
+రకనిర్వచనం గణన {
     INVALID = -2,
-    DO_SEARCH = -1,
+    DO_శోధన = -1,
 
-    COMPOUND_TEXT_SINGLE_0 = 0,
-    COMPOUND_TEXT_SINGLE_1 = 1,
-    COMPOUND_TEXT_SINGLE_2 = 2,
-    COMPOUND_TEXT_SINGLE_3 = 3,
+    COMPOUND_పాఠ్యం_SINGLE_0 = 0,
+    COMPOUND_పాఠ్యం_SINGLE_1 = 1,
+    COMPOUND_పాఠ్యం_SINGLE_2 = 2,
+    COMPOUND_పాఠ్యం_SINGLE_3 = 3,
 
-    COMPOUND_TEXT_DOUBLE_1 = 4,
-    COMPOUND_TEXT_DOUBLE_2 = 5,
-    COMPOUND_TEXT_DOUBLE_3 = 6,
-    COMPOUND_TEXT_DOUBLE_4 = 7,
-    COMPOUND_TEXT_DOUBLE_5 = 8,
-    COMPOUND_TEXT_DOUBLE_6 = 9,
-    COMPOUND_TEXT_DOUBLE_7 = 10,
+    COMPOUND_పాఠ్యం_DOUBLE_1 = 4,
+    COMPOUND_పాఠ్యం_DOUBLE_2 = 5,
+    COMPOUND_పాఠ్యం_DOUBLE_3 = 6,
+    COMPOUND_పాఠ్యం_DOUBLE_4 = 7,
+    COMPOUND_పాఠ్యం_DOUBLE_5 = 8,
+    COMPOUND_పాఠ్యం_DOUBLE_6 = 9,
+    COMPOUND_పాఠ్యం_DOUBLE_7 = 10,
 
-    COMPOUND_TEXT_TRIPLE_DOUBLE = 11,
+    COMPOUND_పాఠ్యం_TRIPLE_DOUBLE = 11,
 
     IBM_915 = 12,
     IBM_916 = 13,
@@ -57,12 +57,12 @@ typedef enum {
     IBM_913 = 17,
     ISO_8859_14 = 18,
     IBM_923 = 19,
-    NUM_OF_CONVERTERS = 20
-} COMPOUND_TEXT_CONVERTERS;
+    అంకె_యొక్క_CONVERTERS = 20
+} COMPOUND_పాఠ్యం_CONVERTERS;
 
-#define SEARCH_LENGTH 12
+#నిర్వచించు శోధన_నిడివి 12
 
-static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
+స్థిర స్థిరరాశి uint8_t esc_Seq_Compound_పాఠ్యం[అంకె_యొక్క_CONVERTERS][5] = {
     /* Single */
     { 0x1B, 0x2D, 0x41, 0, 0 },
     { 0x1B, 0x2D, 0x4D, 0, 0 },
@@ -99,37 +99,37 @@ static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
     { 0x1B, 0x2D, 0x62, 0, 0 },
 };
 
-#define ESC_START 0x1B
+#నిర్వచించు ESC_ప్రారంభం 0x1B
 
-#define isASCIIRange(codepoint) \
+#నిర్వచించు isASCIIRange(codepoint) \
         ((codepoint == 0x0000) || (codepoint == 0x0009) || (codepoint == 0x000A) || \
          (codepoint >= 0x0020 && codepoint <= 0x007f) || (codepoint >= 0x00A0 && codepoint <= 0x00FF))
 
-#define isIBM915(codepoint) \
+#నిర్వచించు isIBM915(codepoint) \
         ((codepoint >= 0x0401 && codepoint <= 0x045F) || (codepoint == 0x2116))
 
-#define isIBM916(codepoint) \
+#నిర్వచించు isIBM916(codepoint) \
         ((codepoint >= 0x05D0 && codepoint <= 0x05EA) || (codepoint == 0x2017) || (codepoint == 0x203E))
 
-#define isCompoundS3(codepoint) \
+#నిర్వచించు isCompoundS3(codepoint) \
         ((codepoint == 0x060C) || (codepoint == 0x061B) || (codepoint == 0x061F) || (codepoint >= 0x0621 && codepoint <= 0x063A) || \
          (codepoint >= 0x0640 && codepoint <= 0x0652) || (codepoint >= 0x0660 && codepoint <= 0x066D) || (codepoint == 0x200B) || \
          (codepoint >= 0x0FE70 && codepoint <= 0x0FE72) || (codepoint == 0x0FE74) || (codepoint >= 0x0FE76 && codepoint <= 0x0FEBE))
 
-#define isCompoundS2(codepoint) \
+#నిర్వచించు isCompoundS2(codepoint) \
         ((codepoint == 0x02BC) || (codepoint == 0x02BD) || (codepoint >= 0x0384 && codepoint <= 0x03CE) || (codepoint == 0x2015))
 
-#define isIBM914(codepoint) \
+#నిర్వచించు isIBM914(codepoint) \
         ((codepoint == 0x0100) || (codepoint == 0x0101) || (codepoint == 0x0112) || (codepoint == 0x0113) || (codepoint == 0x0116) || (codepoint == 0x0117) || \
          (codepoint == 0x0122) || (codepoint == 0x0123) || (codepoint >= 0x0128 && codepoint <= 0x012B) || (codepoint == 0x012E) || (codepoint == 0x012F) || \
          (codepoint >= 0x0136 && codepoint <= 0x0138) || (codepoint == 0x013B) || (codepoint == 0x013C) || (codepoint == 0x0145) || (codepoint ==  0x0146) || \
          (codepoint >= 0x014A && codepoint <= 0x014D) || (codepoint == 0x0156) || (codepoint == 0x0157) || (codepoint >= 0x0166 && codepoint <= 0x016B) || \
          (codepoint == 0x0172) || (codepoint == 0x0173))
 
-#define isIBM874(codepoint) \
+#నిర్వచించు isIBM874(codepoint) \
         ((codepoint >= 0x0E01 && codepoint <= 0x0E3A) || (codepoint >= 0x0E3F && codepoint <= 0x0E5B))
 
-#define isIBM912(codepoint) \
+#నిర్వచించు isIBM912(codepoint) \
         ((codepoint >= 0x0102 && codepoint <= 0x0107) || (codepoint >= 0x010C && codepoint <= 0x0111) || (codepoint >= 0x0118 && codepoint <= 0x011B) || \
          (codepoint == 0x0139) || (codepoint == 0x013A) || (codepoint == 0x013D) || (codepoint == 0x013E) || (codepoint >= 0x0141 && codepoint <= 0x0144) || \
          (codepoint == 0x0147) || (codepoint == 0x0147) || (codepoint == 0x0150) || (codepoint == 0x0151) || (codepoint == 0x0154) || (codepoint == 0x0155) || \
@@ -137,17 +137,17 @@ static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
          (codepoint == 0x016E) || (codepoint == 0x016F) || (codepoint == 0x0170) || (codepoint ==  0x0171) || (codepoint >= 0x0179 && codepoint <= 0x017E) || \
          (codepoint == 0x02C7) || (codepoint == 0x02D8) || (codepoint == 0x02D9) || (codepoint == 0x02DB) || (codepoint == 0x02DD))
 
-#define isIBM913(codepoint) \
+#నిర్వచించు isIBM913(codepoint) \
         ((codepoint >= 0x0108 && codepoint <= 0x010B) || (codepoint == 0x011C) || \
          (codepoint == 0x011D) || (codepoint == 0x0120) || (codepoint == 0x0121) || \
          (codepoint >= 0x0124 && codepoint <= 0x0127) || (codepoint == 0x0134) || (codepoint == 0x0135) || \
          (codepoint == 0x015C) || (codepoint == 0x015D) || (codepoint == 0x016C) || (codepoint ==  0x016D))
 
-#define isCompoundS1(codepoint) \
+#నిర్వచించు isCompoundS1(codepoint) \
         ((codepoint == 0x011E) || (codepoint == 0x011F) || (codepoint == 0x0130) || \
          (codepoint == 0x0131) || (codepoint >= 0x0218 && codepoint <= 0x021B))
 
-#define isISO8859_14(codepoint) \
+#నిర్వచించు isISO8859_14(codepoint) \
         ((codepoint >= 0x0174 && codepoint <= 0x0177) || (codepoint == 0x1E0A) || \
          (codepoint == 0x1E0B) || (codepoint == 0x1E1E) || (codepoint == 0x1E1F) || \
          (codepoint == 0x1E40) || (codepoint == 0x1E41) || (codepoint == 0x1E56) || \
@@ -155,492 +155,492 @@ static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
          (codepoint == 0x1E6A) || (codepoint == 0x1E6B) || (codepoint == 0x1EF2) || \
          (codepoint == 0x1EF3) || (codepoint >= 0x1E80 && codepoint <= 0x1E85))
 
-#define isIBM923(codepoint) \
+#నిర్వచించు isIBM923(codepoint) \
         ((codepoint == 0x0152) || (codepoint == 0x0153) || (codepoint == 0x0178) || (codepoint == 0x20AC))
 
 
-typedef struct{
-    UConverterSharedData *myConverterArray[NUM_OF_CONVERTERS];
-    COMPOUND_TEXT_CONVERTERS state;
-} UConverterDataCompoundText;
+రకనిర్వచనం నిర్మాణం{
+    UConverter_Shared_దత్తాంశం *myConverterArray[అంకె_యొక్క_CONVERTERS];
+    COMPOUND_పాఠ్యం_CONVERTERS state;
+} UConverter_దత్తాంశం_Compound_పాఠ్యం;
 
 /*********** Compound Text Converter Protos ***********/
 U_CDECL_BEGIN
-static void U_CALLCONV
-_CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode);
+స్థిర శూన్య U_CALLCONV
+Compound_పాఠ్యం_Open(UConverter *cnv, UConverter_ఎక్కించు_వాదనలు *p_వాదనలు, UError_సంకేతం *error_సంకేతం);
 
-static void U_CALLCONV
- _CompoundTextClose(UConverter *converter);
+స్థిర శూన్య U_CALLCONV
+ Compound_పాఠ్యం_Close(UConverter *converter);
 
-static void U_CALLCONV
-_CompoundTextReset(UConverter *converter, UConverterResetChoice choice);
+స్థిర శూన్య U_CALLCONV
+Compound_పాఠ్యం_Reset(UConverter *converter, UConverterResetChoice choice);
 
-static const char* U_CALLCONV
-_CompoundTextgetName(const UConverter* cnv);
+స్థిర స్థిరరాశి అక్షరం* U_CALLCONV
+_CompoundTextgetName(స్థిరరాశి UConverter* cnv);
 
 
-static int32_t findNextEsc(const char *source, const char *sourceLimit) {
-    int32_t length = static_cast<int32_t>(sourceLimit - source);
+స్థిర int32_t కనుగొను_తదుపరి_Esc(స్థిరరాశి అక్షరం *ఆధారం, స్థిరరాశి అక్షరం *ఆధారం_హద్దు) {
+    int32_t length = static_cast<int32_t>(ఆధారం_హద్దు - ఆధారం);
     int32_t i;
-    for (i = 1; i < length; i++) {
-        if (*(source + i) == 0x1B) {
-            return i;
+    కొరకు (i = 1; i < length; i++) {
+        ఒకవేళ (*(ఆధారం + i) == 0x1B) {
+            తిరిగి i;
         }
     }
 
-    return length;
+    తిరిగి length;
 }
 
-static COMPOUND_TEXT_CONVERTERS getState(int codepoint) {
-    COMPOUND_TEXT_CONVERTERS state = DO_SEARCH;
+స్థిర COMPOUND_పాఠ్యం_CONVERTERS getState(పూర్ణాంకం codepoint) {
+    COMPOUND_పాఠ్యం_CONVERTERS state = DO_శోధన;
 
-    if (isASCIIRange(codepoint)) {
-        state = COMPOUND_TEXT_SINGLE_0;
-    } else if (isIBM912(codepoint)) {
+    ఒకవేళ (isASCIIRange(codepoint)) {
+        state = COMPOUND_పాఠ్యం_SINGLE_0;
+    } లేకపోతే ఒకవేళ (isIBM912(codepoint)) {
         state = IBM_912;
-    }else if (isIBM913(codepoint)) {
+    }లేకపోతే ఒకవేళ (isIBM913(codepoint)) {
         state = IBM_913;
-    } else if (isISO8859_14(codepoint)) {
+    } లేకపోతే ఒకవేళ (isISO8859_14(codepoint)) {
         state = ISO_8859_14;
-    } else if (isIBM923(codepoint)) {
+    } లేకపోతే ఒకవేళ (isIBM923(codepoint)) {
         state = IBM_923;
-    } else if (isIBM874(codepoint)) {
+    } లేకపోతే ఒకవేళ (isIBM874(codepoint)) {
         state = IBM_874;
-    } else if (isIBM914(codepoint)) {
+    } లేకపోతే ఒకవేళ (isIBM914(codepoint)) {
         state = IBM_914;
-    } else if (isCompoundS2(codepoint)) {
-        state = COMPOUND_TEXT_SINGLE_2;
-    } else if (isCompoundS3(codepoint)) {
-        state = COMPOUND_TEXT_SINGLE_3;
-    } else if (isIBM916(codepoint)) {
+    } లేకపోతే ఒకవేళ (isCompoundS2(codepoint)) {
+        state = COMPOUND_పాఠ్యం_SINGLE_2;
+    } లేకపోతే ఒకవేళ (isCompoundS3(codepoint)) {
+        state = COMPOUND_పాఠ్యం_SINGLE_3;
+    } లేకపోతే ఒకవేళ (isIBM916(codepoint)) {
         state = IBM_916;
-    } else if (isIBM915(codepoint)) {
+    } లేకపోతే ఒకవేళ (isIBM915(codepoint)) {
         state = IBM_915;
-    } else if (isCompoundS1(codepoint)) {
-        state = COMPOUND_TEXT_SINGLE_1;
+    } లేకపోతే ఒకవేళ (isCompoundS1(codepoint)) {
+        state = COMPOUND_పాఠ్యం_SINGLE_1;
     }
 
-    return state;
+    తిరిగి state;
 }
 
-static COMPOUND_TEXT_CONVERTERS findStateFromEscSeq(const char* source, const char* sourceLimit, const uint8_t* toUBytesBuffer, int32_t toUBytesBufferLength, UErrorCode *err) {
-    COMPOUND_TEXT_CONVERTERS state = INVALID;
-    UBool matchFound = false;
-    int32_t i, n, offset = toUBytesBufferLength;
+స్థిర COMPOUND_పాఠ్యం_CONVERTERS కనుగొను_State_From_Esc_Seq(స్థిరరాశి అక్షరం* ఆధారం, స్థిరరాశి అక్షరం* ఆధారం_హద్దు, స్థిరరాశి uint8_t* గమ్యం_UBytes_బఫరు, int32_t గమ్యం_UBytes_బఫరు_నిడివి, UError_సంకేతం *err) {
+    COMPOUND_పాఠ్యం_CONVERTERS state = INVALID;
+    UBool సరిపోలిక_దొరికింది = అబద్ధం;
+    int32_t i, n, స్థానభ్రంశం = గమ్యం_UBytes_బఫరు_నిడివి;
 
-    for (i = 0; i < NUM_OF_CONVERTERS; i++) {
-        matchFound = true;
-        for (n = 0; escSeqCompoundText[i][n] != 0; n++) {
-            if (n < toUBytesBufferLength) {
-                if (toUBytesBuffer[n] != escSeqCompoundText[i][n]) {
-                    matchFound = false;
-                    break;
+    కొరకు (i = 0; i < అంకె_యొక్క_CONVERTERS; i++) {
+        సరిపోలిక_దొరికింది = నిజం;
+        కొరకు (n = 0; esc_Seq_Compound_పాఠ్యం[i][n] != 0; n++) {
+            ఒకవేళ (n < గమ్యం_UBytes_బఫరు_నిడివి) {
+                ఒకవేళ (గమ్యం_UBytes_బఫరు[n] != esc_Seq_Compound_పాఠ్యం[i][n]) {
+                    సరిపోలిక_దొరికింది = అబద్ధం;
+                    ఆపు;
                 }
-            } else if ((source + (n - offset)) >= sourceLimit) {
-                *err = U_TRUNCATED_CHAR_FOUND;
-                matchFound = false;
-                break;
-            } else if (*(source + (n - offset)) != escSeqCompoundText[i][n]) {
-                matchFound = false;
-                break;
+            } లేకపోతే ఒకవేళ ((ఆధారం + (n - స్థానభ్రంశం)) >= ఆధారం_హద్దు) {
+                *err = U_TRUNCATED_CHAR_దొరికింది;
+                సరిపోలిక_దొరికింది = అబద్ధం;
+                ఆపు;
+            } లేకపోతే ఒకవేళ (*(ఆధారం + (n - స్థానభ్రంశం)) != esc_Seq_Compound_పాఠ్యం[i][n]) {
+                సరిపోలిక_దొరికింది = అబద్ధం;
+                ఆపు;
             }
         }
 
-        if (matchFound) {
-            break;
+        ఒకవేళ (సరిపోలిక_దొరికింది) {
+            ఆపు;
         }
     }
 
-    if (matchFound) {
-        state = (COMPOUND_TEXT_CONVERTERS)i;
+    ఒకవేళ (సరిపోలిక_దొరికింది) {
+        state = (COMPOUND_పాఠ్యం_CONVERTERS)i;
     }
 
-    return state;
+    తిరిగి state;
 }
 
-static void U_CALLCONV
-_CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
-    cnv->extraInfo = uprv_malloc (sizeof (UConverterDataCompoundText));
-    if (cnv->extraInfo != nullptr) {
-        UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) cnv->extraInfo;
+స్థిర శూన్య U_CALLCONV
+Compound_పాఠ్యం_Open(UConverter *cnv, UConverter_ఎక్కించు_వాదనలు *p_వాదనలు, UError_సంకేతం *error_సంకేతం){
+    cnv->extraInfo = uprv_malloc (పరిమాణం (UConverter_దత్తాంశం_Compound_పాఠ్యం));
+    ఒకవేళ (cnv->extraInfo != శూన్యసూచిక) {
+        UConverter_దత్తాంశం_Compound_పాఠ్యం *my_Converter_దత్తాంశం = (UConverter_దత్తాంశం_Compound_పాఠ్యం *) cnv->extraInfo;
 
-        UConverterNamePieces stackPieces;
-        UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+        UConverterNamePieces దొంతర_Pieces;
+        UConverter_ఎక్కించు_వాదనలు దొంతర_వాదనలు=UCNV_ఎక్కించు_వాదనలు_INITIALIZER;
 
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_0] = nullptr;
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_1] = ucnv_loadSharedData("icu-internal-compound-s1", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_2] = ucnv_loadSharedData("icu-internal-compound-s2", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_3] = ucnv_loadSharedData("icu-internal-compound-s3", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_1] = ucnv_loadSharedData("icu-internal-compound-d1", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_2] = ucnv_loadSharedData("icu-internal-compound-d2", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_3] = ucnv_loadSharedData("icu-internal-compound-d3", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_4] = ucnv_loadSharedData("icu-internal-compound-d4", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_5] = ucnv_loadSharedData("icu-internal-compound-d5", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_6] = ucnv_loadSharedData("icu-internal-compound-d6", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_7] = ucnv_loadSharedData("icu-internal-compound-d7", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_TRIPLE_DOUBLE] = ucnv_loadSharedData("icu-internal-compound-t", &stackPieces, &stackArgs, errorCode);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_SINGLE_0] = శూన్యసూచిక;
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_SINGLE_1] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-s1", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_SINGLE_2] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-s2", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_SINGLE_3] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-s3", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_DOUBLE_1] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-d1", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_DOUBLE_2] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-d2", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_DOUBLE_3] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-d3", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_DOUBLE_4] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-d4", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_DOUBLE_5] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-d5", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_DOUBLE_6] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-d6", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_DOUBLE_7] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-d7", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[COMPOUND_పాఠ్యం_TRIPLE_DOUBLE] = ucnv_ఎక్కించు_Shared_దత్తాంశం("icu-internal-compound-t", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
 
-        myConverterData->myConverterArray[IBM_915] = ucnv_loadSharedData("ibm-915_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_916] = ucnv_loadSharedData("ibm-916_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_914] = ucnv_loadSharedData("ibm-914_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_874] = ucnv_loadSharedData("ibm-874_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_912] = ucnv_loadSharedData("ibm-912_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_913] = ucnv_loadSharedData("ibm-913_P100-2000", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[ISO_8859_14] = ucnv_loadSharedData("iso-8859_14-1998", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_923] = ucnv_loadSharedData("ibm-923_P100-1998", &stackPieces, &stackArgs, errorCode);
+        my_Converter_దత్తాంశం->myConverterArray[IBM_915] = ucnv_ఎక్కించు_Shared_దత్తాంశం("ibm-915_P100-1995", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[IBM_916] = ucnv_ఎక్కించు_Shared_దత్తాంశం("ibm-916_P100-1995", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[IBM_914] = ucnv_ఎక్కించు_Shared_దత్తాంశం("ibm-914_P100-1995", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[IBM_874] = ucnv_ఎక్కించు_Shared_దత్తాంశం("ibm-874_P100-1995", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[IBM_912] = ucnv_ఎక్కించు_Shared_దత్తాంశం("ibm-912_P100-1995", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[IBM_913] = ucnv_ఎక్కించు_Shared_దత్తాంశం("ibm-913_P100-2000", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[ISO_8859_14] = ucnv_ఎక్కించు_Shared_దత్తాంశం("iso-8859_14-1998", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
+        my_Converter_దత్తాంశం->myConverterArray[IBM_923] = ucnv_ఎక్కించు_Shared_దత్తాంశం("ibm-923_P100-1998", &దొంతర_Pieces, &దొంతర_వాదనలు, error_సంకేతం);
 
-        if (U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
-            _CompoundTextClose(cnv);
-            return;
+        ఒకవేళ (U_FAILURE(*error_సంకేతం) || p_వాదనలు->onlyTestIsLoadable) {
+            Compound_పాఠ్యం_Close(cnv);
+            తిరిగి;
         }
 
-        myConverterData->state = (COMPOUND_TEXT_CONVERTERS)0;
-    } else {
-        *errorCode = U_MEMORY_ALLOCATION_ERROR;
+        my_Converter_దత్తాంశం->state = (COMPOUND_పాఠ్యం_CONVERTERS)0;
+    } లేకపోతే {
+        *error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
 }
 
 
-static void U_CALLCONV
-_CompoundTextClose(UConverter *converter) {
-    UConverterDataCompoundText* myConverterData = (UConverterDataCompoundText*)(converter->extraInfo);
+స్థిర శూన్య U_CALLCONV
+Compound_పాఠ్యం_Close(UConverter *converter) {
+    UConverter_దత్తాంశం_Compound_పాఠ్యం* my_Converter_దత్తాంశం = (UConverter_దత్తాంశం_Compound_పాఠ్యం*)(converter->extraInfo);
     int32_t i;
 
-    if (converter->extraInfo != nullptr) {
+    ఒకవేళ (converter->extraInfo != శూన్యసూచిక) {
         /*close the array of converter pointers and free the memory*/
-        for (i = 0; i < NUM_OF_CONVERTERS; i++) {
-            if (myConverterData->myConverterArray[i] != nullptr) {
-                ucnv_unloadSharedDataIfReady(myConverterData->myConverterArray[i]);
+        కొరకు (i = 0; i < అంకె_యొక్క_CONVERTERS; i++) {
+            ఒకవేళ (my_Converter_దత్తాంశం->myConverterArray[i] != శూన్యసూచిక) {
+                ucnv_unload_Shared_దత్తాంశం_If_Ready(my_Converter_దత్తాంశం->myConverterArray[i]);
             }
         }
 
         uprv_free(converter->extraInfo);
-        converter->extraInfo = nullptr;
+        converter->extraInfo = శూన్యసూచిక;
     }
 }
 
-static void U_CALLCONV
-_CompoundTextReset(UConverter *converter, UConverterResetChoice choice) {
-    (void)converter;
-    (void)choice;
+స్థిర శూన్య U_CALLCONV
+Compound_పాఠ్యం_Reset(UConverter *converter, UConverterResetChoice choice) {
+    (శూన్య)converter;
+    (శూన్య)choice;
 }
 
-static const char* U_CALLCONV
-_CompoundTextgetName(const UConverter* cnv){
-    (void)cnv;
-    return "x11-compound-text";
+స్థిర స్థిరరాశి అక్షరం* U_CALLCONV
+_CompoundTextgetName(స్థిరరాశి UConverter* cnv){
+    (శూన్య)cnv;
+    తిరిగి "x11-compound-text";
 }
 
-static void U_CALLCONV
-UConverter_fromUnicode_CompoundText_OFFSETS(UConverterFromUnicodeArgs* args, UErrorCode* err){
-    UConverter *cnv = args->converter;
-    uint8_t *target = (uint8_t *) args->target;
-    const uint8_t *targetLimit = (const uint8_t *) args->targetLimit;
-    const char16_t* source = args->source;
-    const char16_t* sourceLimit = args->sourceLimit;
+స్థిర శూన్య U_CALLCONV
+UConverter_from_Unicode_Compound_పాఠ్యం_OFFSETS(UConverter_From_Unicode_వాదనలు* వాదనలు_2, UError_సంకేతం* err){
+    UConverter *cnv = వాదనలు_2->converter;
+    uint8_t *లక్ష్యం = (uint8_t *) వాదనలు_2->లక్ష్యం;
+    స్థిరరాశి uint8_t *లక్ష్యం_హద్దు = (స్థిరరాశి uint8_t *) వాదనలు_2->లక్ష్యం_హద్దు;
+    స్థిరరాశి char16_t* ఆధారం = వాదనలు_2->ఆధారం;
+    స్థిరరాశి char16_t* ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
     /* int32_t* offsets = args->offsets; */
-    UChar32 sourceChar;
+    UChar32 ఆధారం_Char;
     UBool useFallback = cnv->useFallback;
-    uint8_t tmpTargetBuffer[7];
-    int32_t tmpTargetBufferLength = 0;
-    COMPOUND_TEXT_CONVERTERS currentState, tmpState;
-    uint32_t pValue;
-    int32_t pValueLength = 0;
+    uint8_t tmp_లక్ష్యం_బఫరు[7];
+    int32_t tmp_లక్ష్యం_బఫరు_నిడివి = 0;
+    COMPOUND_పాఠ్యం_CONVERTERS currentState, tmpState;
+    uint32_t p_విలువ;
+    int32_t p_విలువ_నిడివి = 0;
     int32_t i, n, j;
 
-    UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) cnv->extraInfo;
+    UConverter_దత్తాంశం_Compound_పాఠ్యం *my_Converter_దత్తాంశం = (UConverter_దత్తాంశం_Compound_పాఠ్యం *) cnv->extraInfo;
 
-    currentState = myConverterData->state;
+    currentState = my_Converter_దత్తాంశం->state;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
-    if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
-        goto getTrail;
+    ఒకవేళ((ఆధారం_Char = cnv->fromUChar32)!=0 && లక్ష్యం< లక్ష్యం_హద్దు) {
+        వెళ్ళు getTrail;
     }
 
-    while( source < sourceLimit){
-        if(target < targetLimit){
+    అయితే( ఆధారం < ఆధారం_హద్దు){
+        ఒకవేళ(లక్ష్యం < లక్ష్యం_హద్దు){
 
-            sourceChar  = *(source++);
+            ఆధారం_Char  = *(ఆధారం++);
             /*check if the char is a First surrogate*/
-             if(U16_IS_SURROGATE(sourceChar)) {
-                if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+             ఒకవేళ(U16_IS_SURROGATE(ఆధారం_Char)) {
+                ఒకవేళ(U16_IS_SURROGATE_LEAD(ఆధారం_Char)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if(source < sourceLimit) {
+                    ఒకవేళ(ఆధారం < ఆధారం_హద్దు) {
                         /* test the following code unit */
-                        char16_t trail = *source;
-                        if(U16_IS_TRAIL(trail)) {
-                            source++;
-                            sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
+                        char16_t trail = *ఆధారం;
+                        ఒకవేళ(U16_IS_TRAIL(trail)) {
+                            ఆధారం++;
+                            ఆధారం_Char=U16_GET_SUPPLEMENTARY(ఆధారం_Char, trail);
                             cnv->fromUChar32=0x00;
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } లేకపోతే {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *err=U_ILLEGAL_CHAR_FOUND;
-                            cnv->fromUChar32=sourceChar;
-                            break;
+                            *err=U_ILLEGAL_CHAR_దొరికింది;
+                            cnv->fromUChar32=ఆధారం_Char;
+                            ఆపు;
                         }
-                    } else {
+                    } లేకపోతే {
                         /* no more input */
-                        cnv->fromUChar32=sourceChar;
-                        break;
+                        cnv->fromUChar32=ఆధారం_Char;
+                        ఆపు;
                     }
-                } else {
+                } లేకపోతే {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *err=U_ILLEGAL_CHAR_FOUND;
-                    cnv->fromUChar32=sourceChar;
-                    break;
+                    *err=U_ILLEGAL_CHAR_దొరికింది;
+                    cnv->fromUChar32=ఆధారం_Char;
+                    ఆపు;
                 }
             }
 
-             tmpTargetBufferLength = 0;
-             tmpState = getState(sourceChar);
+             tmp_లక్ష్యం_బఫరు_నిడివి = 0;
+             tmpState = getState(ఆధారం_Char);
 
-             if (tmpState != DO_SEARCH && currentState != tmpState) {
+             ఒకవేళ (tmpState != DO_శోధన && currentState != tmpState) {
                  /* Get escape sequence if necessary */
                  currentState = tmpState;
-                 for (i = 0; escSeqCompoundText[currentState][i] != 0; i++) {
-                     tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][i];
+                 కొరకు (i = 0; esc_Seq_Compound_పాఠ్యం[currentState][i] != 0; i++) {
+                     tmp_లక్ష్యం_బఫరు[tmp_లక్ష్యం_బఫరు_నిడివి++] = esc_Seq_Compound_పాఠ్యం[currentState][i];
                  }
              }
 
-             if (tmpState == DO_SEARCH) {
+             ఒకవేళ (tmpState == DO_శోధన) {
                  /* Test all available converters */
-                 for (i = 1; i < SEARCH_LENGTH; i++) {
-                     pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[i], sourceChar, &pValue, useFallback);
-                     if (pValueLength > 0) {
-                         tmpState = (COMPOUND_TEXT_CONVERTERS)i;
-                         if (currentState != tmpState) {
+                 కొరకు (i = 1; i < శోధన_నిడివి; i++) {
+                     p_విలువ_నిడివి = ucnv_MBCSFromUChar32(my_Converter_దత్తాంశం->myConverterArray[i], ఆధారం_Char, &p_విలువ, useFallback);
+                     ఒకవేళ (p_విలువ_నిడివి > 0) {
+                         tmpState = (COMPOUND_పాఠ్యం_CONVERTERS)i;
+                         ఒకవేళ (currentState != tmpState) {
                              currentState = tmpState;
-                             for (j = 0; escSeqCompoundText[currentState][j] != 0; j++) {
-                                 tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][j];
+                             కొరకు (j = 0; esc_Seq_Compound_పాఠ్యం[currentState][j] != 0; j++) {
+                                 tmp_లక్ష్యం_బఫరు[tmp_లక్ష్యం_బఫరు_నిడివి++] = esc_Seq_Compound_పాఠ్యం[currentState][j];
                              }
                          }
-                         for (n = (pValueLength - 1); n >= 0; n--) {
-                             tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
+                         కొరకు (n = (p_విలువ_నిడివి - 1); n >= 0; n--) {
+                             tmp_లక్ష్యం_బఫరు[tmp_లక్ష్యం_బఫరు_నిడివి++] = (uint8_t)(p_విలువ >> (n * 8));
                          }
-                         break;
+                         ఆపు;
                      }
                  }
-             } else if (tmpState == COMPOUND_TEXT_SINGLE_0) {
-                 tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)sourceChar;
-             } else {
-                 pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[currentState], sourceChar, &pValue, useFallback);
-                 if (pValueLength > 0) {
-                     for (n = (pValueLength - 1); n >= 0; n--) {
-                         tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
+             } లేకపోతే ఒకవేళ (tmpState == COMPOUND_పాఠ్యం_SINGLE_0) {
+                 tmp_లక్ష్యం_బఫరు[tmp_లక్ష్యం_బఫరు_నిడివి++] = (uint8_t)ఆధారం_Char;
+             } లేకపోతే {
+                 p_విలువ_నిడివి = ucnv_MBCSFromUChar32(my_Converter_దత్తాంశం->myConverterArray[currentState], ఆధారం_Char, &p_విలువ, useFallback);
+                 ఒకవేళ (p_విలువ_నిడివి > 0) {
+                     కొరకు (n = (p_విలువ_నిడివి - 1); n >= 0; n--) {
+                         tmp_లక్ష్యం_బఫరు[tmp_లక్ష్యం_బఫరు_నిడివి++] = (uint8_t)(p_విలువ >> (n * 8));
                      }
                  }
              }
 
-             for (i = 0; i < tmpTargetBufferLength; i++) {
-                 if (target < targetLimit) {
-                     *target++ = tmpTargetBuffer[i];
-                 } else {
-                     *err = U_BUFFER_OVERFLOW_ERROR;
-                     break;
+             కొరకు (i = 0; i < tmp_లక్ష్యం_బఫరు_నిడివి; i++) {
+                 ఒకవేళ (లక్ష్యం < లక్ష్యం_హద్దు) {
+                     *లక్ష్యం++ = tmp_లక్ష్యం_బఫరు[i];
+                 } లేకపోతే {
+                     *err = U_బఫరు_అధికప్రవాహం_ERROR;
+                     ఆపు;
                  }
              }
 
-             if (*err == U_BUFFER_OVERFLOW_ERROR) {
-                 for (; i < tmpTargetBufferLength; i++) {
-                     args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = tmpTargetBuffer[i];
+             ఒకవేళ (*err == U_బఫరు_అధికప్రవాహం_ERROR) {
+                 కొరకు (; i < tmp_లక్ష్యం_బఫరు_నిడివి; i++) {
+                     వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] = tmp_లక్ష్యం_బఫరు[i];
                  }
              }
-        } else {
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            break;
+        } లేకపోతే {
+            *err = U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
     }
 
     /*save the state and return */
-    myConverterData->state = currentState;
-    args->source = source;
-    args->target = (char*)target;
+    my_Converter_దత్తాంశం->state = currentState;
+    వాదనలు_2->ఆధారం = ఆధారం;
+    వాదనలు_2->లక్ష్యం = (అక్షరం*)లక్ష్యం;
 }
 
 
-static void U_CALLCONV
-UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
-                                               UErrorCode* err){
-    const char *mySource = (char *) args->source;
-    char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
-    const char *tmpSourceLimit = mySourceLimit;
-    uint32_t mySourceChar = 0x0000;
-    COMPOUND_TEXT_CONVERTERS currentState, tmpState;
-    int32_t sourceOffset = 0;
-    UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) args->converter->extraInfo;
-    UConverterSharedData* savedSharedData = nullptr;
+స్థిర శూన్య U_CALLCONV
+UConverter_గమ్యం_Unicode_Compound_పాఠ్యం_OFFSETS(UConverter_గమ్యం_Unicode_వాదనలు *వాదనలు_2,
+                                               UError_సంకేతం* err){
+    స్థిరరాశి అక్షరం *my_ఆధారం = (అక్షరం *) వాదనలు_2->ఆధారం;
+    char16_t *my_లక్ష్యం = వాదనలు_2->లక్ష్యం;
+    స్థిరరాశి అక్షరం *my_ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి అక్షరం *tmp_ఆధారం_హద్దు = my_ఆధారం_హద్దు;
+    uint32_t my_ఆధారం_Char = 0x0000;
+    COMPOUND_పాఠ్యం_CONVERTERS currentState, tmpState;
+    int32_t ఆధారం_స్థానభ్రంశం = 0;
+    UConverter_దత్తాంశం_Compound_పాఠ్యం *my_Converter_దత్తాంశం = (UConverter_దత్తాంశం_Compound_పాఠ్యం *) వాదనలు_2->converter->extraInfo;
+    UConverter_Shared_దత్తాంశం* saved_Shared_దత్తాంశం = శూన్యసూచిక;
 
-    UConverterToUnicodeArgs subArgs;
-    int32_t minArgsSize;
+    UConverter_గమ్యం_Unicode_వాదనలు sub_వాదనలు;
+    int32_t min_వాదనలు_కొలత;
 
     /* set up the subconverter arguments */
-    if(args->size<sizeof(UConverterToUnicodeArgs)) {
-        minArgsSize = args->size;
-    } else {
-        minArgsSize = (int32_t)sizeof(UConverterToUnicodeArgs);
+    ఒకవేళ(వాదనలు_2->size<పరిమాణం(UConverter_గమ్యం_Unicode_వాదనలు)) {
+        min_వాదనలు_కొలత = వాదనలు_2->size;
+    } లేకపోతే {
+        min_వాదనలు_కొలత = (int32_t)పరిమాణం(UConverter_గమ్యం_Unicode_వాదనలు);
     }
 
-    uprv_memcpy(&subArgs, args, minArgsSize);
-    subArgs.size = (uint16_t)minArgsSize;
+    uprv_memcpy(&sub_వాదనలు, వాదనలు_2, min_వాదనలు_కొలత);
+    sub_వాదనలు.size = (uint16_t)min_వాదనలు_కొలత;
 
-    currentState = tmpState =  myConverterData->state;
+    currentState = tmpState =  my_Converter_దత్తాంశం->state;
 
-    while(mySource < mySourceLimit){
-        if(myTarget < args->targetLimit){
-            if (args->converter->toULength > 0) {
-                mySourceChar = args->converter->toUBytes[0];
-            } else {
-                mySourceChar = (uint8_t)*mySource;
+    అయితే(my_ఆధారం < my_ఆధారం_హద్దు){
+        ఒకవేళ(my_లక్ష్యం < వాదనలు_2->లక్ష్యం_హద్దు){
+            ఒకవేళ (వాదనలు_2->converter->గమ్యం_ULength > 0) {
+                my_ఆధారం_Char = వాదనలు_2->converter->గమ్యం_UBytes[0];
+            } లేకపోతే {
+                my_ఆధారం_Char = (uint8_t)*my_ఆధారం;
             }
 
-            if (mySourceChar == ESC_START) {
-                tmpState = findStateFromEscSeq(mySource, mySourceLimit, args->converter->toUBytes, args->converter->toULength, err);
+            ఒకవేళ (my_ఆధారం_Char == ESC_ప్రారంభం) {
+                tmpState = కనుగొను_State_From_Esc_Seq(my_ఆధారం, my_ఆధారం_హద్దు, వాదనలు_2->converter->గమ్యం_UBytes, వాదనలు_2->converter->గమ్యం_ULength, err);
 
-                if (*err == U_TRUNCATED_CHAR_FOUND) {
-                    for (; mySource < mySourceLimit;) {
-                        args->converter->toUBytes[args->converter->toULength++] = *mySource++;
+                ఒకవేళ (*err == U_TRUNCATED_CHAR_దొరికింది) {
+                    కొరకు (; my_ఆధారం < my_ఆధారం_హద్దు;) {
+                        వాదనలు_2->converter->గమ్యం_UBytes[వాదనలు_2->converter->గమ్యం_ULength++] = *my_ఆధారం++;
                     }
                     *err = U_ZERO_ERROR;
-                    break;
-                } else if (tmpState == INVALID) {
-                    if (args->converter->toULength == 0) {
-                        mySource++; /* skip over the 0x1b byte */
+                    ఆపు;
+                } లేకపోతే ఒకవేళ (tmpState == INVALID) {
+                    ఒకవేళ (వాదనలు_2->converter->గమ్యం_ULength == 0) {
+                        my_ఆధారం++; /* skip over the 0x1b byte */
                     }
-                    *err = U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    *err = U_ILLEGAL_CHAR_దొరికింది;
+                    ఆపు;
                 }
 
-                if (tmpState != currentState) {
+                ఒకవేళ (tmpState != currentState) {
                     currentState = tmpState;
                 }
 
-                sourceOffset = static_cast<int32_t>(uprv_strlen((char*)escSeqCompoundText[currentState]) - args->converter->toULength);
+                ఆధారం_స్థానభ్రంశం = static_cast<int32_t>(uprv_strlen((అక్షరం*)esc_Seq_Compound_పాఠ్యం[currentState]) - వాదనలు_2->converter->గమ్యం_ULength);
 
-                mySource += sourceOffset;
+                my_ఆధారం += ఆధారం_స్థానభ్రంశం;
 
-                args->converter->toULength = 0;
+                వాదనలు_2->converter->గమ్యం_ULength = 0;
             }
 
-            if (currentState == COMPOUND_TEXT_SINGLE_0) {
-                while (mySource < mySourceLimit) {
-                    if (*mySource == ESC_START) {
-                        break;
+            ఒకవేళ (currentState == COMPOUND_పాఠ్యం_SINGLE_0) {
+                అయితే (my_ఆధారం < my_ఆధారం_హద్దు) {
+                    ఒకవేళ (*my_ఆధారం == ESC_ప్రారంభం) {
+                        ఆపు;
                     }
-                    if (myTarget < args->targetLimit) {
-                        *myTarget++ = 0x00ff&(*mySource++);
-                    } else {
-                        *err = U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                    ఒకవేళ (my_లక్ష్యం < వాదనలు_2->లక్ష్యం_హద్దు) {
+                        *my_లక్ష్యం++ = 0x00ff&(*my_ఆధారం++);
+                    } లేకపోతే {
+                        *err = U_బఫరు_అధికప్రవాహం_ERROR;
+                        ఆపు;
                     }
                 }
-            } else if (mySource < mySourceLimit){
-                sourceOffset = findNextEsc(mySource, mySourceLimit);
+            } లేకపోతే ఒకవేళ (my_ఆధారం < my_ఆధారం_హద్దు){
+                ఆధారం_స్థానభ్రంశం = కనుగొను_తదుపరి_Esc(my_ఆధారం, my_ఆధారం_హద్దు);
 
-                tmpSourceLimit = mySource + sourceOffset;
+                tmp_ఆధారం_హద్దు = my_ఆధారం + ఆధారం_స్థానభ్రంశం;
 
-                subArgs.source = mySource;
-                subArgs.sourceLimit = tmpSourceLimit;
-                subArgs.target = myTarget;
-                savedSharedData = subArgs.converter->sharedData;
-                subArgs.converter->sharedData = myConverterData->myConverterArray[currentState];
+                sub_వాదనలు.ఆధారం = my_ఆధారం;
+                sub_వాదనలు.ఆధారం_హద్దు = tmp_ఆధారం_హద్దు;
+                sub_వాదనలు.లక్ష్యం = my_లక్ష్యం;
+                saved_Shared_దత్తాంశం = sub_వాదనలు.converter->shared_దత్తాంశం;
+                sub_వాదనలు.converter->shared_దత్తాంశం = my_Converter_దత్తాంశం->myConverterArray[currentState];
 
-                ucnv_MBCSToUnicodeWithOffsets(&subArgs, err);
+                ucnv_MBCSToUnicodeWithOffsets(&sub_వాదనలు, err);
 
-                subArgs.converter->sharedData = savedSharedData;
+                sub_వాదనలు.converter->shared_దత్తాంశం = saved_Shared_దత్తాంశం;
 
-                mySource = subArgs.source;
-                myTarget = subArgs.target;
+                my_ఆధారం = sub_వాదనలు.ఆధారం;
+                my_లక్ష్యం = sub_వాదనలు.లక్ష్యం;
 
-                if (U_FAILURE(*err)) {
-                    if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                        if(subArgs.converter->UCharErrorBufferLength > 0) {
-                            uprv_memcpy(args->converter->UCharErrorBuffer, subArgs.converter->UCharErrorBuffer,
-                                        subArgs.converter->UCharErrorBufferLength);
+                ఒకవేళ (U_FAILURE(*err)) {
+                    ఒకవేళ(*err == U_బఫరు_అధికప్రవాహం_ERROR) {
+                        ఒకవేళ(sub_వాదనలు.converter->UChar_Error_బఫరు_నిడివి > 0) {
+                            uprv_memcpy(వాదనలు_2->converter->UChar_Error_బఫరు, sub_వాదనలు.converter->UChar_Error_బఫరు,
+                                        sub_వాదనలు.converter->UChar_Error_బఫరు_నిడివి);
                         }
-                        args->converter->UCharErrorBufferLength=subArgs.converter->UCharErrorBufferLength;
-                        subArgs.converter->UCharErrorBufferLength = 0;
+                        వాదనలు_2->converter->UChar_Error_బఫరు_నిడివి=sub_వాదనలు.converter->UChar_Error_బఫరు_నిడివి;
+                        sub_వాదనలు.converter->UChar_Error_బఫరు_నిడివి = 0;
                     }
-                    break;
+                    ఆపు;
                 }
             }
-        } else {
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            break;
+        } లేకపోతే {
+            *err = U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
     }
-    myConverterData->state = currentState;
-    args->target = myTarget;
-    args->source = mySource;
+    my_Converter_దత్తాంశం->state = currentState;
+    వాదనలు_2->లక్ష్యం = my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = my_ఆధారం;
 }
 
-static void U_CALLCONV
-_CompoundText_GetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
-                    UConverterUnicodeSet which,
-                    UErrorCode *pErrorCode) {
-    UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *)cnv->extraInfo;
+స్థిర శూన్య U_CALLCONV
+Compound_పాఠ్యం_Get_Unicode_సమితి(స్థిరరాశి UConverter *cnv,
+                    స్థిరరాశి USetAdder *sa,
+                    UConverter_Unicode_సమితి which,
+                    UError_సంకేతం *p_Error_సంకేతం) {
+    UConverter_దత్తాంశం_Compound_పాఠ్యం *my_Converter_దత్తాంశం = (UConverter_దత్తాంశం_Compound_పాఠ్యం *)cnv->extraInfo;
     int32_t i;
 
-    for (i = 1; i < NUM_OF_CONVERTERS; i++) {
-        ucnv_MBCSGetUnicodeSetForUnicode(myConverterData->myConverterArray[i], sa, which, pErrorCode);
+    కొరకు (i = 1; i < అంకె_యొక్క_CONVERTERS; i++) {
+        ucnv_MBCSGet_Unicode_సమితి_For_Unicode(my_Converter_దత్తాంశం->myConverterArray[i], sa, which, p_Error_సంకేతం);
     }
-    sa->add(sa->set, 0x0000);
-    sa->add(sa->set, 0x0009);
-    sa->add(sa->set, 0x000A);
-    sa->addRange(sa->set, 0x0020, 0x007F);
-    sa->addRange(sa->set, 0x00A0, 0x00FF);
+    sa->కూడు(sa->సమితి, 0x0000);
+    sa->కూడు(sa->సమితి, 0x0009);
+    sa->కూడు(sa->సమితి, 0x000A);
+    sa->కూడు_Range(sa->సమితి, 0x0020, 0x007F);
+    sa->కూడు_Range(sa->సమితి, 0x00A0, 0x00FF);
 }
-U_CDECL_END
+U_CDECL_చివర
 
-static const UConverterImpl _CompoundTextImpl = {
+స్థిర స్థిరరాశి UConverterImpl Compound_పాఠ్యం_Impl = {
 
-    UCNV_COMPOUND_TEXT,
+    UCNV_COMPOUND_పాఠ్యం,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    _CompoundTextOpen,
-    _CompoundTextClose,
-    _CompoundTextReset,
+    Compound_పాఠ్యం_Open,
+    Compound_పాఠ్యం_Close,
+    Compound_పాఠ్యం_Reset,
 
-    UConverter_toUnicode_CompoundText_OFFSETS,
-    UConverter_toUnicode_CompoundText_OFFSETS,
-    UConverter_fromUnicode_CompoundText_OFFSETS,
-    UConverter_fromUnicode_CompoundText_OFFSETS,
-    nullptr,
+    UConverter_గమ్యం_Unicode_Compound_పాఠ్యం_OFFSETS,
+    UConverter_గమ్యం_Unicode_Compound_పాఠ్యం_OFFSETS,
+    UConverter_from_Unicode_Compound_పాఠ్యం_OFFSETS,
+    UConverter_from_Unicode_Compound_పాఠ్యం_OFFSETS,
+    శూన్యసూచిక,
 
-    nullptr,
+    శూన్యసూచిక,
     _CompoundTextgetName,
-    nullptr,
-    nullptr,
-    _CompoundText_GetUnicodeSet,
-    nullptr,
-    nullptr
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    Compound_పాఠ్యం_Get_Unicode_సమితి,
+    శూన్యసూచిక,
+    శూన్యసూచిక
 };
 
-static const UConverterStaticData _CompoundTextStaticData = {
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం Compound_పాఠ్యం_Static_దత్తాంశం = {
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "COMPOUND_TEXT",
     0,
     UCNV_IBM,
-    UCNV_COMPOUND_TEXT,
+    UCNV_COMPOUND_పాఠ్యం,
     1,
     6,
     { 0xef, 0, 0, 0 },
     1,
-    false,
-    false,
+    అబద్ధం,
+    అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
-const UConverterSharedData _CompoundTextData =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_CompoundTextStaticData, &_CompoundTextImpl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం Compound_పాఠ్యం_దత్తాంశం =
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&Compound_పాఠ్యం_Static_దత్తాంశం, &Compound_పాఠ్యం_Impl);
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_LEGACY_CONVERSION */

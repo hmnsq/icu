@@ -7,20 +7,20 @@
 ***************************************************************************
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/ucptrie.h"
-#include "unicode/utypes.h"
-#include "rbbidata.h"
-#include "rbbirb.h"
-#include "udatamem.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "umutex.h"
+#అన్తర్భావ "unicode/ucptrie.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "rbbidata.h"
+#అన్తర్భావ "rbbirb.h"
+#అన్తర్భావ "udatamem.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "umutex.h"
 
-#include "uassert.h"
+#అన్తర్భావ "uassert.h"
 
 
 U_NAMESPACE_BEGIN
@@ -30,44 +30,44 @@ U_NAMESPACE_BEGIN
 //    Constructors.
 //
 //-----------------------------------------------------------------------------
-RBBIDataWrapper::RBBIDataWrapper(const RBBIDataHeader *data, UErrorCode &status) {
+RBBIDataWrapper::RBBIDataWrapper(స్థిరరాశి RBBIData_శీర్షిక *దత్తాంశం, UError_సంకేతం &స్థితి_2) {
     init0();
-    init(data, status);
+    init(దత్తాంశం, స్థితి_2);
 }
 
-RBBIDataWrapper::RBBIDataWrapper(const RBBIDataHeader *data, enum EDontAdopt, UErrorCode &status) {
+RBBIDataWrapper::RBBIDataWrapper(స్థిరరాశి RBBIData_శీర్షిక *దత్తాంశం, గణన EDontAdopt, UError_సంకేతం &స్థితి_2) {
     init0();
-    init(data, status);
-    fDontFreeData = true;
+    init(దత్తాంశం, స్థితి_2);
+    f_Dont_Free_దత్తాంశం = నిజం;
 }
 
-RBBIDataWrapper::RBBIDataWrapper(UDataMemory* udm, UErrorCode &status) {
+RBBIDataWrapper::RBBIDataWrapper(UData_జ్ఞాపకం* udm, UError_సంకేతం &స్థితి_2) {
     init0();
-    if (U_FAILURE(status)) {
-        return;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    const DataHeader *dh = udm->pHeader;
-    int32_t headerSize = dh->dataHeader.headerSize;
-    if (  !(headerSize >= 20 &&
+    స్థిరరాశి దత్తాంశం_శీర్షిక *dh = udm->p_శీర్షిక;
+    int32_t శీర్షిక_కొలత = dh->దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత;
+    ఒకవేళ (  !(శీర్షిక_కొలత >= 20 &&
             dh->info.isBigEndian == U_IS_BIG_ENDIAN &&
             dh->info.charsetFamily == U_CHARSET_FAMILY &&
-            dh->info.dataFormat[0] == 0x42 &&  // dataFormat="Brk "
-            dh->info.dataFormat[1] == 0x72 &&
-            dh->info.dataFormat[2] == 0x6b &&
-            dh->info.dataFormat[3] == 0x20 &&
-            isDataVersionAcceptable(dh->info.formatVersion))
+            dh->info.దత్తాంశం_Format[0] == 0x42 &&  // dataFormat="Brk "
+            dh->info.దత్తాంశం_Format[1] == 0x72 &&
+            dh->info.దత్తాంశం_Format[2] == 0x6b &&
+            dh->info.దత్తాంశం_Format[3] == 0x20 &&
+            is_దత్తాంశం_సంస్కరణ_Acceptable(dh->info.format_సంస్కరణ))
         ) {
-        status = U_INVALID_FORMAT_ERROR;
-        return;
+        స్థితి_2 = U_INVALID_FORMAT_ERROR;
+        తిరిగి;
     }
-    const char *dataAsBytes = reinterpret_cast<const char *>(dh);
-    const RBBIDataHeader *rbbidh = reinterpret_cast<const RBBIDataHeader *>(dataAsBytes + headerSize);
-    init(rbbidh, status);
+    స్థిరరాశి అక్షరం *దత్తాంశం_As_బైట్లు = reinterpret_cast<స్థిరరాశి అక్షరం *>(dh);
+    స్థిరరాశి RBBIData_శీర్షిక *rbbidh = reinterpret_cast<స్థిరరాశి RBBIData_శీర్షిక *>(దత్తాంశం_As_బైట్లు + శీర్షిక_కొలత);
+    init(rbbidh, స్థితి_2);
     fUDataMem = udm;
 }
 
-UBool RBBIDataWrapper::isDataVersionAcceptable(const UVersionInfo version) {
-    return RBBI_DATA_FORMAT_VERSION[0] == version[0];
+UBool RBBIDataWrapper::is_దత్తాంశం_సంస్కరణ_Acceptable(స్థిరరాశి UVersionInfo సంస్కరణ) {
+    తిరిగి RBBI_దత్తాంశం_FORMAT_సంస్కరణ[0] == సంస్కరణ[0];
 }
 
 
@@ -77,68 +77,68 @@ UBool RBBIDataWrapper::isDataVersionAcceptable(const UVersionInfo version) {
 //              constructors.
 //
 //-----------------------------------------------------------------------------
-void RBBIDataWrapper::init0() {
-    fHeader = nullptr;
-    fForwardTable = nullptr;
-    fReverseTable = nullptr;
-    fRuleSource   = nullptr;
-    fRuleStatusTable = nullptr;
-    fTrie         = nullptr;
-    fUDataMem     = nullptr;
-    fRefCount     = 0;
-    fDontFreeData = true;
+శూన్య RBBIDataWrapper::init0() {
+    f_శీర్షిక = శూన్యసూచిక;
+    f_Forward_పట్టిక = శూన్యసూచిక;
+    f_తిరగేయి_పట్టిక = శూన్యసూచిక;
+    f_నియమం_ఆధారం   = శూన్యసూచిక;
+    f_నియమం_స్థితి_పట్టిక = శూన్యసూచిక;
+    fTrie         = శూన్యసూచిక;
+    fUDataMem     = శూన్యసూచిక;
+    f_Ref_లెక్క     = 0;
+    f_Dont_Free_దత్తాంశం = నిజం;
 }
 
-void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య RBBIDataWrapper::init(స్థిరరాశి RBBIData_శీర్షిక *దత్తాంశం, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    fHeader = data;
-    if (fHeader->fMagic != 0xb1a0 || !isDataVersionAcceptable(fHeader->fFormatVersion)) {
-        status = U_INVALID_FORMAT_ERROR;
-        return;
+    f_శీర్షిక = దత్తాంశం;
+    ఒకవేళ (f_శీర్షిక->fMagic != 0xb1a0 || !is_దత్తాంశం_సంస్కరణ_Acceptable(f_శీర్షిక->f_Format_సంస్కరణ)) {
+        స్థితి_2 = U_INVALID_FORMAT_ERROR;
+        తిరిగి;
     }
     // Note: in ICU version 3.2 and earlier, there was a formatVersion 1
     //       that is no longer supported.  At that time fFormatVersion was
     //       an int32_t field, rather than an array of 4 bytes.
 
-    fDontFreeData = false;
-    if (data->fFTableLen != 0) {
-        fForwardTable = reinterpret_cast<const RBBIStateTable*>(reinterpret_cast<const char*>(data) + fHeader->fFTable);
+    f_Dont_Free_దత్తాంశం = అబద్ధం;
+    ఒకవేళ (దత్తాంశం->fFTableLen != 0) {
+        f_Forward_పట్టిక = reinterpret_cast<స్థిరరాశి RBBIState_పట్టిక*>(reinterpret_cast<స్థిరరాశి అక్షరం*>(దత్తాంశం) + f_శీర్షిక->fFTable);
     }
-    if (data->fRTableLen != 0) {
-        fReverseTable = reinterpret_cast<const RBBIStateTable*>(reinterpret_cast<const char*>(data) + fHeader->fRTable);
-    }
-
-    fTrie = ucptrie_openFromBinary(UCPTRIE_TYPE_FAST,
-                                   UCPTRIE_VALUE_BITS_ANY,
-                                   (uint8_t *)data + fHeader->fTrie,
-                                   fHeader->fTrieLen,
-                                   nullptr,           // *actual length
-                                   &status);
-    if (U_FAILURE(status)) {
-        return;
+    ఒకవేళ (దత్తాంశం->fRTableLen != 0) {
+        f_తిరగేయి_పట్టిక = reinterpret_cast<స్థిరరాశి RBBIState_పట్టిక*>(reinterpret_cast<స్థిరరాశి అక్షరం*>(దత్తాంశం) + f_శీర్షిక->fRTable);
     }
 
-    UCPTrieValueWidth width = ucptrie_getValueWidth(fTrie);
-    if (!(width == UCPTRIE_VALUE_BITS_8 || width == UCPTRIE_VALUE_BITS_16)) {
-        status = U_INVALID_FORMAT_ERROR;
-        return;
+    fTrie = ucptrie_open_From_ద్విమాన(UCPTRIE_TYPE_FAST,
+                                   UCPTRIE_విలువ_బిట్లు_ANY,
+                                   (uint8_t *)దత్తాంశం + f_శీర్షిక->fTrie,
+                                   f_శీర్షిక->fTrieLen,
+                                   శూన్యసూచిక,           // *actual length
+                                   &స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
-    fRuleSource   = ((char *)data + fHeader->fRuleSource);
-    fRuleString = UnicodeString::fromUTF8(StringPiece(fRuleSource, fHeader->fRuleSourceLen));
-    U_ASSERT(data->fRuleSourceLen > 0);
+    UCPTrie_విలువ_వెడల్పు వెడల్పు = ucptrie_get_విలువ_వెడల్పు(fTrie);
+    ఒకవేళ (!(వెడల్పు == UCPTRIE_విలువ_బిట్లు_8 || వెడల్పు == UCPTRIE_విలువ_బిట్లు_16)) {
+        స్థితి_2 = U_INVALID_FORMAT_ERROR;
+        తిరిగి;
+    }
 
-    fRuleStatusTable = reinterpret_cast<const int32_t*>(reinterpret_cast<const char*>(data) + fHeader->fStatusTable);
-    fStatusMaxIdx    = data->fStatusTableLen / sizeof(int32_t);
+    f_నియమం_ఆధారం   = ((అక్షరం *)దత్తాంశం + f_శీర్షిక->f_నియమం_ఆధారం);
+    f_నియమం_String = UnicodeString::fromUTF8(StringPiece(f_నియమం_ఆధారం, f_శీర్షిక->f_నియమం_ఆధారం_Len));
+    U_ASSERT(దత్తాంశం->f_నియమం_ఆధారం_Len > 0);
 
-    fRefCount = 1;
+    f_నియమం_స్థితి_పట్టిక = reinterpret_cast<స్థిరరాశి int32_t*>(reinterpret_cast<స్థిరరాశి అక్షరం*>(దత్తాంశం) + f_శీర్షిక->f_స్థితి_పట్టిక);
+    f_స్థితి_Max_Idx    = దత్తాంశం->f_స్థితి_పట్టిక_Len / పరిమాణం(int32_t);
 
-#ifdef RBBI_DEBUG
-    char *debugEnv = getenv("U_RBBIDEBUG");
-    if (debugEnv && uprv_strstr(debugEnv, "data")) {this->printData();}
-#endif
+    f_Ref_లెక్క = 1;
+
+#నిర్వచితమైతే RBBI_DEBUG
+    అక్షరం *debugEnv = getenv("U_RBBIDEBUG");
+    ఒకవేళ (debugEnv && uprv_strstr(debugEnv, "data")) {ఇది->print_దత్తాంశం();}
+#అయితే_ముగింపు
 }
 
 
@@ -148,13 +148,13 @@ void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
 //
 //-----------------------------------------------------------------------------
 RBBIDataWrapper::~RBBIDataWrapper() {
-    U_ASSERT(fRefCount == 0);
+    U_ASSERT(f_Ref_లెక్క == 0);
     ucptrie_close(fTrie);
-    fTrie = nullptr;
-    if (fUDataMem) {
+    fTrie = శూన్యసూచిక;
+    ఒకవేళ (fUDataMem) {
         udata_close(fUDataMem);
-    } else if (!fDontFreeData) {
-        uprv_free((void *)fHeader);
+    } లేకపోతే ఒకవేళ (!f_Dont_Free_దత్తాంశం) {
+        uprv_free((శూన్య *)f_శీర్షిక);
     }
 }
 
@@ -170,21 +170,21 @@ RBBIDataWrapper::~RBBIDataWrapper() {
 //                  should still be ==.
 //
 //-----------------------------------------------------------------------------
-bool RBBIDataWrapper::operator ==(const RBBIDataWrapper &other) const {
-    if (fHeader == other.fHeader) {
-        return true;
+తార్కిక RBBIDataWrapper::క్రియాకారకం ==(స్థిరరాశి RBBIDataWrapper &other) స్థిరరాశి {
+    ఒకవేళ (f_శీర్షిక == other.f_శీర్షిక) {
+        తిరిగి నిజం;
     }
-    if (fHeader->fLength != other.fHeader->fLength) {
-        return false;
+    ఒకవేళ (f_శీర్షిక->f_నిడివి != other.f_శీర్షిక->f_నిడివి) {
+        తిరిగి అబద్ధం;
     }
-    if (uprv_memcmp(fHeader, other.fHeader, fHeader->fLength) == 0) {
-        return true;
+    ఒకవేళ (uprv_memcmp(f_శీర్షిక, other.f_శీర్షిక, f_శీర్షిక->f_నిడివి) == 0) {
+        తిరిగి నిజం;
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-int32_t  RBBIDataWrapper::hashCode() {
-    return fHeader->fFTableLen;
+int32_t  RBBIDataWrapper::hash_సంకేతం() {
+    తిరిగి f_శీర్షిక->fFTableLen;
 }
 
 
@@ -196,16 +196,16 @@ int32_t  RBBIDataWrapper::hashCode() {
 //                          referencing the same data.
 //
 //-----------------------------------------------------------------------------
-void RBBIDataWrapper::removeReference() {
-    if (umtx_atomic_dec(&fRefCount) == 0) {
-        delete this;
+శూన్య RBBIDataWrapper::removeReference() {
+    ఒకవేళ (umtx_atomic_dec(&f_Ref_లెక్క) == 0) {
+        తొలగించు ఇది;
     }
 }
 
 
-RBBIDataWrapper *RBBIDataWrapper::addReference() {
-   umtx_atomic_inc(&fRefCount);
-   return this;
+RBBIDataWrapper *RBBIDataWrapper::కూడు_Reference() {
+   umtx_atomic_inc(&f_Ref_లెక్క);
+   తిరిగి ఇది;
 }
 
 
@@ -215,8 +215,8 @@ RBBIDataWrapper *RBBIDataWrapper::addReference() {
 //  getRuleSourceString
 //
 //-----------------------------------------------------------------------------
-const UnicodeString &RBBIDataWrapper::getRuleSourceString() const {
-    return fRuleString;
+స్థిరరాశి UnicodeString &RBBIDataWrapper::get_నియమం_ఆధారం_String() స్థిరరాశి {
+    తిరిగి f_నియమం_String;
 }
 
 
@@ -225,73 +225,73 @@ const UnicodeString &RBBIDataWrapper::getRuleSourceString() const {
 //  print   -  debugging function to dump the runtime data tables.
 //
 //-----------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void  RBBIDataWrapper::printTable(const char *heading, const RBBIStateTable *table) {
+#నిర్వచితమైతే RBBI_DEBUG
+శూన్య  RBBIDataWrapper::print_పట్టిక(స్థిరరాశి అక్షరం *heading, స్థిరరాశి RBBIState_పట్టిక *పట్టిక) {
     uint32_t   c;
     uint32_t   s;
 
     RBBIDebugPrintf("%s\n", heading);
 
-    RBBIDebugPrintf("   fDictCategoriesStart: %d\n", table->fDictCategoriesStart);
-    RBBIDebugPrintf("   fLookAheadResultsSize: %d\n", table->fLookAheadResultsSize);
+    RBBIDebugPrintf("   fDictCategoriesStart: %d\n", పట్టిక->f_Dict_Categories_ప్రారంభం);
+    RBBIDebugPrintf("   fLookAheadResultsSize: %d\n", పట్టిక->f_Look_Ahead_Results_కొలత);
     RBBIDebugPrintf("   Flags: %4x RBBI_LOOKAHEAD_HARD_BREAK=%s RBBI_8BITS_ROWS=%s\n",
-                    table->fFlags,
-                    table->fFlags & RBBI_LOOKAHEAD_HARD_BREAK ? "T" : "F",
-                    table->fFlags & RBBI_8BITS_ROWS ? "T" : "F");
+                    పట్టిక->fFlags,
+                    పట్టిక->fFlags & RBBI_LOOKAHEAD_HARD_BREAK ? "T" : "F",
+                    పట్టిక->fFlags & RBBI_8_బిట్లు_అడ్డువరుసలు ? "T" : "F");
     RBBIDebugPrintf("\nState |  Acc  LA TagIx");
-    for (c=0; c<fHeader->fCatCount; c++) {RBBIDebugPrintf("%3d ", c);}
-    RBBIDebugPrintf("\n------|---------------"); for (c=0;c<fHeader->fCatCount; c++) {
+    కొరకు (c=0; c<f_శీర్షిక->f_Cat_లెక్క; c++) {RBBIDebugPrintf("%3d ", c);}
+    RBBIDebugPrintf("\n------|---------------"); కొరకు (c=0;c<f_శీర్షిక->f_Cat_లెక్క; c++) {
         RBBIDebugPrintf("----");
     }
     RBBIDebugPrintf("\n");
 
-    if (table == nullptr) {
+    ఒకవేళ (పట్టిక == శూన్యసూచిక) {
         RBBIDebugPrintf("         N U L L   T A B L E\n\n");
-        return;
+        తిరిగి;
     }
-    UBool use8Bits = table->fFlags & RBBI_8BITS_ROWS;
-    for (s=0; s<table->fNumStates; s++) {
-        RBBIStateTableRow *row = (RBBIStateTableRow *)
-                                  (table->fTableData + (table->fRowLen * s));
-        if (use8Bits) {
-            RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, row->r8.fAccepting, row->r8.fLookAhead, row->r8.fTagsIdx);
-            for (c=0; c<fHeader->fCatCount; c++)  {
-                RBBIDebugPrintf("%3d ", row->r8.fNextState[c]);
+    UBool use8_బిట్లు = పట్టిక->fFlags & RBBI_8_బిట్లు_అడ్డువరుసలు;
+    కొరకు (s=0; s<పట్టిక->f_అంకె_స్థితులు; s++) {
+        RBBIState_పట్టిక_అడ్డువరుస *అడ్డువరుస = (RBBIState_పట్టిక_అడ్డువరుస *)
+                                  (పట్టిక->f_పట్టిక_దత్తాంశం + (పట్టిక->f_అడ్డువరుస_Len * s));
+        ఒకవేళ (use8_బిట్లు) {
+            RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, అడ్డువరుస->r8.fAccepting, అడ్డువరుస->r8.fLookAhead, అడ్డువరుస->r8.f_ట్యాగులు_Idx);
+            కొరకు (c=0; c<f_శీర్షిక->f_Cat_లెక్క; c++)  {
+                RBBIDebugPrintf("%3d ", అడ్డువరుస->r8.f_తదుపరి_State[c]);
             }
-        } else {
-            RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, row->r16.fAccepting, row->r16.fLookAhead, row->r16.fTagsIdx);
-            for (c=0; c<fHeader->fCatCount; c++)  {
-                RBBIDebugPrintf("%3d ", row->r16.fNextState[c]);
+        } లేకపోతే {
+            RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, అడ్డువరుస->r16.fAccepting, అడ్డువరుస->r16.fLookAhead, అడ్డువరుస->r16.f_ట్యాగులు_Idx);
+            కొరకు (c=0; c<f_శీర్షిక->f_Cat_లెక్క; c++)  {
+                RBBIDebugPrintf("%3d ", అడ్డువరుస->r16.f_తదుపరి_State[c]);
             }
         }
         RBBIDebugPrintf("\n");
     }
     RBBIDebugPrintf("\n");
 }
-#endif
+#అయితే_ముగింపు
 
 
-void  RBBIDataWrapper::printData() {
-#ifdef RBBI_DEBUG
-    RBBIDebugPrintf("RBBI Data at %p\n", (void *)fHeader);
-    RBBIDebugPrintf("   Version = {%d %d %d %d}\n", fHeader->fFormatVersion[0], fHeader->fFormatVersion[1],
-                                                    fHeader->fFormatVersion[2], fHeader->fFormatVersion[3]);
-    RBBIDebugPrintf("   total length of data  = %d\n", fHeader->fLength);
-    RBBIDebugPrintf("   number of character categories = %d\n\n", fHeader->fCatCount);
+శూన్య  RBBIDataWrapper::print_దత్తాంశం() {
+#నిర్వచితమైతే RBBI_DEBUG
+    RBBIDebugPrintf("RBBI Data at %p\n", (శూన్య *)f_శీర్షిక);
+    RBBIDebugPrintf("   Version = {%d %d %d %d}\n", f_శీర్షిక->f_Format_సంస్కరణ[0], f_శీర్షిక->f_Format_సంస్కరణ[1],
+                                                    f_శీర్షిక->f_Format_సంస్కరణ[2], f_శీర్షిక->f_Format_సంస్కరణ[3]);
+    RBBIDebugPrintf("   total length of data  = %d\n", f_శీర్షిక->f_నిడివి);
+    RBBIDebugPrintf("   number of character categories = %d\n\n", f_శీర్షిక->f_Cat_లెక్క);
 
-    printTable("Forward State Transition Table", fForwardTable);
-    printTable("Reverse State Transition Table", fReverseTable);
+    print_పట్టిక("Forward State Transition Table", f_Forward_పట్టిక);
+    print_పట్టిక("Reverse State Transition Table", f_తిరగేయి_పట్టిక);
 
     RBBIDebugPrintf("\nOriginal Rules source:\n");
-    for (int32_t c=0; fRuleSource[c] != 0; c++) {
-        RBBIDebugPrintf("%c", fRuleSource[c]);
+    కొరకు (int32_t c=0; f_నియమం_ఆధారం[c] != 0; c++) {
+        RBBIDebugPrintf("%c", f_నియమం_ఆధారం[c]);
     }
     RBBIDebugPrintf("\n\n");
-#endif
+#అయితే_ముగింపు
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 U_NAMESPACE_USE
 
 //-----------------------------------------------------------------------------
@@ -301,33 +301,33 @@ U_NAMESPACE_USE
 //-----------------------------------------------------------------------------
 
 U_CAPI int32_t U_EXPORT2
-ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outData,
-           UErrorCode *status) {
+ubrk_మార్పిడి(స్థిరరాశి UDataSwapper *ds, స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+           UError_సంకేతం *స్థితి_2) {
 
-    if (status == nullptr || U_FAILURE(*status)) {
-        return 0;
+    ఒకవేళ (స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి 0;
     }
-    if(ds==nullptr || inData==nullptr || length<-1 || (length>0 && outData==nullptr)) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(ds==శూన్యసూచిక || లోపల_దత్తాంశం==శూన్యసూచిక || length<-1 || (length>0 && బహిర్గతం_దత్తాంశం==శూన్యసూచిక)) {
+        *స్థితి_2=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     //
     //  Check that the data header is for for break data.
     //    (Header contents are defined in genbrk.cpp)
     //
-    const UDataInfo *pInfo = (const UDataInfo *)((const char *)inData+4);
-    if(!(  pInfo->dataFormat[0]==0x42 &&   /* dataFormat="Brk " */
-           pInfo->dataFormat[1]==0x72 &&
-           pInfo->dataFormat[2]==0x6b &&
-           pInfo->dataFormat[3]==0x20 &&
-           RBBIDataWrapper::isDataVersionAcceptable(pInfo->formatVersion) )) {
+    స్థిరరాశి UDataInfo *pInfo = (స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+4);
+    ఒకవేళ(!(  pInfo->దత్తాంశం_Format[0]==0x42 &&   /* dataFormat="Brk " */
+           pInfo->దత్తాంశం_Format[1]==0x72 &&
+           pInfo->దత్తాంశం_Format[2]==0x6b &&
+           pInfo->దత్తాంశం_Format[3]==0x20 &&
+           RBBIDataWrapper::is_దత్తాంశం_సంస్కరణ_Acceptable(pInfo->format_సంస్కరణ) )) {
         udata_printError(ds, "ubrk_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0]);
-        *status=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->దత్తాంశం_Format[0], pInfo->దత్తాంశం_Format[1],
+                         pInfo->దత్తాంశం_Format[2], pInfo->దత్తాంశం_Format[3],
+                         pInfo->format_సంస్కరణ[0]);
+        *స్థితి_2=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
     //
@@ -336,39 +336,39 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
     //                         the size of the ICU d.h., which lets us locate the start
     //                         of the RBBI specific data.
     //
-    int32_t headerSize=udata_swapDataHeader(ds, inData, length, outData, status);
+    int32_t శీర్షిక_కొలత=udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, స్థితి_2);
 
 
     //
     // Get the RRBI Data Header, and check that it appears to be OK.
     //
-    const uint8_t  *inBytes =(const uint8_t *)inData+headerSize;
-    RBBIDataHeader *rbbiDH = (RBBIDataHeader *)inBytes;
-    if (ds->readUInt32(rbbiDH->fMagic) != 0xb1a0 || 
-            !RBBIDataWrapper::isDataVersionAcceptable(rbbiDH->fFormatVersion) ||
-            ds->readUInt32(rbbiDH->fLength)  <  sizeof(RBBIDataHeader)) {
+    స్థిరరాశి uint8_t  *లోపల_బైట్లు =(స్థిరరాశి uint8_t *)లోపల_దత్తాంశం+శీర్షిక_కొలత;
+    RBBIData_శీర్షిక *rbbiDH = (RBBIData_శీర్షిక *)లోపల_బైట్లు;
+    ఒకవేళ (ds->readUInt32(rbbiDH->fMagic) != 0xb1a0 || 
+            !RBBIDataWrapper::is_దత్తాంశం_సంస్కరణ_Acceptable(rbbiDH->f_Format_సంస్కరణ) ||
+            ds->readUInt32(rbbiDH->f_నిడివి)  <  పరిమాణం(RBBIData_శీర్షిక)) {
         udata_printError(ds, "ubrk_swap(): RBBI Data header is invalid.\n");
-        *status=U_UNSUPPORTED_ERROR;
-        return 0;
+        *స్థితి_2=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
     //
     // Prefight operation?  Just return the size
     //
-    int32_t breakDataLength = ds->readUInt32(rbbiDH->fLength);
-    int32_t totalSize = headerSize + breakDataLength;
-    if (length < 0) {
-        return totalSize;
+    int32_t break_దత్తాంశం_నిడివి = ds->readUInt32(rbbiDH->f_నిడివి);
+    int32_t మొత్తం_కొలత = శీర్షిక_కొలత + break_దత్తాంశం_నిడివి;
+    ఒకవేళ (length < 0) {
+        తిరిగి మొత్తం_కొలత;
     }
 
     //
     // Check that length passed in is consistent with length from RBBI data header.
     //
-    if (length < totalSize) {
+    ఒకవేళ (length < మొత్తం_కొలత) {
         udata_printError(ds, "ubrk_swap(): too few bytes (%d after ICU Data header) for break data.\n",
-                            breakDataLength);
-        *status=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+                            break_దత్తాంశం_నిడివి);
+        *స్థితి_2=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
         }
 
 
@@ -377,99 +377,99 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
     //                 we need to reference the header to locate the data, and an
     //                 inplace swap of the header leaves it unusable.
     //
-    uint8_t         *outBytes = (uint8_t *)outData + headerSize;
-    RBBIDataHeader  *outputDH = (RBBIDataHeader *)outBytes;
+    uint8_t         *బహిర్గతం_బైట్లు = (uint8_t *)బహిర్గతం_దత్తాంశం + శీర్షిక_కొలత;
+    RBBIData_శీర్షిక  *outputDH = (RBBIData_శీర్షిక *)బహిర్గతం_బైట్లు;
 
-    int32_t   tableStartOffset;
-    int32_t   tableLength;
+    int32_t   పట్టిక_ప్రారంభం_స్థానభ్రంశం;
+    int32_t   పట్టిక_నిడివి;
 
     //
     // If not swapping in place, zero out the output buffer before starting.
     //    Individual tables and other data items within are aligned to 8 byte boundaries
     //    when originally created.  Any unused space between items needs to be zero.
     //
-    if (inBytes != outBytes) {
-        uprv_memset(outBytes, 0, breakDataLength);
+    ఒకవేళ (లోపల_బైట్లు != బహిర్గతం_బైట్లు) {
+        uprv_memset(బహిర్గతం_బైట్లు, 0, break_దత్తాంశం_నిడివి);
     }
 
     //
     // Each state table begins with several 32 bit fields.  Calculate the size
     //   in bytes of these.
     //
-    int32_t         topSize = offsetof(RBBIStateTable, fTableData);
+    int32_t         శిఖరం_కొలత = offsetof(RBBIState_పట్టిక, f_పట్టిక_దత్తాంశం);
 
     // Forward state table.
-    tableStartOffset = ds->readUInt32(rbbiDH->fFTable);
-    tableLength      = ds->readUInt32(rbbiDH->fFTableLen);
+    పట్టిక_ప్రారంభం_స్థానభ్రంశం = ds->readUInt32(rbbiDH->fFTable);
+    పట్టిక_నిడివి      = ds->readUInt32(rbbiDH->fFTableLen);
 
-    if (tableLength > 0) {
-        RBBIStateTable *rbbiST = (RBBIStateTable *)(inBytes+tableStartOffset);
-        UBool use8Bits = ds->readUInt32(rbbiST->fFlags) & RBBI_8BITS_ROWS;
+    ఒకవేళ (పట్టిక_నిడివి > 0) {
+        RBBIState_పట్టిక *rbbiST = (RBBIState_పట్టిక *)(లోపల_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం);
+        UBool use8_బిట్లు = ds->readUInt32(rbbiST->fFlags) & RBBI_8_బిట్లు_అడ్డువరుసలు;
 
-        ds->swapArray32(ds, inBytes+tableStartOffset, topSize,
-                            outBytes+tableStartOffset, status);
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం, శిఖరం_కొలత,
+                            బహిర్గతం_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం, స్థితి_2);
 
         // Swap the state table if the table is in 16 bits.
-        if (use8Bits) {
-            if (outBytes != inBytes) {
-                uprv_memmove(outBytes+tableStartOffset+topSize,
-                             inBytes+tableStartOffset+topSize,
-                             tableLength-topSize);
+        ఒకవేళ (use8_బిట్లు) {
+            ఒకవేళ (బహిర్గతం_బైట్లు != లోపల_బైట్లు) {
+                uprv_memmove(బహిర్గతం_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం+శిఖరం_కొలత,
+                             లోపల_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం+శిఖరం_కొలత,
+                             పట్టిక_నిడివి-శిఖరం_కొలత);
             }
-        } else {
-            ds->swapArray16(ds, inBytes+tableStartOffset+topSize, tableLength-topSize,
-                                outBytes+tableStartOffset+topSize, status);
+        } లేకపోతే {
+            ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం+శిఖరం_కొలత, పట్టిక_నిడివి-శిఖరం_కొలత,
+                                బహిర్గతం_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం+శిఖరం_కొలత, స్థితి_2);
         }
     }
 
     // Reverse state table.  Same layout as forward table, above.
-    tableStartOffset = ds->readUInt32(rbbiDH->fRTable);
-    tableLength      = ds->readUInt32(rbbiDH->fRTableLen);
+    పట్టిక_ప్రారంభం_స్థానభ్రంశం = ds->readUInt32(rbbiDH->fRTable);
+    పట్టిక_నిడివి      = ds->readUInt32(rbbiDH->fRTableLen);
 
-    if (tableLength > 0) {
-        RBBIStateTable *rbbiST = (RBBIStateTable *)(inBytes+tableStartOffset);
-        UBool use8Bits = ds->readUInt32(rbbiST->fFlags) & RBBI_8BITS_ROWS;
+    ఒకవేళ (పట్టిక_నిడివి > 0) {
+        RBBIState_పట్టిక *rbbiST = (RBBIState_పట్టిక *)(లోపల_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం);
+        UBool use8_బిట్లు = ds->readUInt32(rbbiST->fFlags) & RBBI_8_బిట్లు_అడ్డువరుసలు;
 
-        ds->swapArray32(ds, inBytes+tableStartOffset, topSize,
-                            outBytes+tableStartOffset, status);
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం, శిఖరం_కొలత,
+                            బహిర్గతం_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం, స్థితి_2);
 
         // Swap the state table if the table is in 16 bits.
-        if (use8Bits) {
-            if (outBytes != inBytes) {
-                uprv_memmove(outBytes+tableStartOffset+topSize,
-                             inBytes+tableStartOffset+topSize,
-                             tableLength-topSize);
+        ఒకవేళ (use8_బిట్లు) {
+            ఒకవేళ (బహిర్గతం_బైట్లు != లోపల_బైట్లు) {
+                uprv_memmove(బహిర్గతం_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం+శిఖరం_కొలత,
+                             లోపల_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం+శిఖరం_కొలత,
+                             పట్టిక_నిడివి-శిఖరం_కొలత);
             }
-        } else {
-            ds->swapArray16(ds, inBytes+tableStartOffset+topSize, tableLength-topSize,
-                                outBytes+tableStartOffset+topSize, status);
+        } లేకపోతే {
+            ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం+శిఖరం_కొలత, పట్టిక_నిడివి-శిఖరం_కొలత,
+                                బహిర్గతం_బైట్లు+పట్టిక_ప్రారంభం_స్థానభ్రంశం+శిఖరం_కొలత, స్థితి_2);
         }
     }
 
     // Trie table for character categories
-    ucptrie_swap(ds, inBytes+ds->readUInt32(rbbiDH->fTrie), ds->readUInt32(rbbiDH->fTrieLen),
-                     outBytes+ds->readUInt32(rbbiDH->fTrie), status);
+    ucptrie_మార్పిడి(ds, లోపల_బైట్లు+ds->readUInt32(rbbiDH->fTrie), ds->readUInt32(rbbiDH->fTrieLen),
+                     బహిర్గతం_బైట్లు+ds->readUInt32(rbbiDH->fTrie), స్థితి_2);
 
     // Source Rules Text.  It's UTF8 data
-    if (outBytes != inBytes) {
-        uprv_memmove(outBytes+ds->readUInt32(rbbiDH->fRuleSource),
-                     inBytes+ds->readUInt32(rbbiDH->fRuleSource),
-                     ds->readUInt32(rbbiDH->fRuleSourceLen));
+    ఒకవేళ (బహిర్గతం_బైట్లు != లోపల_బైట్లు) {
+        uprv_memmove(బహిర్గతం_బైట్లు+ds->readUInt32(rbbiDH->f_నియమం_ఆధారం),
+                     లోపల_బైట్లు+ds->readUInt32(rbbiDH->f_నియమం_ఆధారం),
+                     ds->readUInt32(rbbiDH->f_నియమం_ఆధారం_Len));
     }
 
     // Table of rule status values.  It's all int_32 values
-    ds->swapArray32(ds, inBytes+ds->readUInt32(rbbiDH->fStatusTable), ds->readUInt32(rbbiDH->fStatusTableLen),
-                        outBytes+ds->readUInt32(rbbiDH->fStatusTable), status);
+    ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+ds->readUInt32(rbbiDH->f_స్థితి_పట్టిక), ds->readUInt32(rbbiDH->f_స్థితి_పట్టిక_Len),
+                        బహిర్గతం_బైట్లు+ds->readUInt32(rbbiDH->f_స్థితి_పట్టిక), స్థితి_2);
 
     // And, last, the header.
     //   It is all int32_t values except for fFormataVersion, which is an array of four bytes.
     //   Swap the whole thing as int32_t, then re-swap the one field.
     //
-    ds->swapArray32(ds, inBytes, sizeof(RBBIDataHeader), outBytes, status);
-    ds->swapArray32(ds, outputDH->fFormatVersion, 4, outputDH->fFormatVersion, status);
+    ds->మార్పిడి_Array32(ds, లోపల_బైట్లు, పరిమాణం(RBBIData_శీర్షిక), బహిర్గతం_బైట్లు, స్థితి_2);
+    ds->మార్పిడి_Array32(ds, outputDH->f_Format_సంస్కరణ, 4, outputDH->f_Format_సంస్కరణ, స్థితి_2);
 
-    return totalSize;
+    తిరిగి మొత్తం_కొలత;
 }
 
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_BREAK_ITERATION */

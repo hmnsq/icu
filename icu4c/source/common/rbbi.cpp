@@ -12,46 +12,46 @@
 //                   class RuleBasedBreakIterator
 //
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#అన్తర్భావ "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include <cinttypes>
+#అన్తర్భావ <cinttypes>
 
-#include "unicode/rbbi.h"
-#include "unicode/schriter.h"
-#include "unicode/uchriter.h"
-#include "unicode/uclean.h"
-#include "unicode/udata.h"
+#అన్తర్భావ "unicode/rbbi.h"
+#అన్తర్భావ "unicode/schriter.h"
+#అన్తర్భావ "unicode/uchriter.h"
+#అన్తర్భావ "unicode/uclean.h"
+#అన్తర్భావ "unicode/udata.h"
 
-#include "brkeng.h"
-#include "ucln_cmn.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "localsvc.h"
-#include "rbbidata.h"
-#include "rbbi_cache.h"
-#include "rbbirb.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "uvectr32.h"
+#అన్తర్భావ "brkeng.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "localsvc.h"
+#అన్తర్భావ "rbbidata.h"
+#అన్తర్భావ "rbbi_cache.h"
+#అన్తర్భావ "rbbirb.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "uvectr32.h"
 
-#ifdef RBBI_DEBUG
-static UBool gTrace = false;
-#endif
+#నిర్వచితమైతే RBBI_DEBUG
+స్థిర UBool gTrace = అబద్ధం;
+#అయితే_ముగింపు
 
 U_NAMESPACE_BEGIN
 
 // The state number of the starting state
-constexpr int32_t START_STATE = 1;
+constexpr int32_t ప్రారంభం_STATE = 1;
 
 // The state-transition value indicating "stop"
 constexpr int32_t STOP_STATE = 0;
 
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(RuleBasedBreakIterator)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(నియమం_Based_Break_Iterator)
 
 
 //=======================================================================
@@ -62,21 +62,21 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(RuleBasedBreakIterator)
  * Constructs a RuleBasedBreakIterator that uses the already-created
  * tables object that is passed in as a parameter.
  */
-RuleBasedBreakIterator::RuleBasedBreakIterator(RBBIDataHeader* data, UErrorCode &status)
- : RuleBasedBreakIterator(&status)
+నియమం_Based_Break_Iterator::నియమం_Based_Break_Iterator(RBBIData_శీర్షిక* దత్తాంశం, UError_సంకేతం &స్థితి_2)
+ : నియమం_Based_Break_Iterator(&స్థితి_2)
 {
-    fData = new RBBIDataWrapper(data, status); // status checked in constructor
-    if (U_FAILURE(status)) {return;}
-    if(fData == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    f_దత్తాంశం = కొత్త RBBIDataWrapper(దత్తాంశం, స్థితి_2); // status checked in constructor
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {తిరిగి;}
+    ఒకవేళ(f_దత్తాంశం == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    if (fData->fForwardTable->fLookAheadResultsSize > 0) {
+    ఒకవేళ (f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత > 0) {
         fLookAheadMatches = static_cast<int32_t *>(
-            uprv_malloc(fData->fForwardTable->fLookAheadResultsSize * sizeof(int32_t)));
-        if (fLookAheadMatches == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            uprv_malloc(f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత * పరిమాణం(int32_t)));
+        ఒకవేళ (fLookAheadMatches == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
     }
 }
@@ -88,8 +88,8 @@ RuleBasedBreakIterator::RuleBasedBreakIterator(RBBIDataHeader* data, UErrorCode 
 //                 only for internal use.
 //
 //-------------------------------------------------------------------------------
-RuleBasedBreakIterator::RuleBasedBreakIterator(UDataMemory* udm, UBool isPhraseBreaking,
-        UErrorCode &status) : RuleBasedBreakIterator(udm, status)
+నియమం_Based_Break_Iterator::నియమం_Based_Break_Iterator(UData_జ్ఞాపకం* udm, UBool isPhraseBreaking,
+        UError_సంకేతం &స్థితి_2) : నియమం_Based_Break_Iterator(udm, స్థితి_2)
 {
     fIsPhraseBreaking = isPhraseBreaking;
 }
@@ -98,35 +98,35 @@ RuleBasedBreakIterator::RuleBasedBreakIterator(UDataMemory* udm, UBool isPhraseB
 //  Construct from precompiled binary rules (tables).  This constructor is public API,
 //  taking the rules as a (const uint8_t *) to match the type produced by getBinaryRules().
 //
-RuleBasedBreakIterator::RuleBasedBreakIterator(const uint8_t *compiledRules,
-                       uint32_t       ruleLength,
-                       UErrorCode     &status)
- : RuleBasedBreakIterator(&status)
+నియమం_Based_Break_Iterator::నియమం_Based_Break_Iterator(స్థిరరాశి uint8_t *compiled_నియమాలు,
+                       uint32_t       నియమం_నిడివి,
+                       UError_సంకేతం     &స్థితి_2)
+ : నియమం_Based_Break_Iterator(&స్థితి_2)
 {
-    if (U_FAILURE(status)) {
-        return;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    if (compiledRules == nullptr || ruleLength < sizeof(RBBIDataHeader)) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (compiled_నియమాలు == శూన్యసూచిక || నియమం_నిడివి < పరిమాణం(RBBIData_శీర్షిక)) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    const RBBIDataHeader* data = reinterpret_cast<const RBBIDataHeader*>(compiledRules);
-    if (data->fLength > ruleLength) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    స్థిరరాశి RBBIData_శీర్షిక* దత్తాంశం = reinterpret_cast<స్థిరరాశి RBBIData_శీర్షిక*>(compiled_నియమాలు);
+    ఒకవేళ (దత్తాంశం->f_నిడివి > నియమం_నిడివి) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    fData = new RBBIDataWrapper(data, RBBIDataWrapper::kDontAdopt, status);
-    if (U_FAILURE(status)) {return;}
-    if(fData == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    f_దత్తాంశం = కొత్త RBBIDataWrapper(దత్తాంశం, RBBIDataWrapper::kDontAdopt, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {తిరిగి;}
+    ఒకవేళ(f_దత్తాంశం == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    if (fData->fForwardTable->fLookAheadResultsSize > 0) {
+    ఒకవేళ (f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత > 0) {
         fLookAheadMatches = static_cast<int32_t *>(
-            uprv_malloc(fData->fForwardTable->fLookAheadResultsSize * sizeof(int32_t)));
-        if (fLookAheadMatches == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            uprv_malloc(f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత * పరిమాణం(int32_t)));
+        ఒకవేళ (fLookAheadMatches == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
     }
 }
@@ -138,21 +138,21 @@ RuleBasedBreakIterator::RuleBasedBreakIterator(const uint8_t *compiledRules,
 //                 stored in an ICU data file.
 //
 //-------------------------------------------------------------------------------
-RuleBasedBreakIterator::RuleBasedBreakIterator(UDataMemory* udm, UErrorCode &status)
- : RuleBasedBreakIterator(&status)
+నియమం_Based_Break_Iterator::నియమం_Based_Break_Iterator(UData_జ్ఞాపకం* udm, UError_సంకేతం &స్థితి_2)
+ : నియమం_Based_Break_Iterator(&స్థితి_2)
 {
-    fData = new RBBIDataWrapper(udm, status); // status checked in constructor
-    if (U_FAILURE(status)) {return;}
-    if(fData == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    f_దత్తాంశం = కొత్త RBBIDataWrapper(udm, స్థితి_2); // status checked in constructor
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {తిరిగి;}
+    ఒకవేళ(f_దత్తాంశం == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    if (fData->fForwardTable->fLookAheadResultsSize > 0) {
+    ఒకవేళ (f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత > 0) {
         fLookAheadMatches = static_cast<int32_t *>(
-            uprv_malloc(fData->fForwardTable->fLookAheadResultsSize * sizeof(int32_t)));
-        if (fLookAheadMatches == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            uprv_malloc(f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత * పరిమాణం(int32_t)));
+        ఒకవేళ (fLookAheadMatches == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
     }
 }
@@ -164,21 +164,21 @@ RuleBasedBreakIterator::RuleBasedBreakIterator(UDataMemory* udm, UErrorCode &sta
 //   Constructor       from a set of rules supplied as a string.
 //
 //-------------------------------------------------------------------------------
-RuleBasedBreakIterator::RuleBasedBreakIterator( const UnicodeString  &rules,
+నియమం_Based_Break_Iterator::నియమం_Based_Break_Iterator( స్థిరరాశి UnicodeString  &నియమాలు,
                                                 UParseError          &parseError,
-                                                UErrorCode           &status)
- : RuleBasedBreakIterator(&status)
+                                                UError_సంకేతం           &స్థితి_2)
+ : నియమం_Based_Break_Iterator(&స్థితి_2)
 {
-    if (U_FAILURE(status)) {return;}
-    RuleBasedBreakIterator *bi = (RuleBasedBreakIterator *)
-        RBBIRuleBuilder::createRuleBasedBreakIterator(rules, &parseError, status);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {తిరిగి;}
+    నియమం_Based_Break_Iterator *bi = (నియమం_Based_Break_Iterator *)
+        RBBIRuleBuilder::create_నియమం_Based_Break_Iterator(నియమాలు, &parseError, స్థితి_2);
     // Note:  This is a bit awkward.  The RBBI ruleBuilder has a factory method that
     //        creates and returns a complete RBBI.  From here, in a constructor, we
     //        can't just return the object created by the builder factory, hence
     //        the assignment of the factory created object to "this".
-    if (U_SUCCESS(status)) {
-        *this = *bi;
-        delete bi;
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        *ఇది = *bi;
+        తొలగించు bi;
     }
 }
 
@@ -189,8 +189,8 @@ RuleBasedBreakIterator::RuleBasedBreakIterator( const UnicodeString  &rules,
 //                           Used when creating a RuleBasedBreakIterator from a set
 //                           of rules.
 //-------------------------------------------------------------------------------
-RuleBasedBreakIterator::RuleBasedBreakIterator()
- : RuleBasedBreakIterator(nullptr)
+నియమం_Based_Break_Iterator::నియమం_Based_Break_Iterator()
+ : నియమం_Based_Break_Iterator(శూన్యసూచిక)
 {
 }
 
@@ -198,31 +198,31 @@ RuleBasedBreakIterator::RuleBasedBreakIterator()
  * Simple Constructor with an error code.
  * Handles common initialization for all other constructors.
  */
-RuleBasedBreakIterator::RuleBasedBreakIterator(UErrorCode *status) {
-    UErrorCode ec = U_ZERO_ERROR;
-    if (status == nullptr) {
-        status = &ec;
+నియమం_Based_Break_Iterator::నియమం_Based_Break_Iterator(UError_సంకేతం *స్థితి_2) {
+    UError_సంకేతం ec = U_ZERO_ERROR;
+    ఒకవేళ (స్థితి_2 == శూన్యసూచిక) {
+        స్థితి_2 = &ec;
     }
-    utext_openUChars(&fText, nullptr, 0, status);
-    LocalPointer<DictionaryCache> lpDictionaryCache(new DictionaryCache(this, *status), *status);
-    LocalPointer<BreakCache> lpBreakCache(new BreakCache(this, *status), *status);
-    if (U_FAILURE(*status)) {
-        fErrorCode = *status;
-        return;
+    utext_openUChars(&f_పాఠ్యం, శూన్యసూచిక, 0, స్థితి_2);
+    Local_సూచిక<DictionaryCache> lpDictionaryCache(కొత్త DictionaryCache(ఇది, *స్థితి_2), *స్థితి_2);
+    Local_సూచిక<BreakCache> lpBreakCache(కొత్త BreakCache(ఇది, *స్థితి_2), *స్థితి_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        f_Error_సంకేతం = *స్థితి_2;
+        తిరిగి;
     }
     fDictionaryCache = lpDictionaryCache.orphan();
     fBreakCache = lpBreakCache.orphan();
 
-#ifdef RBBI_DEBUG
-    static UBool debugInitDone = false;
-    if (debugInitDone == false) {
-        char *debugEnv = getenv("U_RBBIDEBUG");
-        if (debugEnv && uprv_strstr(debugEnv, "trace")) {
-            gTrace = true;
+#నిర్వచితమైతే RBBI_DEBUG
+    స్థిర UBool debug_Init_పూర్తి = అబద్ధం;
+    ఒకవేళ (debug_Init_పూర్తి == అబద్ధం) {
+        అక్షరం *debugEnv = getenv("U_RBBIDEBUG");
+        ఒకవేళ (debugEnv && uprv_strstr(debugEnv, "trace")) {
+            gTrace = నిజం;
         }
-        debugInitDone = true;
+        debug_Init_పూర్తి = నిజం;
     }
-#endif
+#అయితే_ముగింపు
 }
 
 
@@ -232,43 +232,43 @@ RuleBasedBreakIterator::RuleBasedBreakIterator(UErrorCode *status) {
 //                      and which iterates over the same text, as the one passed in.
 //
 //-------------------------------------------------------------------------------
-RuleBasedBreakIterator::RuleBasedBreakIterator(const RuleBasedBreakIterator& other)
-: RuleBasedBreakIterator()
+నియమం_Based_Break_Iterator::నియమం_Based_Break_Iterator(స్థిరరాశి నియమం_Based_Break_Iterator& other)
+: నియమం_Based_Break_Iterator()
 {
-    *this = other;
+    *ఇది = other;
 }
 
 
 /**
  * Destructor
  */
-RuleBasedBreakIterator::~RuleBasedBreakIterator() {
-    if (fCharIter != &fSCharIter) {
+నియమం_Based_Break_Iterator::~నియమం_Based_Break_Iterator() {
+    ఒకవేళ (fCharIter != &fSCharIter) {
         // fCharIter was adopted from the outside.
-        delete fCharIter;
+        తొలగించు fCharIter;
     }
-    fCharIter = nullptr;
+    fCharIter = శూన్యసూచిక;
 
-    utext_close(&fText);
+    utext_close(&f_పాఠ్యం);
 
-    if (fData != nullptr) {
-        fData->removeReference();
-        fData = nullptr;
+    ఒకవేళ (f_దత్తాంశం != శూన్యసూచిక) {
+        f_దత్తాంశం->removeReference();
+        f_దత్తాంశం = శూన్యసూచిక;
     }
-    delete fBreakCache;
-    fBreakCache = nullptr;
+    తొలగించు fBreakCache;
+    fBreakCache = శూన్యసూచిక;
 
-    delete fDictionaryCache;
-    fDictionaryCache = nullptr;
+    తొలగించు fDictionaryCache;
+    fDictionaryCache = శూన్యసూచిక;
 
-    delete fLanguageBreakEngines;
-    fLanguageBreakEngines = nullptr;
+    తొలగించు fLanguageBreakEngines;
+    fLanguageBreakEngines = శూన్యసూచిక;
 
-    delete fUnhandledBreakEngine;
-    fUnhandledBreakEngine = nullptr;
+    తొలగించు fUnhandledBreakEngine;
+    fUnhandledBreakEngine = శూన్యసూచిక;
 
     uprv_free(fLookAheadMatches);
-    fLookAheadMatches = nullptr;
+    fLookAheadMatches = శూన్యసూచిక;
 }
 
 /**
@@ -276,66 +276,66 @@ RuleBasedBreakIterator::~RuleBasedBreakIterator() {
  * and iterate over the same text, as the one passed in.
  * TODO: needs better handling of memory allocation errors.
  */
-RuleBasedBreakIterator&
-RuleBasedBreakIterator::operator=(const RuleBasedBreakIterator& that) U_LIFETIME_BOUND {
-    if (this == &that) {
-        return *this;
+నియమం_Based_Break_Iterator&
+నియమం_Based_Break_Iterator::క్రియాకారకం=(స్థిరరాశి నియమం_Based_Break_Iterator& that) U_LIFETIME_BOUND {
+    ఒకవేళ (ఇది == &that) {
+        తిరిగి *ఇది;
     }
-    BreakIterator::operator=(that);
+    BreakIterator::క్రియాకారకం=(that);
 
-    if (fLanguageBreakEngines != nullptr) {
-        delete fLanguageBreakEngines;
-        fLanguageBreakEngines = nullptr;   // Just rebuild for now
+    ఒకవేళ (fLanguageBreakEngines != శూన్యసూచిక) {
+        తొలగించు fLanguageBreakEngines;
+        fLanguageBreakEngines = శూన్యసూచిక;   // Just rebuild for now
     }
     // TODO: clone fLanguageBreakEngines from "that"
-    UErrorCode status = U_ZERO_ERROR;
-    utext_clone(&fText, &that.fText, false, true, &status);
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    utext_clone(&f_పాఠ్యం, &that.f_పాఠ్యం, అబద్ధం, నిజం, &స్థితి_2);
 
-    if (fCharIter != &fSCharIter) {
-        delete fCharIter;
+    ఒకవేళ (fCharIter != &fSCharIter) {
+        తొలగించు fCharIter;
     }
     fCharIter = &fSCharIter;
 
-    if (that.fCharIter != nullptr && that.fCharIter != &that.fSCharIter) {
+    ఒకవేళ (that.fCharIter != శూన్యసూచిక && that.fCharIter != &that.fSCharIter) {
         // This is a little bit tricky - it will initially appear that
         //  this->fCharIter is adopted, even if that->fCharIter was
         //  not adopted.  That's ok.
         fCharIter = that.fCharIter->clone();
     }
     fSCharIter = that.fSCharIter;
-    if (fCharIter == nullptr) {
+    ఒకవేళ (fCharIter == శూన్యసూచిక) {
         fCharIter = &fSCharIter;
     }
 
-    if (fData != nullptr) {
-        fData->removeReference();
-        fData = nullptr;
+    ఒకవేళ (f_దత్తాంశం != శూన్యసూచిక) {
+        f_దత్తాంశం->removeReference();
+        f_దత్తాంశం = శూన్యసూచిక;
     }
-    if (that.fData != nullptr) {
-        fData = that.fData->addReference();
+    ఒకవేళ (that.f_దత్తాంశం != శూన్యసూచిక) {
+        f_దత్తాంశం = that.f_దత్తాంశం->కూడు_Reference();
     }
 
     uprv_free(fLookAheadMatches);
-    fLookAheadMatches = nullptr;
-    if (fData && fData->fForwardTable->fLookAheadResultsSize > 0) {
+    fLookAheadMatches = శూన్యసూచిక;
+    ఒకవేళ (f_దత్తాంశం && f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత > 0) {
         fLookAheadMatches = static_cast<int32_t *>(
-            uprv_malloc(fData->fForwardTable->fLookAheadResultsSize * sizeof(int32_t)));
+            uprv_malloc(f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత * పరిమాణం(int32_t)));
     }
 
 
     fPosition = that.fPosition;
-    fRuleStatusIndex = that.fRuleStatusIndex;
-    fDone = that.fDone;
+    f_నియమం_స్థితి_సూచీ = that.f_నియమం_స్థితి_సూచీ;
+    f_పూర్తి = that.f_పూర్తి;
     fIsPhraseBreaking = that.fIsPhraseBreaking;
 
     // TODO: both the dictionary and the main cache need to be copied.
     //       Current position could be within a dictionary range. Trying to continue
     //       the iteration without the caches present would go to the rules, with
     //       the assumption that the current position is on a rule boundary.
-    fBreakCache->reset(fPosition, fRuleStatusIndex);
+    fBreakCache->reset(fPosition, f_నియమం_స్థితి_సూచీ);
     fDictionaryCache->reset();
 
-    return *this;
+    తిరిగి *ఇది;
 }
 
 //-----------------------------------------------------------------------------
@@ -345,50 +345,50 @@ RuleBasedBreakIterator::operator=(const RuleBasedBreakIterator& that) U_LIFETIME
 //            Virtual function: does the right thing with subclasses.
 //
 //-----------------------------------------------------------------------------
-RuleBasedBreakIterator*
-RuleBasedBreakIterator::clone() const {
-    return new RuleBasedBreakIterator(*this);
+నియమం_Based_Break_Iterator*
+నియమం_Based_Break_Iterator::clone() స్థిరరాశి {
+    తిరిగి కొత్త నియమం_Based_Break_Iterator(*ఇది);
 }
 
 /**
  * Equality operator.  Returns true if both BreakIterators are of the
  * same class, have the same behavior, and iterate over the same text.
  */
-bool
-RuleBasedBreakIterator::operator==(const BreakIterator& that) const {
-    if (typeid(*this) != typeid(that)) {
-        return false;
+తార్కిక
+నియమం_Based_Break_Iterator::క్రియాకారకం==(స్థిరరాశి BreakIterator& that) స్థిరరాశి {
+    ఒకవేళ (typeid(*ఇది) != typeid(that)) {
+        తిరిగి అబద్ధం;
     }
-    if (this == &that) {
-        return true;
+    ఒకవేళ (ఇది == &that) {
+        తిరిగి నిజం;
     }
 
     // The base class BreakIterator carries no state that participates in equality,
     // and does not implement an equality function that would otherwise be
     // checked at this point.
 
-    const RuleBasedBreakIterator& that2 = static_cast<const RuleBasedBreakIterator&>(that);
+    స్థిరరాశి నియమం_Based_Break_Iterator& that2 = static_cast<స్థిరరాశి నియమం_Based_Break_Iterator&>(that);
 
-    if (!utext_equals(&fText, &that2.fText)) {
+    ఒకవేళ (!utext_equals(&f_పాఠ్యం, &that2.f_పాఠ్యం)) {
         // The two break iterators are operating on different text,
         //   or have a different iteration position.
         //   Note that fText's position is always the same as the break iterator's position.
-        return false;
+        తిరిగి అబద్ధం;
     }
 
-    if (!(fPosition == that2.fPosition &&
-            fRuleStatusIndex == that2.fRuleStatusIndex &&
-            fDone == that2.fDone &&
+    ఒకవేళ (!(fPosition == that2.fPosition &&
+            f_నియమం_స్థితి_సూచీ == that2.f_నియమం_స్థితి_సూచీ &&
+            f_పూర్తి == that2.f_పూర్తి &&
             fIsPhraseBreaking == that2.fIsPhraseBreaking)) {
-        return false;
+        తిరిగి అబద్ధం;
     }
 
-    if (that2.fData == fData ||
-        (fData != nullptr && that2.fData != nullptr && *that2.fData == *fData)) {
+    ఒకవేళ (that2.f_దత్తాంశం == f_దత్తాంశం ||
+        (f_దత్తాంశం != శూన్యసూచిక && that2.f_దత్తాంశం != శూన్యసూచిక && *that2.f_దత్తాంశం == *f_దత్తాంశం)) {
             // The two break iterators are using the same rules.
-            return true;
+            తిరిగి నిజం;
         }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
 /**
@@ -396,22 +396,22 @@ RuleBasedBreakIterator::operator==(const BreakIterator& that) const {
  * @return A hash code
  */
 int32_t
-RuleBasedBreakIterator::hashCode() const {
+నియమం_Based_Break_Iterator::hash_సంకేతం() స్థిరరాశి {
     int32_t   hash = 0;
-    if (fData != nullptr) {
-        hash = fData->hashCode();
+    ఒకవేళ (f_దత్తాంశం != శూన్యసూచిక) {
+        hash = f_దత్తాంశం->hash_సంకేతం();
     }
-    return hash;
+    తిరిగి hash;
 }
 
 
-void RuleBasedBreakIterator::setText(UText *ut, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య నియమం_Based_Break_Iterator::సమితి_పాఠ్యం(UText *ut, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
     fBreakCache->reset();
     fDictionaryCache->reset();
-    utext_clone(&fText, ut, false, true, &status);
+    utext_clone(&f_పాఠ్యం, ut, అబద్ధం, నిజం, &స్థితి_2);
 
     // Set up a dummy CharacterIterator to be returned if anyone
     //   calls getText().  With input from UText, there is no reasonable
@@ -419,21 +419,21 @@ void RuleBasedBreakIterator::setText(UText *ut, UErrorCode &status) {
     //   Return one over an empty string instead - this is the closest
     //   we can come to signaling a failure.
     //   (GetText() is obsolete, this failure is sort of OK)
-    fSCharIter.setText(u"", 0);
+    fSCharIter.సమితి_పాఠ్యం(u"", 0);
 
-    if (fCharIter != &fSCharIter) {
+    ఒకవేళ (fCharIter != &fSCharIter) {
         // existing fCharIter was adopted from the outside.  Delete it now.
-        delete fCharIter;
+        తొలగించు fCharIter;
     }
     fCharIter = &fSCharIter;
 
-    this->first();
+    ఇది->first();
 }
 
 
-UText* RuleBasedBreakIterator::getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) const {
-    UText *result = utext_clone(fillIn, &fText, false, true, &status);
-    return result;
+UText* నియమం_Based_Break_Iterator::getUText(UText* fill_లోపల U_LIFETIME_BOUND, UError_సంకేతం& స్థితి_2) స్థిరరాశి {
+    UText *ఫలితం = utext_clone(fill_లోపల, &f_పాఠ్యం, అబద్ధం, నిజం, &స్థితి_2);
+    తిరిగి ఫలితం;
 }
 
 
@@ -445,8 +445,8 @@ UText* RuleBasedBreakIterator::getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCo
  * Return a CharacterIterator over the text being analyzed.
  */
 CharacterIterator&
-RuleBasedBreakIterator::getText() const U_LIFETIME_BOUND {
-    return *fCharIter;
+నియమం_Based_Break_Iterator::get_పాఠ్యం() స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి *fCharIter;
 }
 
 /**
@@ -454,26 +454,26 @@ RuleBasedBreakIterator::getText() const U_LIFETIME_BOUND {
  * the current iteration position to the beginning of the text.
  * @param newText An iterator over the text to analyze.
  */
-void
-RuleBasedBreakIterator::adoptText(CharacterIterator* newText) {
+శూన్య
+నియమం_Based_Break_Iterator::adopt_పాఠ్యం(CharacterIterator* new_పాఠ్యం) {
     // If we are holding a CharacterIterator adopted from a
     //   previous call to this function, delete it now.
-    if (fCharIter != &fSCharIter) {
-        delete fCharIter;
+    ఒకవేళ (fCharIter != &fSCharIter) {
+        తొలగించు fCharIter;
     }
 
-    fCharIter = newText;
-    UErrorCode status = U_ZERO_ERROR;
+    fCharIter = new_పాఠ్యం;
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
     fBreakCache->reset();
     fDictionaryCache->reset();
-    if (newText==nullptr || newText->startIndex() != 0) {
+    ఒకవేళ (new_పాఠ్యం==శూన్యసూచిక || new_పాఠ్యం->ప్రారంభం_సూచీ() != 0) {
         // startIndex !=0 wants to be an error, but there's no way to report it.
         // Make the iterator text be an empty string.
-        utext_openUChars(&fText, nullptr, 0, &status);
-    } else {
-        utext_openCharacterIterator(&fText, newText, &status);
+        utext_openUChars(&f_పాఠ్యం, శూన్యసూచిక, 0, &స్థితి_2);
+    } లేకపోతే {
+        utext_openCharacterIterator(&f_పాఠ్యం, new_పాఠ్యం, &స్థితి_2);
     }
-    this->first();
+    ఇది->first();
 }
 
 /**
@@ -481,26 +481,26 @@ RuleBasedBreakIterator::adoptText(CharacterIterator* newText) {
  * the current iteration position to the beginning of the text.
  * @param newText An iterator over the text to analyze.
  */
-void
-RuleBasedBreakIterator::setText(const UnicodeString& newText) {
-    UErrorCode status = U_ZERO_ERROR;
+శూన్య
+నియమం_Based_Break_Iterator::సమితి_పాఠ్యం(స్థిరరాశి UnicodeString& new_పాఠ్యం) {
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
     fBreakCache->reset();
     fDictionaryCache->reset();
-    utext_openConstUnicodeString(&fText, &newText, &status);
+    utext_openConstUnicodeString(&f_పాఠ్యం, &new_పాఠ్యం, &స్థితి_2);
 
     // Set up a character iterator on the string.
     //   Needed in case someone calls getText().
     //  Can not, unfortunately, do this lazily on the (probably never)
     //  call to getText(), because getText is const.
-    fSCharIter.setText(newText.getBuffer(), newText.length());
+    fSCharIter.సమితి_పాఠ్యం(new_పాఠ్యం.get_బఫరు(), new_పాఠ్యం.length());
 
-    if (fCharIter != &fSCharIter) {
+    ఒకవేళ (fCharIter != &fSCharIter) {
         // old fCharIter was adopted from the outside.  Delete it.
-        delete fCharIter;
+        తొలగించు fCharIter;
     }
     fCharIter = &fSCharIter;
 
-    this->first();
+    ఇది->first();
 }
 
 
@@ -510,30 +510,30 @@ RuleBasedBreakIterator::setText(const UnicodeString& newText) {
  *  Intended for use with text data originating in Java (garbage collected) environments
  *  where the data may be moved in memory at arbitrary times.
  */
-RuleBasedBreakIterator&
-RuleBasedBreakIterator::refreshInputText(UText* input, UErrorCode& status) U_LIFETIME_BOUND {
-    if (U_FAILURE(status)) {
-        return *this;
+నియమం_Based_Break_Iterator&
+నియమం_Based_Break_Iterator::refresh_ఆదానం_పాఠ్యం(UText* input, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి *ఇది;
     }
-    if (input == nullptr) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    ఒకవేళ (input == శూన్యసూచిక) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి *ఇది;
     }
-    int64_t pos = utext_getNativeIndex(&fText);
+    int64_t pos = utext_get_Native_సూచీ(&f_పాఠ్యం);
     //  Shallow read-only clone of the new UText into the existing input UText
-    utext_clone(&fText, input, false, true, &status);
-    if (U_FAILURE(status)) {
-        return *this;
+    utext_clone(&f_పాఠ్యం, input, అబద్ధం, నిజం, &స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి *ఇది;
     }
-    utext_setNativeIndex(&fText, pos);
-    if (utext_getNativeIndex(&fText) != pos) {
+    utext_సమితి_Native_సూచీ(&f_పాఠ్యం, pos);
+    ఒకవేళ (utext_get_Native_సూచీ(&f_పాఠ్యం) != pos) {
         // Sanity check.  The new input utext is supposed to have the exact same
         // contents as the old.  If we can't set to the same position, it doesn't.
         // The contents underlying the old utext might be invalid at this point,
         // so it's not safe to check directly.
-        status = U_ILLEGAL_ARGUMENT_ERROR;
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 
@@ -541,27 +541,27 @@ RuleBasedBreakIterator::refreshInputText(UText* input, UErrorCode& status) U_LIF
  * Sets the current iteration position to the beginning of the text, position zero.
  * @return The new iterator position, which is zero.
  */
-int32_t RuleBasedBreakIterator::first() {
-    UErrorCode status = U_ZERO_ERROR;
-    if (!fBreakCache->seek(0)) {
-        fBreakCache->populateNear(0, status);
+int32_t నియమం_Based_Break_Iterator::first() {
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    ఒకవేళ (!fBreakCache->seek(0)) {
+        fBreakCache->populateNear(0, స్థితి_2);
     }
     fBreakCache->current();
     U_ASSERT(fPosition == 0);
-    return 0;
+    తిరిగి 0;
 }
 
 /**
  * Sets the current iteration position to the end of the text.
  * @return The text's past-the-end offset.
  */
-int32_t RuleBasedBreakIterator::last() {
-    int32_t endPos = static_cast<int32_t>(utext_nativeLength(&fText));
-    UBool endShouldBeBoundary = isBoundary(endPos);      // Has side effect of setting iterator position.
-    (void)endShouldBeBoundary;
-    U_ASSERT(endShouldBeBoundary);
-    U_ASSERT(fPosition == endPos);
-    return endPos;
+int32_t నియమం_Based_Break_Iterator::చివరి() {
+    int32_t చివర_Pos = static_cast<int32_t>(utext_native_నిడివి(&f_పాఠ్యం));
+    UBool చివర_Should_Be_Boundary = isBoundary(చివర_Pos);      // Has side effect of setting iterator position.
+    (శూన్య)చివర_Should_Be_Boundary;
+    U_ASSERT(చివర_Should_Be_Boundary);
+    U_ASSERT(fPosition == చివర_Pos);
+    తిరిగి చివర_Pos;
 }
 
 /**
@@ -573,29 +573,29 @@ int32_t RuleBasedBreakIterator::last() {
  * @return The character offset of the boundary position n boundaries away from
  * the current one.
  */
-int32_t RuleBasedBreakIterator::next(int32_t n) {
-    int32_t result = 0;
-    if (n > 0) {
-        for (; n > 0 && result != UBRK_DONE; --n) {
-            result = next();
+int32_t నియమం_Based_Break_Iterator::next(int32_t n) {
+    int32_t ఫలితం = 0;
+    ఒకవేళ (n > 0) {
+        కొరకు (; n > 0 && ఫలితం != UBRK_పూర్తి; --n) {
+            ఫలితం = next();
         }
-    } else if (n < 0) {
-        for (; n < 0 && result != UBRK_DONE; ++n) {
-            result = previous();
+    } లేకపోతే ఒకవేళ (n < 0) {
+        కొరకు (; n < 0 && ఫలితం != UBRK_పూర్తి; ++n) {
+            ఫలితం = మునుపటి();
         }
-    } else {
-        result = current();
+    } లేకపోతే {
+        ఫలితం = current();
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 /**
  * Advances the iterator to the next boundary position.
  * @return The position of the first boundary after this one.
  */
-int32_t RuleBasedBreakIterator::next() {
+int32_t నియమం_Based_Break_Iterator::next() {
     fBreakCache->next();
-    return fDone ? UBRK_DONE : fPosition;
+    తిరిగి f_పూర్తి ? UBRK_పూర్తి : fPosition;
 }
 
 /**
@@ -606,10 +606,10 @@ int32_t RuleBasedBreakIterator::next() {
  *
  * @return The position of the boundary position immediately preceding the starting position.
  */
-int32_t RuleBasedBreakIterator::previous() {
-    UErrorCode status = U_ZERO_ERROR;
-    fBreakCache->previous(status);
-    return fDone ? UBRK_DONE : fPosition;
+int32_t నియమం_Based_Break_Iterator::మునుపటి() {
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    fBreakCache->మునుపటి(స్థితి_2);
+    తిరిగి f_పూర్తి ? UBRK_పూర్తి : fPosition;
 }
 
 /**
@@ -618,21 +618,21 @@ int32_t RuleBasedBreakIterator::previous() {
  * @param startPos The position from which to begin searching for a break position.
  * @return The position of the first break after the current position.
  */
-int32_t RuleBasedBreakIterator::following(int32_t startPos) {
+int32_t నియమం_Based_Break_Iterator::following(int32_t ప్రారంభం_Pos) {
     // if the supplied position is before the beginning, return the
     // text's starting offset
-    if (startPos < 0) {
-        return first();
+    ఒకవేళ (ప్రారంభం_Pos < 0) {
+        తిరిగి first();
     }
 
     // Move requested offset to a code point start. It might be on a trail surrogate,
     // or on a trail byte if the input is UTF-8. Or it may be beyond the end of the text.
-    utext_setNativeIndex(&fText, startPos);
-    startPos = static_cast<int32_t>(utext_getNativeIndex(&fText));
+    utext_సమితి_Native_సూచీ(&f_పాఠ్యం, ప్రారంభం_Pos);
+    ప్రారంభం_Pos = static_cast<int32_t>(utext_get_Native_సూచీ(&f_పాఠ్యం));
 
-    UErrorCode status = U_ZERO_ERROR;
-    fBreakCache->following(startPos, status);
-    return fDone ? UBRK_DONE : fPosition;
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    fBreakCache->following(ప్రారంభం_Pos, స్థితి_2);
+    తిరిగి f_పూర్తి ? UBRK_పూర్తి : fPosition;
 }
 
 /**
@@ -641,20 +641,20 @@ int32_t RuleBasedBreakIterator::following(int32_t startPos) {
  * @param offset The position to begin searching for a break from.
  * @return The position of the last boundary before the starting position.
  */
-int32_t RuleBasedBreakIterator::preceding(int32_t offset) {
-    if (offset > utext_nativeLength(&fText)) {
-        return last();
+int32_t నియమం_Based_Break_Iterator::preceding(int32_t స్థానభ్రంశం) {
+    ఒకవేళ (స్థానభ్రంశం > utext_native_నిడివి(&f_పాఠ్యం)) {
+        తిరిగి చివరి();
     }
 
     // Move requested offset to a code point start. It might be on a trail surrogate,
     // or on a trail byte if the input is UTF-8.
 
-    utext_setNativeIndex(&fText, offset);
-    int32_t adjustedOffset = static_cast<int32_t>(utext_getNativeIndex(&fText));
+    utext_సమితి_Native_సూచీ(&f_పాఠ్యం, స్థానభ్రంశం);
+    int32_t adjusted_స్థానభ్రంశం = static_cast<int32_t>(utext_get_Native_సూచీ(&f_పాఠ్యం));
 
-    UErrorCode status = U_ZERO_ERROR;
-    fBreakCache->preceding(adjustedOffset, status);
-    return fDone ? UBRK_DONE : fPosition;
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    fBreakCache->preceding(adjusted_స్థానభ్రంశం, స్థితి_2);
+    తిరిగి f_పూర్తి ? UBRK_పూర్తి : fPosition;
 }
 
 /**
@@ -665,37 +665,37 @@ int32_t RuleBasedBreakIterator::preceding(int32_t offset) {
  * @param offset the offset to check.
  * @return True if "offset" is a boundary position.
  */
-UBool RuleBasedBreakIterator::isBoundary(int32_t offset) {
+UBool నియమం_Based_Break_Iterator::isBoundary(int32_t స్థానభ్రంశం) {
     // out-of-range indexes are never boundary positions
-    if (offset < 0) {
+    ఒకవేళ (స్థానభ్రంశం < 0) {
         first();       // For side effects on current position, tag values.
-        return false;
+        తిరిగి అబద్ధం;
     }
 
     // Adjust offset to be on a code point boundary and not beyond the end of the text.
     // Note that isBoundary() is always false for offsets that are not on code point boundaries.
     // But we still need the side effect of leaving iteration at the following boundary.
 
-    utext_setNativeIndex(&fText, offset);
-    int32_t adjustedOffset = static_cast<int32_t>(utext_getNativeIndex(&fText));
+    utext_సమితి_Native_సూచీ(&f_పాఠ్యం, స్థానభ్రంశం);
+    int32_t adjusted_స్థానభ్రంశం = static_cast<int32_t>(utext_get_Native_సూచీ(&f_పాఠ్యం));
 
-    bool result = false;
-    UErrorCode status = U_ZERO_ERROR;
-    if (fBreakCache->seek(adjustedOffset) || fBreakCache->populateNear(adjustedOffset, status)) {
-        result = (fBreakCache->current() == offset);
+    తార్కిక ఫలితం = అబద్ధం;
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    ఒకవేళ (fBreakCache->seek(adjusted_స్థానభ్రంశం) || fBreakCache->populateNear(adjusted_స్థానభ్రంశం, స్థితి_2)) {
+        ఫలితం = (fBreakCache->current() == స్థానభ్రంశం);
     }
 
-    if (result && adjustedOffset < offset && utext_char32At(&fText, offset) == U_SENTINEL) {
+    ఒకవేళ (ఫలితం && adjusted_స్థానభ్రంశం < స్థానభ్రంశం && utext_char32At(&f_పాఠ్యం, స్థానభ్రంశం) == U_SENTINEL) {
         // Original offset is beyond the end of the text. Return false, it's not a boundary,
         // but the iteration position remains set to the end of the text, which is a boundary.
-        return false;
+        తిరిగి అబద్ధం;
     }
-    if (!result) {
+    ఒకవేళ (!ఫలితం) {
         // Not on a boundary. isBoundary() must leave iterator on the following boundary.
         // Cache->seek(), above, left us on the preceding boundary, so advance one.
         next();
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 
@@ -703,8 +703,8 @@ UBool RuleBasedBreakIterator::isBoundary(int32_t offset) {
  * Returns the current iteration position.
  * @return The current iteration position.
  */
-int32_t RuleBasedBreakIterator::current() const {
-    return fPosition;
+int32_t నియమం_Based_Break_Iterator::current() స్థిరరాశి {
+    తిరిగి fPosition;
 }
 
 
@@ -717,10 +717,10 @@ int32_t RuleBasedBreakIterator::current() const {
 //                 of user text.  A variable with this enum type keeps track of where we
 //                 are.  The state machine only fetches user input while in the RUN mode.
 //
-enum RBBIRunMode {
-    RBBI_START,     // state machine processing is before first char of input
-    RBBI_RUN,       // state machine processing is in the user text
-    RBBI_END        // state machine processing is after end of user text.
+గణన RBBIRun_బహుళకం {
+    RBBI_ప్రారంభం,     // state machine processing is before first char of input
+    RBBI_నిరంతరం,       // state machine processing is in the user text
+    RBBI_చివర        // state machine processing is after end of user text.
 };
 
 
@@ -728,46 +728,46 @@ enum RBBIRunMode {
 // instantiation, based on whether an 8 or 16 bit table is required.
 //
 // These Trie access functions will be inlined within the handleNext()/Previous() instantions.
-static inline uint16_t TrieFunc8(const UCPTrie *trie, UChar32 c) {
-    return UCPTRIE_FAST_GET(trie, UCPTRIE_8, c);
+స్థిర అంతఃవరుస uint16_t TrieFunc8(స్థిరరాశి UCPTrie *trie, UChar32 c) {
+    తిరిగి UCPTRIE_FAST_GET(trie, UCPTRIE_8, c);
 }
 
-static inline uint16_t TrieFunc16(const UCPTrie *trie, UChar32 c) {
-    return UCPTRIE_FAST_GET(trie, UCPTRIE_16, c);
+స్థిర అంతఃవరుస uint16_t TrieFunc16(స్థిరరాశి UCPTrie *trie, UChar32 c) {
+    తిరిగి UCPTRIE_FAST_GET(trie, UCPTRIE_16, c);
 }
 
-int32_t RuleBasedBreakIterator::handleNext() {
-    const RBBIStateTable *statetable = fData->fForwardTable;
-    bool use8BitsTrie = ucptrie_getValueWidth(fData->fTrie) == UCPTRIE_VALUE_BITS_8;
-    if (statetable->fFlags & RBBI_8BITS_ROWS) {
-        if (use8BitsTrie) {
-            return handleNext<RBBIStateTableRow8, TrieFunc8>();
-        } else {
-            return handleNext<RBBIStateTableRow8, TrieFunc16>();
+int32_t నియమం_Based_Break_Iterator::handle_తదుపరి() {
+    స్థిరరాశి RBBIState_పట్టిక *statetable = f_దత్తాంశం->f_Forward_పట్టిక;
+    తార్కిక use8_బిట్లు_Trie = ucptrie_get_విలువ_వెడల్పు(f_దత్తాంశం->fTrie) == UCPTRIE_విలువ_బిట్లు_8;
+    ఒకవేళ (statetable->fFlags & RBBI_8_బిట్లు_అడ్డువరుసలు) {
+        ఒకవేళ (use8_బిట్లు_Trie) {
+            తిరిగి handle_తదుపరి<RBBIState_పట్టిక_Row8, TrieFunc8>();
+        } లేకపోతే {
+            తిరిగి handle_తదుపరి<RBBIState_పట్టిక_Row8, TrieFunc16>();
         }
-    } else {
-        if (use8BitsTrie) {
-            return handleNext<RBBIStateTableRow16, TrieFunc8>();
-        } else {
-            return handleNext<RBBIStateTableRow16, TrieFunc16>();
+    } లేకపోతే {
+        ఒకవేళ (use8_బిట్లు_Trie) {
+            తిరిగి handle_తదుపరి<RBBIState_పట్టిక_Row16, TrieFunc8>();
+        } లేకపోతే {
+            తిరిగి handle_తదుపరి<RBBIState_పట్టిక_Row16, TrieFunc16>();
         }
     }
 }
 
-int32_t RuleBasedBreakIterator::handleSafePrevious(int32_t fromPosition) {
-    const RBBIStateTable *statetable = fData->fReverseTable;
-    bool use8BitsTrie = ucptrie_getValueWidth(fData->fTrie) == UCPTRIE_VALUE_BITS_8;
-    if (statetable->fFlags & RBBI_8BITS_ROWS) {
-        if (use8BitsTrie) {
-            return handleSafePrevious<RBBIStateTableRow8, TrieFunc8>(fromPosition);
-        } else {
-            return handleSafePrevious<RBBIStateTableRow8, TrieFunc16>(fromPosition);
+int32_t నియమం_Based_Break_Iterator::handle_సురక్షిత_మునుపటి(int32_t fromPosition) {
+    స్థిరరాశి RBBIState_పట్టిక *statetable = f_దత్తాంశం->f_తిరగేయి_పట్టిక;
+    తార్కిక use8_బిట్లు_Trie = ucptrie_get_విలువ_వెడల్పు(f_దత్తాంశం->fTrie) == UCPTRIE_విలువ_బిట్లు_8;
+    ఒకవేళ (statetable->fFlags & RBBI_8_బిట్లు_అడ్డువరుసలు) {
+        ఒకవేళ (use8_బిట్లు_Trie) {
+            తిరిగి handle_సురక్షిత_మునుపటి<RBBIState_పట్టిక_Row8, TrieFunc8>(fromPosition);
+        } లేకపోతే {
+            తిరిగి handle_సురక్షిత_మునుపటి<RBBIState_పట్టిక_Row8, TrieFunc16>(fromPosition);
         }
-    } else {
-        if (use8BitsTrie) {
-            return handleSafePrevious<RBBIStateTableRow16, TrieFunc8>(fromPosition);
-        } else {
-            return handleSafePrevious<RBBIStateTableRow16, TrieFunc16>(fromPosition);
+    } లేకపోతే {
+        ఒకవేళ (use8_బిట్లు_Trie) {
+            తిరిగి handle_సురక్షిత_మునుపటి<RBBIState_పట్టిక_Row16, TrieFunc8>(fromPosition);
+        } లేకపోతే {
+            తిరిగి handle_సురక్షిత_మునుపటి<RBBIState_పట్టిక_Row16, TrieFunc16>(fromPosition);
         }
     }
 }
@@ -779,65 +779,65 @@ int32_t RuleBasedBreakIterator::handleSafePrevious(int32_t fromPosition) {
 //     Run the state machine to find a boundary
 //
 //-----------------------------------------------------------------------------------
-template <typename RowType, RuleBasedBreakIterator::PTrieFunc trieFunc>
-int32_t RuleBasedBreakIterator::handleNext() {
+మూస <రకం_పేరు అడ్డువరుస_Type, నియమం_Based_Break_Iterator::PTrieFunc trieFunc>
+int32_t నియమం_Based_Break_Iterator::handle_తదుపరి() {
     int32_t             state;
     uint16_t            category        = 0;
-    RBBIRunMode         mode;
+    RBBIRun_బహుళకం         బహుళకం;
 
-    RowType             *row;
+    అడ్డువరుస_Type             *అడ్డువరుస;
     UChar32             c;
-    int32_t             result             = 0;
+    int32_t             ఫలితం             = 0;
     int32_t             initialPosition    = 0;
-    const RBBIStateTable *statetable       = fData->fForwardTable;
-    const char         *tableData          = statetable->fTableData;
-    uint32_t            tableRowLen        = statetable->fRowLen;
-    uint32_t            dictStart          = statetable->fDictCategoriesStart;
-    #ifdef RBBI_DEBUG
-        if (gTrace) {
+    స్థిరరాశి RBBIState_పట్టిక *statetable       = f_దత్తాంశం->f_Forward_పట్టిక;
+    స్థిరరాశి అక్షరం         *పట్టిక_దత్తాంశం          = statetable->f_పట్టిక_దత్తాంశం;
+    uint32_t            పట్టిక_అడ్డువరుస_Len        = statetable->f_అడ్డువరుస_Len;
+    uint32_t            dict_ప్రారంభం          = statetable->f_Dict_Categories_ప్రారంభం;
+    #నిర్వచితమైతే RBBI_DEBUG
+        ఒకవేళ (gTrace) {
             RBBIDebugPuts("Handle Next   pos   char  state category");
         }
-    #endif
+    #అయితే_ముగింపు
 
     // handleNext always sets the break tag value.
     // Set the default for it.
-    fRuleStatusIndex = 0;
+    f_నియమం_స్థితి_సూచీ = 0;
 
-    fDictionaryCharCount = 0;
+    f_Dictionary_Char_లెక్క = 0;
 
     // if we're already at the end of the text, return DONE.
     initialPosition = fPosition;
-    UTEXT_SETNATIVEINDEX(&fText, initialPosition);
-    result          = initialPosition;
-    c               = UTEXT_NEXT32(&fText);
-    if (c==U_SENTINEL) {
-        fDone = true;
-        return UBRK_DONE;
+    UTEXT_SETNATIVEINDEX(&f_పాఠ్యం, initialPosition);
+    ఫలితం          = initialPosition;
+    c               = UTEXT_NEXT32(&f_పాఠ్యం);
+    ఒకవేళ (c==U_SENTINEL) {
+        f_పూర్తి = నిజం;
+        తిరిగి UBRK_పూర్తి;
     }
 
     //  Set the initial state for the state machine
-    state = START_STATE;
-    row = (RowType *)
+    state = ప్రారంభం_STATE;
+    అడ్డువరుస = (అడ్డువరుస_Type *)
             //(statetable->fTableData + (statetable->fRowLen * state));
-            (tableData + tableRowLen * state);
+            (పట్టిక_దత్తాంశం + పట్టిక_అడ్డువరుస_Len * state);
 
 
-    mode     = RBBI_RUN;
+    బహుళకం     = RBBI_నిరంతరం;
 
 
     // loop until we reach the end of the text or transition to state 0
     //
-    for (;;) {
-        if (c == U_SENTINEL) {
+    కొరకు (;;) {
+        ఒకవేళ (c == U_SENTINEL) {
             // Reached end of input string.
-            if (mode == RBBI_END) {
+            ఒకవేళ (బహుళకం == RBBI_చివర) {
                 // We have already run the loop one last time with the
                 //   character set to the psueudo {eof} value.  Now it is time
                 //   to unconditionally bail out.
-                break;
+                ఆపు;
             }
             // Run the loop one last time with the fake end-of-input character category.
-            mode = RBBI_END;
+            బహుళకం = RBBI_చివర;
             category = 1;
         }
 
@@ -846,51 +846,51 @@ int32_t RuleBasedBreakIterator::handleNext() {
         //      we are preset for doing the beginning or end of input, and
         //      that we shouldn't get a category from an actual text input character.
         //
-        if (mode == RBBI_RUN) {
+        ఒకవేళ (బహుళకం == RBBI_నిరంతరం) {
             // look up the current character's character category, which tells us
             // which column in the state table to look at.
-            category = trieFunc(fData->fTrie, c);
-            fDictionaryCharCount += (category >= dictStart);
+            category = trieFunc(f_దత్తాంశం->fTrie, c);
+            f_Dictionary_Char_లెక్క += (category >= dict_ప్రారంభం);
         }
 
-       #ifdef RBBI_DEBUG
-            if (gTrace) {
-                RBBIDebugPrintf("             %4" PRId64 "   ", utext_getNativeIndex(&fText));
-                if (0x20<=c && c<0x7f) {
+       #నిర్వచితమైతే RBBI_DEBUG
+            ఒకవేళ (gTrace) {
+                RBBIDebugPrintf("             %4" PRId64 "   ", utext_get_Native_సూచీ(&f_పాఠ్యం));
+                ఒకవేళ (0x20<=c && c<0x7f) {
                     RBBIDebugPrintf("\"%c\"  ", c);
-                } else {
+                } లేకపోతే {
                     RBBIDebugPrintf("%5x  ", c);
                 }
                 RBBIDebugPrintf("%3d  %3d\n", state, category);
             }
-        #endif
+        #అయితే_ముగింపు
 
         // State Transition - move machine to its next state
         //
 
         // fNextState is a variable-length array.
-        U_ASSERT(category<fData->fHeader->fCatCount);
-        state = row->fNextState[category];  /*Not accessing beyond memory*/
-        row = (RowType *)
+        U_ASSERT(category<f_దత్తాంశం->f_శీర్షిక->f_Cat_లెక్క);
+        state = అడ్డువరుస->f_తదుపరి_State[category];  /*Not accessing beyond memory*/
+        అడ్డువరుస = (అడ్డువరుస_Type *)
             // (statetable->fTableData + (statetable->fRowLen * state));
-            (tableData + tableRowLen * state);
+            (పట్టిక_దత్తాంశం + పట్టిక_అడ్డువరుస_Len * state);
 
 
-        uint16_t accepting = row->fAccepting;
-        if (accepting == ACCEPTING_UNCONDITIONAL) {
+        uint16_t accepting = అడ్డువరుస->fAccepting;
+        ఒకవేళ (accepting == ACCEPTING_UNCONDITIONAL) {
             // Match found, common case.
-            if (mode != RBBI_START) {
-                result = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(&fText));
+            ఒకవేళ (బహుళకం != RBBI_ప్రారంభం) {
+                ఫలితం = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(&f_పాఠ్యం));
             }
-            fRuleStatusIndex = row->fTagsIdx;   // Remember the break status (tag) values.
-        } else if (accepting > ACCEPTING_UNCONDITIONAL) {
+            f_నియమం_స్థితి_సూచీ = అడ్డువరుస->f_ట్యాగులు_Idx;   // Remember the break status (tag) values.
+        } లేకపోతే ఒకవేళ (accepting > ACCEPTING_UNCONDITIONAL) {
             // Lookahead match is completed.
-            U_ASSERT(accepting < fData->fForwardTable->fLookAheadResultsSize);
-            int32_t lookaheadResult = fLookAheadMatches[accepting];
-            if (lookaheadResult >= 0) {
-                fRuleStatusIndex = row->fTagsIdx;
-                fPosition = lookaheadResult;
-                return lookaheadResult;
+            U_ASSERT(accepting < f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత);
+            int32_t lookahead_ఫలితం = fLookAheadMatches[accepting];
+            ఒకవేళ (lookahead_ఫలితం >= 0) {
+                f_నియమం_స్థితి_సూచీ = అడ్డువరుస->f_ట్యాగులు_Idx;
+                fPosition = lookahead_ఫలితం;
+                తిరిగి lookahead_ఫలితం;
             }
         }
 
@@ -900,30 +900,30 @@ int32_t RuleBasedBreakIterator::handleNext() {
         //       This would enable hard-break rules with no following context.
         //       But there are line break test failures when trying this. Investigate.
         //       Issue ICU-20837
-        uint16_t rule = row->fLookAhead;
-        U_ASSERT(rule == 0 || rule > ACCEPTING_UNCONDITIONAL);
-        U_ASSERT(rule == 0 || rule < fData->fForwardTable->fLookAheadResultsSize);
-        if (rule > ACCEPTING_UNCONDITIONAL) {
-            int32_t pos = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(&fText));
-            fLookAheadMatches[rule] = pos;
+        uint16_t నియమం = అడ్డువరుస->fLookAhead;
+        U_ASSERT(నియమం == 0 || నియమం > ACCEPTING_UNCONDITIONAL);
+        U_ASSERT(నియమం == 0 || నియమం < f_దత్తాంశం->f_Forward_పట్టిక->f_Look_Ahead_Results_కొలత);
+        ఒకవేళ (నియమం > ACCEPTING_UNCONDITIONAL) {
+            int32_t pos = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(&f_పాఠ్యం));
+            fLookAheadMatches[నియమం] = pos;
         }
 
-        if (state == STOP_STATE) {
+        ఒకవేళ (state == STOP_STATE) {
             // This is the normal exit from the lookup state machine.
             // We have advanced through the string until it is certain that no
             //   longer match is possible, no matter what characters follow.
-            break;
+            ఆపు;
         }
 
         // Advance to the next character.
         // If this is a beginning-of-input loop iteration, don't advance
         //    the input position.  The next iteration will be processing the
         //    first real input character.
-        if (mode == RBBI_RUN) {
-            c = UTEXT_NEXT32(&fText);
-        } else {
-            if (mode == RBBI_START) {
-                mode = RBBI_RUN;
+        ఒకవేళ (బహుళకం == RBBI_నిరంతరం) {
+            c = UTEXT_NEXT32(&f_పాఠ్యం);
+        } లేకపోతే {
+            ఒకవేళ (బహుళకం == RBBI_ప్రారంభం) {
+                బహుళకం = RBBI_నిరంతరం;
             }
         }
     }
@@ -933,21 +933,21 @@ int32_t RuleBasedBreakIterator::handleNext() {
     // If the iterator failed to advance in the match engine, force it ahead by one.
     //   (This really indicates a defect in the break rules.  They should always match
     //    at least one character.)
-    if (result == initialPosition) {
-        utext_setNativeIndex(&fText, initialPosition);
-        utext_next32(&fText);
-        result = static_cast<int32_t>(utext_getNativeIndex(&fText));
-        fRuleStatusIndex = 0;
+    ఒకవేళ (ఫలితం == initialPosition) {
+        utext_సమితి_Native_సూచీ(&f_పాఠ్యం, initialPosition);
+        utext_next32(&f_పాఠ్యం);
+        ఫలితం = static_cast<int32_t>(utext_get_Native_సూచీ(&f_పాఠ్యం));
+        f_నియమం_స్థితి_సూచీ = 0;
     }
 
     // Leave the iterator at our result position.
-    fPosition = result;
-    #ifdef RBBI_DEBUG
-        if (gTrace) {
-            RBBIDebugPrintf("result = %d\n\n", result);
+    fPosition = ఫలితం;
+    #నిర్వచితమైతే RBBI_DEBUG
+        ఒకవేళ (gTrace) {
+            RBBIDebugPrintf("result = %d\n\n", ఫలితం);
         }
-    #endif
-    return result;
+    #అయితే_ముగింపు
+    తిరిగి ఫలితం;
 }
 
 
@@ -960,79 +960,79 @@ int32_t RuleBasedBreakIterator::handleNext() {
 //      because the safe table does not require as many options.
 //
 //-----------------------------------------------------------------------------------
-template <typename RowType, RuleBasedBreakIterator::PTrieFunc trieFunc>
-int32_t RuleBasedBreakIterator::handleSafePrevious(int32_t fromPosition) {
+మూస <రకం_పేరు అడ్డువరుస_Type, నియమం_Based_Break_Iterator::PTrieFunc trieFunc>
+int32_t నియమం_Based_Break_Iterator::handle_సురక్షిత_మునుపటి(int32_t fromPosition) {
 
     int32_t             state;
     uint16_t            category        = 0;
-    RowType            *row;
+    అడ్డువరుస_Type            *అడ్డువరుస;
     UChar32             c;
-    int32_t             result          = 0;
+    int32_t             ఫలితం          = 0;
 
-    const RBBIStateTable *stateTable = fData->fReverseTable;
-    UTEXT_SETNATIVEINDEX(&fText, fromPosition);
-    #ifdef RBBI_DEBUG
-        if (gTrace) {
+    స్థిరరాశి RBBIState_పట్టిక *state_పట్టిక = f_దత్తాంశం->f_తిరగేయి_పట్టిక;
+    UTEXT_SETNATIVEINDEX(&f_పాఠ్యం, fromPosition);
+    #నిర్వచితమైతే RBBI_DEBUG
+        ఒకవేళ (gTrace) {
             RBBIDebugPuts("Handle Previous   pos   char  state category");
         }
-    #endif
+    #అయితే_ముగింపు
 
     // if we're already at the start of the text, return DONE.
-    if (fData == nullptr || UTEXT_GETNATIVEINDEX(&fText)==0) {
-        return BreakIterator::DONE;
+    ఒకవేళ (f_దత్తాంశం == శూన్యసూచిక || UTEXT_GETNATIVEINDEX(&f_పాఠ్యం)==0) {
+        తిరిగి BreakIterator::పూర్తి_2;
     }
 
     //  Set the initial state for the state machine
-    c = UTEXT_PREVIOUS32(&fText);
-    state = START_STATE;
-    row = (RowType *)
-            (stateTable->fTableData + (stateTable->fRowLen * state));
+    c = UTEXT_PREVIOUS32(&f_పాఠ్యం);
+    state = ప్రారంభం_STATE;
+    అడ్డువరుస = (అడ్డువరుస_Type *)
+            (state_పట్టిక->f_పట్టిక_దత్తాంశం + (state_పట్టిక->f_అడ్డువరుస_Len * state));
 
     // loop until we reach the start of the text or transition to state 0
     //
-    for (; c != U_SENTINEL; c = UTEXT_PREVIOUS32(&fText)) {
+    కొరకు (; c != U_SENTINEL; c = UTEXT_PREVIOUS32(&f_పాఠ్యం)) {
 
         // look up the current character's character category, which tells us
         // which column in the state table to look at.
         //
         //  Off the dictionary flag bit. For reverse iteration it is not used.
-        category = trieFunc(fData->fTrie, c);
+        category = trieFunc(f_దత్తాంశం->fTrie, c);
 
-        #ifdef RBBI_DEBUG
-            if (gTrace) {
-                RBBIDebugPrintf("             %4d   ", (int32_t)utext_getNativeIndex(&fText));
-                if (0x20<=c && c<0x7f) {
+        #నిర్వచితమైతే RBBI_DEBUG
+            ఒకవేళ (gTrace) {
+                RBBIDebugPrintf("             %4d   ", (int32_t)utext_get_Native_సూచీ(&f_పాఠ్యం));
+                ఒకవేళ (0x20<=c && c<0x7f) {
                     RBBIDebugPrintf("\"%c\"  ", c);
-                } else {
+                } లేకపోతే {
                     RBBIDebugPrintf("%5x  ", c);
                 }
                 RBBIDebugPrintf("%3d  %3d\n", state, category);
             }
-        #endif
+        #అయితే_ముగింపు
 
         // State Transition - move machine to its next state
         //
         // fNextState is a variable-length array.
-        U_ASSERT(category<fData->fHeader->fCatCount);
-        state = row->fNextState[category];  /*Not accessing beyond memory*/
-        row = (RowType *)
-            (stateTable->fTableData + (stateTable->fRowLen * state));
+        U_ASSERT(category<f_దత్తాంశం->f_శీర్షిక->f_Cat_లెక్క);
+        state = అడ్డువరుస->f_తదుపరి_State[category];  /*Not accessing beyond memory*/
+        అడ్డువరుస = (అడ్డువరుస_Type *)
+            (state_పట్టిక->f_పట్టిక_దత్తాంశం + (state_పట్టిక->f_అడ్డువరుస_Len * state));
 
-        if (state == STOP_STATE) {
+        ఒకవేళ (state == STOP_STATE) {
             // This is the normal exit from the lookup state machine.
             // Transition to state zero means we have found a safe point.
-            break;
+            ఆపు;
         }
     }
 
     // The state machine is done.  Check whether it found a match...
-    result = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(&fText));
-    #ifdef RBBI_DEBUG
-        if (gTrace) {
-            RBBIDebugPrintf("result = %d\n\n", result);
+    ఫలితం = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(&f_పాఠ్యం));
+    #నిర్వచితమైతే RBBI_DEBUG
+        ఒకవేళ (gTrace) {
+            RBBIDebugPrintf("result = %d\n\n", ఫలితం);
         }
-    #endif
-    return result;
+    #అయితే_ముగింపు
+    తిరిగి ఫలితం;
 }
 
 
@@ -1045,35 +1045,35 @@ int32_t RuleBasedBreakIterator::handleSafePrevious(int32_t fromPosition) {
 //
 //-------------------------------------------------------------------------------
 
-int32_t  RuleBasedBreakIterator::getRuleStatus() const {
+int32_t  నియమం_Based_Break_Iterator::get_నియమం_స్థితి() స్థిరరాశి {
 
     // fLastRuleStatusIndex indexes to the start of the appropriate status record
     //                                                 (the number of status values.)
     //   This function returns the last (largest) of the array of status values.
-    int32_t  idx = fRuleStatusIndex + fData->fRuleStatusTable[fRuleStatusIndex];
-    int32_t  tagVal = fData->fRuleStatusTable[idx];
+    int32_t  idx = f_నియమం_స్థితి_సూచీ + f_దత్తాంశం->f_నియమం_స్థితి_పట్టిక[f_నియమం_స్థితి_సూచీ];
+    int32_t  ట్యాగ్_Val = f_దత్తాంశం->f_నియమం_స్థితి_పట్టిక[idx];
 
-    return tagVal;
+    తిరిగి ట్యాగ్_Val;
 }
 
 
-int32_t RuleBasedBreakIterator::getRuleStatusVec(
-             int32_t *fillInVec, int32_t capacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return 0;
+int32_t నియమం_Based_Break_Iterator::get_నియమం_స్థితి_Vec(
+             int32_t *fill_లోపల_Vec, int32_t capacity, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి 0;
     }
 
-    int32_t  numVals = fData->fRuleStatusTable[fRuleStatusIndex];
-    int32_t  numValsToCopy = numVals;
-    if (numVals > capacity) {
-        status = U_BUFFER_OVERFLOW_ERROR;
-        numValsToCopy = capacity;
+    int32_t  అంకె_Vals = f_దత్తాంశం->f_నియమం_స్థితి_పట్టిక[f_నియమం_స్థితి_సూచీ];
+    int32_t  అంకె_Vals_గమ్యం_Copy = అంకె_Vals;
+    ఒకవేళ (అంకె_Vals > capacity) {
+        స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+        అంకె_Vals_గమ్యం_Copy = capacity;
     }
-    int i;
-    for (i=0; i<numValsToCopy; i++) {
-        fillInVec[i] = fData->fRuleStatusTable[fRuleStatusIndex + i + 1];
+    పూర్ణాంకం i;
+    కొరకు (i=0; i<అంకె_Vals_గమ్యం_Copy; i++) {
+        fill_లోపల_Vec[i] = f_దత్తాంశం->f_నియమం_స్థితి_పట్టిక[f_నియమం_స్థితి_సూచీ + i + 1];
     }
-    return numVals;
+    తిరిగి అంకె_Vals;
 }
 
 
@@ -1085,114 +1085,114 @@ int32_t RuleBasedBreakIterator::getRuleStatusVec(
 //                         for standard iterator types.
 //
 //-------------------------------------------------------------------------------
-const uint8_t* RuleBasedBreakIterator::getBinaryRules(uint32_t& length) U_LIFETIME_BOUND {
-    const uint8_t  *retPtr = nullptr;
+స్థిరరాశి uint8_t* నియమం_Based_Break_Iterator::get_ద్విమాన_నియమాలు(uint32_t& length) U_LIFETIME_BOUND {
+    స్థిరరాశి uint8_t  *retPtr = శూన్యసూచిక;
     length = 0;
 
-    if (fData != nullptr) {
-        retPtr = reinterpret_cast<const uint8_t*>(fData->fHeader);
-        length = fData->fHeader->fLength;
+    ఒకవేళ (f_దత్తాంశం != శూన్యసూచిక) {
+        retPtr = reinterpret_cast<స్థిరరాశి uint8_t*>(f_దత్తాంశం->f_శీర్షిక);
+        length = f_దత్తాంశం->f_శీర్షిక->f_నిడివి;
     }
-    return retPtr;
+    తిరిగి retPtr;
 }
 
 
-RuleBasedBreakIterator *RuleBasedBreakIterator::createBufferClone(
-        void * /*stackBuffer*/, int32_t &bufferSize, UErrorCode &status) {
-    if (U_FAILURE(status)){
-        return nullptr;
+నియమం_Based_Break_Iterator *నియమం_Based_Break_Iterator::create_బఫరు_Clone(
+        శూన్య * /*stackBuffer*/, int32_t &బఫరు_కొలత, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)){
+        తిరిగి శూన్యసూచిక;
     }
 
-    if (bufferSize == 0) {
-        bufferSize = 1;  // preflighting for deprecated functionality
-        return nullptr;
+    ఒకవేళ (బఫరు_కొలత == 0) {
+        బఫరు_కొలత = 1;  // preflighting for deprecated functionality
+        తిరిగి శూన్యసూచిక;
     }
 
     BreakIterator *clonedBI = clone();
-    if (clonedBI == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
-        status = U_SAFECLONE_ALLOCATED_WARNING;
+    ఒకవేళ (clonedBI == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    } లేకపోతే {
+        స్థితి_2 = U_SAFECLONE_ALLOCATED_WARNING;
     }
-    return (RuleBasedBreakIterator *)clonedBI;
+    తిరిగి (నియమం_Based_Break_Iterator *)clonedBI;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 
-static icu::UStack *gLanguageBreakFactories = nullptr;
-static const icu::UnicodeString *gEmptyString = nullptr;
-static icu::UInitOnce gLanguageBreakFactoriesInitOnce {};
-static icu::UInitOnce gRBBIInitOnce {};
-static icu::ICULanguageBreakFactory *gICULanguageBreakFactory = nullptr;
+స్థిర icu::UStack *gLanguageBreakFactories = శూన్యసూచిక;
+స్థిర స్థిరరాశి icu::UnicodeString *g_ఖాళీలు_String = శూన్యసూచిక;
+స్థిర icu::UInitOnce gLanguageBreakFactoriesInitOnce {};
+స్థిర icu::UInitOnce gRBBIInitOnce {};
+స్థిర icu::ICULanguageBreakFactory *gICULanguageBreakFactory = శూన్యసూచిక;
 
 /**
  * Release all static memory held by breakiterator.
  */
 U_CDECL_BEGIN
 UBool U_CALLCONV rbbi_cleanup() {
-    delete gLanguageBreakFactories;
-    gLanguageBreakFactories = nullptr;
-    delete gEmptyString;
-    gEmptyString = nullptr;
+    తొలగించు gLanguageBreakFactories;
+    gLanguageBreakFactories = శూన్యసూచిక;
+    తొలగించు g_ఖాళీలు_String;
+    g_ఖాళీలు_String = శూన్యసూచిక;
     gLanguageBreakFactoriesInitOnce.reset();
     gRBBIInitOnce.reset();
-    return true;
+    తిరిగి నిజం;
 }
-U_CDECL_END
+U_CDECL_చివర
 
 U_CDECL_BEGIN
-static void U_CALLCONV _deleteFactory(void *obj) {
-    delete (icu::LanguageBreakFactory *) obj;
+స్థిర శూన్య U_CALLCONV _deleteFactory(శూన్య *obj) {
+    తొలగించు (icu::LanguageBreakFactory *) obj;
 }
-U_CDECL_END
+U_CDECL_చివర
 U_NAMESPACE_BEGIN
 
-static void U_CALLCONV rbbiInit() {
-    gEmptyString = new UnicodeString();
-    ucln_common_registerCleanup(UCLN_COMMON_RBBI, rbbi_cleanup);
+స్థిర శూన్య U_CALLCONV rbbiInit() {
+    g_ఖాళీలు_String = కొత్త UnicodeString();
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_RBBI, rbbi_cleanup);
 }
 
-static void U_CALLCONV initLanguageFactories(UErrorCode& status) {
-    U_ASSERT(gLanguageBreakFactories == nullptr);
-    gLanguageBreakFactories = new UStack(_deleteFactory, nullptr, status);
-    if (gLanguageBreakFactories != nullptr && U_SUCCESS(status)) {
-        LocalPointer<ICULanguageBreakFactory> factory(new ICULanguageBreakFactory(status), status);
-        if (U_SUCCESS(status)) {
+స్థిర శూన్య U_CALLCONV initLanguageFactories(UError_సంకేతం& స్థితి_2) {
+    U_ASSERT(gLanguageBreakFactories == శూన్యసూచిక);
+    gLanguageBreakFactories = కొత్త UStack(_deleteFactory, శూన్యసూచిక, స్థితి_2);
+    ఒకవేళ (gLanguageBreakFactories != శూన్యసూచిక && U_SUCCESS(స్థితి_2)) {
+        Local_సూచిక<ICULanguageBreakFactory> factory(కొత్త ICULanguageBreakFactory(స్థితి_2), స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
             gICULanguageBreakFactory = factory.orphan();
-            gLanguageBreakFactories->push(gICULanguageBreakFactory, status);
-#ifdef U_LOCAL_SERVICE_HOOK
-            LanguageBreakFactory *extra = (LanguageBreakFactory *)uprv_svc_hook("languageBreakFactory", &status);
-            if (extra != nullptr) {
-                gLanguageBreakFactories->push(extra, status);
+            gLanguageBreakFactories->push(gICULanguageBreakFactory, స్థితి_2);
+#నిర్వచితమైతే U_LOCAL_SERVICE_HOOK
+            LanguageBreakFactory *extra = (LanguageBreakFactory *)uprv_svc_hook("languageBreakFactory", &స్థితి_2);
+            ఒకవేళ (extra != శూన్యసూచిక) {
+                gLanguageBreakFactories->push(extra, స్థితి_2);
             }
-#endif
+#అయితే_ముగింపు
         }
     }
-    ucln_common_registerCleanup(UCLN_COMMON_RBBI, rbbi_cleanup);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_RBBI, rbbi_cleanup);
 }
 
-void ensureLanguageFactories(UErrorCode& status) {
-    umtx_initOnce(gLanguageBreakFactoriesInitOnce, &initLanguageFactories, status);
+శూన్య ensureLanguageFactories(UError_సంకేతం& స్థితి_2) {
+    umtx_initOnce(gLanguageBreakFactoriesInitOnce, &initLanguageFactories, స్థితి_2);
 }
 
-static const LanguageBreakEngine*
-getLanguageBreakEngineFromFactory(UChar32 c, const char* locale)
+స్థిర స్థిరరాశి LanguageBreakEngine*
+getLanguageBreakEngineFromFactory(UChar32 c, స్థిరరాశి అక్షరం* locale)
 {
-    UErrorCode status = U_ZERO_ERROR;
-    ensureLanguageFactories(status);
-    if (U_FAILURE(status)) return nullptr;
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    ensureLanguageFactories(స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి శూన్యసూచిక;
 
     int32_t i = gLanguageBreakFactories->size();
-    const LanguageBreakEngine *lbe = nullptr;
-    while (--i >= 0) {
+    స్థిరరాశి LanguageBreakEngine *lbe = శూన్యసూచిక;
+    అయితే (--i >= 0) {
         LanguageBreakFactory* factory = static_cast<LanguageBreakFactory*>(gLanguageBreakFactories->elementAt(i));
         lbe = factory->getEngineFor(c, locale);
-        if (lbe != nullptr) {
-            break;
+        ఒకవేళ (lbe != శూన్యసూచిక) {
+            ఆపు;
         }
     }
-    return lbe;
+    తిరిగి lbe;
 }
 
 
@@ -1202,25 +1202,25 @@ getLanguageBreakEngineFromFactory(UChar32 c, const char* locale)
 //                          the character c.
 //
 //-------------------------------------------------------------------------------
-const LanguageBreakEngine*
-RuleBasedBreakIterator::getLanguageBreakEngine(UChar32 c, const char* locale) U_LIFETIME_BOUND {
-    const LanguageBreakEngine *lbe = nullptr;
-    UErrorCode status = U_ZERO_ERROR;
+స్థిరరాశి LanguageBreakEngine*
+నియమం_Based_Break_Iterator::getLanguageBreakEngine(UChar32 c, స్థిరరాశి అక్షరం* locale) U_LIFETIME_BOUND {
+    స్థిరరాశి LanguageBreakEngine *lbe = శూన్యసూచిక;
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
 
-    if (fLanguageBreakEngines == nullptr) {
-        fLanguageBreakEngines = new UStack(status);
-        if (fLanguageBreakEngines == nullptr || U_FAILURE(status)) {
-            delete fLanguageBreakEngines;
-            fLanguageBreakEngines = nullptr;
-            return nullptr;
+    ఒకవేళ (fLanguageBreakEngines == శూన్యసూచిక) {
+        fLanguageBreakEngines = కొత్త UStack(స్థితి_2);
+        ఒకవేళ (fLanguageBreakEngines == శూన్యసూచిక || U_FAILURE(స్థితి_2)) {
+            తొలగించు fLanguageBreakEngines;
+            fLanguageBreakEngines = శూన్యసూచిక;
+            తిరిగి శూన్యసూచిక;
         }
     }
 
     int32_t i = fLanguageBreakEngines->size();
-    while (--i >= 0) {
-        lbe = static_cast<const LanguageBreakEngine*>(fLanguageBreakEngines->elementAt(i));
-        if (lbe->handles(c, locale)) {
-            return lbe;
+    అయితే (--i >= 0) {
+        lbe = static_cast<స్థిరరాశి LanguageBreakEngine*>(fLanguageBreakEngines->elementAt(i));
+        ఒకవేళ (lbe->handles(c, locale)) {
+            తిరిగి lbe;
         }
     }
 
@@ -1229,30 +1229,30 @@ RuleBasedBreakIterator::getLanguageBreakEngine(UChar32 c, const char* locale) U_
     lbe = getLanguageBreakEngineFromFactory(c, locale);
 
     // If we got one, use it and push it on our stack.
-    if (lbe != nullptr) {
-        fLanguageBreakEngines->push((void *)lbe, status);
+    ఒకవేళ (lbe != శూన్యసూచిక) {
+        fLanguageBreakEngines->push((శూన్య *)lbe, స్థితి_2);
         // Even if we can't remember it, we can keep looking it up, so
         // return it even if the push fails.
-        return lbe;
+        తిరిగి lbe;
     }
 
     // No engine is forthcoming for this character. Add it to the
     // reject set. Create the reject break engine if needed.
-    if (fUnhandledBreakEngine == nullptr) {
-        fUnhandledBreakEngine = new UnhandledEngine(status);
-        if (U_SUCCESS(status) && fUnhandledBreakEngine == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+    ఒకవేళ (fUnhandledBreakEngine == శూన్యసూచిక) {
+        fUnhandledBreakEngine = కొత్త UnhandledEngine(స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2) && fUnhandledBreakEngine == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి శూన్యసూచిక;
         }
         // Put it last so that scripts for which we have an engine get tried
         // first.
-        fLanguageBreakEngines->insertElementAt(fUnhandledBreakEngine, 0, status);
+        fLanguageBreakEngines->చొప్పించు_Element_At(fUnhandledBreakEngine, 0, స్థితి_2);
         // If we can't insert it, or creation failed, get rid of it
         U_ASSERT(!fLanguageBreakEngines->hasDeleter());
-        if (U_FAILURE(status)) {
-            delete fUnhandledBreakEngine;
-            fUnhandledBreakEngine = nullptr;
-            return nullptr;
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తొలగించు fUnhandledBreakEngine;
+            fUnhandledBreakEngine = శూన్యసూచిక;
+            తిరిగి శూన్యసూచిక;
         }
     }
 
@@ -1260,43 +1260,43 @@ RuleBasedBreakIterator::getLanguageBreakEngine(UChar32 c, const char* locale) U_
     // add more than just the one character.
     fUnhandledBreakEngine->handleCharacter(c);
 
-    return fUnhandledBreakEngine;
+    తిరిగి fUnhandledBreakEngine;
 }
 
-#ifndef U_HIDE_DRAFT_API
-void U_EXPORT2 RuleBasedBreakIterator::registerExternalBreakEngine(
-                  ExternalBreakEngine* toAdopt, UErrorCode& status) {
-    LocalPointer<ExternalBreakEngine> engine(toAdopt, status);
-    if (U_FAILURE(status)) return;
-    ensureLanguageFactories(status);
-    if (U_FAILURE(status)) return;
-    gICULanguageBreakFactory->addExternalEngine(engine.orphan(), status);
+#నిర్వచితం_కాకపోతే U_HIDE_DRAFT_API
+శూన్య U_EXPORT2 నియమం_Based_Break_Iterator::రిజిస్టరు_External_Break_Engine(
+                  ExternalBreakEngine* గమ్యం_Adopt, UError_సంకేతం& స్థితి_2) {
+    Local_సూచిక<ExternalBreakEngine> engine(గమ్యం_Adopt, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి;
+    ensureLanguageFactories(స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి;
+    gICULanguageBreakFactory->కూడు_External_Engine(engine.orphan(), స్థితి_2);
 }
-#endif  /* U_HIDE_DRAFT_API */
+#అయితే_ముగింపు  /* U_HIDE_DRAFT_API */
 
 
-void RuleBasedBreakIterator::dumpCache() {
+శూన్య నియమం_Based_Break_Iterator::dumpCache() {
     fBreakCache->dumpCache();
 }
 
-void RuleBasedBreakIterator::dumpTables() {
-    fData->printData();
+శూన్య నియమం_Based_Break_Iterator::dumpTables() {
+    f_దత్తాంశం->print_దత్తాంశం();
 }
 
 /**
  * Returns the description used to create this iterator
  */
 
-const UnicodeString&
-RuleBasedBreakIterator::getRules() const U_LIFETIME_BOUND {
-    if (fData != nullptr) {
-        return fData->getRuleSourceString();
-    } else {
+స్థిరరాశి UnicodeString&
+నియమం_Based_Break_Iterator::get_నియమాలు() స్థిరరాశి U_LIFETIME_BOUND {
+    ఒకవేళ (f_దత్తాంశం != శూన్యసూచిక) {
+        తిరిగి f_దత్తాంశం->get_నియమం_ఆధారం_String();
+    } లేకపోతే {
         umtx_initOnce(gRBBIInitOnce, &rbbiInit);
-        return *gEmptyString;
+        తిరిగి *g_ఖాళీలు_String;
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_BREAK_ITERATION */

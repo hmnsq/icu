@@ -10,39 +10,39 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "locbased.h"
-#include "uresimp.h"
+#అన్తర్భావ "locbased.h"
+#అన్తర్భావ "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
-const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
-                                     const Locale& actual U_LIFETIME_BOUND,
-                                     ULocDataLocaleType type,
-                                     UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+స్థిరరాశి Locale& LocaleBased::getLocale(స్థిరరాశి Locale& valid U_LIFETIME_BOUND,
+                                     స్థిరరాశి Locale& actual U_LIFETIME_BOUND,
+                                     ULoc_దత్తాంశం_Locale_Type type,
+                                     UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి Locale::get_మూలం();
     }
 
-    switch(type) {
-    case ULOC_VALID_LOCALE:
-        return valid;
-    case ULOC_ACTUAL_LOCALE:
-        return actual;
-    default:
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+    ఎంపిక(type) {
+    స్థితి ULOC_VALID_LOCALE:
+        తిరిగి valid;
+    స్థితి ULOC_ACTUAL_LOCALE:
+        తిరిగి actual;
+    అప్రమేయ:
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి Locale::get_మూలం();
     }
 }
 
-const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
-                                     ULocDataLocaleType type, UErrorCode& status) {
-    const Locale& locale = getLocale(valid, actual, type, status);
+స్థిరరాశి అక్షరం* LocaleBased::getLocaleID(స్థిరరాశి Locale& valid, స్థిరరాశి Locale& actual,
+                                     ULoc_దత్తాంశం_Locale_Type type, UError_సంకేతం& స్థితి_2) {
+    స్థిరరాశి Locale& locale = getLocale(valid, actual, type, స్థితి_2);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    తిరిగి locale == Locale::get_మూలం() ? k_మూలం_Locale_Name : locale.getName();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

@@ -17,56 +17,56 @@
 *   24/7/2001   Ram         Added support for EXT character handling
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cstring.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/ucnv_cb.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uassert.h"
 
-#define UCNV_OPTIONS_VERSION_MASK 0xf
-#define NUKTA               0x093c
-#define HALANT              0x094d
-#define ZWNJ                0x200c /* Zero Width Non Joiner */
-#define ZWJ                 0x200d /* Zero width Joiner */
-#define INVALID_CHAR        0xffff
-#define ATR                 0xEF   /* Attribute code */
-#define EXT                 0xF0   /* Extension code */
-#define DANDA               0x0964
-#define DOUBLE_DANDA        0x0965
-#define ISCII_NUKTA         0xE9
-#define ISCII_HALANT        0xE8
-#define ISCII_DANDA         0xEA
-#define ISCII_INV           0xD9
-#define ISCII_VOWEL_SIGN_E  0xE0
-#define INDIC_BLOCK_BEGIN   0x0900
-#define INDIC_BLOCK_END     0x0D7F
-#define INDIC_RANGE         (INDIC_BLOCK_END - INDIC_BLOCK_BEGIN)
-#define VOCALLIC_RR         0x0931
-#define LF                  0x0A
-#define ASCII_END           0xA0
-#define NO_CHAR_MARKER      0xFFFE
-#define TELUGU_DELTA        DELTA * TELUGU
-#define DEV_ABBR_SIGN       0x0970
-#define DEV_ANUDATTA        0x0952
-#define EXT_RANGE_BEGIN     0xA1
-#define EXT_RANGE_END       0xEE
+#నిర్వచించు UCNV_OPTIONS_సంస్కరణ_ముసుగు 0xf
+#నిర్వచించు NUKTA               0x093c
+#నిర్వచించు HALANT              0x094d
+#నిర్వచించు ZWNJ                0x200c /* Zero Width Non Joiner */
+#నిర్వచించు ZWJ                 0x200d /* Zero width Joiner */
+#నిర్వచించు INVALID_CHAR        0xffff
+#నిర్వచించు ATR                 0xEF   /* Attribute code */
+#నిర్వచించు EXT                 0xF0   /* Extension code */
+#నిర్వచించు DANDA               0x0964
+#నిర్వచించు DOUBLE_DANDA        0x0965
+#నిర్వచించు ISCII_NUKTA         0xE9
+#నిర్వచించు ISCII_HALANT        0xE8
+#నిర్వచించు ISCII_DANDA         0xEA
+#నిర్వచించు ISCII_INV           0xD9
+#నిర్వచించు ISCII_VOWEL_SIGN_E  0xE0
+#నిర్వచించు INDIC_ఖండం_BEGIN   0x0900
+#నిర్వచించు INDIC_ఖండం_చివర     0x0D7F
+#నిర్వచించు INDIC_RANGE         (INDIC_ఖండం_చివర - INDIC_ఖండం_BEGIN)
+#నిర్వచించు VOCALLIC_RR         0x0931
+#నిర్వచించు LF                  0x0A
+#నిర్వచించు ASCII_చివర           0xA0
+#నిర్వచించు NO_CHAR_MARKER      0xFFFE
+#నిర్వచించు TELUGU_DELTA        DELTA * TELUGU
+#నిర్వచించు DEV_ABBR_SIGN       0x0970
+#నిర్వచించు DEV_ANUDATTA        0x0952
+#నిర్వచించు EXT_RANGE_BEGIN     0xA1
+#నిర్వచించు EXT_RANGE_చివర       0xEE
 
-#define PNJ_DELTA           0x0100
-#define PNJ_BINDI           0x0A02
-#define PNJ_TIPPI           0x0A70
-#define PNJ_SIGN_VIRAMA     0x0A4D
-#define PNJ_ADHAK           0x0A71
-#define PNJ_HA              0x0A39
-#define PNJ_RRA             0x0A5C
+#నిర్వచించు PNJ_DELTA           0x0100
+#నిర్వచించు PNJ_BINDI           0x0A02
+#నిర్వచించు PNJ_TIPPI           0x0A70
+#నిర్వచించు PNJ_SIGN_VIRAMA     0x0A4D
+#నిర్వచించు PNJ_ADHAK           0x0A71
+#నిర్వచించు PNJ_HA              0x0A39
+#నిర్వచించు PNJ_RRA             0x0A5C
 
-typedef enum {
+రకనిర్వచనం గణన {
     DEVANAGARI =0,
     BENGALI,
     GURMUKHI,
@@ -83,7 +83,7 @@ typedef enum {
  * Enumeration for switching code pages if <ATR>+<one of below values>
  * is encountered
  */
-typedef enum {
+రకనిర్వచనం గణన {
     DEF = 0x40,
     RMN = 0x41,
     DEV = 0x42,
@@ -104,51 +104,51 @@ typedef enum {
     PST = 0x76
 }ISCIILang;
 
-typedef enum {
-    DEV_MASK =0x80,
-    PNJ_MASK =0x40,
-    GJR_MASK =0x20,
-    ORI_MASK =0x10,
-    BNG_MASK =0x08,
-    KND_MASK =0x04,
-    MLM_MASK =0x02,
-    TML_MASK =0x01,
+రకనిర్వచనం గణన {
+    DEV_ముసుగు =0x80,
+    PNJ_ముసుగు =0x40,
+    GJR_ముసుగు =0x20,
+    ORI_ముసుగు =0x10,
+    BNG_ముసుగు =0x08,
+    KND_ముసుగు =0x04,
+    MLM_ముసుగు =0x02,
+    TML_ముసుగు =0x01,
     ZERO =0x00
-}MaskEnum;
+}ముసుగు_Enum;
 
-#define ISCII_CNV_PREFIX "ISCII,version="
+#నిర్వచించు ISCII_CNV_ఉపసర్గ "ISCII,version="
 
-typedef struct {
-    char16_t contextCharToUnicode;         /* previous Unicode codepoint for contextual analysis */
+రకనిర్వచనం నిర్మాణం {
+    char16_t context_Char_గమ్యం_Unicode;         /* previous Unicode codepoint for contextual analysis */
     char16_t contextCharFromUnicode;       /* previous Unicode codepoint for contextual analysis */
-    uint16_t defDeltaToUnicode;         /* delta for switching to default state when DEF is encountered  */
+    uint16_t def_Delta_గమ్యం_Unicode;         /* delta for switching to default state when DEF is encountered  */
     uint16_t currentDeltaFromUnicode;   /* current delta in Indic block */
-    uint16_t currentDeltaToUnicode;     /* current delta in Indic block */
-    MaskEnum currentMaskFromUnicode;    /* mask for current state in toUnicode */
-    MaskEnum currentMaskToUnicode;      /* mask for current state in toUnicode */
-    MaskEnum defMaskToUnicode;          /* mask for default state in toUnicode */
-    UBool isFirstBuffer;                /* boolean for fromUnicode to see if we need to announce the first script */
-    UBool resetToDefaultToUnicode;      /* boolean for resetting to default delta and mask when a newline is encountered*/
-    char name[sizeof(ISCII_CNV_PREFIX) + 1];
-    UChar32 prevToUnicodeStatus;        /* Hold the previous toUnicodeStatus. This is necessary because we may need to know the last two code points. */
-} UConverterDataISCII;
+    uint16_t current_Delta_గమ్యం_Unicode;     /* current delta in Indic block */
+    ముసుగు_Enum current_ముసుగు_From_Unicode;    /* mask for current state in toUnicode */
+    ముసుగు_Enum current_ముసుగు_గమ్యం_Unicode;      /* mask for current state in toUnicode */
+    ముసుగు_Enum def_ముసుగు_గమ్యం_Unicode;          /* mask for default state in toUnicode */
+    UBool is_మొదటి_బఫరు;                /* boolean for fromUnicode to see if we need to announce the first script */
+    UBool reset_గమ్యం_Default_గమ్యం_Unicode;      /* boolean for resetting to default delta and mask when a newline is encountered*/
+    అక్షరం name[పరిమాణం(ISCII_CNV_ఉపసర్గ) + 1];
+    UChar32 prev_గమ్యం_Unicode_స్థితి;        /* Hold the previous toUnicodeStatus. This is necessary because we may need to know the last two code points. */
+} UConverter_దత్తాంశం_ISCII;
 
-typedef struct LookupDataStruct {
+రకనిర్వచనం నిర్మాణం Lookup_దత్తాంశం_Struct {
     UniLang uniLang;
-    MaskEnum maskEnum;
+    ముసుగు_Enum ముసుగు_Enum_2;
     ISCIILang isciiLang;
-} LookupDataStruct;
+} Lookup_దత్తాంశం_Struct;
 
-static const LookupDataStruct lookupInitialData[]={
-    { DEVANAGARI, DEV_MASK,  DEV },
-    { BENGALI,    BNG_MASK,  BNG },
-    { GURMUKHI,   PNJ_MASK,  PNJ },
-    { GUJARATI,   GJR_MASK,  GJR },
-    { ORIYA,      ORI_MASK,  ORI },
-    { TAMIL,      TML_MASK,  TML },
-    { TELUGU,     KND_MASK,  TLG },
-    { KANNADA,    KND_MASK,  KND },
-    { MALAYALAM,  MLM_MASK,  MLM }
+స్థిర స్థిరరాశి Lookup_దత్తాంశం_Struct lookup_Initial_దత్తాంశం[]={
+    { DEVANAGARI, DEV_ముసుగు,  DEV },
+    { BENGALI,    BNG_ముసుగు,  BNG },
+    { GURMUKHI,   PNJ_ముసుగు,  PNJ },
+    { GUJARATI,   GJR_ముసుగు,  GJR },
+    { ORIYA,      ORI_ముసుగు,  ORI },
+    { TAMIL,      TML_ముసుగు,  TML },
+    { TELUGU,     KND_ముసుగు,  TLG },
+    { KANNADA,    KND_ముసుగు,  KND },
+    { MALAYALAM,  MLM_ముసుగు,  MLM }
 };
 
 /*
@@ -156,7 +156,7 @@ static const LookupDataStruct lookupInitialData[]={
  * Bit 0 (value 1): PNJ consonant
  * Bit 1 (value 2): PNJ Bindi Tippi
  */
-static const uint8_t pnjMap[80] = {
+స్థిర స్థిరరాశి uint8_t pnjMap[80] = {
     /* 0A00..0A0F */
     0, 0, 0, 0, 0, 2, 0, 2,  0, 0, 0, 0, 0, 0, 0, 0,
     /* 0A10..0A1F */
@@ -169,106 +169,106 @@ static const uint8_t pnjMap[80] = {
     0, 2, 2, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static UBool
+స్థిర UBool
 isPNJConsonant(UChar32 c) {
-    if (c < 0xa00 || 0xa50 <= c) {
-        return false;
-    } else {
-        return pnjMap[c - 0xa00] & 1;
+    ఒకవేళ (c < 0xa00 || 0xa50 <= c) {
+        తిరిగి అబద్ధం;
+    } లేకపోతే {
+        తిరిగి pnjMap[c - 0xa00] & 1;
     }
 }
 
-static UBool
+స్థిర UBool
 isPNJBindiTippi(UChar32 c) {
-    if (c < 0xa00 || 0xa50 <= c) {
-        return false;
-    } else {
-        return pnjMap[c - 0xa00] >> 1;
+    ఒకవేళ (c < 0xa00 || 0xa50 <= c) {
+        తిరిగి అబద్ధం;
+    } లేకపోతే {
+        తిరిగి pnjMap[c - 0xa00] >> 1;
     }
 }
 U_CDECL_BEGIN
-static void  U_CALLCONV
-_ISCIIOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode) {
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+స్థిర శూన్య  U_CALLCONV
+_ISCIIOpen(UConverter *cnv, UConverter_ఎక్కించు_వాదనలు *p_వాదనలు, UError_సంకేతం *error_సంకేతం) {
+    ఒకవేళ(p_వాదనలు->onlyTestIsLoadable) {
+        తిరిగి;
     }
 
-    cnv->extraInfo = uprv_malloc(sizeof(UConverterDataISCII));
+    cnv->extraInfo = uprv_malloc(పరిమాణం(UConverter_దత్తాంశం_ISCII));
 
-    if (cnv->extraInfo != nullptr) {
+    ఒకవేళ (cnv->extraInfo != శూన్యసూచిక) {
         int32_t len=0;
-        UConverterDataISCII *converterData=
-                (UConverterDataISCII *) cnv->extraInfo;
-        converterData->contextCharToUnicode=NO_CHAR_MARKER;
-        cnv->toUnicodeStatus = missingCharMarker;
-        converterData->contextCharFromUnicode=0x0000;
-        converterData->resetToDefaultToUnicode=false;
+        UConverter_దత్తాంశం_ISCII *converter_దత్తాంశం=
+                (UConverter_దత్తాంశం_ISCII *) cnv->extraInfo;
+        converter_దత్తాంశం->context_Char_గమ్యం_Unicode=NO_CHAR_MARKER;
+        cnv->గమ్యం_Unicode_స్థితి = missingCharMarker;
+        converter_దత్తాంశం->contextCharFromUnicode=0x0000;
+        converter_దత్తాంశం->reset_గమ్యం_Default_గమ్యం_Unicode=అబద్ధం;
         /* check if the version requested is supported */
-        if ((pArgs->options & UCNV_OPTIONS_VERSION_MASK) < 9) {
+        ఒకవేళ ((p_వాదనలు->options & UCNV_OPTIONS_సంస్కరణ_ముసుగు) < 9) {
             /* initialize state variables */
-            converterData->currentDeltaFromUnicode
-                    = converterData->currentDeltaToUnicode
-                            = converterData->defDeltaToUnicode = (uint16_t)(lookupInitialData[pArgs->options & UCNV_OPTIONS_VERSION_MASK].uniLang * DELTA);
+            converter_దత్తాంశం->currentDeltaFromUnicode
+                    = converter_దత్తాంశం->current_Delta_గమ్యం_Unicode
+                            = converter_దత్తాంశం->def_Delta_గమ్యం_Unicode = (uint16_t)(lookup_Initial_దత్తాంశం[p_వాదనలు->options & UCNV_OPTIONS_సంస్కరణ_ముసుగు].uniLang * DELTA);
 
-            converterData->currentMaskFromUnicode
-                    = converterData->currentMaskToUnicode
-                            = converterData->defMaskToUnicode = lookupInitialData[pArgs->options & UCNV_OPTIONS_VERSION_MASK].maskEnum;
+            converter_దత్తాంశం->current_ముసుగు_From_Unicode
+                    = converter_దత్తాంశం->current_ముసుగు_గమ్యం_Unicode
+                            = converter_దత్తాంశం->def_ముసుగు_గమ్యం_Unicode = lookup_Initial_దత్తాంశం[p_వాదనలు->options & UCNV_OPTIONS_సంస్కరణ_ముసుగు].ముసుగు_Enum_2;
             
-            converterData->isFirstBuffer=true;
-            (void)uprv_strcpy(converterData->name, ISCII_CNV_PREFIX);
-            len = (int32_t)uprv_strlen(converterData->name);
-            converterData->name[len]= (char)((pArgs->options & UCNV_OPTIONS_VERSION_MASK) + '0');
-            converterData->name[len+1]=0;
+            converter_దత్తాంశం->is_మొదటి_బఫరు=నిజం;
+            (శూన్య)uprv_strcpy(converter_దత్తాంశం->name, ISCII_CNV_ఉపసర్గ);
+            len = (int32_t)uprv_strlen(converter_దత్తాంశం->name);
+            converter_దత్తాంశం->name[len]= (అక్షరం)((p_వాదనలు->options & UCNV_OPTIONS_సంస్కరణ_ముసుగు) + '0');
+            converter_దత్తాంశం->name[len+1]=0;
             
-            converterData->prevToUnicodeStatus = 0x0000;
-        } else {
+            converter_దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = 0x0000;
+        } లేకపోతే {
             uprv_free(cnv->extraInfo);
-            cnv->extraInfo = nullptr;
-            *errorCode = U_ILLEGAL_ARGUMENT_ERROR;
+            cnv->extraInfo = శూన్యసూచిక;
+            *error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
         }
 
-    } else {
-        *errorCode =U_MEMORY_ALLOCATION_ERROR;
+    } లేకపోతే {
+        *error_సంకేతం =U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
 }
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 _ISCIIClose(UConverter *cnv) {
-    if (cnv->extraInfo!=nullptr) {
-        if (!cnv->isExtraLocal) {
+    ఒకవేళ (cnv->extraInfo!=శూన్యసూచిక) {
+        ఒకవేళ (!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
-        cnv->extraInfo=nullptr;
+        cnv->extraInfo=శూన్యసూచిక;
     }
 }
 
-static const char*  U_CALLCONV
-_ISCIIgetName(const UConverter* cnv) {
-    if (cnv->extraInfo) {
-        UConverterDataISCII* myData= (UConverterDataISCII*)cnv->extraInfo;
-        return myData->name;
+స్థిర స్థిరరాశి అక్షరం*  U_CALLCONV
+_ISCIIgetName(స్థిరరాశి UConverter* cnv) {
+    ఒకవేళ (cnv->extraInfo) {
+        UConverter_దత్తాంశం_ISCII* my_దత్తాంశం= (UConverter_దత్తాంశం_ISCII*)cnv->extraInfo;
+        తిరిగి my_దత్తాంశం->name;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 _ISCIIReset(UConverter *cnv, UConverterResetChoice choice) {
-    UConverterDataISCII* data =(UConverterDataISCII *) (cnv->extraInfo);
-    if (choice<=UCNV_RESET_TO_UNICODE) {
-        cnv->toUnicodeStatus = missingCharMarker;
-        cnv->mode=0;
-        data->currentDeltaToUnicode=data->defDeltaToUnicode;
-        data->currentMaskToUnicode = data->defMaskToUnicode;
-        data->contextCharToUnicode=NO_CHAR_MARKER;
-        data->prevToUnicodeStatus = 0x0000;
+    UConverter_దత్తాంశం_ISCII* దత్తాంశం =(UConverter_దత్తాంశం_ISCII *) (cnv->extraInfo);
+    ఒకవేళ (choice<=UCNV_RESET_గమ్యం_UNICODE) {
+        cnv->గమ్యం_Unicode_స్థితి = missingCharMarker;
+        cnv->బహుళకం=0;
+        దత్తాంశం->current_Delta_గమ్యం_Unicode=దత్తాంశం->def_Delta_గమ్యం_Unicode;
+        దత్తాంశం->current_ముసుగు_గమ్యం_Unicode = దత్తాంశం->def_ముసుగు_గమ్యం_Unicode;
+        దత్తాంశం->context_Char_గమ్యం_Unicode=NO_CHAR_MARKER;
+        దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = 0x0000;
     }
-    if (choice!=UCNV_RESET_TO_UNICODE) {
+    ఒకవేళ (choice!=UCNV_RESET_గమ్యం_UNICODE) {
         cnv->fromUChar32=0x0000;
-        data->contextCharFromUnicode=0x00;
-        data->currentMaskFromUnicode=data->defMaskToUnicode;
-        data->currentDeltaFromUnicode=data->defDeltaToUnicode;
-        data->isFirstBuffer=true;
-        data->resetToDefaultToUnicode=false;
+        దత్తాంశం->contextCharFromUnicode=0x00;
+        దత్తాంశం->current_ముసుగు_From_Unicode=దత్తాంశం->def_ముసుగు_గమ్యం_Unicode;
+        దత్తాంశం->currentDeltaFromUnicode=దత్తాంశం->def_Delta_గమ్యం_Unicode;
+        దత్తాంశం->is_మొదటి_బఫరు=నిజం;
+        దత్తాంశం->reset_గమ్యం_Default_గమ్యం_Unicode=అబద్ధం;
     }
 }
 
@@ -292,123 +292,123 @@ _ISCIIReset(UConverter *cnv, UConverterResetChoice choice) {
  * to use uint16_t and give each of the 9 Unicode/script blocks its own bit.
  */
 
-static const uint8_t validityTable[128] = {
+స్థిర స్థిరరాశి uint8_t validity_పట్టిక[128] = {
 /* This state table is tool generated please do not edit unless you know exactly what you are doing */
 /* Note: This table was edited to mirror the Windows XP implementation */
 /*ISCII:Valid:Unicode */
 /*0xa0 : 0x00: 0x900  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xa1 : 0xb8: 0x901  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0xa2 : 0xfe: 0x902  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa3 : 0xbf: 0x903  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0x00 : 0x00: 0x904  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xa4 : 0xff: 0x905  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa5 : 0xff: 0x906  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa6 : 0xff: 0x907  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa7 : 0xff: 0x908  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa8 : 0xff: 0x909  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa9 : 0xff: 0x90a  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xaa : 0xfe: 0x90b  */ DEV_MASK + ZERO     + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x90c  */ DEV_MASK + ZERO     + ZERO     + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xae : 0x80: 0x90d  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xab : 0x87: 0x90e  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xac : 0xff: 0x90f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xad : 0xff: 0x910  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb2 : 0x80: 0x911  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xaf : 0x87: 0x912  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb0 : 0xff: 0x913  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb1 : 0xff: 0x914  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb3 : 0xff: 0x915  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb4 : 0xfe: 0x916  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xb5 : 0xfe: 0x917  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xb6 : 0xfe: 0x918  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xb7 : 0xff: 0x919  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb8 : 0xff: 0x91a  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb9 : 0xfe: 0x91b  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xba : 0xff: 0x91c  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xbb : 0xfe: 0x91d  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xbc : 0xff: 0x91e  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xbd : 0xff: 0x91f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xbe : 0xfe: 0x920  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xbf : 0xfe: 0x921  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc0 : 0xfe: 0x922  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc1 : 0xff: 0x923  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xc2 : 0xff: 0x924  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xc3 : 0xfe: 0x925  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc4 : 0xfe: 0x926  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc5 : 0xfe: 0x927  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc6 : 0xff: 0x928  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xc7 : 0x81: 0x929  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + TML_MASK ,
-/*0xc8 : 0xff: 0x92a  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xc9 : 0xfe: 0x92b  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xca : 0xfe: 0x92c  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xcb : 0xfe: 0x92d  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xcc : 0xfe: 0x92e  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xcd : 0xff: 0x92f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xcf : 0xff: 0x930  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd0 : 0x87: 0x931  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + MLM_MASK + TML_MASK ,
-/*0xd1 : 0xff: 0x932  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd2 : 0xb7: 0x933  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd3 : 0x83: 0x934  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + MLM_MASK + TML_MASK ,
-/*0xd4 : 0xff: 0x935  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd5 : 0xfe: 0x936  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xd6 : 0xbf: 0x937  */ DEV_MASK + ZERO     + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd7 : 0xff: 0x938  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd8 : 0xff: 0x939  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
+/*0xa1 : 0xb8: 0x901  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + ZERO     + ZERO     + ZERO     ,
+/*0xa2 : 0xfe: 0x902  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xa3 : 0xbf: 0x903  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0x00 : 0x00: 0x904  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xa4 : 0xff: 0x905  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xa5 : 0xff: 0x906  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xa6 : 0xff: 0x907  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xa7 : 0xff: 0x908  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xa8 : 0xff: 0x909  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xa9 : 0xff: 0x90a  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xaa : 0xfe: 0x90b  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0x00 : 0x00: 0x90c  */ DEV_ముసుగు + ZERO     + ZERO     + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xae : 0x80: 0x90d  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xab : 0x87: 0x90e  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xac : 0xff: 0x90f  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xad : 0xff: 0x910  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xb2 : 0x80: 0x911  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xaf : 0x87: 0x912  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xb0 : 0xff: 0x913  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xb1 : 0xff: 0x914  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xb3 : 0xff: 0x915  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xb4 : 0xfe: 0x916  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xb5 : 0xfe: 0x917  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xb6 : 0xfe: 0x918  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xb7 : 0xff: 0x919  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xb8 : 0xff: 0x91a  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xb9 : 0xfe: 0x91b  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xba : 0xff: 0x91c  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xbb : 0xfe: 0x91d  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xbc : 0xff: 0x91e  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xbd : 0xff: 0x91f  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xbe : 0xfe: 0x920  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xbf : 0xfe: 0x921  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xc0 : 0xfe: 0x922  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xc1 : 0xff: 0x923  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xc2 : 0xff: 0x924  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xc3 : 0xfe: 0x925  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xc4 : 0xfe: 0x926  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xc5 : 0xfe: 0x927  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xc6 : 0xff: 0x928  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xc7 : 0x81: 0x929  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + TML_ముసుగు ,
+/*0xc8 : 0xff: 0x92a  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xc9 : 0xfe: 0x92b  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xca : 0xfe: 0x92c  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xcb : 0xfe: 0x92d  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xcc : 0xfe: 0x92e  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xcd : 0xff: 0x92f  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xcf : 0xff: 0x930  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xd0 : 0x87: 0x931  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + MLM_ముసుగు + TML_ముసుగు ,
+/*0xd1 : 0xff: 0x932  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xd2 : 0xb7: 0x933  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + ZERO     + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xd3 : 0x83: 0x934  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + MLM_ముసుగు + TML_ముసుగు ,
+/*0xd4 : 0xff: 0x935  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + ZERO     + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xd5 : 0xfe: 0x936  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0xd6 : 0xbf: 0x937  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xd7 : 0xff: 0x938  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xd8 : 0xff: 0x939  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
 /*0x00 : 0x00: 0x93A  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
 /*0x00 : 0x00: 0x93B  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xe9 : 0xda: 0x93c  */ DEV_MASK + PNJ_MASK + ZERO     + ORI_MASK + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x93d  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xda : 0xff: 0x93e  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xdb : 0xff: 0x93f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xdc : 0xff: 0x940  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xdd : 0xff: 0x941  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xde : 0xff: 0x942  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xdf : 0xbe: 0x943  */ DEV_MASK + ZERO     + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x944  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + BNG_MASK + KND_MASK + ZERO     + ZERO     ,
-/*0xe3 : 0x80: 0x945  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xe0 : 0x87: 0x946  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe1 : 0xff: 0x947  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe2 : 0xff: 0x948  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe7 : 0x80: 0x949  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xe4 : 0x87: 0x94a  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe5 : 0xff: 0x94b  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe6 : 0xff: 0x94c  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe8 : 0xff: 0x94d  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
+/*0xe9 : 0xda: 0x93c  */ DEV_ముసుగు + PNJ_ముసుగు + ZERO     + ORI_ముసుగు + BNG_ముసుగు + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x93d  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xda : 0xff: 0x93e  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xdb : 0xff: 0x93f  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xdc : 0xff: 0x940  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xdd : 0xff: 0x941  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xde : 0xff: 0x942  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xdf : 0xbe: 0x943  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0x00 : 0x00: 0x944  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ZERO     + BNG_ముసుగు + KND_ముసుగు + ZERO     + ZERO     ,
+/*0xe3 : 0x80: 0x945  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xe0 : 0x87: 0x946  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xe1 : 0xff: 0x947  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xe2 : 0xff: 0x948  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xe7 : 0x80: 0x949  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xe4 : 0x87: 0x94a  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xe5 : 0xff: 0x94b  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xe6 : 0xff: 0x94c  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xe8 : 0xff: 0x94d  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
 /*0xec : 0x00: 0x94e  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
 /*0xed : 0x00: 0x94f  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x950  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x951  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x952  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x953  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x954  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x955  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x956  */ ZERO     + ZERO     + ZERO     + ORI_MASK + ZERO     + KND_MASK + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x957  */ ZERO     + ZERO     + ZERO     + ORI_MASK + BNG_MASK + ZERO     + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x958  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x959  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95a  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95b  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95c  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95d  */ DEV_MASK + ZERO     + ZERO     + ORI_MASK + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95e  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xce : 0x98: 0x95f  */ DEV_MASK + ZERO     + ZERO     + ORI_MASK + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x960  */ DEV_MASK + ZERO     + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x961  */ DEV_MASK + ZERO     + ZERO     + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x962  */ DEV_MASK + ZERO     + ZERO     + ZERO     + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x963  */ DEV_MASK + ZERO     + ZERO     + ZERO     + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0xea : 0xf8: 0x964  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xeaea : 0x00: 0x965*/ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xf1 : 0xff: 0x966  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf2 : 0xff: 0x967  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf3 : 0xff: 0x968  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf4 : 0xff: 0x969  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf5 : 0xff: 0x96a  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf6 : 0xff: 0x96b  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf7 : 0xff: 0x96c  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf8 : 0xff: 0x96d  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf9 : 0xff: 0x96e  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xfa : 0xff: 0x96f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0x00 : 0x80: 0x970  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x950  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x951  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x952  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x953  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x954  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x955  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + KND_ముసుగు + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x956  */ ZERO     + ZERO     + ZERO     + ORI_ముసుగు + ZERO     + KND_ముసుగు + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x957  */ ZERO     + ZERO     + ZERO     + ORI_ముసుగు + BNG_ముసుగు + ZERO     + MLM_ముసుగు + ZERO     ,
+/*0x00 : 0x00: 0x958  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x959  */ DEV_ముసుగు + PNJ_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95a  */ DEV_ముసుగు + PNJ_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95b  */ DEV_ముసుగు + PNJ_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95c  */ DEV_ముసుగు + PNJ_ముసుగు + ZERO     + ZERO     + BNG_ముసుగు + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95d  */ DEV_ముసుగు + ZERO     + ZERO     + ORI_ముసుగు + BNG_ముసుగు + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95e  */ DEV_ముసుగు + PNJ_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xce : 0x98: 0x95f  */ DEV_ముసుగు + ZERO     + ZERO     + ORI_ముసుగు + BNG_ముసుగు + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x960  */ DEV_ముసుగు + ZERO     + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0x00 : 0x00: 0x961  */ DEV_ముసుగు + ZERO     + ZERO     + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + ZERO     ,
+/*0x00 : 0x00: 0x962  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + BNG_ముసుగు + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x963  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + BNG_ముసుగు + ZERO     + ZERO     + ZERO     ,
+/*0xea : 0xf8: 0x964  */ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xeaea : 0x00: 0x965*/ DEV_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xf1 : 0xff: 0x966  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xf2 : 0xff: 0x967  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xf3 : 0xff: 0x968  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xf4 : 0xff: 0x969  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xf5 : 0xff: 0x96a  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xf6 : 0xff: 0x96b  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xf7 : 0xff: 0x96c  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xf8 : 0xff: 0x96d  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xf9 : 0xff: 0x96e  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0xfa : 0xff: 0x96f  */ DEV_ముసుగు + PNJ_ముసుగు + GJR_ముసుగు + ORI_ముసుగు + BNG_ముసుగు + KND_ముసుగు + MLM_ముసుగు + TML_ముసుగు ,
+/*0x00 : 0x80: 0x970  */ DEV_ముసుగు + PNJ_ముసుగు + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
 /*
  * The length of the array is 128 to provide values for 0x900..0x97f.
  * The last 15 entries for 0x971..0x97f of the validity table are all zero
@@ -417,7 +417,7 @@ static const uint8_t validityTable[128] = {
 /*0x00 : 0x00: 0x9yz  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO
 };
 
-static const uint16_t fromUnicodeTable[128]={
+స్థిర స్థిరరాశి uint16_t from_Unicode_పట్టిక[128]={
     0x00a0 ,/* 0x0900 */
     0x00a1 ,/* 0x0901 */
     0x00a2 ,/* 0x0902 */
@@ -547,7 +547,7 @@ static const uint16_t fromUnicodeTable[128]={
     0xFFFF ,/* 0x097e */
     0xFFFF ,/* 0x097f */
 };
-static const uint16_t toUnicodeTable[256]={
+స్థిర స్థిరరాశి uint16_t గమ్యం_Unicode_పట్టిక[256]={
     0x0000,/* 0x00 */
     0x0001,/* 0x01 */
     0x0002,/* 0x02 */
@@ -806,12 +806,12 @@ static const uint16_t toUnicodeTable[256]={
     0xFFFF /* 0xff */
 };
 
-static const uint16_t vowelSignESpecialCases[][2]={
+స్థిర స్థిరరాశి uint16_t vowelSignESpecialCases[][2]={
 	{ 2 /*length of array*/    , 0      },
 	{ 0xA4 , 0x0904 },
 };
 
-static const uint16_t nuktaSpecialCases[][2]={
+స్థిర స్థిరరాశి uint16_t nuktaSpecialCases[][2]={
     { 16 /*length of array*/   , 0      },
     { 0xA6 , 0x090c },
     { 0xEA , 0x093D },
@@ -831,60 +831,60 @@ static const uint16_t nuktaSpecialCases[][2]={
 };
 
 
-#define WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err) UPRV_BLOCK_MACRO_BEGIN { \
-    int32_t offset = (int32_t)(source - args->source-1);                                        \
+#నిర్వచించు WRITE_గమ్యం_లక్ష్యం_FROM_U(వాదనలు_2,offsets,ఆధారం,లక్ష్యం,లక్ష్యం_హద్దు,లక్ష్యం_Byte_Unit,err) UPRV_ఖండం_MACRO_BEGIN { \
+    int32_t స్థానభ్రంశం = (int32_t)(ఆధారం - వాదనలు_2->ఆధారం-1);                                        \
       /* write the targetUniChar  to target */                                                  \
-    if(target < targetLimit){                                                                   \
-        if(targetByteUnit <= 0xFF){                                                             \
-            *(target)++ = (uint8_t)(targetByteUnit);                                            \
-            if(offsets){                                                                        \
-                *(offsets++) = offset;                                                          \
+    ఒకవేళ(లక్ష్యం < లక్ష్యం_హద్దు){                                                                   \
+        ఒకవేళ(లక్ష్యం_Byte_Unit <= 0xFF){                                                             \
+            *(లక్ష్యం)++ = (uint8_t)(లక్ష్యం_Byte_Unit);                                            \
+            ఒకవేళ(offsets){                                                                        \
+                *(offsets++) = స్థానభ్రంశం;                                                          \
             }                                                                                   \
-        }else{                                                                                  \
-            if (targetByteUnit > 0xFFFF) {                                                      \
-                *(target)++ = (uint8_t)(targetByteUnit>>16);                                    \
-                if (offsets) {                                                                  \
-                    --offset;                                                                   \
-                    *(offsets++) = offset;                                                      \
+        }లేకపోతే{                                                                                  \
+            ఒకవేళ (లక్ష్యం_Byte_Unit > 0xFFFF) {                                                      \
+                *(లక్ష్యం)++ = (uint8_t)(లక్ష్యం_Byte_Unit>>16);                                    \
+                ఒకవేళ (offsets) {                                                                  \
+                    --స్థానభ్రంశం;                                                                   \
+                    *(offsets++) = స్థానభ్రంశం;                                                      \
                 }                                                                               \
             }                                                                                   \
-            if (!(target < targetLimit)) {                                                      \
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =    \
-                                (uint8_t)(targetByteUnit >> 8);                                 \
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =    \
-                                (uint8_t)targetByteUnit;                                        \
-                *err = U_BUFFER_OVERFLOW_ERROR;                                                 \
-            } else {                                                                            \
-                *(target)++ = (uint8_t)(targetByteUnit>>8);                                     \
-                if(offsets){                                                                    \
-                    *(offsets++) = offset;                                                      \
+            ఒకవేళ (!(లక్ష్యం < లక్ష్యం_హద్దు)) {                                                      \
+                వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] =    \
+                                (uint8_t)(లక్ష్యం_Byte_Unit >> 8);                                 \
+                వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] =    \
+                                (uint8_t)లక్ష్యం_Byte_Unit;                                        \
+                *err = U_బఫరు_అధికప్రవాహం_ERROR;                                                 \
+            } లేకపోతే {                                                                            \
+                *(లక్ష్యం)++ = (uint8_t)(లక్ష్యం_Byte_Unit>>8);                                     \
+                ఒకవేళ(offsets){                                                                    \
+                    *(offsets++) = స్థానభ్రంశం;                                                      \
                 }                                                                               \
-                if(target < targetLimit){                                                       \
-                    *(target)++ = (uint8_t)  targetByteUnit;                                    \
-                    if(offsets){                                                                \
-                        *(offsets++) = offset                            ;                      \
+                ఒకవేళ(లక్ష్యం < లక్ష్యం_హద్దు){                                                       \
+                    *(లక్ష్యం)++ = (uint8_t)  లక్ష్యం_Byte_Unit;                                    \
+                    ఒకవేళ(offsets){                                                                \
+                        *(offsets++) = స్థానభ్రంశం                            ;                      \
                     }                                                                           \
-                }else{                                                                          \
-                    args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =\
-                                (uint8_t) (targetByteUnit);                                     \
-                    *err = U_BUFFER_OVERFLOW_ERROR;                                             \
+                }లేకపోతే{                                                                          \
+                    వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] =\
+                                (uint8_t) (లక్ష్యం_Byte_Unit);                                     \
+                    *err = U_బఫరు_అధికప్రవాహం_ERROR;                                             \
                 }                                                                               \
             }                                                                                   \
         }                                                                                       \
-    }else{                                                                                      \
-        if (targetByteUnit & 0xFF0000) {                                                        \
-            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =        \
-                        (uint8_t) (targetByteUnit >>16);                                        \
+    }లేకపోతే{                                                                                      \
+        ఒకవేళ (లక్ష్యం_Byte_Unit & 0xFF0000) {                                                        \
+            వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] =        \
+                        (uint8_t) (లక్ష్యం_Byte_Unit >>16);                                        \
         }                                                                                       \
-        if(targetByteUnit & 0xFF00){                                                            \
-            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =        \
-                        (uint8_t) (targetByteUnit >>8);                                         \
+        ఒకవేళ(లక్ష్యం_Byte_Unit & 0xFF00){                                                            \
+            వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] =        \
+                        (uint8_t) (లక్ష్యం_Byte_Unit >>8);                                         \
         }                                                                                       \
-        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =            \
-                        (uint8_t) (targetByteUnit);                                             \
-        *err = U_BUFFER_OVERFLOW_ERROR;                                                         \
+        వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] =            \
+                        (uint8_t) (లక్ష్యం_Byte_Unit);                                             \
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;                                                         \
     }                                                                                           \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /* Rules:
  *    Explicit Halant :
@@ -892,268 +892,268 @@ static const uint16_t nuktaSpecialCases[][2]={
  *    Soft Halant :
  *                      <HALANT> + <ZWJ>
  */
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 UConverter_fromUnicode_ISCII_OFFSETS_LOGIC(
-        UConverterFromUnicodeArgs * args, UErrorCode * err) {
-    const char16_t *source = args->source;
-    const char16_t *sourceLimit = args->sourceLimit;
-    unsigned char *target = (unsigned char *) args->target;
-    unsigned char *targetLimit = (unsigned char *) args->targetLimit;
-    int32_t* offsets = args->offsets;
-    uint32_t targetByteUnit = 0x0000;
-    UChar32 sourceChar = 0x0000;
-    UChar32 tempContextFromUnicode = 0x0000;    /* For special handling of the Gurmukhi script. */
-    UConverterDataISCII *converterData;
+        UConverter_From_Unicode_వాదనలు * వాదనలు_2, UError_సంకేతం * err) {
+    స్థిరరాశి char16_t *ఆధారం = వాదనలు_2->ఆధారం;
+    స్థిరరాశి char16_t *ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+    గుర్తులేని అక్షరం *లక్ష్యం = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం;
+    గుర్తులేని అక్షరం *లక్ష్యం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం_హద్దు;
+    int32_t* offsets = వాదనలు_2->offsets;
+    uint32_t లక్ష్యం_Byte_Unit = 0x0000;
+    UChar32 ఆధారం_Char = 0x0000;
+    UChar32 తాత్కాలిక_Context_From_Unicode = 0x0000;    /* For special handling of the Gurmukhi script. */
+    UConverter_దత్తాంశం_ISCII *converter_దత్తాంశం;
     uint16_t newDelta=0;
     uint16_t range = 0;
-    UBool deltaChanged = false;
+    UBool delta_మారింది = అబద్ధం;
 
-    if ((args->converter == nullptr) || (args->targetLimit < args->target) || (args->sourceLimit < args->source)) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ ((వాదనలు_2->converter == శూన్యసూచిక) || (వాదనలు_2->లక్ష్యం_హద్దు < వాదనలు_2->లక్ష్యం) || (వాదనలు_2->ఆధారం_హద్దు < వాదనలు_2->ఆధారం)) {
+        *err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
     /* initialize data */
-    converterData=(UConverterDataISCII*)args->converter->extraInfo;
-    newDelta=converterData->currentDeltaFromUnicode;
+    converter_దత్తాంశం=(UConverter_దత్తాంశం_ISCII*)వాదనలు_2->converter->extraInfo;
+    newDelta=converter_దత్తాంశం->currentDeltaFromUnicode;
     range = (uint16_t)(newDelta/DELTA);
 
-    if ((sourceChar = args->converter->fromUChar32)!=0) {
-        goto getTrail;
+    ఒకవేళ ((ఆధారం_Char = వాదనలు_2->converter->fromUChar32)!=0) {
+        వెళ్ళు getTrail;
     }
 
     /*writing the char to the output stream */
-    while (source < sourceLimit) {
+    అయితే (ఆధారం < ఆధారం_హద్దు) {
         /* Write the language code following LF only if LF is not the last character. */
-        if (args->converter->fromUnicodeStatus == LF) {
-            targetByteUnit = ATR<<8;
-            targetByteUnit += (uint8_t) lookupInitialData[range].isciiLang;
-            args->converter->fromUnicodeStatus = 0x0000;
+        ఒకవేళ (వాదనలు_2->converter->from_Unicode_స్థితి == LF) {
+            లక్ష్యం_Byte_Unit = ATR<<8;
+            లక్ష్యం_Byte_Unit += (uint8_t) lookup_Initial_దత్తాంశం[range].isciiLang;
+            వాదనలు_2->converter->from_Unicode_స్థితి = 0x0000;
             /* now append ATR and language code */
-            WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err);
-            if (U_FAILURE(*err)) {
-                break;
+            WRITE_గమ్యం_లక్ష్యం_FROM_U(వాదనలు_2,offsets,ఆధారం,లక్ష్యం,లక్ష్యం_హద్దు,లక్ష్యం_Byte_Unit,err);
+            ఒకవేళ (U_FAILURE(*err)) {
+                ఆపు;
             }
         }
         
-        sourceChar = *source++;
-        tempContextFromUnicode = converterData->contextCharFromUnicode;
+        ఆధారం_Char = *ఆధారం++;
+        తాత్కాలిక_Context_From_Unicode = converter_దత్తాంశం->contextCharFromUnicode;
         
-        targetByteUnit = missingCharMarker;
+        లక్ష్యం_Byte_Unit = missingCharMarker;
         
         /*check if input is in ASCII and C0 control codes range*/
-        if (sourceChar <= ASCII_END) {
-            args->converter->fromUnicodeStatus = sourceChar;
-            WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,sourceChar,err);
-            if (U_FAILURE(*err)) {
-                break;
+        ఒకవేళ (ఆధారం_Char <= ASCII_చివర) {
+            వాదనలు_2->converter->from_Unicode_స్థితి = ఆధారం_Char;
+            WRITE_గమ్యం_లక్ష్యం_FROM_U(వాదనలు_2,offsets,ఆధారం,లక్ష్యం,లక్ష్యం_హద్దు,ఆధారం_Char,err);
+            ఒకవేళ (U_FAILURE(*err)) {
+                ఆపు;
             }
-            continue;
+            కొనసాగు;
         }
-        switch (sourceChar) {
-        case ZWNJ:
+        ఎంపిక (ఆధారం_Char) {
+        స్థితి ZWNJ:
             /* contextChar has HALANT */
-            if (converterData->contextCharFromUnicode) {
-                converterData->contextCharFromUnicode = 0x00;
-                targetByteUnit = ISCII_HALANT;
-            } else {
+            ఒకవేళ (converter_దత్తాంశం->contextCharFromUnicode) {
+                converter_దత్తాంశం->contextCharFromUnicode = 0x00;
+                లక్ష్యం_Byte_Unit = ISCII_HALANT;
+            } లేకపోతే {
                 /* consume ZWNJ and continue */
-                converterData->contextCharFromUnicode = 0x00;
-                continue;
+                converter_దత్తాంశం->contextCharFromUnicode = 0x00;
+                కొనసాగు;
             }
-            break;
-        case ZWJ:
+            ఆపు;
+        స్థితి ZWJ:
             /* contextChar has HALANT */
-            if (converterData->contextCharFromUnicode) {
-                targetByteUnit = ISCII_NUKTA;
-            } else {
-                targetByteUnit =ISCII_INV;
+            ఒకవేళ (converter_దత్తాంశం->contextCharFromUnicode) {
+                లక్ష్యం_Byte_Unit = ISCII_NUKTA;
+            } లేకపోతే {
+                లక్ష్యం_Byte_Unit =ISCII_INV;
             }
-            converterData->contextCharFromUnicode = 0x00;
-            break;
-        default:
+            converter_దత్తాంశం->contextCharFromUnicode = 0x00;
+            ఆపు;
+        అప్రమేయ:
             /* is the sourceChar in the INDIC_RANGE? */
-            if ((uint16_t)(INDIC_BLOCK_END-sourceChar) <= INDIC_RANGE) {
+            ఒకవేళ ((uint16_t)(INDIC_ఖండం_చివర-ఆధారం_Char) <= INDIC_RANGE) {
                 /* Danda and Double Danda are valid in Northern scripts.. since Unicode
                  * does not include these codepoints in all Northern scrips we need to
                  * filter them out
                  */
-                if (sourceChar!= DANDA && sourceChar != DOUBLE_DANDA) {
+                ఒకవేళ (ఆధారం_Char!= DANDA && ఆధారం_Char != DOUBLE_DANDA) {
                     /* find out to which block the souceChar belongs*/
-                    range =(uint16_t)((sourceChar-INDIC_BLOCK_BEGIN)/DELTA);
+                    range =(uint16_t)((ఆధారం_Char-INDIC_ఖండం_BEGIN)/DELTA);
                     newDelta =(uint16_t)(range*DELTA);
 
                     /* Now are we in the same block as the previous? */
-                    if (newDelta!= converterData->currentDeltaFromUnicode || converterData->isFirstBuffer) {
-                        converterData->currentDeltaFromUnicode = newDelta;
-                        converterData->currentMaskFromUnicode = lookupInitialData[range].maskEnum;
-                        deltaChanged =true;
-                        converterData->isFirstBuffer=false;
+                    ఒకవేళ (newDelta!= converter_దత్తాంశం->currentDeltaFromUnicode || converter_దత్తాంశం->is_మొదటి_బఫరు) {
+                        converter_దత్తాంశం->currentDeltaFromUnicode = newDelta;
+                        converter_దత్తాంశం->current_ముసుగు_From_Unicode = lookup_Initial_దత్తాంశం[range].ముసుగు_Enum_2;
+                        delta_మారింది =నిజం;
+                        converter_దత్తాంశం->is_మొదటి_బఫరు=అబద్ధం;
                     }
                     
-                    if (converterData->currentDeltaFromUnicode == PNJ_DELTA) { 
-                        if (sourceChar == PNJ_TIPPI) {
+                    ఒకవేళ (converter_దత్తాంశం->currentDeltaFromUnicode == PNJ_DELTA) { 
+                        ఒకవేళ (ఆధారం_Char == PNJ_TIPPI) {
                             /* Make sure Tippi is converted to Bindi. */
-                            sourceChar = PNJ_BINDI;
-                        } else if (sourceChar == PNJ_ADHAK) {
+                            ఆధారం_Char = PNJ_BINDI;
+                        } లేకపోతే ఒకవేళ (ఆధారం_Char == PNJ_ADHAK) {
                             /* This is for consonant cluster handling. */
-                            converterData->contextCharFromUnicode = PNJ_ADHAK;
+                            converter_దత్తాంశం->contextCharFromUnicode = PNJ_ADHAK;
                         }
                         
                     }
                     /* Normalize all Indic codepoints to Devanagari and map them to ISCII */
                     /* now subtract the new delta from sourceChar*/
-                    sourceChar -= converterData->currentDeltaFromUnicode;
+                    ఆధారం_Char -= converter_దత్తాంశం->currentDeltaFromUnicode;
                 }
 
                 /* get the target byte unit */
-                targetByteUnit=fromUnicodeTable[(uint8_t)sourceChar];
+                లక్ష్యం_Byte_Unit=from_Unicode_పట్టిక[(uint8_t)ఆధారం_Char];
 
                 /* is the code point valid in current script? */
-                if ((validityTable[(uint8_t)sourceChar] & converterData->currentMaskFromUnicode)==0) {
+                ఒకవేళ ((validity_పట్టిక[(uint8_t)ఆధారం_Char] & converter_దత్తాంశం->current_ముసుగు_From_Unicode)==0) {
                     /* Vocallic RR is assigned in ISCII Telugu and Unicode */
-                    if (converterData->currentDeltaFromUnicode!=(TELUGU_DELTA) || sourceChar!=VOCALLIC_RR) {
-                        targetByteUnit=missingCharMarker;
+                    ఒకవేళ (converter_దత్తాంశం->currentDeltaFromUnicode!=(TELUGU_DELTA) || ఆధారం_Char!=VOCALLIC_RR) {
+                        లక్ష్యం_Byte_Unit=missingCharMarker;
                     }
                 }
 
-                if (deltaChanged) {
+                ఒకవేళ (delta_మారింది) {
                     /* we are in a script block which is different than
                      * previous sourceChar's script block write ATR and language codes
                      */
-                    uint32_t temp=0;
-                    temp =(uint16_t)(ATR<<8);
-                    temp += (uint16_t)((uint8_t) lookupInitialData[range].isciiLang);
+                    uint32_t తాత్కాలిక=0;
+                    తాత్కాలిక =(uint16_t)(ATR<<8);
+                    తాత్కాలిక += (uint16_t)((uint8_t) lookup_Initial_దత్తాంశం[range].isciiLang);
                     /* reset */
-                    deltaChanged=false;
+                    delta_మారింది=అబద్ధం;
                     /* now append ATR and language code */
-                    WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,temp,err);
-                    if (U_FAILURE(*err)) {
-                        break;
+                    WRITE_గమ్యం_లక్ష్యం_FROM_U(వాదనలు_2,offsets,ఆధారం,లక్ష్యం,లక్ష్యం_హద్దు,తాత్కాలిక,err);
+                    ఒకవేళ (U_FAILURE(*err)) {
+                        ఆపు;
                     }
                 }
                 
-                if (converterData->currentDeltaFromUnicode == PNJ_DELTA && (sourceChar + PNJ_DELTA) == PNJ_ADHAK) {
-                    continue;
+                ఒకవేళ (converter_దత్తాంశం->currentDeltaFromUnicode == PNJ_DELTA && (ఆధారం_Char + PNJ_DELTA) == PNJ_ADHAK) {
+                    కొనసాగు;
                 }
             }
             /* reset context char */
-            converterData->contextCharFromUnicode = 0x00;
-            break;
+            converter_దత్తాంశం->contextCharFromUnicode = 0x00;
+            ఆపు;
         }
-        if (converterData->currentDeltaFromUnicode == PNJ_DELTA && tempContextFromUnicode == PNJ_ADHAK && isPNJConsonant((sourceChar + PNJ_DELTA))) {
+        ఒకవేళ (converter_దత్తాంశం->currentDeltaFromUnicode == PNJ_DELTA && తాత్కాలిక_Context_From_Unicode == PNJ_ADHAK && isPNJConsonant((ఆధారం_Char + PNJ_DELTA))) {
             /* If the previous codepoint is Adhak and the current codepoint is a consonant, the targetByteUnit should be C + Halant + C. */
             /* reset context char */
-            converterData->contextCharFromUnicode = 0x0000;
-            targetByteUnit = targetByteUnit << 16 | ISCII_HALANT << 8 | targetByteUnit;
+            converter_దత్తాంశం->contextCharFromUnicode = 0x0000;
+            లక్ష్యం_Byte_Unit = లక్ష్యం_Byte_Unit << 16 | ISCII_HALANT << 8 | లక్ష్యం_Byte_Unit;
             /* write targetByteUnit to target */
-            WRITE_TO_TARGET_FROM_U(args, offsets, source, target, targetLimit, targetByteUnit,err);
-            if (U_FAILURE(*err)) {
-                break;
+            WRITE_గమ్యం_లక్ష్యం_FROM_U(వాదనలు_2, offsets, ఆధారం, లక్ష్యం, లక్ష్యం_హద్దు, లక్ష్యం_Byte_Unit,err);
+            ఒకవేళ (U_FAILURE(*err)) {
+                ఆపు;
             }
-        } else if (targetByteUnit != missingCharMarker) {
-            if (targetByteUnit==ISCII_HALANT) {
-                converterData->contextCharFromUnicode = (char16_t)targetByteUnit;
+        } లేకపోతే ఒకవేళ (లక్ష్యం_Byte_Unit != missingCharMarker) {
+            ఒకవేళ (లక్ష్యం_Byte_Unit==ISCII_HALANT) {
+                converter_దత్తాంశం->contextCharFromUnicode = (char16_t)లక్ష్యం_Byte_Unit;
             }
             /* write targetByteUnit to target*/
-            WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err);
-            if (U_FAILURE(*err)) {
-                break;
+            WRITE_గమ్యం_లక్ష్యం_FROM_U(వాదనలు_2,offsets,ఆధారం,లక్ష్యం,లక్ష్యం_హద్దు,లక్ష్యం_Byte_Unit,err);
+            ఒకవేళ (U_FAILURE(*err)) {
+                ఆపు;
             }
-        } else {
+        } లేకపోతే {
             /* oops.. the code point is unassigned */
             /*check if the char is a First surrogate*/
-            if (U16_IS_SURROGATE(sourceChar)) {
-                if (U16_IS_SURROGATE_LEAD(sourceChar)) {
+            ఒకవేళ (U16_IS_SURROGATE(ఆధారం_Char)) {
+                ఒకవేళ (U16_IS_SURROGATE_LEAD(ఆధారం_Char)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if (source < sourceLimit) {
+                    ఒకవేళ (ఆధారం < ఆధారం_హద్దు) {
                         /* test the following code unit */
-                        char16_t trail= (*source);
-                        if (U16_IS_TRAIL(trail)) {
-                            source++;
-                            sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
-                            *err =U_INVALID_CHAR_FOUND;
+                        char16_t trail= (*ఆధారం);
+                        ఒకవేళ (U16_IS_TRAIL(trail)) {
+                            ఆధారం++;
+                            ఆధారం_Char=U16_GET_SUPPLEMENTARY(ఆధారం_Char, trail);
+                            *err =U_INVALID_CHAR_దొరికింది;
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } లేకపోతే {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *err=U_ILLEGAL_CHAR_FOUND;
+                            *err=U_ILLEGAL_CHAR_దొరికింది;
                         }
-                    } else {
+                    } లేకపోతే {
                         /* no more input */
                         *err = U_ZERO_ERROR;
                     }
-                } else {
+                } లేకపోతే {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *err=U_ILLEGAL_CHAR_FOUND;
+                    *err=U_ILLEGAL_CHAR_దొరికింది;
                 }
-            } else {
+            } లేకపోతే {
                 /* callback(unassigned) for a BMP code point */
-                *err = U_INVALID_CHAR_FOUND;
+                *err = U_INVALID_CHAR_దొరికింది;
             }
 
-            args->converter->fromUChar32=sourceChar;
-            break;
+            వాదనలు_2->converter->fromUChar32=ఆధారం_Char;
+            ఆపు;
         }
     }/* end while(mySourceIndex<mySourceLength) */
 
     /*save the state and return */
-    args->source = source;
-    args->target = (char*)target;
+    వాదనలు_2->ఆధారం = ఆధారం;
+    వాదనలు_2->లక్ష్యం = (అక్షరం*)లక్ష్యం;
 }
 
-static const uint16_t lookupTable[][2]={
+స్థిర స్థిరరాశి uint16_t lookup_పట్టిక[][2]={
     { ZERO,       ZERO     },     /*DEFAULT*/
     { ZERO,       ZERO     },     /*ROMAN*/
-    { DEVANAGARI, DEV_MASK },
-    { BENGALI,    BNG_MASK },
-    { TAMIL,      TML_MASK },
-    { TELUGU,     KND_MASK },
-    { BENGALI,    BNG_MASK },
-    { ORIYA,      ORI_MASK },
-    { KANNADA,    KND_MASK },
-    { MALAYALAM,  MLM_MASK },
-    { GUJARATI,   GJR_MASK },
-    { GURMUKHI,   PNJ_MASK }
+    { DEVANAGARI, DEV_ముసుగు },
+    { BENGALI,    BNG_ముసుగు },
+    { TAMIL,      TML_ముసుగు },
+    { TELUGU,     KND_ముసుగు },
+    { BENGALI,    BNG_ముసుగు },
+    { ORIYA,      ORI_ముసుగు },
+    { KANNADA,    KND_ముసుగు },
+    { MALAYALAM,  MLM_ముసుగు },
+    { GUJARATI,   GJR_ముసుగు },
+    { GURMUKHI,   PNJ_ముసుగు }
 };
 
-#define WRITE_TO_TARGET_TO_U(args,source,target,offsets,offset,targetUniChar,delta, err) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,offsets,స్థానభ్రంశం,లక్ష్యం_Uni_Char,delta, err) UPRV_ఖండం_MACRO_BEGIN { \
     /* add offset to current Indic Block */                                              \
-    if(targetUniChar>ASCII_END &&                                                        \
-           targetUniChar != ZWJ &&                                                       \
-           targetUniChar != ZWNJ &&                                                      \
-           targetUniChar != DANDA &&                                                     \
-           targetUniChar != DOUBLE_DANDA){                                               \
+    ఒకవేళ(లక్ష్యం_Uni_Char>ASCII_చివర &&                                                        \
+           లక్ష్యం_Uni_Char != ZWJ &&                                                       \
+           లక్ష్యం_Uni_Char != ZWNJ &&                                                      \
+           లక్ష్యం_Uni_Char != DANDA &&                                                     \
+           లక్ష్యం_Uni_Char != DOUBLE_DANDA){                                               \
                                                                                          \
-           targetUniChar+=(uint16_t)(delta);                                             \
+           లక్ష్యం_Uni_Char+=(uint16_t)(delta);                                             \
     }                                                                                    \
     /* now write the targetUniChar */                                                    \
-    if(target<args->targetLimit){                                                        \
-        *(target)++ = (char16_t)targetUniChar;                                              \
-        if(offsets){                                                                     \
-            *(offsets)++ = (int32_t)(offset);                                            \
+    ఒకవేళ(లక్ష్యం<వాదనలు_2->లక్ష్యం_హద్దు){                                                        \
+        *(లక్ష్యం)++ = (char16_t)లక్ష్యం_Uni_Char;                                              \
+        ఒకవేళ(offsets){                                                                     \
+            *(offsets)++ = (int32_t)(స్థానభ్రంశం);                                            \
         }                                                                                \
-    }else{                                                                               \
-        args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++] =   \
-            (char16_t)targetUniChar;                                                        \
-        *err = U_BUFFER_OVERFLOW_ERROR;                                                  \
+    }లేకపోతే{                                                                               \
+        వాదనలు_2->converter->UChar_Error_బఫరు[వాదనలు_2->converter->UChar_Error_బఫరు_నిడివి++] =   \
+            (char16_t)లక్ష్యం_Uni_Char;                                                        \
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;                                                  \
     }                                                                                    \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
-#define GET_MAPPING(sourceChar,targetUniChar,data) UPRV_BLOCK_MACRO_BEGIN {              \
-    targetUniChar = toUnicodeTable[(sourceChar)] ;                                       \
+#నిర్వచించు GET_MAPPING(ఆధారం_Char,లక్ష్యం_Uni_Char,దత్తాంశం) UPRV_ఖండం_MACRO_BEGIN {              \
+    లక్ష్యం_Uni_Char = గమ్యం_Unicode_పట్టిక[(ఆధారం_Char)] ;                                       \
     /* is the code point valid in current script? */                                     \
-    if(sourceChar> ASCII_END &&                                                          \
-            (validityTable[(targetUniChar & 0x7F)] & data->currentMaskToUnicode)==0){    \
+    ఒకవేళ(ఆధారం_Char> ASCII_చివర &&                                                          \
+            (validity_పట్టిక[(లక్ష్యం_Uni_Char & 0x7F)] & దత్తాంశం->current_ముసుగు_గమ్యం_Unicode)==0){    \
         /* Vocallic RR is assigned in ISCII Telugu and Unicode */                         \
-        if(data->currentDeltaToUnicode!=(TELUGU_DELTA) ||                                \
-                    targetUniChar!=VOCALLIC_RR){                                         \
-            targetUniChar=missingCharMarker;                                             \
+        ఒకవేళ(దత్తాంశం->current_Delta_గమ్యం_Unicode!=(TELUGU_DELTA) ||                                \
+                    లక్ష్యం_Uni_Char!=VOCALLIC_RR){                                         \
+            లక్ష్యం_Uni_Char=missingCharMarker;                                             \
         }                                                                                \
     }                                                                                    \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /***********
  *  Rules for ISCII to Unicode converter
@@ -1176,443 +1176,443 @@ static const uint16_t lookupTable[][2]={
  *
  */
 
-static void U_CALLCONV
-UConverter_toUnicode_ISCII_OFFSETS_LOGIC(UConverterToUnicodeArgs *args, UErrorCode* err) {
-    const char *source = ( char *) args->source;
-    char16_t *target = args->target;
-    const char *sourceLimit = args->sourceLimit;
-    const char16_t* targetLimit = args->targetLimit;
-    uint32_t targetUniChar = 0x0000;
-    uint8_t sourceChar = 0x0000;
-    UConverterDataISCII* data;
-    UChar32* toUnicodeStatus=nullptr;
-    UChar32 tempTargetUniChar = 0x0000;
-    char16_t* contextCharToUnicode= nullptr;
-    UBool found;
-    int i; 
-    int offset = 0;
+స్థిర శూన్య U_CALLCONV
+UConverter_గమ్యం_Unicode_ISCII_OFFSETS_LOGIC(UConverter_గమ్యం_Unicode_వాదనలు *వాదనలు_2, UError_సంకేతం* err) {
+    స్థిరరాశి అక్షరం *ఆధారం = ( అక్షరం *) వాదనలు_2->ఆధారం;
+    char16_t *లక్ష్యం = వాదనలు_2->లక్ష్యం;
+    స్థిరరాశి అక్షరం *ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి char16_t* లక్ష్యం_హద్దు = వాదనలు_2->లక్ష్యం_హద్దు;
+    uint32_t లక్ష్యం_Uni_Char = 0x0000;
+    uint8_t ఆధారం_Char = 0x0000;
+    UConverter_దత్తాంశం_ISCII* దత్తాంశం;
+    UChar32* గమ్యం_Unicode_స్థితి=శూన్యసూచిక;
+    UChar32 తాత్కాలిక_లక్ష్యం_Uni_Char = 0x0000;
+    char16_t* context_Char_గమ్యం_Unicode= శూన్యసూచిక;
+    UBool దొరికింది;
+    పూర్ణాంకం i; 
+    పూర్ణాంకం స్థానభ్రంశం = 0;
 
-    if ((args->converter == nullptr) || (target < args->target) || (source < args->source)) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ ((వాదనలు_2->converter == శూన్యసూచిక) || (లక్ష్యం < వాదనలు_2->లక్ష్యం) || (ఆధారం < వాదనలు_2->ఆధారం)) {
+        *err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    data = (UConverterDataISCII*)(args->converter->extraInfo);
-    contextCharToUnicode = &data->contextCharToUnicode; /* contains previous ISCII codepoint visited */
-    toUnicodeStatus = (UChar32*)&args->converter->toUnicodeStatus;/* contains the mapping to Unicode of the above codepoint*/
+    దత్తాంశం = (UConverter_దత్తాంశం_ISCII*)(వాదనలు_2->converter->extraInfo);
+    context_Char_గమ్యం_Unicode = &దత్తాంశం->context_Char_గమ్యం_Unicode; /* contains previous ISCII codepoint visited */
+    గమ్యం_Unicode_స్థితి = (UChar32*)&వాదనలు_2->converter->గమ్యం_Unicode_స్థితి;/* contains the mapping to Unicode of the above codepoint*/
 
-    while (U_SUCCESS(*err) && source<sourceLimit) {
+    అయితే (U_SUCCESS(*err) && ఆధారం<ఆధారం_హద్దు) {
 
-        targetUniChar = missingCharMarker;
+        లక్ష్యం_Uni_Char = missingCharMarker;
 
-        if (target < targetLimit) {
-            sourceChar = (unsigned char)*(source)++;
+        ఒకవేళ (లక్ష్యం < లక్ష్యం_హద్దు) {
+            ఆధారం_Char = (గుర్తులేని అక్షరం)*(ఆధారం)++;
 
             /* look at the post-context perform special processing */
-            if (*contextCharToUnicode==ATR) {
+            ఒకవేళ (*context_Char_గమ్యం_Unicode==ATR) {
 
                 /* If we have ATR in *contextCharToUnicode then we need to change our
                  * state to the Indic Script specified by sourceChar
                  */
 
                 /* check if the sourceChar is supported script range*/
-                if ((uint8_t)(PNJ-sourceChar)<=PNJ-DEV) {
-                    data->currentDeltaToUnicode = (uint16_t)(lookupTable[sourceChar & 0x0F][0] * DELTA);
-                    data->currentMaskToUnicode = (MaskEnum)lookupTable[sourceChar & 0x0F][1];
-                } else if (sourceChar==DEF) {
+                ఒకవేళ ((uint8_t)(PNJ-ఆధారం_Char)<=PNJ-DEV) {
+                    దత్తాంశం->current_Delta_గమ్యం_Unicode = (uint16_t)(lookup_పట్టిక[ఆధారం_Char & 0x0F][0] * DELTA);
+                    దత్తాంశం->current_ముసుగు_గమ్యం_Unicode = (ముసుగు_Enum)lookup_పట్టిక[ఆధారం_Char & 0x0F][1];
+                } లేకపోతే ఒకవేళ (ఆధారం_Char==DEF) {
                     /* switch back to default */
-                    data->currentDeltaToUnicode = data->defDeltaToUnicode;
-                    data->currentMaskToUnicode = data->defMaskToUnicode;
-                } else {
-                    if ((sourceChar >= 0x21 && sourceChar <= 0x3F)) {
+                    దత్తాంశం->current_Delta_గమ్యం_Unicode = దత్తాంశం->def_Delta_గమ్యం_Unicode;
+                    దత్తాంశం->current_ముసుగు_గమ్యం_Unicode = దత్తాంశం->def_ముసుగు_గమ్యం_Unicode;
+                } లేకపోతే {
+                    ఒకవేళ ((ఆధారం_Char >= 0x21 && ఆధారం_Char <= 0x3F)) {
                         /* these are display codes consume and continue */
-                    } else {
-                        *err =U_ILLEGAL_CHAR_FOUND;
+                    } లేకపోతే {
+                        *err =U_ILLEGAL_CHAR_దొరికింది;
                         /* reset */
-                        *contextCharToUnicode=NO_CHAR_MARKER;
-                        goto CALLBACK;
+                        *context_Char_గమ్యం_Unicode=NO_CHAR_MARKER;
+                        వెళ్ళు CALLBACK;
                     }
                 }
 
                 /* reset */
-                *contextCharToUnicode=NO_CHAR_MARKER;
+                *context_Char_గమ్యం_Unicode=NO_CHAR_MARKER;
 
-                continue;
+                కొనసాగు;
 
-            } else if (*contextCharToUnicode==EXT) {
+            } లేకపోతే ఒకవేళ (*context_Char_గమ్యం_Unicode==EXT) {
                 /* check if sourceChar is in 0xA1-0xEE range */
-                if ((uint8_t) (EXT_RANGE_END - sourceChar) <= (EXT_RANGE_END - EXT_RANGE_BEGIN)) {
+                ఒకవేళ ((uint8_t) (EXT_RANGE_చివర - ఆధారం_Char) <= (EXT_RANGE_చివర - EXT_RANGE_BEGIN)) {
                     /* We currently support only Anudatta and Devanagari abbreviation sign */
-                    if (sourceChar==0xBF || sourceChar == 0xB8) {
-                        targetUniChar = (sourceChar==0xBF) ? DEV_ABBR_SIGN : DEV_ANUDATTA;
+                    ఒకవేళ (ఆధారం_Char==0xBF || ఆధారం_Char == 0xB8) {
+                        లక్ష్యం_Uni_Char = (ఆధారం_Char==0xBF) ? DEV_ABBR_SIGN : DEV_ANUDATTA;
                         
                         /* find out if the mapping is valid in this state */
-                        if (validityTable[(uint8_t)targetUniChar] & data->currentMaskToUnicode) {
-                            *contextCharToUnicode= NO_CHAR_MARKER;
+                        ఒకవేళ (validity_పట్టిక[(uint8_t)లక్ష్యం_Uni_Char] & దత్తాంశం->current_ముసుగు_గమ్యం_Unicode) {
+                            *context_Char_గమ్యం_Unicode= NO_CHAR_MARKER;
 
                             /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                            if (data->prevToUnicodeStatus) {
-                                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                                data->prevToUnicodeStatus = 0x0000;
+                            ఒకవేళ (దత్తాంశం->prev_గమ్యం_Unicode_స్థితి) {
+                                WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -1),దత్తాంశం->prev_గమ్యం_Unicode_స్థితి,0,err);
+                                దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = 0x0000;
                             }
                             /* write to target */
-                            WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,data->currentDeltaToUnicode,err);
+                            WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -2),లక్ష్యం_Uni_Char,దత్తాంశం->current_Delta_గమ్యం_Unicode,err);
 
-                            continue;
+                            కొనసాగు;
                         }
                     }
                     /* byte unit is unassigned */
-                    targetUniChar = missingCharMarker;
-                    *err= U_INVALID_CHAR_FOUND;
-                } else {
+                    లక్ష్యం_Uni_Char = missingCharMarker;
+                    *err= U_INVALID_CHAR_దొరికింది;
+                } లేకపోతే {
                     /* only 0xA1 - 0xEE are legal after EXT char */
-                    *contextCharToUnicode= NO_CHAR_MARKER;
-                    *err = U_ILLEGAL_CHAR_FOUND;
+                    *context_Char_గమ్యం_Unicode= NO_CHAR_MARKER;
+                    *err = U_ILLEGAL_CHAR_దొరికింది;
                 }
-                goto CALLBACK;
-            } else if (*contextCharToUnicode==ISCII_INV) {
-                if (sourceChar==ISCII_HALANT) {
-                    targetUniChar = 0x0020; /* replace with space according to Indic FAQ */
-                } else {
-                    targetUniChar = ZWJ;
+                వెళ్ళు CALLBACK;
+            } లేకపోతే ఒకవేళ (*context_Char_గమ్యం_Unicode==ISCII_INV) {
+                ఒకవేళ (ఆధారం_Char==ISCII_HALANT) {
+                    లక్ష్యం_Uni_Char = 0x0020; /* replace with space according to Indic FAQ */
+                } లేకపోతే {
+                    లక్ష్యం_Uni_Char = ZWJ;
                 }
 
                 /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                if (data->prevToUnicodeStatus) {
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                    data->prevToUnicodeStatus = 0x0000;
+                ఒకవేళ (దత్తాంశం->prev_గమ్యం_Unicode_స్థితి) {
+                    WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -1),దత్తాంశం->prev_గమ్యం_Unicode_స్థితి,0,err);
+                    దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = 0x0000;
                 }
                 /* write to target */
-                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,data->currentDeltaToUnicode,err);
+                WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -2),లక్ష్యం_Uni_Char,దత్తాంశం->current_Delta_గమ్యం_Unicode,err);
                 /* reset */
-                *contextCharToUnicode=NO_CHAR_MARKER;
+                *context_Char_గమ్యం_Unicode=NO_CHAR_MARKER;
             }
 
             /* look at the pre-context and perform special processing */
-            switch (sourceChar) {
-            case ISCII_INV:
-            case EXT:
-            case ATR:
-                *contextCharToUnicode = (char16_t)sourceChar;
+            ఎంపిక (ఆధారం_Char) {
+            స్థితి ISCII_INV:
+            స్థితి EXT:
+            స్థితి ATR:
+                *context_Char_గమ్యం_Unicode = (char16_t)ఆధారం_Char;
 
-                if (*toUnicodeStatus != missingCharMarker) {
+                ఒకవేళ (*గమ్యం_Unicode_స్థితి != missingCharMarker) {
                     /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                    if (data->prevToUnicodeStatus) {
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                        data->prevToUnicodeStatus = 0x0000;
+                    ఒకవేళ (దత్తాంశం->prev_గమ్యం_Unicode_స్థితి) {
+                        WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -1),దత్తాంశం->prev_గమ్యం_Unicode_స్థితి,0,err);
+                        దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = 0x0000;
                     }
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,data->currentDeltaToUnicode,err);
-                    *toUnicodeStatus = missingCharMarker;
+                    WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -2),*గమ్యం_Unicode_స్థితి,దత్తాంశం->current_Delta_గమ్యం_Unicode,err);
+                    *గమ్యం_Unicode_స్థితి = missingCharMarker;
                 }
-                continue;
-            case ISCII_DANDA:
+                కొనసాగు;
+            స్థితి ISCII_DANDA:
                 /* handle double danda*/
-                if (*contextCharToUnicode== ISCII_DANDA) {
-                    targetUniChar = DOUBLE_DANDA;
+                ఒకవేళ (*context_Char_గమ్యం_Unicode== ISCII_DANDA) {
+                    లక్ష్యం_Uni_Char = DOUBLE_DANDA;
                     /* clear the context */
-                    *contextCharToUnicode = NO_CHAR_MARKER;
-                    *toUnicodeStatus = missingCharMarker;
-                } else {
-                    GET_MAPPING(sourceChar,targetUniChar,data);
-                    *contextCharToUnicode = sourceChar;
+                    *context_Char_గమ్యం_Unicode = NO_CHAR_MARKER;
+                    *గమ్యం_Unicode_స్థితి = missingCharMarker;
+                } లేకపోతే {
+                    GET_MAPPING(ఆధారం_Char,లక్ష్యం_Uni_Char,దత్తాంశం);
+                    *context_Char_గమ్యం_Unicode = ఆధారం_Char;
                 }
-                break;
-            case ISCII_HALANT:
+                ఆపు;
+            స్థితి ISCII_HALANT:
                 /* handle explicit halant */
-                if (*contextCharToUnicode == ISCII_HALANT) {
-                    targetUniChar = ZWNJ;
+                ఒకవేళ (*context_Char_గమ్యం_Unicode == ISCII_HALANT) {
+                    లక్ష్యం_Uni_Char = ZWNJ;
                     /* clear the context */
-                    *contextCharToUnicode = NO_CHAR_MARKER;
-                } else {
-                    GET_MAPPING(sourceChar,targetUniChar,data);
-                    *contextCharToUnicode = sourceChar;
+                    *context_Char_గమ్యం_Unicode = NO_CHAR_MARKER;
+                } లేకపోతే {
+                    GET_MAPPING(ఆధారం_Char,లక్ష్యం_Uni_Char,దత్తాంశం);
+                    *context_Char_గమ్యం_Unicode = ఆధారం_Char;
                 }
-                break;
-            case 0x0A:
-            case 0x0D:
-                data->resetToDefaultToUnicode = true;
-                GET_MAPPING(sourceChar,targetUniChar,data)
+                ఆపు;
+            స్థితి 0x0A:
+            స్థితి 0x0D:
+                దత్తాంశం->reset_గమ్యం_Default_గమ్యం_Unicode = నిజం;
+                GET_MAPPING(ఆధారం_Char,లక్ష్యం_Uni_Char,దత్తాంశం)
                 ;
-                *contextCharToUnicode = sourceChar;
-                break;
+                *context_Char_గమ్యం_Unicode = ఆధారం_Char;
+                ఆపు;
 
-            case ISCII_VOWEL_SIGN_E:
+            స్థితి ISCII_VOWEL_SIGN_E:
                 i=1;
-                found=false;
-                for (; i<vowelSignESpecialCases[0][0]; i++) {
+                దొరికింది=అబద్ధం;
+                కొరకు (; i<vowelSignESpecialCases[0][0]; i++) {
                     U_ASSERT(i<UPRV_LENGTHOF(vowelSignESpecialCases));
-                    if (vowelSignESpecialCases[i][0]==(uint8_t)*contextCharToUnicode) {
-                        targetUniChar=vowelSignESpecialCases[i][1];
-                        found=true;
-                        break;
+                    ఒకవేళ (vowelSignESpecialCases[i][0]==(uint8_t)*context_Char_గమ్యం_Unicode) {
+                        లక్ష్యం_Uni_Char=vowelSignESpecialCases[i][1];
+                        దొరికింది=నిజం;
+                        ఆపు;
                     }
                 }
-                if (found) {
+                ఒకవేళ (దొరికింది) {
                     /* find out if the mapping is valid in this state */
-                    if (validityTable[(uint8_t)targetUniChar] & data->currentMaskToUnicode) {
+                    ఒకవేళ (validity_పట్టిక[(uint8_t)లక్ష్యం_Uni_Char] & దత్తాంశం->current_ముసుగు_గమ్యం_Unicode) {
                         /*targetUniChar += data->currentDeltaToUnicode ;*/
-                        *contextCharToUnicode= NO_CHAR_MARKER;
-                        *toUnicodeStatus = missingCharMarker;
-                        break;
+                        *context_Char_గమ్యం_Unicode= NO_CHAR_MARKER;
+                        *గమ్యం_Unicode_స్థితి = missingCharMarker;
+                        ఆపు;
                     }
                 }
-                GET_MAPPING(sourceChar,targetUniChar,data);
-                *contextCharToUnicode = sourceChar;
-                break;
+                GET_MAPPING(ఆధారం_Char,లక్ష్యం_Uni_Char,దత్తాంశం);
+                *context_Char_గమ్యం_Unicode = ఆధారం_Char;
+                ఆపు;
 
-            case ISCII_NUKTA:
+            స్థితి ISCII_NUKTA:
                 /* handle soft halant */
-                if (*contextCharToUnicode == ISCII_HALANT) {
-                    targetUniChar = ZWJ;
+                ఒకవేళ (*context_Char_గమ్యం_Unicode == ISCII_HALANT) {
+                    లక్ష్యం_Uni_Char = ZWJ;
                     /* clear the context */
-                    *contextCharToUnicode = NO_CHAR_MARKER;
-                    break;
-                } else if (data->currentDeltaToUnicode == PNJ_DELTA && data->contextCharToUnicode == 0xc0) {
+                    *context_Char_గమ్యం_Unicode = NO_CHAR_MARKER;
+                    ఆపు;
+                } లేకపోతే ఒకవేళ (దత్తాంశం->current_Delta_గమ్యం_Unicode == PNJ_DELTA && దత్తాంశం->context_Char_గమ్యం_Unicode == 0xc0) {
                     /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                    if (data->prevToUnicodeStatus) {
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                        data->prevToUnicodeStatus = 0x0000;
+                    ఒకవేళ (దత్తాంశం->prev_గమ్యం_Unicode_స్థితి) {
+                        WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -1),దత్తాంశం->prev_గమ్యం_Unicode_స్థితి,0,err);
+                        దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = 0x0000;
                     }
                     /* We got here because ISCII_NUKTA was preceded by 0xc0 and we are converting Gurmukhi.
                      * In that case we must convert (0xc0 0xe9) to (\u0a5c\u0a4d\u0a39).
                      */
-                    targetUniChar = PNJ_RRA;
-                    WRITE_TO_TARGET_TO_U(args, source, target, args->offsets, (source-args->source)-2, targetUniChar, 0, err);
-                    if (U_SUCCESS(*err)) {
-                        targetUniChar = PNJ_SIGN_VIRAMA;
-                        WRITE_TO_TARGET_TO_U(args, source, target, args->offsets, (source-args->source)-2, targetUniChar, 0, err);
-                        if (U_SUCCESS(*err)) {
-                            targetUniChar = PNJ_HA;
-                            WRITE_TO_TARGET_TO_U(args, source, target, args->offsets, (source-args->source)-2, targetUniChar, 0, err);
-                        } else {
-                            args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]= PNJ_HA;
+                    లక్ష్యం_Uni_Char = PNJ_RRA;
+                    WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2, ఆధారం, లక్ష్యం, వాదనలు_2->offsets, (ఆధారం-వాదనలు_2->ఆధారం)-2, లక్ష్యం_Uni_Char, 0, err);
+                    ఒకవేళ (U_SUCCESS(*err)) {
+                        లక్ష్యం_Uni_Char = PNJ_SIGN_VIRAMA;
+                        WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2, ఆధారం, లక్ష్యం, వాదనలు_2->offsets, (ఆధారం-వాదనలు_2->ఆధారం)-2, లక్ష్యం_Uni_Char, 0, err);
+                        ఒకవేళ (U_SUCCESS(*err)) {
+                            లక్ష్యం_Uni_Char = PNJ_HA;
+                            WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2, ఆధారం, లక్ష్యం, వాదనలు_2->offsets, (ఆధారం-వాదనలు_2->ఆధారం)-2, లక్ష్యం_Uni_Char, 0, err);
+                        } లేకపోతే {
+                            వాదనలు_2->converter->UChar_Error_బఫరు[వాదనలు_2->converter->UChar_Error_బఫరు_నిడివి++]= PNJ_HA;
                         }
-                    } else {
-                        args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]= PNJ_SIGN_VIRAMA;
-                        args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]= PNJ_HA;
+                    } లేకపోతే {
+                        వాదనలు_2->converter->UChar_Error_బఫరు[వాదనలు_2->converter->UChar_Error_బఫరు_నిడివి++]= PNJ_SIGN_VIRAMA;
+                        వాదనలు_2->converter->UChar_Error_బఫరు[వాదనలు_2->converter->UChar_Error_బఫరు_నిడివి++]= PNJ_HA;
                     }
-                    *toUnicodeStatus = missingCharMarker;
-                    data->contextCharToUnicode = NO_CHAR_MARKER;
-                    continue;
-                } else {
+                    *గమ్యం_Unicode_స్థితి = missingCharMarker;
+                    దత్తాంశం->context_Char_గమ్యం_Unicode = NO_CHAR_MARKER;
+                    కొనసాగు;
+                } లేకపోతే {
                     /* try to handle <CHAR> + ISCII_NUKTA special mappings */
                     i=1;
-                    found =false;
-                    for (; i<nuktaSpecialCases[0][0]; i++) {
-                        if (nuktaSpecialCases[i][0]==(uint8_t)
-                                *contextCharToUnicode) {
-                            targetUniChar=nuktaSpecialCases[i][1];
-                            found =true;
-                            break;
+                    దొరికింది =అబద్ధం;
+                    కొరకు (; i<nuktaSpecialCases[0][0]; i++) {
+                        ఒకవేళ (nuktaSpecialCases[i][0]==(uint8_t)
+                                *context_Char_గమ్యం_Unicode) {
+                            లక్ష్యం_Uni_Char=nuktaSpecialCases[i][1];
+                            దొరికింది =నిజం;
+                            ఆపు;
                         }
                     }
-                    if (found) {
+                    ఒకవేళ (దొరికింది) {
                         /* find out if the mapping is valid in this state */
-                        if (validityTable[(uint8_t)targetUniChar] & data->currentMaskToUnicode) {
+                        ఒకవేళ (validity_పట్టిక[(uint8_t)లక్ష్యం_Uni_Char] & దత్తాంశం->current_ముసుగు_గమ్యం_Unicode) {
                             /*targetUniChar += data->currentDeltaToUnicode ;*/
-                            *contextCharToUnicode= NO_CHAR_MARKER;
-                            *toUnicodeStatus = missingCharMarker;
-                            if (data->currentDeltaToUnicode == PNJ_DELTA) {
+                            *context_Char_గమ్యం_Unicode= NO_CHAR_MARKER;
+                            *గమ్యం_Unicode_స్థితి = missingCharMarker;
+                            ఒకవేళ (దత్తాంశం->current_Delta_గమ్యం_Unicode == PNJ_DELTA) {
                                 /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                                if (data->prevToUnicodeStatus) {
-                                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                                    data->prevToUnicodeStatus = 0x0000;
+                                ఒకవేళ (దత్తాంశం->prev_గమ్యం_Unicode_స్థితి) {
+                                    WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -1),దత్తాంశం->prev_గమ్యం_Unicode_స్థితి,0,err);
+                                    దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = 0x0000;
                                 }
-                                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,data->currentDeltaToUnicode,err);
-                                continue;
+                                WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -2),లక్ష్యం_Uni_Char,దత్తాంశం->current_Delta_గమ్యం_Unicode,err);
+                                కొనసాగు;
                             }
-                            break;
+                            ఆపు;
                         }
                         /* else fall through to default */
                     }
                     /* else fall through to default */
                     U_FALLTHROUGH;
                 }
-            default:GET_MAPPING(sourceChar,targetUniChar,data)
+            అప్రమేయ:GET_MAPPING(ఆధారం_Char,లక్ష్యం_Uni_Char,దత్తాంశం)
                 ;
-                *contextCharToUnicode = sourceChar;
-                break;
+                *context_Char_గమ్యం_Unicode = ఆధారం_Char;
+                ఆపు;
             }
 
-            if (*toUnicodeStatus != missingCharMarker) {
+            ఒకవేళ (*గమ్యం_Unicode_స్థితి != missingCharMarker) {
                 /* Check to make sure that consonant clusters are handled correct for Gurmukhi script. */
-                if (data->currentDeltaToUnicode == PNJ_DELTA && data->prevToUnicodeStatus != 0 && isPNJConsonant(data->prevToUnicodeStatus) &&
-                        (*toUnicodeStatus + PNJ_DELTA) == PNJ_SIGN_VIRAMA && ((UChar32)(targetUniChar + PNJ_DELTA) == data->prevToUnicodeStatus)) {
+                ఒకవేళ (దత్తాంశం->current_Delta_గమ్యం_Unicode == PNJ_DELTA && దత్తాంశం->prev_గమ్యం_Unicode_స్థితి != 0 && isPNJConsonant(దత్తాంశం->prev_గమ్యం_Unicode_స్థితి) &&
+                        (*గమ్యం_Unicode_స్థితి + PNJ_DELTA) == PNJ_SIGN_VIRAMA && ((UChar32)(లక్ష్యం_Uni_Char + PNJ_DELTA) == దత్తాంశం->prev_గమ్యం_Unicode_స్థితి)) {
                     /* Consonant clusters C + HALANT + C should be encoded as ADHAK + C */
-                    offset = (int)(source-args->source - 3);
-                    tempTargetUniChar = PNJ_ADHAK; /* This is necessary to avoid some compiler warnings. */
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,offset,tempTargetUniChar,0,err);
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,offset,data->prevToUnicodeStatus,0,err);
-                    data->prevToUnicodeStatus = 0x0000; /* reset the previous unicode code point */
-                    *toUnicodeStatus = missingCharMarker;
-                    continue;
-                } else {
+                    స్థానభ్రంశం = (పూర్ణాంకం)(ఆధారం-వాదనలు_2->ఆధారం - 3);
+                    తాత్కాలిక_లక్ష్యం_Uni_Char = PNJ_ADHAK; /* This is necessary to avoid some compiler warnings. */
+                    WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,స్థానభ్రంశం,తాత్కాలిక_లక్ష్యం_Uni_Char,0,err);
+                    WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,స్థానభ్రంశం,దత్తాంశం->prev_గమ్యం_Unicode_స్థితి,0,err);
+                    దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = 0x0000; /* reset the previous unicode code point */
+                    *గమ్యం_Unicode_స్థితి = missingCharMarker;
+                    కొనసాగు;
+                } లేకపోతే {
                     /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                    if (data->prevToUnicodeStatus) {
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                        data->prevToUnicodeStatus = 0x0000;
+                    ఒకవేళ (దత్తాంశం->prev_గమ్యం_Unicode_స్థితి) {
+                        WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -1),దత్తాంశం->prev_గమ్యం_Unicode_స్థితి,0,err);
+                        దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = 0x0000;
                     }
                     /* Check to make sure that Bindi and Tippi are handled correctly for Gurmukhi script. 
                      * If 0xA2 is preceded by a codepoint in the PNJ_BINDI_TIPPI_SET then the target codepoint should be Tippi instead of Bindi.
                      */
-                    if (data->currentDeltaToUnicode == PNJ_DELTA && (targetUniChar + PNJ_DELTA) == PNJ_BINDI && isPNJBindiTippi((*toUnicodeStatus + PNJ_DELTA))) {
-                        targetUniChar = PNJ_TIPPI - PNJ_DELTA;
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,PNJ_DELTA,err);
-                    } else if (data->currentDeltaToUnicode == PNJ_DELTA && (targetUniChar + PNJ_DELTA) == PNJ_SIGN_VIRAMA && isPNJConsonant((*toUnicodeStatus + PNJ_DELTA))) {
+                    ఒకవేళ (దత్తాంశం->current_Delta_గమ్యం_Unicode == PNJ_DELTA && (లక్ష్యం_Uni_Char + PNJ_DELTA) == PNJ_BINDI && isPNJBindiTippi((*గమ్యం_Unicode_స్థితి + PNJ_DELTA))) {
+                        లక్ష్యం_Uni_Char = PNJ_TIPPI - PNJ_DELTA;
+                        WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -2),*గమ్యం_Unicode_స్థితి,PNJ_DELTA,err);
+                    } లేకపోతే ఒకవేళ (దత్తాంశం->current_Delta_గమ్యం_Unicode == PNJ_DELTA && (లక్ష్యం_Uni_Char + PNJ_DELTA) == PNJ_SIGN_VIRAMA && isPNJConsonant((*గమ్యం_Unicode_స్థితి + PNJ_DELTA))) {
                         /* Store the current toUnicodeStatus code point for later handling of consonant cluster in Gurmukhi. */
-                        data->prevToUnicodeStatus = *toUnicodeStatus + PNJ_DELTA;
-                    } else {
+                        దత్తాంశం->prev_గమ్యం_Unicode_స్థితి = *గమ్యం_Unicode_స్థితి + PNJ_DELTA;
+                    } లేకపోతే {
                         /* write the previously mapped codepoint */
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,data->currentDeltaToUnicode,err);
+                        WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం-వాదనలు_2->ఆధారం -2),*గమ్యం_Unicode_స్థితి,దత్తాంశం->current_Delta_గమ్యం_Unicode,err);
                     }
                 }
-                *toUnicodeStatus = missingCharMarker;
+                *గమ్యం_Unicode_స్థితి = missingCharMarker;
             }
 
-            if (targetUniChar != missingCharMarker) {
+            ఒకవేళ (లక్ష్యం_Uni_Char != missingCharMarker) {
                 /* now save the targetUniChar for delayed write */
-                *toUnicodeStatus = (char16_t) targetUniChar;
-                if (data->resetToDefaultToUnicode) {
-                    data->currentDeltaToUnicode = data->defDeltaToUnicode;
-                    data->currentMaskToUnicode = data->defMaskToUnicode;
-                    data->resetToDefaultToUnicode=false;
+                *గమ్యం_Unicode_స్థితి = (char16_t) లక్ష్యం_Uni_Char;
+                ఒకవేళ (దత్తాంశం->reset_గమ్యం_Default_గమ్యం_Unicode) {
+                    దత్తాంశం->current_Delta_గమ్యం_Unicode = దత్తాంశం->def_Delta_గమ్యం_Unicode;
+                    దత్తాంశం->current_ముసుగు_గమ్యం_Unicode = దత్తాంశం->def_ముసుగు_గమ్యం_Unicode;
+                    దత్తాంశం->reset_గమ్యం_Default_గమ్యం_Unicode=అబద్ధం;
                 }
-            } else {
+            } లేకపోతే {
 
                 /* we reach here only if targetUniChar == missingCharMarker
                  * so assign codes to reason and err
                  */
-                *err = U_INVALID_CHAR_FOUND;
+                *err = U_INVALID_CHAR_దొరికింది;
 CALLBACK:
-                args->converter->toUBytes[0] = sourceChar;
-                args->converter->toULength = 1;
-                break;
+                వాదనలు_2->converter->గమ్యం_UBytes[0] = ఆధారం_Char;
+                వాదనలు_2->converter->గమ్యం_ULength = 1;
+                ఆపు;
             }
 
-        } else {
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        } లేకపోతే {
+            *err =U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
     }
 
-    if (U_SUCCESS(*err) && args->flush && source == sourceLimit) {
+    ఒకవేళ (U_SUCCESS(*err) && వాదనలు_2->flush && ఆధారం == ఆధారం_హద్దు) {
         /* end of the input stream */
-        UConverter *cnv = args->converter;
+        UConverter *cnv = వాదనలు_2->converter;
 
-        if (*contextCharToUnicode==ATR || *contextCharToUnicode==EXT || *contextCharToUnicode==ISCII_INV) {
+        ఒకవేళ (*context_Char_గమ్యం_Unicode==ATR || *context_Char_గమ్యం_Unicode==EXT || *context_Char_గమ్యం_Unicode==ISCII_INV) {
             /* set toUBytes[] */
-            cnv->toUBytes[0] = (uint8_t)*contextCharToUnicode;
-            cnv->toULength = 1;
+            cnv->గమ్యం_UBytes[0] = (uint8_t)*context_Char_గమ్యం_Unicode;
+            cnv->గమ్యం_ULength = 1;
 
             /* avoid looping on truncated sequences */
-            *contextCharToUnicode = NO_CHAR_MARKER;
-        } else {
-            cnv->toULength = 0;
+            *context_Char_గమ్యం_Unicode = NO_CHAR_MARKER;
+        } లేకపోతే {
+            cnv->గమ్యం_ULength = 0;
         }
 
-        if (*toUnicodeStatus != missingCharMarker) {
+        ఒకవేళ (*గమ్యం_Unicode_స్థితి != missingCharMarker) {
             /* output a remaining target character */
-            WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source - args->source -1),*toUnicodeStatus,data->currentDeltaToUnicode,err);
-            *toUnicodeStatus = missingCharMarker;
+            WRITE_గమ్యం_లక్ష్యం_గమ్యం_U(వాదనలు_2,ఆధారం,లక్ష్యం,వాదనలు_2->offsets,(ఆధారం - వాదనలు_2->ఆధారం -1),*గమ్యం_Unicode_స్థితి,దత్తాంశం->current_Delta_గమ్యం_Unicode,err);
+            *గమ్యం_Unicode_స్థితి = missingCharMarker;
         }
     }
 
-    args->target = target;
-    args->source = source;
+    వాదనలు_2->లక్ష్యం = లక్ష్యం;
+    వాదనలు_2->ఆధారం = ఆధారం;
 }
 
 /* structure for SafeClone calculations */
-struct cloneISCIIStruct {
+నిర్మాణం cloneISCIIStruct {
     UConverter cnv;
-    UConverterDataISCII mydata;
+    UConverter_దత్తాంశం_ISCII mydata;
 };
 
-static UConverter * U_CALLCONV
-_ISCII_SafeClone(const UConverter *cnv,
-              void *stackBuffer,
-              int32_t *pBufferSize,
-              UErrorCode *status)
+స్థిర UConverter * U_CALLCONV
+ISCII_సురక్షిత_Clone(స్థిరరాశి UConverter *cnv,
+              శూన్య *దొంతర_బఫరు,
+              int32_t *p_బఫరు_కొలత,
+              UError_సంకేతం *స్థితి_2)
 {
-    struct cloneISCIIStruct * localClone;
-    int32_t bufferSizeNeeded = sizeof(struct cloneISCIIStruct);
+    నిర్మాణం cloneISCIIStruct * localClone;
+    int32_t బఫరు_కొలత_Needed = పరిమాణం(నిర్మాణం cloneISCIIStruct);
 
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    if (*pBufferSize == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
-        *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+    ఒకవేళ (*p_బఫరు_కొలత == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
+        *p_బఫరు_కొలత = బఫరు_కొలత_Needed;
+        తిరిగి శూన్యసూచిక;
     }
 
-    localClone = (struct cloneISCIIStruct *)stackBuffer;
+    localClone = (నిర్మాణం cloneISCIIStruct *)దొంతర_బఫరు;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(UConverterDataISCII));
+    uprv_memcpy(&localClone->mydata, cnv->extraInfo, పరిమాణం(UConverter_దత్తాంశం_ISCII));
     localClone->cnv.extraInfo = &localClone->mydata;
-    localClone->cnv.isExtraLocal = true;
+    localClone->cnv.isExtraLocal = నిజం;
 
-    return &localClone->cnv;
+    తిరిగి &localClone->cnv;
 }
 
-static void U_CALLCONV
-_ISCIIGetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
-                    UConverterUnicodeSet which,
-                    UErrorCode *pErrorCode)
+స్థిర శూన్య U_CALLCONV
+ISCIIGet_Unicode_సమితి(స్థిరరాశి UConverter *cnv,
+                    స్థిరరాశి USetAdder *sa,
+                    UConverter_Unicode_సమితి which,
+                    UError_సంకేతం *p_Error_సంకేతం)
 {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
+    (శూన్య)cnv;
+    (శూన్య)which;
+    (శూన్య)p_Error_సంకేతం;
     int32_t idx, script;
     uint8_t mask;
 
     /* Since all ISCII versions allow switching to other ISCII
     scripts, we add all roundtrippable characters to this set. */
-    sa->addRange(sa->set, 0, ASCII_END);
-    for (script = DEVANAGARI; script <= MALAYALAM; script++) {
-        mask = (uint8_t)(lookupInitialData[script].maskEnum);
-        for (idx = 0; idx < DELTA; idx++) {
+    sa->కూడు_Range(sa->సమితి, 0, ASCII_చివర);
+    కొరకు (script = DEVANAGARI; script <= MALAYALAM; script++) {
+        mask = (uint8_t)(lookup_Initial_దత్తాంశం[script].ముసుగు_Enum_2);
+        కొరకు (idx = 0; idx < DELTA; idx++) {
             /* added check for TELUGU character */
-            if ((validityTable[idx] & mask) || (script==TELUGU && idx==0x31)) {
-                sa->add(sa->set, idx + (script * DELTA) + INDIC_BLOCK_BEGIN);
+            ఒకవేళ ((validity_పట్టిక[idx] & mask) || (script==TELUGU && idx==0x31)) {
+                sa->కూడు(sa->సమితి, idx + (script * DELTA) + INDIC_ఖండం_BEGIN);
             }
         }
     }
-    sa->add(sa->set, DANDA);
-    sa->add(sa->set, DOUBLE_DANDA);
-    sa->add(sa->set, ZWNJ);
-    sa->add(sa->set, ZWJ);
+    sa->కూడు(sa->సమితి, DANDA);
+    sa->కూడు(sa->సమితి, DOUBLE_DANDA);
+    sa->కూడు(sa->సమితి, ZWNJ);
+    sa->కూడు(sa->సమితి, ZWJ);
 }
-U_CDECL_END
-static const UConverterImpl _ISCIIImpl={
+U_CDECL_చివర
+స్థిర స్థిరరాశి UConverterImpl _ISCIIImpl={
 
     UCNV_ISCII,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
     _ISCIIOpen,
     _ISCIIClose,
     _ISCIIReset,
 
-    UConverter_toUnicode_ISCII_OFFSETS_LOGIC,
-    UConverter_toUnicode_ISCII_OFFSETS_LOGIC,
+    UConverter_గమ్యం_Unicode_ISCII_OFFSETS_LOGIC,
+    UConverter_గమ్యం_Unicode_ISCII_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISCII_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISCII_OFFSETS_LOGIC,
-    nullptr,
+    శూన్యసూచిక,
 
-    nullptr,
+    శూన్యసూచిక,
     _ISCIIgetName,
-    nullptr,
-    _ISCII_SafeClone,
-    _ISCIIGetUnicodeSet,
-    nullptr,
-    nullptr
+    శూన్యసూచిక,
+    ISCII_సురక్షిత_Clone,
+    ISCIIGet_Unicode_సమితి,
+    శూన్యసూచిక,
+    శూన్యసూచిక
 };
 
-static const UConverterStaticData _ISCIIStaticData={
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం ISCIIStatic_దత్తాంశం={
+    పరిమాణం(UConverter_Static_దత్తాంశం),
         "ISCII",
          0,
          UCNV_IBM,
@@ -1621,15 +1621,15 @@ static const UConverterStaticData _ISCIIStaticData={
          4,
         { 0x1a, 0, 0, 0 },
         0x1,
-        false,
-        false,
+        అబద్ధం,
+        అబద్ధం,
         0x0,
         0x0,
         { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, /* reserved */
 
 };
 
-const UConverterSharedData _ISCIIData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ISCIIStaticData, &_ISCIIImpl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం _ISCIIData=
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&ISCIIStatic_దత్తాంశం, &_ISCIIImpl);
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_LEGACY_CONVERSION */

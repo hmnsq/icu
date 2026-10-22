@@ -42,28 +42,28 @@
 *                             macros to ucnvmbcs.h file
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/udata.h"
-#include "unicode/uset.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "ucnv_bld.h"
-#include "ucnvmbcs.h"
-#include "ucnv_ext.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "umutex.h"
-#include "ustr_imp.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/ucnv_cb.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnvmbcs.h"
+#అన్తర్భావ "ucnv_ext.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "ustr_imp.h"
 
 /* control optimizations according to the platform */
-#define MBCS_UNROLL_SINGLE_TO_BMP 1
-#define MBCS_UNROLL_SINGLE_FROM_BMP 0
+#నిర్వచించు MBCS_UNROLL_SINGLE_గమ్యం_BMP 1
+#నిర్వచించు MBCS_UNROLL_SINGLE_FROM_BMP 0
 
 /*
  * _MBCSHeader versions 5.3 & 4.3
@@ -375,158 +375,158 @@
  *        not map to anything
  * @return true to continue enumeration, false to stop
  */
-typedef UBool U_CALLCONV
-UConverterEnumToUCallback(const void *context, uint32_t value, UChar32 codePoints[32]);
+రకనిర్వచనం UBool U_CALLCONV
+UConverter_Enum_గమ్యం_UCallback(స్థిరరాశి శూన్య *context, uint32_t value, UChar32 సంకేతం_Points[32]);
 
-static void U_CALLCONV
-ucnv_MBCSLoad(UConverterSharedData *sharedData,
-          UConverterLoadArgs *pArgs,
-          const uint8_t *raw,
-          UErrorCode *pErrorCode);
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSLoad(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
+          UConverter_ఎక్కించు_వాదనలు *p_వాదనలు,
+          స్థిరరాశి uint8_t *raw,
+          UError_సంకేతం *p_Error_సంకేతం);
 
-static void U_CALLCONV
-ucnv_MBCSUnload(UConverterSharedData *sharedData);
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSUnload(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం);
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ucnv_MBCSOpen(UConverter *cnv,
-              UConverterLoadArgs *pArgs,
-              UErrorCode *pErrorCode);
+              UConverter_ఎక్కించు_వాదనలు *p_వాదనలు,
+              UError_సంకేతం *p_Error_సంకేతం);
 
-static UChar32 U_CALLCONV
-ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                  UErrorCode *pErrorCode);
+స్థిర UChar32 U_CALLCONV
+ucnv_MBCSGet_తదుపరి_UChar(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                  UError_సంకేతం *p_Error_సంకేతం);
 
-static void U_CALLCONV
-ucnv_MBCSGetStarters(const UConverter* cnv,
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSGetStarters(స్థిరరాశి UConverter* cnv,
                  UBool starters[256],
-                 UErrorCode *pErrorCode);
+                 UError_సంకేతం *p_Error_సంకేతం);
 
 U_CDECL_BEGIN
-static const char* U_CALLCONV
-ucnv_MBCSGetName(const UConverter *cnv);
-U_CDECL_END
+స్థిర స్థిరరాశి అక్షరం* U_CALLCONV
+ucnv_MBCSGetName(స్థిరరాశి UConverter *cnv);
+U_CDECL_చివర
 
-static void U_CALLCONV
-ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
-              int32_t offsetIndex,
-              UErrorCode *pErrorCode);
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSWriteSub(UConverter_From_Unicode_వాదనలు *p_వాదనలు,
+              int32_t స్థానభ్రంశం_సూచీ,
+              UError_సంకేతం *p_Error_సంకేతం);
 
-static UChar32 U_CALLCONV
-ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                  UErrorCode *pErrorCode);
+స్థిర UChar32 U_CALLCONV
+ucnv_MBCSGet_తదుపరి_UChar(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                  UError_సంకేతం *p_Error_సంకేతం);
 
-static void U_CALLCONV
-ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode);
+స్థిర శూన్య U_CALLCONV
+ucnv_SBCSFromUTF8(UConverter_From_Unicode_వాదనలు *pFromUArgs,
+                  UConverter_గమ్యం_Unicode_వాదనలు *p_గమ్యం_UArgs,
+                  UError_సంకేతం *p_Error_సంకేతం);
 
-static void U_CALLCONV
-ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
-                   UConverterUnicodeSet which,
-                   UErrorCode *pErrorCode);
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSGet_Unicode_సమితి(స్థిరరాశి UConverter *cnv,
+                   స్థిరరాశి USetAdder *sa,
+                   UConverter_Unicode_సమితి which,
+                   UError_సంకేతం *p_Error_సంకేతం);
 
-static void U_CALLCONV
-ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode);
+స్థిర శూన్య U_CALLCONV
+ucnv_DBCSFromUTF8(UConverter_From_Unicode_వాదనలు *pFromUArgs,
+                  UConverter_గమ్యం_Unicode_వాదనలు *p_గమ్యం_UArgs,
+                  UError_సంకేతం *p_Error_సంకేతం);
 
-static const UConverterImpl _SBCSUTF8Impl={
+స్థిర స్థిరరాశి UConverterImpl _SBCSUTF8Impl={
     UCNV_MBCS,
 
     ucnv_MBCSLoad,
     ucnv_MBCSUnload,
 
     ucnv_MBCSOpen,
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
-    ucnv_MBCSGetNextUChar,
+    ucnv_MBCSGet_తదుపరి_UChar,
 
     ucnv_MBCSGetStarters,
     ucnv_MBCSGetName,
     ucnv_MBCSWriteSub,
-    nullptr,
-    ucnv_MBCSGetUnicodeSet,
+    శూన్యసూచిక,
+    ucnv_MBCSGet_Unicode_సమితి,
 
-    nullptr,
+    శూన్యసూచిక,
     ucnv_SBCSFromUTF8
 };
 
-static const UConverterImpl _DBCSUTF8Impl={
+స్థిర స్థిరరాశి UConverterImpl _DBCSUTF8Impl={
     UCNV_MBCS,
 
     ucnv_MBCSLoad,
     ucnv_MBCSUnload,
 
     ucnv_MBCSOpen,
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
-    ucnv_MBCSGetNextUChar,
+    ucnv_MBCSGet_తదుపరి_UChar,
 
     ucnv_MBCSGetStarters,
     ucnv_MBCSGetName,
     ucnv_MBCSWriteSub,
-    nullptr,
-    ucnv_MBCSGetUnicodeSet,
+    శూన్యసూచిక,
+    ucnv_MBCSGet_Unicode_సమితి,
 
-    nullptr,
+    శూన్యసూచిక,
     ucnv_DBCSFromUTF8
 };
 
-static const UConverterImpl _MBCSImpl={
+స్థిర స్థిరరాశి UConverterImpl _MBCSImpl={
     UCNV_MBCS,
 
     ucnv_MBCSLoad,
     ucnv_MBCSUnload,
 
     ucnv_MBCSOpen,
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
-    ucnv_MBCSGetNextUChar,
+    ucnv_MBCSGet_తదుపరి_UChar,
 
     ucnv_MBCSGetStarters,
     ucnv_MBCSGetName,
     ucnv_MBCSWriteSub,
-    nullptr,
-    ucnv_MBCSGetUnicodeSet,
-    nullptr,
-    nullptr
+    శూన్యసూచిక,
+    ucnv_MBCSGet_Unicode_సమితి,
+    శూన్యసూచిక,
+    శూన్యసూచిక
 };
 
 /* Static data is in tools/makeconv/ucnvstat.c for data-based
  * converters. Be sure to update it as well.
  */
 
-const UConverterSharedData _MBCSData={
-    sizeof(UConverterSharedData), 1,
-    nullptr, nullptr, false, true, &_MBCSImpl,
-    0, UCNV_MBCS_TABLE_INITIALIZER
+స్థిరరాశి UConverter_Shared_దత్తాంశం _MBCSData={
+    పరిమాణం(UConverter_Shared_దత్తాంశం), 1,
+    శూన్యసూచిక, శూన్యసూచిక, అబద్ధం, నిజం, &_MBCSImpl,
+    0, UCNV_MBCS_పట్టిక_INITIALIZER
 };
 
 
 /* GB 18030 data ------------------------------------------------------------ */
 
 /* helper macros for linear values for GB 18030 four-byte sequences */
-#define LINEAR_18030(a, b, c, d) ((((a)*10+(b))*126L+(c))*10L+(d))
+#నిర్వచించు రేఖీయ_18030(a, b, c, d) ((((a)*10+(b))*126L+(c))*10L+(d))
 
-#define LINEAR_18030_BASE LINEAR_18030(0x81, 0x30, 0x81, 0x30)
+#నిర్వచించు రేఖీయ_18030_పునాది రేఖీయ_18030(0x81, 0x30, 0x81, 0x30)
 
-#define LINEAR(x) LINEAR_18030(x>>24, (x>>16)&0xff, (x>>8)&0xff, x&0xff)
+#నిర్వచించు రేఖీయ(x) రేఖీయ_18030(x>>24, (x>>16)&0xff, (x>>8)&0xff, x&0xff)
 
 /*
  * Some ranges of GB 18030 where both the Unicode code points and the
@@ -537,142 +537,142 @@ const UConverterSharedData _MBCSData={
  * Note that single surrogates are not mapped by GB 18030
  * as of the re-released mapping tables from 2000-nov-30.
  */
-static const uint32_t
+స్థిర స్థిరరాశి uint32_t
 gb18030Ranges[14][4]={
-    {0x10000, 0x10FFFF, LINEAR(0x90308130), LINEAR(0xE3329A35)},
-    {0x9FA6, 0xD7FF, LINEAR(0x82358F33), LINEAR(0x8336C738)},
-    {0x0452, 0x1E3E, LINEAR(0x8130D330), LINEAR(0x8135F436)},
-    {0x1E40, 0x200F, LINEAR(0x8135F438), LINEAR(0x8136A531)},
-    {0xE865, 0xF92B, LINEAR(0x8336D030), LINEAR(0x84308534)},
-    {0x2643, 0x2E80, LINEAR(0x8137A839), LINEAR(0x8138FD38)},
-    {0xFA2A, 0xFE2F, LINEAR(0x84309C38), LINEAR(0x84318537)},
-    {0x3CE1, 0x4055, LINEAR(0x8231D438), LINEAR(0x8232AF32)},
-    {0x361B, 0x3917, LINEAR(0x8230A633), LINEAR(0x8230F237)},
-    {0x49B8, 0x4C76, LINEAR(0x8234A131), LINEAR(0x8234E733)},
-    {0x4160, 0x4336, LINEAR(0x8232C937), LINEAR(0x8232F837)},
-    {0x478E, 0x4946, LINEAR(0x8233E838), LINEAR(0x82349638)},
-    {0x44D7, 0x464B, LINEAR(0x8233A339), LINEAR(0x8233C931)},
-    {0xFFE6, 0xFFFF, LINEAR(0x8431A234), LINEAR(0x8431A439)}
+    {0x10000, 0x10FFFF, రేఖీయ(0x90308130), రేఖీయ(0xE3329A35)},
+    {0x9FA6, 0xD7FF, రేఖీయ(0x82358F33), రేఖీయ(0x8336C738)},
+    {0x0452, 0x1E3E, రేఖీయ(0x8130D330), రేఖీయ(0x8135F436)},
+    {0x1E40, 0x200F, రేఖీయ(0x8135F438), రేఖీయ(0x8136A531)},
+    {0xE865, 0xF92B, రేఖీయ(0x8336D030), రేఖీయ(0x84308534)},
+    {0x2643, 0x2E80, రేఖీయ(0x8137A839), రేఖీయ(0x8138FD38)},
+    {0xFA2A, 0xFE2F, రేఖీయ(0x84309C38), రేఖీయ(0x84318537)},
+    {0x3CE1, 0x4055, రేఖీయ(0x8231D438), రేఖీయ(0x8232AF32)},
+    {0x361B, 0x3917, రేఖీయ(0x8230A633), రేఖీయ(0x8230F237)},
+    {0x49B8, 0x4C76, రేఖీయ(0x8234A131), రేఖీయ(0x8234E733)},
+    {0x4160, 0x4336, రేఖీయ(0x8232C937), రేఖీయ(0x8232F837)},
+    {0x478E, 0x4946, రేఖీయ(0x8233E838), రేఖీయ(0x82349638)},
+    {0x44D7, 0x464B, రేఖీయ(0x8233A339), రేఖీయ(0x8233C931)},
+    {0xFFE6, 0xFFFF, రేఖీయ(0x8431A234), రేఖీయ(0x8431A439)}
 };
 
 /* bit flag for UConverter.options indicating GB 18030 special handling */
-#define _MBCS_OPTION_GB18030 0x8000
+#నిర్వచించు _MBCS_OPTION_GB18030 0x8000
 
 /* bit flag for UConverter.options indicating KEIS,JEF,JIF special handling */
-#define _MBCS_OPTION_KEIS 0x01000
-#define _MBCS_OPTION_JEF  0x02000
-#define _MBCS_OPTION_JIPS 0x04000
+#నిర్వచించు _MBCS_OPTION_KEIS 0x01000
+#నిర్వచించు _MBCS_OPTION_JEF  0x02000
+#నిర్వచించు _MBCS_OPTION_JIPS 0x04000
 
-#define KEIS_SO_CHAR_1 0x0A
-#define KEIS_SO_CHAR_2 0x42
-#define KEIS_SI_CHAR_1 0x0A
-#define KEIS_SI_CHAR_2 0x41
+#నిర్వచించు KEIS_SO_CHAR_1 0x0A
+#నిర్వచించు KEIS_SO_CHAR_2 0x42
+#నిర్వచించు KEIS_SI_CHAR_1 0x0A
+#నిర్వచించు KEIS_SI_CHAR_2 0x41
 
-#define JEF_SO_CHAR 0x28
-#define JEF_SI_CHAR 0x29
+#నిర్వచించు JEF_SO_CHAR 0x28
+#నిర్వచించు JEF_SI_CHAR 0x29
 
-#define JIPS_SO_CHAR_1 0x1A
-#define JIPS_SO_CHAR_2 0x70
-#define JIPS_SI_CHAR_1 0x1A
-#define JIPS_SI_CHAR_2 0x71
+#నిర్వచించు JIPS_SO_CHAR_1 0x1A
+#నిర్వచించు JIPS_SO_CHAR_2 0x70
+#నిర్వచించు JIPS_SI_CHAR_1 0x1A
+#నిర్వచించు JIPS_SI_CHAR_2 0x71
 
-enum SISO_Option {
+గణన SISO_Option {
     SI,
     SO
 };
-typedef enum SISO_Option SISO_Option;
+రకనిర్వచనం గణన SISO_Option SISO_Option;
 
-static int32_t getSISOBytes(SISO_Option option, uint32_t cnvOption, uint8_t *value) {
+స్థిర int32_t getSISOBytes(SISO_Option option, uint32_t cnvOption, uint8_t *value) {
     int32_t SISOLength = 0;
 
-    switch (option) {
-        case SI:
-            if ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
+    ఎంపిక (option) {
+        స్థితి SI:
+            ఒకవేళ ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
                 value[0] = KEIS_SI_CHAR_1;
                 value[1] = KEIS_SI_CHAR_2;
                 SISOLength = 2;
-            } else if ((cnvOption&_MBCS_OPTION_JEF)!=0) {
+            } లేకపోతే ఒకవేళ ((cnvOption&_MBCS_OPTION_JEF)!=0) {
                 value[0] = JEF_SI_CHAR;
                 SISOLength = 1;
-            } else if ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
+            } లేకపోతే ఒకవేళ ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
                 value[0] = JIPS_SI_CHAR_1;
                 value[1] = JIPS_SI_CHAR_2;
                 SISOLength = 2;
-            } else {
+            } లేకపోతే {
                 value[0] = UCNV_SI;
                 SISOLength = 1;
             }
-            break;
-        case SO:
-            if ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
+            ఆపు;
+        స్థితి SO:
+            ఒకవేళ ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
                 value[0] = KEIS_SO_CHAR_1;
                 value[1] = KEIS_SO_CHAR_2;
                 SISOLength = 2;
-            } else if ((cnvOption&_MBCS_OPTION_JEF)!=0) {
+            } లేకపోతే ఒకవేళ ((cnvOption&_MBCS_OPTION_JEF)!=0) {
                 value[0] = JEF_SO_CHAR;
                 SISOLength = 1;
-            } else if ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
+            } లేకపోతే ఒకవేళ ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
                 value[0] = JIPS_SO_CHAR_1;
                 value[1] = JIPS_SO_CHAR_2;
                 SISOLength = 2;
-            } else {
+            } లేకపోతే {
                 value[0] = UCNV_SO;
                 SISOLength = 1;
             }
-            break;
-        default:
+            ఆపు;
+        అప్రమేయ:
             /* Should never happen. */
-            break;
+            ఆపు;
     }
 
-    return SISOLength;
+    తిరిగి SISOLength;
 }
 
 /* Miscellaneous ------------------------------------------------------------ */
 
 /* similar to ucnv_MBCSGetNextUChar() but recursive */
-static UBool
-enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
-        int32_t state, uint32_t offset,
+స్థిర UBool
+enum_గమ్యం_U(UConverterMBCSTable *mbcs_పట్టిక, int8_t stateProps[],
+        int32_t state, uint32_t స్థానభ్రంశం,
         uint32_t value,
-        UConverterEnumToUCallback *callback, const void *context,
-        UErrorCode *pErrorCode) {
-    UChar32 codePoints[32];
-    const int32_t *row;
-    const uint16_t *unicodeCodeUnits;
-    UChar32 anyCodePoints;
-    int32_t b, limit;
+        UConverter_Enum_గమ్యం_UCallback *callback, స్థిరరాశి శూన్య *context,
+        UError_సంకేతం *p_Error_సంకేతం) {
+    UChar32 సంకేతం_Points[32];
+    స్థిరరాశి int32_t *అడ్డువరుస;
+    స్థిరరాశి uint16_t *unicode_సంకేతం_Units;
+    UChar32 any_సంకేతం_Points;
+    int32_t b, హద్దు;
 
-    row=mbcsTable->stateTable[state];
-    unicodeCodeUnits=mbcsTable->unicodeCodeUnits;
+    అడ్డువరుస=mbcs_పట్టిక->state_పట్టిక[state];
+    unicode_సంకేతం_Units=mbcs_పట్టిక->unicode_సంకేతం_Units;
 
     value<<=8;
-    anyCodePoints=-1;  /* becomes non-negative if there is a mapping */
+    any_సంకేతం_Points=-1;  /* becomes non-negative if there is a mapping */
 
     b=(stateProps[state]&0x38)<<2;
-    if(b==0 && stateProps[state]>=0x40) {
+    ఒకవేళ(b==0 && stateProps[state]>=0x40) {
         /* skip byte sequences with leading zeros because they are not stored in the fromUnicode table */
-        codePoints[0]=U_SENTINEL;
+        సంకేతం_Points[0]=U_SENTINEL;
         b=1;
     }
-    limit=((stateProps[state]&7)+1)<<5;
-    while(b<limit) {
-        int32_t entry=row[b];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            int32_t nextState=MBCS_ENTRY_TRANSITION_STATE(entry);
-            if(stateProps[nextState]>=0) {
+    హద్దు=((stateProps[state]&7)+1)<<5;
+    అయితే(b<హద్దు) {
+        int32_t నమోదు_2=అడ్డువరుస[b];
+        ఒకవేళ(MBCS_నమోదు_IS_TRANSITION(నమోదు_2)) {
+            int32_t తదుపరి_State=MBCS_నమోదు_TRANSITION_STATE(నమోదు_2);
+            ఒకవేళ(stateProps[తదుపరి_State]>=0) {
                 /* recurse to a state with non-ignorable actions */
-                if(!enumToU(
-                        mbcsTable, stateProps, nextState,
-                        offset+MBCS_ENTRY_TRANSITION_OFFSET(entry),
+                ఒకవేళ(!enum_గమ్యం_U(
+                        mbcs_పట్టిక, stateProps, తదుపరి_State,
+                        స్థానభ్రంశం+MBCS_నమోదు_TRANSITION_స్థానభ్రంశం(నమోదు_2),
                         value | static_cast<uint32_t>(b),
                         callback, context,
-                        pErrorCode)) {
-                    return false;
+                        p_Error_సంకేతం)) {
+                    తిరిగి అబద్ధం;
                 }
             }
-            codePoints[b&0x1f]=U_SENTINEL;
-        } else {
+            సంకేతం_Points[b&0x1f]=U_SENTINEL;
+        } లేకపోతే {
             UChar32 c;
             int32_t action;
 
@@ -680,52 +680,52 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
              * An if-else-if chain provides more reliable performance for
              * the most common cases compared to a switch.
              */
-            action=MBCS_ENTRY_FINAL_ACTION(entry);
-            if(action==MBCS_STATE_VALID_DIRECT_16) {
+            action=MBCS_నమోదు_FINAL_ACTION(నమోదు_2);
+            ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_16) {
                 /* output BMP code point */
-                c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            } else if(action==MBCS_STATE_VALID_16) {
-                int32_t finalOffset=offset+MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[finalOffset];
-                if(c<0xfffe) {
+                c = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_16) {
+                int32_t final_స్థానభ్రంశం=స్థానభ్రంశం+MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                c=unicode_సంకేతం_Units[final_స్థానభ్రంశం];
+                ఒకవేళ(c<0xfffe) {
                     /* output BMP code point */
-                } else {
+                } లేకపోతే {
                     c=U_SENTINEL;
                 }
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
-                int32_t finalOffset=offset+MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[finalOffset++];
-                if(c<0xd800) {
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_16_PAIR) {
+                int32_t final_స్థానభ్రంశం=స్థానభ్రంశం+MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                c=unicode_సంకేతం_Units[final_స్థానభ్రంశం++];
+                ఒకవేళ(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                } else if(c<=0xdbff) {
+                } లేకపోతే ఒకవేళ(c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
-                    c=((c&0x3ff)<<10)+unicodeCodeUnits[finalOffset]+(0x10000-0xdc00);
-                } else if(c==0xe000) {
+                    c=((c&0x3ff)<<10)+unicode_సంకేతం_Units[final_స్థానభ్రంశం]+(0x10000-0xdc00);
+                } లేకపోతే ఒకవేళ(c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
-                    c=unicodeCodeUnits[finalOffset];
-                } else {
+                    c=unicode_సంకేతం_Units[final_స్థానభ్రంశం];
+                } లేకపోతే {
                     c=U_SENTINEL;
                 }
-            } else if(action==MBCS_STATE_VALID_DIRECT_20) {
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_20) {
                 /* output supplementary code point */
-                c = static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-            } else {
+                c = static_cast<UChar32>(MBCS_నమోదు_FINAL_విలువ(నమోదు_2) + 0x10000);
+            } లేకపోతే {
                 c=U_SENTINEL;
             }
 
-            codePoints[b&0x1f]=c;
-            anyCodePoints&=c;
+            సంకేతం_Points[b&0x1f]=c;
+            any_సంకేతం_Points&=c;
         }
-        if(((++b)&0x1f)==0) {
-            if(anyCodePoints>=0) {
-                if (!callback(context, value | static_cast<uint32_t>(b - 0x20), codePoints)) {
-                    return false;
+        ఒకవేళ(((++b)&0x1f)==0) {
+            ఒకవేళ(any_సంకేతం_Points>=0) {
+                ఒకవేళ (!callback(context, value | static_cast<uint32_t>(b - 0x20), సంకేతం_Points)) {
+                    తిరిగి అబద్ధం;
                 }
-                anyCodePoints=-1;
+                any_సంకేతం_Points=-1;
             }
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 /*
@@ -733,68 +733,68 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
  * A recursive call may do stateProps[state]|=0x40 if this state is the target of an
  * MBCS_STATE_CHANGE_ONLY.
  */
-static int8_t
-getStateProp(const int32_t (*stateTable)[256], int8_t stateProps[], int state) {
-    const int32_t *row;
-    int32_t min, max, entry, nextState;
+స్థిర int8_t
+getStateProp(స్థిరరాశి int32_t (*state_పట్టిక)[256], int8_t stateProps[], పూర్ణాంకం state) {
+    స్థిరరాశి int32_t *అడ్డువరుస;
+    int32_t min, max, నమోదు_2, తదుపరి_State;
 
-    row=stateTable[state];
+    అడ్డువరుస=state_పట్టిక[state];
     stateProps[state]=0;
 
     /* find first non-ignorable state */
-    for(min=0;; ++min) {
-        entry=row[min];
-        nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
-            getStateProp(stateTable, stateProps, nextState);
+    కొరకు(min=0;; ++min) {
+        నమోదు_2=అడ్డువరుస[min];
+        తదుపరి_State=MBCS_నమోదు_STATE(నమోదు_2);
+        ఒకవేళ(stateProps[తదుపరి_State]==-1) {
+            getStateProp(state_పట్టిక, stateProps, తదుపరి_State);
         }
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            if(stateProps[nextState]>=0) {
-                break;
+        ఒకవేళ(MBCS_నమోదు_IS_TRANSITION(నమోదు_2)) {
+            ఒకవేళ(stateProps[తదుపరి_State]>=0) {
+                ఆపు;
             }
-        } else if(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
-            break;
+        } లేకపోతే ఒకవేళ(MBCS_నమోదు_FINAL_ACTION(నమోదు_2)<MBCS_STATE_UNASSIGNED) {
+            ఆపు;
         }
-        if(min==0xff) {
+        ఒకవేళ(min==0xff) {
             stateProps[state]=-0x40;  /* (int8_t)0xc0 */
-            return stateProps[state];
+            తిరిగి stateProps[state];
         }
     }
     stateProps[state] |= static_cast<int8_t>((min >> 5) << 3);
 
     /* find last non-ignorable state */
-    for(max=0xff; min<max; --max) {
-        entry=row[max];
-        nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
-            getStateProp(stateTable, stateProps, nextState);
+    కొరకు(max=0xff; min<max; --max) {
+        నమోదు_2=అడ్డువరుస[max];
+        తదుపరి_State=MBCS_నమోదు_STATE(నమోదు_2);
+        ఒకవేళ(stateProps[తదుపరి_State]==-1) {
+            getStateProp(state_పట్టిక, stateProps, తదుపరి_State);
         }
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            if(stateProps[nextState]>=0) {
-                break;
+        ఒకవేళ(MBCS_నమోదు_IS_TRANSITION(నమోదు_2)) {
+            ఒకవేళ(stateProps[తదుపరి_State]>=0) {
+                ఆపు;
             }
-        } else if(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
-            break;
+        } లేకపోతే ఒకవేళ(MBCS_నమోదు_FINAL_ACTION(నమోదు_2)<MBCS_STATE_UNASSIGNED) {
+            ఆపు;
         }
     }
     stateProps[state] |= static_cast<int8_t>(max >> 5);
 
     /* recurse further and collect direct-state information */
-    while(min<=max) {
-        entry=row[min];
-        nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
-            getStateProp(stateTable, stateProps, nextState);
+    అయితే(min<=max) {
+        నమోదు_2=అడ్డువరుస[min];
+        తదుపరి_State=MBCS_నమోదు_STATE(నమోదు_2);
+        ఒకవేళ(stateProps[తదుపరి_State]==-1) {
+            getStateProp(state_పట్టిక, stateProps, తదుపరి_State);
         }
-        if(MBCS_ENTRY_IS_FINAL(entry)) {
-            stateProps[nextState]|=0x40;
-            if(MBCS_ENTRY_FINAL_ACTION(entry)<=MBCS_STATE_FALLBACK_DIRECT_20) {
+        ఒకవేళ(MBCS_నమోదు_IS_FINAL(నమోదు_2)) {
+            stateProps[తదుపరి_State]|=0x40;
+            ఒకవేళ(MBCS_నమోదు_FINAL_ACTION(నమోదు_2)<=MBCS_STATE_FALLBACK_ప్రత్యక్ష_20) {
                 stateProps[state]|=0x40;
             }
         }
         ++min;
     }
-    return stateProps[state];
+    తిరిగి stateProps[state];
 }
 
 /*
@@ -805,10 +805,10 @@ getStateProp(const int32_t (*stateTable)[256], int8_t stateProps[], int state) {
  * Currently only handles roundtrip mappings.
  * Does not currently handle extensions.
  */
-static void
-ucnv_MBCSEnumToUnicode(UConverterMBCSTable *mbcsTable,
-                       UConverterEnumToUCallback *callback, const void *context,
-                       UErrorCode *pErrorCode) {
+స్థిర శూన్య
+ucnv_MBCSEnum_గమ్యం_Unicode(UConverterMBCSTable *mbcs_పట్టిక,
+                       UConverter_Enum_గమ్యం_UCallback *callback, స్థిరరాశి శూన్య *context,
+                       UError_సంకేతం *p_Error_సంకేతం) {
     /*
      * Properties for each state, to speed up the enumeration.
      * Ignorable actions are unassigned/illegal/state-change-only:
@@ -827,36 +827,36 @@ ucnv_MBCSEnumToUnicode(UConverterMBCSTable *mbcsTable,
      * The highest byte value with non-ignorable actions is
      * (value<<5)&0x1f (rounded up).
      */
-    int8_t stateProps[MBCS_MAX_STATE_COUNT];
+    int8_t stateProps[MBCS_MAX_STATE_లెక్క];
     int32_t state;
 
-    uprv_memset(stateProps, -1, sizeof(stateProps));
+    uprv_memset(stateProps, -1, పరిమాణం(stateProps));
 
     /* recurse from state 0 and set all stateProps */
-    getStateProp(mbcsTable->stateTable, stateProps, 0);
+    getStateProp(mbcs_పట్టిక->state_పట్టిక, stateProps, 0);
 
-    for(state=0; state<mbcsTable->countStates; ++state) {
+    కొరకు(state=0; state<mbcs_పట్టిక->లెక్క_స్థితులు; ++state) {
         /*if(stateProps[state]==-1) {
             printf("unused/unreachable <icu:state> %d\n", state);
         }*/
-        if(stateProps[state]>=0x40) {
+        ఒకవేళ(stateProps[state]>=0x40) {
             /* start from each direct state */
-            enumToU(
-                mbcsTable, stateProps, state, 0, 0,
+            enum_గమ్యం_U(
+                mbcs_పట్టిక, stateProps, state, 0, 0,
                 callback, context,
-                pErrorCode);
+                p_Error_సంకేతం);
         }
     }
 }
 
-U_CFUNC void 
-ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
-                                         const USetAdder *sa,
-                                         UConverterUnicodeSet which,
-                                         UConverterSetFilter filter,
-                                         UErrorCode *pErrorCode) {
-    const UConverterMBCSTable *mbcsTable;
-    const uint16_t *table;
+U_CFUNC శూన్య 
+ucnv_MBCSGet_Filtered_Unicode_సమితి_For_Unicode(స్థిరరాశి UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
+                                         స్థిరరాశి USetAdder *sa,
+                                         UConverter_Unicode_సమితి which,
+                                         UConverter_సమితి_Filter filter,
+                                         UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి UConverterMBCSTable *mbcs_పట్టిక;
+    స్థిరరాశి uint16_t *పట్టిక;
 
     uint32_t st3;
     uint16_t st1, maxStage1, st2;
@@ -864,89 +864,89 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
     UChar32 c;
 
     /* enumerate the from-Unicode trie table */
-    mbcsTable=&sharedData->mbcs;
-    table=mbcsTable->fromUnicodeTable;
-    if(mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
+    mbcs_పట్టిక=&shared_దత్తాంశం->mbcs;
+    పట్టిక=mbcs_పట్టిక->from_Unicode_పట్టిక;
+    ఒకవేళ(mbcs_పట్టిక->unicode_ముసుగు&UCNV_HAS_SUPPLEMENTARY) {
         maxStage1=0x440;
-    } else {
+    } లేకపోతే {
         maxStage1=0x40;
     }
 
     c=0; /* keep track of the current code point while enumerating */
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        const uint16_t *stage2, *stage3, *results;
-        uint16_t minValue;
+    ఒకవేళ(mbcs_పట్టిక->outputType==MBCS_OUTPUT_1) {
+        స్థిరరాశి uint16_t *stage2, *stage3, *results;
+        uint16_t min_విలువ;
 
-        results=(const uint16_t *)mbcsTable->fromUnicodeBytes;
+        results=(స్థిరరాశి uint16_t *)mbcs_పట్టిక->from_Unicode_బైట్లు;
 
         /*
          * Set a threshold variable for selecting which mappings to use.
          * See ucnv_MBCSSingleFromBMPWithOffsets() and
          * MBCS_SINGLE_RESULT_FROM_U() for details.
          */
-        if(which==UCNV_ROUNDTRIP_SET) {
+        ఒకవేళ(which==UCNV_ROUNDTRIP_సమితి) {
             /* use only roundtrips */
-            minValue=0xf00;
-        } else /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
+            min_విలువ=0xf00;
+        } లేకపోతే /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
             /* use all roundtrip and fallback results */
-            minValue=0x800;
+            min_విలువ=0x800;
         }
 
-        for(st1=0; st1<maxStage1; ++st1) {
-            st2=table[st1];
-            if(st2>maxStage1) {
-                stage2=table+st2;
-                for(st2=0; st2<64; ++st2) {
-                    if((st3=stage2[st2])!=0) {
+        కొరకు(st1=0; st1<maxStage1; ++st1) {
+            st2=పట్టిక[st1];
+            ఒకవేళ(st2>maxStage1) {
+                stage2=పట్టిక+st2;
+                కొరకు(st2=0; st2<64; ++st2) {
+                    ఒకవేళ((st3=stage2[st2])!=0) {
                         /* read the stage 3 block */
                         stage3=results+st3;
 
-                        do {
-                            if(*stage3++>=minValue) {
-                                sa->add(sa->set, c);
+                        చేయి {
+                            ఒకవేళ(*stage3++>=min_విలువ) {
+                                sa->కూడు(sa->సమితి, c);
                             }
-                        } while((++c&0xf)!=0);
-                    } else {
+                        } అయితే((++c&0xf)!=0);
+                    } లేకపోతే {
                         c+=16; /* empty stage 3 block */
                     }
                 }
-            } else {
+            } లేకపోతే {
                 c+=1024; /* empty stage 2 block */
             }
         }
-    } else {
-        const uint32_t *stage2;
-        const uint8_t *stage3, *bytes;
+    } లేకపోతే {
+        స్థిరరాశి uint32_t *stage2;
+        స్థిరరాశి uint8_t *stage3, *బైట్లు;
         uint32_t st3Multiplier;
         uint32_t value;
         UBool useFallback;
 
-        bytes=mbcsTable->fromUnicodeBytes;
+        బైట్లు=mbcs_పట్టిక->from_Unicode_బైట్లు;
 
-        useFallback = which == UCNV_ROUNDTRIP_AND_FALLBACK_SET;
+        useFallback = which == UCNV_ROUNDTRIP_AND_FALLBACK_సమితి;
 
-        switch(mbcsTable->outputType) {
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4_EUC:
+        ఎంపిక(mbcs_పట్టిక->outputType) {
+        స్థితి MBCS_OUTPUT_3:
+        స్థితి MBCS_OUTPUT_4_EUC:
             st3Multiplier=3;
-            break;
-        case MBCS_OUTPUT_4:
+            ఆపు;
+        స్థితి MBCS_OUTPUT_4:
             st3Multiplier=4;
-            break;
-        default:
+            ఆపు;
+        అప్రమేయ:
             st3Multiplier=2;
-            break;
+            ఆపు;
         }
 
-        for(st1=0; st1<maxStage1; ++st1) {
-            st2=table[st1];
-            if(st2>(maxStage1>>1)) {
-                stage2=(const uint32_t *)table+st2;
-                for(st2=0; st2<64; ++st2) {
-                    if((st3=stage2[st2])!=0) {
+        కొరకు(st1=0; st1<maxStage1; ++st1) {
+            st2=పట్టిక[st1];
+            ఒకవేళ(st2>(maxStage1>>1)) {
+                stage2=(స్థిరరాశి uint32_t *)పట్టిక+st2;
+                కొరకు(st2=0; st2<64; ++st2) {
+                    ఒకవేళ((st3=stage2[st2])!=0) {
                         /* read the stage 3 block */
-                        stage3=bytes+st3Multiplier*16*(uint32_t)(uint16_t)st3;
+                        stage3=బైట్లు+st3Multiplier*16*(uint32_t)(uint16_t)st3;
 
                         /* get the roundtrip flags for the stage 3 block */
                         st3>>=16;
@@ -956,131 +956,131 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
                          * or which map to non-zero bytes if we use fallbacks.
                          * See ucnv_MBCSFromUnicodeWithOffsets() for details.
                          */
-                        switch(filter) {
-                        case UCNV_SET_FILTER_NONE:
-                            do {
-                                if(st3&1) {
-                                    sa->add(sa->set, c);
+                        ఎంపిక(filter) {
+                        స్థితి UCNV_సమితి_FILTER_NONE:
+                            చేయి {
+                                ఒకవేళ(st3&1) {
+                                    sa->కూడు(sa->సమితి, c);
                                     stage3+=st3Multiplier;
-                                } else if(useFallback) {
+                                } లేకపోతే ఒకవేళ(useFallback) {
                                     uint8_t b=0;
-                                    switch(st3Multiplier) {
-                                    case 4:
+                                    ఎంపిక(st3Multiplier) {
+                                    స్థితి 4:
                                         b|=*stage3++;
                                         U_FALLTHROUGH;
-                                    case 3:
+                                    స్థితి 3:
                                         b|=*stage3++;
                                         U_FALLTHROUGH;
-                                    case 2:
+                                    స్థితి 2:
                                         b|=stage3[0]|stage3[1];
                                         stage3+=2;
                                         U_FALLTHROUGH;
-                                    default:
-                                        break;
+                                    అప్రమేయ:
+                                        ఆపు;
                                     }
-                                    if(b!=0) {
-                                        sa->add(sa->set, c);
+                                    ఒకవేళ(b!=0) {
+                                        sa->కూడు(sa->సమితి, c);
                                     }
                                 }
                                 st3>>=1;
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_DBCS_ONLY:
+                            } అయితే((++c&0xf)!=0);
+                            ఆపు;
+                        స్థితి UCNV_సమితి_FILTER_DBCS_ONLY:
                              /* Ignore single-byte results (<0x100). */
-                            do {
-                                if(((st3&1)!=0 || useFallback) && *((const uint16_t *)stage3)>=0x100) {
-                                    sa->add(sa->set, c);
+                            చేయి {
+                                ఒకవేళ(((st3&1)!=0 || useFallback) && *((స్థిరరాశి uint16_t *)stage3)>=0x100) {
+                                    sa->కూడు(sa->సమితి, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_2022_CN:
+                            } అయితే((++c&0xf)!=0);
+                            ఆపు;
+                        స్థితి UCNV_సమితి_FILTER_2022_CN:
                              /* Only add code points that map to CNS 11643 planes 1 & 2 for non-EXT ISO-2022-CN. */
-                            do {
-                                if(((st3&1)!=0 || useFallback) && ((value=*stage3)==0x81 || value==0x82)) {
-                                    sa->add(sa->set, c);
+                            చేయి {
+                                ఒకవేళ(((st3&1)!=0 || useFallback) && ((value=*stage3)==0x81 || value==0x82)) {
+                                    sa->కూడు(sa->సమితి, c);
                                 }
                                 st3>>=1;
                                 stage3+=3;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_SJIS:
+                            } అయితే((++c&0xf)!=0);
+                            ఆపు;
+                        స్థితి UCNV_సమితి_FILTER_SJIS:
                              /* Only add code points that map to Shift-JIS codes corresponding to JIS X 0208. */
-                            do {
-                                if(((st3&1)!=0 || useFallback) && (value=*((const uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
-                                    sa->add(sa->set, c);
+                            చేయి {
+                                ఒకవేళ(((st3&1)!=0 || useFallback) && (value=*((స్థిరరాశి uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
+                                    sa->కూడు(sa->సమితి, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_GR94DBCS:
+                            } అయితే((++c&0xf)!=0);
+                            ఆపు;
+                        స్థితి UCNV_సమితి_FILTER_GR94_DBCS:
                             /* Only add code points that map to ISO 2022 GR 94 DBCS codes (each byte A1..FE). */
-                            do {
-                                if( ((st3&1)!=0 || useFallback) &&
-                                    (uint16_t)((value=*((const uint16_t *)stage3)) - 0xa1a1)<=(0xfefe - 0xa1a1) &&
+                            చేయి {
+                                ఒకవేళ( ((st3&1)!=0 || useFallback) &&
+                                    (uint16_t)((value=*((స్థిరరాశి uint16_t *)stage3)) - 0xa1a1)<=(0xfefe - 0xa1a1) &&
                                     (uint8_t)(value-0xa1)<=(0xfe - 0xa1)
                                 ) {
-                                    sa->add(sa->set, c);
+                                    sa->కూడు(sa->సమితి, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_HZ:
+                            } అయితే((++c&0xf)!=0);
+                            ఆపు;
+                        స్థితి UCNV_సమితి_FILTER_HZ:
                             /* Only add code points that are suitable for HZ DBCS (lead byte A1..FD). */
-                            do {
-                                if( ((st3&1)!=0 || useFallback) &&
-                                    (uint16_t)((value=*((const uint16_t *)stage3))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
+                            చేయి {
+                                ఒకవేళ( ((st3&1)!=0 || useFallback) &&
+                                    (uint16_t)((value=*((స్థిరరాశి uint16_t *)stage3))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
                                     (uint8_t)(value-0xa1)<=(0xfe - 0xa1)
                                 ) {
-                                    sa->add(sa->set, c);
+                                    sa->కూడు(sa->సమితి, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        default:
-                            *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-                            return;
+                            } అయితే((++c&0xf)!=0);
+                            ఆపు;
+                        అప్రమేయ:
+                            *p_Error_సంకేతం=U_అంతర్గత_కార్యక్రమం_ERROR;
+                            తిరిగి;
                         }
-                    } else {
+                    } లేకపోతే {
                         c+=16; /* empty stage 3 block */
                     }
                 }
-            } else {
+            } లేకపోతే {
                 c+=1024; /* empty stage 2 block */
             }
         }
     }
 
-    ucnv_extGetUnicodeSet(sharedData, sa, which, filter, pErrorCode);
+    ucnv_ext_Get_Unicode_సమితి(shared_దత్తాంశం, sa, which, filter, p_Error_సంకేతం);
 }
 
-U_CFUNC void
-ucnv_MBCSGetUnicodeSetForUnicode(const UConverterSharedData *sharedData,
-                                 const USetAdder *sa,
-                                 UConverterUnicodeSet which,
-                                 UErrorCode *pErrorCode) {
-    ucnv_MBCSGetFilteredUnicodeSetForUnicode(
-        sharedData, sa, which,
-        sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ?
-            UCNV_SET_FILTER_DBCS_ONLY :
-            UCNV_SET_FILTER_NONE,
-        pErrorCode);
+U_CFUNC శూన్య
+ucnv_MBCSGet_Unicode_సమితి_For_Unicode(స్థిరరాశి UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
+                                 స్థిరరాశి USetAdder *sa,
+                                 UConverter_Unicode_సమితి which,
+                                 UError_సంకేతం *p_Error_సంకేతం) {
+    ucnv_MBCSGet_Filtered_Unicode_సమితి_For_Unicode(
+        shared_దత్తాంశం, sa, which,
+        shared_దత్తాంశం->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ?
+            UCNV_సమితి_FILTER_DBCS_ONLY :
+            UCNV_సమితి_FILTER_NONE,
+        p_Error_సంకేతం);
 }
 
-static void U_CALLCONV
-ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
-                   UConverterUnicodeSet which,
-                   UErrorCode *pErrorCode) {
-    if(cnv->options&_MBCS_OPTION_GB18030) {
-        sa->addRange(sa->set, 0, 0xd7ff);
-        sa->addRange(sa->set, 0xe000, 0x10ffff);
-    } else {
-        ucnv_MBCSGetUnicodeSetForUnicode(cnv->sharedData, sa, which, pErrorCode);
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSGet_Unicode_సమితి(స్థిరరాశి UConverter *cnv,
+                   స్థిరరాశి USetAdder *sa,
+                   UConverter_Unicode_సమితి which,
+                   UError_సంకేతం *p_Error_సంకేతం) {
+    ఒకవేళ(cnv->options&_MBCS_OPTION_GB18030) {
+        sa->కూడు_Range(sa->సమితి, 0, 0xd7ff);
+        sa->కూడు_Range(sa->సమితి, 0xe000, 0x10ffff);
+    } లేకపోతే {
+        ucnv_MBCSGet_Unicode_సమితి_For_Unicode(cnv->shared_దత్తాంశం, sa, which, p_Error_సంకేతం);
     }
 }
 
@@ -1101,66 +1101,66 @@ ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
  * @return if(U_FAILURE) return the code point for cnv->fromUChar32
  *         else return 0 after output has been written to the target
  */
-static UChar32
-_extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
+స్థిర UChar32
+_extFromU(UConverter *cnv, స్థిరరాశి UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
           UChar32 cp,
-          const char16_t **source, const char16_t *sourceLimit,
-          uint8_t **target, const uint8_t *targetLimit,
-          int32_t **offsets, int32_t sourceIndex,
+          స్థిరరాశి char16_t **ఆధారం, స్థిరరాశి char16_t *ఆధారం_హద్దు,
+          uint8_t **లక్ష్యం, స్థిరరాశి uint8_t *లక్ష్యం_హద్దు,
+          int32_t **offsets, int32_t ఆధారం_సూచీ,
           UBool flush,
-          UErrorCode *pErrorCode) {
-    const int32_t *cx;
+          UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి int32_t *cx;
 
-    cnv->useSubChar1=false;
+    cnv->useSubChar1=అబద్ధం;
 
-    if( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
-        ucnv_extInitialMatchFromU(
+    ఒకవేళ( (cx=shared_దత్తాంశం->mbcs.extIndexes)!=శూన్యసూచిక &&
+        ucnv_ext_Initial_సరిపోలిక_From_U(
             cnv, cx,
-            cp, source, sourceLimit,
-            reinterpret_cast<char**>(target), reinterpret_cast<const char*>(targetLimit),
-            offsets, sourceIndex,
+            cp, ఆధారం, ఆధారం_హద్దు,
+            reinterpret_cast<అక్షరం**>(లక్ష్యం), reinterpret_cast<స్థిరరాశి అక్షరం*>(లక్ష్యం_హద్దు),
+            offsets, ఆధారం_సూచీ,
             flush,
-            pErrorCode)
+            p_Error_సంకేతం)
     ) {
-        return 0; /* an extension mapping handled the input */
+        తిరిగి 0; /* an extension mapping handled the input */
     }
 
     /* GB 18030 */
-    if((cnv->options&_MBCS_OPTION_GB18030)!=0) {
-        const uint32_t *range;
+    ఒకవేళ((cnv->options&_MBCS_OPTION_GB18030)!=0) {
+        స్థిరరాశి uint32_t *range;
         int32_t i;
 
         range=gb18030Ranges[0];
-        for(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
-            if (range[0] <= static_cast<uint32_t>(cp) && static_cast<uint32_t>(cp) <= range[1]) {
+        కొరకు(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
+            ఒకవేళ (range[0] <= static_cast<uint32_t>(cp) && static_cast<uint32_t>(cp) <= range[1]) {
                 /* found the Unicode code point, output the four-byte sequence for it */
-                uint32_t linear;
-                char bytes[4];
+                uint32_t రేఖీయ_2;
+                అక్షరం బైట్లు[4];
 
                 /* get the linear value of the first GB 18030 code in this range */
-                linear=range[2]-LINEAR_18030_BASE;
+                రేఖీయ_2=range[2]-రేఖీయ_18030_పునాది;
 
                 /* add the offset from the beginning of the range */
-                linear += (static_cast<uint32_t>(cp) - range[0]);
+                రేఖీయ_2 += (static_cast<uint32_t>(cp) - range[0]);
 
                 /* turn this into a four-byte sequence */
-                bytes[3] = static_cast<char>(0x30 + linear % 10); linear /= 10;
-                bytes[2] = static_cast<char>(0x81 + linear % 126); linear /= 126;
-                bytes[1] = static_cast<char>(0x30 + linear % 10); linear /= 10;
-                bytes[0] = static_cast<char>(0x81 + linear);
+                బైట్లు[3] = static_cast<అక్షరం>(0x30 + రేఖీయ_2 % 10); రేఖీయ_2 /= 10;
+                బైట్లు[2] = static_cast<అక్షరం>(0x81 + రేఖీయ_2 % 126); రేఖీయ_2 /= 126;
+                బైట్లు[1] = static_cast<అక్షరం>(0x30 + రేఖీయ_2 % 10); రేఖీయ_2 /= 10;
+                బైట్లు[0] = static_cast<అక్షరం>(0x81 + రేఖీయ_2);
 
                 /* output this sequence */
-                ucnv_fromUWriteBytes(cnv,
-                                     bytes, 4, reinterpret_cast<char**>(target), reinterpret_cast<const char*>(targetLimit),
-                                     offsets, sourceIndex, pErrorCode);
-                return 0;
+                ucnv_from_UWrite_బైట్లు(cnv,
+                                     బైట్లు, 4, reinterpret_cast<అక్షరం**>(లక్ష్యం), reinterpret_cast<స్థిరరాశి అక్షరం*>(లక్ష్యం_హద్దు),
+                                     offsets, ఆధారం_సూచీ, p_Error_సంకేతం);
+                తిరిగి 0;
             }
         }
     }
 
     /* no mapping */
-    *pErrorCode=U_INVALID_CHAR_FOUND;
-    return cp;
+    *p_Error_సంకేతం=U_INVALID_CHAR_దొరికింది;
+    తిరిగి cp;
 }
 
 /*
@@ -1168,55 +1168,55 @@ _extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
  * @return if(U_FAILURE) return the length (toULength, byteIndex) for the input
  *         else return 0 after output has been written to the target
  */
-static int8_t
-_extToU(UConverter *cnv, const UConverterSharedData *sharedData,
+స్థిర int8_t
+ext_గమ్యం_U(UConverter *cnv, స్థిరరాశి UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
         int8_t length,
-        const uint8_t **source, const uint8_t *sourceLimit,
-        char16_t **target, const char16_t *targetLimit,
-        int32_t **offsets, int32_t sourceIndex,
+        స్థిరరాశి uint8_t **ఆధారం, స్థిరరాశి uint8_t *ఆధారం_హద్దు,
+        char16_t **లక్ష్యం, స్థిరరాశి char16_t *లక్ష్యం_హద్దు,
+        int32_t **offsets, int32_t ఆధారం_సూచీ,
         UBool flush,
-        UErrorCode *pErrorCode) {
-    const int32_t *cx;
+        UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి int32_t *cx;
 
-    if( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
-        ucnv_extInitialMatchToU(
+    ఒకవేళ( (cx=shared_దత్తాంశం->mbcs.extIndexes)!=శూన్యసూచిక &&
+        ucnv_ext_Initial_సరిపోలిక_గమ్యం_U(
             cnv, cx,
-            length, reinterpret_cast<const char**>(source), reinterpret_cast<const char*>(sourceLimit),
-            target, targetLimit,
-            offsets, sourceIndex,
+            length, reinterpret_cast<స్థిరరాశి అక్షరం**>(ఆధారం), reinterpret_cast<స్థిరరాశి అక్షరం*>(ఆధారం_హద్దు),
+            లక్ష్యం, లక్ష్యం_హద్దు,
+            offsets, ఆధారం_సూచీ,
             flush,
-            pErrorCode)
+            p_Error_సంకేతం)
     ) {
-        return 0; /* an extension mapping handled the input */
+        తిరిగి 0; /* an extension mapping handled the input */
     }
 
     /* GB 18030 */
-    if(length==4 && (cnv->options&_MBCS_OPTION_GB18030)!=0) {
-        const uint32_t *range;
-        uint32_t linear;
+    ఒకవేళ(length==4 && (cnv->options&_MBCS_OPTION_GB18030)!=0) {
+        స్థిరరాశి uint32_t *range;
+        uint32_t రేఖీయ_2;
         int32_t i;
 
-        linear=LINEAR_18030(cnv->toUBytes[0], cnv->toUBytes[1], cnv->toUBytes[2], cnv->toUBytes[3]);
+        రేఖీయ_2=రేఖీయ_18030(cnv->గమ్యం_UBytes[0], cnv->గమ్యం_UBytes[1], cnv->గమ్యం_UBytes[2], cnv->గమ్యం_UBytes[3]);
         range=gb18030Ranges[0];
-        for(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
-            if(range[2]<=linear && linear<=range[3]) {
+        కొరకు(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
+            ఒకవేళ(range[2]<=రేఖీయ_2 && రేఖీయ_2<=range[3]) {
                 /* found the sequence, output the Unicode code point for it */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_సంకేతం=U_ZERO_ERROR;
 
                 /* add the linear difference between the input and start sequences to the start code point */
-                linear=range[0]+(linear-range[2]);
+                రేఖీయ_2=range[0]+(రేఖీయ_2-range[2]);
 
                 /* output this code point */
-                ucnv_toUWriteCodePoint(cnv, linear, target, targetLimit, offsets, sourceIndex, pErrorCode);
+                ucnv_గమ్యం_UWrite_సంకేతం_బిందువు(cnv, రేఖీయ_2, లక్ష్యం, లక్ష్యం_హద్దు, offsets, ఆధారం_సూచీ, p_Error_సంకేతం);
 
-                return 0;
+                తిరిగి 0;
             }
         }
     }
 
     /* no mapping */
-    *pErrorCode=U_INVALID_CHAR_FOUND;
-    return length;
+    *p_Error_సంకేతం=U_INVALID_CHAR_దొరికింది;
+    తిరిగి length;
 }
 
 /* EBCDIC swap LF<->NL ------------------------------------------------------ */
@@ -1243,37 +1243,37 @@ _extToU(UConverter *cnv, const UConverterSharedData *sharedData,
  */
 
 /* standard EBCDIC codes */
-#define EBCDIC_LF 0x25
-#define EBCDIC_NL 0x15
+#నిర్వచించు EBCDIC_LF 0x25
+#నిర్వచించు EBCDIC_NL 0x15
 
 /* standard EBCDIC codes with roundtrip flag as stored in Unicode-to-single-byte tables */
-#define EBCDIC_RT_LF 0xf25
-#define EBCDIC_RT_NL 0xf15
+#నిర్వచించు EBCDIC_RT_LF 0xf25
+#నిర్వచించు EBCDIC_RT_NL 0xf15
 
 /* Unicode code points */
-#define U_LF 0x0a
-#define U_NL 0x85
+#నిర్వచించు U_LF 0x0a
+#నిర్వచించు U_NL 0x85
 
-static UBool
-_EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
-    UConverterMBCSTable *mbcsTable;
+స్థిర UBool
+_EBCDICSwapLFNL(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం, UError_సంకేతం *p_Error_సంకేతం) {
+    UConverterMBCSTable *mbcs_పట్టిక;
 
-    const uint16_t *table, *results;
-    const uint8_t *bytes;
+    స్థిరరాశి uint16_t *పట్టిక, *results;
+    స్థిరరాశి uint8_t *బైట్లు;
 
-    int32_t (*newStateTable)[256];
+    int32_t (*new_State_పట్టిక)[256];
     uint16_t *newResults;
     uint8_t *p;
-    char *name;
+    అక్షరం *name;
 
-    uint32_t stage2Entry;
+    uint32_t stage2_నమోదు;
     uint32_t size, sizeofFromUBytes;
 
-    mbcsTable=&sharedData->mbcs;
+    mbcs_పట్టిక=&shared_దత్తాంశం->mbcs;
 
-    table=mbcsTable->fromUnicodeTable;
-    bytes=mbcsTable->fromUnicodeBytes;
-    results = reinterpret_cast<const uint16_t*>(bytes);
+    పట్టిక=mbcs_పట్టిక->from_Unicode_పట్టిక;
+    బైట్లు=mbcs_పట్టిక->from_Unicode_బైట్లు;
+    results = reinterpret_cast<స్థిరరాశి uint16_t*>(బైట్లు);
 
     /*
      * Check that this is an EBCDIC table with SBCS portion -
@@ -1281,46 +1281,46 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
      *
      * If not, ignore the option. Options are always ignored if they do not apply.
      */
-    if(!(
-         (mbcsTable->outputType==MBCS_OUTPUT_1 || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) &&
-         mbcsTable->stateTable[0][EBCDIC_LF]==MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_LF) &&
-         mbcsTable->stateTable[0][EBCDIC_NL]==MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_NL)
+    ఒకవేళ(!(
+         (mbcs_పట్టిక->outputType==MBCS_OUTPUT_1 || mbcs_పట్టిక->outputType==MBCS_OUTPUT_2_SISO) &&
+         mbcs_పట్టిక->state_పట్టిక[0][EBCDIC_LF]==MBCS_నమోదు_FINAL(0, MBCS_STATE_VALID_ప్రత్యక్ష_16, U_LF) &&
+         mbcs_పట్టిక->state_పట్టిక[0][EBCDIC_NL]==MBCS_నమోదు_FINAL(0, MBCS_STATE_VALID_ప్రత్యక్ష_16, U_NL)
     )) {
-        return false;
+        తిరిగి అబద్ధం;
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        if(!(
-             EBCDIC_RT_LF==MBCS_SINGLE_RESULT_FROM_U(table, results, U_LF) &&
-             EBCDIC_RT_NL==MBCS_SINGLE_RESULT_FROM_U(table, results, U_NL)
+    ఒకవేళ(mbcs_పట్టిక->outputType==MBCS_OUTPUT_1) {
+        ఒకవేళ(!(
+             EBCDIC_RT_LF==MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, U_LF) &&
+             EBCDIC_RT_NL==MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, U_NL)
         )) {
-            return false;
+            తిరిగి అబద్ధం;
         }
-    } else /* MBCS_OUTPUT_2_SISO */ {
-        stage2Entry=MBCS_STAGE_2_FROM_U(table, U_LF);
-        if(!(
-             MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, U_LF)!=0 &&
-             EBCDIC_LF==MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, U_LF)
+    } లేకపోతే /* MBCS_OUTPUT_2_SISO */ {
+        stage2_నమోదు=MBCS_STAGE_2_FROM_U(పట్టిక, U_LF);
+        ఒకవేళ(!(
+             MBCS_FROM_U_IS_ROUNDTRIP(stage2_నమోదు, U_LF)!=0 &&
+             EBCDIC_LF==MBCS_విలువ_2_FROM_STAGE_2(బైట్లు, stage2_నమోదు, U_LF)
         )) {
-            return false;
+            తిరిగి అబద్ధం;
         }
 
-        stage2Entry=MBCS_STAGE_2_FROM_U(table, U_NL);
-        if(!(
-             MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, U_NL)!=0 &&
-             EBCDIC_NL==MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, U_NL)
+        stage2_నమోదు=MBCS_STAGE_2_FROM_U(పట్టిక, U_NL);
+        ఒకవేళ(!(
+             MBCS_FROM_U_IS_ROUNDTRIP(stage2_నమోదు, U_NL)!=0 &&
+             EBCDIC_NL==MBCS_విలువ_2_FROM_STAGE_2(బైట్లు, stage2_నమోదు, U_NL)
         )) {
-            return false;
+            తిరిగి అబద్ధం;
         }
     }
 
-    if(mbcsTable->fromUBytesLength>0) {
+    ఒకవేళ(mbcs_పట్టిక->from_UBytes_నిడివి>0) {
         /*
          * We _know_ the number of bytes in the fromUnicodeBytes array
          * starting with header.version 4.1.
          */
-        sizeofFromUBytes=mbcsTable->fromUBytesLength;
-    } else {
+        sizeofFromUBytes=mbcs_పట్టిక->from_UBytes_నిడివి;
+    } లేకపోతే {
         /*
          * Otherwise:
          * There used to be code to enumerate the fromUnicode
@@ -1333,8 +1333,8 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
          * ucnvmbcs.c revision 1.99 is the last one with the
          * ucnv_MBCSSizeofFromUBytes() function.
          */
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return false;
+        *p_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        తిరిగి అబద్ధం;
     }
 
     /*
@@ -1345,184 +1345,184 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
      * - a converter name string with the swap option appended
      */
     size=
-        mbcsTable->countStates*1024+
+        mbcs_పట్టిక->లెక్క_స్థితులు*1024+
         sizeofFromUBytes+
-        UCNV_MAX_CONVERTER_NAME_LENGTH+20;
+        UCNV_MAX_CONVERTER_NAME_నిడివి+20;
     p = static_cast<uint8_t*>(uprv_malloc(size));
-    if(p==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+    ఒకవేళ(p==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి అబద్ధం;
     }
 
     /* copy and modify the to-Unicode state table */
-    newStateTable = reinterpret_cast<int32_t(*)[256]>(p);
-    uprv_memcpy(newStateTable, mbcsTable->stateTable, mbcsTable->countStates*1024);
+    new_State_పట్టిక = reinterpret_cast<int32_t(*)[256]>(p);
+    uprv_memcpy(new_State_పట్టిక, mbcs_పట్టిక->state_పట్టిక, mbcs_పట్టిక->లెక్క_స్థితులు*1024);
 
-    newStateTable[0][EBCDIC_LF]=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_NL);
-    newStateTable[0][EBCDIC_NL]=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_LF);
+    new_State_పట్టిక[0][EBCDIC_LF]=MBCS_నమోదు_FINAL(0, MBCS_STATE_VALID_ప్రత్యక్ష_16, U_NL);
+    new_State_పట్టిక[0][EBCDIC_NL]=MBCS_నమోదు_FINAL(0, MBCS_STATE_VALID_ప్రత్యక్ష_16, U_LF);
 
     /* copy and modify the from-Unicode result table */
-    newResults = reinterpret_cast<uint16_t*>(newStateTable[mbcsTable->countStates]);
-    uprv_memcpy(newResults, bytes, sizeofFromUBytes);
+    newResults = reinterpret_cast<uint16_t*>(new_State_పట్టిక[mbcs_పట్టిక->లెక్క_స్థితులు]);
+    uprv_memcpy(newResults, బైట్లు, sizeofFromUBytes);
 
     /* conveniently, the table access macros work on the left side of expressions */
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        MBCS_SINGLE_RESULT_FROM_U(table, newResults, U_LF)=EBCDIC_RT_NL;
-        MBCS_SINGLE_RESULT_FROM_U(table, newResults, U_NL)=EBCDIC_RT_LF;
-    } else /* MBCS_OUTPUT_2_SISO */ {
-        stage2Entry=MBCS_STAGE_2_FROM_U(table, U_LF);
-        MBCS_VALUE_2_FROM_STAGE_2(newResults, stage2Entry, U_LF)=EBCDIC_NL;
+    ఒకవేళ(mbcs_పట్టిక->outputType==MBCS_OUTPUT_1) {
+        MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, newResults, U_LF)=EBCDIC_RT_NL;
+        MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, newResults, U_NL)=EBCDIC_RT_LF;
+    } లేకపోతే /* MBCS_OUTPUT_2_SISO */ {
+        stage2_నమోదు=MBCS_STAGE_2_FROM_U(పట్టిక, U_LF);
+        MBCS_విలువ_2_FROM_STAGE_2(newResults, stage2_నమోదు, U_LF)=EBCDIC_NL;
 
-        stage2Entry=MBCS_STAGE_2_FROM_U(table, U_NL);
-        MBCS_VALUE_2_FROM_STAGE_2(newResults, stage2Entry, U_NL)=EBCDIC_LF;
+        stage2_నమోదు=MBCS_STAGE_2_FROM_U(పట్టిక, U_NL);
+        MBCS_విలువ_2_FROM_STAGE_2(newResults, stage2_నమోదు, U_NL)=EBCDIC_LF;
     }
 
     /* set the canonical converter name */
-    name = reinterpret_cast<char*>(newResults) + sizeofFromUBytes;
-    uprv_strcpy(name, sharedData->staticData->name);
-    uprv_strcat(name, UCNV_SWAP_LFNL_OPTION_STRING);
+    name = reinterpret_cast<అక్షరం*>(newResults) + sizeofFromUBytes;
+    uprv_strcpy(name, shared_దత్తాంశం->static_దత్తాంశం->name);
+    uprv_strcat(name, UCNV_మార్పిడి_LFNL_OPTION_STRING);
 
     /* set the pointers */
-    icu::umtx_lock(nullptr);
-    if(mbcsTable->swapLFNLStateTable==nullptr) {
-        mbcsTable->swapLFNLStateTable=newStateTable;
-        mbcsTable->swapLFNLFromUnicodeBytes = reinterpret_cast<uint8_t*>(newResults);
-        mbcsTable->swapLFNLName=name;
+    icu::umtx_తాళం(శూన్యసూచిక);
+    ఒకవేళ(mbcs_పట్టిక->మార్పిడి_LFNLState_పట్టిక==శూన్యసూచిక) {
+        mbcs_పట్టిక->మార్పిడి_LFNLState_పట్టిక=new_State_పట్టిక;
+        mbcs_పట్టిక->మార్పిడి_LFNLFrom_Unicode_బైట్లు = reinterpret_cast<uint8_t*>(newResults);
+        mbcs_పట్టిక->మార్పిడి_LFNLName=name;
 
-        newStateTable=nullptr;
+        new_State_పట్టిక=శూన్యసూచిక;
     }
-    icu::umtx_unlock(nullptr);
+    icu::umtx_unlock(శూన్యసూచిక);
 
     /* release the allocated memory if another thread beat us to it */
-    if(newStateTable!=nullptr) {
-        uprv_free(newStateTable);
+    ఒకవేళ(new_State_పట్టిక!=శూన్యసూచిక) {
+        uprv_free(new_State_పట్టిక);
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 /* reconstitute omitted fromUnicode data ------------------------------------ */
 
 /* for details, compare with genmbcs.c MBCSAddFromUnicode() and transformEUC() */
-static UBool U_CALLCONV
-writeStage3Roundtrip(const void *context, uint32_t value, UChar32 codePoints[32]) {
-    UConverterMBCSTable *mbcsTable=(UConverterMBCSTable *)context;
-    const uint16_t *table;
+స్థిర UBool U_CALLCONV
+writeStage3Roundtrip(స్థిరరాశి శూన్య *context, uint32_t value, UChar32 సంకేతం_Points[32]) {
+    UConverterMBCSTable *mbcs_పట్టిక=(UConverterMBCSTable *)context;
+    స్థిరరాశి uint16_t *పట్టిక;
     uint32_t *stage2;
-    uint8_t *bytes, *p;
+    uint8_t *బైట్లు, *p;
     UChar32 c;
     int32_t i, st3;
 
-    table=mbcsTable->fromUnicodeTable;
-    bytes = const_cast<uint8_t*>(mbcsTable->fromUnicodeBytes);
+    పట్టిక=mbcs_పట్టిక->from_Unicode_పట్టిక;
+    బైట్లు = const_cast<uint8_t*>(mbcs_పట్టిక->from_Unicode_బైట్లు);
 
     /* for EUC outputTypes, modify the value like genmbcs.c's transformEUC() */
-    switch(mbcsTable->outputType) {
-    case MBCS_OUTPUT_3_EUC:
-        if(value<=0xffff) {
+    ఎంపిక(mbcs_పట్టిక->outputType) {
+    స్థితి MBCS_OUTPUT_3_EUC:
+        ఒకవేళ(value<=0xffff) {
             /* short sequences are stored directly */
             /* code set 0 or 1 */
-        } else if(value<=0x8effff) {
+        } లేకపోతే ఒకవేళ(value<=0x8effff) {
             /* code set 2 */
             value&=0x7fff;
-        } else /* first byte is 0x8f */ {
+        } లేకపోతే /* first byte is 0x8f */ {
             /* code set 3 */
             value&=0xff7f;
         }
-        break;
-    case MBCS_OUTPUT_4_EUC:
-        if(value<=0xffffff) {
+        ఆపు;
+    స్థితి MBCS_OUTPUT_4_EUC:
+        ఒకవేళ(value<=0xffffff) {
             /* short sequences are stored directly */
             /* code set 0 or 1 */
-        } else if(value<=0x8effffff) {
+        } లేకపోతే ఒకవేళ(value<=0x8effffff) {
             /* code set 2 */
             value&=0x7fffff;
-        } else /* first byte is 0x8f */ {
+        } లేకపోతే /* first byte is 0x8f */ {
             /* code set 3 */
             value&=0xff7fff;
         }
-        break;
-    default:
-        break;
+        ఆపు;
+    అప్రమేయ:
+        ఆపు;
     }
 
-    for(i=0; i<=0x1f; ++value, ++i) {
-        c=codePoints[i];
-        if(c<0) {
-            continue;
+    కొరకు(i=0; i<=0x1f; ++value, ++i) {
+        c=సంకేతం_Points[i];
+        ఒకవేళ(c<0) {
+            కొనసాగు;
         }
 
         /* locate the stage 2 & 3 data */
-        stage2=((uint32_t *)table)+table[c>>10]+((c>>4)&0x3f);
-        p=bytes;
+        stage2=((uint32_t *)పట్టిక)+పట్టిక[c>>10]+((c>>4)&0x3f);
+        p=బైట్లు;
         st3 = static_cast<int32_t>(static_cast<uint16_t>(*stage2)) * 16 + (c & 0xf);
 
         /* write the codepage bytes into stage 3 */
-        switch(mbcsTable->outputType) {
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4_EUC:
+        ఎంపిక(mbcs_పట్టిక->outputType) {
+        స్థితి MBCS_OUTPUT_3:
+        స్థితి MBCS_OUTPUT_4_EUC:
             p+=st3*3;
             p[0] = static_cast<uint8_t>(value >> 16);
             p[1] = static_cast<uint8_t>(value >> 8);
             p[2] = static_cast<uint8_t>(value);
-            break;
-        case MBCS_OUTPUT_4:
+            ఆపు;
+        స్థితి MBCS_OUTPUT_4:
             reinterpret_cast<uint32_t*>(p)[st3] = value;
-            break;
-        default:
+            ఆపు;
+        అప్రమేయ:
             /* 2 bytes per character */
             reinterpret_cast<uint16_t*>(p)[st3] = static_cast<uint16_t>(value);
-            break;
+            ఆపు;
         }
 
         /* set the roundtrip flag */
         *stage2|=(1UL<<(16+(c&0xf)));
     }
-    return true;
+    తిరిగి నిజం;
  }
 
-static void
-reconstituteData(UConverterMBCSTable *mbcsTable,
-                 uint32_t stage1Length, uint32_t stage2Length,
-                 uint32_t fullStage2Length,  /* lengths are numbers of units, not bytes */
-                 UErrorCode *pErrorCode) {
+స్థిర శూన్య
+reconstitute_దత్తాంశం(UConverterMBCSTable *mbcs_పట్టిక,
+                 uint32_t stage1_నిడివి, uint32_t stage2_నిడివి,
+                 uint32_t నిండిన_Stage2_నిడివి,  /* lengths are numbers of units, not bytes */
+                 UError_సంకేతం *p_Error_సంకేతం) {
     uint16_t *stage1;
     uint32_t *stage2;
-    uint32_t dataLength=stage1Length*2+fullStage2Length*4+mbcsTable->fromUBytesLength;
-    mbcsTable->reconstitutedData = static_cast<uint8_t*>(uprv_malloc(dataLength));
-    if(mbcsTable->reconstitutedData==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    uint32_t దత్తాంశం_నిడివి=stage1_నిడివి*2+నిండిన_Stage2_నిడివి*4+mbcs_పట్టిక->from_UBytes_నిడివి;
+    mbcs_పట్టిక->reconstituted_దత్తాంశం = static_cast<uint8_t*>(uprv_malloc(దత్తాంశం_నిడివి));
+    ఒకవేళ(mbcs_పట్టిక->reconstituted_దత్తాంశం==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    uprv_memset(mbcsTable->reconstitutedData, 0, dataLength);
+    uprv_memset(mbcs_పట్టిక->reconstituted_దత్తాంశం, 0, దత్తాంశం_నిడివి);
 
     /* copy existing data and reroute the pointers */
-    stage1 = reinterpret_cast<uint16_t*>(mbcsTable->reconstitutedData);
-    uprv_memcpy(stage1, mbcsTable->fromUnicodeTable, stage1Length*2);
+    stage1 = reinterpret_cast<uint16_t*>(mbcs_పట్టిక->reconstituted_దత్తాంశం);
+    uprv_memcpy(stage1, mbcs_పట్టిక->from_Unicode_పట్టిక, stage1_నిడివి*2);
 
-    stage2 = reinterpret_cast<uint32_t*>(stage1 + stage1Length);
-    uprv_memcpy(stage2+(fullStage2Length-stage2Length),
-                mbcsTable->fromUnicodeTable+stage1Length,
-                stage2Length*4);
+    stage2 = reinterpret_cast<uint32_t*>(stage1 + stage1_నిడివి);
+    uprv_memcpy(stage2+(నిండిన_Stage2_నిడివి-stage2_నిడివి),
+                mbcs_పట్టిక->from_Unicode_పట్టిక+stage1_నిడివి,
+                stage2_నిడివి*4);
 
-    mbcsTable->fromUnicodeTable=stage1;
-    mbcsTable->fromUnicodeBytes = reinterpret_cast<uint8_t*>(stage2 + fullStage2Length);
+    mbcs_పట్టిక->from_Unicode_పట్టిక=stage1;
+    mbcs_పట్టిక->from_Unicode_బైట్లు = reinterpret_cast<uint8_t*>(stage2 + నిండిన_Stage2_నిడివి);
 
     /* indexes into stage 2 count from the bottom of the fromUnicodeTable */
     stage2 = reinterpret_cast<uint32_t*>(stage1);
 
     /* reconstitute the initial part of stage 2 from the mbcsIndex */
     {
-        int32_t stageUTF8Length = (static_cast<int32_t>(mbcsTable->maxFastUChar) + 1) >> 6;
-        int32_t stageUTF8Index=0;
+        int32_t stage_UTF8_నిడివి = (static_cast<int32_t>(mbcs_పట్టిక->maxFastUChar) + 1) >> 6;
+        int32_t stage_UTF8_సూచీ=0;
         int32_t st1, st2, st3, i;
 
-        for(st1=0; stageUTF8Index<stageUTF8Length; ++st1) {
+        కొరకు(st1=0; stage_UTF8_సూచీ<stage_UTF8_నిడివి; ++st1) {
             st2=stage1[st1];
-            if (st2 != static_cast<int32_t>(stage1Length) / 2) {
+            ఒకవేళ (st2 != static_cast<int32_t>(stage1_నిడివి) / 2) {
                 /* each stage 2 block has 64 entries corresponding to 16 entries in the mbcsIndex */
-                for(i=0; i<16; ++i) {
-                    st3=mbcsTable->mbcsIndex[stageUTF8Index++];
-                    if(st3!=0) {
+                కొరకు(i=0; i<16; ++i) {
+                    st3=mbcs_పట్టిక->mbcs_సూచీ[stage_UTF8_సూచీ++];
+                    ఒకవేళ(st3!=0) {
                         /* an stage 2 entry's index is per stage 3 16-block, not per stage 3 entry */
                         st3>>=4;
                         /*
@@ -1533,122 +1533,122 @@ reconstituteData(UConverterMBCSTable *mbcsTable,
                         stage2[st2++]=st3++;
                         stage2[st2++]=st3++;
                         stage2[st2++]=st3;
-                    } else {
+                    } లేకపోతే {
                         /* no stage 3 block, skip */
                         st2+=4;
                     }
                 }
-            } else {
+            } లేకపోతే {
                 /* no stage 2 block, skip */
-                stageUTF8Index+=16;
+                stage_UTF8_సూచీ+=16;
             }
         }
     }
 
     /* reconstitute fromUnicodeBytes with roundtrips from toUnicode data */
-    ucnv_MBCSEnumToUnicode(mbcsTable, writeStage3Roundtrip, mbcsTable, pErrorCode);
+    ucnv_MBCSEnum_గమ్యం_Unicode(mbcs_పట్టిక, writeStage3Roundtrip, mbcs_పట్టిక, p_Error_సంకేతం);
 }
 
 /* MBCS setup functions ----------------------------------------------------- */
 
-static void U_CALLCONV
-ucnv_MBCSLoad(UConverterSharedData *sharedData,
-          UConverterLoadArgs *pArgs,
-          const uint8_t *raw,
-          UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSLoad(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
+          UConverter_ఎక్కించు_వాదనలు *p_వాదనలు,
+          స్థిరరాశి uint8_t *raw,
+          UError_సంకేతం *p_Error_సంకేతం) {
     UDataInfo info;
-    UConverterMBCSTable *mbcsTable=&sharedData->mbcs;
-    _MBCSHeader *header=(_MBCSHeader *)raw;
-    uint32_t offset;
-    uint32_t headerLength;
-    UBool noFromU=false;
+    UConverterMBCSTable *mbcs_పట్టిక=&shared_దత్తాంశం->mbcs;
+    _MBCSHeader *శీర్షిక=(_MBCSHeader *)raw;
+    uint32_t స్థానభ్రంశం;
+    uint32_t శీర్షిక_నిడివి;
+    UBool noFromU=అబద్ధం;
 
-    if(header->version[0]==4) {
-        headerLength=MBCS_HEADER_V4_LENGTH;
-    } else if(header->version[0]==5 && header->version[1]>=3 &&
-              (header->options&MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK)==0) {
-        headerLength=header->options&MBCS_OPT_LENGTH_MASK;
-        noFromU = static_cast<UBool>((header->options & MBCS_OPT_NO_FROM_U) != 0);
-    } else {
-        *pErrorCode=U_INVALID_TABLE_FORMAT;
-        return;
+    ఒకవేళ(శీర్షిక->సంస్కరణ[0]==4) {
+        శీర్షిక_నిడివి=MBCS_శీర్షిక_V4_నిడివి;
+    } లేకపోతే ఒకవేళ(శీర్షిక->సంస్కరణ[0]==5 && శీర్షిక->సంస్కరణ[1]>=3 &&
+              (శీర్షిక->options&MBCS_OPT_UNKNOWN_INCOMPATIBLE_ముసుగు)==0) {
+        శీర్షిక_నిడివి=శీర్షిక->options&MBCS_OPT_నిడివి_ముసుగు;
+        noFromU = static_cast<UBool>((శీర్షిక->options & MBCS_OPT_NO_FROM_U) != 0);
+    } లేకపోతే {
+        *p_Error_సంకేతం=U_INVALID_పట్టిక_FORMAT;
+        తిరిగి;
     }
 
-    mbcsTable->outputType = static_cast<uint8_t>(header->flags);
-    if(noFromU && mbcsTable->outputType==MBCS_OUTPUT_1) {
-        *pErrorCode=U_INVALID_TABLE_FORMAT;
-        return;
+    mbcs_పట్టిక->outputType = static_cast<uint8_t>(శీర్షిక->flags);
+    ఒకవేళ(noFromU && mbcs_పట్టిక->outputType==MBCS_OUTPUT_1) {
+        *p_Error_సంకేతం=U_INVALID_పట్టిక_FORMAT;
+        తిరిగి;
     }
 
     /* extension data, header version 4.2 and higher */
-    offset=header->flags>>8;
-    if(offset!=0) {
-        mbcsTable->extIndexes = reinterpret_cast<const int32_t*>(raw + offset);
+    స్థానభ్రంశం=శీర్షిక->flags>>8;
+    ఒకవేళ(స్థానభ్రంశం!=0) {
+        mbcs_పట్టిక->extIndexes = reinterpret_cast<స్థిరరాశి int32_t*>(raw + స్థానభ్రంశం);
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_EXT_ONLY) {
-        UConverterLoadArgs args=UCNV_LOAD_ARGS_INITIALIZER;
-        UConverterSharedData *baseSharedData;
-        const int32_t *extIndexes;
-        const char *baseName;
+    ఒకవేళ(mbcs_పట్టిక->outputType==MBCS_OUTPUT_EXT_ONLY) {
+        UConverter_ఎక్కించు_వాదనలు వాదనలు_2=UCNV_ఎక్కించు_వాదనలు_INITIALIZER;
+        UConverter_Shared_దత్తాంశం *పునాది_Shared_దత్తాంశం;
+        స్థిరరాశి int32_t *extIndexes;
+        స్థిరరాశి అక్షరం *పునాది_Name;
 
         /* extension-only file, load the base table and set values appropriately */
-        if((extIndexes=mbcsTable->extIndexes)==nullptr) {
+        ఒకవేళ((extIndexes=mbcs_పట్టిక->extIndexes)==శూన్యసూచిక) {
             /* extension-only file without extension */
-            *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            *p_Error_సంకేతం=U_INVALID_పట్టిక_FORMAT;
+            తిరిగి;
         }
 
-        if(pArgs->nestedLoads!=1) {
+        ఒకవేళ(p_వాదనలు->nestedLoads!=1) {
             /* an extension table must not be loaded as a base table */
-            *pErrorCode=U_INVALID_TABLE_FILE;
-            return;
+            *p_Error_సంకేతం=U_INVALID_పట్టిక_FILE;
+            తిరిగి;
         }
 
         /* load the base table */
-        baseName = reinterpret_cast<const char*>(header) + headerLength * 4;
-        if(0==uprv_strcmp(baseName, sharedData->staticData->name)) {
+        పునాది_Name = reinterpret_cast<స్థిరరాశి అక్షరం*>(శీర్షిక) + శీర్షిక_నిడివి * 4;
+        ఒకవేళ(0==uprv_strcmp(పునాది_Name, shared_దత్తాంశం->static_దత్తాంశం->name)) {
             /* forbid loading this same extension-only file */
-            *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            *p_Error_సంకేతం=U_INVALID_పట్టిక_FORMAT;
+            తిరిగి;
         }
 
         /* TODO parse package name out of the prefix of the base name in the extension .cnv file? */
-        args.size=sizeof(UConverterLoadArgs);
-        args.nestedLoads=2;
-        args.onlyTestIsLoadable=pArgs->onlyTestIsLoadable;
-        args.reserved=pArgs->reserved;
-        args.options=pArgs->options;
-        args.pkg=pArgs->pkg;
-        args.name=baseName;
-        baseSharedData=ucnv_load(&args, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        వాదనలు_2.size=పరిమాణం(UConverter_ఎక్కించు_వాదనలు);
+        వాదనలు_2.nestedLoads=2;
+        వాదనలు_2.onlyTestIsLoadable=p_వాదనలు->onlyTestIsLoadable;
+        వాదనలు_2.reserved=p_వాదనలు->reserved;
+        వాదనలు_2.options=p_వాదనలు->options;
+        వాదనలు_2.pkg=p_వాదనలు->pkg;
+        వాదనలు_2.name=పునాది_Name;
+        పునాది_Shared_దత్తాంశం=ucnv_ఎక్కించు(&వాదనలు_2, p_Error_సంకేతం);
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+            తిరిగి;
         }
-        if( baseSharedData->staticData->conversionType!=UCNV_MBCS ||
-            baseSharedData->mbcs.baseSharedData!=nullptr
+        ఒకవేళ( పునాది_Shared_దత్తాంశం->static_దత్తాంశం->conversionType!=UCNV_MBCS ||
+            పునాది_Shared_దత్తాంశం->mbcs.పునాది_Shared_దత్తాంశం!=శూన్యసూచిక
         ) {
-            ucnv_unload(baseSharedData);
-            *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            ucnv_unload(పునాది_Shared_దత్తాంశం);
+            *p_Error_సంకేతం=U_INVALID_పట్టిక_FORMAT;
+            తిరిగి;
         }
-        if(pArgs->onlyTestIsLoadable) {
+        ఒకవేళ(p_వాదనలు->onlyTestIsLoadable) {
             /*
              * Exit as soon as we know that we can load the converter
              * and the format is valid and supported.
              * The worst that can happen in the following code is a memory
              * allocation error.
              */
-            ucnv_unload(baseSharedData);
-            return;
+            ucnv_unload(పునాది_Shared_దత్తాంశం);
+            తిరిగి;
         }
 
         /* copy the base table data */
-        uprv_memcpy(mbcsTable, &baseSharedData->mbcs, sizeof(UConverterMBCSTable));
+        uprv_memcpy(mbcs_పట్టిక, &పునాది_Shared_దత్తాంశం->mbcs, పరిమాణం(UConverterMBCSTable));
 
         /* overwrite values with relevant ones for the extension converter */
-        mbcsTable->baseSharedData=baseSharedData;
-        mbcsTable->extIndexes=extIndexes;
+        mbcs_పట్టిక->పునాది_Shared_దత్తాంశం=పునాది_Shared_దత్తాంశం;
+        mbcs_పట్టిక->extIndexes=extIndexes;
 
         /*
          * It would be possible to share the swapLFNL data with a base converter,
@@ -1657,78 +1657,78 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * It is easier to just create the data for the extension converter
          * separately when it is requested.
          */
-        mbcsTable->swapLFNLStateTable=nullptr;
-        mbcsTable->swapLFNLFromUnicodeBytes=nullptr;
-        mbcsTable->swapLFNLName=nullptr;
+        mbcs_పట్టిక->మార్పిడి_LFNLState_పట్టిక=శూన్యసూచిక;
+        mbcs_పట్టిక->మార్పిడి_LFNLFrom_Unicode_బైట్లు=శూన్యసూచిక;
+        mbcs_పట్టిక->మార్పిడి_LFNLName=శూన్యసూచిక;
 
         /*
          * The reconstitutedData must be deleted only when the base converter
          * is unloaded.
          */
-        mbcsTable->reconstitutedData=nullptr;
+        mbcs_పట్టిక->reconstituted_దత్తాంశం=శూన్యసూచిక;
 
         /*
          * Set a special, runtime-only outputType if the extension converter
          * is a DBCS version of a base converter that also maps single bytes.
          */
-        if( sharedData->staticData->conversionType==UCNV_DBCS ||
-                (sharedData->staticData->conversionType==UCNV_MBCS &&
-                 sharedData->staticData->minBytesPerChar>=2)
+        ఒకవేళ( shared_దత్తాంశం->static_దత్తాంశం->conversionType==UCNV_DBCS ||
+                (shared_దత్తాంశం->static_దత్తాంశం->conversionType==UCNV_MBCS &&
+                 shared_దత్తాంశం->static_దత్తాంశం->min_బైట్లు_చొప్పున_Char>=2)
         ) {
-            if(baseSharedData->mbcs.outputType==MBCS_OUTPUT_2_SISO) {
+            ఒకవేళ(పునాది_Shared_దత్తాంశం->mbcs.outputType==MBCS_OUTPUT_2_SISO) {
                 /* the base converter is SI/SO-stateful */
-                int32_t entry;
+                int32_t నమోదు_2;
 
                 /* get the dbcs state from the state table entry for SO=0x0e */
-                entry=mbcsTable->stateTable[0][0xe];
-                if( MBCS_ENTRY_IS_FINAL(entry) &&
-                    MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_CHANGE_ONLY &&
-                    MBCS_ENTRY_FINAL_STATE(entry)!=0
+                నమోదు_2=mbcs_పట్టిక->state_పట్టిక[0][0xe];
+                ఒకవేళ( MBCS_నమోదు_IS_FINAL(నమోదు_2) &&
+                    MBCS_నమోదు_FINAL_ACTION(నమోదు_2)==MBCS_STATE_CHANGE_ONLY &&
+                    MBCS_నమోదు_FINAL_STATE(నమోదు_2)!=0
                 ) {
-                    mbcsTable->dbcsOnlyState = static_cast<uint8_t>(MBCS_ENTRY_FINAL_STATE(entry));
+                    mbcs_పట్టిక->dbcsOnlyState = static_cast<uint8_t>(MBCS_నమోదు_FINAL_STATE(నమోదు_2));
 
-                    mbcsTable->outputType=MBCS_OUTPUT_DBCS_ONLY;
+                    mbcs_పట్టిక->outputType=MBCS_OUTPUT_DBCS_ONLY;
                 }
-            } else if(
-                baseSharedData->staticData->conversionType==UCNV_MBCS &&
-                baseSharedData->staticData->minBytesPerChar==1 &&
-                baseSharedData->staticData->maxBytesPerChar==2 &&
-                mbcsTable->countStates<=127
+            } లేకపోతే ఒకవేళ(
+                పునాది_Shared_దత్తాంశం->static_దత్తాంశం->conversionType==UCNV_MBCS &&
+                పునాది_Shared_దత్తాంశం->static_దత్తాంశం->min_బైట్లు_చొప్పున_Char==1 &&
+                పునాది_Shared_దత్తాంశం->static_దత్తాంశం->max_బైట్లు_చొప్పున_Char==2 &&
+                mbcs_పట్టిక->లెక్క_స్థితులు<=127
             ) {
                 /* non-stateful base converter, need to modify the state table */
-                int32_t (*newStateTable)[256];
+                int32_t (*new_State_పట్టిక)[256];
                 int32_t *state;
                 int32_t i, count;
 
                 /* allocate a new state table and copy the base state table contents */
-                count=mbcsTable->countStates;
-                newStateTable = static_cast<int32_t(*)[256]>(uprv_malloc((count + 1) * 1024));
-                if(newStateTable==nullptr) {
-                    ucnv_unload(baseSharedData);
-                    *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                count=mbcs_పట్టిక->లెక్క_స్థితులు;
+                new_State_పట్టిక = static_cast<int32_t(*)[256]>(uprv_malloc((count + 1) * 1024));
+                ఒకవేళ(new_State_పట్టిక==శూన్యసూచిక) {
+                    ucnv_unload(పునాది_Shared_దత్తాంశం);
+                    *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    తిరిగి;
                 }
 
-                uprv_memcpy(newStateTable, mbcsTable->stateTable, count*1024);
+                uprv_memcpy(new_State_పట్టిక, mbcs_పట్టిక->state_పట్టిక, count*1024);
 
                 /* change all final single-byte entries to go to a new all-illegal state */
-                state=newStateTable[0];
-                for(i=0; i<256; ++i) {
-                    if(MBCS_ENTRY_IS_FINAL(state[i])) {
-                        state[i]=MBCS_ENTRY_TRANSITION(count, 0);
+                state=new_State_పట్టిక[0];
+                కొరకు(i=0; i<256; ++i) {
+                    ఒకవేళ(MBCS_నమోదు_IS_FINAL(state[i])) {
+                        state[i]=MBCS_నమోదు_TRANSITION(count, 0);
                     }
                 }
 
                 /* build the new all-illegal state */
-                state=newStateTable[count];
-                for(i=0; i<256; ++i) {
-                    state[i]=MBCS_ENTRY_FINAL(0, MBCS_STATE_ILLEGAL, 0);
+                state=new_State_పట్టిక[count];
+                కొరకు(i=0; i<256; ++i) {
+                    state[i]=MBCS_నమోదు_FINAL(0, MBCS_STATE_ILLEGAL, 0);
                 }
-                mbcsTable->stateTable=(const int32_t (*)[256])newStateTable;
-                mbcsTable->countStates = static_cast<uint8_t>(count + 1);
-                mbcsTable->stateTableOwned=true;
+                mbcs_పట్టిక->state_పట్టిక=(స్థిరరాశి int32_t (*)[256])new_State_పట్టిక;
+                mbcs_పట్టిక->లెక్క_స్థితులు = static_cast<uint8_t>(count + 1);
+                mbcs_పట్టిక->state_పట్టిక_Owned=నిజం;
 
-                mbcsTable->outputType=MBCS_OUTPUT_DBCS_ONLY;
+                mbcs_పట్టిక->outputType=MBCS_OUTPUT_DBCS_ONLY;
             }
         }
 
@@ -1739,55 +1739,55 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * this is necessary because the static data unicodeMask, especially
          * the UCNV_HAS_SUPPLEMENTARY flag, is part of the base table data
          */
-    } else {
+    } లేకపోతే {
         /* conversion file with a base table; an additional extension table is optional */
         /* make sure that the output type is known */
-        switch(mbcsTable->outputType) {
-        case MBCS_OUTPUT_1:
-        case MBCS_OUTPUT_2:
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4:
-        case MBCS_OUTPUT_3_EUC:
-        case MBCS_OUTPUT_4_EUC:
-        case MBCS_OUTPUT_2_SISO:
+        ఎంపిక(mbcs_పట్టిక->outputType) {
+        స్థితి MBCS_OUTPUT_1:
+        స్థితి MBCS_OUTPUT_2:
+        స్థితి MBCS_OUTPUT_3:
+        స్థితి MBCS_OUTPUT_4:
+        స్థితి MBCS_OUTPUT_3_EUC:
+        స్థితి MBCS_OUTPUT_4_EUC:
+        స్థితి MBCS_OUTPUT_2_SISO:
             /* OK */
-            break;
-        default:
-            *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            ఆపు;
+        అప్రమేయ:
+            *p_Error_సంకేతం=U_INVALID_పట్టిక_FORMAT;
+            తిరిగి;
         }
-        if(pArgs->onlyTestIsLoadable) {
+        ఒకవేళ(p_వాదనలు->onlyTestIsLoadable) {
             /*
              * Exit as soon as we know that we can load the converter
              * and the format is valid and supported.
              * The worst that can happen in the following code is a memory
              * allocation error.
              */
-            return;
+            తిరిగి;
         }
 
-        mbcsTable->countStates = static_cast<uint8_t>(header->countStates);
-        mbcsTable->countToUFallbacks=header->countToUFallbacks;
-        mbcsTable->stateTable = reinterpret_cast<const int32_t(*)[256]>(raw + headerLength * 4);
-        mbcsTable->toUFallbacks = reinterpret_cast<const _MBCSToUFallback*>(mbcsTable->stateTable + header->countStates);
-        mbcsTable->unicodeCodeUnits = reinterpret_cast<const uint16_t*>(raw + header->offsetToUCodeUnits);
+        mbcs_పట్టిక->లెక్క_స్థితులు = static_cast<uint8_t>(శీర్షిక->లెక్క_స్థితులు);
+        mbcs_పట్టిక->లెక్క_గమ్యం_UFallbacks=శీర్షిక->లెక్క_గమ్యం_UFallbacks;
+        mbcs_పట్టిక->state_పట్టిక = reinterpret_cast<స్థిరరాశి int32_t(*)[256]>(raw + శీర్షిక_నిడివి * 4);
+        mbcs_పట్టిక->గమ్యం_UFallbacks = reinterpret_cast<స్థిరరాశి _MBCSToUFallback*>(mbcs_పట్టిక->state_పట్టిక + శీర్షిక->లెక్క_స్థితులు);
+        mbcs_పట్టిక->unicode_సంకేతం_Units = reinterpret_cast<స్థిరరాశి uint16_t*>(raw + శీర్షిక->స్థానభ్రంశం_గమ్యం_UCode_Units);
 
-        mbcsTable->fromUnicodeTable = reinterpret_cast<const uint16_t*>(raw + header->offsetFromUTable);
-        mbcsTable->fromUnicodeBytes = raw + header->offsetFromUBytes;
-        mbcsTable->fromUBytesLength=header->fromUBytesLength;
+        mbcs_పట్టిక->from_Unicode_పట్టిక = reinterpret_cast<స్థిరరాశి uint16_t*>(raw + శీర్షిక->స్థానభ్రంశం_From_UTable);
+        mbcs_పట్టిక->from_Unicode_బైట్లు = raw + శీర్షిక->స్థానభ్రంశం_From_UBytes;
+        mbcs_పట్టిక->from_UBytes_నిడివి=శీర్షిక->from_UBytes_నిడివి;
 
         /*
          * converter versions 6.1 and up contain a unicodeMask that is
          * used here to select the most efficient function implementations
          */
-        info.size=sizeof(UDataInfo);
-        udata_getInfo((UDataMemory *)sharedData->dataMemory, &info);
-        if(info.formatVersion[0]>6 || (info.formatVersion[0]==6 && info.formatVersion[1]>=1)) {
+        info.size=పరిమాణం(UDataInfo);
+        udata_getInfo((UData_జ్ఞాపకం *)shared_దత్తాంశం->దత్తాంశం_జ్ఞాపకం, &info);
+        ఒకవేళ(info.format_సంస్కరణ[0]>6 || (info.format_సంస్కరణ[0]==6 && info.format_సంస్కరణ[1]>=1)) {
             /* mask off possible future extensions to be safe */
-            mbcsTable->unicodeMask = static_cast<uint8_t>(sharedData->staticData->unicodeMask & 3);
-        } else {
+            mbcs_పట్టిక->unicode_ముసుగు = static_cast<uint8_t>(shared_దత్తాంశం->static_దత్తాంశం->unicode_ముసుగు & 3);
+        } లేకపోతే {
             /* for older versions, assume worst case: contains anything possible (prevent over-optimizations) */
-            mbcsTable->unicodeMask=UCNV_HAS_SUPPLEMENTARY|UCNV_HAS_SURROGATES;
+            mbcs_పట్టిక->unicode_ముసుగు=UCNV_HAS_SUPPLEMENTARY|UCNV_HAS_SURROGATES;
         }
 
         /*
@@ -1798,37 +1798,37 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * The implementation does not handle mapping tables with entries for
          * unpaired surrogates.
          */
-        if( header->version[1]>=3 &&
-            (mbcsTable->unicodeMask&UCNV_HAS_SURROGATES)==0 &&
-            (mbcsTable->countStates==1 ?
-                (header->version[2]>=(SBCS_FAST_MAX>>8)) :
-                (header->version[2]>=(MBCS_FAST_MAX>>8))
+        ఒకవేళ( శీర్షిక->సంస్కరణ[1]>=3 &&
+            (mbcs_పట్టిక->unicode_ముసుగు&UCNV_HAS_SURROGATES)==0 &&
+            (mbcs_పట్టిక->లెక్క_స్థితులు==1 ?
+                (శీర్షిక->సంస్కరణ[2]>=(SBCS_FAST_MAX>>8)) :
+                (శీర్షిక->సంస్కరణ[2]>=(MBCS_FAST_MAX>>8))
             )
         ) {
-            mbcsTable->utf8Friendly=true;
+            mbcs_పట్టిక->utf8Friendly=నిజం;
 
-            if(mbcsTable->countStates==1) {
+            ఒకవేళ(mbcs_పట్టిక->లెక్క_స్థితులు==1) {
                 /*
                  * SBCS: Stage 3 is allocated in 64-entry blocks for U+0000..SBCS_FAST_MAX or higher.
                  * Build a table with indexes to each block, to be used instead of
                  * the regular stage 1/2 table.
                  */
                 int32_t i;
-                for(i=0; i<(SBCS_FAST_LIMIT>>6); ++i) {
-                    mbcsTable->sbcsIndex[i]=mbcsTable->fromUnicodeTable[mbcsTable->fromUnicodeTable[i>>4]+((i<<2)&0x3c)];
+                కొరకు(i=0; i<(SBCS_FAST_హద్దు>>6); ++i) {
+                    mbcs_పట్టిక->sbcs_సూచీ[i]=mbcs_పట్టిక->from_Unicode_పట్టిక[mbcs_పట్టిక->from_Unicode_పట్టిక[i>>4]+((i<<2)&0x3c)];
                 }
                 /* set SBCS_FAST_MAX to reflect the reach of sbcsIndex[] even if header->version[2]>(SBCS_FAST_MAX>>8) */
-                mbcsTable->maxFastUChar=SBCS_FAST_MAX;
-            } else {
+                mbcs_పట్టిక->maxFastUChar=SBCS_FAST_MAX;
+            } లేకపోతే {
                 /*
                  * MBCS: Stage 3 is allocated in 64-entry blocks for U+0000..MBCS_FAST_MAX or higher.
                  * The .cnv file is prebuilt with an additional stage table with indexes
                  * to each block.
                  */
-                mbcsTable->mbcsIndex = reinterpret_cast<const uint16_t*>(
-                    mbcsTable->fromUnicodeBytes +
-                     (noFromU ? 0 : mbcsTable->fromUBytesLength));
-                mbcsTable->maxFastUChar = (static_cast<char16_t>(header->version[2]) << 8) | 0xff;
+                mbcs_పట్టిక->mbcs_సూచీ = reinterpret_cast<స్థిరరాశి uint16_t*>(
+                    mbcs_పట్టిక->from_Unicode_బైట్లు +
+                     (noFromU ? 0 : mbcs_పట్టిక->from_UBytes_నిడివి));
+                mbcs_పట్టిక->maxFastUChar = (static_cast<char16_t>(శీర్షిక->సంస్కరణ[2]) << 8) | 0xff;
             }
         }
 
@@ -1837,234 +1837,234 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
             uint32_t asciiRoundtrips=0xffffffff;
             int32_t i;
 
-            for(i=0; i<0x80; ++i) {
-                if(mbcsTable->stateTable[0][i]!=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, i)) {
+            కొరకు(i=0; i<0x80; ++i) {
+                ఒకవేళ(mbcs_పట్టిక->state_పట్టిక[0][i]!=MBCS_నమోదు_FINAL(0, MBCS_STATE_VALID_ప్రత్యక్ష_16, i)) {
                     asciiRoundtrips &= ~(static_cast<uint32_t>(1) << (i >> 2));
                 }
             }
-            mbcsTable->asciiRoundtrips=asciiRoundtrips;
+            mbcs_పట్టిక->asciiRoundtrips=asciiRoundtrips;
         }
 
-        if(noFromU) {
-            uint32_t stage1Length=
-                mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY ?
+        ఒకవేళ(noFromU) {
+            uint32_t stage1_నిడివి=
+                mbcs_పట్టిక->unicode_ముసుగు&UCNV_HAS_SUPPLEMENTARY ?
                     0x440 : 0x40;
-            uint32_t stage2Length=
-                (header->offsetFromUBytes-header->offsetFromUTable)/4-
-                stage1Length/2;
-            reconstituteData(mbcsTable, stage1Length, stage2Length, header->fullStage2Length, pErrorCode);
+            uint32_t stage2_నిడివి=
+                (శీర్షిక->స్థానభ్రంశం_From_UBytes-శీర్షిక->స్థానభ్రంశం_From_UTable)/4-
+                stage1_నిడివి/2;
+            reconstitute_దత్తాంశం(mbcs_పట్టిక, stage1_నిడివి, stage2_నిడివి, శీర్షిక->నిండిన_Stage2_నిడివి, p_Error_సంకేతం);
         }
     }
 
     /* Set the impl pointer here so that it is set for both extension-only and base tables. */
-    if(mbcsTable->utf8Friendly) {
-        if(mbcsTable->countStates==1) {
-            sharedData->impl=&_SBCSUTF8Impl;
-        } else {
-            if(mbcsTable->outputType==MBCS_OUTPUT_2) {
-                sharedData->impl=&_DBCSUTF8Impl;
+    ఒకవేళ(mbcs_పట్టిక->utf8Friendly) {
+        ఒకవేళ(mbcs_పట్టిక->లెక్క_స్థితులు==1) {
+            shared_దత్తాంశం->impl=&_SBCSUTF8Impl;
+        } లేకపోతే {
+            ఒకవేళ(mbcs_పట్టిక->outputType==MBCS_OUTPUT_2) {
+                shared_దత్తాంశం->impl=&_DBCSUTF8Impl;
             }
         }
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_DBCS_ONLY || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) {
+    ఒకవేళ(mbcs_పట్టిక->outputType==MBCS_OUTPUT_DBCS_ONLY || mbcs_పట్టిక->outputType==MBCS_OUTPUT_2_SISO) {
         /*
          * MBCS_OUTPUT_DBCS_ONLY: No SBCS mappings, therefore ASCII does not roundtrip.
          * MBCS_OUTPUT_2_SISO: Bypass the ASCII fastpath to handle prevLength correctly.
          */
-        mbcsTable->asciiRoundtrips=0;
+        mbcs_పట్టిక->asciiRoundtrips=0;
     }
 }
 
-static void U_CALLCONV
-ucnv_MBCSUnload(UConverterSharedData *sharedData) {
-    UConverterMBCSTable *mbcsTable=&sharedData->mbcs;
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSUnload(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం) {
+    UConverterMBCSTable *mbcs_పట్టిక=&shared_దత్తాంశం->mbcs;
 
-    if(mbcsTable->swapLFNLStateTable!=nullptr) {
-        uprv_free(mbcsTable->swapLFNLStateTable);
+    ఒకవేళ(mbcs_పట్టిక->మార్పిడి_LFNLState_పట్టిక!=శూన్యసూచిక) {
+        uprv_free(mbcs_పట్టిక->మార్పిడి_LFNLState_పట్టిక);
     }
-    if(mbcsTable->stateTableOwned) {
-        uprv_free((void *)mbcsTable->stateTable);
+    ఒకవేళ(mbcs_పట్టిక->state_పట్టిక_Owned) {
+        uprv_free((శూన్య *)mbcs_పట్టిక->state_పట్టిక);
     }
-    if(mbcsTable->baseSharedData!=nullptr) {
-        ucnv_unload(mbcsTable->baseSharedData);
+    ఒకవేళ(mbcs_పట్టిక->పునాది_Shared_దత్తాంశం!=శూన్యసూచిక) {
+        ucnv_unload(mbcs_పట్టిక->పునాది_Shared_దత్తాంశం);
     }
-    if(mbcsTable->reconstitutedData!=nullptr) {
-        uprv_free(mbcsTable->reconstitutedData);
+    ఒకవేళ(mbcs_పట్టిక->reconstituted_దత్తాంశం!=శూన్యసూచిక) {
+        uprv_free(mbcs_పట్టిక->reconstituted_దత్తాంశం);
     }
 }
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ucnv_MBCSOpen(UConverter *cnv,
-              UConverterLoadArgs *pArgs,
-              UErrorCode *pErrorCode) {
-    UConverterMBCSTable *mbcsTable;
-    const int32_t *extIndexes;
+              UConverter_ఎక్కించు_వాదనలు *p_వాదనలు,
+              UError_సంకేతం *p_Error_సంకేతం) {
+    UConverterMBCSTable *mbcs_పట్టిక;
+    స్థిరరాశి int32_t *extIndexes;
     uint8_t outputType;
-    int8_t maxBytesPerUChar;
+    int8_t max_బైట్లు_చొప్పున_UChar;
 
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+    ఒకవేళ(p_వాదనలు->onlyTestIsLoadable) {
+        తిరిగి;
     }
 
-    mbcsTable=&cnv->sharedData->mbcs;
-    outputType=mbcsTable->outputType;
+    mbcs_పట్టిక=&cnv->shared_దత్తాంశం->mbcs;
+    outputType=mbcs_పట్టిక->outputType;
 
-    if(outputType==MBCS_OUTPUT_DBCS_ONLY) {
+    ఒకవేళ(outputType==MBCS_OUTPUT_DBCS_ONLY) {
         /* the swaplfnl option does not apply, remove it */
-        cnv->options=pArgs->options&=~UCNV_OPTION_SWAP_LFNL;
+        cnv->options=p_వాదనలు->options&=~UCNV_OPTION_మార్పిడి_LFNL;
     }
 
-    if((pArgs->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    ఒకవేళ((p_వాదనలు->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
         /* do this because double-checked locking is broken */
         UBool isCached;
 
-        icu::umtx_lock(nullptr);
-        isCached=mbcsTable->swapLFNLStateTable!=nullptr;
-        icu::umtx_unlock(nullptr);
+        icu::umtx_తాళం(శూన్యసూచిక);
+        isCached=mbcs_పట్టిక->మార్పిడి_LFNLState_పట్టిక!=శూన్యసూచిక;
+        icu::umtx_unlock(శూన్యసూచిక);
 
-        if(!isCached) {
-            if(!_EBCDICSwapLFNL(cnv->sharedData, pErrorCode)) {
-                if(U_FAILURE(*pErrorCode)) {
-                    return; /* something went wrong */
+        ఒకవేళ(!isCached) {
+            ఒకవేళ(!_EBCDICSwapLFNL(cnv->shared_దత్తాంశం, p_Error_సంకేతం)) {
+                ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+                    తిరిగి; /* something went wrong */
                 }
 
                 /* the option does not apply, remove it */
-                cnv->options=pArgs->options&=~UCNV_OPTION_SWAP_LFNL;
+                cnv->options=p_వాదనలు->options&=~UCNV_OPTION_మార్పిడి_LFNL;
             }
         }
     }
 
-    if(uprv_strstr(pArgs->name, "18030")!=nullptr) {
-        if(uprv_strstr(pArgs->name, "gb18030")!=nullptr || uprv_strstr(pArgs->name, "GB18030")!=nullptr) {
+    ఒకవేళ(uprv_strstr(p_వాదనలు->name, "18030")!=శూన్యసూచిక) {
+        ఒకవేళ(uprv_strstr(p_వాదనలు->name, "gb18030")!=శూన్యసూచిక || uprv_strstr(p_వాదనలు->name, "GB18030")!=శూన్యసూచిక) {
             /* set a flag for GB 18030 mode, which changes the callback behavior */
             cnv->options|=_MBCS_OPTION_GB18030;
         }
-    } else if((uprv_strstr(pArgs->name, "KEIS")!=nullptr) || (uprv_strstr(pArgs->name, "keis")!=nullptr)) {
+    } లేకపోతే ఒకవేళ((uprv_strstr(p_వాదనలు->name, "KEIS")!=శూన్యసూచిక) || (uprv_strstr(p_వాదనలు->name, "keis")!=శూన్యసూచిక)) {
         /* set a flag for KEIS converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_KEIS;
-    } else if((uprv_strstr(pArgs->name, "JEF")!=nullptr) || (uprv_strstr(pArgs->name, "jef")!=nullptr)) {
+    } లేకపోతే ఒకవేళ((uprv_strstr(p_వాదనలు->name, "JEF")!=శూన్యసూచిక) || (uprv_strstr(p_వాదనలు->name, "jef")!=శూన్యసూచిక)) {
         /* set a flag for JEF converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_JEF;
-    } else if((uprv_strstr(pArgs->name, "JIPS")!=nullptr) || (uprv_strstr(pArgs->name, "jips")!=nullptr)) {
+    } లేకపోతే ఒకవేళ((uprv_strstr(p_వాదనలు->name, "JIPS")!=శూన్యసూచిక) || (uprv_strstr(p_వాదనలు->name, "jips")!=శూన్యసూచిక)) {
         /* set a flag for JIPS converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_JIPS;
     }
 
     /* fix maxBytesPerUChar depending on outputType and options etc. */
-    if(outputType==MBCS_OUTPUT_2_SISO) {
-        cnv->maxBytesPerUChar=3; /* SO+DBCS */
+    ఒకవేళ(outputType==MBCS_OUTPUT_2_SISO) {
+        cnv->max_బైట్లు_చొప్పున_UChar=3; /* SO+DBCS */
     }
 
-    extIndexes=mbcsTable->extIndexes;
-    if(extIndexes!=nullptr) {
-        maxBytesPerUChar = static_cast<int8_t>(UCNV_GET_MAX_BYTES_PER_UCHAR(extIndexes));
-        if(outputType==MBCS_OUTPUT_2_SISO) {
-            ++maxBytesPerUChar; /* SO + multiple DBCS */
+    extIndexes=mbcs_పట్టిక->extIndexes;
+    ఒకవేళ(extIndexes!=శూన్యసూచిక) {
+        max_బైట్లు_చొప్పున_UChar = static_cast<int8_t>(UCNV_GET_MAX_బైట్లు_చొప్పున_UCHAR(extIndexes));
+        ఒకవేళ(outputType==MBCS_OUTPUT_2_SISO) {
+            ++max_బైట్లు_చొప్పున_UChar; /* SO + multiple DBCS */
         }
 
-        if(maxBytesPerUChar>cnv->maxBytesPerUChar) {
-            cnv->maxBytesPerUChar=maxBytesPerUChar;
+        ఒకవేళ(max_బైట్లు_చొప్పున_UChar>cnv->max_బైట్లు_చొప్పున_UChar) {
+            cnv->max_బైట్లు_చొప్పున_UChar=max_బైట్లు_చొప్పున_UChar;
         }
     }
 
-#if 0
+#ఒకవేళ 0
     /*
      * documentation of UConverter fields used for status
      * all of these fields are (re)set to 0 by ucnv_bld.c and ucnv_reset()
      */
 
     /* toUnicode */
-    cnv->toUnicodeStatus=0;     /* offset */
-    cnv->mode=0;                /* state */
-    cnv->toULength=0;           /* byteIndex */
+    cnv->గమ్యం_Unicode_స్థితి=0;     /*స్థానభ్రంశం*/
+    cnv->బహుళకం=0;                /* state */
+    cnv->గమ్యం_ULength=0;           /* byteIndex */
 
     /* fromUnicode */
     cnv->fromUChar32=0;
-    cnv->fromUnicodeStatus=1;   /* prevLength */
-#endif
+    cnv->from_Unicode_స్థితి=1;   /* prevLength */
+#అయితే_ముగింపు
 }
 
 U_CDECL_BEGIN
 
-static const char* U_CALLCONV
-ucnv_MBCSGetName(const UConverter *cnv) {
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0 && cnv->sharedData->mbcs.swapLFNLName!=nullptr) {
-        return cnv->sharedData->mbcs.swapLFNLName;
-    } else {
-        return cnv->sharedData->staticData->name;
+స్థిర స్థిరరాశి అక్షరం* U_CALLCONV
+ucnv_MBCSGetName(స్థిరరాశి UConverter *cnv) {
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0 && cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLName!=శూన్యసూచిక) {
+        తిరిగి cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLName;
+    } లేకపోతే {
+        తిరిగి cnv->shared_దత్తాంశం->static_దత్తాంశం->name;
     }
 }
-U_CDECL_END
+U_CDECL_చివర
 
 
 /* MBCS-to-Unicode conversion functions ------------------------------------- */
 
-static UChar32 U_CALLCONV
-ucnv_MBCSGetFallback(UConverterMBCSTable *mbcsTable, uint32_t offset) {
-    const _MBCSToUFallback *toUFallbacks;
-    uint32_t i, start, limit;
+స్థిర UChar32 U_CALLCONV
+ucnv_MBCSGetFallback(UConverterMBCSTable *mbcs_పట్టిక, uint32_t స్థానభ్రంశం) {
+    స్థిరరాశి _MBCSToUFallback *గమ్యం_UFallbacks;
+    uint32_t i, ప్రారంభం, హద్దు;
 
-    limit=mbcsTable->countToUFallbacks;
-    if(limit>0) {
+    హద్దు=mbcs_పట్టిక->లెక్క_గమ్యం_UFallbacks;
+    ఒకవేళ(హద్దు>0) {
         /* do a binary search for the fallback mapping */
-        toUFallbacks=mbcsTable->toUFallbacks;
-        start=0;
-        while(start<limit-1) {
-            i=(start+limit)/2;
-            if(offset<toUFallbacks[i].offset) {
-                limit=i;
-            } else {
-                start=i;
+        గమ్యం_UFallbacks=mbcs_పట్టిక->గమ్యం_UFallbacks;
+        ప్రారంభం=0;
+        అయితే(ప్రారంభం<హద్దు-1) {
+            i=(ప్రారంభం+హద్దు)/2;
+            ఒకవేళ(స్థానభ్రంశం<గమ్యం_UFallbacks[i].స్థానభ్రంశం) {
+                హద్దు=i;
+            } లేకపోతే {
+                ప్రారంభం=i;
             }
         }
 
         /* did we really find it? */
-        if(offset==toUFallbacks[start].offset) {
-            return toUFallbacks[start].codePoint;
+        ఒకవేళ(స్థానభ్రంశం==గమ్యం_UFallbacks[ప్రారంభం].స్థానభ్రంశం) {
+            తిరిగి గమ్యం_UFallbacks[ప్రారంభం].సంకేతం_బిందువు;
         }
     }
 
-    return 0xfffe;
+    తిరిగి 0xfffe;
 }
 
 /* This version of ucnv_MBCSToUnicodeWithOffsets() is optimized for single-byte, single-state codepages. */
-static void
-ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                                UErrorCode *pErrorCode) {
+స్థిర శూన్య
+ucnv_MBCSSingle_గమ్యం_Unicode_With_Offsets(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                                UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    char16_t *లక్ష్యం;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు;
     int32_t *offsets;
 
-    const int32_t (*stateTable)[256];
+    స్థిరరాశి int32_t (*state_పట్టిక)[256];
 
-    int32_t sourceIndex;
+    int32_t ఆధారం_సూచీ;
 
-    int32_t entry;
+    int32_t నమోదు_2;
     char16_t c;
     uint8_t action;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    cnv=p_వాదనలు->converter;
+    ఆధారం = reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->ఆధారం);
+    ఆధారం_హద్దు = reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->ఆధారం_హద్దు);
+    లక్ష్యం=p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_హద్దు=p_వాదనలు->లక్ష్యం_హద్దు;
+    offsets=p_వాదనలు->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        state_పట్టిక=(స్థిరరాశి int32_t (*)[256])cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLState_పట్టిక;
+    } లేకపోతే {
+        state_పట్టిక=cnv->shared_దత్తాంశం->mbcs.state_పట్టిక;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=0;
+    ఆధారం_సూచీ=0;
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one code unit that
@@ -2073,106 +2073,106 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(target>=targetLimit) {
+        ఒకవేళ(లక్ష్యం>=లక్ష్యం_హద్దు) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
 
-        entry=stateTable[0][*source++];
+        నమోదు_2=state_పట్టిక[0][*ఆధారం++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* test the most common case first */
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        ఒకవేళ(MBCS_నమోదు_FINAL_IS_VALID_ప్రత్యక్ష_16(నమోదు_2)) {
             /* output BMP code point */
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                *offsets++=ఆధారం_సూచీ;
             }
 
             /* normal end of action codes: prepare for a new character */
-            ++sourceIndex;
-            continue;
+            ++ఆధారం_సూచీ;
+            కొనసాగు;
         }
 
         /*
          * An if-else-if chain provides more reliable performance for
          * the most common cases compared to a switch.
          */
-        action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_VALID_DIRECT_20 ||
-           (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
+        action = static_cast<uint8_t>(MBCS_నమోదు_FINAL_ACTION(నమోదు_2));
+        ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_20 ||
+           (action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_20 && UCNV_గమ్యం_U_USE_FALLBACK(cnv))
         ) {
-            entry=MBCS_ENTRY_FINAL_VALUE(entry);
+            నమోదు_2=MBCS_నమోదు_FINAL_విలువ(నమోదు_2);
             /* output surrogate pair */
-            *target++ = static_cast<char16_t>(0xd800 | static_cast<char16_t>(entry >> 10));
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *లక్ష్యం++ = static_cast<char16_t>(0xd800 | static_cast<char16_t>(నమోదు_2 >> 10));
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                *offsets++=ఆధారం_సూచీ;
             }
-            c = static_cast<char16_t>(0xdc00 | static_cast<char16_t>(entry & 0x3ff));
-            if(target<targetLimit) {
-                *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+            c = static_cast<char16_t>(0xdc00 | static_cast<char16_t>(నమోదు_2 & 0x3ff));
+            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                *లక్ష్యం++=c;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-            } else {
+            } లేకపోతే {
                 /* target overflow */
-                cnv->UCharErrorBuffer[0]=c;
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                cnv->UChar_Error_బఫరు[0]=c;
+                cnv->UChar_Error_బఫరు_నిడివి=1;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                ఆపు;
             }
 
-            ++sourceIndex;
-            continue;
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            ++ఆధారం_సూచీ;
+            కొనసాగు;
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_16) {
+            ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
 
-                ++sourceIndex;
-                continue;
+                ++ఆధారం_సూచీ;
+                కొనసాగు;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+        } లేకపోతే {
             /* reserved, must never occur */
-            ++sourceIndex;
-            continue;
+            ++ఆధారం_సూచీ;
+            కొనసాగు;
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             /* callback(illegal) */
-            break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+            ఆపు;
+        } లేకపోతే /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
-            pArgs->source = reinterpret_cast<const char*>(source);
-            cnv->toUBytes[0]=*(source-1);
-            cnv->toULength=_extToU(cnv, cnv->sharedData,
-                                    1, &source, sourceLimit,
-                                    &target, targetLimit,
-                                    &offsets, sourceIndex,
-                                    pArgs->flush,
-                                    pErrorCode);
-            sourceIndex += 1 + static_cast<int32_t>(source - reinterpret_cast<const uint8_t*>(pArgs->source));
+            p_వాదనలు->ఆధారం = reinterpret_cast<స్థిరరాశి అక్షరం*>(ఆధారం);
+            cnv->గమ్యం_UBytes[0]=*(ఆధారం-1);
+            cnv->గమ్యం_ULength=ext_గమ్యం_U(cnv, cnv->shared_దత్తాంశం,
+                                    1, &ఆధారం, ఆధారం_హద్దు,
+                                    &లక్ష్యం, లక్ష్యం_హద్దు,
+                                    &offsets, ఆధారం_సూచీ,
+                                    p_వాదనలు->flush,
+                                    p_Error_సంకేతం);
+            ఆధారం_సూచీ += 1 + static_cast<int32_t>(ఆధారం - reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->ఆధారం));
 
-            if(U_FAILURE(*pErrorCode)) {
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                 /* not mappable or buffer overflow */
-                break;
+                ఆపు;
             }
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం = reinterpret_cast<స్థిరరాశి అక్షరం*>(ఆధారం);
+    p_వాదనలు->లక్ష్యం=లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
 
 /*
@@ -2181,263 +2181,263 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
  * In addition to single-byte optimizations, the offset calculations
  * become much easier.
  */
-static void
-ucnv_MBCSSingleToBMPWithOffsets(UConverterToUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+స్థిర శూన్య
+ucnv_MBCSSingle_గమ్యం_BMPWith_Offsets(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                            UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit, *lastSource;
-    char16_t *target;
-    int32_t targetCapacity, length;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు, *చివరి_ఆధారం;
+    char16_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం, length;
     int32_t *offsets;
 
-    const int32_t (*stateTable)[256];
+    స్థిరరాశి int32_t (*state_పట్టిక)[256];
 
-    int32_t sourceIndex;
+    int32_t ఆధారం_సూచీ;
 
-    int32_t entry;
+    int32_t నమోదు_2;
     uint8_t action;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    target=pArgs->target;
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_వాదనలు->converter;
+    ఆధారం = reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->ఆధారం);
+    ఆధారం_హద్దు = reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->ఆధారం_హద్దు);
+    లక్ష్యం=p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(p_వాదనలు->లక్ష్యం_హద్దు - p_వాదనలు->లక్ష్యం);
+    offsets=p_వాదనలు->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        state_పట్టిక=(స్థిరరాశి int32_t (*)[256])cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLState_పట్టిక;
+    } లేకపోతే {
+        state_పట్టిక=cnv->shared_దత్తాంశం->mbcs.state_పట్టిక;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=0;
-    lastSource=source;
+    ఆధారం_సూచీ=0;
+    చివరి_ఆధారం=ఆధారం;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length = static_cast<int32_t>(sourceLimit - source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length = static_cast<int32_t>(ఆధారం_హద్దు - ఆధారం);
+    ఒకవేళ(length<లక్ష్యం_సామర్థ్యం) {
+        లక్ష్యం_సామర్థ్యం=length;
     }
 
-#if MBCS_UNROLL_SINGLE_TO_BMP
+#ఒకవేళ MBCS_UNROLL_SINGLE_గమ్యం_BMP
     /* unrolling makes it faster on Pentium III/Windows 2000 */
     /* unroll the loop with the most common case */
 unrolled:
-    if(targetCapacity>=16) {
+    ఒకవేళ(లక్ష్యం_సామర్థ్యం>=16) {
         int32_t count, loops, oredEntries;
 
-        loops=count=targetCapacity>>4;
-        do {
-            oredEntries=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+        loops=count=లక్ష్యం_సామర్థ్యం>>4;
+        చేయి {
+            oredEntries=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            oredEntries|=నమోదు_2=state_పట్టిక[0][*ఆధారం++];
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
 
             /* were all 16 entries really valid? */
-            if(!MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(oredEntries)) {
+            ఒకవేళ(!MBCS_నమోదు_FINAL_IS_VALID_ప్రత్యక్ష_16(oredEntries)) {
                 /* no, return to the first of these 16 */
-                source-=16;
-                target-=16;
-                break;
+                ఆధారం-=16;
+                లక్ష్యం-=16;
+                ఆపు;
             }
-        } while(--count>0);
+        } అయితే(--count>0);
         count=loops-count;
-        targetCapacity-=16*count;
+        లక్ష్యం_సామర్థ్యం-=16*count;
 
-        if(offsets!=nullptr) {
-            lastSource+=16*count;
-            while(count>0) {
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
+        ఒకవేళ(offsets!=శూన్యసూచిక) {
+            చివరి_ఆధారం+=16*count;
+            అయితే(count>0) {
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
                 --count;
             }
         }
     }
-#endif
+#అయితే_ముగింపు
 
     /* conversion loop */
-    while(targetCapacity > 0 && source < sourceLimit) {
-        entry=stateTable[0][*source++];
+    అయితే(లక్ష్యం_సామర్థ్యం > 0 && ఆధారం < ఆధారం_హద్దు) {
+        నమోదు_2=state_పట్టిక[0][*ఆధారం++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* test the most common case first */
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        ఒకవేళ(MBCS_నమోదు_FINAL_IS_VALID_ప్రత్యక్ష_16(నమోదు_2)) {
             /* output BMP code point */
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            --targetCapacity;
-            continue;
+            *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+            --లక్ష్యం_సామర్థ్యం;
+            కొనసాగు;
         }
 
         /*
          * An if-else-if chain provides more reliable performance for
          * the most common cases compared to a switch.
          */
-        action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+        action = static_cast<uint8_t>(MBCS_నమోదు_FINAL_ACTION(నమోదు_2));
+        ఒకవేళ(action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_16) {
+            ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                --targetCapacity;
-                continue;
+                *లక్ష్యం++ = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+                --లక్ష్యం_సామర్థ్యం;
+                కొనసాగు;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+        } లేకపోతే {
             /* reserved, must never occur */
-            continue;
+            కొనసాగు;
         }
 
         /* set offsets since the start or the last extension */
-        if(offsets!=nullptr) {
-            int32_t count = static_cast<int32_t>(source - lastSource);
+        ఒకవేళ(offsets!=శూన్యసూచిక) {
+            int32_t count = static_cast<int32_t>(ఆధారం - చివరి_ఆధారం);
 
             /* predecrement: do not set the offset for the callback-causing character */
-            while(--count>0) {
-                *offsets++=sourceIndex++;
+            అయితే(--count>0) {
+                *offsets++=ఆధారం_సూచీ++;
             }
             /* offset and sourceIndex are now set for the current character */
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             /* callback(illegal) */
-            break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+            ఆపు;
+        } లేకపోతే /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
-            lastSource=source;
-            cnv->toUBytes[0]=*(source-1);
-            cnv->toULength=_extToU(cnv, cnv->sharedData,
-                                    1, &source, sourceLimit,
-                                    &target, pArgs->targetLimit,
-                                    &offsets, sourceIndex,
-                                    pArgs->flush,
-                                    pErrorCode);
-            sourceIndex += 1 + static_cast<int32_t>(source - lastSource);
+            చివరి_ఆధారం=ఆధారం;
+            cnv->గమ్యం_UBytes[0]=*(ఆధారం-1);
+            cnv->గమ్యం_ULength=ext_గమ్యం_U(cnv, cnv->shared_దత్తాంశం,
+                                    1, &ఆధారం, ఆధారం_హద్దు,
+                                    &లక్ష్యం, p_వాదనలు->లక్ష్యం_హద్దు,
+                                    &offsets, ఆధారం_సూచీ,
+                                    p_వాదనలు->flush,
+                                    p_Error_సంకేతం);
+            ఆధారం_సూచీ += 1 + static_cast<int32_t>(ఆధారం - చివరి_ఆధారం);
 
-            if(U_FAILURE(*pErrorCode)) {
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                 /* not mappable or buffer overflow */
-                break;
+                ఆపు;
             }
 
             /* recalculate the targetCapacity after an extension mapping */
-            targetCapacity = static_cast<int32_t>(pArgs->targetLimit - target);
-            length = static_cast<int32_t>(sourceLimit - source);
-            if(length<targetCapacity) {
-                targetCapacity=length;
+            లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(p_వాదనలు->లక్ష్యం_హద్దు - లక్ష్యం);
+            length = static_cast<int32_t>(ఆధారం_హద్దు - ఆధారం);
+            ఒకవేళ(length<లక్ష్యం_సామర్థ్యం) {
+                లక్ష్యం_సామర్థ్యం=length;
             }
         }
 
-#if MBCS_UNROLL_SINGLE_TO_BMP
+#ఒకవేళ MBCS_UNROLL_SINGLE_గమ్యం_BMP
         /* unrolling makes it faster on Pentium III/Windows 2000 */
-        goto unrolled;
-#endif
+        వెళ్ళు unrolled;
+#అయితే_ముగింపు
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=pArgs->targetLimit) {
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం) && ఆధారం<ఆధారం_హద్దు && లక్ష్యం>=p_వాదనలు->లక్ష్యం_హద్దు) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
     /* set offsets since the start or the last callback */
-    if(offsets!=nullptr) {
-        size_t count=source-lastSource;
-        while(count>0) {
-            *offsets++=sourceIndex++;
+    ఒకవేళ(offsets!=శూన్యసూచిక) {
+        size_t count=ఆధారం-చివరి_ఆధారం;
+        అయితే(count>0) {
+            *offsets++=ఆధారం_సూచీ++;
             --count;
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం = reinterpret_cast<స్థిరరాశి అక్షరం*>(ఆధారం);
+    p_వాదనలు->లక్ష్యం=లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
 
-static UBool
-hasValidTrailBytes(const int32_t (*stateTable)[256], uint8_t state) {
-    const int32_t *row=stateTable[state];
-    int32_t b, entry;
+స్థిర UBool
+has_Valid_Trail_బైట్లు(స్థిరరాశి int32_t (*state_పట్టిక)[256], uint8_t state) {
+    స్థిరరాశి int32_t *అడ్డువరుస=state_పట్టిక[state];
+    int32_t b, నమోదు_2;
     /* First test for final entries in this state for some commonly valid byte values. */
-    entry=row[0xa1];
-    if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
-        MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
+    నమోదు_2=అడ్డువరుస[0xa1];
+    ఒకవేళ( !MBCS_నమోదు_IS_TRANSITION(నమోదు_2) &&
+        MBCS_నమోదు_FINAL_ACTION(నమోదు_2)!=MBCS_STATE_ILLEGAL
     ) {
-        return true;
+        తిరిగి నిజం;
     }
-    entry=row[0x41];
-    if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
-        MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
+    నమోదు_2=అడ్డువరుస[0x41];
+    ఒకవేళ( !MBCS_నమోదు_IS_TRANSITION(నమోదు_2) &&
+        MBCS_నమోదు_FINAL_ACTION(నమోదు_2)!=MBCS_STATE_ILLEGAL
     ) {
-        return true;
+        తిరిగి నిజం;
     }
     /* Then test for final entries in this state. */
-    for(b=0; b<=0xff; ++b) {
-        entry=row[b];
-        if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
-            MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
+    కొరకు(b=0; b<=0xff; ++b) {
+        నమోదు_2=అడ్డువరుస[b];
+        ఒకవేళ( !MBCS_నమోదు_IS_TRANSITION(నమోదు_2) &&
+            MBCS_నమోదు_FINAL_ACTION(నమోదు_2)!=MBCS_STATE_ILLEGAL
         ) {
-            return true;
+            తిరిగి నిజం;
         }
     }
     /* Then recurse for transition entries. */
-    for(b=0; b<=0xff; ++b) {
-        entry=row[b];
-        if( MBCS_ENTRY_IS_TRANSITION(entry) &&
-            hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)))
+    కొరకు(b=0; b<=0xff; ++b) {
+        నమోదు_2=అడ్డువరుస[b];
+        ఒకవేళ( MBCS_నమోదు_IS_TRANSITION(నమోదు_2) &&
+            has_Valid_Trail_బైట్లు(state_పట్టిక, static_cast<uint8_t>(MBCS_నమోదు_TRANSITION_STATE(నమోదు_2)))
         ) {
-            return true;
+            తిరిగి నిజం;
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
 /*
@@ -2445,103 +2445,103 @@ hasValidTrailBytes(const int32_t (*stateTable)[256], uint8_t state) {
  * Recurse for transition states, because here we don't want to say that
  * b is a lead byte if all byte sequences that start with b are illegal.
  */
-static UBool
-isSingleOrLead(const int32_t (*stateTable)[256], uint8_t state, UBool isDBCSOnly, uint8_t b) {
-    const int32_t *row=stateTable[state];
-    int32_t entry=row[b];
-    if(MBCS_ENTRY_IS_TRANSITION(entry)) {   /* lead byte */
-        return hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)));
-    } else {
-        uint8_t action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_CHANGE_ONLY && isDBCSOnly) {
-            return false;   /* SI/SO are illegal for DBCS-only conversion */
-        } else {
-            return action!=MBCS_STATE_ILLEGAL;
+స్థిర UBool
+isSingleOrLead(స్థిరరాశి int32_t (*state_పట్టిక)[256], uint8_t state, UBool isDBCSOnly, uint8_t b) {
+    స్థిరరాశి int32_t *అడ్డువరుస=state_పట్టిక[state];
+    int32_t నమోదు_2=అడ్డువరుస[b];
+    ఒకవేళ(MBCS_నమోదు_IS_TRANSITION(నమోదు_2)) {   /* lead byte */
+        తిరిగి has_Valid_Trail_బైట్లు(state_పట్టిక, static_cast<uint8_t>(MBCS_నమోదు_TRANSITION_STATE(నమోదు_2)));
+    } లేకపోతే {
+        uint8_t action = static_cast<uint8_t>(MBCS_నమోదు_FINAL_ACTION(నమోదు_2));
+        ఒకవేళ(action==MBCS_STATE_CHANGE_ONLY && isDBCSOnly) {
+            తిరిగి అబద్ధం;   /* SI/SO are illegal for DBCS-only conversion */
+        } లేకపోతే {
+            తిరిగి action!=MBCS_STATE_ILLEGAL;
         }
     }
 }
 
-U_CFUNC void
-ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+U_CFUNC శూన్య
+ucnv_MBCSToUnicodeWithOffsets(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                          UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    char16_t *లక్ష్యం;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు;
     int32_t *offsets;
 
-    const int32_t (*stateTable)[256];
-    const uint16_t *unicodeCodeUnits;
+    స్థిరరాశి int32_t (*state_పట్టిక)[256];
+    స్థిరరాశి uint16_t *unicode_సంకేతం_Units;
 
-    uint32_t offset;
+    uint32_t స్థానభ్రంశం;
     uint8_t state;
-    int8_t byteIndex;
-    uint8_t *bytes;
+    int8_t byte_సూచీ;
+    uint8_t *బైట్లు;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ఆధారం_సూచీ, తదుపరి_ఆధారం_సూచీ;
 
-    int32_t entry;
+    int32_t నమోదు_2;
     char16_t c;
     uint8_t action;
 
     /* use optimized function if possible */
-    cnv=pArgs->converter;
+    cnv=p_వాదనలు->converter;
 
-    if(cnv->preToULength>0) {
+    ఒకవేళ(cnv->pre_గమ్యం_ULength>0) {
         /*
          * pass sourceIndex=-1 because we continue from an earlier buffer
          * in the future, this may change with continuous offsets
          */
-        ucnv_extContinueMatchToU(cnv, pArgs, -1, pErrorCode);
+        ucnv_ext_Continue_సరిపోలిక_గమ్యం_U(cnv, p_వాదనలు, -1, p_Error_సంకేతం);
 
-        if(U_FAILURE(*pErrorCode) || cnv->preToULength<0) {
-            return;
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం) || cnv->pre_గమ్యం_ULength<0) {
+            తిరిగి;
         }
     }
 
-    if(cnv->sharedData->mbcs.countStates==1) {
-        if(!(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-            ucnv_MBCSSingleToBMPWithOffsets(pArgs, pErrorCode);
-        } else {
-            ucnv_MBCSSingleToUnicodeWithOffsets(pArgs, pErrorCode);
+    ఒకవేళ(cnv->shared_దత్తాంశం->mbcs.లెక్క_స్థితులు==1) {
+        ఒకవేళ(!(cnv->shared_దత్తాంశం->mbcs.unicode_ముసుగు&UCNV_HAS_SUPPLEMENTARY)) {
+            ucnv_MBCSSingle_గమ్యం_BMPWith_Offsets(p_వాదనలు, p_Error_సంకేతం);
+        } లేకపోతే {
+            ucnv_MBCSSingle_గమ్యం_Unicode_With_Offsets(p_వాదనలు, p_Error_సంకేతం);
         }
-        return;
+        తిరిగి;
     }
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ఆధారం=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం=p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_హద్దు=p_వాదనలు->లక్ష్యం_హద్దు;
+    offsets=p_వాదనలు->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        state_పట్టిక=(స్థిరరాశి int32_t (*)[256])cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLState_పట్టిక;
+    } లేకపోతే {
+        state_పట్టిక=cnv->shared_దత్తాంశం->mbcs.state_పట్టిక;
     }
-    unicodeCodeUnits=cnv->sharedData->mbcs.unicodeCodeUnits;
+    unicode_సంకేతం_Units=cnv->shared_దత్తాంశం->mbcs.unicode_సంకేతం_Units;
 
     /* get the converter state from UConverter */
-    offset=cnv->toUnicodeStatus;
-    byteIndex=cnv->toULength;
-    bytes=cnv->toUBytes;
+    స్థానభ్రంశం=cnv->గమ్యం_Unicode_స్థితి;
+    byte_సూచీ=cnv->గమ్యం_ULength;
+    బైట్లు=cnv->గమ్యం_UBytes;
 
     /*
      * if we are in the SBCS state for a DBCS-only converter,
      * then load the DBCS state from the MBCS data
      * (dbcsOnlyState==0 if it is not a DBCS-only converter)
      */
-    if((state=(uint8_t)(cnv->mode))==0) {
-        state=cnv->sharedData->mbcs.dbcsOnlyState;
+    ఒకవేళ((state=(uint8_t)(cnv->బహుళకం))==0) {
+        state=cnv->shared_దత్తాంశం->mbcs.dbcsOnlyState;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ఆధారం_సూచీ=byte_సూచీ==0 ? 0 : -1;
+    తదుపరి_ఆధారం_సూచీ=0;
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one code unit that
@@ -2550,230 +2550,230 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(target>=targetLimit) {
+        ఒకవేళ(లక్ష్యం>=లక్ష్యం_హద్దు) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
 
-        if(byteIndex==0) {
+        ఒకవేళ(byte_సూచీ==0) {
             /* optimized loop for 1/2-byte input and BMP output */
-            if(offsets==nullptr) {
-                do {
-                    entry=stateTable[state][*source];
-                    if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-                        state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
-                        offset=MBCS_ENTRY_TRANSITION_OFFSET(entry);
+            ఒకవేళ(offsets==శూన్యసూచిక) {
+                చేయి {
+                    నమోదు_2=state_పట్టిక[state][*ఆధారం];
+                    ఒకవేళ(MBCS_నమోదు_IS_TRANSITION(నమోదు_2)) {
+                        state=(uint8_t)MBCS_నమోదు_TRANSITION_STATE(నమోదు_2);
+                        స్థానభ్రంశం=MBCS_నమోదు_TRANSITION_స్థానభ్రంశం(నమోదు_2);
 
-                        ++source;
-                        if( source<sourceLimit &&
-                            MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
-                            MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
-                            (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
+                        ++ఆధారం;
+                        ఒకవేళ( ఆధారం<ఆధారం_హద్దు &&
+                            MBCS_నమోదు_IS_FINAL(నమోదు_2=state_పట్టిక[state][*ఆధారం]) &&
+                            MBCS_నమోదు_FINAL_ACTION(నమోదు_2)==MBCS_STATE_VALID_16 &&
+                            (c=unicode_సంకేతం_Units[స్థానభ్రంశం+MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2)])<0xfffe
                         ) {
-                            ++source;
-                            *target++=c;
-                            state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                            offset=0;
-                        } else {
+                            ++ఆధారం;
+                            *లక్ష్యం++=c;
+                            state=(uint8_t)MBCS_నమోదు_FINAL_STATE(నమోదు_2); /* typically 0 */
+                            స్థానభ్రంశం=0;
+                        } లేకపోతే {
                             /* set the state and leave the optimized loop */
-                            bytes[0]=*(source-1);
-                            byteIndex=1;
-                            break;
+                            బైట్లు[0]=*(ఆధారం-1);
+                            byte_సూచీ=1;
+                            ఆపు;
                         }
-                    } else {
-                        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+                    } లేకపోతే {
+                        ఒకవేళ(MBCS_నమోదు_FINAL_IS_VALID_ప్రత్యక్ష_16(నమోదు_2)) {
                             /* output BMP code point */
-                            ++source;
-                            *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                            state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                        } else {
+                            ++ఆధారం;
+                            *లక్ష్యం++=(char16_t)MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                            state=(uint8_t)MBCS_నమోదు_FINAL_STATE(నమోదు_2); /* typically 0 */
+                        } లేకపోతే {
                             /* leave the optimized loop */
-                            break;
+                            ఆపు;
                         }
                     }
-                } while(source<sourceLimit && target<targetLimit);
-            } else /* offsets!=nullptr */ {
-                do {
-                    entry=stateTable[state][*source];
-                    if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-                        state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
-                        offset=MBCS_ENTRY_TRANSITION_OFFSET(entry);
+                } అయితే(ఆధారం<ఆధారం_హద్దు && లక్ష్యం<లక్ష్యం_హద్దు);
+            } లేకపోతే /* offsets!=nullptr */ {
+                చేయి {
+                    నమోదు_2=state_పట్టిక[state][*ఆధారం];
+                    ఒకవేళ(MBCS_నమోదు_IS_TRANSITION(నమోదు_2)) {
+                        state=(uint8_t)MBCS_నమోదు_TRANSITION_STATE(నమోదు_2);
+                        స్థానభ్రంశం=MBCS_నమోదు_TRANSITION_స్థానభ్రంశం(నమోదు_2);
 
-                        ++source;
-                        if( source<sourceLimit &&
-                            MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
-                            MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
-                            (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
+                        ++ఆధారం;
+                        ఒకవేళ( ఆధారం<ఆధారం_హద్దు &&
+                            MBCS_నమోదు_IS_FINAL(నమోదు_2=state_పట్టిక[state][*ఆధారం]) &&
+                            MBCS_నమోదు_FINAL_ACTION(నమోదు_2)==MBCS_STATE_VALID_16 &&
+                            (c=unicode_సంకేతం_Units[స్థానభ్రంశం+MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2)])<0xfffe
                         ) {
-                            ++source;
-                            *target++=c;
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                sourceIndex=(nextSourceIndex+=2);
+                            ++ఆధారం;
+                            *లక్ష్యం++=c;
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ;
+                                ఆధారం_సూచీ=(తదుపరి_ఆధారం_సూచీ+=2);
                             }
-                            state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                            offset=0;
-                        } else {
+                            state=(uint8_t)MBCS_నమోదు_FINAL_STATE(నమోదు_2); /* typically 0 */
+                            స్థానభ్రంశం=0;
+                        } లేకపోతే {
                             /* set the state and leave the optimized loop */
-                            ++nextSourceIndex;
-                            bytes[0]=*(source-1);
-                            byteIndex=1;
-                            break;
+                            ++తదుపరి_ఆధారం_సూచీ;
+                            బైట్లు[0]=*(ఆధారం-1);
+                            byte_సూచీ=1;
+                            ఆపు;
                         }
-                    } else {
-                        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+                    } లేకపోతే {
+                        ఒకవేళ(MBCS_నమోదు_FINAL_IS_VALID_ప్రత్యక్ష_16(నమోదు_2)) {
                             /* output BMP code point */
-                            ++source;
-                            *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                sourceIndex=++nextSourceIndex;
+                            ++ఆధారం;
+                            *లక్ష్యం++=(char16_t)MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ;
+                                ఆధారం_సూచీ=++తదుపరి_ఆధారం_సూచీ;
                             }
-                            state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                        } else {
+                            state=(uint8_t)MBCS_నమోదు_FINAL_STATE(నమోదు_2); /* typically 0 */
+                        } లేకపోతే {
                             /* leave the optimized loop */
-                            break;
+                            ఆపు;
                         }
                     }
-                } while(source<sourceLimit && target<targetLimit);
+                } అయితే(ఆధారం<ఆధారం_హద్దు && లక్ష్యం<లక్ష్యం_హద్దు);
             }
 
             /*
              * these tests and break statements could be put inside the loop
              * if C had "break outerLoop" like Java
              */
-            if(source>=sourceLimit) {
-                break;
+            ఒకవేళ(ఆధారం>=ఆధారం_హద్దు) {
+                ఆపు;
             }
-            if(target>=targetLimit) {
+            ఒకవేళ(లక్ష్యం>=లక్ష్యం_హద్దు) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                ఆపు;
             }
 
-            ++nextSourceIndex;
-            bytes[byteIndex++]=*source++;
-        } else /* byteIndex>0 */ {
-            ++nextSourceIndex;
-            entry=stateTable[state][bytes[byteIndex++]=*source++];
+            ++తదుపరి_ఆధారం_సూచీ;
+            బైట్లు[byte_సూచీ++]=*ఆధారం++;
+        } లేకపోతే /* byteIndex>0 */ {
+            ++తదుపరి_ఆధారం_సూచీ;
+            నమోదు_2=state_పట్టిక[state][బైట్లు[byte_సూచీ++]=*ఆధారం++];
         }
 
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
-            offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
-            continue;
+        ఒకవేళ(MBCS_నమోదు_IS_TRANSITION(నమోదు_2)) {
+            state=(uint8_t)MBCS_నమోదు_TRANSITION_STATE(నమోదు_2);
+            స్థానభ్రంశం+=MBCS_నమోదు_TRANSITION_స్థానభ్రంశం(నమోదు_2);
+            కొనసాగు;
         }
 
         /* save the previous state for proper extension mapping with SI/SO-stateful converters */
-        cnv->mode=state;
+        cnv->బహుళకం=state;
 
         /* set the next state early so that we can reuse the entry variable */
-        state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
+        state=(uint8_t)MBCS_నమోదు_FINAL_STATE(నమోదు_2); /* typically 0 */
 
         /*
          * An if-else-if chain provides more reliable performance for
          * the most common cases compared to a switch.
          */
-        action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_VALID_16) {
-            offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-            c=unicodeCodeUnits[offset];
-            if(c<0xfffe) {
+        action=(uint8_t)(MBCS_నమోదు_FINAL_ACTION(నమోదు_2));
+        ఒకవేళ(action==MBCS_STATE_VALID_16) {
+            స్థానభ్రంశం+=MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+            c=unicode_సంకేతం_Units[స్థానభ్రంశం];
+            ఒకవేళ(c<0xfffe) {
                 /* output BMP code point */
-                *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *లక్ష్యం++=c;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-                byteIndex=0;
-            } else if(c==0xfffe) {
-                if(UCNV_TO_U_USE_FALLBACK(cnv) && (entry=(int32_t)ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
+                byte_సూచీ=0;
+            } లేకపోతే ఒకవేళ(c==0xfffe) {
+                ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv) && (నమోదు_2=(int32_t)ucnv_MBCSGetFallback(&cnv->shared_దత్తాంశం->mbcs, స్థానభ్రంశం))!=0xfffe) {
                     /* output fallback BMP code point */
-                    *target++=(char16_t)entry;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *లక్ష్యం++=(char16_t)నమోదు_2;
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ;
                     }
-                    byteIndex=0;
+                    byte_సూచీ=0;
                 }
-            } else {
+            } లేకపోతే {
                 /* callback(illegal) */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
             }
-        } else if(action==MBCS_STATE_VALID_DIRECT_16) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_16) {
             /* output BMP code point */
-            *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *లక్ష్యం++=(char16_t)MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                *offsets++=ఆధారం_సూచీ;
             }
-            byteIndex=0;
-        } else if(action==MBCS_STATE_VALID_16_PAIR) {
-            offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-            c=unicodeCodeUnits[offset++];
-            if(c<0xd800) {
+            byte_సూచీ=0;
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_16_PAIR) {
+            స్థానభ్రంశం+=MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+            c=unicode_సంకేతం_Units[స్థానభ్రంశం++];
+            ఒకవేళ(c<0xd800) {
                 /* output BMP code point below 0xd800 */
-                *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *లక్ష్యం++=c;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-                byteIndex=0;
-            } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                byte_సూచీ=0;
+            } లేకపోతే ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                 /* output roundtrip or fallback surrogate pair */
-                *target++=(char16_t)(c&0xdbff);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *లక్ష్యం++=(char16_t)(c&0xdbff);
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-                byteIndex=0;
-                if(target<targetLimit) {
-                    *target++=unicodeCodeUnits[offset];
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                byte_సూచీ=0;
+                ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                    *లక్ష్యం++=unicode_సంకేతం_Units[స్థానభ్రంశం];
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ;
                     }
-                } else {
+                } లేకపోతే {
                     /* target overflow */
-                    cnv->UCharErrorBuffer[0]=unicodeCodeUnits[offset];
-                    cnv->UCharErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                    cnv->UChar_Error_బఫరు[0]=unicode_సంకేతం_Units[స్థానభ్రంశం];
+                    cnv->UChar_Error_బఫరు_నిడివి=1;
+                    *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
 
-                    offset=0;
-                    break;
+                    స్థానభ్రంశం=0;
+                    ఆపు;
                 }
-            } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+            } లేకపోతే ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                 /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
-                *target++=unicodeCodeUnits[offset];
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *లక్ష్యం++=unicode_సంకేతం_Units[స్థానభ్రంశం];
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-                byteIndex=0;
-            } else if(c==0xffff) {
+                byte_సూచీ=0;
+            } లేకపోతే ఒకవేళ(c==0xffff) {
                 /* callback(illegal) */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
             }
-        } else if(action==MBCS_STATE_VALID_DIRECT_20 ||
-                  (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_20 ||
+                  (action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_20 && UCNV_గమ్యం_U_USE_FALLBACK(cnv))
         ) {
-            entry=MBCS_ENTRY_FINAL_VALUE(entry);
+            నమోదు_2=MBCS_నమోదు_FINAL_విలువ(నమోదు_2);
             /* output surrogate pair */
-            *target++=(char16_t)(0xd800|(char16_t)(entry>>10));
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *లక్ష్యం++=(char16_t)(0xd800|(char16_t)(నమోదు_2>>10));
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                *offsets++=ఆధారం_సూచీ;
             }
-            byteIndex=0;
-            c=(char16_t)(0xdc00|(char16_t)(entry&0x3ff));
-            if(target<targetLimit) {
-                *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+            byte_సూచీ=0;
+            c=(char16_t)(0xdc00|(char16_t)(నమోదు_2&0x3ff));
+            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                *లక్ష్యం++=c;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-            } else {
+            } లేకపోతే {
                 /* target overflow */
-                cnv->UCharErrorBuffer[0]=c;
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                cnv->UChar_Error_బఫరు[0]=c;
+                cnv->UChar_Error_బఫరు_నిడివి=1;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
 
-                offset=0;
-                break;
+                స్థానభ్రంశం=0;
+                ఆపు;
             }
-        } else if(action==MBCS_STATE_CHANGE_ONLY) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_CHANGE_ONLY) {
             /*
              * This serves as a state change without any output.
              * It is useful for reading simple stateful encodings,
@@ -2781,174 +2781,174 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
              * The 21 unused bits may later be used for more sophisticated
              * state transitions.
              */
-            if(cnv->sharedData->mbcs.dbcsOnlyState==0) {
-                byteIndex=0;
-            } else {
+            ఒకవేళ(cnv->shared_దత్తాంశం->mbcs.dbcsOnlyState==0) {
+                byte_సూచీ=0;
+            } లేకపోతే {
                 /* SI/SO are illegal for DBCS-only conversion */
-                state=(uint8_t)(cnv->mode); /* restore the previous state */
+                state=(uint8_t)(cnv->బహుళకం); /* restore the previous state */
 
                 /* callback(illegal) */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
             }
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_16) {
+            ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *లక్ష్యం++=(char16_t)MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-                byteIndex=0;
+                byte_సూచీ=0;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+        } లేకపోతే {
             /* reserved, must never occur */
-            byteIndex=0;
+            byte_సూచీ=0;
         }
 
         /* end of action codes: prepare for a new character */
-        offset=0;
+        స్థానభ్రంశం=0;
 
-        if(byteIndex==0) {
-            sourceIndex=nextSourceIndex;
-        } else if(U_FAILURE(*pErrorCode)) {
+        ఒకవేళ(byte_సూచీ==0) {
+            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
+        } లేకపోతే ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             /* callback(illegal) */
-            if(byteIndex>1) {
+            ఒకవేళ(byte_సూచీ>1) {
                 /*
                  * Ticket 5691: consistent illegal sequences:
                  * - We include at least the first byte in the illegal sequence.
                  * - If any of the non-initial bytes could be the start of a character,
                  *   we stop the illegal sequence before the first one of those.
                  */
-                UBool isDBCSOnly = cnv->sharedData->mbcs.dbcsOnlyState != 0;
+                UBool isDBCSOnly = cnv->shared_దత్తాంశం->mbcs.dbcsOnlyState != 0;
                 int8_t i;
-                for(i=1;
-                    i<byteIndex && !isSingleOrLead(stateTable, state, isDBCSOnly, bytes[i]);
+                కొరకు(i=1;
+                    i<byte_సూచీ && !isSingleOrLead(state_పట్టిక, state, isDBCSOnly, బైట్లు[i]);
                     ++i) {}
-                if(i<byteIndex) {
+                ఒకవేళ(i<byte_సూచీ) {
                     /* Back out some bytes. */
-                    int8_t backOutDistance=byteIndex-i;
-                    int32_t bytesFromThisBuffer=(int32_t)(source-(const uint8_t *)pArgs->source);
-                    byteIndex=i;  /* length of reported illegal byte sequence */
-                    if(backOutDistance<=bytesFromThisBuffer) {
-                        source-=backOutDistance;
-                    } else {
+                    int8_t వెనుక_బహిర్గతం_దూరం=byte_సూచీ-i;
+                    int32_t బైట్లు_From_This_బఫరు=(int32_t)(ఆధారం-(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం);
+                    byte_సూచీ=i;  /* length of reported illegal byte sequence */
+                    ఒకవేళ(వెనుక_బహిర్గతం_దూరం<=బైట్లు_From_This_బఫరు) {
+                        ఆధారం-=వెనుక_బహిర్గతం_దూరం;
+                    } లేకపోతే {
                         /* Back out bytes from the previous buffer: Need to replay them. */
-                        cnv->preToULength=(int8_t)(bytesFromThisBuffer-backOutDistance);
+                        cnv->pre_గమ్యం_ULength=(int8_t)(బైట్లు_From_This_బఫరు-వెనుక_బహిర్గతం_దూరం);
                         /* preToULength is negative! */
-                        uprv_memcpy(cnv->preToU, bytes+i, -cnv->preToULength);
-                        source=(const uint8_t *)pArgs->source;
+                        uprv_memcpy(cnv->pre_గమ్యం_U, బైట్లు+i, -cnv->pre_గమ్యం_ULength);
+                        ఆధారం=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం;
                     }
                 }
             }
-            break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+            ఆపు;
+        } లేకపోతే /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
-            pArgs->source=(const char *)source;
-            byteIndex=_extToU(cnv, cnv->sharedData,
-                              byteIndex, &source, sourceLimit,
-                              &target, targetLimit,
-                              &offsets, sourceIndex,
-                              pArgs->flush,
-                              pErrorCode);
-            sourceIndex=nextSourceIndex+=(int32_t)(source-(const uint8_t *)pArgs->source);
+            p_వాదనలు->ఆధారం=(స్థిరరాశి అక్షరం *)ఆధారం;
+            byte_సూచీ=ext_గమ్యం_U(cnv, cnv->shared_దత్తాంశం,
+                              byte_సూచీ, &ఆధారం, ఆధారం_హద్దు,
+                              &లక్ష్యం, లక్ష్యం_హద్దు,
+                              &offsets, ఆధారం_సూచీ,
+                              p_వాదనలు->flush,
+                              p_Error_సంకేతం);
+            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ+=(int32_t)(ఆధారం-(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం);
 
-            if(U_FAILURE(*pErrorCode)) {
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                 /* not mappable or buffer overflow */
-                break;
+                ఆపు;
             }
         }
     }
 
     /* set the converter state back into UConverter */
-    cnv->toUnicodeStatus=offset;
-    cnv->mode=state;
-    cnv->toULength=byteIndex;
+    cnv->గమ్యం_Unicode_స్థితి=స్థానభ్రంశం;
+    cnv->బహుళకం=state;
+    cnv->గమ్యం_ULength=byte_సూచీ;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=(స్థిరరాశి అక్షరం *)ఆధారం;
+    p_వాదనలు->లక్ష్యం=లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
 
 /*
  * This version of ucnv_MBCSGetNextUChar() is optimized for single-byte, single-state codepages.
  * We still need a conversion loop in case we find reserved action codes, which are to be ignored.
  */
-static UChar32
-ucnv_MBCSSingleGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                        UErrorCode *pErrorCode) {
+స్థిర UChar32
+ucnv_MBCSSingle_Get_తదుపరి_UChar(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                        UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const int32_t (*stateTable)[256];
-    const uint8_t *source, *sourceLimit;
+    స్థిరరాశి int32_t (*state_పట్టిక)[256];
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
 
-    int32_t entry;
+    int32_t నమోదు_2;
     uint8_t action;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    cnv=p_వాదనలు->converter;
+    ఆధారం = reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->ఆధారం);
+    ఆధారం_హద్దు = reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->ఆధారం_హద్దు);
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        state_పట్టిక=(స్థిరరాశి int32_t (*)[256])cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLState_పట్టిక;
+    } లేకపోతే {
+        state_పట్టిక=cnv->shared_దత్తాంశం->mbcs.state_పట్టిక;
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        entry=stateTable[0][*source++];
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
+        నమోదు_2=state_పట్టిక[0][*ఆధారం++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* write back the updated pointer early so that we can return directly */
-        pArgs->source = reinterpret_cast<const char*>(source);
+        p_వాదనలు->ఆధారం = reinterpret_cast<స్థిరరాశి అక్షరం*>(ఆధారం);
 
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        ఒకవేళ(MBCS_నమోదు_FINAL_IS_VALID_ప్రత్యక్ష_16(నమోదు_2)) {
             /* output BMP code point */
-            return static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            తిరిగి static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
         }
 
         /*
          * An if-else-if chain provides more reliable performance for
          * the most common cases compared to a switch.
          */
-        action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if( action==MBCS_STATE_VALID_DIRECT_20 ||
-            (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
+        action = static_cast<uint8_t>(MBCS_నమోదు_FINAL_ACTION(నమోదు_2));
+        ఒకవేళ( action==MBCS_STATE_VALID_ప్రత్యక్ష_20 ||
+            (action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_20 && UCNV_గమ్యం_U_USE_FALLBACK(cnv))
         ) {
             /* output supplementary code point */
-            return static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            తిరిగి static_cast<UChar32>(MBCS_నమోదు_FINAL_విలువ(నమోదు_2) + 0x10000);
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_16) {
+            ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                return static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+                తిరిగి static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } లేకపోతే ఒకవేళ(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+        } లేకపోతే {
             /* reserved, must never occur */
-            continue;
+            కొనసాగు;
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             /* callback(illegal) */
-            break;
-        } else /* unassigned sequence */ {
+            ఆపు;
+        } లేకపోతే /* unassigned sequence */ {
             /* defer to the generic implementation */
-            pArgs->source = reinterpret_cast<const char*>(source) - 1;
-            return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+            p_వాదనలు->ఆధారం = reinterpret_cast<స్థిరరాశి అక్షరం*>(ఆధారం) - 1;
+            తిరిగి UCNV_GET_తదుపరి_UCHAR_USE_గమ్యం_U;
         }
     }
 
     /* no output because of empty input or only state changes */
-    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+    తిరిగి 0xffff;
 }
 
 /*
@@ -2963,138 +2963,138 @@ ucnv_MBCSSingleGetNextUChar(UConverterToUnicodeArgs *pArgs,
  *
  * All normal mappings and errors are handled here.
  */
-static UChar32 U_CALLCONV
-ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                  UErrorCode *pErrorCode) {
+స్థిర UChar32 U_CALLCONV
+ucnv_MBCSGet_తదుపరి_UChar(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                  UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit, *lastSource;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు, *చివరి_ఆధారం;
 
-    const int32_t (*stateTable)[256];
-    const uint16_t *unicodeCodeUnits;
+    స్థిరరాశి int32_t (*state_పట్టిక)[256];
+    స్థిరరాశి uint16_t *unicode_సంకేతం_Units;
 
-    uint32_t offset;
+    uint32_t స్థానభ్రంశం;
     uint8_t state;
 
-    int32_t entry;
+    int32_t నమోదు_2;
     UChar32 c;
     uint8_t action;
 
     /* use optimized function if possible */
-    cnv=pArgs->converter;
+    cnv=p_వాదనలు->converter;
 
-    if(cnv->preToULength>0) {
+    ఒకవేళ(cnv->pre_గమ్యం_ULength>0) {
         /* use the generic code in ucnv_getNextUChar() to continue with a partial match */
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+        తిరిగి UCNV_GET_తదుపరి_UCHAR_USE_గమ్యం_U;
     }
 
-    if(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SURROGATES) {
+    ఒకవేళ(cnv->shared_దత్తాంశం->mbcs.unicode_ముసుగు&UCNV_HAS_SURROGATES) {
         /*
          * Using the generic ucnv_getNextUChar() code lets us deal correctly
          * with the rare case of a codepage that maps single surrogates
          * without adding the complexity to this already complicated function here.
          */
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
-    } else if(cnv->sharedData->mbcs.countStates==1) {
-        return ucnv_MBCSSingleGetNextUChar(pArgs, pErrorCode);
+        తిరిగి UCNV_GET_తదుపరి_UCHAR_USE_గమ్యం_U;
+    } లేకపోతే ఒకవేళ(cnv->shared_దత్తాంశం->mbcs.లెక్క_స్థితులు==1) {
+        తిరిగి ucnv_MBCSSingle_Get_తదుపరి_UChar(p_వాదనలు, p_Error_సంకేతం);
     }
 
     /* set up the local pointers */
-    source = lastSource = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
+    ఆధారం = చివరి_ఆధారం = reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->ఆధారం);
+    ఆధారం_హద్దు = reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->ఆధారం_హద్దు);
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        state_పట్టిక=(స్థిరరాశి int32_t (*)[256])cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLState_పట్టిక;
+    } లేకపోతే {
+        state_పట్టిక=cnv->shared_దత్తాంశం->mbcs.state_పట్టిక;
     }
-    unicodeCodeUnits=cnv->sharedData->mbcs.unicodeCodeUnits;
+    unicode_సంకేతం_Units=cnv->shared_దత్తాంశం->mbcs.unicode_సంకేతం_Units;
 
     /* get the converter state from UConverter */
-    offset=cnv->toUnicodeStatus;
+    స్థానభ్రంశం=cnv->గమ్యం_Unicode_స్థితి;
 
     /*
      * if we are in the SBCS state for a DBCS-only converter,
      * then load the DBCS state from the MBCS data
      * (dbcsOnlyState==0 if it is not a DBCS-only converter)
      */
-    if ((state = static_cast<uint8_t>(cnv->mode)) == 0) {
-        state=cnv->sharedData->mbcs.dbcsOnlyState;
+    ఒకవేళ ((state = static_cast<uint8_t>(cnv->బహుళకం)) == 0) {
+        state=cnv->shared_దత్తాంశం->mbcs.dbcsOnlyState;
     }
 
     /* conversion loop */
     c=U_SENTINEL;
-    while(source<sourceLimit) {
-        entry=stateTable[state][*source++];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            state = static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry));
-            offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
+        నమోదు_2=state_పట్టిక[state][*ఆధారం++];
+        ఒకవేళ(MBCS_నమోదు_IS_TRANSITION(నమోదు_2)) {
+            state = static_cast<uint8_t>(MBCS_నమోదు_TRANSITION_STATE(నమోదు_2));
+            స్థానభ్రంశం+=MBCS_నమోదు_TRANSITION_స్థానభ్రంశం(నమోదు_2);
 
             /* optimization for 1/2-byte input and BMP output */
-            if( source<sourceLimit &&
-                MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
-                MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
-                (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
+            ఒకవేళ( ఆధారం<ఆధారం_హద్దు &&
+                MBCS_నమోదు_IS_FINAL(నమోదు_2=state_పట్టిక[state][*ఆధారం]) &&
+                MBCS_నమోదు_FINAL_ACTION(నమోదు_2)==MBCS_STATE_VALID_16 &&
+                (c=unicode_సంకేతం_Units[స్థానభ్రంశం+MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2)])<0xfffe
             ) {
-                ++source;
-                state = static_cast<uint8_t>(MBCS_ENTRY_FINAL_STATE(entry)); /* typically 0 */
+                ++ఆధారం;
+                state = static_cast<uint8_t>(MBCS_నమోదు_FINAL_STATE(నమోదు_2)); /* typically 0 */
                 /* output BMP code point */
-                break;
+                ఆపు;
             }
-        } else {
+        } లేకపోతే {
             /* save the previous state for proper extension mapping with SI/SO-stateful converters */
-            cnv->mode=state;
+            cnv->బహుళకం=state;
 
             /* set the next state early so that we can reuse the entry variable */
-            state = static_cast<uint8_t>(MBCS_ENTRY_FINAL_STATE(entry)); /* typically 0 */
+            state = static_cast<uint8_t>(MBCS_నమోదు_FINAL_STATE(నమోదు_2)); /* typically 0 */
 
             /*
              * An if-else-if chain provides more reliable performance for
              * the most common cases compared to a switch.
              */
-            action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-            if(action==MBCS_STATE_VALID_DIRECT_16) {
+            action = static_cast<uint8_t>(MBCS_నమోదు_FINAL_ACTION(నమోదు_2));
+            ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_16) {
                 /* output BMP code point */
-                c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                break;
-            } else if(action==MBCS_STATE_VALID_16) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[offset];
-                if(c<0xfffe) {
+                c = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+                ఆపు;
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_16) {
+                స్థానభ్రంశం+=MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                c=unicode_సంకేతం_Units[స్థానభ్రంశం];
+                ఒకవేళ(c<0xfffe) {
                     /* output BMP code point */
-                    break;
-                } else if(c==0xfffe) {
-                    if(UCNV_TO_U_USE_FALLBACK(cnv) && (c=ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
-                        break;
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(c==0xfffe) {
+                    ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv) && (c=ucnv_MBCSGetFallback(&cnv->shared_దత్తాంశం->mbcs, స్థానభ్రంశం))!=0xfffe) {
+                        ఆపు;
                     }
-                } else {
+                } లేకపోతే {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
                 }
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[offset++];
-                if(c<0xd800) {
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_16_PAIR) {
+                స్థానభ్రంశం+=MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                c=unicode_సంకేతం_Units[స్థానభ్రంశం++];
+                ఒకవేళ(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                    break;
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
-                    c=((c&0x3ff)<<10)+unicodeCodeUnits[offset]+(0x10000-0xdc00);
-                    break;
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+                    c=((c&0x3ff)<<10)+unicode_సంకేతం_Units[స్థానభ్రంశం]+(0x10000-0xdc00);
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
-                    c=unicodeCodeUnits[offset];
-                    break;
-                } else if(c==0xffff) {
+                    c=unicode_సంకేతం_Units[స్థానభ్రంశం];
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(c==0xffff) {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
                 }
-            } else if(action==MBCS_STATE_VALID_DIRECT_20 ||
-                      (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_20 ||
+                      (action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_20 && UCNV_గమ్యం_U_USE_FALLBACK(cnv))
             ) {
                 /* output supplementary code point */
-                c = static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-                break;
-            } else if(action==MBCS_STATE_CHANGE_ONLY) {
+                c = static_cast<UChar32>(MBCS_నమోదు_FINAL_విలువ(నమోదు_2) + 0x10000);
+                ఆపు;
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_CHANGE_ONLY) {
                 /*
                  * This serves as a state change without any output.
                  * It is useful for reading simple stateful encodings,
@@ -3102,54 +3102,54 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
                  * The 21 unused bits may later be used for more sophisticated
                  * state transitions.
                  */
-                if(cnv->sharedData->mbcs.dbcsOnlyState!=0) {
+                ఒకవేళ(cnv->shared_దత్తాంశం->mbcs.dbcsOnlyState!=0) {
                     /* SI/SO are illegal for DBCS-only conversion */
-                    state = static_cast<uint8_t>(cnv->mode); /* restore the previous state */
+                    state = static_cast<uint8_t>(cnv->బహుళకం); /* restore the previous state */
 
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
                 }
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-                if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_16) {
+                ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv)) {
                     /* output BMP code point */
-                    c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                    break;
+                    c = static_cast<char16_t>(MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2));
+                    ఆపు;
                 }
-            } else if(action==MBCS_STATE_UNASSIGNED) {
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_UNASSIGNED) {
                 /* just fall through */
-            } else if(action==MBCS_STATE_ILLEGAL) {
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_ILLEGAL) {
                 /* callback(illegal) */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            } else {
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+            } లేకపోతే {
                 /* reserved (must never occur), or only state change */
-                offset=0;
-                lastSource=source;
-                continue;
+                స్థానభ్రంశం=0;
+                చివరి_ఆధారం=ఆధారం;
+                కొనసాగు;
             }
 
             /* end of action codes: prepare for a new character */
-            offset=0;
+            స్థానభ్రంశం=0;
 
-            if(U_FAILURE(*pErrorCode)) {
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                 /* callback(illegal) */
-                break;
-            } else /* unassigned sequence */ {
+                ఆపు;
+            } లేకపోతే /* unassigned sequence */ {
                 /* defer to the generic implementation */
-                cnv->toUnicodeStatus=0;
-                cnv->mode=state;
-                pArgs->source = reinterpret_cast<const char*>(lastSource);
-                return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+                cnv->గమ్యం_Unicode_స్థితి=0;
+                cnv->బహుళకం=state;
+                p_వాదనలు->ఆధారం = reinterpret_cast<స్థిరరాశి అక్షరం*>(చివరి_ఆధారం);
+                తిరిగి UCNV_GET_తదుపరి_UCHAR_USE_గమ్యం_U;
             }
         }
     }
 
-    if(c<0) {
-        if(U_SUCCESS(*pErrorCode) && source==sourceLimit && lastSource<source) {
+    ఒకవేళ(c<0) {
+        ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం) && ఆధారం==ఆధారం_హద్దు && చివరి_ఆధారం<ఆధారం) {
             /* incomplete character byte sequence */
-            cnv->toULength = static_cast<int8_t>(source - lastSource);
-            uprv_memcpy(cnv->toUBytes, lastSource, cnv->toULength);
-            *pErrorCode=U_TRUNCATED_CHAR_FOUND;
-        } else if(U_FAILURE(*pErrorCode)) {
+            cnv->గమ్యం_ULength = static_cast<int8_t>(ఆధారం - చివరి_ఆధారం);
+            uprv_memcpy(cnv->గమ్యం_UBytes, చివరి_ఆధారం, cnv->గమ్యం_ULength);
+            *p_Error_సంకేతం=U_TRUNCATED_CHAR_దొరికింది;
+        } లేకపోతే ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             /* callback(illegal) */
             /*
              * Ticket 5691: consistent illegal sequences:
@@ -3157,39 +3157,39 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
              * - If any of the non-initial bytes could be the start of a character,
              *   we stop the illegal sequence before the first one of those.
              */
-            UBool isDBCSOnly = static_cast<UBool>(cnv->sharedData->mbcs.dbcsOnlyState != 0);
-            uint8_t *bytes=cnv->toUBytes;
-            *bytes++=*lastSource++;     /* first byte */
-            if(lastSource==source) {
-                cnv->toULength=1;
-            } else /* lastSource<source: multi-byte character */ {
+            UBool isDBCSOnly = static_cast<UBool>(cnv->shared_దత్తాంశం->mbcs.dbcsOnlyState != 0);
+            uint8_t *బైట్లు=cnv->గమ్యం_UBytes;
+            *బైట్లు++=*చివరి_ఆధారం++;     /* first byte */
+            ఒకవేళ(చివరి_ఆధారం==ఆధారం) {
+                cnv->గమ్యం_ULength=1;
+            } లేకపోతే /* lastSource<source: multi-byte character */ {
                 int8_t i;
-                for(i=1;
-                    lastSource<source && !isSingleOrLead(stateTable, state, isDBCSOnly, *lastSource);
+                కొరకు(i=1;
+                    చివరి_ఆధారం<ఆధారం && !isSingleOrLead(state_పట్టిక, state, isDBCSOnly, *చివరి_ఆధారం);
                     ++i
                 ) {
-                    *bytes++=*lastSource++;
+                    *బైట్లు++=*చివరి_ఆధారం++;
                 }
-                cnv->toULength=i;
-                source=lastSource;
+                cnv->గమ్యం_ULength=i;
+                ఆధారం=చివరి_ఆధారం;
             }
-        } else {
+        } లేకపోతే {
             /* no output because of empty input or only state changes */
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
+            *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
         }
         c=0xffff;
     }
 
     /* set the converter state back into UConverter, ready for a new character */
-    cnv->toUnicodeStatus=0;
-    cnv->mode=state;
+    cnv->గమ్యం_Unicode_స్థితి=0;
+    cnv->బహుళకం=state;
 
     /* write back the updated pointer */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    return c;
+    p_వాదనలు->ఆధారం = reinterpret_cast<స్థిరరాశి అక్షరం*>(ఆధారం);
+    తిరిగి c;
 }
 
-#if 0
+#ఒకవేళ 0
 /*
  * Code disabled 2002dec09 (ICU 2.4) because it is not currently used in ICU. markus
  * Removal improves code coverage.
@@ -3200,49 +3200,49 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
  * It does not handle conversion extensions (_extToU()).
  */
 U_CFUNC UChar32
-ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
+ucnv_MBCSSingle_Simple_Get_తదుపరి_UChar(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
                               uint8_t b, UBool useFallback) {
-    int32_t entry;
+    int32_t నమోదు_2;
     uint8_t action;
 
-    entry=sharedData->mbcs.stateTable[0][b];
+    నమోదు_2=shared_దత్తాంశం->mbcs.state_పట్టిక[0][b];
     /* MBCS_ENTRY_IS_FINAL(entry) */
 
-    if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+    ఒకవేళ(MBCS_నమోదు_FINAL_IS_VALID_ప్రత్యక్ష_16(నమోదు_2)) {
         /* output BMP code point */
-        return (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
+        తిరిగి (char16_t)MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
     }
 
     /*
      * An if-else-if chain provides more reliable performance for
      * the most common cases compared to a switch.
      */
-    action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-    if(action==MBCS_STATE_VALID_DIRECT_20) {
+    action=(uint8_t)(MBCS_నమోదు_FINAL_ACTION(నమోదు_2));
+    ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_20) {
         /* output supplementary code point */
-        return 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-    } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-        if(!TO_U_USE_FALLBACK(useFallback)) {
-            return 0xfffe;
+        తిరిగి 0x10000+MBCS_నమోదు_FINAL_విలువ(నమోదు_2);
+    } లేకపోతే ఒకవేళ(action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_16) {
+        ఒకవేళ(!గమ్యం_U_USE_FALLBACK(useFallback)) {
+            తిరిగి 0xfffe;
         }
         /* output BMP code point */
-        return (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-    } else if(action==MBCS_STATE_FALLBACK_DIRECT_20) {
-        if(!TO_U_USE_FALLBACK(useFallback)) {
-            return 0xfffe;
+        తిరిగి (char16_t)MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+    } లేకపోతే ఒకవేళ(action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_20) {
+        ఒకవేళ(!గమ్యం_U_USE_FALLBACK(useFallback)) {
+            తిరిగి 0xfffe;
         }
         /* output supplementary code point */
-        return 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-    } else if(action==MBCS_STATE_UNASSIGNED) {
-        return 0xfffe;
-    } else if(action==MBCS_STATE_ILLEGAL) {
-        return 0xffff;
-    } else {
+        తిరిగి 0x10000+MBCS_నమోదు_FINAL_విలువ(నమోదు_2);
+    } లేకపోతే ఒకవేళ(action==MBCS_STATE_UNASSIGNED) {
+        తిరిగి 0xfffe;
+    } లేకపోతే ఒకవేళ(action==MBCS_STATE_ILLEGAL) {
+        తిరిగి 0xffff;
+    } లేకపోతే {
         /* reserved, must never occur */
-        return 0xffff;
+        తిరిగి 0xffff;
     }
 }
-#endif
+#అయితే_ముగింపు
 
 /*
  * This is a simple version of _MBCSGetNextUChar() that is used
@@ -3258,24 +3258,24 @@ ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
  * otherwise the Unicode code point
  */
 U_CFUNC UChar32
-ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
-                        const char *source, int32_t length,
+ucnv_MBCSSimple_Get_తదుపరి_UChar(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
+                        స్థిరరాశి అక్షరం *ఆధారం, int32_t length,
                         UBool useFallback) {
-    const int32_t (*stateTable)[256];
-    const uint16_t *unicodeCodeUnits;
+    స్థిరరాశి int32_t (*state_పట్టిక)[256];
+    స్థిరరాశి uint16_t *unicode_సంకేతం_Units;
 
-    uint32_t offset;
+    uint32_t స్థానభ్రంశం;
     uint8_t state, action;
 
     UChar32 c;
-    int32_t i, entry;
+    int32_t i, నమోదు_2;
 
-    if(length<=0) {
+    ఒకవేళ(length<=0) {
         /* no input at all: "illegal" */
-        return 0xffff;
+        తిరిగి 0xffff;
     }
 
-#if 0
+#ఒకవేళ 0
 /*
  * Code disabled 2002dec09 (ICU 2.4) because it is not currently used in ICU. markus
  * TODO In future releases, verify that this function is never called for SBCS
@@ -3283,177 +3283,177 @@ ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
  * Removal improves code coverage.
  */
     /* use optimized function if possible */
-    if(sharedData->mbcs.countStates==1) {
-        if(length==1) {
-            return ucnv_MBCSSingleSimpleGetNextUChar(sharedData, (uint8_t)*source, useFallback);
-        } else {
-            return 0xffff; /* illegal: more than a single byte for an SBCS converter */
+    ఒకవేళ(shared_దత్తాంశం->mbcs.లెక్క_స్థితులు==1) {
+        ఒకవేళ(length==1) {
+            తిరిగి ucnv_MBCSSingle_Simple_Get_తదుపరి_UChar(shared_దత్తాంశం, (uint8_t)*ఆధారం, useFallback);
+        } లేకపోతే {
+            తిరిగి 0xffff; /* illegal: more than a single byte for an SBCS converter */
         }
     }
-#endif
+#అయితే_ముగింపు
 
     /* set up the local pointers */
-    stateTable=sharedData->mbcs.stateTable;
-    unicodeCodeUnits=sharedData->mbcs.unicodeCodeUnits;
+    state_పట్టిక=shared_దత్తాంశం->mbcs.state_పట్టిక;
+    unicode_సంకేతం_Units=shared_దత్తాంశం->mbcs.unicode_సంకేతం_Units;
 
     /* converter state */
-    offset=0;
-    state=sharedData->mbcs.dbcsOnlyState;
+    స్థానభ్రంశం=0;
+    state=shared_దత్తాంశం->mbcs.dbcsOnlyState;
 
     /* conversion loop */
-    for(i=0;;) {
-        entry=stateTable[state][(uint8_t)source[i++]];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
-            offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
+    కొరకు(i=0;;) {
+        నమోదు_2=state_పట్టిక[state][(uint8_t)ఆధారం[i++]];
+        ఒకవేళ(MBCS_నమోదు_IS_TRANSITION(నమోదు_2)) {
+            state=(uint8_t)MBCS_నమోదు_TRANSITION_STATE(నమోదు_2);
+            స్థానభ్రంశం+=MBCS_నమోదు_TRANSITION_స్థానభ్రంశం(నమోదు_2);
 
-            if(i==length) {
-                return 0xffff; /* truncated character */
+            ఒకవేళ(i==length) {
+                తిరిగి 0xffff; /* truncated character */
             }
-        } else {
+        } లేకపోతే {
             /*
              * An if-else-if chain provides more reliable performance for
              * the most common cases compared to a switch.
              */
-            action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-            if(action==MBCS_STATE_VALID_16) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[offset];
-                if(c!=0xfffe) {
-                    /* done */
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv)) {
-                    c=ucnv_MBCSGetFallback(&sharedData->mbcs, offset);
+            action=(uint8_t)(MBCS_నమోదు_FINAL_ACTION(నమోదు_2));
+            ఒకవేళ(action==MBCS_STATE_VALID_16) {
+                స్థానభ్రంశం+=MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                c=unicode_సంకేతం_Units[స్థానభ్రంశం];
+                ఒకవేళ(c!=0xfffe) {
+                    /*పూర్తి*/
+                } లేకపోతే ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv)) {
+                    c=ucnv_MBCSGetFallback(&shared_దత్తాంశం->mbcs, స్థానభ్రంశం);
                 /* else done with 0xfffe */
                 }
-                break;
-            } else if(action==MBCS_STATE_VALID_DIRECT_16) {
+                ఆపు;
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_16) {
                 /* output BMP code point */
-                c=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                break;
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[offset++];
-                if(c<0xd800) {
+                c=(char16_t)MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                ఆపు;
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_16_PAIR) {
+                స్థానభ్రంశం+=MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                c=unicode_సంకేతం_Units[స్థానభ్రంశం++];
+                ఒకవేళ(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                } లేకపోతే ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
-                    c=(UChar32)(((c&0x3ff)<<10)+unicodeCodeUnits[offset]+(0x10000-0xdc00));
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+                    c=(UChar32)(((c&0x3ff)<<10)+unicode_సంకేతం_Units[స్థానభ్రంశం]+(0x10000-0xdc00));
+                } లేకపోతే ఒకవేళ(UCNV_గమ్యం_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
-                    c=unicodeCodeUnits[offset];
-                } else if(c==0xffff) {
-                    return 0xffff;
-                } else {
+                    c=unicode_సంకేతం_Units[స్థానభ్రంశం];
+                } లేకపోతే ఒకవేళ(c==0xffff) {
+                    తిరిగి 0xffff;
+                } లేకపోతే {
                     c=0xfffe;
                 }
-                break;
-            } else if(action==MBCS_STATE_VALID_DIRECT_20) {
+                ఆపు;
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_VALID_ప్రత్యక్ష_20) {
                 /* output supplementary code point */
-                c=0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-                break;
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-                if(!TO_U_USE_FALLBACK(useFallback)) {
+                c=0x10000+MBCS_నమోదు_FINAL_విలువ(నమోదు_2);
+                ఆపు;
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_16) {
+                ఒకవేళ(!గమ్యం_U_USE_FALLBACK(useFallback)) {
                     c=0xfffe;
-                    break;
+                    ఆపు;
                 }
                 /* output BMP code point */
-                c=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                break;
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_20) {
-                if(!TO_U_USE_FALLBACK(useFallback)) {
+                c=(char16_t)MBCS_నమోదు_FINAL_విలువ_16(నమోదు_2);
+                ఆపు;
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_FALLBACK_ప్రత్యక్ష_20) {
+                ఒకవేళ(!గమ్యం_U_USE_FALLBACK(useFallback)) {
                     c=0xfffe;
-                    break;
+                    ఆపు;
                 }
                 /* output supplementary code point */
-                c=0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-                break;
-            } else if(action==MBCS_STATE_UNASSIGNED) {
+                c=0x10000+MBCS_నమోదు_FINAL_విలువ(నమోదు_2);
+                ఆపు;
+            } లేకపోతే ఒకవేళ(action==MBCS_STATE_UNASSIGNED) {
                 c=0xfffe;
-                break;
+                ఆపు;
             }
 
             /*
              * forbid MBCS_STATE_CHANGE_ONLY for this function,
              * and MBCS_STATE_ILLEGAL and reserved action codes
              */
-            return 0xffff;
+            తిరిగి 0xffff;
         }
     }
 
-    if(i!=length) {
+    ఒకవేళ(i!=length) {
         /* illegal for this function: not all input consumed */
-        return 0xffff;
+        తిరిగి 0xffff;
     }
 
-    if(c==0xfffe) {
+    ఒకవేళ(c==0xfffe) {
         /* try an extension mapping */
-        const int32_t *cx=sharedData->mbcs.extIndexes;
-        if(cx!=nullptr) {
-            return ucnv_extSimpleMatchToU(cx, source, length, useFallback);
+        స్థిరరాశి int32_t *cx=shared_దత్తాంశం->mbcs.extIndexes;
+        ఒకవేళ(cx!=శూన్యసూచిక) {
+            తిరిగి ucnv_ext_Simple_సరిపోలిక_గమ్యం_U(cx, ఆధారం, length, useFallback);
         }
     }
 
-    return c;
+    తిరిగి c;
 }
 
 /* MBCS-from-Unicode conversion functions ----------------------------------- */
 
 /* This version of ucnv_MBCSFromUnicodeWithOffsets() is optimized for double-byte codepages. */
-static void
-ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                                  UErrorCode *pErrorCode) {
+స్థిర శూన్య
+ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverter_From_Unicode_వాదనలు *p_వాదనలు,
+                                  UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    స్థిరరాశి char16_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *mbcsIndex;
-    const uint8_t *bytes;
+    స్థిరరాశి uint16_t *పట్టిక;
+    స్థిరరాశి uint16_t *mbcs_సూచీ;
+    స్థిరరాశి uint8_t *బైట్లు;
 
     UChar32 c;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ఆధారం_సూచీ, తదుపరి_ఆధారం_సూచీ;
 
-    uint32_t stage2Entry;
+    uint32_t stage2_నమోదు;
     uint32_t asciiRoundtrips;
     uint32_t value;
-    uint8_t unicodeMask;
+    uint8_t unicode_ముసుగు;
 
     /* use optimized function if possible */
-    cnv=pArgs->converter;
-    unicodeMask=cnv->sharedData->mbcs.unicodeMask;
+    cnv=p_వాదనలు->converter;
+    unicode_ముసుగు=cnv->shared_దత్తాంశం->mbcs.unicode_ముసుగు;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    ఆధారం=p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం = reinterpret_cast<uint8_t*>(p_వాదనలు->లక్ష్యం);
+    లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(p_వాదనలు->లక్ష్యం_హద్దు - p_వాదనలు->లక్ష్యం);
+    offsets=p_వాదనలు->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        bytes=cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes;
-    } else {
-        bytes=cnv->sharedData->mbcs.fromUnicodeBytes;
+    పట్టిక=cnv->shared_దత్తాంశం->mbcs.from_Unicode_పట్టిక;
+    mbcs_సూచీ=cnv->shared_దత్తాంశం->mbcs.mbcs_సూచీ;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        బైట్లు=cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLFrom_Unicode_బైట్లు;
+    } లేకపోతే {
+        బైట్లు=cnv->shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_దత్తాంశం->mbcs.asciiRoundtrips;
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ఆధారం_సూచీ= c==0 ? 0 : -1;
+    తదుపరి_ఆధారం_సూచీ=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    ఒకవేళ(c!=0 && లక్ష్యం_సామర్థ్యం>0) {
+        వెళ్ళు getTrail;
     }
 
-    while(source<sourceLimit) {
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -3462,86 +3462,86 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        ఒకవేళ(లక్ష్యం_సామర్థ్యం>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
              * a matched surrogate pair for a "supplementary code point".
              */
-            c=*source++;
-            ++nextSourceIndex;
-            if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
-                *target++ = static_cast<uint8_t>(c);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
-                    sourceIndex=nextSourceIndex;
+            c=*ఆధారం++;
+            ++తదుపరి_ఆధారం_సూచీ;
+            ఒకవేళ(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+                *లక్ష్యం++ = static_cast<uint8_t>(c);
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
+                    ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
                 }
-                --targetCapacity;
+                --లక్ష్యం_సామర్థ్యం;
                 c=0;
-                continue;
+                కొనసాగు;
             }
             /*
              * utf8Friendly table: Test for <=0xd7ff rather than <=MBCS_FAST_MAX
              * to avoid dealing with surrogates.
              * MBCS_FAST_MAX must be >=0xd7ff.
              */
-            if(c<=0xd7ff) {
-                value=DBCS_RESULT_FROM_MOST_BMP(mbcsIndex, (const uint16_t *)bytes, c);
+            ఒకవేళ(c<=0xd7ff) {
+                value=DBCS_ఫలితం_FROM_MOST_BMP(mbcs_సూచీ, (స్థిరరాశి uint16_t *)బైట్లు, c);
                 /* There are only roundtrips (!=0) and no-mapping (==0) entries. */
-                if(value==0) {
-                    goto unassigned;
+                ఒకవేళ(value==0) {
+                    వెళ్ళు unassigned;
                 }
                 /* output the value */
-            } else {
+            } లేకపోతే {
                 /*
                  * This also tests if the codepage maps single surrogates.
                  * If it does, then surrogates are not paired but mapped separately.
                  * Note that in this case unmatched surrogates are not detected.
                  */
-                if(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-                    if(U16_IS_SURROGATE_LEAD(c)) {
+                ఒకవేళ(U16_IS_SURROGATE(c) && !(unicode_ముసుగు&UCNV_HAS_SURROGATES)) {
+                    ఒకవేళ(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                        if(source<sourceLimit) {
+                        ఒకవేళ(ఆధారం<ఆధారం_హద్దు) {
                             /* test the following code unit */
-                            char16_t trail=*source;
-                            if(U16_IS_TRAIL(trail)) {
-                                ++source;
-                                ++nextSourceIndex;
+                            char16_t trail=*ఆధారం;
+                            ఒకవేళ(U16_IS_TRAIL(trail)) {
+                                ++ఆధారం;
+                                ++తదుపరి_ఆధారం_సూచీ;
                                 c=U16_GET_SUPPLEMENTARY(c, trail);
-                                if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+                                ఒకవేళ(!(unicode_ముసుగు&UCNV_HAS_SUPPLEMENTARY)) {
                                     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                     /* callback(unassigned) */
-                                    goto unassigned;
+                                    వెళ్ళు unassigned;
                                 }
                                 /* convert this supplementary code point */
                                 /* exit this condition tree */
-                            } else {
+                            } లేకపోతే {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
-                                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                                break;
+                                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                                ఆపు;
                             }
-                        } else {
+                        } లేకపోతే {
                             /* no more input */
-                            break;
+                            ఆపు;
                         }
-                    } else {
+                    } లేకపోతే {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
                     }
                 }
 
                 /* convert the Unicode code point in c into codepage bytes */
-                stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
+                stage2_నమోదు=MBCS_STAGE_2_FROM_U(పట్టిక, c);
 
                 /* get the bytes and the length for the output */
                 /* MBCS_OUTPUT_2 */
-                value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
+                value=MBCS_విలువ_2_FROM_STAGE_2(బైట్లు, stage2_నమోదు, c);
 
                 /* is this code point assigned, or do we use fallbacks? */
-                if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+                ఒకవేళ(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2_నమోదు, c) ||
                      (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                 ) {
                     /*
@@ -3552,72 +3552,72 @@ getTrail:
 
 unassigned:
                     /* try an extension mapping */
-                    pArgs->source=source;
-                    c=_extFromU(cnv, cnv->sharedData,
-                                c, &source, sourceLimit,
-                                &target, target+targetCapacity,
-                                &offsets, sourceIndex,
-                                pArgs->flush,
-                                pErrorCode);
-                    nextSourceIndex += static_cast<int32_t>(source - pArgs->source);
+                    p_వాదనలు->ఆధారం=ఆధారం;
+                    c=_extFromU(cnv, cnv->shared_దత్తాంశం,
+                                c, &ఆధారం, ఆధారం_హద్దు,
+                                &లక్ష్యం, లక్ష్యం+లక్ష్యం_సామర్థ్యం,
+                                &offsets, ఆధారం_సూచీ,
+                                p_వాదనలు->flush,
+                                p_Error_సంకేతం);
+                    తదుపరి_ఆధారం_సూచీ += static_cast<int32_t>(ఆధారం - p_వాదనలు->ఆధారం);
 
-                    if(U_FAILURE(*pErrorCode)) {
+                    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                         /* not mappable or buffer overflow */
-                        break;
-                    } else {
+                        ఆపు;
+                    } లేకపోతే {
                         /* a mapping was written to the target, continue */
 
                         /* recalculate the targetCapacity after an extension mapping */
-                        targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
+                        లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(p_వాదనలు->లక్ష్యం_హద్దు - reinterpret_cast<అక్షరం*>(లక్ష్యం));
 
                         /* normal end of conversion: prepare for a new character */
-                        sourceIndex=nextSourceIndex;
-                        continue;
+                        ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
+                        కొనసాగు;
                     }
                 }
             }
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(value<=0xff) {
+            ఒకవేళ(value<=0xff) {
                 /* this is easy because we know that there is enough space */
-                *target++ = static_cast<uint8_t>(value);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *లక్ష్యం++ = static_cast<uint8_t>(value);
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-                --targetCapacity;
-            } else /* length==2 */ {
-                *target++ = static_cast<uint8_t>(value >> 8);
-                if(2<=targetCapacity) {
-                    *target++ = static_cast<uint8_t>(value);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex;
+                --లక్ష్యం_సామర్థ్యం;
+            } లేకపోతే /* length==2 */ {
+                *లక్ష్యం++ = static_cast<uint8_t>(value >> 8);
+                ఒకవేళ(2<=లక్ష్యం_సామర్థ్యం) {
+                    *లక్ష్యం++ = static_cast<uint8_t>(value);
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ;
+                        *offsets++=ఆధారం_సూచీ;
                     }
-                    targetCapacity-=2;
-                } else {
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    లక్ష్యం_సామర్థ్యం-=2;
+                } లేకపోతే {
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ;
                     }
-                    cnv->charErrorBuffer[0] = static_cast<char>(value);
-                    cnv->charErrorBufferLength=1;
+                    cnv->char_Error_బఫరు[0] = static_cast<అక్షరం>(value);
+                    cnv->char_Error_బఫరు_నిడివి=1;
 
                     /* target overflow */
-                    targetCapacity=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                    లక్ష్యం_సామర్థ్యం=0;
+                    *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                     c=0;
-                    break;
+                    ఆపు;
                 }
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            sourceIndex=nextSourceIndex;
-            continue;
-        } else {
+            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
+            కొనసాగు;
+        } లేకపోతే {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
     }
 
@@ -3625,68 +3625,68 @@ unassigned:
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=ఆధారం;
+    p_వాదనలు->లక్ష్యం = reinterpret_cast<అక్షరం*>(లక్ష్యం);
+    p_వాదనలు->offsets=offsets;
 }
 
 /* This version of ucnv_MBCSFromUnicodeWithOffsets() is optimized for single-byte codepages. */
-static void
-ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                                  UErrorCode *pErrorCode) {
+స్థిర శూన్య
+ucnv_MBCSSingleFromUnicodeWithOffsets(UConverter_From_Unicode_వాదనలు *p_వాదనలు,
+                                  UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    స్థిరరాశి char16_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *results;
+    స్థిరరాశి uint16_t *పట్టిక;
+    స్థిరరాశి uint16_t *results;
 
     UChar32 c;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ఆధారం_సూచీ, తదుపరి_ఆధారం_సూచీ;
 
-    uint16_t value, minValue;
+    uint16_t value, min_విలువ;
     UBool hasSupplementary;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_వాదనలు->converter;
+    ఆధారం=p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం = reinterpret_cast<uint8_t*>(p_వాదనలు->లక్ష్యం);
+    లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(p_వాదనలు->లక్ష్యం_హద్దు - p_వాదనలు->లక్ష్యం);
+    offsets=p_వాదనలు->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    పట్టిక=cnv->shared_దత్తాంశం->mbcs.from_Unicode_పట్టిక;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLFrom_Unicode_బైట్లు);
+    } లేకపోతే {
+        results=(uint16_t *)cnv->shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు;
     }
 
-    if(cnv->useFallback) {
+    ఒకవేళ(cnv->useFallback) {
         /* use all roundtrip and fallback results */
-        minValue=0x800;
-    } else {
+        min_విలువ=0x800;
+    } లేకపోతే {
         /* use only roundtrips and fallbacks from private-use characters */
-        minValue=0xc00;
+        min_విలువ=0xc00;
     }
-    hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
+    hasSupplementary = static_cast<UBool>(cnv->shared_దత్తాంశం->mbcs.unicode_ముసుగు & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ఆధారం_సూచీ= c==0 ? 0 : -1;
+    తదుపరి_ఆధారం_సూచీ=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    ఒకవేళ(c!=0 && లక్ష్యం_సామర్థ్యం>0) {
+        వెళ్ళు getTrail;
     }
 
-    while(source<sourceLimit) {
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -3695,95 +3695,95 @@ ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        ఒకవేళ(లక్ష్యం_సామర్థ్యం>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
              * a matched surrogate pair for a "supplementary code point".
              */
-            c=*source++;
-            ++nextSourceIndex;
-            if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            c=*ఆధారం++;
+            ++తదుపరి_ఆధారం_సూచీ;
+            ఒకవేళ(U16_IS_SURROGATE(c)) {
+                ఒకవేళ(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                    if(source<sourceLimit) {
+                    ఒకవేళ(ఆధారం<ఆధారం_హద్దు) {
                         /* test the following code unit */
-                        char16_t trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
-                            ++nextSourceIndex;
+                        char16_t trail=*ఆధారం;
+                        ఒకవేళ(U16_IS_TRAIL(trail)) {
+                            ++ఆధారం;
+                            ++తదుపరి_ఆధారం_సూచీ;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
-                            if(!hasSupplementary) {
+                            ఒకవేళ(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 /* callback(unassigned) */
-                                goto unassigned;
+                                వెళ్ళు unassigned;
                             }
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } లేకపోతే {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                            ఆపు;
                         }
-                    } else {
+                    } లేకపోతే {
                         /* no more input */
-                        break;
+                        ఆపు;
                     }
-                } else {
+                } లేకపోతే {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                    ఆపు;
                 }
             }
 
             /* convert the Unicode code point in c into codepage bytes */
-            value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+            value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, c);
 
             /* is this code point assigned, or do we use fallbacks? */
-            if(value>=minValue) {
+            ఒకవేళ(value>=min_విలువ) {
                 /* assigned, write the output character bytes from value and length */
                 /* length==1 */
                 /* this is easy because we know that there is enough space */
-                *target++ = static_cast<uint8_t>(value);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *లక్ష్యం++ = static_cast<uint8_t>(value);
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-                --targetCapacity;
+                --లక్ష్యం_సామర్థ్యం;
 
                 /* normal end of conversion: prepare for a new character */
                 c=0;
-                sourceIndex=nextSourceIndex;
-            } else { /* unassigned */
+                ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
+            } లేకపోతే { /* unassigned */
 unassigned:
                 /* try an extension mapping */
-                pArgs->source=source;
-                c=_extFromU(cnv, cnv->sharedData,
-                            c, &source, sourceLimit,
-                            &target, target+targetCapacity,
-                            &offsets, sourceIndex,
-                            pArgs->flush,
-                            pErrorCode);
-                nextSourceIndex += static_cast<int32_t>(source - pArgs->source);
+                p_వాదనలు->ఆధారం=ఆధారం;
+                c=_extFromU(cnv, cnv->shared_దత్తాంశం,
+                            c, &ఆధారం, ఆధారం_హద్దు,
+                            &లక్ష్యం, లక్ష్యం+లక్ష్యం_సామర్థ్యం,
+                            &offsets, ఆధారం_సూచీ,
+                            p_వాదనలు->flush,
+                            p_Error_సంకేతం);
+                తదుపరి_ఆధారం_సూచీ += static_cast<int32_t>(ఆధారం - p_వాదనలు->ఆధారం);
 
-                if(U_FAILURE(*pErrorCode)) {
+                ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                     /* not mappable or buffer overflow */
-                    break;
-                } else {
+                    ఆపు;
+                } లేకపోతే {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
-                    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
+                    లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(p_వాదనలు->లక్ష్యం_హద్దు - reinterpret_cast<అక్షరం*>(లక్ష్యం));
 
                     /* normal end of conversion: prepare for a new character */
-                    sourceIndex=nextSourceIndex;
+                    ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
                 }
             }
-        } else {
+        } లేకపోతే {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
     }
 
@@ -3791,9 +3791,9 @@ unassigned:
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=ఆధారం;
+    p_వాదనలు->లక్ష్యం = reinterpret_cast<అక్షరం*>(లక్ష్యం);
+    p_వాదనలు->offsets=offsets;
 }
 
 /*
@@ -3807,241 +3807,241 @@ unassigned:
  * See SVN revision 21013 (2007-feb-06) for the last version with #if switches
  * for various MBCS and SBCS optimizations.
  */
-static void
-ucnv_MBCSSingleFromBMPWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                              UErrorCode *pErrorCode) {
+స్థిర శూన్య
+ucnv_MBCSSingleFromBMPWithOffsets(UConverter_From_Unicode_వాదనలు *p_వాదనలు,
+                              UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit, *lastSource;
-    uint8_t *target;
-    int32_t targetCapacity, length;
+    స్థిరరాశి char16_t *ఆధారం, *ఆధారం_హద్దు, *చివరి_ఆధారం;
+    uint8_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం, length;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *results;
+    స్థిరరాశి uint16_t *పట్టిక;
+    స్థిరరాశి uint16_t *results;
 
     UChar32 c;
 
-    int32_t sourceIndex;
+    int32_t ఆధారం_సూచీ;
 
     uint32_t asciiRoundtrips;
-    uint16_t value, minValue;
+    uint16_t value, min_విలువ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_వాదనలు->converter;
+    ఆధారం=p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం = reinterpret_cast<uint8_t*>(p_వాదనలు->లక్ష్యం);
+    లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(p_వాదనలు->లక్ష్యం_హద్దు - p_వాదనలు->లక్ష్యం);
+    offsets=p_వాదనలు->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    పట్టిక=cnv->shared_దత్తాంశం->mbcs.from_Unicode_పట్టిక;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLFrom_Unicode_బైట్లు);
+    } లేకపోతే {
+        results=(uint16_t *)cnv->shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_దత్తాంశం->mbcs.asciiRoundtrips;
 
-    if(cnv->useFallback) {
+    ఒకవేళ(cnv->useFallback) {
         /* use all roundtrip and fallback results */
-        minValue=0x800;
-    } else {
+        min_విలువ=0x800;
+    } లేకపోతే {
         /* use only roundtrips and fallbacks from private-use characters */
-        minValue=0xc00;
+        min_విలువ=0xc00;
     }
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    lastSource=source;
+    ఆధారం_సూచీ= c==0 ? 0 : -1;
+    చివరి_ఆధారం=ఆధారం;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length = static_cast<int32_t>(sourceLimit - source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length = static_cast<int32_t>(ఆధారం_హద్దు - ఆధారం);
+    ఒకవేళ(length<లక్ష్యం_సామర్థ్యం) {
+        లక్ష్యం_సామర్థ్యం=length;
     }
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    ఒకవేళ(c!=0 && లక్ష్యం_సామర్థ్యం>0) {
+        వెళ్ళు getTrail;
     }
 
-#if MBCS_UNROLL_SINGLE_FROM_BMP
+#ఒకవేళ MBCS_UNROLL_SINGLE_FROM_BMP
     /* unrolling makes it slower on Pentium III/Windows 2000?! */
     /* unroll the loop with the most common case */
 unrolled:
-    if(targetCapacity>=4) {
+    ఒకవేళ(లక్ష్యం_సామర్థ్యం>=4) {
         int32_t count, loops;
-        uint16_t andedValues;
+        uint16_t anded_విలువలు;
 
-        loops=count=targetCapacity>>2;
-        do {
-            c=*source++;
-            andedValues=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-            *target++=(uint8_t)value;
-            c=*source++;
-            andedValues&=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-            *target++=(uint8_t)value;
-            c=*source++;
-            andedValues&=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-            *target++=(uint8_t)value;
-            c=*source++;
-            andedValues&=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-            *target++=(uint8_t)value;
+        loops=count=లక్ష్యం_సామర్థ్యం>>2;
+        చేయి {
+            c=*ఆధారం++;
+            anded_విలువలు=value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, c);
+            *లక్ష్యం++=(uint8_t)value;
+            c=*ఆధారం++;
+            anded_విలువలు&=value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, c);
+            *లక్ష్యం++=(uint8_t)value;
+            c=*ఆధారం++;
+            anded_విలువలు&=value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, c);
+            *లక్ష్యం++=(uint8_t)value;
+            c=*ఆధారం++;
+            anded_విలువలు&=value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, c);
+            *లక్ష్యం++=(uint8_t)value;
 
             /* were all 4 entries really valid? */
-            if(andedValues<minValue) {
+            ఒకవేళ(anded_విలువలు<min_విలువ) {
                 /* no, return to the first of these 4 */
-                source-=4;
-                target-=4;
-                break;
+                ఆధారం-=4;
+                లక్ష్యం-=4;
+                ఆపు;
             }
-        } while(--count>0);
+        } అయితే(--count>0);
         count=loops-count;
-        targetCapacity-=4*count;
+        లక్ష్యం_సామర్థ్యం-=4*count;
 
-        if(offsets!=nullptr) {
-            lastSource+=4*count;
-            while(count>0) {
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
+        ఒకవేళ(offsets!=శూన్యసూచిక) {
+            చివరి_ఆధారం+=4*count;
+            అయితే(count>0) {
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
+                *offsets++=ఆధారం_సూచీ++;
                 --count;
             }
         }
 
         c=0;
     }
-#endif
+#అయితే_ముగింపు
 
-    while(targetCapacity>0) {
+    అయితే(లక్ష్యం_సామర్థ్యం>0) {
         /*
          * Get a correct Unicode code point:
          * a single char16_t for a BMP code point or
          * a matched surrogate pair for a "supplementary code point".
          */
-        c=*source++;
+        c=*ఆధారం++;
         /*
          * Do not immediately check for single surrogates:
          * Assume that they are unassigned and check for them in that case.
          * This speeds up the conversion of assigned characters.
          */
         /* convert the Unicode code point in c into codepage bytes */
-        if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
-            *target++ = static_cast<uint8_t>(c);
-            --targetCapacity;
+        ఒకవేళ(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+            *లక్ష్యం++ = static_cast<uint8_t>(c);
+            --లక్ష్యం_సామర్థ్యం;
             c=0;
-            continue;
+            కొనసాగు;
         }
-        value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+        value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, c);
         /* is this code point assigned, or do we use fallbacks? */
-        if(value>=minValue) {
+        ఒకవేళ(value>=min_విలువ) {
             /* assigned, write the output character bytes from value and length */
             /* length==1 */
             /* this is easy because we know that there is enough space */
-            *target++ = static_cast<uint8_t>(value);
-            --targetCapacity;
+            *లక్ష్యం++ = static_cast<uint8_t>(value);
+            --లక్ష్యం_సామర్థ్యం;
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            continue;
-        } else if(!U16_IS_SURROGATE(c)) {
+            కొనసాగు;
+        } లేకపోతే ఒకవేళ(!U16_IS_SURROGATE(c)) {
             /* normal, unassigned BMP character */
-        } else if(U16_IS_SURROGATE_LEAD(c)) {
+        } లేకపోతే ఒకవేళ(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-            if(source<sourceLimit) {
+            ఒకవేళ(ఆధారం<ఆధారం_హద్దు) {
                 /* test the following code unit */
-                char16_t trail=*source;
-                if(U16_IS_TRAIL(trail)) {
-                    ++source;
+                char16_t trail=*ఆధారం;
+                ఒకవేళ(U16_IS_TRAIL(trail)) {
+                    ++ఆధారం;
                     c=U16_GET_SUPPLEMENTARY(c, trail);
                     /* this codepage does not map supplementary code points */
                     /* callback(unassigned) */
-                } else {
+                } లేకపోతే {
                     /* this is an unmatched lead code unit (1st surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 /* no more input */
-                if (pArgs->flush) {
-                    *pErrorCode=U_TRUNCATED_CHAR_FOUND;
+                ఒకవేళ (p_వాదనలు->flush) {
+                    *p_Error_సంకేతం=U_TRUNCATED_CHAR_దొరికింది;
                 }
-                break;
+                ఆపు;
             }
-        } else {
+        } లేకపోతే {
             /* this is an unmatched trail code unit (2nd surrogate) */
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            break;
+            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+            ఆపు;
         }
 
         /* c does not have a mapping */
 
         /* get the number of code units for c to correctly advance sourceIndex */
-        length=U16_LENGTH(c);
+        length=U16_నిడివి(c);
 
         /* set offsets since the start or the last extension */
-        if(offsets!=nullptr) {
-            int32_t count = static_cast<int32_t>(source - lastSource);
+        ఒకవేళ(offsets!=శూన్యసూచిక) {
+            int32_t count = static_cast<int32_t>(ఆధారం - చివరి_ఆధారం);
 
             /* do not set the offset for this character */
             count-=length;
 
-            while(count>0) {
-                *offsets++=sourceIndex++;
+            అయితే(count>0) {
+                *offsets++=ఆధారం_సూచీ++;
                 --count;
             }
             /* offsets and sourceIndex are now set for the current character */
         }
 
         /* try an extension mapping */
-        lastSource=source;
-        c=_extFromU(cnv, cnv->sharedData,
-                    c, &source, sourceLimit,
-                    &target, reinterpret_cast<const uint8_t*>(pArgs->targetLimit),
-                    &offsets, sourceIndex,
-                    pArgs->flush,
-                    pErrorCode);
-        sourceIndex += length + static_cast<int32_t>(source - lastSource);
-        lastSource=source;
+        చివరి_ఆధారం=ఆధారం;
+        c=_extFromU(cnv, cnv->shared_దత్తాంశం,
+                    c, &ఆధారం, ఆధారం_హద్దు,
+                    &లక్ష్యం, reinterpret_cast<స్థిరరాశి uint8_t*>(p_వాదనలు->లక్ష్యం_హద్దు),
+                    &offsets, ఆధారం_సూచీ,
+                    p_వాదనలు->flush,
+                    p_Error_సంకేతం);
+        ఆధారం_సూచీ += length + static_cast<int32_t>(ఆధారం - చివరి_ఆధారం);
+        చివరి_ఆధారం=ఆధారం;
 
-        if(U_FAILURE(*pErrorCode)) {
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             /* not mappable or buffer overflow */
-            break;
-        } else {
+            ఆపు;
+        } లేకపోతే {
             /* a mapping was written to the target, continue */
 
             /* recalculate the targetCapacity after an extension mapping */
-            targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
-            length = static_cast<int32_t>(sourceLimit - source);
-            if(length<targetCapacity) {
-                targetCapacity=length;
+            లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(p_వాదనలు->లక్ష్యం_హద్దు - reinterpret_cast<అక్షరం*>(లక్ష్యం));
+            length = static_cast<int32_t>(ఆధారం_హద్దు - ఆధారం);
+            ఒకవేళ(length<లక్ష్యం_సామర్థ్యం) {
+                లక్ష్యం_సామర్థ్యం=length;
             }
         }
 
-#if MBCS_UNROLL_SINGLE_FROM_BMP
+#ఒకవేళ MBCS_UNROLL_SINGLE_FROM_BMP
         /* unrolling makes it slower on Pentium III/Windows 2000?! */
-        goto unrolled;
-#endif
+        వెళ్ళు unrolled;
+#అయితే_ముగింపు
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం) && ఆధారం<ఆధారం_హద్దు && లక్ష్యం>=(uint8_t *)p_వాదనలు->లక్ష్యం_హద్దు) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
     /* set offsets since the start or the last callback */
-    if(offsets!=nullptr) {
-        size_t count=source-lastSource;
-        if (count > 0 && *pErrorCode == U_TRUNCATED_CHAR_FOUND) {
+    ఒకవేళ(offsets!=శూన్యసూచిక) {
+        size_t count=ఆధారం-చివరి_ఆధారం;
+        ఒకవేళ (count > 0 && *p_Error_సంకేతం == U_TRUNCATED_CHAR_దొరికింది) {
             /*
             Caller gave us a partial supplementary character,
             which this function couldn't convert in any case.
@@ -4049,8 +4049,8 @@ getTrail:
             */
             count--;
         }
-        while(count>0) {
-            *offsets++=sourceIndex++;
+        అయితే(count>0) {
+            *offsets++=ఆధారం_సూచీ++;
             --count;
         }
     }
@@ -4059,110 +4059,110 @@ getTrail:
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=ఆధారం;
+    p_వాదనలు->లక్ష్యం = reinterpret_cast<అక్షరం*>(లక్ష్యం);
+    p_వాదనలు->offsets=offsets;
 }
 
-U_CFUNC void
-ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+U_CFUNC శూన్య
+ucnv_MBCSFromUnicodeWithOffsets(UConverter_From_Unicode_వాదనలు *p_వాదనలు,
+                            UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    స్థిరరాశి char16_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *mbcsIndex;
-    const uint8_t *p, *bytes;
+    స్థిరరాశి uint16_t *పట్టిక;
+    స్థిరరాశి uint16_t *mbcs_సూచీ;
+    స్థిరరాశి uint8_t *p, *బైట్లు;
     uint8_t outputType;
 
     UChar32 c;
 
-    int32_t prevSourceIndex, sourceIndex, nextSourceIndex;
+    int32_t prev_ఆధారం_సూచీ, ఆధారం_సూచీ, తదుపరి_ఆధారం_సూచీ;
 
-    uint32_t stage2Entry;
+    uint32_t stage2_నమోదు;
     uint32_t asciiRoundtrips;
     uint32_t value;
     /* Shift-In and Shift-Out byte sequences differ by encoding scheme. */
-    uint8_t siBytes[2] = {0, 0};
-    uint8_t soBytes[2] = {0, 0};
-    uint8_t siLength, soLength;
-    int32_t length = 0, prevLength;
-    uint8_t unicodeMask;
+    uint8_t si_బైట్లు[2] = {0, 0};
+    uint8_t so_బైట్లు[2] = {0, 0};
+    uint8_t si_నిడివి, so_నిడివి;
+    int32_t length = 0, prev_నిడివి;
+    uint8_t unicode_ముసుగు;
 
-    cnv=pArgs->converter;
+    cnv=p_వాదనలు->converter;
 
-    if(cnv->preFromUFirstCP>=0) {
+    ఒకవేళ(cnv->preFromUFirstCP>=0) {
         /*
          * pass sourceIndex=-1 because we continue from an earlier buffer
          * in the future, this may change with continuous offsets
          */
-        ucnv_extContinueMatchFromU(cnv, pArgs, -1, pErrorCode);
+        ucnv_ext_Continue_సరిపోలిక_From_U(cnv, p_వాదనలు, -1, p_Error_సంకేతం);
 
-        if(U_FAILURE(*pErrorCode) || cnv->preFromULength<0) {
-            return;
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం) || cnv->preFromULength<0) {
+            తిరిగి;
         }
     }
 
     /* use optimized function if possible */
-    outputType=cnv->sharedData->mbcs.outputType;
-    unicodeMask=cnv->sharedData->mbcs.unicodeMask;
-    if(outputType==MBCS_OUTPUT_1 && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-        if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-            ucnv_MBCSSingleFromBMPWithOffsets(pArgs, pErrorCode);
-        } else {
-            ucnv_MBCSSingleFromUnicodeWithOffsets(pArgs, pErrorCode);
+    outputType=cnv->shared_దత్తాంశం->mbcs.outputType;
+    unicode_ముసుగు=cnv->shared_దత్తాంశం->mbcs.unicode_ముసుగు;
+    ఒకవేళ(outputType==MBCS_OUTPUT_1 && !(unicode_ముసుగు&UCNV_HAS_SURROGATES)) {
+        ఒకవేళ(!(unicode_ముసుగు&UCNV_HAS_SUPPLEMENTARY)) {
+            ucnv_MBCSSingleFromBMPWithOffsets(p_వాదనలు, p_Error_సంకేతం);
+        } లేకపోతే {
+            ucnv_MBCSSingleFromUnicodeWithOffsets(p_వాదనలు, p_Error_సంకేతం);
         }
-        return;
-    } else if(outputType==MBCS_OUTPUT_2 && cnv->sharedData->mbcs.utf8Friendly) {
-        ucnv_MBCSDoubleFromUnicodeWithOffsets(pArgs, pErrorCode);
-        return;
+        తిరిగి;
+    } లేకపోతే ఒకవేళ(outputType==MBCS_OUTPUT_2 && cnv->shared_దత్తాంశం->mbcs.utf8Friendly) {
+        ucnv_MBCSDoubleFromUnicodeWithOffsets(p_వాదనలు, p_Error_సంకేతం);
+        తిరిగి;
     }
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    ఆధారం=p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం=(uint8_t *)p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_సామర్థ్యం=(int32_t)(p_వాదనలు->లక్ష్యం_హద్దు-p_వాదనలు->లక్ష్యం);
+    offsets=p_వాదనలు->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if(cnv->sharedData->mbcs.utf8Friendly) {
-        mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    } else {
-        mbcsIndex=nullptr;
+    పట్టిక=cnv->shared_దత్తాంశం->mbcs.from_Unicode_పట్టిక;
+    ఒకవేళ(cnv->shared_దత్తాంశం->mbcs.utf8Friendly) {
+        mbcs_సూచీ=cnv->shared_దత్తాంశం->mbcs.mbcs_సూచీ;
+    } లేకపోతే {
+        mbcs_సూచీ=శూన్యసూచిక;
     }
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        bytes=cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes;
-    } else {
-        bytes=cnv->sharedData->mbcs.fromUnicodeBytes;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        బైట్లు=cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLFrom_Unicode_బైట్లు;
+    } లేకపోతే {
+        బైట్లు=cnv->shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_దత్తాంశం->mbcs.asciiRoundtrips;
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
-    if(outputType==MBCS_OUTPUT_2_SISO) {
-        prevLength=cnv->fromUnicodeStatus;
-        if(prevLength==0) {
+    ఒకవేళ(outputType==MBCS_OUTPUT_2_SISO) {
+        prev_నిడివి=cnv->from_Unicode_స్థితి;
+        ఒకవేళ(prev_నిడివి==0) {
             /* set the real value */
-            prevLength=1;
+            prev_నిడివి=1;
         }
-    } else {
+    } లేకపోతే {
         /* prevent fromUnicodeStatus from being set to something non-0 */
-        prevLength=0;
+        prev_నిడివి=0;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    prevSourceIndex=-1;
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    prev_ఆధారం_సూచీ=-1;
+    ఆధారం_సూచీ= c==0 ? 0 : -1;
+    తదుపరి_ఆధారం_సూచీ=0;
 
     /* Get the SI/SO character for the converter */
-    siLength = static_cast<uint8_t>(getSISOBytes(SI, cnv->options, siBytes));
-    soLength = static_cast<uint8_t>(getSISOBytes(SO, cnv->options, soBytes));
+    si_నిడివి = static_cast<uint8_t>(getSISOBytes(SI, cnv->options, si_బైట్లు));
+    so_నిడివి = static_cast<uint8_t>(getSISOBytes(SO, cnv->options, so_బైట్లు));
 
     /* conversion loop */
     /*
@@ -4178,11 +4178,11 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
      *
      * Markus Scherer 2000-jul-19
      */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    ఒకవేళ(c!=0 && లక్ష్యం_సామర్థ్యం>0) {
+        వెళ్ళు getTrail;
     }
 
-    while(source<sourceLimit) {
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -4191,49 +4191,49 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        ఒకవేళ(లక్ష్యం_సామర్థ్యం>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
              * a matched surrogate pair for a "supplementary code point".
              */
-            c=*source++;
-            ++nextSourceIndex;
-            if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
-                    prevSourceIndex=sourceIndex;
-                    sourceIndex=nextSourceIndex;
+            c=*ఆధారం++;
+            ++తదుపరి_ఆధారం_సూచీ;
+            ఒకవేళ(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+                *లక్ష్యం++=(uint8_t)c;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
+                    prev_ఆధారం_సూచీ=ఆధారం_సూచీ;
+                    ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
                 }
-                --targetCapacity;
+                --లక్ష్యం_సామర్థ్యం;
                 c=0;
-                continue;
+                కొనసాగు;
             }
             /*
              * utf8Friendly table: Test for <=0xd7ff rather than <=MBCS_FAST_MAX
              * to avoid dealing with surrogates.
              * MBCS_FAST_MAX must be >=0xd7ff.
              */
-            if(c<=0xd7ff && mbcsIndex!=nullptr) {
-                value=mbcsIndex[c>>6];
+            ఒకవేళ(c<=0xd7ff && mbcs_సూచీ!=శూన్యసూచిక) {
+                value=mbcs_సూచీ[c>>6];
 
                 /* get the bytes and the length for the output (copied from below and adapted for utf8Friendly data) */
                 /* There are only roundtrips (!=0) and no-mapping (==0) entries. */
-                switch(outputType) {
-                case MBCS_OUTPUT_2:
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                ఎంపిక(outputType) {
+                స్థితి MBCS_OUTPUT_2:
+                    value=((స్థిరరాశి uint16_t *)బైట్లు)[value +(c&0x3f)];
+                    ఒకవేళ(value<=0xff) {
+                        ఒకవేళ(value==0) {
+                            వెళ్ళు unassigned;
+                        } లేకపోతే {
                             length=1;
                         }
-                    } else {
+                    } లేకపోతే {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_2_SISO:
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_2_SISO:
                     /* 1/2-byte stateful with Shift-In/Shift-Out */
                     /*
                      * Save the old state in the converter object
@@ -4244,125 +4244,125 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                      * However, the callback must still restore the state from the converter
                      * in case the callback function changed it for its output.
                      */
-                    cnv->fromUnicodeStatus=prevLength; /* save the old state */
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else if(prevLength<=1) {
+                    cnv->from_Unicode_స్థితి=prev_నిడివి; /* save the old state */
+                    value=((స్థిరరాశి uint16_t *)బైట్లు)[value +(c&0x3f)];
+                    ఒకవేళ(value<=0xff) {
+                        ఒకవేళ(value==0) {
+                            వెళ్ళు unassigned;
+                        } లేకపోతే ఒకవేళ(prev_నిడివి<=1) {
                             length=1;
-                        } else {
+                        } లేకపోతే {
                             /* change from double-byte mode to single-byte */
-                            if (siLength == 1) {
-                                value|=(uint32_t)siBytes[0]<<8;
+                            ఒకవేళ (si_నిడివి == 1) {
+                                value|=(uint32_t)si_బైట్లు[0]<<8;
                                 length = 2;
-                            } else if (siLength == 2) {
-                                value|=(uint32_t)siBytes[1]<<8;
-                                value|=(uint32_t)siBytes[0]<<16;
+                            } లేకపోతే ఒకవేళ (si_నిడివి == 2) {
+                                value|=(uint32_t)si_బైట్లు[1]<<8;
+                                value|=(uint32_t)si_బైట్లు[0]<<16;
                                 length = 3;
                             }
-                            prevLength=1;
+                            prev_నిడివి=1;
                         }
-                    } else {
-                        if(prevLength==2) {
+                    } లేకపోతే {
+                        ఒకవేళ(prev_నిడివి==2) {
                             length=2;
-                        } else {
+                        } లేకపోతే {
                             /* change from single-byte mode to double-byte */
-                            if (soLength == 1) {
-                                value|=(uint32_t)soBytes[0]<<16;
+                            ఒకవేళ (so_నిడివి == 1) {
+                                value|=(uint32_t)so_బైట్లు[0]<<16;
                                 length = 3;
-                            } else if (soLength == 2) {
-                                value|=(uint32_t)soBytes[1]<<16;
-                                value|=(uint32_t)soBytes[0]<<24;
+                            } లేకపోతే ఒకవేళ (so_నిడివి == 2) {
+                                value|=(uint32_t)so_బైట్లు[1]<<16;
+                                value|=(uint32_t)so_బైట్లు[0]<<24;
                                 length = 4;
                             }
-                            prevLength=2;
+                            prev_నిడివి=2;
                         }
                     }
-                    break;
-                case MBCS_OUTPUT_DBCS_ONLY:
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_DBCS_ONLY:
                     /* table with single-byte results, but only DBCS mappings used */
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
+                    value=((స్థిరరాశి uint16_t *)బైట్లు)[value +(c&0x3f)];
+                    ఒకవేళ(value<=0xff) {
                         /* no mapping or SBCS result, not taken for DBCS-only */
-                        goto unassigned;
-                    } else {
+                        వెళ్ళు unassigned;
+                    } లేకపోతే {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_3:
-                    p=bytes+(value+(c&0x3f))*3;
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_3:
+                    p=బైట్లు+(value+(c&0x3f))*3;
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    ఒకవేళ(value<=0xff) {
+                        ఒకవేళ(value==0) {
+                            వెళ్ళు unassigned;
+                        } లేకపోతే {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } లేకపోతే ఒకవేళ(value<=0xffff) {
                         length=2;
-                    } else {
+                    } లేకపోతే {
                         length=3;
                     }
-                    break;
-                case MBCS_OUTPUT_4:
-                    value=((const uint32_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_4:
+                    value=((స్థిరరాశి uint32_t *)బైట్లు)[value +(c&0x3f)];
+                    ఒకవేళ(value<=0xff) {
+                        ఒకవేళ(value==0) {
+                            వెళ్ళు unassigned;
+                        } లేకపోతే {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } లేకపోతే ఒకవేళ(value<=0xffff) {
                         length=2;
-                    } else if(value<=0xffffff) {
+                    } లేకపోతే ఒకవేళ(value<=0xffffff) {
                         length=3;
-                    } else {
+                    } లేకపోతే {
                         length=4;
                     }
-                    break;
-                case MBCS_OUTPUT_3_EUC:
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_3_EUC:
+                    value=((స్థిరరాశి uint16_t *)బైట్లు)[value +(c&0x3f)];
                     /* EUC 16-bit fixed-length representation */
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    ఒకవేళ(value<=0xff) {
+                        ఒకవేళ(value==0) {
+                            వెళ్ళు unassigned;
+                        } లేకపోతే {
                             length=1;
                         }
-                    } else if((value&0x8000)==0) {
+                    } లేకపోతే ఒకవేళ((value&0x8000)==0) {
                         value|=0x8e8000;
                         length=3;
-                    } else if((value&0x80)==0) {
+                    } లేకపోతే ఒకవేళ((value&0x80)==0) {
                         value|=0x8f0080;
                         length=3;
-                    } else {
+                    } లేకపోతే {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_4_EUC:
-                    p=bytes+(value+(c&0x3f))*3;
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_4_EUC:
+                    p=బైట్లు+(value+(c&0x3f))*3;
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                     /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    ఒకవేళ(value<=0xff) {
+                        ఒకవేళ(value==0) {
+                            వెళ్ళు unassigned;
+                        } లేకపోతే {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } లేకపోతే ఒకవేళ(value<=0xffff) {
                         length=2;
-                    } else if((value&0x800000)==0) {
+                    } లేకపోతే ఒకవేళ((value&0x800000)==0) {
                         value|=0x8e800000;
                         length=4;
-                    } else if((value&0x8000)==0) {
+                    } లేకపోతే ఒకవేళ((value&0x8000)==0) {
                         value|=0x8f008000;
                         length=4;
-                    } else {
+                    } లేకపోతే {
                         length=3;
                     }
-                    break;
-                default:
+                    ఆపు;
+                అప్రమేయ:
                     /* must not occur */
                     /*
                      * To avoid compiler warnings that value & length may be
@@ -4373,48 +4373,48 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                      */
                     value=0;
                     length=0;
-                    break;
+                    ఆపు;
                 }
                 /* output the value */
-            } else {
+            } లేకపోతే {
                 /*
                  * This also tests if the codepage maps single surrogates.
                  * If it does, then surrogates are not paired but mapped separately.
                  * Note that in this case unmatched surrogates are not detected.
                  */
-                if(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-                    if(U16_IS_SURROGATE_LEAD(c)) {
+                ఒకవేళ(U16_IS_SURROGATE(c) && !(unicode_ముసుగు&UCNV_HAS_SURROGATES)) {
+                    ఒకవేళ(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                        if(source<sourceLimit) {
+                        ఒకవేళ(ఆధారం<ఆధారం_హద్దు) {
                             /* test the following code unit */
-                            char16_t trail=*source;
-                            if(U16_IS_TRAIL(trail)) {
-                                ++source;
-                                ++nextSourceIndex;
+                            char16_t trail=*ఆధారం;
+                            ఒకవేళ(U16_IS_TRAIL(trail)) {
+                                ++ఆధారం;
+                                ++తదుపరి_ఆధారం_సూచీ;
                                 c=U16_GET_SUPPLEMENTARY(c, trail);
-                                if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+                                ఒకవేళ(!(unicode_ముసుగు&UCNV_HAS_SUPPLEMENTARY)) {
                                     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-                                    cnv->fromUnicodeStatus=prevLength; /* save the old state */
+                                    cnv->from_Unicode_స్థితి=prev_నిడివి; /* save the old state */
                                     /* callback(unassigned) */
-                                    goto unassigned;
+                                    వెళ్ళు unassigned;
                                 }
                                 /* convert this supplementary code point */
                                 /* exit this condition tree */
-                            } else {
+                            } లేకపోతే {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
-                                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                                break;
+                                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                                ఆపు;
                             }
-                        } else {
+                        } లేకపోతే {
                             /* no more input */
-                            break;
+                            ఆపు;
                         }
-                    } else {
+                    } లేకపోతే {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
                     }
                 }
 
@@ -4452,19 +4452,19 @@ getTrail:
                  * The data structure does not support zero byte output as a fallback,
                  * and also does not allow output of leading zeros.
                  */
-                stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
+                stage2_నమోదు=MBCS_STAGE_2_FROM_U(పట్టిక, c);
 
                 /* get the bytes and the length for the output */
-                switch(outputType) {
-                case MBCS_OUTPUT_2:
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                ఎంపిక(outputType) {
+                స్థితి MBCS_OUTPUT_2:
+                    value=MBCS_విలువ_2_FROM_STAGE_2(బైట్లు, stage2_నమోదు, c);
+                    ఒకవేళ(value<=0xff) {
                         length=1;
-                    } else {
+                    } లేకపోతే {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_2_SISO:
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_2_SISO:
                     /* 1/2-byte stateful with Shift-In/Shift-Out */
                     /*
                      * Save the old state in the converter object
@@ -4475,111 +4475,111 @@ getTrail:
                      * However, the callback must still restore the state from the converter
                      * in case the callback function changed it for its output.
                      */
-                    cnv->fromUnicodeStatus=prevLength; /* save the old state */
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
-                        if(value==0 && MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)==0) {
+                    cnv->from_Unicode_స్థితి=prev_నిడివి; /* save the old state */
+                    value=MBCS_విలువ_2_FROM_STAGE_2(బైట్లు, stage2_నమోదు, c);
+                    ఒకవేళ(value<=0xff) {
+                        ఒకవేళ(value==0 && MBCS_FROM_U_IS_ROUNDTRIP(stage2_నమోదు, c)==0) {
                             /* no mapping, leave value==0 */
                             length=0;
-                        } else if(prevLength<=1) {
+                        } లేకపోతే ఒకవేళ(prev_నిడివి<=1) {
                             length=1;
-                        } else {
+                        } లేకపోతే {
                             /* change from double-byte mode to single-byte */
-                            if (siLength == 1) {
-                                value|=(uint32_t)siBytes[0]<<8;
+                            ఒకవేళ (si_నిడివి == 1) {
+                                value|=(uint32_t)si_బైట్లు[0]<<8;
                                 length = 2;
-                            } else if (siLength == 2) {
-                                value|=(uint32_t)siBytes[1]<<8;
-                                value|=(uint32_t)siBytes[0]<<16;
+                            } లేకపోతే ఒకవేళ (si_నిడివి == 2) {
+                                value|=(uint32_t)si_బైట్లు[1]<<8;
+                                value|=(uint32_t)si_బైట్లు[0]<<16;
                                 length = 3;
                             }
-                            prevLength=1;
+                            prev_నిడివి=1;
                         }
-                    } else {
-                        if(prevLength==2) {
+                    } లేకపోతే {
+                        ఒకవేళ(prev_నిడివి==2) {
                             length=2;
-                        } else {
+                        } లేకపోతే {
                             /* change from single-byte mode to double-byte */
-                            if (soLength == 1) {
-                                value|=(uint32_t)soBytes[0]<<16;
+                            ఒకవేళ (so_నిడివి == 1) {
+                                value|=(uint32_t)so_బైట్లు[0]<<16;
                                 length = 3;
-                            } else if (soLength == 2) {
-                                value|=(uint32_t)soBytes[1]<<16;
-                                value|=(uint32_t)soBytes[0]<<24;
+                            } లేకపోతే ఒకవేళ (so_నిడివి == 2) {
+                                value|=(uint32_t)so_బైట్లు[1]<<16;
+                                value|=(uint32_t)so_బైట్లు[0]<<24;
                                 length = 4;
                             }
-                            prevLength=2;
+                            prev_నిడివి=2;
                         }
                     }
-                    break;
-                case MBCS_OUTPUT_DBCS_ONLY:
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_DBCS_ONLY:
                     /* table with single-byte results, but only DBCS mappings used */
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                    value=MBCS_విలువ_2_FROM_STAGE_2(బైట్లు, stage2_నమోదు, c);
+                    ఒకవేళ(value<=0xff) {
                         /* no mapping or SBCS result, not taken for DBCS-only */
-                        value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
+                        value=stage2_నమోదు=0; /* stage2Entry=0 to reset roundtrip flags */
                         length=0;
-                    } else {
+                    } లేకపోతే {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_3:
-                    p=MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c);
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_3:
+                    p=MBCS_సూచిక_3_FROM_STAGE_2(బైట్లు, stage2_నమోదు, c);
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                    if(value<=0xff) {
+                    ఒకవేళ(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } లేకపోతే ఒకవేళ(value<=0xffff) {
                         length=2;
-                    } else {
+                    } లేకపోతే {
                         length=3;
                     }
-                    break;
-                case MBCS_OUTPUT_4:
-                    value=MBCS_VALUE_4_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_4:
+                    value=MBCS_విలువ_4_FROM_STAGE_2(బైట్లు, stage2_నమోదు, c);
+                    ఒకవేళ(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } లేకపోతే ఒకవేళ(value<=0xffff) {
                         length=2;
-                    } else if(value<=0xffffff) {
+                    } లేకపోతే ఒకవేళ(value<=0xffffff) {
                         length=3;
-                    } else {
+                    } లేకపోతే {
                         length=4;
                     }
-                    break;
-                case MBCS_OUTPUT_3_EUC:
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_3_EUC:
+                    value=MBCS_విలువ_2_FROM_STAGE_2(బైట్లు, stage2_నమోదు, c);
                     /* EUC 16-bit fixed-length representation */
-                    if(value<=0xff) {
+                    ఒకవేళ(value<=0xff) {
                         length=1;
-                    } else if((value&0x8000)==0) {
+                    } లేకపోతే ఒకవేళ((value&0x8000)==0) {
                         value|=0x8e8000;
                         length=3;
-                    } else if((value&0x80)==0) {
+                    } లేకపోతే ఒకవేళ((value&0x80)==0) {
                         value|=0x8f0080;
                         length=3;
-                    } else {
+                    } లేకపోతే {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_4_EUC:
-                    p=MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c);
+                    ఆపు;
+                స్థితి MBCS_OUTPUT_4_EUC:
+                    p=MBCS_సూచిక_3_FROM_STAGE_2(బైట్లు, stage2_నమోదు, c);
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                     /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                    if(value<=0xff) {
+                    ఒకవేళ(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } లేకపోతే ఒకవేళ(value<=0xffff) {
                         length=2;
-                    } else if((value&0x800000)==0) {
+                    } లేకపోతే ఒకవేళ((value&0x800000)==0) {
                         value|=0x8e800000;
                         length=4;
-                    } else if((value&0x8000)==0) {
+                    } లేకపోతే ఒకవేళ((value&0x8000)==0) {
                         value|=0x8f008000;
                         length=4;
-                    } else {
+                    } లేకపోతే {
                         length=3;
                     }
-                    break;
-                default:
+                    ఆపు;
+                అప్రమేయ:
                     /* must not occur */
                     /*
                      * To avoid compiler warnings that value & length may be
@@ -4588,13 +4588,13 @@ getTrail:
                      * Not having a default branch also causes warnings with
                      * some compilers.
                      */
-                    value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
+                    value=stage2_నమోదు=0; /* stage2Entry=0 to reset roundtrip flags */
                     length=0;
-                    break;
+                    ఆపు;
                 }
 
                 /* is this code point assigned, or do we use fallbacks? */
-                if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)!=0 ||
+                ఒకవేళ(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2_నమోదు, c)!=0 ||
                      (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                 ) {
                     /*
@@ -4605,84 +4605,84 @@ getTrail:
 
 unassigned:
                     /* try an extension mapping */
-                    pArgs->source=source;
-                    c=_extFromU(cnv, cnv->sharedData,
-                                c, &source, sourceLimit,
-                                &target, target+targetCapacity,
-                                &offsets, sourceIndex,
-                                pArgs->flush,
-                                pErrorCode);
-                    nextSourceIndex+=(int32_t)(source-pArgs->source);
-                    prevLength=cnv->fromUnicodeStatus; /* restore SISO state */
+                    p_వాదనలు->ఆధారం=ఆధారం;
+                    c=_extFromU(cnv, cnv->shared_దత్తాంశం,
+                                c, &ఆధారం, ఆధారం_హద్దు,
+                                &లక్ష్యం, లక్ష్యం+లక్ష్యం_సామర్థ్యం,
+                                &offsets, ఆధారం_సూచీ,
+                                p_వాదనలు->flush,
+                                p_Error_సంకేతం);
+                    తదుపరి_ఆధారం_సూచీ+=(int32_t)(ఆధారం-p_వాదనలు->ఆధారం);
+                    prev_నిడివి=cnv->from_Unicode_స్థితి; /* restore SISO state */
 
-                    if(U_FAILURE(*pErrorCode)) {
+                    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                         /* not mappable or buffer overflow */
-                        break;
-                    } else {
+                        ఆపు;
+                    } లేకపోతే {
                         /* a mapping was written to the target, continue */
 
                         /* recalculate the targetCapacity after an extension mapping */
-                        targetCapacity=(int32_t)(pArgs->targetLimit-(char *)target);
+                        లక్ష్యం_సామర్థ్యం=(int32_t)(p_వాదనలు->లక్ష్యం_హద్దు-(అక్షరం *)లక్ష్యం);
 
                         /* normal end of conversion: prepare for a new character */
-                        if(offsets!=nullptr) {
-                            prevSourceIndex=sourceIndex;
-                            sourceIndex=nextSourceIndex;
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            prev_ఆధారం_సూచీ=ఆధారం_సూచీ;
+                            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
                         }
-                        continue;
+                        కొనసాగు;
                     }
                 }
             }
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(length<=targetCapacity) {
-                if(offsets==nullptr) {
-                    switch(length) {
+            ఒకవేళ(length<=లక్ష్యం_సామర్థ్యం) {
+                ఒకవేళ(offsets==శూన్యసూచిక) {
+                    ఎంపిక(length) {
                         /* each branch falls through to the next one */
-                    case 4:
-                        *target++=(uint8_t)(value>>24);
+                    స్థితి 4:
+                        *లక్ష్యం++=(uint8_t)(value>>24);
                         U_FALLTHROUGH;
-                    case 3:
-                        *target++=(uint8_t)(value>>16);
+                    స్థితి 3:
+                        *లక్ష్యం++=(uint8_t)(value>>16);
                         U_FALLTHROUGH;
-                    case 2:
-                        *target++=(uint8_t)(value>>8);
+                    స్థితి 2:
+                        *లక్ష్యం++=(uint8_t)(value>>8);
                         U_FALLTHROUGH;
-                    case 1:
-                        *target++=(uint8_t)value;
+                    స్థితి 1:
+                        *లక్ష్యం++=(uint8_t)value;
                         U_FALLTHROUGH;
-                    default:
+                    అప్రమేయ:
                         /* will never occur */
-                        break;
+                        ఆపు;
                     }
-                } else {
-                    switch(length) {
+                } లేకపోతే {
+                    ఎంపిక(length) {
                         /* each branch falls through to the next one */
-                    case 4:
-                        *target++=(uint8_t)(value>>24);
-                        *offsets++=sourceIndex;
+                    స్థితి 4:
+                        *లక్ష్యం++=(uint8_t)(value>>24);
+                        *offsets++=ఆధారం_సూచీ;
                         U_FALLTHROUGH;
-                    case 3:
-                        *target++=(uint8_t)(value>>16);
-                        *offsets++=sourceIndex;
+                    స్థితి 3:
+                        *లక్ష్యం++=(uint8_t)(value>>16);
+                        *offsets++=ఆధారం_సూచీ;
                         U_FALLTHROUGH;
-                    case 2:
-                        *target++=(uint8_t)(value>>8);
-                        *offsets++=sourceIndex;
+                    స్థితి 2:
+                        *లక్ష్యం++=(uint8_t)(value>>8);
+                        *offsets++=ఆధారం_సూచీ;
                         U_FALLTHROUGH;
-                    case 1:
-                        *target++=(uint8_t)value;
-                        *offsets++=sourceIndex;
+                    స్థితి 1:
+                        *లక్ష్యం++=(uint8_t)value;
+                        *offsets++=ఆధారం_సూచీ;
                         U_FALLTHROUGH;
-                    default:
+                    అప్రమేయ:
                         /* will never occur */
-                        break;
+                        ఆపు;
                     }
                 }
-                targetCapacity-=length;
-            } else {
-                uint8_t *charErrorBuffer;
+                లక్ష్యం_సామర్థ్యం-=length;
+            } లేకపోతే {
+                uint8_t *char_Error_బఫరు;
 
                 /*
                  * We actually do this backwards here:
@@ -4691,70 +4691,70 @@ unassigned:
                  * regular target.
                  */
                 /* we know that 1<=targetCapacity<length<=4 */
-                length-=targetCapacity;
-                charErrorBuffer=(uint8_t *)cnv->charErrorBuffer;
-                switch(length) {
+                length-=లక్ష్యం_సామర్థ్యం;
+                char_Error_బఫరు=(uint8_t *)cnv->char_Error_బఫరు;
+                ఎంపిక(length) {
                     /* each branch falls through to the next one */
-                case 3:
-                    *charErrorBuffer++=(uint8_t)(value>>16);
+                స్థితి 3:
+                    *char_Error_బఫరు++=(uint8_t)(value>>16);
                     U_FALLTHROUGH;
-                case 2:
-                    *charErrorBuffer++=(uint8_t)(value>>8);
+                స్థితి 2:
+                    *char_Error_బఫరు++=(uint8_t)(value>>8);
                     U_FALLTHROUGH;
-                case 1:
-                    *charErrorBuffer=(uint8_t)value;
+                స్థితి 1:
+                    *char_Error_బఫరు=(uint8_t)value;
                     U_FALLTHROUGH;
-                default:
+                అప్రమేయ:
                     /* will never occur */
-                    break;
+                    ఆపు;
                 }
-                cnv->charErrorBufferLength=(int8_t)length;
+                cnv->char_Error_బఫరు_నిడివి=(int8_t)length;
 
                 /* now output what fits into the regular target */
                 value>>=8*length; /* length was reduced by targetCapacity */
-                switch(targetCapacity) {
+                ఎంపిక(లక్ష్యం_సామర్థ్యం) {
                     /* each branch falls through to the next one */
-                case 3:
-                    *target++=(uint8_t)(value>>16);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                స్థితి 3:
+                    *లక్ష్యం++=(uint8_t)(value>>16);
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ;
                     }
                     U_FALLTHROUGH;
-                case 2:
-                    *target++=(uint8_t)(value>>8);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                స్థితి 2:
+                    *లక్ష్యం++=(uint8_t)(value>>8);
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ;
                     }
                     U_FALLTHROUGH;
-                case 1:
-                    *target++=(uint8_t)value;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                స్థితి 1:
+                    *లక్ష్యం++=(uint8_t)value;
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ;
                     }
                     U_FALLTHROUGH;
-                default:
+                అప్రమేయ:
                     /* will never occur */
-                    break;
+                    ఆపు;
                 }
 
                 /* target overflow */
-                targetCapacity=0;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                లక్ష్యం_సామర్థ్యం=0;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                 c=0;
-                break;
+                ఆపు;
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            if(offsets!=nullptr) {
-                prevSourceIndex=sourceIndex;
-                sourceIndex=nextSourceIndex;
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                prev_ఆధారం_సూచీ=ఆధారం_సూచీ;
+                ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
             }
-            continue;
-        } else {
+            కొనసాగు;
+        } లేకపోతే {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
     }
 
@@ -4768,46 +4768,46 @@ unassigned:
      *   EBCDIC_STATEFUL in DBCS mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*pErrorCode) &&
-        outputType==MBCS_OUTPUT_2_SISO && prevLength==2 &&
-        pArgs->flush && source>=sourceLimit && c==0
+    ఒకవేళ( U_SUCCESS(*p_Error_సంకేతం) &&
+        outputType==MBCS_OUTPUT_2_SISO && prev_నిడివి==2 &&
+        p_వాదనలు->flush && ఆధారం>=ఆధారం_హద్దు && c==0
     ) {
         /* EBCDIC_STATEFUL ending with DBCS: emit an SI to return the output stream to SBCS */
-        if(targetCapacity>0) {
-            *target++ = siBytes[0];
-            if (siLength == 2) {
-                if (targetCapacity<2) {
-                    cnv->charErrorBuffer[0] = siBytes[1];
-                    cnv->charErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                } else {
-                    *target++ = siBytes[1];
+        ఒకవేళ(లక్ష్యం_సామర్థ్యం>0) {
+            *లక్ష్యం++ = si_బైట్లు[0];
+            ఒకవేళ (si_నిడివి == 2) {
+                ఒకవేళ (లక్ష్యం_సామర్థ్యం<2) {
+                    cnv->char_Error_బఫరు[0] = si_బైట్లు[1];
+                    cnv->char_Error_బఫరు_నిడివి=1;
+                    *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                } లేకపోతే {
+                    *లక్ష్యం++ = si_బైట్లు[1];
                 }
             }
-            if(offsets!=nullptr) {
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
                 /* set the last source character's index (sourceIndex points at sourceLimit now) */
-                *offsets++=prevSourceIndex;
+                *offsets++=prev_ఆధారం_సూచీ;
             }
-        } else {
+        } లేకపోతే {
             /* target is full */
-            cnv->charErrorBuffer[0] = siBytes[0];
-            if (siLength == 2) {
-                cnv->charErrorBuffer[1] = siBytes[1];
+            cnv->char_Error_బఫరు[0] = si_బైట్లు[0];
+            ఒకవేళ (si_నిడివి == 2) {
+                cnv->char_Error_బఫరు[1] = si_బైట్లు[1];
             }
-            cnv->charErrorBufferLength=siLength;
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            cnv->char_Error_బఫరు_నిడివి=si_నిడివి;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
         }
-        prevLength=1; /* we switched into SBCS */
+        prev_నిడివి=1; /* we switched into SBCS */
     }
 
     /* set the converter state back into UConverter */
     cnv->fromUChar32=c;
-    cnv->fromUnicodeStatus=prevLength;
+    cnv->from_Unicode_స్థితి=prev_నిడివి;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=ఆధారం;
+    p_వాదనలు->లక్ష్యం=(అక్షరం *)లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
 
 /*
@@ -4828,121 +4828,121 @@ unassigned:
  * Currently, the function assumes but does not check that 0<=c<=0x10ffff.
  */
 U_CFUNC int32_t
-ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
-                 UChar32 c, uint32_t *pValue,
+ucnv_MBCSFromUChar32(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
+                 UChar32 c, uint32_t *p_విలువ,
                  UBool useFallback) {
-    const int32_t *cx;
-    const uint16_t *table;
-#if 0
+    స్థిరరాశి int32_t *cx;
+    స్థిరరాశి uint16_t *పట్టిక;
+#ఒకవేళ 0
 /* #if 0 because this is not currently used in ICU - reduce code, increase code coverage */
-    const uint8_t *p;
-#endif
-    uint32_t stage2Entry;
+    స్థిరరాశి uint8_t *p;
+#అయితే_ముగింపు
+    uint32_t stage2_నమోదు;
     uint32_t value;
     int32_t length;
 
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c<=0xffff || (sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        table=sharedData->mbcs.fromUnicodeTable;
+    ఒకవేళ(c<=0xffff || (shared_దత్తాంశం->mbcs.unicode_ముసుగు&UCNV_HAS_SUPPLEMENTARY)) {
+        పట్టిక=shared_దత్తాంశం->mbcs.from_Unicode_పట్టిక;
 
         /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
-        if(sharedData->mbcs.outputType==MBCS_OUTPUT_1) {
-            value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
+        ఒకవేళ(shared_దత్తాంశం->mbcs.outputType==MBCS_OUTPUT_1) {
+            value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, (uint16_t *)shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు, c);
             /* is this code point assigned, or do we use fallbacks? */
-            if(useFallback ? value>=0x800 : value>=0xc00) {
-                *pValue=value&0xff;
-                return 1;
+            ఒకవేళ(useFallback ? value>=0x800 : value>=0xc00) {
+                *p_విలువ=value&0xff;
+                తిరిగి 1;
             }
-        } else /* outputType!=MBCS_OUTPUT_1 */ {
-            stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
+        } లేకపోతే /* outputType!=MBCS_OUTPUT_1 */ {
+            stage2_నమోదు=MBCS_STAGE_2_FROM_U(పట్టిక, c);
 
             /* get the bytes and the length for the output */
-            switch(sharedData->mbcs.outputType) {
-            case MBCS_OUTPUT_2:
-                value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+            ఎంపిక(shared_దత్తాంశం->mbcs.outputType) {
+            స్థితి MBCS_OUTPUT_2:
+                value=MBCS_విలువ_2_FROM_STAGE_2(shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు, stage2_నమోదు, c);
+                ఒకవేళ(value<=0xff) {
                     length=1;
-                } else {
+                } లేకపోతే {
                     length=2;
                 }
-                break;
-#if 0
+                ఆపు;
+#ఒకవేళ 0
 /* #if 0 because this is not currently used in ICU - reduce code, increase code coverage */
-            case MBCS_OUTPUT_DBCS_ONLY:
+            స్థితి MBCS_OUTPUT_DBCS_ONLY:
                 /* table with single-byte results, but only DBCS mappings used */
-                value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+                value=MBCS_విలువ_2_FROM_STAGE_2(shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు, stage2_నమోదు, c);
+                ఒకవేళ(value<=0xff) {
                     /* no mapping or SBCS result, not taken for DBCS-only */
-                    value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
+                    value=stage2_నమోదు=0; /* stage2Entry=0 to reset roundtrip flags */
                     length=0;
-                } else {
+                } లేకపోతే {
                     length=2;
                 }
-                break;
-            case MBCS_OUTPUT_3:
-                p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+                ఆపు;
+            స్థితి MBCS_OUTPUT_3:
+                p=MBCS_సూచిక_3_FROM_STAGE_2(shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు, stage2_నమోదు, c);
                 value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                if(value<=0xff) {
+                ఒకవేళ(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } లేకపోతే ఒకవేళ(value<=0xffff) {
                     length=2;
-                } else {
+                } లేకపోతే {
                     length=3;
                 }
-                break;
-            case MBCS_OUTPUT_4:
-                value=MBCS_VALUE_4_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+                ఆపు;
+            స్థితి MBCS_OUTPUT_4:
+                value=MBCS_విలువ_4_FROM_STAGE_2(shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు, stage2_నమోదు, c);
+                ఒకవేళ(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } లేకపోతే ఒకవేళ(value<=0xffff) {
                     length=2;
-                } else if(value<=0xffffff) {
+                } లేకపోతే ఒకవేళ(value<=0xffffff) {
                     length=3;
-                } else {
+                } లేకపోతే {
                     length=4;
                 }
-                break;
-            case MBCS_OUTPUT_3_EUC:
-                value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+                ఆపు;
+            స్థితి MBCS_OUTPUT_3_EUC:
+                value=MBCS_విలువ_2_FROM_STAGE_2(shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు, stage2_నమోదు, c);
                 /* EUC 16-bit fixed-length representation */
-                if(value<=0xff) {
+                ఒకవేళ(value<=0xff) {
                     length=1;
-                } else if((value&0x8000)==0) {
+                } లేకపోతే ఒకవేళ((value&0x8000)==0) {
                     value|=0x8e8000;
                     length=3;
-                } else if((value&0x80)==0) {
+                } లేకపోతే ఒకవేళ((value&0x80)==0) {
                     value|=0x8f0080;
                     length=3;
-                } else {
+                } లేకపోతే {
                     length=2;
                 }
-                break;
-            case MBCS_OUTPUT_4_EUC:
-                p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+                ఆపు;
+            స్థితి MBCS_OUTPUT_4_EUC:
+                p=MBCS_సూచిక_3_FROM_STAGE_2(shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు, stage2_నమోదు, c);
                 value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                 /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                if(value<=0xff) {
+                ఒకవేళ(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } లేకపోతే ఒకవేళ(value<=0xffff) {
                     length=2;
-                } else if((value&0x800000)==0) {
+                } లేకపోతే ఒకవేళ((value&0x800000)==0) {
                     value|=0x8e800000;
                     length=4;
-                } else if((value&0x8000)==0) {
+                } లేకపోతే ఒకవేళ((value&0x8000)==0) {
                     value|=0x8f008000;
                     length=4;
-                } else {
+                } లేకపోతే {
                     length=3;
                 }
-                break;
-#endif
-            default:
+                ఆపు;
+#అయితే_ముగింపు
+            అప్రమేయ:
                 /* must not occur */
-                return -1;
+                తిరిగి -1;
             }
 
             /* is this code point assigned, or do we use fallbacks? */
-            if( MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+            ఒకవేళ( MBCS_FROM_U_IS_ROUNDTRIP(stage2_నమోదు, c) ||
                 (FROM_U_USE_FALLBACK(useFallback, c) && value!=0)
             ) {
                 /*
@@ -4951,24 +4951,24 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
                  * to be a zero byte.
                  */
                 /* assigned */
-                *pValue=value;
-                return length;
+                *p_విలువ=value;
+                తిరిగి length;
             }
         }
     }
 
-    cx=sharedData->mbcs.extIndexes;
-    if(cx!=nullptr) {
-        length=ucnv_extSimpleMatchFromU(cx, c, pValue, useFallback);
-        return length>=0 ? length : -length;  /* return abs(length); */
+    cx=shared_దత్తాంశం->mbcs.extIndexes;
+    ఒకవేళ(cx!=శూన్యసూచిక) {
+        length=ucnv_ext_Simple_సరిపోలిక_From_U(cx, c, p_విలువ, useFallback);
+        తిరిగి length>=0 ? length : -length;  /* return abs(length); */
     }
 
     /* unassigned */
-    return 0;
+    తిరిగి 0;
 }
 
 
-#if 0
+#ఒకవేళ 0
 /*
  * This function has been moved to ucnv2022.c for inlining.
  * This implementation is here only for documentation purposes
@@ -4982,91 +4982,91 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
  * It returns the codepage byte for the code point, or -1 if it is unassigned.
  */
 U_CFUNC int32_t
-ucnv_MBCSSingleFromUChar32(UConverterSharedData *sharedData,
+ucnv_MBCSSingleFromUChar32(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం,
                        UChar32 c,
                        UBool useFallback) {
-    const uint16_t *table;
+    స్థిరరాశి uint16_t *పట్టిక;
     int32_t value;
 
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c>=0x10000 && !(sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        return -1;
+    ఒకవేళ(c>=0x10000 && !(shared_దత్తాంశం->mbcs.unicode_ముసుగు&UCNV_HAS_SUPPLEMENTARY)) {
+        తిరిగి -1;
     }
 
     /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
-    table=sharedData->mbcs.fromUnicodeTable;
+    పట్టిక=shared_దత్తాంశం->mbcs.from_Unicode_పట్టిక;
 
     /* get the byte for the output */
-    value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
+    value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, (uint16_t *)shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు, c);
     /* is this code point assigned, or do we use fallbacks? */
-    if(useFallback ? value>=0x800 : value>=0xc00) {
-        return value&0xff;
-    } else {
-        return -1;
+    ఒకవేళ(useFallback ? value>=0x800 : value>=0xc00) {
+        తిరిగి value&0xff;
+    } లేకపోతే {
+        తిరిగి -1;
     }
 }
-#endif
+#అయితే_ముగింపు
 
 /* MBCS-from-UTF-8 conversion functions ------------------------------------- */
 
 /* offsets for n-byte UTF-8 sequences that were calculated with ((lead<<6)+trail)<<6+trail... */
-static const UChar32
+స్థిర స్థిరరాశి UChar32
 utf8_offsets[5]={ 0, 0, 0x3080, 0xE2080, 0x3C82080 };
 
-static void U_CALLCONV
-ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+ucnv_SBCSFromUTF8(UConverter_From_Unicode_వాదనలు *pFromUArgs,
+                  UConverter_గమ్యం_Unicode_వాదనలు *p_గమ్యం_UArgs,
+                  UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *utf8, *cnv;
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం;
 
-    const uint16_t *table, *sbcsIndex;
-    const uint16_t *results;
+    స్థిరరాశి uint16_t *పట్టిక, *sbcs_సూచీ;
+    స్థిరరాశి uint16_t *results;
 
-    int8_t oldToULength, toULength, toULimit;
+    int8_t old_గమ్యం_ULength, గమ్యం_ULength, గమ్యం_ULimit;
 
     UChar32 c;
     uint8_t b, t1, t2;
 
     uint32_t asciiRoundtrips;
-    uint16_t value, minValue = 0;
+    uint16_t value, min_విలువ = 0;
     UBool hasSupplementary;
 
     /* set up the local pointers */
-    utf8=pToUArgs->converter;
+    utf8=p_గమ్యం_UArgs->converter;
     cnv=pFromUArgs->converter;
-    source=(uint8_t *)pToUArgs->source;
-    sourceLimit=(uint8_t *)pToUArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pFromUArgs->target);
-    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - pFromUArgs->target);
+    ఆధారం=(uint8_t *)p_గమ్యం_UArgs->ఆధారం;
+    ఆధారం_హద్దు=(uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు;
+    లక్ష్యం = reinterpret_cast<uint8_t*>(pFromUArgs->లక్ష్యం);
+    లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(pFromUArgs->లక్ష్యం_హద్దు - pFromUArgs->లక్ష్యం);
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    sbcsIndex=cnv->sharedData->mbcs.sbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    పట్టిక=cnv->shared_దత్తాంశం->mbcs.from_Unicode_పట్టిక;
+    sbcs_సూచీ=cnv->shared_దత్తాంశం->mbcs.sbcs_సూచీ;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLFrom_Unicode_బైట్లు);
+    } లేకపోతే {
+        results=(uint16_t *)cnv->shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_దత్తాంశం->mbcs.asciiRoundtrips;
 
-    if(cnv->useFallback) {
+    ఒకవేళ(cnv->useFallback) {
         /* use all roundtrip and fallback results */
-        minValue=0x800;
-    } else {
+        min_విలువ=0x800;
+    } లేకపోతే {
         /* use only roundtrips and fallbacks from private-use characters */
-        minValue=0xc00;
+        min_విలువ=0xc00;
     }
-    hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
+    hasSupplementary = static_cast<UBool>(cnv->shared_దత్తాంశం->mbcs.unicode_ముసుగు & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
-        toULength=oldToULength=utf8->toULength;
-        toULimit = static_cast<int8_t>(utf8->mode);
-        c = static_cast<UChar32>(utf8->toUnicodeStatus);
-    } else {
-        toULength=oldToULength=toULimit=0;
+    ఒకవేళ(utf8->గమ్యం_ULength > 0) {
+        గమ్యం_ULength=old_గమ్యం_ULength=utf8->గమ్యం_ULength;
+        గమ్యం_ULimit = static_cast<int8_t>(utf8->బహుళకం);
+        c = static_cast<UChar32>(utf8->గమ్యం_Unicode_స్థితి);
+    } లేకపోతే {
+        గమ్యం_ULength=old_గమ్యం_ULength=గమ్యం_ULimit=0;
         c = 0;
     }
 
@@ -5077,28 +5077,28 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     {
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
-        int32_t length = static_cast<int32_t>(sourceLimit - source) - (toULimit - oldToULength);
-        if(length>0) {
-            uint8_t b1=*(sourceLimit-1);
-            if(U8_IS_SINGLE(b1)) {
+        int32_t length = static_cast<int32_t>(ఆధారం_హద్దు - ఆధారం) - (గమ్యం_ULimit - old_గమ్యం_ULength);
+        ఒకవేళ(length>0) {
+            uint8_t b1=*(ఆధారం_హద్దు-1);
+            ఒకవేళ(U8_IS_SINGLE(b1)) {
                 // common ASCII character
-            } else if(U8_IS_TRAIL(b1) && length>=2) {
-                uint8_t b2=*(sourceLimit-2);
-                if(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+            } లేకపోతే ఒకవేళ(U8_IS_TRAIL(b1) && length>=2) {
+                uint8_t b2=*(ఆధారం_హద్దు-2);
+                ఒకవేళ(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                     // truncated 3-byte sequence
-                    sourceLimit-=2;
+                    ఆధారం_హద్దు-=2;
                 }
-            } else if(0xc2<=b1 && b1<0xf0) {
+            } లేకపోతే ఒకవేళ(0xc2<=b1 && b1<0xf0) {
                 // truncated 2- or 3-byte sequence
-                --sourceLimit;
+                --ఆధారం_హద్దు;
             }
         }
     }
 
-    if(c!=0 && targetCapacity>0) {
-        utf8->toUnicodeStatus=0;
-        utf8->toULength=0;
-        goto moreBytes;
+    ఒకవేళ(c!=0 && లక్ష్యం_సామర్థ్యం>0) {
+        utf8->గమ్యం_Unicode_స్థితి=0;
+        utf8->గమ్యం_ULength=0;
+        వెళ్ళు మరిన్ని_బైట్లు;
         /*
          * Note: We could avoid the goto by duplicating some of the moreBytes
          * code, but only up to the point of collecting a complete UTF-8
@@ -5121,68 +5121,68 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
-            b=*source++;
-            if(U8_IS_SINGLE(b)) {
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
+        ఒకవేళ(లక్ష్యం_సామర్థ్యం>0) {
+            b=*ఆధారం++;
+            ఒకవేళ(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                if(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
-                    *target++ = b;
-                    --targetCapacity;
-                    continue;
-                } else {
+                ఒకవేళ(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
+                    *లక్ష్యం++ = b;
+                    --లక్ష్యం_సామర్థ్యం;
+                    కొనసాగు;
+                } లేకపోతే {
                     c=b;
-                    value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, 0, c);
+                    value=SBCS_ఫలితం_FROM_UTF8(sbcs_సూచీ, results, 0, c);
                 }
-            } else {
-                if(b<0xe0) {
-                    if( /* handle U+0080..U+07FF inline */
+            } లేకపోతే {
+                ఒకవేళ(b<0xe0) {
+                    ఒకవేళ( /* handle U+0080..U+07FF inline */
                         b>=0xc2 &&
-                        (t1 = static_cast<uint8_t>(*source - 0x80)) <= 0x3f
+                        (t1 = static_cast<uint8_t>(*ఆధారం - 0x80)) <= 0x3f
                     ) {
                         c=b&0x1f;
-                        ++source;
-                        value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, c, t1);
-                        if(value>=minValue) {
-                            *target++ = static_cast<uint8_t>(value);
-                            --targetCapacity;
-                            continue;
-                        } else {
+                        ++ఆధారం;
+                        value=SBCS_ఫలితం_FROM_UTF8(sbcs_సూచీ, results, c, t1);
+                        ఒకవేళ(value>=min_విలువ) {
+                            *లక్ష్యం++ = static_cast<uint8_t>(value);
+                            --లక్ష్యం_సామర్థ్యం;
+                            కొనసాగు;
+                        } లేకపోతే {
                             c=(c<<6)|t1;
                         }
-                    } else {
+                    } లేకపోతే {
                         c=-1;
                     }
-                } else if(b==0xe0) {
-                    if( /* handle U+0800..U+0FFF inline */
-                        (t1 = static_cast<uint8_t>(source[0] - 0x80)) <= 0x3f && t1 >= 0x20 &&
-                        (t2 = static_cast<uint8_t>(source[1] - 0x80)) <= 0x3f
+                } లేకపోతే ఒకవేళ(b==0xe0) {
+                    ఒకవేళ( /* handle U+0800..U+0FFF inline */
+                        (t1 = static_cast<uint8_t>(ఆధారం[0] - 0x80)) <= 0x3f && t1 >= 0x20 &&
+                        (t2 = static_cast<uint8_t>(ఆధారం[1] - 0x80)) <= 0x3f
                     ) {
                         c=t1;
-                        source+=2;
-                        value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, c, t2);
-                        if(value>=minValue) {
-                            *target++ = static_cast<uint8_t>(value);
-                            --targetCapacity;
-                            continue;
-                        } else {
+                        ఆధారం+=2;
+                        value=SBCS_ఫలితం_FROM_UTF8(sbcs_సూచీ, results, c, t2);
+                        ఒకవేళ(value>=min_విలువ) {
+                            *లక్ష్యం++ = static_cast<uint8_t>(value);
+                            --లక్ష్యం_సామర్థ్యం;
+                            కొనసాగు;
+                        } లేకపోతే {
                             c=(c<<6)|t2;
                         }
-                    } else {
+                    } లేకపోతే {
                         c=-1;
                     }
-                } else {
+                } లేకపోతే {
                     c=-1;
                 }
 
-                if(c<0) {
+                ఒకవేళ(c<0) {
                     /* handle "complicated" and error cases, and continuing partial characters */
-                    oldToULength=0;
-                    toULength=1;
-                    toULimit=U8_COUNT_BYTES_NON_ASCII(b);
+                    old_గమ్యం_ULength=0;
+                    గమ్యం_ULength=1;
+                    గమ్యం_ULimit=U8_లెక్క_బైట్లు_NON_ASCII(b);
                     c=b;
-moreBytes:
-                    while(toULength<toULimit) {
+మరిన్ని_బైట్లు:
+                    అయితే(గమ్యం_ULength<గమ్యం_ULimit) {
                         /*
                          * The sourceLimit may have been adjusted before the conversion loop
                          * to stop before a truncated sequence.
@@ -5190,63 +5190,63 @@ moreBytes:
                          * sequences at the end.
                          * See ticket #7492.
                          */
-                        if(source<(uint8_t *)pToUArgs->sourceLimit) {
-                            b=*source;
-                            if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
-                                ++source;
-                                ++toULength;
+                        ఒకవేళ(ఆధారం<(uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు) {
+                            b=*ఆధారం;
+                            ఒకవేళ(icu::UTF8::isValidTrail(c, b, గమ్యం_ULength, గమ్యం_ULimit)) {
+                                ++ఆధారం;
+                                ++గమ్యం_ULength;
                                 c=(c<<6)+b;
-                            } else {
-                                break; /* sequence too short, stop with toULength<toULimit */
+                            } లేకపోతే {
+                                ఆపు; /* sequence too short, stop with toULength<toULimit */
                             }
-                        } else {
+                        } లేకపోతే {
                             /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
-                            source-=(toULength-oldToULength);
-                            while(oldToULength<toULength) {
-                                utf8->toUBytes[oldToULength++]=*source++;
+                            ఆధారం-=(గమ్యం_ULength-old_గమ్యం_ULength);
+                            అయితే(old_గమ్యం_ULength<గమ్యం_ULength) {
+                                utf8->గమ్యం_UBytes[old_గమ్యం_ULength++]=*ఆధారం++;
                             }
-                            utf8->toUnicodeStatus=c;
-                            utf8->toULength=toULength;
-                            utf8->mode=toULimit;
-                            pToUArgs->source=(char *)source;
-                            pFromUArgs->target = reinterpret_cast<char*>(target);
-                            return;
+                            utf8->గమ్యం_Unicode_స్థితి=c;
+                            utf8->గమ్యం_ULength=గమ్యం_ULength;
+                            utf8->బహుళకం=గమ్యం_ULimit;
+                            p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+                            pFromUArgs->లక్ష్యం = reinterpret_cast<అక్షరం*>(లక్ష్యం);
+                            తిరిగి;
                         }
                     }
 
-                    if(toULength==toULimit) {
-                        c-=utf8_offsets[toULength];
-                        if(toULength<=3) {  /* BMP */
-                            value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-                        } else {
+                    ఒకవేళ(గమ్యం_ULength==గమ్యం_ULimit) {
+                        c-=utf8_offsets[గమ్యం_ULength];
+                        ఒకవేళ(గమ్యం_ULength<=3) {  /* BMP */
+                            value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, c);
+                        } లేకపోతే {
                             /* supplementary code point */
-                            if(!hasSupplementary) {
+                            ఒకవేళ(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 value=0;
-                            } else {
-                                value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+                            } లేకపోతే {
+                                value=MBCS_SINGLE_ఫలితం_FROM_U(పట్టిక, results, c);
                             }
                         }
-                    } else {
+                    } లేకపోతే {
                         /* error handling: illegal UTF-8 byte sequence */
-                        source-=(toULength-oldToULength);
-                        while(oldToULength<toULength) {
-                            utf8->toUBytes[oldToULength++]=*source++;
+                        ఆధారం-=(గమ్యం_ULength-old_గమ్యం_ULength);
+                        అయితే(old_గమ్యం_ULength<గమ్యం_ULength) {
+                            utf8->గమ్యం_UBytes[old_గమ్యం_ULength++]=*ఆధారం++;
                         }
-                        utf8->toULength=toULength;
-                        pToUArgs->source=(char *)source;
-                        pFromUArgs->target = reinterpret_cast<char*>(target);
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        return;
+                        utf8->గమ్యం_ULength=గమ్యం_ULength;
+                        p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+                        pFromUArgs->లక్ష్యం = reinterpret_cast<అక్షరం*>(లక్ష్యం);
+                        *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                        తిరిగి;
                     }
                 }
             }
 
-            if(value>=minValue) {
+            ఒకవేళ(value>=min_విలువ) {
                 /* output the mapping for c */
-                *target++ = static_cast<uint8_t>(value);
-                --targetCapacity;
-            } else {
+                *లక్ష్యం++ = static_cast<uint8_t>(value);
+                --లక్ష్యం_సామర్థ్యం;
+            } లేకపోతే {
                 /* value<minValue means c is unassigned (unmappable) */
                 /*
                  * Try an extension mapping.
@@ -5254,39 +5254,39 @@ moreBytes:
                  * If we have a partial match on c, we will return and revert
                  * to UTF-8->UTF-16->charset conversion.
                  */
-                static const char16_t nul=0;
-                const char16_t *noSource=&nul;
-                c=_extFromU(cnv, cnv->sharedData,
-                            c, &noSource, noSource,
-                            &target, target+targetCapacity,
-                            nullptr, -1,
+                స్థిర స్థిరరాశి char16_t nul=0;
+                స్థిరరాశి char16_t *no_ఆధారం=&nul;
+                c=_extFromU(cnv, cnv->shared_దత్తాంశం,
+                            c, &no_ఆధారం, no_ఆధారం,
+                            &లక్ష్యం, లక్ష్యం+లక్ష్యం_సామర్థ్యం,
+                            శూన్యసూచిక, -1,
                             pFromUArgs->flush,
-                            pErrorCode);
+                            p_Error_సంకేతం);
 
-                if(U_FAILURE(*pErrorCode)) {
+                ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                     /* not mappable or buffer overflow */
                     cnv->fromUChar32=c;
-                    break;
-                } else if(cnv->preFromUFirstCP>=0) {
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(cnv->preFromUFirstCP>=0) {
                     /*
                      * Partial match, return and revert to pivoting.
                      * In normal from-UTF-16 conversion, we would just continue
                      * but then exit the loop because the extension match would
                      * have consumed the source.
                      */
-                    *pErrorCode=U_USING_DEFAULT_WARNING;
-                    break;
-                } else {
+                    *p_Error_సంకేతం=U_USING_DEFAULT_WARNING;
+                    ఆపు;
+                } లేకపోతే {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
-                    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - reinterpret_cast<char*>(target));
+                    లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(pFromUArgs->లక్ష్యం_హద్దు - reinterpret_cast<అక్షరం*>(లక్ష్యం));
                 }
             }
-        } else {
+        } లేకపోతే {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
     }
 
@@ -5295,74 +5295,74 @@ moreBytes:
      * to stop before a truncated sequence.
      * If so, then collect the truncated sequence now.
      */
-    if(U_SUCCESS(*pErrorCode) &&
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం) &&
             cnv->preFromUFirstCP<0 &&
-            source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
-        c=utf8->toUBytes[0]=b=*source++;
-        toULength=1;
-        toULimit=U8_COUNT_BYTES(b);
-        while(source<sourceLimit) {
-            utf8->toUBytes[toULength++]=b=*source++;
+            ఆధారం<(ఆధారం_హద్దు=(uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు)) {
+        c=utf8->గమ్యం_UBytes[0]=b=*ఆధారం++;
+        గమ్యం_ULength=1;
+        గమ్యం_ULimit=U8_లెక్క_బైట్లు(b);
+        అయితే(ఆధారం<ఆధారం_హద్దు) {
+            utf8->గమ్యం_UBytes[గమ్యం_ULength++]=b=*ఆధారం++;
             c=(c<<6)+b;
         }
-        utf8->toUnicodeStatus=c;
-        utf8->toULength=toULength;
-        utf8->mode=toULimit;
+        utf8->గమ్యం_Unicode_స్థితి=c;
+        utf8->గమ్యం_ULength=గమ్యం_ULength;
+        utf8->బహుళకం=గమ్యం_ULimit;
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target = reinterpret_cast<char*>(target);
+    p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+    pFromUArgs->లక్ష్యం = reinterpret_cast<అక్షరం*>(లక్ష్యం);
 }
 
-static void U_CALLCONV
-ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+ucnv_DBCSFromUTF8(UConverter_From_Unicode_వాదనలు *pFromUArgs,
+                  UConverter_గమ్యం_Unicode_వాదనలు *p_గమ్యం_UArgs,
+                  UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *utf8, *cnv;
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం;
 
-    const uint16_t *table, *mbcsIndex;
-    const uint16_t *results;
+    స్థిరరాశి uint16_t *పట్టిక, *mbcs_సూచీ;
+    స్థిరరాశి uint16_t *results;
 
-    int8_t oldToULength, toULength, toULimit;
+    int8_t old_గమ్యం_ULength, గమ్యం_ULength, గమ్యం_ULimit;
 
     UChar32 c;
     uint8_t b, t1, t2;
 
-    uint32_t stage2Entry;
+    uint32_t stage2_నమోదు;
     uint32_t asciiRoundtrips;
     uint16_t value = 0;
     UBool hasSupplementary;
 
     /* set up the local pointers */
-    utf8=pToUArgs->converter;
+    utf8=p_గమ్యం_UArgs->converter;
     cnv=pFromUArgs->converter;
-    source=(uint8_t *)pToUArgs->source;
-    sourceLimit=(uint8_t *)pToUArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pFromUArgs->target);
-    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - pFromUArgs->target);
+    ఆధారం=(uint8_t *)p_గమ్యం_UArgs->ఆధారం;
+    ఆధారం_హద్దు=(uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు;
+    లక్ష్యం = reinterpret_cast<uint8_t*>(pFromUArgs->లక్ష్యం);
+    లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(pFromUArgs->లక్ష్యం_హద్దు - pFromUArgs->లక్ష్యం);
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    పట్టిక=cnv->shared_దత్తాంశం->mbcs.from_Unicode_పట్టిక;
+    mbcs_సూచీ=cnv->shared_దత్తాంశం->mbcs.mbcs_సూచీ;
+    ఒకవేళ((cnv->options&UCNV_OPTION_మార్పిడి_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_దత్తాంశం->mbcs.మార్పిడి_LFNLFrom_Unicode_బైట్లు);
+    } లేకపోతే {
+        results=(uint16_t *)cnv->shared_దత్తాంశం->mbcs.from_Unicode_బైట్లు;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_దత్తాంశం->mbcs.asciiRoundtrips;
 
-    hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
+    hasSupplementary = static_cast<UBool>(cnv->shared_దత్తాంశం->mbcs.unicode_ముసుగు & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
-        toULength=oldToULength=utf8->toULength;
-        toULimit = static_cast<int8_t>(utf8->mode);
-        c = static_cast<UChar32>(utf8->toUnicodeStatus);
-    } else {
-        toULength=oldToULength=toULimit=0;
+    ఒకవేళ(utf8->గమ్యం_ULength > 0) {
+        గమ్యం_ULength=old_గమ్యం_ULength=utf8->గమ్యం_ULength;
+        గమ్యం_ULimit = static_cast<int8_t>(utf8->బహుళకం);
+        c = static_cast<UChar32>(utf8->గమ్యం_Unicode_స్థితి);
+    } లేకపోతే {
+        గమ్యం_ULength=old_గమ్యం_ULength=గమ్యం_ULimit=0;
         c = 0;
     }
 
@@ -5373,90 +5373,90 @@ ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     {
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
-        int32_t length = static_cast<int32_t>(sourceLimit - source) - (toULimit - oldToULength);
-        if(length>0) {
-            uint8_t b1=*(sourceLimit-1);
-            if(U8_IS_SINGLE(b1)) {
+        int32_t length = static_cast<int32_t>(ఆధారం_హద్దు - ఆధారం) - (గమ్యం_ULimit - old_గమ్యం_ULength);
+        ఒకవేళ(length>0) {
+            uint8_t b1=*(ఆధారం_హద్దు-1);
+            ఒకవేళ(U8_IS_SINGLE(b1)) {
                 // common ASCII character
-            } else if(U8_IS_TRAIL(b1) && length>=2) {
-                uint8_t b2=*(sourceLimit-2);
-                if(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+            } లేకపోతే ఒకవేళ(U8_IS_TRAIL(b1) && length>=2) {
+                uint8_t b2=*(ఆధారం_హద్దు-2);
+                ఒకవేళ(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                     // truncated 3-byte sequence
-                    sourceLimit-=2;
+                    ఆధారం_హద్దు-=2;
                 }
-            } else if(0xc2<=b1 && b1<0xf0) {
+            } లేకపోతే ఒకవేళ(0xc2<=b1 && b1<0xf0) {
                 // truncated 2- or 3-byte sequence
-                --sourceLimit;
+                --ఆధారం_హద్దు;
             }
         }
     }
 
-    if(c!=0 && targetCapacity>0) {
-        utf8->toUnicodeStatus=0;
-        utf8->toULength=0;
-        goto moreBytes;
+    ఒకవేళ(c!=0 && లక్ష్యం_సామర్థ్యం>0) {
+        utf8->గమ్యం_Unicode_స్థితి=0;
+        utf8->గమ్యం_ULength=0;
+        వెళ్ళు మరిన్ని_బైట్లు;
         /* See note in ucnv_SBCSFromUTF8() about this goto. */
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
-            b=*source++;
-            if(U8_IS_SINGLE(b)) {
+    అయితే(ఆధారం<ఆధారం_హద్దు) {
+        ఒకవేళ(లక్ష్యం_సామర్థ్యం>0) {
+            b=*ఆధారం++;
+            ఒకవేళ(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                if(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
-                    *target++=b;
-                    --targetCapacity;
-                    continue;
-                } else {
-                    value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, 0, b);
-                    if(value==0) {
+                ఒకవేళ(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
+                    *లక్ష్యం++=b;
+                    --లక్ష్యం_సామర్థ్యం;
+                    కొనసాగు;
+                } లేకపోతే {
+                    value=DBCS_ఫలితం_FROM_UTF8(mbcs_సూచీ, results, 0, b);
+                    ఒకవేళ(value==0) {
                         c=b;
-                        goto unassigned;
+                        వెళ్ళు unassigned;
                     }
                 }
-            } else {
-                if(b>=0xe0) {
-                    if( /* handle U+0800..U+D7FF inline */
+            } లేకపోతే {
+                ఒకవేళ(b>=0xe0) {
+                    ఒకవేళ( /* handle U+0800..U+D7FF inline */
                         b<=0xed &&  // do not assume maxFastUChar>0xd7ff
-                        U8_IS_VALID_LEAD3_AND_T1(b, t1=source[0]) &&
-                        (t2 = static_cast<uint8_t>(source[1] - 0x80)) <= 0x3f
+                        U8_IS_VALID_LEAD3_AND_T1(b, t1=ఆధారం[0]) &&
+                        (t2 = static_cast<uint8_t>(ఆధారం[1] - 0x80)) <= 0x3f
                     ) {
                         c=((b&0xf)<<6)|(t1&0x3f);
-                        source+=2;
-                        value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, c, t2);
-                        if(value==0) {
+                        ఆధారం+=2;
+                        value=DBCS_ఫలితం_FROM_UTF8(mbcs_సూచీ, results, c, t2);
+                        ఒకవేళ(value==0) {
                             c=(c<<6)|t2;
-                            goto unassigned;
+                            వెళ్ళు unassigned;
                         }
-                    } else {
+                    } లేకపోతే {
                         c=-1;
                     }
-                } else {
-                    if( /* handle U+0080..U+07FF inline */
+                } లేకపోతే {
+                    ఒకవేళ( /* handle U+0080..U+07FF inline */
                         b>=0xc2 &&
-                        (t1 = static_cast<uint8_t>(*source - 0x80)) <= 0x3f
+                        (t1 = static_cast<uint8_t>(*ఆధారం - 0x80)) <= 0x3f
                     ) {
                         c=b&0x1f;
-                        ++source;
-                        value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, c, t1);
-                        if(value==0) {
+                        ++ఆధారం;
+                        value=DBCS_ఫలితం_FROM_UTF8(mbcs_సూచీ, results, c, t1);
+                        ఒకవేళ(value==0) {
                             c=(c<<6)|t1;
-                            goto unassigned;
+                            వెళ్ళు unassigned;
                         }
-                    } else {
+                    } లేకపోతే {
                         c=-1;
                     }
                 }
 
-                if(c<0) {
+                ఒకవేళ(c<0) {
                     /* handle "complicated" and error cases, and continuing partial characters */
-                    oldToULength=0;
-                    toULength=1;
-                    toULimit=U8_COUNT_BYTES_NON_ASCII(b);
+                    old_గమ్యం_ULength=0;
+                    గమ్యం_ULength=1;
+                    గమ్యం_ULimit=U8_లెక్క_బైట్లు_NON_ASCII(b);
                     c=b;
-moreBytes:
-                    while(toULength<toULimit) {
+మరిన్ని_బైట్లు:
+                    అయితే(గమ్యం_ULength<గమ్యం_ULimit) {
                         /*
                          * The sourceLimit may have been adjusted before the conversion loop
                          * to stop before a truncated sequence.
@@ -5464,90 +5464,90 @@ moreBytes:
                          * sequences at the end.
                          * See ticket #7492.
                          */
-                        if(source<(uint8_t *)pToUArgs->sourceLimit) {
-                            b=*source;
-                            if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
-                                ++source;
-                                ++toULength;
+                        ఒకవేళ(ఆధారం<(uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు) {
+                            b=*ఆధారం;
+                            ఒకవేళ(icu::UTF8::isValidTrail(c, b, గమ్యం_ULength, గమ్యం_ULimit)) {
+                                ++ఆధారం;
+                                ++గమ్యం_ULength;
                                 c=(c<<6)+b;
-                            } else {
-                                break; /* sequence too short, stop with toULength<toULimit */
+                            } లేకపోతే {
+                                ఆపు; /* sequence too short, stop with toULength<toULimit */
                             }
-                        } else {
+                        } లేకపోతే {
                             /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
-                            source-=(toULength-oldToULength);
-                            while(oldToULength<toULength) {
-                                utf8->toUBytes[oldToULength++]=*source++;
+                            ఆధారం-=(గమ్యం_ULength-old_గమ్యం_ULength);
+                            అయితే(old_గమ్యం_ULength<గమ్యం_ULength) {
+                                utf8->గమ్యం_UBytes[old_గమ్యం_ULength++]=*ఆధారం++;
                             }
-                            utf8->toUnicodeStatus=c;
-                            utf8->toULength=toULength;
-                            utf8->mode=toULimit;
-                            pToUArgs->source=(char *)source;
-                            pFromUArgs->target = reinterpret_cast<char*>(target);
-                            return;
+                            utf8->గమ్యం_Unicode_స్థితి=c;
+                            utf8->గమ్యం_ULength=గమ్యం_ULength;
+                            utf8->బహుళకం=గమ్యం_ULimit;
+                            p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+                            pFromUArgs->లక్ష్యం = reinterpret_cast<అక్షరం*>(లక్ష్యం);
+                            తిరిగి;
                         }
                     }
 
-                    if(toULength==toULimit) {
-                        c-=utf8_offsets[toULength];
-                        if(toULength<=3) {  /* BMP */
-                            stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
-                        } else {
+                    ఒకవేళ(గమ్యం_ULength==గమ్యం_ULimit) {
+                        c-=utf8_offsets[గమ్యం_ULength];
+                        ఒకవేళ(గమ్యం_ULength<=3) {  /* BMP */
+                            stage2_నమోదు=MBCS_STAGE_2_FROM_U(పట్టిక, c);
+                        } లేకపోతే {
                             /* supplementary code point */
-                            if(!hasSupplementary) {
+                            ఒకవేళ(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-                                stage2Entry=0;
-                            } else {
-                                stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
+                                stage2_నమోదు=0;
+                            } లేకపోతే {
+                                stage2_నమోదు=MBCS_STAGE_2_FROM_U(పట్టిక, c);
                             }
                         }
-                    } else {
+                    } లేకపోతే {
                         /* error handling: illegal UTF-8 byte sequence */
-                        source-=(toULength-oldToULength);
-                        while(oldToULength<toULength) {
-                            utf8->toUBytes[oldToULength++]=*source++;
+                        ఆధారం-=(గమ్యం_ULength-old_గమ్యం_ULength);
+                        అయితే(old_గమ్యం_ULength<గమ్యం_ULength) {
+                            utf8->గమ్యం_UBytes[old_గమ్యం_ULength++]=*ఆధారం++;
                         }
-                        utf8->toULength=toULength;
-                        pToUArgs->source=(char *)source;
-                        pFromUArgs->target = reinterpret_cast<char*>(target);
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        return;
+                        utf8->గమ్యం_ULength=గమ్యం_ULength;
+                        p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+                        pFromUArgs->లక్ష్యం = reinterpret_cast<అక్షరం*>(లక్ష్యం);
+                        *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                        తిరిగి;
                     }
 
                     /* get the bytes and the length for the output */
                     /* MBCS_OUTPUT_2 */
-                    value=MBCS_VALUE_2_FROM_STAGE_2(results, stage2Entry, c);
+                    value=MBCS_విలువ_2_FROM_STAGE_2(results, stage2_నమోదు, c);
 
                     /* is this code point assigned, or do we use fallbacks? */
-                    if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+                    ఒకవేళ(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2_నమోదు, c) ||
                          (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                     ) {
-                        goto unassigned;
+                        వెళ్ళు unassigned;
                     }
                 }
             }
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(value<=0xff) {
+            ఒకవేళ(value<=0xff) {
                 /* this is easy because we know that there is enough space */
-                *target++ = static_cast<uint8_t>(value);
-                --targetCapacity;
-            } else /* length==2 */ {
-                *target++ = static_cast<uint8_t>(value >> 8);
-                if(2<=targetCapacity) {
-                    *target++ = static_cast<uint8_t>(value);
-                    targetCapacity-=2;
-                } else {
-                    cnv->charErrorBuffer[0] = static_cast<char>(value);
-                    cnv->charErrorBufferLength=1;
+                *లక్ష్యం++ = static_cast<uint8_t>(value);
+                --లక్ష్యం_సామర్థ్యం;
+            } లేకపోతే /* length==2 */ {
+                *లక్ష్యం++ = static_cast<uint8_t>(value >> 8);
+                ఒకవేళ(2<=లక్ష్యం_సామర్థ్యం) {
+                    *లక్ష్యం++ = static_cast<uint8_t>(value);
+                    లక్ష్యం_సామర్థ్యం-=2;
+                } లేకపోతే {
+                    cnv->char_Error_బఫరు[0] = static_cast<అక్షరం>(value);
+                    cnv->char_Error_బఫరు_నిడివి=1;
 
                     /* target overflow */
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                    ఆపు;
                 }
             }
-            continue;
+            కొనసాగు;
 
 unassigned:
             {
@@ -5557,40 +5557,40 @@ unassigned:
                  * If we have a partial match on c, we will return and revert
                  * to UTF-8->UTF-16->charset conversion.
                  */
-                static const char16_t nul=0;
-                const char16_t *noSource=&nul;
-                c=_extFromU(cnv, cnv->sharedData,
-                            c, &noSource, noSource,
-                            &target, target+targetCapacity,
-                            nullptr, -1,
+                స్థిర స్థిరరాశి char16_t nul=0;
+                స్థిరరాశి char16_t *no_ఆధారం=&nul;
+                c=_extFromU(cnv, cnv->shared_దత్తాంశం,
+                            c, &no_ఆధారం, no_ఆధారం,
+                            &లక్ష్యం, లక్ష్యం+లక్ష్యం_సామర్థ్యం,
+                            శూన్యసూచిక, -1,
                             pFromUArgs->flush,
-                            pErrorCode);
+                            p_Error_సంకేతం);
 
-                if(U_FAILURE(*pErrorCode)) {
+                ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                     /* not mappable or buffer overflow */
                     cnv->fromUChar32=c;
-                    break;
-                } else if(cnv->preFromUFirstCP>=0) {
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(cnv->preFromUFirstCP>=0) {
                     /*
                      * Partial match, return and revert to pivoting.
                      * In normal from-UTF-16 conversion, we would just continue
                      * but then exit the loop because the extension match would
                      * have consumed the source.
                      */
-                    *pErrorCode=U_USING_DEFAULT_WARNING;
-                    break;
-                } else {
+                    *p_Error_సంకేతం=U_USING_DEFAULT_WARNING;
+                    ఆపు;
+                } లేకపోతే {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
-                    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - reinterpret_cast<char*>(target));
-                    continue;
+                    లక్ష్యం_సామర్థ్యం = static_cast<int32_t>(pFromUArgs->లక్ష్యం_హద్దు - reinterpret_cast<అక్షరం*>(లక్ష్యం));
+                    కొనసాగు;
                 }
             }
-        } else {
+        } లేకపోతే {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+            ఆపు;
         }
     }
 
@@ -5599,39 +5599,39 @@ unassigned:
      * to stop before a truncated sequence.
      * If so, then collect the truncated sequence now.
      */
-    if(U_SUCCESS(*pErrorCode) &&
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం) &&
             cnv->preFromUFirstCP<0 &&
-            source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
-        c=utf8->toUBytes[0]=b=*source++;
-        toULength=1;
-        toULimit=U8_COUNT_BYTES(b);
-        while(source<sourceLimit) {
-            utf8->toUBytes[toULength++]=b=*source++;
+            ఆధారం<(ఆధారం_హద్దు=(uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు)) {
+        c=utf8->గమ్యం_UBytes[0]=b=*ఆధారం++;
+        గమ్యం_ULength=1;
+        గమ్యం_ULimit=U8_లెక్క_బైట్లు(b);
+        అయితే(ఆధారం<ఆధారం_హద్దు) {
+            utf8->గమ్యం_UBytes[గమ్యం_ULength++]=b=*ఆధారం++;
             c=(c<<6)+b;
         }
-        utf8->toUnicodeStatus=c;
-        utf8->toULength=toULength;
-        utf8->mode=toULimit;
+        utf8->గమ్యం_Unicode_స్థితి=c;
+        utf8->గమ్యం_ULength=గమ్యం_ULength;
+        utf8->బహుళకం=గమ్యం_ULimit;
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target = reinterpret_cast<char*>(target);
+    p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+    pFromUArgs->లక్ష్యం = reinterpret_cast<అక్షరం*>(లక్ష్యం);
 }
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static void U_CALLCONV
-ucnv_MBCSGetStarters(const UConverter* cnv,
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSGetStarters(స్థిరరాశి UConverter* cnv,
                  UBool starters[256],
-                 UErrorCode *) {
-    const int32_t *state0;
-    int i;
+                 UError_సంకేతం *) {
+    స్థిరరాశి int32_t *state0;
+    పూర్ణాంకం i;
 
-    state0=cnv->sharedData->mbcs.stateTable[cnv->sharedData->mbcs.dbcsOnlyState];
-    for(i=0; i<256; ++i) {
+    state0=cnv->shared_దత్తాంశం->mbcs.state_పట్టిక[cnv->shared_దత్తాంశం->mbcs.dbcsOnlyState];
+    కొరకు(i=0; i<256; ++i) {
         /* all bytes that cause a state transition from state 0 are lead bytes */
-        starters[i] = static_cast<UBool>(MBCS_ENTRY_IS_TRANSITION(state0[i]));
+        starters[i] = static_cast<UBool>(MBCS_నమోదు_IS_TRANSITION(state0[i]));
     }
 }
 
@@ -5640,81 +5640,81 @@ ucnv_MBCSGetStarters(const UConverter* cnv,
  * to check whether a byte is a lead byte.
  */
 U_CFUNC UBool
-ucnv_MBCSIsLeadByte(UConverterSharedData *sharedData, char byte) {
-    return MBCS_ENTRY_IS_TRANSITION(sharedData->mbcs.stateTable[0][(uint8_t)byte]);
+ucnv_MBCSIsLeadByte(UConverter_Shared_దత్తాంశం *shared_దత్తాంశం, అక్షరం byte) {
+    తిరిగి MBCS_నమోదు_IS_TRANSITION(shared_దత్తాంశం->mbcs.state_పట్టిక[0][(uint8_t)byte]);
 }
 
-static void U_CALLCONV
-ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
-              int32_t offsetIndex,
-              UErrorCode *pErrorCode) {
-    UConverter *cnv=pArgs->converter;
-    char *p, *subchar;
-    char buffer[4];
+స్థిర శూన్య U_CALLCONV
+ucnv_MBCSWriteSub(UConverter_From_Unicode_వాదనలు *p_వాదనలు,
+              int32_t స్థానభ్రంశం_సూచీ,
+              UError_సంకేతం *p_Error_సంకేతం) {
+    UConverter *cnv=p_వాదనలు->converter;
+    అక్షరం *p, *subchar;
+    అక్షరం బఫరు[4];
     int32_t length;
 
     /* first, select between subChar and subChar1 */
-    if( cnv->subChar1!=0 &&
-        (cnv->sharedData->mbcs.extIndexes!=nullptr ?
+    ఒకవేళ( cnv->subChar1!=0 &&
+        (cnv->shared_దత్తాంశం->mbcs.extIndexes!=శూన్యసూచిక ?
             cnv->useSubChar1 :
-            (cnv->invalidUCharBuffer[0]<=0xff))
+            (cnv->invalid_UChar_బఫరు[0]<=0xff))
     ) {
         /* select subChar1 if it is set (not 0) and the unmappable Unicode code point is up to U+00ff (IBM MBCS behavior) */
-        subchar = reinterpret_cast<char*>(&cnv->subChar1);
+        subchar = reinterpret_cast<అక్షరం*>(&cnv->subChar1);
         length=1;
-    } else {
+    } లేకపోతే {
         /* select subChar in all other cases */
-        subchar = reinterpret_cast<char*>(cnv->subChars);
+        subchar = reinterpret_cast<అక్షరం*>(cnv->subChars);
         length=cnv->subCharLen;
     }
 
     /* reset the selector for the next code point */
-    cnv->useSubChar1=false;
+    cnv->useSubChar1=అబద్ధం;
 
-    if (cnv->sharedData->mbcs.outputType == MBCS_OUTPUT_2_SISO) {
-        p=buffer;
+    ఒకవేళ (cnv->shared_దత్తాంశం->mbcs.outputType == MBCS_OUTPUT_2_SISO) {
+        p=బఫరు;
 
         /* fromUnicodeStatus contains prevLength */
-        switch(length) {
-        case 1:
-            if(cnv->fromUnicodeStatus==2) {
+        ఎంపిక(length) {
+        స్థితి 1:
+            ఒకవేళ(cnv->from_Unicode_స్థితి==2) {
                 /* DBCS mode and SBCS sub char: change to SBCS */
-                cnv->fromUnicodeStatus=1;
+                cnv->from_Unicode_స్థితి=1;
                 *p++=UCNV_SI;
             }
             *p++=subchar[0];
-            break;
-        case 2:
-            if(cnv->fromUnicodeStatus<=1) {
+            ఆపు;
+        స్థితి 2:
+            ఒకవేళ(cnv->from_Unicode_స్థితి<=1) {
                 /* SBCS mode and DBCS sub char: change to DBCS */
-                cnv->fromUnicodeStatus=2;
+                cnv->from_Unicode_స్థితి=2;
                 *p++=UCNV_SO;
             }
             *p++=subchar[0];
             *p++=subchar[1];
-            break;
-        default:
-            *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ఆపు;
+        అప్రమేయ:
+            *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
-        subchar=buffer;
-        length = static_cast<int32_t>(p - buffer);
+        subchar=బఫరు;
+        length = static_cast<int32_t>(p - బఫరు);
     }
 
-    ucnv_cbFromUWriteBytes(pArgs, subchar, length, offsetIndex, pErrorCode);
+    ucnv_cb_From_UWrite_బైట్లు(p_వాదనలు, subchar, length, స్థానభ్రంశం_సూచీ, p_Error_సంకేతం);
 }
 
 U_CFUNC UConverterType
-ucnv_MBCSGetType(const UConverter* converter) {
+ucnv_MBCSGetType(స్థిరరాశి UConverter* converter) {
     /* SBCS, DBCS, and EBCDIC_STATEFUL are replaced by MBCS, but here we cheat a little */
-    if(converter->sharedData->mbcs.countStates==1) {
-        return (UConverterType)UCNV_SBCS;
-    } else if((converter->sharedData->mbcs.outputType&0xff)==MBCS_OUTPUT_2_SISO) {
-        return (UConverterType)UCNV_EBCDIC_STATEFUL;
-    } else if(converter->sharedData->staticData->minBytesPerChar==2 && converter->sharedData->staticData->maxBytesPerChar==2) {
-        return (UConverterType)UCNV_DBCS;
+    ఒకవేళ(converter->shared_దత్తాంశం->mbcs.లెక్క_స్థితులు==1) {
+        తిరిగి (UConverterType)UCNV_SBCS;
+    } లేకపోతే ఒకవేళ((converter->shared_దత్తాంశం->mbcs.outputType&0xff)==MBCS_OUTPUT_2_SISO) {
+        తిరిగి (UConverterType)UCNV_EBCDIC_STATEFUL;
+    } లేకపోతే ఒకవేళ(converter->shared_దత్తాంశం->static_దత్తాంశం->min_బైట్లు_చొప్పున_Char==2 && converter->shared_దత్తాంశం->static_దత్తాంశం->max_బైట్లు_చొప్పున_Char==2) {
+        తిరిగి (UConverterType)UCNV_DBCS;
     }
-    return (UConverterType)UCNV_MBCS;
+    తిరిగి (UConverterType)UCNV_MBCS;
 }
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_LEGACY_CONVERSION */

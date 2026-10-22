@@ -7,317 +7,317 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
+#అన్తర్భావ "unicode/utypes.h"
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
 
-#include "cmemory.h"
+#అన్తర్భావ "cmemory.h"
 
-#include "unicode/filteredbrk.h"
-#include "unicode/ucharstriebuilder.h"
-#include "unicode/ures.h"
+#అన్తర్భావ "unicode/filteredbrk.h"
+#అన్తర్భావ "unicode/ucharstriebuilder.h"
+#అన్తర్భావ "unicode/ures.h"
 
-#include "uresimp.h" // ures_getByKeyWithFallback
-#include "ubrkimpl.h" // U_ICUDATA_BRKITR
-#include "uvector.h"
-#include "cmemory.h"
-#include "umutex.h"
+#అన్తర్భావ "uresimp.h" // ures_getByKeyWithFallback
+#అన్తర్భావ "ubrkimpl.h" // U_ICUDATA_BRKITR
+#అన్తర్భావ "uvector.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "umutex.h"
 
 U_NAMESPACE_BEGIN
 
-#ifndef FB_DEBUG
-#define FB_DEBUG 0
-#endif
+#నిర్వచితం_కాకపోతే FB_DEBUG
+#నిర్వచించు FB_DEBUG 0
+#అయితే_ముగింపు
 
-#if FB_DEBUG
-#include <stdio.h>
-static void _fb_trace(const char *m, const UnicodeString *s, UBool b, int32_t d, const char *f, int l) {
-  char buf[2048];
-  if(s) {
+#ఒకవేళ FB_DEBUG
+#అన్తర్భావ <stdio.h>
+స్థిర శూన్య _fb_trace(స్థిరరాశి అక్షరం *m, స్థిరరాశి UnicodeString *s, UBool b, int32_t d, స్థిరరాశి అక్షరం *f, పూర్ణాంకం l) {
+  అక్షరం buf[2048];
+  ఒకవేళ(s) {
     s->extract(0,s->length(),buf,2048);
-  } else {
+  } లేకపోతే {
     strcpy(buf,"nullptr");
   }
   fprintf(stderr,"%s:%d: %s. s='%s'(%p), b=%c, d=%d\n",
-          f, l, m, buf, (const void*)s, b?'T':'F',(int)d);
+          f, l, m, buf, (స్థిరరాశి శూన్య*)s, b?'T':'F',(పూర్ణాంకం)d);
 }
 
-#define FB_TRACE(m,s,b,d) _fb_trace(m,s,b,d,__FILE__,__LINE__)
-#else
-#define FB_TRACE(m,s,b,d)
-#endif
+#నిర్వచించు FB_TRACE(m,s,b,d) _fb_trace(m,s,b,d,__FILE__,__LINE__)
+#లేకపోతే
+#నిర్వచించు FB_TRACE(m,s,b,d)
+#అయితే_ముగింపు
 
 /**
  * Used with sortedInsert()
  */
-static int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
-    const UnicodeString& a = *static_cast<const UnicodeString*>(t1.pointer);
-    const UnicodeString& b = *static_cast<const UnicodeString*>(t2.pointer);
-    return a.compare(b);
+స్థిర int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
+    స్థిరరాశి UnicodeString& a = *static_cast<స్థిరరాశి UnicodeString*>(t1.సూచిక);
+    స్థిరరాశి UnicodeString& b = *static_cast<స్థిరరాశి UnicodeString*>(t2.సూచిక);
+    తిరిగి a.compare(b);
 }
 
 /**
  * A UVector which implements a set of strings.
  */
-class UStringSet : public UVector {
- public:
-  UStringSet(UErrorCode &status) : UVector(uprv_deleteUObject,
+తరగతి UString_సమితి : బహిరంగ UVector {
+ బహిరంగ:
+  UString_సమితి(UError_సంకేతం &స్థితి_2) : UVector(uprv_deleteUObject,
                                            uhash_compareUnicodeString,
                                            1,
-                                           status) {}
-  virtual ~UStringSet();
+                                           స్థితి_2) {}
+  మాయా ~UString_సమితి();
   /**
    * Is this UnicodeSet contained?
    */
-  inline UBool contains(const UnicodeString& s) {
-    return contains((void*) &s);
+  అంతఃవరుస UBool కలిగియుంది(స్థిరరాశి UnicodeString& s) {
+    తిరిగి కలిగియుంది((శూన్య*) &s);
   }
-  using UVector::contains;
+  ఉపయోగించి UVector::కలిగియుంది;
   /**
    * Return the ith UnicodeString alias
    */
-  inline const UnicodeString* getStringAt(int32_t i) const U_LIFETIME_BOUND {
-    return static_cast<const UnicodeString*>(elementAt(i));
+  అంతఃవరుస స్థిరరాశి UnicodeString* getStringAt(int32_t i) స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి static_cast<స్థిరరాశి UnicodeString*>(elementAt(i));
   }
   /**
    * Adopt the UnicodeString if not already contained.
    * Caller no longer owns the pointer in any case.
    * @return true if adopted successfully, false otherwise (error, or else duplicate)
    */
-  inline UBool adopt(UnicodeString *str, UErrorCode &status) {
-    if(U_FAILURE(status) || contains(*str)) {
-      delete str;
-      return false;
-    } else {
-      sortedInsert(str, compareUnicodeString, status);
-      if(U_FAILURE(status)) {
-        return false;
+  అంతఃవరుస UBool adopt(UnicodeString *str, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ(U_FAILURE(స్థితి_2) || కలిగియుంది(*str)) {
+      తొలగించు str;
+      తిరిగి అబద్ధం;
+    } లేకపోతే {
+      sorted_చొప్పించు(str, compareUnicodeString, స్థితి_2);
+      ఒకవేళ(U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
       }
-      return true;
+      తిరిగి నిజం;
     }
   }
   /**
    * Add by value.
    * @return true if successfully adopted.
    */
-  inline UBool add(const UnicodeString& str, UErrorCode &status) {
-    if(U_FAILURE(status)) return false;
-    UnicodeString *t = new UnicodeString(str);
-    if(t==nullptr) {
-      status = U_MEMORY_ALLOCATION_ERROR; return false;
+  అంతఃవరుస UBool కూడు(స్థిరరాశి UnicodeString& str, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ(U_FAILURE(స్థితి_2)) తిరిగి అబద్ధం;
+    UnicodeString *t = కొత్త UnicodeString(str);
+    ఒకవేళ(t==శూన్యసూచిక) {
+      స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR; తిరిగి అబద్ధం;
     }
-    return adopt(t, status);
+    తిరిగి adopt(t, స్థితి_2);
   }
   /**
    * Remove this string.
    * @return true if successfully removed, false otherwise (error, or else it wasn't there)
    */
-  inline UBool remove(const UnicodeString &s, UErrorCode &status) {
-    if(U_FAILURE(status)) return false;
-    return removeElement((void*) &s);
+  అంతఃవరుస UBool remove(స్థిరరాశి UnicodeString &s, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ(U_FAILURE(స్థితి_2)) తిరిగి అబద్ధం;
+    తిరిగి removeElement((శూన్య*) &s);
   }
 };
 
 /**
  * Virtual, won't be inlined
  */
-UStringSet::~UStringSet() {}
+UString_సమితి::~UString_సమితి() {}
 
 /* ----------------------------------------------------------- */
 
 
 /* Filtered Break constants */
-static const int32_t kPARTIAL = (1<<0); //< partial - need to run through forward trie
-static const int32_t kMATCH   = (1<<1); //< exact match - skip this one.
-static const int32_t kSuppressInReverse = (1<<0);
-static const int32_t kAddToForward = (1<<1);
-static const char16_t kFULLSTOP = 0x002E; // '.'
+స్థిర స్థిరరాశి int32_t kPARTIAL = (1<<0); //< partial - need to run through forward trie
+స్థిర స్థిరరాశి int32_t k_సరిపోలిక   = (1<<1); //< exact match - skip this one.
+స్థిర స్థిరరాశి int32_t k_Suppress_లోపల_తిరగేయి = (1<<0);
+స్థిర స్థిరరాశి int32_t k_కూడు_గమ్యం_Forward = (1<<1);
+స్థిర స్థిరరాశి char16_t kFULLSTOP = 0x002E; // '.'
 
 /**
  * Shared data for SimpleFilteredSentenceBreakIterator
  */
-class SimpleFilteredSentenceBreakData : public UMemory {
-public:
-  SimpleFilteredSentenceBreakData(UCharsTrie *forwards, UCharsTrie *backwards ) 
+తరగతి Simple_Filtered_Sentence_Break_దత్తాంశం : బహిరంగ UMemory {
+బహిరంగ:
+  Simple_Filtered_Sentence_Break_దత్తాంశం(UCharsTrie *forwards, UCharsTrie *backwards ) 
       : fForwardsPartialTrie(forwards), fBackwardsTrie(backwards), refcount(1) { }
-    SimpleFilteredSentenceBreakData* incr() U_LIFETIME_BOUND {
+    Simple_Filtered_Sentence_Break_దత్తాంశం* incr() U_LIFETIME_BOUND {
         umtx_atomic_inc(&refcount);
-        return this;
+        తిరిగి ఇది;
     }
-    SimpleFilteredSentenceBreakData *decr() {
-        if(umtx_atomic_dec(&refcount) <= 0) {
-            delete this;
+    Simple_Filtered_Sentence_Break_దత్తాంశం *decr() {
+        ఒకవేళ(umtx_atomic_dec(&refcount) <= 0) {
+            తొలగించు ఇది;
         }
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
-    virtual ~SimpleFilteredSentenceBreakData();
+    మాయా ~Simple_Filtered_Sentence_Break_దత్తాంశం();
 
-    bool hasForwardsPartialTrie() const { return fForwardsPartialTrie.isValid(); }
-    bool hasBackwardsTrie() const { return fBackwardsTrie.isValid(); }
+    తార్కిక hasForwardsPartialTrie() స్థిరరాశి { తిరిగి fForwardsPartialTrie.isValid(); }
+    తార్కిక hasBackwardsTrie() స్థిరరాశి { తిరిగి fBackwardsTrie.isValid(); }
 
-    const UCharsTrie& getForwardsPartialTrie() const U_LIFETIME_BOUND {
-        return *fForwardsPartialTrie;
+    స్థిరరాశి UCharsTrie& getForwardsPartialTrie() స్థిరరాశి U_LIFETIME_BOUND {
+        తిరిగి *fForwardsPartialTrie;
     }
-    const UCharsTrie& getBackwardsTrie() const U_LIFETIME_BOUND { return *fBackwardsTrie; }
+    స్థిరరాశి UCharsTrie& getBackwardsTrie() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి *fBackwardsTrie; }
 
-private:
+అంతరంగ:
     // These tries own their data arrays.
     // They are shared and must therefore not be modified.
-    LocalPointer<UCharsTrie>    fForwardsPartialTrie; //  Has ".a" for "a.M."
-    LocalPointer<UCharsTrie>    fBackwardsTrie; //  i.e. ".srM" for Mrs.
+    Local_సూచిక<UCharsTrie>    fForwardsPartialTrie; //  Has ".a" for "a.M."
+    Local_సూచిక<UCharsTrie>    fBackwardsTrie; //  i.e. ".srM" for Mrs.
     u_atomic_int32_t            refcount;
 };
 
-SimpleFilteredSentenceBreakData::~SimpleFilteredSentenceBreakData() {}
+Simple_Filtered_Sentence_Break_దత్తాంశం::~Simple_Filtered_Sentence_Break_దత్తాంశం() {}
 
 /**
  * Concrete implementation
  */
-class SimpleFilteredSentenceBreakIterator : public BreakIterator {
-public:
-  SimpleFilteredSentenceBreakIterator(BreakIterator *adopt, UCharsTrie *forwards, UCharsTrie *backwards, UErrorCode &status);
-  SimpleFilteredSentenceBreakIterator(const SimpleFilteredSentenceBreakIterator& other);
-  virtual ~SimpleFilteredSentenceBreakIterator();
-private:
-  SimpleFilteredSentenceBreakData *fData;
-  LocalPointer<BreakIterator> fDelegate;
-  LocalUTextPointer           fText;
+తరగతి SimpleFilteredSentenceBreakIterator : బహిరంగ BreakIterator {
+బహిరంగ:
+  SimpleFilteredSentenceBreakIterator(BreakIterator *adopt, UCharsTrie *forwards, UCharsTrie *backwards, UError_సంకేతం &స్థితి_2);
+  SimpleFilteredSentenceBreakIterator(స్థిరరాశి SimpleFilteredSentenceBreakIterator& other);
+  మాయా ~SimpleFilteredSentenceBreakIterator();
+అంతరంగ:
+  Simple_Filtered_Sentence_Break_దత్తాంశం *f_దత్తాంశం;
+  Local_సూచిక<BreakIterator> fDelegate;
+  Local_UText_సూచిక           f_పాఠ్యం;
 
   /* -- subclass interface -- */
-public:
+బహిరంగ:
   /* -- cloning and other subclass stuff -- */
-  virtual BreakIterator *  createBufferClone(void * /*stackBuffer*/,
+  మాయా BreakIterator *  create_బఫరు_Clone(శూన్య * /*stackBuffer*/,
                                              int32_t &/*BufferSize*/,
-                                             UErrorCode &status) override {
+                                             UError_సంకేతం &స్థితి_2) override {
     // for now - always deep clone
-    status = U_SAFECLONE_ALLOCATED_WARNING;
-    return clone();
+    స్థితి_2 = U_SAFECLONE_ALLOCATED_WARNING;
+    తిరిగి clone();
   }
-  virtual SimpleFilteredSentenceBreakIterator* clone() const override { return new SimpleFilteredSentenceBreakIterator(*this); }
-  virtual UClassID getDynamicClassID() const override { return nullptr; }
-  virtual bool operator==(const BreakIterator& o) const override { if(this==&o) return true; return false; }
+  మాయా SimpleFilteredSentenceBreakIterator* clone() స్థిరరాశి override { తిరిగి కొత్త SimpleFilteredSentenceBreakIterator(*ఇది); }
+  మాయా UClassID getDynamicClassID() స్థిరరాశి override { తిరిగి శూన్యసూచిక; }
+  మాయా తార్కిక క్రియాకారకం==(స్థిరరాశి BreakIterator& o) స్థిరరాశి override { ఒకవేళ(ఇది==&o) తిరిగి నిజం; తిరిగి అబద్ధం; }
 
   /* -- text modifying -- */
-  virtual void setText(UText *text, UErrorCode &status) override { fDelegate->setText(text,status); }
-  virtual BreakIterator& refreshInputText(UText* input,
-                                          UErrorCode& status) U_LIFETIME_BOUND override {
-      fDelegate->refreshInputText(input, status);
-      return *this;
+  మాయా శూన్య సమితి_పాఠ్యం(UText *పాఠ్యం, UError_సంకేతం &స్థితి_2) override { fDelegate->సమితి_పాఠ్యం(పాఠ్యం,స్థితి_2); }
+  మాయా BreakIterator& refresh_ఆదానం_పాఠ్యం(UText* input,
+                                          UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND override {
+      fDelegate->refresh_ఆదానం_పాఠ్యం(input, స్థితి_2);
+      తిరిగి *ఇది;
   }
-  virtual void adoptText(CharacterIterator* it) override { fDelegate->adoptText(it); }
-  virtual void setText(const UnicodeString &text) override { fDelegate->setText(text); }
+  మాయా శూన్య adopt_పాఠ్యం(CharacterIterator* it) override { fDelegate->adopt_పాఠ్యం(it); }
+  మాయా శూన్య సమితి_పాఠ్యం(స్థిరరాశి UnicodeString &పాఠ్యం) override { fDelegate->సమితి_పాఠ్యం(పాఠ్యం); }
 
   /* -- other functions that are just delegated -- */
-  virtual UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) const override {
-      return fDelegate->getUText(fillIn, status);
+  మాయా UText* getUText(UText* fill_లోపల U_LIFETIME_BOUND, UError_సంకేతం& స్థితి_2) స్థిరరాశి override {
+      తిరిగి fDelegate->getUText(fill_లోపల, స్థితి_2);
   }
-  virtual CharacterIterator& getText() const U_LIFETIME_BOUND override {
-      return fDelegate->getText();
+  మాయా CharacterIterator& get_పాఠ్యం() స్థిరరాశి U_LIFETIME_BOUND override {
+      తిరిగి fDelegate->get_పాఠ్యం();
   }
 
   /* -- ITERATION -- */
-  virtual int32_t first() override;
-  virtual int32_t preceding(int32_t offset) override;
-  virtual int32_t previous() override;
-  virtual UBool isBoundary(int32_t offset) override;
-  virtual int32_t current() const override { return fDelegate->current(); } // we keep the delegate current, so this should be correct.
+  మాయా int32_t first() override;
+  మాయా int32_t preceding(int32_t స్థానభ్రంశం) override;
+  మాయా int32_t మునుపటి() override;
+  మాయా UBool isBoundary(int32_t స్థానభ్రంశం) override;
+  మాయా int32_t current() స్థిరరాశి override { తిరిగి fDelegate->current(); } // we keep the delegate current, so this should be correct.
 
-  virtual int32_t next() override;
+  మాయా int32_t next() override;
 
-  virtual int32_t next(int32_t n) override;
-  virtual int32_t following(int32_t offset) override;
-  virtual int32_t last() override;
+  మాయా int32_t next(int32_t n) override;
+  మాయా int32_t following(int32_t స్థానభ్రంశం) override;
+  మాయా int32_t చివరి() override;
 
-private:
+అంతరంగ:
     /**
      * Given that the fDelegate has already given its "initial" answer,
      * find the NEXT actual (non-excepted) break.
      * @param n initial position from delegate
      * @return new break position or UBRK_DONE
      */
-    int32_t internalNext(int32_t n);
+    int32_t అంతర్గత_తదుపరి(int32_t n);
     /**
      * Given that the fDelegate has already given its "initial" answer,
      * find the PREV actual (non-excepted) break.
      * @param n initial position from delegate
      * @return new break position or UBRK_DONE
      */
-    int32_t internalPrev(int32_t n);
+    int32_t అంతర్గత_Prev(int32_t n);
     /**
      * set up the UText with the value of the fDelegate.
      * Call this before calling breakExceptionAt. 
      * May be able to avoid excess calls
      */
-    void resetState(UErrorCode &status);
+    శూన్య resetState(UError_సంకేతం &స్థితి_2);
     /**
      * Is there a match  (exception) at this spot?
      */
-    enum EFBMatchResult { kNoExceptionHere, kExceptionHere };
+    గణన EFBMatch_ఫలితం { k_No_Exception_ఇక్కడ, k_Exception_ఇక్కడ };
     /**
      * Determine if there is an exception at this spot
      * @param n spot to check
      * @return kNoExceptionHere or kExceptionHere
      **/
-    enum EFBMatchResult breakExceptionAt(int32_t n);
+    గణన EFBMatch_ఫలితం breakExceptionAt(int32_t n);
 };
 
-SimpleFilteredSentenceBreakIterator::SimpleFilteredSentenceBreakIterator(const SimpleFilteredSentenceBreakIterator& other)
-  : BreakIterator(other), fData(other.fData->incr()), fDelegate(other.fDelegate->clone())
+SimpleFilteredSentenceBreakIterator::SimpleFilteredSentenceBreakIterator(స్థిరరాశి SimpleFilteredSentenceBreakIterator& other)
+  : BreakIterator(other), f_దత్తాంశం(other.f_దత్తాంశం->incr()), fDelegate(other.fDelegate->clone())
 {
 }
 
 
-SimpleFilteredSentenceBreakIterator::SimpleFilteredSentenceBreakIterator(BreakIterator *adopt, UCharsTrie *forwards, UCharsTrie *backwards, UErrorCode &status) :
-  BreakIterator(adopt->getLocale(ULOC_VALID_LOCALE,status),adopt->getLocale(ULOC_ACTUAL_LOCALE,status)),
-  fData(new SimpleFilteredSentenceBreakData(forwards, backwards)),
+SimpleFilteredSentenceBreakIterator::SimpleFilteredSentenceBreakIterator(BreakIterator *adopt, UCharsTrie *forwards, UCharsTrie *backwards, UError_సంకేతం &స్థితి_2) :
+  BreakIterator(adopt->getLocale(ULOC_VALID_LOCALE,స్థితి_2),adopt->getLocale(ULOC_ACTUAL_LOCALE,స్థితి_2)),
+  f_దత్తాంశం(కొత్త Simple_Filtered_Sentence_Break_దత్తాంశం(forwards, backwards)),
   fDelegate(adopt)
 {
-    if (fData == nullptr) {
-        delete forwards;
-        delete backwards;
-        if (U_SUCCESS(status)) {
-            status = U_MEMORY_ALLOCATION_ERROR;
+    ఒకవేళ (f_దత్తాంశం == శూన్యసూచిక) {
+        తొలగించు forwards;
+        తొలగించు backwards;
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
         }
     }
 }
 
 SimpleFilteredSentenceBreakIterator::~SimpleFilteredSentenceBreakIterator() {
-    fData = fData->decr();
+    f_దత్తాంశం = f_దత్తాంశం->decr();
 }
 
-void SimpleFilteredSentenceBreakIterator::resetState(UErrorCode &status) {
-  fText.adoptInstead(fDelegate->getUText(fText.orphan(), status));
+శూన్య SimpleFilteredSentenceBreakIterator::resetState(UError_సంకేతం &స్థితి_2) {
+  f_పాఠ్యం.adoptInstead(fDelegate->getUText(f_పాఠ్యం.orphan(), స్థితి_2));
 }
 
-SimpleFilteredSentenceBreakIterator::EFBMatchResult
+SimpleFilteredSentenceBreakIterator::EFBMatch_ఫలితం
 SimpleFilteredSentenceBreakIterator::breakExceptionAt(int32_t n) {
-    int64_t bestPosn = -1;
-    int32_t bestValue = -1;
+    int64_t ఉత్తమ_Posn = -1;
+    int32_t ఉత్తమ_విలువ = -1;
     // loops while 'n' points to an exception.
-    utext_setNativeIndex(fText.getAlias(), n); // from n..
+    utext_సమితి_Native_సూచీ(f_పాఠ్యం.getAlias(), n); // from n..
 
     //if(debug2) u_printf(" n@ %d\n", n);
     // Assume a space is following the '.'  (so we handle the case:  "Mr. /Brown")
-    if(utext_previous32(fText.getAlias())==u' ') {  // TODO: skip a class of chars here??
+    ఒకవేళ(utext_previous32(f_పాఠ్యం.getAlias())==u' ') {  // TODO: skip a class of chars here??
       // TODO only do this the 1st time?
       //if(debug2) u_printf("skipping prev: |%C| \n", (char16_t)uch);
-    } else {
+    } లేకపోతే {
       //if(debug2) u_printf("not skipping prev: |%C| \n", (char16_t)uch);
-      utext_next32(fText.getAlias());
+      utext_next32(f_పాఠ్యం.getAlias());
       //if(debug2) u_printf(" -> : |%C| \n", (char16_t)uch);
     }
 
     {
         // Do not modify the shared trie!
-        UCharsTrie iter(fData->getBackwardsTrie());
+        UCharsTrie iter(f_దత్తాంశం->getBackwardsTrie());
         UChar32 uch;
-        while((uch=utext_previous32(fText.getAlias()))!=U_SENTINEL) {  // more to consume backwards
-            UStringTrieResult r = iter.nextForCodePoint(uch);
-            if(USTRINGTRIE_HAS_VALUE(r)) { // remember the best match so far
-                bestPosn = utext_getNativeIndex(fText.getAlias());
-                bestValue = iter.getValue();
+        అయితే((uch=utext_previous32(f_పాఠ్యం.getAlias()))!=U_SENTINEL) {  // more to consume backwards
+            UString_Trie_ఫలితం r = iter.తదుపరి_For_సంకేతం_బిందువు(uch);
+            ఒకవేళ(USTRINGTRIE_HAS_విలువ(r)) { // remember the best match so far
+                ఉత్తమ_Posn = utext_get_Native_సూచీ(f_పాఠ్యం.getAlias());
+                ఉత్తమ_విలువ = iter.get_విలువ();
             }
-            if(!USTRINGTRIE_HAS_NEXT(r)) {
-                break;
+            ఒకవేళ(!USTRINGTRIE_HAS_తదుపరి(r)) {
+                ఆపు;
             }
             //if(debug2) u_printf("rev< /%C/ cont?%d @%d\n", (char16_t)uch, r, utext_getNativeIndex(fText.getAlias()));
         }
@@ -327,259 +327,259 @@ SimpleFilteredSentenceBreakIterator::breakExceptionAt(int32_t n) {
         //if(debug2) u_printf("rev<+/%C/+end of seq.. r=%d, bestPosn=%d, bestValue=%d\n", (char16_t)uch, r, bestPosn, bestValue);
     //}
 
-    if(bestPosn>=0) {
+    ఒకవేళ(ఉత్తమ_Posn>=0) {
       //if(debug2) u_printf("rev< /%C/ end of seq.. r=%d, bestPosn=%d, bestValue=%d\n", (char16_t)uch, r, bestPosn, bestValue);
 
       //if(USTRINGTRIE_MATCHES(r)) {  // matched - so, now what?
       //int32_t bestValue = iter.getValue();
       ////if(debug2) u_printf("rev< /%C/ matched, skip..%d  bestValue=%d\n", (char16_t)uch, r, bestValue);
 
-      if(bestValue == kMATCH) { // exact match!
+      ఒకవేళ(ఉత్తమ_విలువ == k_సరిపోలిక) { // exact match!
         //if(debug2) u_printf(" exact backward match\n");
-        return kExceptionHere; // See if the next is another exception.
-      } else if(bestValue == kPARTIAL
-                && fData->hasForwardsPartialTrie()) { // make sure there's a forward trie
+        తిరిగి k_Exception_ఇక్కడ; // See if the next is another exception.
+      } లేకపోతే ఒకవేళ(ఉత్తమ_విలువ == kPARTIAL
+                && f_దత్తాంశం->hasForwardsPartialTrie()) { // make sure there's a forward trie
         //if(debug2) u_printf(" partial backward match\n");
         // We matched the "Ph." in "Ph.D." - now we need to run everything through the forwards trie
         // to see if it matches something going forward.
-        UStringTrieResult rfwd = USTRINGTRIE_INTERMEDIATE_VALUE;
-        utext_setNativeIndex(fText.getAlias(), bestPosn); // hope that's close ..
+        UString_Trie_ఫలితం rfwd = USTRINGTRIE_INTERMEDIATE_విలువ;
+        utext_సమితి_Native_సూచీ(f_పాఠ్యం.getAlias(), ఉత్తమ_Posn); // hope that's close ..
         //if(debug2) u_printf("Retrying at %d\n", bestPosn);
         // Do not modify the shared trie!
-        UCharsTrie iter(fData->getForwardsPartialTrie());
+        UCharsTrie iter(f_దత్తాంశం->getForwardsPartialTrie());
         UChar32 uch;
-        while((uch=utext_next32(fText.getAlias()))!=U_SENTINEL &&
-              USTRINGTRIE_HAS_NEXT(rfwd=iter.nextForCodePoint(uch))) {
+        అయితే((uch=utext_next32(f_పాఠ్యం.getAlias()))!=U_SENTINEL &&
+              USTRINGTRIE_HAS_తదుపరి(rfwd=iter.తదుపరి_For_సంకేతం_బిందువు(uch))) {
           //if(debug2) u_printf("fwd> /%C/ cont?%d @%d\n", (char16_t)uch, rfwd, utext_getNativeIndex(fText.getAlias()));
         }
-        if(USTRINGTRIE_MATCHES(rfwd)) {
+        ఒకవేళ(USTRINGTRIE_MATCHES(rfwd)) {
           //if(debug2) u_printf("fwd> /%C/ == forward match!\n", (char16_t)uch);
           // only full matches here, nothing to check
           // skip the next:
-            return kExceptionHere;
-        } else {
+            తిరిగి k_Exception_ఇక్కడ;
+        } లేకపోతే {
           //if(debug2) u_printf("fwd> /%C/ no match.\n", (char16_t)uch);
           // no match (no exception) -return the 'underlying' break
-          return kNoExceptionHere;
+          తిరిగి k_No_Exception_ఇక్కడ;
         }
-      } else {
-        return kNoExceptionHere; // internal error and/or no forwards trie
+      } లేకపోతే {
+        తిరిగి k_No_Exception_ఇక్కడ; // internal error and/or no forwards trie
       }
-    } else {
+    } లేకపోతే {
       //if(debug2) u_printf("rev< /%C/ .. no match..%d\n", (char16_t)uch, r);  // no best match
-      return kNoExceptionHere; // No match - so exit. Not an exception.
+      తిరిగి k_No_Exception_ఇక్కడ; // No match - so exit. Not an exception.
     }
 }
 
 // the workhorse single next.
 int32_t
-SimpleFilteredSentenceBreakIterator::internalNext(int32_t n) {
-  if(n == UBRK_DONE || // at end  or
-    !fData->hasBackwardsTrie()) { // .. no backwards table loaded == no exceptions
-      return n;
+SimpleFilteredSentenceBreakIterator::అంతర్గత_తదుపరి(int32_t n) {
+  ఒకవేళ(n == UBRK_పూర్తి || // at end  or
+    !f_దత్తాంశం->hasBackwardsTrie()) { // .. no backwards table loaded == no exceptions
+      తిరిగి n;
   }
   // OK, do we need to break here?
-  UErrorCode status = U_ZERO_ERROR;
+  UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
   // refresh text
-  resetState(status);
-  if(U_FAILURE(status)) return UBRK_DONE; // bail out
-  int64_t utextLen = utext_nativeLength(fText.getAlias());
+  resetState(స్థితి_2);
+  ఒకవేళ(U_FAILURE(స్థితి_2)) తిరిగి UBRK_పూర్తి; // bail out
+  int64_t utextLen = utext_native_నిడివి(f_పాఠ్యం.getAlias());
 
   //if(debug2) u_printf("str, native len=%d\n", utext_nativeLength(fText.getAlias()));
-  while (n != UBRK_DONE && n != utextLen) { // outer loop runs once per underlying break (from fDelegate).
-    SimpleFilteredSentenceBreakIterator::EFBMatchResult m = breakExceptionAt(n);
+  అయితే (n != UBRK_పూర్తి && n != utextLen) { // outer loop runs once per underlying break (from fDelegate).
+    SimpleFilteredSentenceBreakIterator::EFBMatch_ఫలితం m = breakExceptionAt(n);
 
-    switch(m) {
-    case kExceptionHere:
+    ఎంపిక(m) {
+    స్థితి k_Exception_ఇక్కడ:
       n = fDelegate->next(); // skip this one. Find the next lowerlevel break.
-      continue;
+      కొనసాగు;
 
-    default:
-    case kNoExceptionHere:
-      return n;
+    అప్రమేయ:
+    స్థితి k_No_Exception_ఇక్కడ:
+      తిరిగి n;
     }    
   }
-  return n;
+  తిరిగి n;
 }
 
 int32_t
-SimpleFilteredSentenceBreakIterator::internalPrev(int32_t n) {
-  if(n == 0 || n == UBRK_DONE || // at end  or
-    !fData->hasBackwardsTrie()) { // .. no backwards table loaded == no exceptions
-      return n;
+SimpleFilteredSentenceBreakIterator::అంతర్గత_Prev(int32_t n) {
+  ఒకవేళ(n == 0 || n == UBRK_పూర్తి || // at end  or
+    !f_దత్తాంశం->hasBackwardsTrie()) { // .. no backwards table loaded == no exceptions
+      తిరిగి n;
   }
   // OK, do we need to break here?
-  UErrorCode status = U_ZERO_ERROR;
+  UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
   // refresh text
-  resetState(status);
-  if(U_FAILURE(status)) return UBRK_DONE; // bail out
+  resetState(స్థితి_2);
+  ఒకవేళ(U_FAILURE(స్థితి_2)) తిరిగి UBRK_పూర్తి; // bail out
 
   //if(debug2) u_printf("str, native len=%d\n", utext_nativeLength(fText.getAlias()));
-  while (n != UBRK_DONE && n != 0) { // outer loop runs once per underlying break (from fDelegate).
-    SimpleFilteredSentenceBreakIterator::EFBMatchResult m = breakExceptionAt(n);
+  అయితే (n != UBRK_పూర్తి && n != 0) { // outer loop runs once per underlying break (from fDelegate).
+    SimpleFilteredSentenceBreakIterator::EFBMatch_ఫలితం m = breakExceptionAt(n);
 
-    switch(m) {
-    case kExceptionHere:
-      n = fDelegate->previous(); // skip this one. Find the next lowerlevel break.
-      continue;
+    ఎంపిక(m) {
+    స్థితి k_Exception_ఇక్కడ:
+      n = fDelegate->మునుపటి(); // skip this one. Find the next lowerlevel break.
+      కొనసాగు;
 
-    default:
-    case kNoExceptionHere:
-      return n;
+    అప్రమేయ:
+    స్థితి k_No_Exception_ఇక్కడ:
+      తిరిగి n;
     }    
   }
-  return n;
+  తిరిగి n;
 }
 
 
 int32_t
 SimpleFilteredSentenceBreakIterator::next() {
-  return internalNext(fDelegate->next());
+  తిరిగి అంతర్గత_తదుపరి(fDelegate->next());
 }
 
 int32_t
 SimpleFilteredSentenceBreakIterator::first() {
   // Don't suppress a break opportunity at the beginning of text.
-  return fDelegate->first();
+  తిరిగి fDelegate->first();
 }
 
 int32_t
-SimpleFilteredSentenceBreakIterator::preceding(int32_t offset) {
-  return internalPrev(fDelegate->preceding(offset));
+SimpleFilteredSentenceBreakIterator::preceding(int32_t స్థానభ్రంశం) {
+  తిరిగి అంతర్గత_Prev(fDelegate->preceding(స్థానభ్రంశం));
 }
 
 int32_t
-SimpleFilteredSentenceBreakIterator::previous() {
-  return internalPrev(fDelegate->previous());
+SimpleFilteredSentenceBreakIterator::మునుపటి() {
+  తిరిగి అంతర్గత_Prev(fDelegate->మునుపటి());
 }
 
-UBool SimpleFilteredSentenceBreakIterator::isBoundary(int32_t offset) {
-  if (!fDelegate->isBoundary(offset)) return false; // no break to suppress
+UBool SimpleFilteredSentenceBreakIterator::isBoundary(int32_t స్థానభ్రంశం) {
+  ఒకవేళ (!fDelegate->isBoundary(స్థానభ్రంశం)) తిరిగి అబద్ధం; // no break to suppress
 
-  if (!fData->hasBackwardsTrie()) return true; // no data = no suppressions
+  ఒకవేళ (!f_దత్తాంశం->hasBackwardsTrie()) తిరిగి నిజం; // no data = no suppressions
 
-  UErrorCode status = U_ZERO_ERROR;
-  resetState(status);
+  UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+  resetState(స్థితి_2);
 
-  SimpleFilteredSentenceBreakIterator::EFBMatchResult m = breakExceptionAt(offset);
+  SimpleFilteredSentenceBreakIterator::EFBMatch_ఫలితం m = breakExceptionAt(స్థానభ్రంశం);
 
-  switch(m) {
-  case kExceptionHere:
-    return false;
-  default:
-  case kNoExceptionHere:
-    return true;
+  ఎంపిక(m) {
+  స్థితి k_Exception_ఇక్కడ:
+    తిరిగి అబద్ధం;
+  అప్రమేయ:
+  స్థితి k_No_Exception_ఇక్కడ:
+    తిరిగి నిజం;
   }    
 }
  
 int32_t
-SimpleFilteredSentenceBreakIterator::next(int32_t offset) {
-  return internalNext(fDelegate->next(offset));
+SimpleFilteredSentenceBreakIterator::next(int32_t స్థానభ్రంశం) {
+  తిరిగి అంతర్గత_తదుపరి(fDelegate->next(స్థానభ్రంశం));
 }
 
 int32_t
-SimpleFilteredSentenceBreakIterator::following(int32_t offset) {
-  return internalNext(fDelegate->following(offset));
+SimpleFilteredSentenceBreakIterator::following(int32_t స్థానభ్రంశం) {
+  తిరిగి అంతర్గత_తదుపరి(fDelegate->following(స్థానభ్రంశం));
 }
 
 int32_t
-SimpleFilteredSentenceBreakIterator::last() {
+SimpleFilteredSentenceBreakIterator::చివరి() {
   // Don't suppress a break opportunity at the end of text.
-  return fDelegate->last();
+  తిరిగి fDelegate->చివరి();
 }
 
 
 /**
  * Concrete implementation of builder class.
  */
-class SimpleFilteredBreakIteratorBuilder : public FilteredBreakIteratorBuilder {
-public:
-  virtual ~SimpleFilteredBreakIteratorBuilder();
-  SimpleFilteredBreakIteratorBuilder(const Locale &fromLocale, UErrorCode &status);
-  SimpleFilteredBreakIteratorBuilder(UErrorCode &status);
-  virtual UBool suppressBreakAfter(const UnicodeString& exception, UErrorCode& status) override;
-  virtual UBool unsuppressBreakAfter(const UnicodeString& exception, UErrorCode& status) override;
-  virtual BreakIterator *build(BreakIterator* adoptBreakIterator, UErrorCode& status) override;
-private:
-  UStringSet fSet;
+తరగతి SimpleFilteredBreakIteratorBuilder : బహిరంగ FilteredBreakIteratorBuilder {
+బహిరంగ:
+  మాయా ~SimpleFilteredBreakIteratorBuilder();
+  SimpleFilteredBreakIteratorBuilder(స్థిరరాశి Locale &fromLocale, UError_సంకేతం &స్థితి_2);
+  SimpleFilteredBreakIteratorBuilder(UError_సంకేతం &స్థితి_2);
+  మాయా UBool suppressBreakAfter(స్థిరరాశి UnicodeString& exception, UError_సంకేతం& స్థితి_2) override;
+  మాయా UBool unsuppressBreakAfter(స్థిరరాశి UnicodeString& exception, UError_సంకేతం& స్థితి_2) override;
+  మాయా BreakIterator *build(BreakIterator* adoptBreakIterator, UError_సంకేతం& స్థితి_2) override;
+అంతరంగ:
+  UString_సమితి f_సమితి;
 };
 
 SimpleFilteredBreakIteratorBuilder::~SimpleFilteredBreakIteratorBuilder()
 {
 }
 
-SimpleFilteredBreakIteratorBuilder::SimpleFilteredBreakIteratorBuilder(UErrorCode &status) 
-  : fSet(status)
+SimpleFilteredBreakIteratorBuilder::SimpleFilteredBreakIteratorBuilder(UError_సంకేతం &స్థితి_2) 
+  : f_సమితి(స్థితి_2)
 {
 }
 
-SimpleFilteredBreakIteratorBuilder::SimpleFilteredBreakIteratorBuilder(const Locale &fromLocale, UErrorCode &status)
-  : fSet(status)
+SimpleFilteredBreakIteratorBuilder::SimpleFilteredBreakIteratorBuilder(స్థిరరాశి Locale &fromLocale, UError_సంకేతం &స్థితి_2)
+  : f_సమితి(స్థితి_2)
 {
-  if(U_SUCCESS(status)) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    LocalUResourceBundlePointer b(ures_open(U_ICUDATA_BRKITR, fromLocale.getBaseName(), &subStatus));
-    if (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
-      status = subStatus; // copy the failing status 
-#if FB_DEBUG
-      fprintf(stderr, "open BUNDLE %s : %s, %s\n", fromLocale.getBaseName(), "[exit]", u_errorName(status));
-#endif
-      return;  // leaves the builder empty, if you try to use it.
+  ఒకవేళ(U_SUCCESS(స్థితి_2)) {
+    UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+    Local_UResource_Bundle_సూచిక b(ures_open(U_ICUDATA_BRKITR, fromLocale.get_పునాది_Name(), &sub_స్థితి));
+    ఒకవేళ (U_FAILURE(sub_స్థితి) || (sub_స్థితి == U_USING_DEFAULT_WARNING) ) {    
+      స్థితి_2 = sub_స్థితి; // copy the failing status 
+#ఒకవేళ FB_DEBUG
+      fprintf(stderr, "open BUNDLE %s : %s, %s\n", fromLocale.get_పునాది_Name(), "[exit]", u_errorName(స్థితి_2));
+#అయితే_ముగింపు
+      తిరిగి;  // leaves the builder empty, if you try to use it.
     }
-    LocalUResourceBundlePointer exceptions(ures_getByKeyWithFallback(b.getAlias(), "exceptions", nullptr, &subStatus));
-    if (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
-      status = subStatus; // copy the failing status 
-#if FB_DEBUG
-      fprintf(stderr, "open EXCEPTIONS %s : %s, %s\n", fromLocale.getBaseName(), "[exit]", u_errorName(status));
-#endif
-      return;  // leaves the builder empty, if you try to use it.
+    Local_UResource_Bundle_సూచిక exceptions(ures_get_By_కీలకం_With_Fallback(b.getAlias(), "exceptions", శూన్యసూచిక, &sub_స్థితి));
+    ఒకవేళ (U_FAILURE(sub_స్థితి) || (sub_స్థితి == U_USING_DEFAULT_WARNING) ) {    
+      స్థితి_2 = sub_స్థితి; // copy the failing status 
+#ఒకవేళ FB_DEBUG
+      fprintf(stderr, "open EXCEPTIONS %s : %s, %s\n", fromLocale.get_పునాది_Name(), "[exit]", u_errorName(స్థితి_2));
+#అయితే_ముగింపు
+      తిరిగి;  // leaves the builder empty, if you try to use it.
     }
-    LocalUResourceBundlePointer breaks(ures_getByKeyWithFallback(exceptions.getAlias(), "SentenceBreak", nullptr, &subStatus));
+    Local_UResource_Bundle_సూచిక breaks(ures_get_By_కీలకం_With_Fallback(exceptions.getAlias(), "SentenceBreak", శూన్యసూచిక, &sub_స్థితి));
 
-#if FB_DEBUG
+#ఒకవేళ FB_DEBUG
     {
-      UErrorCode subsub = subStatus;
-      fprintf(stderr, "open SentenceBreak %s => %s, %s\n", fromLocale.getBaseName(), ures_getLocale(breaks.getAlias(), &subsub), u_errorName(subStatus));
+      UError_సంకేతం subsub = sub_స్థితి;
+      fprintf(stderr, "open SentenceBreak %s => %s, %s\n", fromLocale.get_పునాది_Name(), ures_getLocale(breaks.getAlias(), &subsub), u_errorName(sub_స్థితి));
     }
-#endif
+#అయితే_ముగింపు
     
-    if (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
-      status = subStatus; // copy the failing status 
-#if FB_DEBUG
-      fprintf(stderr, "open %s : %s, %s\n", fromLocale.getBaseName(), "[exit]", u_errorName(status));
-#endif
-      return;  // leaves the builder empty, if you try to use it.
+    ఒకవేళ (U_FAILURE(sub_స్థితి) || (sub_స్థితి == U_USING_DEFAULT_WARNING) ) {    
+      స్థితి_2 = sub_స్థితి; // copy the failing status 
+#ఒకవేళ FB_DEBUG
+      fprintf(stderr, "open %s : %s, %s\n", fromLocale.get_పునాది_Name(), "[exit]", u_errorName(స్థితి_2));
+#అయితే_ముగింపు
+      తిరిగి;  // leaves the builder empty, if you try to use it.
     }
 
-    LocalUResourceBundlePointer strs;
-    subStatus = status; // Pick up inherited warning status now 
-    do {
-      strs.adoptInstead(ures_getNextResource(breaks.getAlias(), strs.orphan(), &subStatus));
-      if(strs.isValid() && U_SUCCESS(subStatus)) {
-        UnicodeString str(ures_getUnicodeString(strs.getAlias(), &status));
-        suppressBreakAfter(str, status); // load the string
+    Local_UResource_Bundle_సూచిక strs;
+    sub_స్థితి = స్థితి_2; // Pick up inherited warning status now 
+    చేయి {
+      strs.adoptInstead(ures_get_తదుపరి_Resource(breaks.getAlias(), strs.orphan(), &sub_స్థితి));
+      ఒకవేళ(strs.isValid() && U_SUCCESS(sub_స్థితి)) {
+        UnicodeString str(ures_getUnicodeString(strs.getAlias(), &స్థితి_2));
+        suppressBreakAfter(str, స్థితి_2); // load the string
       }
-    } while (strs.isValid() && U_SUCCESS(subStatus));
-    if(U_FAILURE(subStatus)&&subStatus!=U_INDEX_OUTOFBOUNDS_ERROR&&U_SUCCESS(status)) {
-      status = subStatus;
+    } అయితే (strs.isValid() && U_SUCCESS(sub_స్థితి));
+    ఒకవేళ(U_FAILURE(sub_స్థితి)&&sub_స్థితి!=U_సూచీ_OUTOFBOUNDS_ERROR&&U_SUCCESS(స్థితి_2)) {
+      స్థితి_2 = sub_స్థితి;
     }
   }
 }
 
 UBool
-SimpleFilteredBreakIteratorBuilder::suppressBreakAfter(const UnicodeString& exception, UErrorCode& status)
+SimpleFilteredBreakIteratorBuilder::suppressBreakAfter(స్థిరరాశి UnicodeString& exception, UError_సంకేతం& స్థితి_2)
 {
-  UBool r = fSet.add(exception, status);
+  UBool r = f_సమితి.కూడు(exception, స్థితి_2);
   FB_TRACE("suppressBreakAfter",&exception,r,0);
-  return r;
+  తిరిగి r;
 }
 
 UBool
-SimpleFilteredBreakIteratorBuilder::unsuppressBreakAfter(const UnicodeString& exception, UErrorCode& status)
+SimpleFilteredBreakIteratorBuilder::unsuppressBreakAfter(స్థిరరాశి UnicodeString& exception, UError_సంకేతం& స్థితి_2)
 {
-  UBool r = fSet.remove(exception, status);
+  UBool r = f_సమితి.remove(exception, స్థితి_2);
   FB_TRACE("unsuppressBreakAfter",&exception,r,0);
-  return r;
+  తిరిగి r;
 }
 
 /**
@@ -589,128 +589,128 @@ SimpleFilteredBreakIteratorBuilder::unsuppressBreakAfter(const UnicodeString& ex
  * Note: "new UnicodeString[subCount]" ends up calling global operator new
  * on MSVC2012 for some reason.
  */
-static inline UnicodeString* newUnicodeStringArray(size_t count) {
-    return new UnicodeString[count ? count : 1];
+స్థిర అంతఃవరుస UnicodeString* newUnicodeStringArray(size_t count) {
+    తిరిగి కొత్త UnicodeString[count ? count : 1];
 }
 
 BreakIterator *
-SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UErrorCode& status) {
-  LocalPointer<BreakIterator> adopt(adoptBreakIterator);
+SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UError_సంకేతం& స్థితి_2) {
+  Local_సూచిక<BreakIterator> adopt(adoptBreakIterator);
 
-  LocalPointer<UCharsTrieBuilder> builder(new UCharsTrieBuilder(status), status);
-  LocalPointer<UCharsTrieBuilder> builder2(new UCharsTrieBuilder(status), status);
-  if(U_FAILURE(status)) {
-    return nullptr;
+  Local_సూచిక<UCharsTrieBuilder> builder(కొత్త UCharsTrieBuilder(స్థితి_2), స్థితి_2);
+  Local_సూచిక<UCharsTrieBuilder> builder2(కొత్త UCharsTrieBuilder(స్థితి_2), స్థితి_2);
+  ఒకవేళ(U_FAILURE(స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
 
-  int32_t revCount = 0;
-  int32_t fwdCount = 0;
+  int32_t rev_లెక్క = 0;
+  int32_t fwd_లెక్క = 0;
 
-  int32_t subCount = fSet.size();
+  int32_t sub_లెక్క = f_సమితి.size();
 
-  UnicodeString *ustrs_ptr = newUnicodeStringArray(subCount);
+  UnicodeString *ustrs_ptr = newUnicodeStringArray(sub_లెక్క);
   
   LocalArray<UnicodeString> ustrs(ustrs_ptr);
 
-  LocalMemory<int> partials;
-  partials.allocateInsteadAndReset(subCount);
+  Local_జ్ఞాపకం<పూర్ణాంకం> partials;
+  partials.allocateInsteadAndReset(sub_లెక్క);
 
-  LocalPointer<UCharsTrie>    backwardsTrie; //  i.e. ".srM" for Mrs.
-  LocalPointer<UCharsTrie>    forwardsPartialTrie; //  Has ".a" for "a.M."
+  Local_సూచిక<UCharsTrie>    backwardsTrie; //  i.e. ".srM" for Mrs.
+  Local_సూచిక<UCharsTrie>    forwardsPartialTrie; //  Has ".a" for "a.M."
 
-  int n=0;
-  for ( int32_t i = 0;
-        i<fSet.size();
+  పూర్ణాంకం n=0;
+  కొరకు ( int32_t i = 0;
+        i<f_సమితి.size();
         i++) {
-    const UnicodeString *abbr = fSet.getStringAt(i);
-    if(abbr) {
-      FB_TRACE("build",abbr,true,i);
+    స్థిరరాశి UnicodeString *abbr = f_సమితి.getStringAt(i);
+    ఒకవేళ(abbr) {
+      FB_TRACE("build",abbr,నిజం,i);
       ustrs[n] = *abbr; // copy by value
-      FB_TRACE("ustrs[n]",&ustrs[n],true,i);
-    } else {
-      FB_TRACE("build",abbr,false,i);
-      status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+      FB_TRACE("ustrs[n]",&ustrs[n],నిజం,i);
+    } లేకపోతే {
+      FB_TRACE("build",abbr,అబద్ధం,i);
+      స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+      తిరిగి శూన్యసూచిక;
     }
     partials[n] = 0; // default: not partial
     n++;
   }
   // first pass - find partials.
-  for(int i=0;i<subCount;i++) {
-    int nn = ustrs[i].indexOf(kFULLSTOP); // TODO: non-'.' abbreviations
-    if(nn>-1 && (nn+1)!=ustrs[i].length()) {
-      FB_TRACE("partial",&ustrs[i],false,i);
+  కొరకు(పూర్ణాంకం i=0;i<sub_లెక్క;i++) {
+    పూర్ణాంకం nn = ustrs[i].సూచీ_యొక్క(kFULLSTOP); // TODO: non-'.' abbreviations
+    ఒకవేళ(nn>-1 && (nn+1)!=ustrs[i].length()) {
+      FB_TRACE("partial",&ustrs[i],అబద్ధం,i);
       // is partial.
       // is it unique?
-      int sameAs = -1;
-      for(int j=0;j<subCount;j++) {
-        if(j==i) continue;
-        if(ustrs[i].compare(0,nn+1,ustrs[j],0,nn+1)==0) {
-          FB_TRACE("prefix",&ustrs[j],false,nn+1);
+      పూర్ణాంకం sameAs = -1;
+      కొరకు(పూర్ణాంకం j=0;j<sub_లెక్క;j++) {
+        ఒకవేళ(j==i) కొనసాగు;
+        ఒకవేళ(ustrs[i].compare(0,nn+1,ustrs[j],0,nn+1)==0) {
+          FB_TRACE("prefix",&ustrs[j],అబద్ధం,nn+1);
           //UBool otherIsPartial = ((nn+1)!=ustrs[j].length());  // true if ustrs[j] doesn't end at nn
-          if(partials[j]==0) { // hasn't been processed yet
-            partials[j] = kSuppressInReverse | kAddToForward;
-            FB_TRACE("suppressing",&ustrs[j],false,j);
-          } else if(partials[j] & kSuppressInReverse) {
+          ఒకవేళ(partials[j]==0) { // hasn't been processed yet
+            partials[j] = k_Suppress_లోపల_తిరగేయి | k_కూడు_గమ్యం_Forward;
+            FB_TRACE("suppressing",&ustrs[j],అబద్ధం,j);
+          } లేకపోతే ఒకవేళ(partials[j] & k_Suppress_లోపల_తిరగేయి) {
             sameAs = j; // the other entry is already in the reverse table.
           }
         }
       }
-      FB_TRACE("for partial same-",&ustrs[i],false,sameAs);
-      FB_TRACE(" == partial #",&ustrs[i],false,partials[i]);
-      UnicodeString prefix(ustrs[i], 0, nn+1);
-      if(sameAs == -1 && partials[i] == 0) {
+      FB_TRACE("for partial same-",&ustrs[i],అబద్ధం,sameAs);
+      FB_TRACE(" == partial #",&ustrs[i],అబద్ధం,partials[i]);
+      UnicodeString ఉపసర్గ(ustrs[i], 0, nn+1);
+      ఒకవేళ(sameAs == -1 && partials[i] == 0) {
         // first one - add the prefix to the reverse table.
-        prefix.reverse();
-        builder->add(prefix, kPARTIAL, status);
-        revCount++;
-        FB_TRACE("Added partial",&prefix,false, i);
-        FB_TRACE(u_errorName(status),&ustrs[i],false,i);
-        partials[i] = kSuppressInReverse | kAddToForward;
-      } else {
-        FB_TRACE("NOT adding partial",&prefix,false, i);
-        FB_TRACE(u_errorName(status),&ustrs[i],false,i);
+        ఉపసర్గ.reverse();
+        builder->కూడు(ఉపసర్గ, kPARTIAL, స్థితి_2);
+        rev_లెక్క++;
+        FB_TRACE("Added partial",&ఉపసర్గ,అబద్ధం, i);
+        FB_TRACE(u_errorName(స్థితి_2),&ustrs[i],అబద్ధం,i);
+        partials[i] = k_Suppress_లోపల_తిరగేయి | k_కూడు_గమ్యం_Forward;
+      } లేకపోతే {
+        FB_TRACE("NOT adding partial",&ఉపసర్గ,అబద్ధం, i);
+        FB_TRACE(u_errorName(స్థితి_2),&ustrs[i],అబద్ధం,i);
       }
     }
   }
-  for(int i=0;i<subCount;i++) {
-    if(partials[i]==0) {
+  కొరకు(పూర్ణాంకం i=0;i<sub_లెక్క;i++) {
+    ఒకవేళ(partials[i]==0) {
       ustrs[i].reverse();
-      builder->add(ustrs[i], kMATCH, status);
-      revCount++;
-      FB_TRACE(u_errorName(status), &ustrs[i], false, i);
-    } else {
-      FB_TRACE("Adding fwd",&ustrs[i], false, i);
+      builder->కూడు(ustrs[i], k_సరిపోలిక, స్థితి_2);
+      rev_లెక్క++;
+      FB_TRACE(u_errorName(స్థితి_2), &ustrs[i], అబద్ధం, i);
+    } లేకపోతే {
+      FB_TRACE("Adding fwd",&ustrs[i], అబద్ధం, i);
 
       // an optimization would be to only add the portion after the '.'
       // for example, for "Ph.D." we store ".hP" in the reverse table. We could just store "D." in the forward,
       // instead of "Ph.D." since we already know the "Ph." part is a match.
       // would need the trie to be able to hold 0-length strings, though.
-      builder2->add(ustrs[i], kMATCH, status); // forward
-      fwdCount++;
+      builder2->కూడు(ustrs[i], k_సరిపోలిక, స్థితి_2); // forward
+      fwd_లెక్క++;
       //ustrs[i].reverse();
       ////if(debug2) u_printf("SUPPRESS- not Added(%d):  /%S/ status=%s\n",partials[i], ustrs[i].getTerminatedBuffer(), u_errorName(status));
     }
   }
-  FB_TRACE("AbbrCount",nullptr,false, subCount);
+  FB_TRACE("AbbrCount",శూన్యసూచిక,అబద్ధం, sub_లెక్క);
 
-  if(revCount>0) {
-    backwardsTrie.adoptInstead(builder->build(USTRINGTRIE_BUILD_FAST, status));
-    if(U_FAILURE(status)) {
-      FB_TRACE(u_errorName(status),nullptr,false, -1);
-      return nullptr;
+  ఒకవేళ(rev_లెక్క>0) {
+    backwardsTrie.adoptInstead(builder->build(USTRINGTRIE_BUILD_FAST, స్థితి_2));
+    ఒకవేళ(U_FAILURE(స్థితి_2)) {
+      FB_TRACE(u_errorName(స్థితి_2),శూన్యసూచిక,అబద్ధం, -1);
+      తిరిగి శూన్యసూచిక;
     }
   }
 
-  if(fwdCount>0) {
-    forwardsPartialTrie.adoptInstead(builder2->build(USTRINGTRIE_BUILD_FAST, status));
-    if(U_FAILURE(status)) {
-      FB_TRACE(u_errorName(status),nullptr,false, -1);
-      return nullptr;
+  ఒకవేళ(fwd_లెక్క>0) {
+    forwardsPartialTrie.adoptInstead(builder2->build(USTRINGTRIE_BUILD_FAST, స్థితి_2));
+    ఒకవేళ(U_FAILURE(స్థితి_2)) {
+      FB_TRACE(u_errorName(స్థితి_2),శూన్యసూచిక,అబద్ధం, -1);
+      తిరిగి శూన్యసూచిక;
     }
   }
 
-  return new SimpleFilteredSentenceBreakIterator(adopt.orphan(), forwardsPartialTrie.orphan(), backwardsTrie.orphan(), status);
+  తిరిగి కొత్త SimpleFilteredSentenceBreakIterator(adopt.orphan(), forwardsPartialTrie.orphan(), backwardsTrie.orphan(), స్థితి_2);
 }
 
 
@@ -723,24 +723,24 @@ FilteredBreakIteratorBuilder::~FilteredBreakIteratorBuilder() {
 }
 
 FilteredBreakIteratorBuilder *
-FilteredBreakIteratorBuilder::createInstance(const Locale& where, UErrorCode& status) {
-  if(U_FAILURE(status)) return nullptr;
-  LocalPointer<FilteredBreakIteratorBuilder> ret(new SimpleFilteredBreakIteratorBuilder(where, status), status);
-  return (U_SUCCESS(status))? ret.orphan(): nullptr;
+FilteredBreakIteratorBuilder::createInstance(స్థిరరాశి Locale& where, UError_సంకేతం& స్థితి_2) {
+  ఒకవేళ(U_FAILURE(స్థితి_2)) తిరిగి శూన్యసూచిక;
+  Local_సూచిక<FilteredBreakIteratorBuilder> ret(కొత్త SimpleFilteredBreakIteratorBuilder(where, స్థితి_2), స్థితి_2);
+  తిరిగి (U_SUCCESS(స్థితి_2))? ret.orphan(): శూన్యసూచిక;
 }
 
 FilteredBreakIteratorBuilder *
-FilteredBreakIteratorBuilder::createInstance(UErrorCode &status) {
-  return createEmptyInstance(status);
+FilteredBreakIteratorBuilder::createInstance(UError_సంకేతం &స్థితి_2) {
+  తిరిగి create_ఖాళీలు_Instance(స్థితి_2);
 }
 
 FilteredBreakIteratorBuilder *
-FilteredBreakIteratorBuilder::createEmptyInstance(UErrorCode& status) {
-  if(U_FAILURE(status)) return nullptr;
-  LocalPointer<FilteredBreakIteratorBuilder> ret(new SimpleFilteredBreakIteratorBuilder(status), status);
-  return (U_SUCCESS(status))? ret.orphan(): nullptr;
+FilteredBreakIteratorBuilder::create_ఖాళీలు_Instance(UError_సంకేతం& స్థితి_2) {
+  ఒకవేళ(U_FAILURE(స్థితి_2)) తిరిగి శూన్యసూచిక;
+  Local_సూచిక<FilteredBreakIteratorBuilder> ret(కొత్త SimpleFilteredBreakIteratorBuilder(స్థితి_2), స్థితి_2);
+  తిరిగి (U_SUCCESS(స్థితి_2))? ret.orphan(): శూన్యసూచిక;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif //#if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
+#అయితే_ముగింపు //#if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION

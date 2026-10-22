@@ -11,14 +11,14 @@
 * 2010nov19 Markus Scherer  Rewrite for formatVersion 2.
 **********************************************************************
 */
-#ifndef PROPNAME_H
-#define PROPNAME_H
+#నిర్వచితం_కాకపోతే PROPNAME_H
+#నిర్వచించు PROPNAME_H
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uchar.h"
-#include "udataswp.h"
-#include "uprops.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/bytestrie.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "udataswp.h"
+#అన్తర్భావ "uprops.h"
 
 /*
  * This header defines the in-memory layout of the property names data
@@ -51,71 +51,71 @@ U_CDECL_BEGIN
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
+uprv_compare_ASCIIProperty_పేర్లు(స్థిరరాశి అక్షరం *name1, స్థిరరాశి అక్షరం *name2);
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
+uprv_compare_EBCDICProperty_పేర్లు(స్థిరరాశి అక్షరం *name1, స్థిరరాశి అక్షరం *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-#   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-#   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#ఒకవేళ U_CHARSET_FAMILY==U_ASCII_FAMILY
+#   define uprv_compare_Property_పేర్లు uprv_compare_ASCIIProperty_పేర్లు
+#లేదావేళ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#   define uprv_compare_Property_పేర్లు uprv_compare_EBCDICProperty_పేర్లు
+#లేకపోతే
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#అయితే_ముగింపు
 
-U_CDECL_END
+U_CDECL_చివర
 
 /* UDataMemory structure and signatures ------------------------------------- */
 
-#define PNAME_DATA_NAME "pnames"
-#define PNAME_DATA_TYPE "icu"
+#నిర్వచించు PNAME_దత్తాంశం_NAME "pnames"
+#నిర్వచించు PNAME_దత్తాంశం_TYPE "icu"
 
 /* Fields in UDataInfo: */
 
 /* PNAME_SIG[] is encoded as numeric literals for compatibility with the HP compiler */
-#define PNAME_SIG_0 ((uint8_t)0x70) /* p */
-#define PNAME_SIG_1 ((uint8_t)0x6E) /* n */
-#define PNAME_SIG_2 ((uint8_t)0x61) /* a */
-#define PNAME_SIG_3 ((uint8_t)0x6D) /* m */
+#నిర్వచించు PNAME_SIG_0 ((uint8_t)0x70) /* p */
+#నిర్వచించు PNAME_SIG_1 ((uint8_t)0x6E) /* n */
+#నిర్వచించు PNAME_SIG_2 ((uint8_t)0x61) /* a */
+#నిర్వచించు PNAME_SIG_3 ((uint8_t)0x6D) /* m */
 
 U_NAMESPACE_BEGIN
 
-class PropNameData {
-public:
-    enum {
+class Prop_Name_దత్తాంశం {
+బహిరంగ:
+    గణన {
         // Byte offsets from the start of the data, after the generic header.
-        IX_VALUE_MAPS_OFFSET,
-        IX_BYTE_TRIES_OFFSET,
-        IX_NAME_GROUPS_OFFSET,
-        IX_RESERVED3_OFFSET,
-        IX_RESERVED4_OFFSET,
-        IX_TOTAL_SIZE,
+        IX_విలువ_MAPS_స్థానభ్రంశం,
+        IX_BYTE_TRIES_స్థానభ్రంశం,
+        IX_NAME_GROUPS_స్థానభ్రంశం,
+        IX_RESERVED3_స్థానభ్రంశం,
+        IX_RESERVED4_స్థానభ్రంశం,
+        IX_మొత్తం_కొలత,
 
         // Other values.
-        IX_MAX_NAME_LENGTH,
+        IX_MAX_NAME_నిడివి,
         IX_RESERVED7,
-        IX_COUNT
+        IX_లెక్క
     };
 
-    static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    స్థిర స్థిరరాశి అక్షరం *getPropertyName(int32_t property, int32_t nameChoice);
+    స్థిర స్థిరరాశి అక్షరం *get_Property_విలువ_Name(int32_t property, int32_t విలువ_2, int32_t nameChoice);
 
-    static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    స్థిర int32_t getPropertyEnum(స్థిరరాశి అక్షరం *alias);
+    స్థిర int32_t get_Property_విలువ_Enum(int32_t property, స్థిరరాశి అక్షరం *alias);
 
-private:
-    static int32_t findProperty(int32_t property);
-    static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
-    static const char *getName(const char *nameGroup, int32_t nameIndex);
-    static UBool containsName(BytesTrie &trie, const char *name);
+అంతరంగ:
+    స్థిర int32_t కనుగొను_Property(int32_t property);
+    స్థిర int32_t కనుగొను_Property_విలువ_Name_సమూహం(int32_t విలువ_Map_సూచీ, int32_t విలువ_2);
+    స్థిర స్థిరరాశి అక్షరం *getName(స్థిరరాశి అక్షరం *name_సమూహం, int32_t name_సూచీ);
+    స్థిర UBool కలిగియుంది_Name(బైట్లు_Trie &trie, స్థిరరాశి అక్షరం *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    స్థిర int32_t get_Property_Or_విలువ_Enum(int32_t బైట్లు_Trie_స్థానభ్రంశం, స్థిరరాశి అక్షరం *alias);
 
-    static const int32_t indexes[];
-    static const int32_t valueMaps[];
-    static const uint8_t bytesTries[];
-    static const char nameGroups[];
+    స్థిర స్థిరరాశి int32_t indexes[];
+    స్థిర స్థిరరాశి int32_t విలువ_Maps[];
+    స్థిర స్థిరరాశి uint8_t బైట్లు_Tries[];
+    స్థిర స్థిరరాశి అక్షరం nameGroups[];
 };
 
 /*
@@ -207,6 +207,6 @@ private:
  *      in a property's sparse value ranges.
  */
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు

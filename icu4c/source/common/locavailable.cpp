@@ -19,71 +19,71 @@
 *   that then do not depend on resource bundle code and res_index bundles.
 */
 
-#include "unicode/errorcode.h"
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "uresimp.h"
+#అన్తర్భావ "unicode/errorcode.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/uloc.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "uresimp.h"
 
 // C++ API ----------------------------------------------------------------- ***
 
 U_NAMESPACE_BEGIN
 
-static icu::Locale*  availableLocaleList = nullptr;
-static int32_t  availableLocaleListCount;
-static icu::UInitOnce gInitOnceLocale {};
+స్థిర icu::Locale*  అందుబాటు_Locale_List = శూన్యసూచిక;
+స్థిర int32_t  అందుబాటు_Locale_List_లెక్క;
+స్థిర icu::UInitOnce gInitOnceLocale {};
 
-namespace {
+నామాకాశ {
 
-UBool U_CALLCONV locale_available_cleanup()
+UBool U_CALLCONV locale_అందుబాటు_cleanup()
 {
-    if (availableLocaleList) {
-        delete []availableLocaleList;
-        availableLocaleList = nullptr;
+    ఒకవేళ (అందుబాటు_Locale_List) {
+        తొలగించు []అందుబాటు_Locale_List;
+        అందుబాటు_Locale_List = శూన్యసూచిక;
     }
-    availableLocaleListCount = 0;
+    అందుబాటు_Locale_List_లెక్క = 0;
     gInitOnceLocale.reset();
 
-    return true;
+    తిరిగి నిజం;
 }
 
 }  // namespace
 
-void U_CALLCONV locale_available_init() {
+శూన్య U_CALLCONV locale_అందుబాటు_init() {
     // This function is a friend of class Locale.
     // This function is only invoked via umtx_initOnce().
     
     // for now, there is a hardcoded list, so just walk through that list and set it up.
     //  Note: this function is a friend of class Locale.
-    availableLocaleListCount = uloc_countAvailable();
-    if(availableLocaleListCount) {
-       availableLocaleList = new Locale[availableLocaleListCount];
+    అందుబాటు_Locale_List_లెక్క = uloc_లెక్క_అందుబాటు();
+    ఒకవేళ(అందుబాటు_Locale_List_లెక్క) {
+       అందుబాటు_Locale_List = కొత్త Locale[అందుబాటు_Locale_List_లెక్క];
     }
-    if (availableLocaleList == nullptr) {
-        availableLocaleListCount= 0;
+    ఒకవేళ (అందుబాటు_Locale_List == శూన్యసూచిక) {
+        అందుబాటు_Locale_List_లెక్క= 0;
     }
-    for (int32_t locCount=availableLocaleListCount-1; locCount>=0; --locCount) {
-        availableLocaleList[locCount].setFromPOSIXID(uloc_getAvailable(locCount));
+    కొరకు (int32_t loc_లెక్క=అందుబాటు_Locale_List_లెక్క-1; loc_లెక్క>=0; --loc_లెక్క) {
+        అందుబాటు_Locale_List[loc_లెక్క].సమితి_From_POSIXID(uloc_get_అందుబాటు(loc_లెక్క));
     }
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_AVAILABLE, locale_available_cleanup);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_LOCALE_అందుబాటు, locale_అందుబాటు_cleanup);
 }
 
-const Locale* U_EXPORT2
-Locale::getAvailableLocales(int32_t& count)
+స్థిరరాశి Locale* U_EXPORT2
+Locale::get_అందుబాటు_Locales(int32_t& count)
 {
-    umtx_initOnce(gInitOnceLocale, &locale_available_init);
-    count = availableLocaleListCount;
-    return availableLocaleList;
+    umtx_initOnce(gInitOnceLocale, &locale_అందుబాటు_init);
+    count = అందుబాటు_Locale_List_లెక్క;
+    తిరిగి అందుబాటు_Locale_List;
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 // C API ------------------------------------------------------------------- ***
 
@@ -91,175 +91,175 @@ U_NAMESPACE_USE
 
 /* ### Constants **************************************************/
 
-namespace {
+నామాకాశ {
 
 // Enough capacity for the two lists in the res_index.res file
-const char** gAvailableLocaleNames[2] = {};
-int32_t gAvailableLocaleCounts[2] = {};
+స్థిరరాశి అక్షరం** g_అందుబాటు_Locale_పేర్లు[2] = {};
+int32_t g_అందుబాటు_Locale_Counts[2] = {};
 icu::UInitOnce ginstalledLocalesInitOnce {};
 
-class AvailableLocalesSink : public ResourceSink {
-  public:
-    void put(const char *key, ResourceValue &value, UBool /*noFallback*/, UErrorCode &status) override {
-        if (U_FAILURE(status)) { return; }
-        ResourceTable resIndexTable = value.getTable(status);
-        if (U_FAILURE(status)) { return; }
-        for (int32_t i = 0; resIndexTable.getKeyAndValue(i, key, value); ++i) {
-            ULocAvailableType type;
-            if (uprv_strcmp(key, "InstalledLocales") == 0) {
-                type = ULOC_AVAILABLE_DEFAULT;
-            } else if (uprv_strcmp(key, "AliasLocales") == 0) {
-                type = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
-            } else {
+తరగతి అందుబాటు_Locales_Sink : బహిరంగ ResourceSink {
+  బహిరంగ:
+    శూన్య put(స్థిరరాశి అక్షరం *కీలకం, Resource_విలువ &value, UBool /*noFallback*/, UError_సంకేతం &స్థితి_2) override {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+        Resource_పట్టిక res_సూచీ_పట్టిక = value.get_పట్టిక(స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+        కొరకు (int32_t i = 0; res_సూచీ_పట్టిక.get_కీలకం_And_విలువ(i, కీలకం, value); ++i) {
+            ULoc_అందుబాటు_Type type;
+            ఒకవేళ (uprv_strcmp(కీలకం, "InstalledLocales") == 0) {
+                type = ULOC_అందుబాటు_DEFAULT;
+            } లేకపోతే ఒకవేళ (uprv_strcmp(కీలకం, "AliasLocales") == 0) {
+                type = ULOC_అందుబాటు_ONLY_LEGACY_ALIASES;
+            } లేకపోతే {
                 // CLDRVersion, etc.
-                continue;
+                కొనసాగు;
             }
-            ResourceTable availableLocalesTable = value.getTable(status);
-            if (U_FAILURE(status)) {
-                return;
+            Resource_పట్టిక అందుబాటు_Locales_పట్టిక = value.get_పట్టిక(స్థితి_2);
+            ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తిరిగి;
             }
-            gAvailableLocaleCounts[type] = availableLocalesTable.getSize();
-            gAvailableLocaleNames[type] = static_cast<const char**>(
-                uprv_malloc(gAvailableLocaleCounts[type] * sizeof(const char*)));
-            if (gAvailableLocaleNames[type] == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            g_అందుబాటు_Locale_Counts[type] = అందుబాటు_Locales_పట్టిక.get_కొలత();
+            g_అందుబాటు_Locale_పేర్లు[type] = static_cast<స్థిరరాశి అక్షరం**>(
+                uprv_malloc(g_అందుబాటు_Locale_Counts[type] * పరిమాణం(స్థిరరాశి అక్షరం*)));
+            ఒకవేళ (g_అందుబాటు_Locale_పేర్లు[type] == శూన్యసూచిక) {
+                స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి;
             }
-            for (int32_t j = 0; availableLocalesTable.getKeyAndValue(j, key, value); ++j) {
-                gAvailableLocaleNames[type][j] = key;
+            కొరకు (int32_t j = 0; అందుబాటు_Locales_పట్టిక.get_కీలకం_And_విలువ(j, కీలకం, value); ++j) {
+                g_అందుబాటు_Locale_పేర్లు[type][j] = కీలకం;
             }
         }
     }
 };
 
-class AvailableLocalesStringEnumeration : public StringEnumeration {
-  public:
-    AvailableLocalesStringEnumeration(ULocAvailableType type) : fType(type) {
+తరగతి అందుబాటు_Locales_String_Enumeration : బహిరంగ StringEnumeration {
+  బహిరంగ:
+    అందుబాటు_Locales_String_Enumeration(ULoc_అందుబాటు_Type type) : fType(type) {
     }
 
-    const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
-        if (U_FAILURE(status)) { return nullptr; }
-        ULocAvailableType actualType = fType;
-        int32_t actualIndex = fIndex++;
+    స్థిరరాశి అక్షరం* next(int32_t* ఫలితం_నిడివి, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND override {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి శూన్యసూచిక; }
+        ULoc_అందుబాటు_Type actualType = fType;
+        int32_t actual_సూచీ = f_సూచీ++;
 
         // If the "combined" list was requested, resolve that now
-        if (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
-            int32_t defaultLocalesCount = gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT];
-            if (actualIndex < defaultLocalesCount) {
-                actualType = ULOC_AVAILABLE_DEFAULT;
-            } else {
-                actualIndex -= defaultLocalesCount;
-                actualType = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
+        ఒకవేళ (fType == ULOC_అందుబాటు_WITH_LEGACY_ALIASES) {
+            int32_t default_Locales_లెక్క = g_అందుబాటు_Locale_Counts[ULOC_అందుబాటు_DEFAULT];
+            ఒకవేళ (actual_సూచీ < default_Locales_లెక్క) {
+                actualType = ULOC_అందుబాటు_DEFAULT;
+            } లేకపోతే {
+                actual_సూచీ -= default_Locales_లెక్క;
+                actualType = ULOC_అందుబాటు_ONLY_LEGACY_ALIASES;
             }
         }
 
         // Return the requested string
-        int32_t count = gAvailableLocaleCounts[actualType];
-        const char* result;
-        if (actualIndex < count) {
-            result = gAvailableLocaleNames[actualType][actualIndex];
-            if (resultLength != nullptr) {
-                *resultLength = static_cast<int32_t>(uprv_strlen(result));
+        int32_t count = g_అందుబాటు_Locale_Counts[actualType];
+        స్థిరరాశి అక్షరం* ఫలితం;
+        ఒకవేళ (actual_సూచీ < count) {
+            ఫలితం = g_అందుబాటు_Locale_పేర్లు[actualType][actual_సూచీ];
+            ఒకవేళ (ఫలితం_నిడివి != శూన్యసూచిక) {
+                *ఫలితం_నిడివి = static_cast<int32_t>(uprv_strlen(ఫలితం));
             }
-        } else {
-            result = nullptr;
-            if (resultLength != nullptr) {
-                *resultLength = 0;
+        } లేకపోతే {
+            ఫలితం = శూన్యసూచిక;
+            ఒకవేళ (ఫలితం_నిడివి != శూన్యసూచిక) {
+                *ఫలితం_నిడివి = 0;
             }
         }
-        return result;
+        తిరిగి ఫలితం;
     }
 
-    void reset(UErrorCode &status) override {
-        if (U_FAILURE(status)) { return; }
-        fIndex = 0;
+    శూన్య reset(UError_సంకేతం &స్థితి_2) override {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+        f_సూచీ = 0;
     }
 
-    int32_t count(UErrorCode &status) const override {
-        if (U_FAILURE(status)) { return 0; }
-        if (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
-            return gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT]
-                + gAvailableLocaleCounts[ULOC_AVAILABLE_ONLY_LEGACY_ALIASES];
-        } else {
-            return gAvailableLocaleCounts[fType];
+    int32_t count(UError_సంకేతం &స్థితి_2) స్థిరరాశి override {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి 0; }
+        ఒకవేళ (fType == ULOC_అందుబాటు_WITH_LEGACY_ALIASES) {
+            తిరిగి g_అందుబాటు_Locale_Counts[ULOC_అందుబాటు_DEFAULT]
+                + g_అందుబాటు_Locale_Counts[ULOC_అందుబాటు_ONLY_LEGACY_ALIASES];
+        } లేకపోతే {
+            తిరిగి g_అందుబాటు_Locale_Counts[fType];
         }
     }
 
-  private:
-    ULocAvailableType fType;
-    int32_t fIndex = 0;
+  అంతరంగ:
+    ULoc_అందుబాటు_Type fType;
+    int32_t f_సూచీ = 0;
 };
 
 /* ### Get available **************************************************/
 
 UBool U_CALLCONV uloc_cleanup() {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gAvailableLocaleNames); i++) {
-        uprv_free(gAvailableLocaleNames[i]);
-        gAvailableLocaleNames[i] = nullptr;
-        gAvailableLocaleCounts[i] = 0;
+    కొరకు (int32_t i = 0; i < UPRV_LENGTHOF(g_అందుబాటు_Locale_పేర్లు); i++) {
+        uprv_free(g_అందుబాటు_Locale_పేర్లు[i]);
+        g_అందుబాటు_Locale_పేర్లు[i] = శూన్యసూచిక;
+        g_అందుబాటు_Locale_Counts[i] = 0;
     }
     ginstalledLocalesInitOnce.reset();
-    return true;
+    తిరిగి నిజం;
 }
 
 // Load Installed Locales. This function will be called exactly once
 //   via the initOnce mechanism.
 
-void U_CALLCONV loadInstalledLocales(UErrorCode& status) {
-    ucln_common_registerCleanup(UCLN_COMMON_ULOC, uloc_cleanup);
+శూన్య U_CALLCONV ఎక్కించు_Installed_Locales(UError_సంకేతం& స్థితి_2) {
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_ULOC, uloc_cleanup);
 
-    icu::LocalUResourceBundlePointer rb(ures_openDirect(nullptr, "res_index", &status));
-    AvailableLocalesSink sink;
-    ures_getAllItemsWithFallback(rb.getAlias(), "", sink, status);
+    icu::Local_UResource_Bundle_సూచిక rb(ures_open_ప్రత్యక్ష(శూన్యసూచిక, "res_index", &స్థితి_2));
+    అందుబాటు_Locales_Sink sink;
+    ures_get_All_వస్తువులు_With_Fallback(rb.getAlias(), "", sink, స్థితి_2);
 }
 
-void _load_installedLocales(UErrorCode& status) {
-    umtx_initOnce(ginstalledLocalesInitOnce, &loadInstalledLocales, status);
+శూన్య ఎక్కించు_installed_Locales(UError_సంకేతం& స్థితి_2) {
+    umtx_initOnce(ginstalledLocalesInitOnce, &ఎక్కించు_Installed_Locales, స్థితి_2);
 }
 
 } // namespace
 
-U_CAPI const char* U_EXPORT2
-uloc_getAvailable(int32_t offset) {
-    icu::ErrorCode status;
-    _load_installedLocales(status);
-    if (status.isFailure()) {
-        return nullptr;
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uloc_get_అందుబాటు(int32_t స్థానభ్రంశం) {
+    icu::Error_సంకేతం స్థితి_2;
+    ఎక్కించు_installed_Locales(స్థితి_2);
+    ఒకవేళ (స్థితి_2.isFailure()) {
+        తిరిగి శూన్యసూచిక;
     }
-    if (offset > gAvailableLocaleCounts[0]) {
+    ఒకవేళ (స్థానభ్రంశం > g_అందుబాటు_Locale_Counts[0]) {
         // *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
-    return gAvailableLocaleNames[0][offset];
+    తిరిగి g_అందుబాటు_Locale_పేర్లు[0][స్థానభ్రంశం];
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_countAvailable() {
-    icu::ErrorCode status;
-    _load_installedLocales(status);
-    if (status.isFailure()) {
-        return 0;
+uloc_లెక్క_అందుబాటు() {
+    icu::Error_సంకేతం స్థితి_2;
+    ఎక్కించు_installed_Locales(స్థితి_2);
+    ఒకవేళ (స్థితి_2.isFailure()) {
+        తిరిగి 0;
     }
-    return gAvailableLocaleCounts[0];
+    తిరిగి g_అందుబాటు_Locale_Counts[0];
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+uloc_open_అందుబాటు_By_Type(ULoc_అందుబాటు_Type type, UError_సంకేతం* స్థితి_2) {
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if (type < 0 || type >= ULOC_AVAILABLE_COUNT) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ (type < 0 || type >= ULOC_అందుబాటు_లెక్క) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    _load_installedLocales(*status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ఎక్కించు_installed_Locales(*స్థితి_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    LocalPointer<AvailableLocalesStringEnumeration> result(
-        new AvailableLocalesStringEnumeration(type), *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    Local_సూచిక<అందుబాటు_Locales_String_Enumeration> ఫలితం(
+        కొత్త అందుబాటు_Locales_String_Enumeration(type), *స్థితి_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    return uenum_openFromStringEnumeration(result.orphan(), status);
+    తిరిగి uenum_openFromStringEnumeration(ఫలితం.orphan(), స్థితి_2);
 }

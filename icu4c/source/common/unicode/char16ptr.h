@@ -4,18 +4,18 @@
 // char16ptr.h
 // created: 2017feb28 Markus W. Scherer
 
-#ifndef __CHAR16PTR_H__
-#define __CHAR16PTR_H__
+#నిర్వచితం_కాకపోతే __CHAR16PTR_H__
+#నిర్వచించు __CHAR16PTR_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_శీర్షిక_API
 
-#include <cstddef>
-#include <string_view>
-#include <type_traits>
+#అన్తర్భావ <cstddef>
+#అన్తర్భావ <string_view>
+#అన్తర్భావ <type_traits>
 
-#endif
+#అయితే_ముగింపు
 
 /**
  * \file
@@ -29,16 +29,16 @@
  * Barrier for pointer anti-aliasing optimizations even across function boundaries.
  * @internal
  */
-#ifdef U_ALIASING_BARRIER
+#నిర్వచితమైతే U_ALIASING_BARRIER
     // Use the predefined value.
-#elif (defined(__clang__) || defined(__GNUC__)) && U_PLATFORM != U_PF_BROWSER_NATIVE_CLIENT
-#   define U_ALIASING_BARRIER(ptr) asm volatile("" : : "rm"(ptr) : "memory")
-#elif defined(U_IN_DOXYGEN)
+#లేదావేళ (defined(__clang__) || defined(__GNUC__)) && U_PLATFORM != U_PF_BROWSER_NATIVE_CLIENT
+#   define U_ALIASING_BARRIER(ptr) asm అస్థిర("" : : "rm"(ptr) : "memory")
+#లేదావేళ defined(U_లోపల_DOXYGEN)
 #   define U_ALIASING_BARRIER(ptr)
-#endif
+#అయితే_ముగింపు
 
 // ICU DLL-exported
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -47,106 +47,106 @@ U_NAMESPACE_BEGIN
  * @stable ICU 59
  */
 class U_COMMON_API Char16Ptr final {
-public:
+బహిరంగ:
     /**
      * Copies the pointer.
      * @param p pointer
      * @stable ICU 59
      */
-    inline Char16Ptr(char16_t *p);
-#if !U_CHAR16_IS_TYPEDEF
+    అంతఃవరుస Char16Ptr(char16_t *p);
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF
     /**
      * Converts the pointer to char16_t *.
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline Char16Ptr(uint16_t *p);
-#endif
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+    అంతఃవరుస Char16Ptr(uint16_t *p);
+#అయితే_ముగింపు
+#ఒకవేళ U_SIZEOF_WCHAR_T==2 || defined(U_లోపల_DOXYGEN)
     /**
      * Converts the pointer to char16_t *.
      * (Only defined if U_SIZEOF_WCHAR_T==2.)
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline Char16Ptr(wchar_t *p);
-#endif
+    అంతఃవరుస Char16Ptr(wchar_t *p);
+#అయితే_ముగింపు
     /**
      * nullptr constructor.
      * @param p nullptr
      * @stable ICU 59
      */
-    inline Char16Ptr(std::nullptr_t p);
+    అంతఃవరుస Char16Ptr(std::nullptr_t p);
     /**
      * Destructor.
      * @stable ICU 59
      */
-    inline ~Char16Ptr();
+    అంతఃవరుస ~Char16Ptr();
 
     /**
      * Pointer access.
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline char16_t *get() const;
+    అంతఃవరుస char16_t *get() స్థిరరాశి;
     /**
      * char16_t pointer access via type conversion (e.g., static_cast).
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline operator char16_t *() const { return get(); }
+    అంతఃవరుస క్రియాకారకం char16_t *() స్థిరరాశి { తిరిగి get(); }
 
-private:
+అంతరంగ:
     Char16Ptr() = delete;
 
-#ifdef U_ALIASING_BARRIER
-    template<typename T> static char16_t *cast(T *t) {
+#నిర్వచితమైతే U_ALIASING_BARRIER
+    మూస<typename T> స్థిర char16_t *cast(T *t) {
         U_ALIASING_BARRIER(t);
-        return reinterpret_cast<char16_t *>(t);
+        తిరిగి reinterpret_cast<char16_t *>(t);
     }
 
     char16_t *p_;
-#else
-    union {
+#లేకపోతే
+    సంఘం {
         char16_t *cp;
-        uint16_t *up;
+        uint16_t *పైకి;
         wchar_t *wp;
     } u_;
-#endif
+#అయితే_ముగింపు
 };
 
 /// \cond
-#ifdef U_ALIASING_BARRIER
+#నిర్వచితమైతే U_ALIASING_BARRIER
 
 Char16Ptr::Char16Ptr(char16_t *p) : p_(p) {}
-#if !U_CHAR16_IS_TYPEDEF
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF
 Char16Ptr::Char16Ptr(uint16_t *p) : p_(cast(p)) {}
-#endif
-#if U_SIZEOF_WCHAR_T==2
+#అయితే_ముగింపు
+#ఒకవేళ U_SIZEOF_WCHAR_T==2
 Char16Ptr::Char16Ptr(wchar_t *p) : p_(cast(p)) {}
-#endif
+#అయితే_ముగింపు
 Char16Ptr::Char16Ptr(std::nullptr_t p) : p_(p) {}
 Char16Ptr::~Char16Ptr() {
     U_ALIASING_BARRIER(p_);
 }
 
-char16_t *Char16Ptr::get() const { return p_; }
+char16_t *Char16Ptr::get() స్థిరరాశి { తిరిగి p_; }
 
-#else
+#లేకపోతే
 
 Char16Ptr::Char16Ptr(char16_t *p) { u_.cp = p; }
-#if !U_CHAR16_IS_TYPEDEF
-Char16Ptr::Char16Ptr(uint16_t *p) { u_.up = p; }
-#endif
-#if U_SIZEOF_WCHAR_T==2
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF
+Char16Ptr::Char16Ptr(uint16_t *p) { u_.పైకి = p; }
+#అయితే_ముగింపు
+#ఒకవేళ U_SIZEOF_WCHAR_T==2
 Char16Ptr::Char16Ptr(wchar_t *p) { u_.wp = p; }
-#endif
+#అయితే_ముగింపు
 Char16Ptr::Char16Ptr(std::nullptr_t p) { u_.cp = p; }
 Char16Ptr::~Char16Ptr() {}
 
-char16_t *Char16Ptr::get() const { return u_.cp; }
+char16_t *Char16Ptr::get() స్థిరరాశి { తిరిగి u_.cp; }
 
-#endif
+#అయితే_ముగింపు
 /// \endcond
 
 /**
@@ -154,162 +154,162 @@ char16_t *Char16Ptr::get() const { return u_.cp; }
  * @stable ICU 59
  */
 class U_COMMON_API ConstChar16Ptr final {
-public:
+బహిరంగ:
     /**
      * Copies the pointer.
      * @param p pointer
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const char16_t *p);
-#if !U_CHAR16_IS_TYPEDEF
+    అంతఃవరుస ConstChar16Ptr(స్థిరరాశి char16_t *p);
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF
     /**
      * Converts the pointer to char16_t *.
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const uint16_t *p);
-#endif
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+    అంతఃవరుస ConstChar16Ptr(స్థిరరాశి uint16_t *p);
+#అయితే_ముగింపు
+#ఒకవేళ U_SIZEOF_WCHAR_T==2 || defined(U_లోపల_DOXYGEN)
     /**
      * Converts the pointer to char16_t *.
      * (Only defined if U_SIZEOF_WCHAR_T==2.)
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const wchar_t *p);
-#endif
+    అంతఃవరుస ConstChar16Ptr(స్థిరరాశి wchar_t *p);
+#అయితే_ముగింపు
     /**
      * nullptr constructor.
      * @param p nullptr
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const std::nullptr_t p);
+    అంతఃవరుస ConstChar16Ptr(స్థిరరాశి std::nullptr_t p);
 
     /**
      * Destructor.
      * @stable ICU 59
      */
-    inline ~ConstChar16Ptr();
+    అంతఃవరుస ~ConstChar16Ptr();
 
     /**
      * Pointer access.
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline const char16_t *get() const;
+    అంతఃవరుస స్థిరరాశి char16_t *get() స్థిరరాశి;
     /**
      * char16_t pointer access via type conversion (e.g., static_cast).
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline operator const char16_t *() const { return get(); }
+    అంతఃవరుస క్రియాకారకం స్థిరరాశి char16_t *() స్థిరరాశి { తిరిగి get(); }
 
-private:
+అంతరంగ:
     ConstChar16Ptr() = delete;
 
-#ifdef U_ALIASING_BARRIER
-    template<typename T> static const char16_t *cast(const T *t) {
+#నిర్వచితమైతే U_ALIASING_BARRIER
+    మూస<typename T> స్థిర స్థిరరాశి char16_t *cast(స్థిరరాశి T *t) {
         U_ALIASING_BARRIER(t);
-        return reinterpret_cast<const char16_t *>(t);
+        తిరిగి reinterpret_cast<స్థిరరాశి char16_t *>(t);
     }
 
-    const char16_t *p_;
-#else
-    union {
-        const char16_t *cp;
-        const uint16_t *up;
-        const wchar_t *wp;
+    స్థిరరాశి char16_t *p_;
+#లేకపోతే
+    సంఘం {
+        స్థిరరాశి char16_t *cp;
+        స్థిరరాశి uint16_t *పైకి;
+        స్థిరరాశి wchar_t *wp;
     } u_;
-#endif
+#అయితే_ముగింపు
 };
 
 /// \cond
-#ifdef U_ALIASING_BARRIER
+#నిర్వచితమైతే U_ALIASING_BARRIER
 
-ConstChar16Ptr::ConstChar16Ptr(const char16_t *p) : p_(p) {}
-#if !U_CHAR16_IS_TYPEDEF
-ConstChar16Ptr::ConstChar16Ptr(const uint16_t *p) : p_(cast(p)) {}
-#endif
-#if U_SIZEOF_WCHAR_T==2
-ConstChar16Ptr::ConstChar16Ptr(const wchar_t *p) : p_(cast(p)) {}
-#endif
-ConstChar16Ptr::ConstChar16Ptr(const std::nullptr_t p) : p_(p) {}
+ConstChar16Ptr::ConstChar16Ptr(స్థిరరాశి char16_t *p) : p_(p) {}
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF
+ConstChar16Ptr::ConstChar16Ptr(స్థిరరాశి uint16_t *p) : p_(cast(p)) {}
+#అయితే_ముగింపు
+#ఒకవేళ U_SIZEOF_WCHAR_T==2
+ConstChar16Ptr::ConstChar16Ptr(స్థిరరాశి wchar_t *p) : p_(cast(p)) {}
+#అయితే_ముగింపు
+ConstChar16Ptr::ConstChar16Ptr(స్థిరరాశి std::nullptr_t p) : p_(p) {}
 ConstChar16Ptr::~ConstChar16Ptr() {
     U_ALIASING_BARRIER(p_);
 }
 
-const char16_t *ConstChar16Ptr::get() const { return p_; }
+స్థిరరాశి char16_t *ConstChar16Ptr::get() స్థిరరాశి { తిరిగి p_; }
 
-#else
+#లేకపోతే
 
-ConstChar16Ptr::ConstChar16Ptr(const char16_t *p) { u_.cp = p; }
-#if !U_CHAR16_IS_TYPEDEF
-ConstChar16Ptr::ConstChar16Ptr(const uint16_t *p) { u_.up = p; }
-#endif
-#if U_SIZEOF_WCHAR_T==2
-ConstChar16Ptr::ConstChar16Ptr(const wchar_t *p) { u_.wp = p; }
-#endif
-ConstChar16Ptr::ConstChar16Ptr(const std::nullptr_t p) { u_.cp = p; }
+ConstChar16Ptr::ConstChar16Ptr(స్థిరరాశి char16_t *p) { u_.cp = p; }
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF
+ConstChar16Ptr::ConstChar16Ptr(స్థిరరాశి uint16_t *p) { u_.పైకి = p; }
+#అయితే_ముగింపు
+#ఒకవేళ U_SIZEOF_WCHAR_T==2
+ConstChar16Ptr::ConstChar16Ptr(స్థిరరాశి wchar_t *p) { u_.wp = p; }
+#అయితే_ముగింపు
+ConstChar16Ptr::ConstChar16Ptr(స్థిరరాశి std::nullptr_t p) { u_.cp = p; }
 ConstChar16Ptr::~ConstChar16Ptr() {}
 
-const char16_t *ConstChar16Ptr::get() const { return u_.cp; }
+స్థిరరాశి char16_t *ConstChar16Ptr::get() స్థిరరాశి { తిరిగి u_.cp; }
 
-#endif
+#అయితే_ముగింపు
 /// \endcond
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // U_SHOW_CPLUSPLUS_API
+#అయితే_ముగింపు  // U_SHOW_CPLUSPLUS_API
 
 // Usable in header-only definitions
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_శీర్షిక_API
 
-namespace U_ICU_NAMESPACE_OR_INTERNAL {
+namespace U_ICU_NAMESPACE_OR_అంతర్గత {
 
-#ifndef U_FORCE_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_FORCE_HIDE_అంతర్గత_API
 /** @internal */
-template <typename T, typename = std::enable_if_t<std::is_same_v<T, UChar>>>
-inline const char16_t* uprv_char16PtrFromUChar(const T* p U_LIFETIME_BOUND) {
-    if constexpr (std::is_same_v<UChar, char16_t>) {
-        return p;
-    } else {
-#if U_SHOW_CPLUSPLUS_API
-        return ConstChar16Ptr(p).get();
-#else
-#ifdef U_ALIASING_BARRIER
+మూస <typename T, typename = std::enable_if_t<std::is_same_v<T, UChar>>>
+అంతఃవరుస స్థిరరాశి char16_t* uprv_char16PtrFromUChar(స్థిరరాశి T* p U_LIFETIME_BOUND) {
+    ఒకవేళ constexpr (std::is_same_v<UChar, char16_t>) {
+        తిరిగి p;
+    } లేకపోతే {
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+        తిరిగి ConstChar16Ptr(p).get();
+#లేకపోతే
+#నిర్వచితమైతే U_ALIASING_BARRIER
         U_ALIASING_BARRIER(p);
-#endif
-        return reinterpret_cast<const char16_t *>(p);
-#endif
+#అయితే_ముగింపు
+        తిరిగి reinterpret_cast<స్థిరరాశి char16_t *>(p);
+#అయితే_ముగింపు
     }
 }
-#if !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF && (!defined(LIBCPP_సంస్కరణ) || LIBCPP_సంస్కరణ < 180000)
 /** @internal */
-inline const char16_t* uprv_char16PtrFromUint16(const uint16_t* p U_LIFETIME_BOUND) {
-#if U_SHOW_CPLUSPLUS_API
-    return ConstChar16Ptr(p).get();
-#else
-#ifdef U_ALIASING_BARRIER
+అంతఃవరుస స్థిరరాశి char16_t* uprv_char16PtrFromUint16(స్థిరరాశి uint16_t* p U_LIFETIME_BOUND) {
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+    తిరిగి ConstChar16Ptr(p).get();
+#లేకపోతే
+#నిర్వచితమైతే U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<const char16_t *>(p);
-#endif
+#అయితే_ముగింపు
+    తిరిగి reinterpret_cast<స్థిరరాశి char16_t *>(p);
+#అయితే_ముగింపు
 }
-#endif
-#if U_SIZEOF_WCHAR_T==2
+#అయితే_ముగింపు
+#ఒకవేళ U_SIZEOF_WCHAR_T==2
 /** @internal */
-inline const char16_t* uprv_char16PtrFromWchar(const wchar_t* p U_LIFETIME_BOUND) {
-#if U_SHOW_CPLUSPLUS_API
-    return ConstChar16Ptr(p).get();
-#else
-#ifdef U_ALIASING_BARRIER
+అంతఃవరుస స్థిరరాశి char16_t* uprv_char16PtrFromWchar(స్థిరరాశి wchar_t* p U_LIFETIME_BOUND) {
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+    తిరిగి ConstChar16Ptr(p).get();
+#లేకపోతే
+#నిర్వచితమైతే U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<const char16_t *>(p);
-#endif
+#అయితే_ముగింపు
+    తిరిగి reinterpret_cast<స్థిరరాశి char16_t *>(p);
+#అయితే_ముగింపు
 }
-#endif
-#endif
+#అయితే_ముగింపు
+#అయితే_ముగింపు
 
 /**
  * Converts from const char16_t * to const UChar *.
@@ -318,11 +318,11 @@ inline const char16_t* uprv_char16PtrFromWchar(const wchar_t* p U_LIFETIME_BOUND
  * @return p as const UChar *
  * @stable ICU 59
  */
-inline const UChar* toUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
-#ifdef U_ALIASING_BARRIER
+అంతఃవరుస స్థిరరాశి UChar* గమ్యం_UChar_Ptr(స్థిరరాశి char16_t* p U_LIFETIME_BOUND) {
+#నిర్వచితమైతే U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<const UChar *>(p);
+#అయితే_ముగింపు
+    తిరిగి reinterpret_cast<స్థిరరాశి UChar *>(p);
 }
 
 /**
@@ -332,11 +332,11 @@ inline const UChar* toUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
  * @return p as UChar *
  * @stable ICU 59
  */
-inline UChar* toUCharPtr(char16_t* p U_LIFETIME_BOUND) {
-#ifdef U_ALIASING_BARRIER
+అంతఃవరుస UChar* గమ్యం_UChar_Ptr(char16_t* p U_LIFETIME_BOUND) {
+#నిర్వచితమైతే U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<UChar *>(p);
+#అయితే_ముగింపు
+    తిరిగి reinterpret_cast<UChar *>(p);
 }
 
 /**
@@ -346,11 +346,11 @@ inline UChar* toUCharPtr(char16_t* p U_LIFETIME_BOUND) {
  * @return p as const OldUChar *
  * @stable ICU 59
  */
-inline const OldUChar* toOldUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
-#ifdef U_ALIASING_BARRIER
+అంతఃవరుస స్థిరరాశి OldUChar* గమ్యం_Old_UChar_Ptr(స్థిరరాశి char16_t* p U_LIFETIME_BOUND) {
+#నిర్వచితమైతే U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<const OldUChar *>(p);
+#అయితే_ముగింపు
+    తిరిగి reinterpret_cast<స్థిరరాశి OldUChar *>(p);
 }
 
 /**
@@ -360,94 +360,94 @@ inline const OldUChar* toOldUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
  * @return p as OldUChar *
  * @stable ICU 59
  */
-inline OldUChar* toOldUCharPtr(char16_t* p U_LIFETIME_BOUND) {
-#ifdef U_ALIASING_BARRIER
+అంతఃవరుస OldUChar* గమ్యం_Old_UChar_Ptr(char16_t* p U_LIFETIME_BOUND) {
+#నిర్వచితమైతే U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<OldUChar *>(p);
+#అయితే_ముగింపు
+    తిరిగి reinterpret_cast<OldUChar *>(p);
 }
 
 }  // U_ICU_NAMESPACE_OR_INTERNAL
 
-#endif  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#అయితే_ముగింపు  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
 // ICU DLL-exported
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
-#ifndef U_FORCE_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_FORCE_HIDE_అంతర్గత_API
 /**
  * Is T convertible to a std::u16string_view or some other 16-bit string view?
  * @internal
  */
-template<typename T>
-constexpr bool ConvertibleToU16StringView =
+మూస<typename T>
+constexpr bool Convertible_గమ్యం_U16_String_View =
     std::is_convertible_v<T, std::u16string_view>
-#if !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF && (!defined(LIBCPP_సంస్కరణ) || LIBCPP_సంస్కరణ < 180000)
     || std::is_convertible_v<T, std::basic_string_view<uint16_t>>
-#endif
-#if U_SIZEOF_WCHAR_T==2
+#అయితే_ముగింపు
+#ఒకవేళ U_SIZEOF_WCHAR_T==2
     || std::is_convertible_v<T, std::wstring_view>
-#endif
+#అయితే_ముగింపు
     ;
 
-namespace internal {
+namespace అంతర్గత_2 {
 /**
  * Pass-through overload.
  * @internal
  */
-inline std::u16string_view toU16StringView(std::u16string_view sv U_LIFETIME_BOUND) { return sv; }
+అంతఃవరుస std::u16string_view గమ్యం_U16_String_View(std::u16string_view sv U_LIFETIME_BOUND) { తిరిగి sv; }
 
-#if !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
+#ఒకవేళ !U_CHAR16_IS_TYPEDEF && (!defined(LIBCPP_సంస్కరణ) || LIBCPP_సంస్కరణ < 180000)
 /**
  * Basically undefined behavior but sometimes necessary conversion
  * from std::basic_string_view<uint16_t> to std::u16string_view.
  * @internal
  */
-inline std::u16string_view toU16StringView(std::basic_string_view<uint16_t> sv U_LIFETIME_BOUND) {
-    return { ConstChar16Ptr(sv.data()), sv.length() };
+అంతఃవరుస std::u16string_view గమ్యం_U16_String_View(std::basic_string_view<uint16_t> sv U_LIFETIME_BOUND) {
+    తిరిగి { ConstChar16Ptr(sv.దత్తాంశం()), sv.నిడివి() };
 }
-#endif
+#అయితే_ముగింపు
 
-#if U_SIZEOF_WCHAR_T==2
+#ఒకవేళ U_SIZEOF_WCHAR_T==2
 /**
  * Basically undefined behavior but sometimes necessary conversion
  * from std::wstring_view to std::u16string_view.
  * @internal
  */
-inline std::u16string_view toU16StringView(std::wstring_view sv U_LIFETIME_BOUND) {
-    return { ConstChar16Ptr(sv.data()), sv.length() };
+అంతఃవరుస std::u16string_view గమ్యం_U16_String_View(std::wstring_view sv U_LIFETIME_BOUND) {
+    తిరిగి { ConstChar16Ptr(sv.దత్తాంశం()), sv.నిడివి() };
 }
-#endif
+#అయితే_ముగింపు
 
 /**
  * Pass-through overload.
  * @internal
  */
-template <typename T,
-          typename = typename std::enable_if_t<!std::is_pointer_v<std::remove_reference_t<T>>>>
-inline std::u16string_view toU16StringViewNullable(const T& text U_LIFETIME_BOUND) {
-    return toU16StringView(text);
+మూస <typename T,
+          typename = typename std::enable_if_t<!std::is_సూచిక_v<std::remove_reference_t<T>>>>
+అంతఃవరుస std::u16string_view గమ్యం_U16_String_View_Nullable(స్థిరరాశి T& పాఠ్యం U_LIFETIME_BOUND) {
+    తిరిగి గమ్యం_U16_String_View(పాఠ్యం);
 }
 
 /**
  * In case of nullptr, return an empty view.
  * @internal
  */
-template <typename T,
-          typename = typename std::enable_if_t<std::is_pointer_v<std::remove_reference_t<T>>>,
-          typename = void>
-inline std::u16string_view toU16StringViewNullable(const T& text U_LIFETIME_BOUND) {
-    if (text == nullptr) return {};  // For backward compatibility.
-    return toU16StringView(text);
+మూస <typename T,
+          typename = typename std::enable_if_t<std::is_సూచిక_v<std::remove_reference_t<T>>>,
+          typename = శూన్య>
+అంతఃవరుస std::u16string_view గమ్యం_U16_String_View_Nullable(స్థిరరాశి T& పాఠ్యం U_LIFETIME_BOUND) {
+    ఒకవేళ (పాఠ్యం == nullptr) తిరిగి {};  // For backward compatibility.
+    తిరిగి గమ్యం_U16_String_View(పాఠ్యం);
 }
 
-}  // internal
-#endif  // U_FORCE_HIDE_INTERNAL_API
+}  //అంతర్గత
+#అయితే_ముగింపు  // U_FORCE_HIDE_INTERNAL_API
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // U_SHOW_CPLUSPLUS_API
+#అయితే_ముగింపు  // U_SHOW_CPLUSPLUS_API
 
-#endif  // __CHAR16PTR_H__
+#అయితే_ముగింపు  // __CHAR16PTR_H__

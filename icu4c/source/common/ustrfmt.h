@@ -7,13 +7,13 @@
 **********************************************************************
 */
 
-#ifndef USTRFMT_H
-#define USTRFMT_H
+#నిర్వచితం_కాకపోతే USTRFMT_H
+#నిర్వచించు USTRFMT_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
 U_CAPI int32_t U_EXPORT2
-uprv_itou (UChar * buffer, int32_t capacity, uint32_t i, uint32_t radix, int32_t minwidth);
+uprv_itou (UChar * బఫరు, int32_t సామర్థ్యం, uint32_t i, uint32_t radix, int32_t minwidth);
 
 
-#endif
+#అయితే_ముగింపు

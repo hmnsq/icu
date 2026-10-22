@@ -4,67 +4,67 @@
 // localeprioritylist.cpp
 // created: 2019jul11 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/localpointer.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "localeprioritylist.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "uhash.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/localpointer.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "localeprioritylist.h"
+#అన్తర్భావ "uarrsort.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "uhash.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+నామాకాశ {
 
-int32_t hashLocale(const UHashTok token) {
-    const auto* locale = static_cast<const Locale*>(token.pointer);
-    return locale->hashCode();
+int32_t hashLocale(స్థిరరాశి UHashTok token) {
+    స్థిరరాశి స్వయంచాలక* locale = static_cast<స్థిరరాశి Locale*>(token.సూచిక);
+    తిరిగి locale->hash_సంకేతం();
 }
 
-UBool compareLocales(const UHashTok t1, const UHashTok t2) {
-    const auto* l1 = static_cast<const Locale*>(t1.pointer);
-    const auto* l2 = static_cast<const Locale*>(t2.pointer);
-    return *l1 == *l2;
+UBool compareLocales(స్థిరరాశి UHashTok t1, స్థిరరాశి UHashTok t2) {
+    స్థిరరాశి స్వయంచాలక* l1 = static_cast<స్థిరరాశి Locale*>(t1.సూచిక);
+    స్థిరరాశి స్వయంచాలక* l2 = static_cast<స్థిరరాశి Locale*>(t2.సూచిక);
+    తిరిగి *l1 == *l2;
 }
 
-constexpr int32_t WEIGHT_ONE = 1000;
+constexpr int32_t బరువు_ONE = 1000;
 
-struct LocaleAndWeight {
+నిర్మాణం Locale_And_బరువు {
     Locale *locale;
-    int32_t weight;  // 0..1000 = 0.0..1.0
-    int32_t index;  // force stable sort
+    int32_t బరువు;  // 0..1000 = 0.0..1.0
+    int32_t సూచీ;  // force stable sort
 
-    int32_t compare(const LocaleAndWeight &other) const {
-        int32_t diff = other.weight - weight;  // descending: other-this
-        if (diff != 0) { return diff; }
-        return index - other.index;
+    int32_t compare(స్థిరరాశి Locale_And_బరువు &other) స్థిరరాశి {
+        int32_t diff = other.బరువు - బరువు;  // descending: other-this
+        ఒకవేళ (diff != 0) { తిరిగి diff; }
+        తిరిగి సూచీ - other.సూచీ;
     }
 };
 
 int32_t U_CALLCONV
-compareLocaleAndWeight(const void * /*context*/, const void *left, const void *right) {
-    return static_cast<const LocaleAndWeight *>(left)->
-        compare(*static_cast<const LocaleAndWeight *>(right));
+compare_Locale_And_బరువు(స్థిరరాశి శూన్య * /*context*/, స్థిరరాశి శూన్య *ఎడమ, స్థిరరాశి శూన్య *కుడి) {
+    తిరిగి static_cast<స్థిరరాశి Locale_And_బరువు *>(ఎడమ)->
+        compare(*static_cast<స్థిరరాశి Locale_And_బరువు *>(కుడి));
 }
 
-const char *skipSpaces(const char *p, const char *limit) {
-    while (p < limit && *p == ' ') { ++p; }
-    return p;
+స్థిరరాశి అక్షరం *skipSpaces(స్థిరరాశి అక్షరం *p, స్థిరరాశి అక్షరం *హద్దు) {
+    అయితే (p < హద్దు && *p == ' ') { ++p; }
+    తిరిగి p;
 }
 
-int32_t findTagLength(const char *p, const char *limit) {
+int32_t కనుగొను_ట్యాగ్_నిడివి(స్థిరరాశి అక్షరం *p, స్థిరరాశి అక్షరం *హద్దు) {
     // Look for accept-language delimiters.
     // Leave other validation up to the Locale constructor.
-    const char *q;
-    for (q = p; q < limit; ++q) {
-        char c = *q;
-        if (c == ' ' || c == ',' || c == ';') { break; }
+    స్థిరరాశి అక్షరం *q;
+    కొరకు (q = p; q < హద్దు; ++q) {
+        అక్షరం c = *q;
+        ఒకవేళ (c == ' ' || c == ',' || c == ';') { ఆపు; }
     }
-    return static_cast<int32_t>(q - p);
+    తిరిగి static_cast<int32_t>(q - p);
 }
 
 /**
@@ -72,25 +72,25 @@ int32_t findTagLength(const char *p, const char *limit) {
  * Advances p to after the parsed substring.
  * Returns a negative value if parsing fails.
  */
-int32_t parseWeight(const char *&p, const char *limit) {
-    p = skipSpaces(p, limit);
-    char c;
-    if (p == limit || ((c = *p) != '0' && c != '1')) { return -1; }
-    int32_t weight = (c - '0') * 1000;
-    if (++p == limit || *p != '.') { return weight; }
+int32_t parse_బరువు(స్థిరరాశి అక్షరం *&p, స్థిరరాశి అక్షరం *హద్దు) {
+    p = skipSpaces(p, హద్దు);
+    అక్షరం c;
+    ఒకవేళ (p == హద్దు || ((c = *p) != '0' && c != '1')) { తిరిగి -1; }
+    int32_t బరువు = (c - '0') * 1000;
+    ఒకవేళ (++p == హద్దు || *p != '.') { తిరిగి బరువు; }
     int32_t multiplier = 100;
-    while (++p != limit && '0' <= (c = *p) && c <= '9') {
+    అయితే (++p != హద్దు && '0' <= (c = *p) && c <= '9') {
         c -= '0';
-        if (multiplier > 0) {
-            weight += c * multiplier;
+        ఒకవేళ (multiplier > 0) {
+            బరువు += c * multiplier;
             multiplier /= 10;
-        } else if (multiplier == 0) {
+        } లేకపోతే ఒకవేళ (multiplier == 0) {
             // round up
-            if (c >= 5) { ++weight; }
+            ఒకవేళ (c >= 5) { ++బరువు; }
             multiplier = -1;
         }  // else ignore further fraction digits
     }
-    return weight <= WEIGHT_ONE ? weight : -1;  // bad if > 1.0
+    తిరిగి బరువు <= బరువు_ONE ? బరువు : -1;  // bad if > 1.0
 }
 
 }  // namespace
@@ -106,135 +106,135 @@ int32_t parseWeight(const char *&p, const char *limit) {
  * template export declaration of some kind for the MaybeStackArray specialization
  * to be properly exported from the common DLL.
  */
-struct LocaleAndWeightArray : public UMemory {
-    MaybeStackArray<LocaleAndWeight, 20> array;
+నిర్మాణం Locale_And_బరువు_Array : బహిరంగ UMemory {
+    Maybe_దొంతర_Array<Locale_And_బరువు, 20> array;
 };
 
-LocalePriorityList::LocalePriorityList(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    list = new LocaleAndWeightArray();
-    if (list == nullptr) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+Locale_ప్రాధాన్యత_List::Locale_ప్రాధాన్యత_List(StringPiece s, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+    list = కొత్త Locale_And_బరువు_Array();
+    ఒకవేళ (list == శూన్యసూచిక) {
+        error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    const char *p = s.data();
-    const char *limit = p + s.length();
-    while ((p = skipSpaces(p, limit)) != limit) {
-        if (*p == ',') {  // empty range field
+    స్థిరరాశి అక్షరం *p = s.దత్తాంశం();
+    స్థిరరాశి అక్షరం *హద్దు = p + s.length();
+    అయితే ((p = skipSpaces(p, హద్దు)) != హద్దు) {
+        ఒకవేళ (*p == ',') {  // empty range field
             ++p;
-            continue;
+            కొనసాగు;
         }
-        int32_t tagLength = findTagLength(p, limit);
-        if (tagLength == 0) {
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        int32_t ట్యాగ్_నిడివి = కనుగొను_ట్యాగ్_నిడివి(p, హద్దు);
+        ఒకవేళ (ట్యాగ్_నిడివి == 0) {
+            error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
-        CharString tag(p, tagLength, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        Locale locale = Locale(tag.data());
-        if (locale.isBogus()) {
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        CharString ట్యాగ్(p, ట్యాగ్_నిడివి, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+        Locale locale = Locale(ట్యాగ్.దత్తాంశం());
+        ఒకవేళ (locale.isBogus()) {
+            error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
-        int32_t weight = WEIGHT_ONE;
-        if ((p = skipSpaces(p + tagLength, limit)) != limit && *p == ';') {
-            if ((p = skipSpaces(p + 1, limit)) == limit || *p != 'q' ||
-                    (p = skipSpaces(p + 1, limit)) == limit || *p != '=' ||
-                    (++p, (weight = parseWeight(p, limit)) < 0)) {
-                errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+        int32_t బరువు = బరువు_ONE;
+        ఒకవేళ ((p = skipSpaces(p + ట్యాగ్_నిడివి, హద్దు)) != హద్దు && *p == ';') {
+            ఒకవేళ ((p = skipSpaces(p + 1, హద్దు)) == హద్దు || *p != 'q' ||
+                    (p = skipSpaces(p + 1, హద్దు)) == హద్దు || *p != '=' ||
+                    (++p, (బరువు = parse_బరువు(p, హద్దు)) < 0)) {
+                error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+                తిరిగి;
             }
-            p = skipSpaces(p, limit);
+            p = skipSpaces(p, హద్దు);
         }
-        if (p != limit && *p != ',') {  // trailing junk
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        ఒకవేళ (p != హద్దు && *p != ',') {  // trailing junk
+            error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
-        add(locale, weight, errorCode);
-        if (p == limit) { break; }
+        కూడు(locale, బరువు, error_సంకేతం);
+        ఒకవేళ (p == హద్దు) { ఆపు; }
         ++p;
     }
-    sort(errorCode);
+    sort(error_సంకేతం);
 }
 
-LocalePriorityList::~LocalePriorityList() {
-    if (list != nullptr) {
-        for (int32_t i = 0; i < listLength; ++i) {
-            delete list->array[i].locale;
+Locale_ప్రాధాన్యత_List::~Locale_ప్రాధాన్యత_List() {
+    ఒకవేళ (list != శూన్యసూచిక) {
+        కొరకు (int32_t i = 0; i < list_నిడివి; ++i) {
+            తొలగించు list->array[i].locale;
         }
-        delete list;
+        తొలగించు list;
     }
     uhash_close(map);
 }
 
-const Locale *LocalePriorityList::localeAt(int32_t i) const {
-    return list->array[i].locale;
+స్థిరరాశి Locale *Locale_ప్రాధాన్యత_List::localeAt(int32_t i) స్థిరరాశి {
+    తిరిగి list->array[i].locale;
 }
 
-Locale *LocalePriorityList::orphanLocaleAt(int32_t i) {
-    if (list == nullptr) { return nullptr; }
-    LocaleAndWeight &lw = list->array[i];
+Locale *Locale_ప్రాధాన్యత_List::orphanLocaleAt(int32_t i) {
+    ఒకవేళ (list == శూన్యసూచిక) { తిరిగి శూన్యసూచిక; }
+    Locale_And_బరువు &lw = list->array[i];
     Locale *l = lw.locale;
-    lw.locale = nullptr;
-    return l;
+    lw.locale = శూన్యసూచిక;
+    తిరిగి l;
 }
 
-bool LocalePriorityList::add(const Locale &locale, int32_t weight, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if (map == nullptr) {
-        if (weight <= 0) { return true; }  // do not add q=0
-        map = uhash_open(hashLocale, compareLocales, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return false; }
+తార్కిక Locale_ప్రాధాన్యత_List::కూడు(స్థిరరాశి Locale &locale, int32_t బరువు, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి అబద్ధం; }
+    ఒకవేళ (map == శూన్యసూచిక) {
+        ఒకవేళ (బరువు <= 0) { తిరిగి నిజం; }  // do not add q=0
+        map = uhash_open(hashLocale, compareLocales, uhash_compareLong, &error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి అబద్ధం; }
     }
-    LocalPointer<Locale> clone;
-    UBool found = false;
-    int32_t index = uhash_getiAndFound(map, &locale, &found);
-    if (found) {
+    Local_సూచిక<Locale> clone;
+    UBool దొరికింది = అబద్ధం;
+    int32_t సూచీ = uhash_geti_And_దొరికింది(map, &locale, &దొరికింది);
+    ఒకవేళ (దొరికింది) {
         // Duplicate: Remove the old item and append it anew.
-        LocaleAndWeight &lw = list->array[index];
+        Locale_And_బరువు &lw = list->array[సూచీ];
         clone.adoptInstead(lw.locale);
-        lw.locale = nullptr;
-        lw.weight = 0;
-        ++numRemoved;
+        lw.locale = శూన్యసూచిక;
+        lw.బరువు = 0;
+        ++అంకె_Removed;
     }
-    if (weight <= 0) {  // do not add q=0
-        if (found) {
+    ఒకవేళ (బరువు <= 0) {  // do not add q=0
+        ఒకవేళ (దొరికింది) {
             // Not strictly necessary but cleaner.
             uhash_removei(map, &locale);
         }
-        return true;
+        తిరిగి నిజం;
     }
-    if (clone.isNull()) {
+    ఒకవేళ (clone.isNull()) {
         clone.adoptInstead(locale.clone());
-        if (clone.isNull() || (clone->isBogus() && !locale.isBogus())) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+        ఒకవేళ (clone.isNull() || (clone->isBogus() && !locale.isBogus())) {
+            error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి అబద్ధం;
         }
     }
-    if (listLength == list->array.getCapacity()) {
-        int32_t newCapacity = listLength < 50 ? 100 : 4 * listLength;
-        if (list->array.resize(newCapacity, listLength) == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+    ఒకవేళ (list_నిడివి == list->array.get_సామర్థ్యం()) {
+        int32_t new_సామర్థ్యం = list_నిడివి < 50 ? 100 : 4 * list_నిడివి;
+        ఒకవేళ (list->array.resize(new_సామర్థ్యం, list_నిడివి) == శూన్యసూచిక) {
+            error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి అబద్ధం;
         }
     }
-    uhash_putiAllowZero(map, clone.getAlias(), listLength, &errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
-    LocaleAndWeight &lw = list->array[listLength];
+    uhash_putiAllowZero(map, clone.getAlias(), list_నిడివి, &error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి అబద్ధం; }
+    Locale_And_బరువు &lw = list->array[list_నిడివి];
     lw.locale = clone.orphan();
-    lw.weight = weight;
-    lw.index = listLength++;
-    if (weight < WEIGHT_ONE) { hasWeights = true; }
-    U_ASSERT(uhash_count(map) == getLength());
-    return true;
+    lw.బరువు = బరువు;
+    lw.సూచీ = list_నిడివి++;
+    ఒకవేళ (బరువు < బరువు_ONE) { hasWeights = నిజం; }
+    U_ASSERT(uhash_లెక్క(map) == get_నిడివి());
+    తిరిగి నిజం;
 }
 
-void LocalePriorityList::sort(UErrorCode &errorCode) {
+శూన్య Locale_ప్రాధాన్యత_List::sort(UError_సంకేతం &error_సంకేతం) {
     // Sort by descending weights if there is a mix of weights.
     // The comparator forces a stable sort via the item index.
-    if (U_FAILURE(errorCode) || getLength() <= 1 || !hasWeights) { return; }
-    uprv_sortArray(list->array.getAlias(), listLength, sizeof(LocaleAndWeight),
-                   compareLocaleAndWeight, nullptr, false, &errorCode);
+    ఒకవేళ (U_FAILURE(error_సంకేతం) || get_నిడివి() <= 1 || !hasWeights) { తిరిగి; }
+    uprv_క్రమీకరించు_Array(list->array.getAlias(), list_నిడివి, పరిమాణం(Locale_And_బరువు),
+                   compare_Locale_And_బరువు, శూన్యసూచిక, అబద్ధం, &error_సంకేతం);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

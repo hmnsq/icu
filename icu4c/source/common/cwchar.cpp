@@ -16,40 +16,40 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#ఒకవేళ !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#అన్తర్భావ "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while(*dst!=0) {
+U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, స్థిరరాశి wchar_t *src) {
+    wchar_t *ప్రారంభం=dst;
+    అయితే(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
-        ++dst;
-        ++src;
-    }
-    return start;
-}
-
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    అయితే((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    తిరిగి ప్రారంభం;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, స్థిరరాశి wchar_t *src) {
+    wchar_t *ప్రారంభం=dst;
+    అయితే((*dst=*src)!=0) {
+        ++dst;
         ++src;
     }
-    return src-start;
+    తిరిగి ప్రారంభం;
 }
 
-#endif
+U_CAPI size_t uprv_wcslen(స్థిరరాశి wchar_t *src) {
+    స్థిరరాశి wchar_t *ప్రారంభం=src;
+    అయితే(*src!=0) {
+        ++src;
+    }
+    తిరిగి src-ప్రారంభం;
+}
+
+#అయితే_ముగింపు
 

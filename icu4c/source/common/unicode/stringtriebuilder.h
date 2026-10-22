@@ -14,14 +14,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __STRINGTRIEBUILDER_H__
-#define __STRINGTRIEBUILDER_H__
+#నిర్వచితం_కాకపోతే __STRINGTRIEBUILDER_H__
+#నిర్వచించు __STRINGTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/uobject.h"
 
 /**
  * \file
@@ -30,15 +30,15 @@
 
 // Forward declaration.
 /// \cond
-struct UHashtable;
-typedef struct UHashtable UHashtable;
+నిర్మాణం UHashtable;
+రకనిర్వచనం నిర్మాణం UHashtable UHashtable;
 /// \endcond
 
 /**
  * Build options for BytesTrieBuilder and CharsTrieBuilder.
  * @stable ICU 4.8
  */
-enum UStringTrieBuildOption {
+గణన UStringTrieBuildOption {
     /**
      * Builds a trie quickly.
      * @stable ICU 4.8
@@ -65,93 +65,93 @@ U_NAMESPACE_BEGIN
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API StringTrieBuilder : public UObject {
-public:
-#ifndef U_HIDE_INTERNAL_API
+class U_COMMON_API StringTrieBuilder : బహిరంగ UObject {
+బహిరంగ:
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     /** @internal */
-    static int32_t hashNode(const void *node);
+    స్థిర int32_t hash_కణుపు(స్థిరరాశి శూన్య *కణుపు);
     /** @internal */
-    static UBool equalNodes(const void *left, const void *right);
-#endif  /* U_HIDE_INTERNAL_API */
+    స్థిర UBool equalNodes(స్థిరరాశి శూన్య *ఎడమ_2, స్థిరరాశి శూన్య *కుడి_2);
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
 
-protected:
+రక్షిత:
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public default constructor.
     /** @internal */
     StringTrieBuilder();
     /** @internal */
-    virtual ~StringTrieBuilder();
+    మాయా ~StringTrieBuilder();
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     /** @internal */
-    void createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
+    శూన్య createCompactBuilder(int32_t కొలత_Guess, UError_సంకేతం &error_సంకేతం);
     /** @internal */
-    void deleteCompactBuilder();
-
-    /** @internal */
-    void build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
+    శూన్య deleteCompactBuilder();
 
     /** @internal */
-    int32_t writeNode(int32_t start, int32_t limit, int32_t unitIndex);
-    /** @internal */
-    int32_t writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
-#endif  /* U_HIDE_INTERNAL_API */
-
-    class Node;
-
-#ifndef U_HIDE_INTERNAL_API
-    /** @internal */
-    Node* makeNode(int32_t start,
-                   int32_t limit,
-                   int32_t unitIndex,
-                   UErrorCode& errorCode) U_LIFETIME_BOUND;
-    /** @internal */
-    Node* makeBranchSubNode(int32_t start,
-                            int32_t limit,
-                            int32_t unitIndex,
-                            int32_t length,
-                            UErrorCode& errorCode) U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+    శూన్య build(UStringTrieBuildOption buildOption, int32_t elements_నిడివి, UError_సంకేతం &error_సంకేతం);
 
     /** @internal */
-    virtual int32_t getElementStringLength(int32_t i) const = 0;
+    int32_t write_కణుపు(int32_t ప్రారంభం, int32_t హద్దు, int32_t unit_సూచీ);
     /** @internal */
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const = 0;
+    int32_t write_Branch_Sub_కణుపు(int32_t ప్రారంభం, int32_t హద్దు, int32_t unit_సూచీ, int32_t నిడివి);
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
+
+    class కణుపు_2;
+
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     /** @internal */
-    virtual int32_t getElementValue(int32_t i) const = 0;
+    కణుపు_2* make_కణుపు(int32_t ప్రారంభం,
+                   int32_t హద్దు,
+                   int32_t unit_సూచీ,
+                   UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
+    /** @internal */
+    కణుపు_2* make_Branch_Sub_కణుపు(int32_t ప్రారంభం,
+                            int32_t హద్దు,
+                            int32_t unit_సూచీ,
+                            int32_t నిడివి,
+                            UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
+
+    /** @internal */
+    మాయా int32_t get_Element_String_నిడివి(int32_t i) స్థిరరాశి = 0;
+    /** @internal */
+    మాయా char16_t getElementUnit(int32_t i, int32_t unit_సూచీ) స్థిరరాశి = 0;
+    /** @internal */
+    మాయా int32_t get_Element_విలువ(int32_t i) స్థిరరాశి = 0;
 
     // Finds the first unit index after this one where
     // the first and last element have different units again.
     /** @internal */
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const = 0;
+    మాయా int32_t get_హద్దు_యొక్క_రేఖీయ_సరిపోలిక(int32_t మొదటి, int32_t చివరి, int32_t unit_సూచీ) స్థిరరాశి = 0;
 
     // Number of different units at unitIndex.
     /** @internal */
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
+    మాయా int32_t లెక్క_Element_Units(int32_t ప్రారంభం, int32_t హద్దు, int32_t unit_సూచీ) స్థిరరాశి = 0;
     /** @internal */
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const = 0;
+    మాయా int32_t skipElementsBySomeUnits(int32_t i, int32_t unit_సూచీ, int32_t లెక్క) స్థిరరాశి = 0;
     /** @internal */
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const = 0;
+    మాయా int32_t సూచీ_యొక్క_Element_With_తదుపరి_Unit(int32_t i, int32_t unit_సూచీ, char16_t unit) స్థిరరాశి = 0;
 
     /** @internal */
-    virtual UBool matchNodesCanHaveValues() const = 0;
+    మాయా UBool సరిపోలిక_Nodes_Can_Have_విలువలు() స్థిరరాశి = 0;
 
     /** @internal */
-    virtual int32_t getMaxBranchLinearSubNodeLength() const = 0;
+    మాయా int32_t get_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి() స్థిరరాశి = 0;
     /** @internal */
-    virtual int32_t getMinLinearMatch() const = 0;
+    మాయా int32_t get_Min_రేఖీయ_సరిపోలిక() స్థిరరాశి = 0;
     /** @internal */
-    virtual int32_t getMaxLinearMatchLength() const = 0;
+    మాయా int32_t get_Max_రేఖీయ_సరిపోలిక_నిడివి() స్థిరరాశి = 0;
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     // max(BytesTrie::kMaxBranchLinearSubNodeLength, UCharsTrie::kMaxBranchLinearSubNodeLength).
     /** @internal */
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    స్థిర స్థిరరాశి int32_t k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి=5;
 
     // Maximum number of nested split-branch levels for a branch on all 2^16 possible char16_t units.
     // log2(2^16/kMaxBranchLinearSubNodeLength) rounded up.
     /** @internal */
-    static const int32_t kMaxSplitBranchLevels=14;
+    స్థిర స్థిరరాశి int32_t k_Max_విభజించు_Branch_స్థాయిలు=14;
 
     /**
      * Makes sure that there is only one unique node registered that is
@@ -163,7 +163,7 @@ protected:
      *         an equivalent node if newNode is a duplicate.
      * @internal
      */
-    Node* registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    కణుపు_2* రిజిస్టరు_కణుపు(కణుపు_2* new_కణుపు, UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
     /**
      * Makes sure that there is only one unique FinalValueNode registered
      * with this value.
@@ -174,8 +174,8 @@ protected:
      * @return A FinalValueNode with the given value.
      * @internal
      */
-    Node* registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+    కణుపు_2* రిజిస్టరు_Final_విలువ(int32_t విలువ_2, UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
 
     /*
      * C++ note:
@@ -203,15 +203,15 @@ protected:
      * @internal
      * \cond
      */
-    class Node : public UObject {
-    public:
-        Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+    class కణుపు_2 : బహిరంగ UObject {
+    బహిరంగ:
+        కణుపు_2(int32_t initialHash) : hash(initialHash), స్థానభ్రంశం(0) {}
+        అంతఃవరుస int32_t hash_సంకేతం() స్థిరరాశి { తిరిగి hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        స్థిర అంతఃవరుస int32_t hash_సంకేతం(స్థిరరాశి కణుపు_2 *కణుపు) { తిరిగి కణుపు==nullptr ? 0 : కణుపు->hash_సంకేతం(); }
         // Base class operator==() compares the actual class types.
-        virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        మాయా bool క్రియాకారకం==(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి;
+        అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి { తిరిగి !క్రియాకారకం==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -239,28 +239,28 @@ protected:
          * @return An edge number that is at least the maximum-negative
          *         of the input edge number and the numbers of this node and all of its sub-nodes.
          */
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber);
+        మాయా int32_t mark_కుడి_అంచులు_మొదటి(int32_t అంచు_సంఖ్య);
         // write() must set the offset to a positive value.
-        virtual void write(StringTrieBuilder &builder) = 0;
+        మాయా శూన్య లిఖ(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        అంతఃవరుస శూన్య write_Unless_Inside_కుడి_అంచు(int32_t మొదటి_కుడి, int32_t చివరి_కుడి,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
-                write(builder);
+            ఒకవేళ(స్థానభ్రంశం<0 && (స్థానభ్రంశం<చివరి_కుడి || మొదటి_కుడి<స్థానభ్రంశం)) {
+                లిఖ(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
-    protected:
+        అంతఃవరుస int32_t get_స్థానభ్రంశం() స్థిరరాశి { తిరిగి స్థానభ్రంశం; }
+    రక్షిత:
         int32_t hash;
-        int32_t offset;
+        int32_t స్థానభ్రంశం;
     };
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     // This class should not be overridden because
     // registerFinalValue() compares a stack-allocated FinalValueNode
     // (stack-allocated so that we don't unnecessarily create lots of duplicate nodes)
@@ -268,165 +268,165 @@ protected:
     // !Node::operator==(other) used inside FinalValueNode::operator==(other)
     // will be false if the typeid's are different.
     /** @internal */
-    class FinalValueNode : public Node {
-    public:
-        FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t value;
+    class Final_విలువ_కణుపు : బహిరంగ కణుపు_2 {
+    బహిరంగ:
+        Final_విలువ_కణుపు(int32_t v) : కణుపు_2(0x111111u*37u+v), విలువ_2(v) {}
+        మాయా bool క్రియాకారకం==(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి override;
+        మాయా శూన్య లిఖ(StringTrieBuilder &builder) override;
+    రక్షిత:
+        int32_t విలువ_2;
     };
-#endif  /* U_HIDE_INTERNAL_API */
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
 
     // Do not conditionalize the following with #ifndef U_HIDE_INTERNAL_API,
     // it is needed for layout of other objects.
     /**
      * @internal 
      */
-    class ValueNode : public Node {
-    public:
-        ValueNode(int32_t initialHash) : Node(initialHash), hasValue(false), value(0) {}
-        virtual bool operator==(const Node &other) const override;
-        void setValue(int32_t v) {
-            hasValue=true;
-            value=v;
+    class విలువ_కణుపు : బహిరంగ కణుపు_2 {
+    బహిరంగ:
+        విలువ_కణుపు(int32_t initialHash) : కణుపు_2(initialHash), has_విలువ(false), విలువ_2(0) {}
+        మాయా bool క్రియాకారకం==(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి override;
+        శూన్య సమితి_విలువ(int32_t v) {
+            has_విలువ=true;
+            విలువ_2=v;
             hash=hash*37u+v;
         }
-    protected:
-        UBool hasValue;
-        int32_t value;
+    రక్షిత:
+        UBool has_విలువ;
+        int32_t విలువ_2;
     };
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     /** 
      * @internal 
      */
-    class IntermediateValueNode : public ValueNode {
-    public:
-        IntermediateValueNode(int32_t v, Node *nextNode)
-                : ValueNode(0x222222u*37u+hashCode(nextNode)), next(nextNode) { setValue(v); }
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        Node *next;
+    class Intermediate_విలువ_కణుపు : బహిరంగ విలువ_కణుపు {
+    బహిరంగ:
+        Intermediate_విలువ_కణుపు(int32_t v, కణుపు_2 *తదుపరి_కణుపు)
+                : విలువ_కణుపు(0x222222u*37u+hash_సంకేతం(తదుపరి_కణుపు)), తదుపరి(తదుపరి_కణుపు) { సమితి_విలువ(v); }
+        మాయా bool క్రియాకారకం==(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి override;
+        మాయా int32_t mark_కుడి_అంచులు_మొదటి(int32_t అంచు_సంఖ్య) override;
+        మాయా శూన్య లిఖ(StringTrieBuilder &builder) override;
+    రక్షిత:
+        కణుపు_2 *తదుపరి;
     };
-#endif  /* U_HIDE_INTERNAL_API */
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
 
     // Do not conditionalize the following with #ifndef U_HIDE_INTERNAL_API,
     // it is needed for layout of other objects.
     /**
      * @internal 
      */
-    class LinearMatchNode : public ValueNode {
-    public:
-        LinearMatchNode(int32_t len, Node *nextNode)
-                : ValueNode((0x333333u*37u+len)*37u+hashCode(nextNode)),
-                  length(len), next(nextNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-    protected:
-        int32_t length;
-        Node *next;
+    class రేఖీయ_సరిపోలిక_కణుపు : బహిరంగ విలువ_కణుపు {
+    బహిరంగ:
+        రేఖీయ_సరిపోలిక_కణుపు(int32_t len, కణుపు_2 *తదుపరి_కణుపు)
+                : విలువ_కణుపు((0x333333u*37u+len)*37u+hash_సంకేతం(తదుపరి_కణుపు)),
+                  నిడివి(len), తదుపరి(తదుపరి_కణుపు) {}
+        మాయా bool క్రియాకారకం==(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి override;
+        మాయా int32_t mark_కుడి_అంచులు_మొదటి(int32_t అంచు_సంఖ్య) override;
+    రక్షిత:
+        int32_t నిడివి;
+        కణుపు_2 *తదుపరి;
     };
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     /**
      * @internal 
      */
-    class BranchNode : public Node {
-    public:
-        BranchNode(int32_t initialHash) : Node(initialHash) {}
-    protected:
-        int32_t firstEdgeNumber;
+    class Branch_కణుపు : బహిరంగ కణుపు_2 {
+    బహిరంగ:
+        Branch_కణుపు(int32_t initialHash) : కణుపు_2(initialHash) {}
+    రక్షిత:
+        int32_t మొదటి_అంచు_సంఖ్య;
     };
 
     /**
      * @internal 
      */
-    class ListBranchNode : public BranchNode {
-    public:
-        ListBranchNode() : BranchNode(0x444444), length(0) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
+    class List_Branch_కణుపు : బహిరంగ Branch_కణుపు {
+    బహిరంగ:
+        List_Branch_కణుపు() : Branch_కణుపు(0x444444), నిడివి(0) {}
+        మాయా bool క్రియాకారకం==(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి override;
+        మాయా int32_t mark_కుడి_అంచులు_మొదటి(int32_t అంచు_సంఖ్య) override;
+        మాయా శూన్య లిఖ(StringTrieBuilder &builder) override;
         // Adds a unit with a final value.
-        void add(int32_t c, int32_t value) {
-            units[length] = static_cast<char16_t>(c);
-            equal[length]=nullptr;
-            values[length]=value;
-            ++length;
-            hash=(hash*37u+c)*37u+value;
+        శూన్య కూడు(int32_t c, int32_t విలువ_2) {
+            units[నిడివి] = static_cast<char16_t>(c);
+            equal[నిడివి]=nullptr;
+            విలువలు[నిడివి]=విలువ_2;
+            ++నిడివి;
+            hash=(hash*37u+c)*37u+విలువ_2;
         }
         // Adds a unit which leads to another match node.
-        void add(int32_t c, Node *node) {
-            units[length] = static_cast<char16_t>(c);
-            equal[length]=node;
-            values[length]=0;
-            ++length;
-            hash=(hash*37u+c)*37u+hashCode(node);
+        శూన్య కూడు(int32_t c, కణుపు_2 *కణుపు) {
+            units[నిడివి] = static_cast<char16_t>(c);
+            equal[నిడివి]=కణుపు;
+            విలువలు[నిడివి]=0;
+            ++నిడివి;
+            hash=(hash*37u+c)*37u+hash_సంకేతం(కణుపు);
         }
-    protected:
-        Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
-        int32_t length;
-        int32_t values[kMaxBranchLinearSubNodeLength];
-        char16_t units[kMaxBranchLinearSubNodeLength];
+    రక్షిత:
+        కణుపు_2 *equal[k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి];  // nullptr means "has final value".
+        int32_t నిడివి;
+        int32_t విలువలు[k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి];
+        char16_t units[k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి];
     };
 
     /**
      * @internal 
      */
-    class SplitBranchNode : public BranchNode {
-    public:
-        SplitBranchNode(char16_t middleUnit, Node *lessThanNode, Node *greaterOrEqualNode)
-                : BranchNode(((0x555555u*37u+middleUnit)*37u+
-                              hashCode(lessThanNode))*37u+hashCode(greaterOrEqualNode)),
-                  unit(middleUnit), lessThan(lessThanNode), greaterOrEqual(greaterOrEqualNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class విభజించు_Branch_కణుపు : బహిరంగ Branch_కణుపు {
+    బహిరంగ:
+        విభజించు_Branch_కణుపు(char16_t మధ్య_Unit, కణుపు_2 *less_Than_కణుపు, కణుపు_2 *greater_Or_Equal_కణుపు)
+                : Branch_కణుపు(((0x555555u*37u+మధ్య_Unit)*37u+
+                              hash_సంకేతం(less_Than_కణుపు))*37u+hash_సంకేతం(greater_Or_Equal_కణుపు)),
+                  unit(మధ్య_Unit), lessThan(less_Than_కణుపు), greaterOrEqual(greater_Or_Equal_కణుపు) {}
+        మాయా bool క్రియాకారకం==(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి override;
+        మాయా int32_t mark_కుడి_అంచులు_మొదటి(int32_t అంచు_సంఖ్య) override;
+        మాయా శూన్య లిఖ(StringTrieBuilder &builder) override;
+    రక్షిత:
         char16_t unit;
-        Node *lessThan;
-        Node *greaterOrEqual;
+        కణుపు_2 *lessThan;
+        కణుపు_2 *greaterOrEqual;
     };
 
     // Branch head node, for writing the actual node lead unit.
     /** @internal */
-    class BranchHeadNode : public ValueNode {
-    public:
-        BranchHeadNode(int32_t len, Node *subNode)
-                : ValueNode((0x666666u*37u+len)*37u+hashCode(subNode)),
-                  length(len), next(subNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t length;
-        Node *next;  // A branch sub-node.
+    class Branch_తల_కణుపు : బహిరంగ విలువ_కణుపు {
+    బహిరంగ:
+        Branch_తల_కణుపు(int32_t len, కణుపు_2 *sub_కణుపు)
+                : విలువ_కణుపు((0x666666u*37u+len)*37u+hash_సంకేతం(sub_కణుపు)),
+                  నిడివి(len), తదుపరి(sub_కణుపు) {}
+        మాయా bool క్రియాకారకం==(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి override;
+        మాయా int32_t mark_కుడి_అంచులు_మొదటి(int32_t అంచు_సంఖ్య) override;
+        మాయా శూన్య లిఖ(StringTrieBuilder &builder) override;
+    రక్షిత:
+        int32_t నిడివి;
+        కణుపు_2 *తదుపరి;  // A branch sub-node.
     };
 
-#endif  /* U_HIDE_INTERNAL_API */
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
     /// \endcond
 
     /** @internal */
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const = 0;
+    మాయా కణుపు_2 *create_రేఖీయ_సరిపోలిక_కణుపు(int32_t i, int32_t unit_సూచీ, int32_t నిడివి,
+                                        కణుపు_2 *తదుపరి_కణుపు) స్థిరరాశి = 0;
 
     /** @internal */
-    virtual int32_t write(int32_t unit) = 0;
+    మాయా int32_t లిఖ(int32_t unit) = 0;
     /** @internal */
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
+    మాయా int32_t writeElementUnits(int32_t i, int32_t unit_సూచీ, int32_t నిడివి) = 0;
     /** @internal */
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) = 0;
+    మాయా int32_t write_విలువ_And_Final(int32_t i, UBool isFinal) = 0;
     /** @internal */
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) = 0;
+    మాయా int32_t write_విలువ_And_Type(UBool has_విలువ, int32_t విలువ_2, int32_t కణుపు) = 0;
     /** @internal */
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) = 0;
+    మాయా int32_t write_Delta_గమ్యం(int32_t jump_లక్ష్యం) = 0;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __STRINGTRIEBUILDER_H__
+#అయితే_ముగింపు  // __STRINGTRIEBUILDER_H__

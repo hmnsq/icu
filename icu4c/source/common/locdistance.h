@@ -4,48 +4,48 @@
 // locdistance.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LOCDISTANCE_H__
-#define __LOCDISTANCE_H__
+#నిర్వచితం_కాకపోతే __LOCDISTANCE_H__
+#నిర్వచించు __LOCDISTANCE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "lsr.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/bytestrie.h"
+#అన్తర్భావ "unicode/localematcher.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LocaleDistanceData;
+నిర్మాణం Locale_దూరం_దత్తాంశం;
 
 /**
  * Offline-built data for LocaleMatcher.
  * Mostly but not only the data for mapping locales to their maximized forms.
  */
-class LocaleDistance final : public UMemory {
-public:
-    static const LocaleDistance *getSingleton(UErrorCode &errorCode);
+class Locale_దూరం final : బహిరంగ UMemory {
+బహిరంగ:
+    స్థిర స్థిరరాశి Locale_దూరం *getSingleton(UError_సంకేతం &error_సంకేతం);
 
-    static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+    స్థిర int32_t జరుపు_దూరం(int32_t దూరం) {
+        తిరిగి దూరం << దూరం_జరుపు;
     }
 
-    static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+    స్థిర int32_t get_Shifted_దూరం(int32_t సూచీ_And_దూరం) {
+        తిరిగి సూచీ_And_దూరం & దూరం_ముసుగు;
     }
 
-    static double getDistanceDouble(int32_t indexAndDistance) {
-        double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+    స్థిర ద్విగుణ get_దూరం_Double(int32_t సూచీ_And_దూరం) {
+        ద్విగుణ shifted_దూరం = get_Shifted_దూరం(సూచీ_And_దూరం);
+        తిరిగి shifted_దూరం / (1 << దూరం_జరుపు);
     }
 
-    static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+    స్థిర int32_t get_దూరం_Floor(int32_t సూచీ_And_దూరం) {
+        తిరిగి (సూచీ_And_దూరం & దూరం_ముసుగు) >> దూరం_జరుపు;
     }
 
-    static int32_t getIndex(int32_t indexAndDistance) {
+    స్థిర int32_t get_సూచీ(int32_t సూచీ_And_దూరం) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        తిరిగి సూచీ_And_దూరం >> సూచీ_జరుపు;
     }
 
     /**
@@ -56,96 +56,96 @@ public:
      * (negative if none has a distance below the threshold),
      * and its distance (0..ABOVE_THRESHOLD) in the low bits.
      */
-    int32_t getBestIndexAndDistance(const LSR &desired,
-                                    const LSR **supportedLSRs, int32_t supportedLSRsLength,
-                                    int32_t shiftedThreshold,
-                                    ULocMatchFavorSubtag favorSubtag,
-                                    ULocMatchDirection direction) const;
+    int32_t get_ఉత్తమ_సూచీ_And_దూరం(స్థిరరాశి LSR &desired,
+                                    స్థిరరాశి LSR **supportedLSRs, int32_t supported_LSRs_నిడివి,
+                                    int32_t shifted_పరిమితి,
+                                    ULoc_సరిపోలిక_Favor_Subtag favorSubtag,
+                                    ULoc_సరిపోలిక_Direction direction) స్థిరరాశి;
 
-    bool isParadigmLSR(const LSR &lsr) const;
+    bool isParadigmLSR(స్థిరరాశి LSR &lsr) స్థిరరాశి;
 
-    int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+    int32_t get_Default_Script_దూరం() స్థిరరాశి {
+        తిరిగి default_Script_దూరం;
     }
 
-    int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+    int32_t get_Default_Demotion_చొప్పున_Desired_Locale() స్థిరరాశి {
+        తిరిగి default_Demotion_చొప్పున_Desired_Locale;
     }
 
-private:
+అంతరంగ:
     // The distance is shifted left to gain some fraction bits.
-    static constexpr int32_t DISTANCE_SHIFT = 3;
-    static constexpr int32_t DISTANCE_FRACTION_MASK = 7;
+    స్థిర constexpr int32_t దూరం_జరుపు = 3;
+    స్థిర constexpr int32_t దూరం_FRACTION_ముసుగు = 7;
     // 7 bits for 0..100
-    static constexpr int32_t DISTANCE_INT_SHIFT = 7;
-    static constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
-    static constexpr int32_t DISTANCE_MASK = 0x3ff;
+    స్థిర constexpr int32_t దూరం_INT_జరుపు = 7;
+    స్థిర constexpr int32_t సూచీ_జరుపు = దూరం_INT_జరుపు + దూరం_జరుపు;
+    స్థిర constexpr int32_t దూరం_ముసుగు = 0x3ff;
     // tic constexpr int32_t MAX_INDEX = 0x1fffff;  // avoids sign bit
-    static constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
+    స్థిర constexpr int32_t సూచీ_NEG_1 = 0xfffffc00;
 
-    LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely);
-    LocaleDistance(const LocaleDistance &other) = delete;
-    LocaleDistance &operator=(const LocaleDistance &other) = delete;
+    Locale_దూరం(స్థిరరాశి Locale_దూరం_దత్తాంశం &దత్తాంశం, స్థిరరాశి LikelySubtags &likely);
+    Locale_దూరం(స్థిరరాశి Locale_దూరం &other) = delete;
+    Locale_దూరం &క్రియాకారకం=(స్థిరరాశి Locale_దూరం &other) = delete;
 
-    static void initLocaleDistance(UErrorCode &errorCode);
+    స్థిర శూన్య init_Locale_దూరం(UError_సంకేతం &error_సంకేతం);
 
-    bool isMatch(const LSR &desired, const LSR &supported,
-                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
-        const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+    bool is_సరిపోలిక(స్థిరరాశి LSR &desired, స్థిరరాశి LSR &supported,
+                 int32_t shifted_పరిమితి, ULoc_సరిపోలిక_Favor_Subtag favorSubtag) స్థిరరాశి {
+        స్థిరరాశి LSR *pSupp = &supported;
+        తిరిగి get_ఉత్తమ_సూచీ_And_దూరం(
             desired, &pSupp, 1,
-            shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
+            shifted_పరిమితి, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
 
-    static int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
-                                            const char *desired, const char *supported);
+    స్థిర int32_t get_Des_Supp_Script_దూరం(బైట్లు_Trie &iter, uint64_t ప్రారంభం_State,
+                                            స్థిరరాశి అక్షరం *desired, స్థిరరాశి అక్షరం *supported);
 
-    static int32_t getRegionPartitionsDistance(
-        BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions,
-        int32_t threshold);
+    స్థిర int32_t get_Region_Partitions_దూరం(
+        బైట్లు_Trie &iter, uint64_t ప్రారంభం_State,
+        స్థిరరాశి అక్షరం *desiredPartitions, స్థిరరాశి అక్షరం *supportedPartitions,
+        int32_t పరిమితి);
 
-    static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
+    స్థిర int32_t get_Fallback_Region_దూరం(బైట్లు_Trie &iter, uint64_t ప్రారంభం_State);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    స్థిర int32_t trie_తదుపరి(బైట్లు_Trie &iter, స్థిరరాశి అక్షరం *s, bool want_విలువ);
 
-    const char *partitionsForRegion(const LSR &lsr) const {
+    స్థిరరాశి అక్షరం *partitionsForRegion(స్థిరరాశి LSR &lsr) స్థిరరాశి {
         // ill-formed region -> one non-matching string
-        int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        int32_t p_సూచీ = region_గమ్యం_Partitions_సూచీ[lsr.region_సూచీ];
+        తిరిగి విభజన_Arrays[p_సూచీ];
     }
 
-    int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+    int32_t get_Default_Region_దూరం() స్థిరరాశి {
+        తిరిగి default_Region_దూరం;
     }
 
-    const LikelySubtags &likelySubtags;
+    స్థిరరాశి LikelySubtags &likelySubtags;
 
     // The trie maps each dlang+slang+dscript+sscript+dregion+sregion
     // (encoded in ASCII with bit 7 set on the last character of each subtag) to a distance.
     // There is also a trie value for each subsequence of whole subtags.
     // One '*' is used for a (desired, supported) pair of "und", "Zzzz"/"", or "ZZ"/"".
-    BytesTrie trie;
+    బైట్లు_Trie trie;
 
     /**
      * Maps each region to zero or more single-character partitions.
      */
-    const uint8_t *regionToPartitionsIndex;
-    const char **partitionArrays;
+    స్థిరరాశి uint8_t *region_గమ్యం_Partitions_సూచీ;
+    స్థిరరాశి అక్షరం **విభజన_Arrays;
 
     /**
      * Used to get the paradigm region for a cluster, if there is one.
      */
-    const LSR *paradigmLSRs;
-    int32_t paradigmLSRsLength;
+    స్థిరరాశి LSR *paradigmLSRs;
+    int32_t paradigm_LSRs_నిడివి;
 
-    int32_t defaultLanguageDistance;
-    int32_t defaultScriptDistance;
-    int32_t defaultRegionDistance;
-    int32_t minRegionDistance;
-    int32_t defaultDemotionPerDesiredLocale;
+    int32_t default_Language_దూరం;
+    int32_t default_Script_దూరం;
+    int32_t default_Region_దూరం;
+    int32_t min_Region_దూరం;
+    int32_t default_Demotion_చొప్పున_Desired_Locale;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // __LOCDISTANCE_H__
+#అయితే_ముగింపు  // __LOCDISTANCE_H__

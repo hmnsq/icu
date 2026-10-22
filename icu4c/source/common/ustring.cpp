@@ -17,20 +17,20 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uchar.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cstring.h"
-#include "cwchar.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cwchar.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ustr_imp.h"
 
 /* ANSI string.h - style functions ------------------------------------------ */
 
 /* U+ffff is the highest BMP code point, the highest one that fits into a 16-bit char16_t */
-#define U_BMP_MAX 0xffff
+#నిర్వచించు U_BMP_MAX 0xffff
 
 /* Forward binary string search functions ----------------------------------- */
 
@@ -39,64 +39,64 @@
  * All pointers refer to the same buffer.
  * The limit pointer may be nullptr, all others must be real pointers.
  */
-static inline UBool
-isMatchAtCPBoundary(const char16_t *start, const char16_t *match, const char16_t *matchLimit, const char16_t *limit) {
-    if(U16_IS_TRAIL(*match) && start!=match && U16_IS_LEAD(*(match-1))) {
+స్థిర అంతఃవరుస UBool
+is_సరిపోలిక_At_CPBoundary(స్థిరరాశి char16_t *ప్రారంభం, స్థిరరాశి char16_t *సరిపోలిక, స్థిరరాశి char16_t *సరిపోలిక_హద్దు, స్థిరరాశి char16_t *హద్దు) {
+    ఒకవేళ(U16_IS_TRAIL(*సరిపోలిక) && ప్రారంభం!=సరిపోలిక && U16_IS_LEAD(*(సరిపోలిక-1))) {
         /* the leading edge of the match is in the middle of a surrogate pair */
-        return false;
+        తిరిగి అబద్ధం;
     }
-    if(U16_IS_LEAD(*(matchLimit-1)) && matchLimit!=limit && U16_IS_TRAIL(*matchLimit)) {
+    ఒకవేళ(U16_IS_LEAD(*(సరిపోలిక_హద్దు-1)) && సరిపోలిక_హద్దు!=హద్దు && U16_IS_TRAIL(*సరిపోలిక_హద్దు)) {
         /* the trailing edge of the match is in the middle of a surrogate pair */
-        return false;
+        తిరిగి అబద్ధం;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
+u_str_కనుగొను_మొదటి(స్థిరరాశి char16_t* s U_LIFETIME_BOUND,
                int32_t length,
-               const char16_t* sub,
-               int32_t subLength) {
-    const char16_t *start, *p, *q, *subLimit;
+               స్థిరరాశి char16_t* sub,
+               int32_t sub_నిడివి) {
+    స్థిరరాశి char16_t *ప్రారంభం, *p, *q, *sub_హద్దు;
     char16_t c, cs, cq;
 
-    if(sub==nullptr || subLength<-1) {
-        return (char16_t *)s;
+    ఒకవేళ(sub==శూన్యసూచిక || sub_నిడివి<-1) {
+        తిరిగి (char16_t *)s;
     }
-    if(s==nullptr || length<-1) {
-        return nullptr;
+    ఒకవేళ(s==శూన్యసూచిక || length<-1) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    start=s;
+    ప్రారంభం=s;
 
-    if(length<0 && subLength<0) {
+    ఒకవేళ(length<0 && sub_నిడివి<0) {
         /* both strings are NUL-terminated */
-        if((cs=*sub++)==0) {
-            return (char16_t *)s;
+        ఒకవేళ((cs=*sub++)==0) {
+            తిరిగి (char16_t *)s;
         }
-        if(*sub==0 && !U16_IS_SURROGATE(cs)) {
+        ఒకవేళ(*sub==0 && !U16_IS_SURROGATE(cs)) {
             /* the substring consists of a single, non-surrogate BMP code point */
-            return u_strchr(s, cs);
+            తిరిగి u_strchr(s, cs);
         }
 
-        while((c=*s++)!=0) {
-            if(c==cs) {
+        అయితే((c=*s++)!=0) {
+            ఒకవేళ(c==cs) {
                 /* found first substring char16_t, compare rest */
                 p=s;
                 q=sub;
-                for(;;) {
-                    if((cq=*q)==0) {
-                        if(isMatchAtCPBoundary(start, s-1, p, nullptr)) {
-                            return (char16_t *)(s-1); /* well-formed match */
-                        } else {
-                            break; /* no match because surrogate pair is split */
+                కొరకు(;;) {
+                    ఒకవేళ((cq=*q)==0) {
+                        ఒకవేళ(is_సరిపోలిక_At_CPBoundary(ప్రారంభం, s-1, p, శూన్యసూచిక)) {
+                            తిరిగి (char16_t *)(s-1); /* well-formed match */
+                        } లేకపోతే {
+                            ఆపు; /* no match because surrogate pair is split */
                         }
                     }
-                    if((c=*p)==0) {
-                        return nullptr; /* no match, and none possible after s */
+                    ఒకవేళ((c=*p)==0) {
+                        తిరిగి శూన్యసూచిక; /* no match, and none possible after s */
                     }
-                    if(c!=cq) {
-                        break; /* no match */
+                    ఒకవేళ(c!=cq) {
+                        ఆపు; /* no match */
                     }
                     ++p;
                     ++q;
@@ -105,81 +105,81 @@ u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
         }
 
         /* not found */
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(subLength<0) {
-        subLength=u_strlen(sub);
+    ఒకవేళ(sub_నిడివి<0) {
+        sub_నిడివి=u_strlen(sub);
     }
-    if(subLength==0) {
-        return (char16_t *)s;
+    ఒకవేళ(sub_నిడివి==0) {
+        తిరిగి (char16_t *)s;
     }
 
     /* get sub[0] to search for it fast */
     cs=*sub++;
-    --subLength;
-    subLimit=sub+subLength;
+    --sub_నిడివి;
+    sub_హద్దు=sub+sub_నిడివి;
 
-    if(subLength==0 && !U16_IS_SURROGATE(cs)) {
+    ఒకవేళ(sub_నిడివి==0 && !U16_IS_SURROGATE(cs)) {
         /* the substring consists of a single, non-surrogate BMP code point */
-        return length<0 ? u_strchr(s, cs) : u_memchr(s, cs, length);
+        తిరిగి length<0 ? u_strchr(s, cs) : u_memchr(s, cs, length);
     }
 
-    if(length<0) {
+    ఒకవేళ(length<0) {
         /* s is NUL-terminated */
-        while((c=*s++)!=0) {
-            if(c==cs) {
+        అయితే((c=*s++)!=0) {
+            ఒకవేళ(c==cs) {
                 /* found first substring char16_t, compare rest */
                 p=s;
                 q=sub;
-                for(;;) {
-                    if(q==subLimit) {
-                        if(isMatchAtCPBoundary(start, s-1, p, nullptr)) {
-                            return (char16_t *)(s-1); /* well-formed match */
-                        } else {
-                            break; /* no match because surrogate pair is split */
+                కొరకు(;;) {
+                    ఒకవేళ(q==sub_హద్దు) {
+                        ఒకవేళ(is_సరిపోలిక_At_CPBoundary(ప్రారంభం, s-1, p, శూన్యసూచిక)) {
+                            తిరిగి (char16_t *)(s-1); /* well-formed match */
+                        } లేకపోతే {
+                            ఆపు; /* no match because surrogate pair is split */
                         }
                     }
-                    if((c=*p)==0) {
-                        return nullptr; /* no match, and none possible after s */
+                    ఒకవేళ((c=*p)==0) {
+                        తిరిగి శూన్యసూచిక; /* no match, and none possible after s */
                     }
-                    if(c!=*q) {
-                        break; /* no match */
+                    ఒకవేళ(c!=*q) {
+                        ఆపు; /* no match */
                     }
                     ++p;
                     ++q;
                 }
             }
         }
-    } else {
-        const char16_t *limit, *preLimit;
+    } లేకపోతే {
+        స్థిరరాశి char16_t *హద్దు, *pre_హద్దు;
 
         /* subLength was decremented above */
-        if(length<=subLength) {
-            return nullptr; /* s is shorter than sub */
+        ఒకవేళ(length<=sub_నిడివి) {
+            తిరిగి శూన్యసూచిక; /* s is shorter than sub */
         }
 
-        limit=s+length;
+        హద్దు=s+length;
 
         /* the substring must start before preLimit */
-        preLimit=limit-subLength;
+        pre_హద్దు=హద్దు-sub_నిడివి;
 
-        while(s!=preLimit) {
+        అయితే(s!=pre_హద్దు) {
             c=*s++;
-            if(c==cs) {
+            ఒకవేళ(c==cs) {
                 /* found first substring char16_t, compare rest */
                 p=s;
                 q=sub;
-                for(;;) {
-                    if(q==subLimit) {
-                        if(isMatchAtCPBoundary(start, s-1, p, limit)) {
-                            return (char16_t *)(s-1); /* well-formed match */
-                        } else {
-                            break; /* no match because surrogate pair is split */
+                కొరకు(;;) {
+                    ఒకవేళ(q==sub_హద్దు) {
+                        ఒకవేళ(is_సరిపోలిక_At_CPBoundary(ప్రారంభం, s-1, p, హద్దు)) {
+                            తిరిగి (char16_t *)(s-1); /* well-formed match */
+                        } లేకపోతే {
+                            ఆపు; /* no match because surrogate pair is split */
                         }
                     }
-                    if(*p!=*q) {
-                        break; /* no match */
+                    ఒకవేళ(*p!=*q) {
+                        ఆపు; /* no match */
                     }
                     ++p;
                     ++q;
@@ -189,29 +189,29 @@ u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
     }
 
     /* not found */
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strstr(const char16_t* s U_LIFETIME_BOUND, const char16_t* substring) {
-    return u_strFindFirst(s, -1, substring, -1);
+u_strstr(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, స్థిరరాశి char16_t* substring) {
+    తిరిగి u_str_కనుగొను_మొదటి(s, -1, substring, -1);
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
-    if(U16_IS_SURROGATE(c)) {
+u_strchr(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, char16_t c) {
+    ఒకవేళ(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindFirst(s, -1, &c, 1);
-    } else {
+        తిరిగి u_str_కనుగొను_మొదటి(s, -1, &c, 1);
+    } లేకపోతే {
         char16_t cs;
 
         /* trivial search for a BMP code point */
-        for(;;) {
-            if((cs=*s)==c) {
-                return (char16_t *)s;
+        కొరకు(;;) {
+            ఒకవేళ((cs=*s)==c) {
+                తిరిగి (char16_t *)s;
             }
-            if(cs==0) {
-                return nullptr;
+            ఒకవేళ(cs==0) {
+                తిరిగి శూన్యసూచిక;
             }
             ++s;
         }
@@ -219,85 +219,85 @@ u_strchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_strchr32(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, UChar32 c) {
+    ఒకవేళ((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_strchr(s, (char16_t)c);
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        తిరిగి u_strchr(s, (char16_t)c);
+    } లేకపోతే ఒకవేళ((uint32_t)c<=UCHAR_MAX_విలువ) {
         /* find supplementary code point as surrogate pair */
         char16_t cs, lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        while((cs=*s++)!=0) {
-            if(cs==lead && *s==trail) {
-                return (char16_t *)(s-1);
+        అయితే((cs=*s++)!=0) {
+            ఒకవేళ(cs==lead && *s==trail) {
+                తిరిగి (char16_t *)(s-1);
             }
         }
-        return nullptr;
-    } else {
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memchr(const char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
-    if(count<=0) {
-        return nullptr; /* no string */
-    } else if(U16_IS_SURROGATE(c)) {
+u_memchr(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
+    ఒకవేళ(count<=0) {
+        తిరిగి శూన్యసూచిక; /* no string */
+    } లేకపోతే ఒకవేళ(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindFirst(s, count, &c, 1);
-    } else {
+        తిరిగి u_str_కనుగొను_మొదటి(s, count, &c, 1);
+    } లేకపోతే {
         /* trivial search for a BMP code point */
-        const char16_t *limit=s+count;
-        do {
-            if(*s==c) {
-                return (char16_t *)s;
+        స్థిరరాశి char16_t *హద్దు=s+count;
+        చేయి {
+            ఒకవేళ(*s==c) {
+                తిరిగి (char16_t *)s;
             }
-        } while(++s!=limit);
-        return nullptr;
+        } అయితే(++s!=హద్దు);
+        తిరిగి శూన్యసూచిక;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_memchr32(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
+    ఒకవేళ((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_memchr(s, (char16_t)c, count);
-    } else if(count<2) {
+        తిరిగి u_memchr(s, (char16_t)c, count);
+    } లేకపోతే ఒకవేళ(count<2) {
         /* too short for a surrogate pair */
-        return nullptr;
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే ఒకవేళ((uint32_t)c<=UCHAR_MAX_విలువ) {
         /* find supplementary code point as surrogate pair */
-        const char16_t *limit=s+count-1; /* -1 so that we do not need a separate check for the trail unit */
+        స్థిరరాశి char16_t *హద్దు=s+count-1; /* -1 so that we do not need a separate check for the trail unit */
         char16_t lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        do {
-            if(*s==lead && *(s+1)==trail) {
-                return (char16_t *)s;
+        చేయి {
+            ఒకవేళ(*s==lead && *(s+1)==trail) {
+                తిరిగి (char16_t *)s;
             }
-        } while(++s!=limit);
-        return nullptr;
-    } else {
+        } అయితే(++s!=హద్దు);
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 }
 
 /* Backward binary string search functions ---------------------------------- */
 
 U_CAPI char16_t* U_EXPORT2
-u_strFindLast(const char16_t* s U_LIFETIME_BOUND,
+u_str_కనుగొను_చివరి(స్థిరరాశి char16_t* s U_LIFETIME_BOUND,
               int32_t length,
-              const char16_t* sub,
-              int32_t subLength) {
-    const char16_t *start, *limit, *p, *q, *subLimit;
+              స్థిరరాశి char16_t* sub,
+              int32_t sub_నిడివి) {
+    స్థిరరాశి char16_t *ప్రారంభం, *హద్దు, *p, *q, *sub_హద్దు;
     char16_t c, cs;
 
-    if(sub==nullptr || subLength<-1) {
-        return (char16_t *)s;
+    ఒకవేళ(sub==శూన్యసూచిక || sub_నిడివి<-1) {
+        తిరిగి (char16_t *)s;
     }
-    if(s==nullptr || length<-1) {
-        return nullptr;
+    ఒకవేళ(s==శూన్యసూచిక || length<-1) {
+        తిరిగి శూన్యసూచిక;
     }
 
     /*
@@ -310,84 +310,84 @@ u_strFindLast(const char16_t* s U_LIFETIME_BOUND,
      * markus 2002oct23
      */
 
-    if(subLength<0) {
-        subLength=u_strlen(sub);
+    ఒకవేళ(sub_నిడివి<0) {
+        sub_నిడివి=u_strlen(sub);
     }
-    if(subLength==0) {
-        return (char16_t *)s;
+    ఒకవేళ(sub_నిడివి==0) {
+        తిరిగి (char16_t *)s;
     }
 
     /* get sub[subLength-1] to search for it fast */
-    subLimit=sub+subLength;
-    cs=*(--subLimit);
-    --subLength;
+    sub_హద్దు=sub+sub_నిడివి;
+    cs=*(--sub_హద్దు);
+    --sub_నిడివి;
 
-    if(subLength==0 && !U16_IS_SURROGATE(cs)) {
+    ఒకవేళ(sub_నిడివి==0 && !U16_IS_SURROGATE(cs)) {
         /* the substring consists of a single, non-surrogate BMP code point */
-        return length<0 ? u_strrchr(s, cs) : u_memrchr(s, cs, length);
+        తిరిగి length<0 ? u_strrchr(s, cs) : u_memrchr(s, cs, length);
     }
 
-    if(length<0) {
+    ఒకవేళ(length<0) {
         length=u_strlen(s);
     }
 
     /* subLength was decremented above */
-    if(length<=subLength) {
-        return nullptr; /* s is shorter than sub */
+    ఒకవేళ(length<=sub_నిడివి) {
+        తిరిగి శూన్యసూచిక; /* s is shorter than sub */
     }
 
-    start=s;
-    limit=s+length;
+    ప్రారంభం=s;
+    హద్దు=s+length;
 
     /* the substring must start no later than s+subLength */
-    s+=subLength;
+    s+=sub_నిడివి;
 
-    while(s!=limit) {
-        c=*(--limit);
-        if(c==cs) {
+    అయితే(s!=హద్దు) {
+        c=*(--హద్దు);
+        ఒకవేళ(c==cs) {
             /* found last substring char16_t, compare rest */
-            p=limit;
-            q=subLimit;
-            for(;;) {
-                if(q==sub) {
-                    if(isMatchAtCPBoundary(start, p, limit+1, start+length)) {
-                        return (char16_t *)p; /* well-formed match */
-                    } else {
-                        break; /* no match because surrogate pair is split */
+            p=హద్దు;
+            q=sub_హద్దు;
+            కొరకు(;;) {
+                ఒకవేళ(q==sub) {
+                    ఒకవేళ(is_సరిపోలిక_At_CPBoundary(ప్రారంభం, p, హద్దు+1, ప్రారంభం+length)) {
+                        తిరిగి (char16_t *)p; /* well-formed match */
+                    } లేకపోతే {
+                        ఆపు; /* no match because surrogate pair is split */
                     }
                 }
-                if(*(--p)!=*(--q)) {
-                    break; /* no match */
+                ఒకవేళ(*(--p)!=*(--q)) {
+                    ఆపు; /* no match */
                 }
             }
         }
     }
 
     /* not found */
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strrstr(const char16_t* s U_LIFETIME_BOUND, const char16_t* substring) {
-    return u_strFindLast(s, -1, substring, -1);
+u_strrstr(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, స్థిరరాశి char16_t* substring) {
+    తిరిగి u_str_కనుగొను_చివరి(s, -1, substring, -1);
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strrchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
-    if(U16_IS_SURROGATE(c)) {
+u_strrchr(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, char16_t c) {
+    ఒకవేళ(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindLast(s, -1, &c, 1);
-    } else {
-        const char16_t *result=nullptr;
+        తిరిగి u_str_కనుగొను_చివరి(s, -1, &c, 1);
+    } లేకపోతే {
+        స్థిరరాశి char16_t *ఫలితం=శూన్యసూచిక;
         char16_t cs;
 
         /* trivial search for a BMP code point */
-        for(;;) {
-            if((cs=*s)==c) {
-                result=s;
+        కొరకు(;;) {
+            ఒకవేళ((cs=*s)==c) {
+                ఫలితం=s;
             }
-            if(cs==0) {
-                return (char16_t *)result;
+            ఒకవేళ(cs==0) {
+                తిరిగి (char16_t *)ఫలితం;
             }
             ++s;
         }
@@ -395,68 +395,68 @@ u_strrchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_strrchr32(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, UChar32 c) {
+    ఒకవేళ((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_strrchr(s, (char16_t)c);
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        తిరిగి u_strrchr(s, (char16_t)c);
+    } లేకపోతే ఒకవేళ((uint32_t)c<=UCHAR_MAX_విలువ) {
         /* find supplementary code point as surrogate pair */
-        const char16_t *result=nullptr;
+        స్థిరరాశి char16_t *ఫలితం=శూన్యసూచిక;
         char16_t cs, lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        while((cs=*s++)!=0) {
-            if(cs==lead && *s==trail) {
-                result=s-1;
+        అయితే((cs=*s++)!=0) {
+            ఒకవేళ(cs==lead && *s==trail) {
+                ఫలితం=s-1;
             }
         }
-        return (char16_t *)result;
-    } else {
+        తిరిగి (char16_t *)ఫలితం;
+    } లేకపోతే {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memrchr(const char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
-    if(count<=0) {
-        return nullptr; /* no string */
-    } else if(U16_IS_SURROGATE(c)) {
+u_memrchr(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
+    ఒకవేళ(count<=0) {
+        తిరిగి శూన్యసూచిక; /* no string */
+    } లేకపోతే ఒకవేళ(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindLast(s, count, &c, 1);
-    } else {
+        తిరిగి u_str_కనుగొను_చివరి(s, count, &c, 1);
+    } లేకపోతే {
         /* trivial search for a BMP code point */
-        const char16_t *limit=s+count;
-        do {
-            if(*(--limit)==c) {
-                return (char16_t *)limit;
+        స్థిరరాశి char16_t *హద్దు=s+count;
+        చేయి {
+            ఒకవేళ(*(--హద్దు)==c) {
+                తిరిగి (char16_t *)హద్దు;
             }
-        } while(s!=limit);
-        return nullptr;
+        } అయితే(s!=హద్దు);
+        తిరిగి శూన్యసూచిక;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_memrchr32(స్థిరరాశి char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
+    ఒకవేళ((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_memrchr(s, (char16_t)c, count);
-    } else if(count<2) {
+        తిరిగి u_memrchr(s, (char16_t)c, count);
+    } లేకపోతే ఒకవేళ(count<2) {
         /* too short for a surrogate pair */
-        return nullptr;
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే ఒకవేళ((uint32_t)c<=UCHAR_MAX_విలువ) {
         /* find supplementary code point as surrogate pair */
-        const char16_t *limit=s+count-1;
+        స్థిరరాశి char16_t *హద్దు=s+count-1;
         char16_t lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        do {
-            if(*limit==trail && *(limit-1)==lead) {
-                return (char16_t *)(limit-1);
+        చేయి {
+            ఒకవేళ(*హద్దు==trail && *(హద్దు-1)==lead) {
+                తిరిగి (char16_t *)(హద్దు-1);
             }
-        } while(s!=--limit);
-        return nullptr;
-    } else {
+        } అయితే(s!=--హద్దు);
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 }
 
@@ -468,68 +468,68 @@ u_memrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
  * is (polarity==true) or is not (false) contained in the matchSet.
  * Return -(string length)-1 if there is no such code point.
  */
-static int32_t
-_matchFromSet(const char16_t *string, const char16_t *matchSet, UBool polarity) {
-    int32_t matchLen, matchBMPLen, strItr, matchItr;
-    UChar32 stringCh, matchCh;
+స్థిర int32_t
+సరిపోలిక_From_సమితి(స్థిరరాశి char16_t *string, స్థిరరాశి char16_t *సరిపోలిక_సమితి, UBool polarity) {
+    int32_t సరిపోలిక_Len, సరిపోలిక_BMPLen, strItr, సరిపోలిక_Itr;
+    UChar32 stringCh, సరిపోలిక_Ch;
     char16_t c, c2;
 
     /* first part of matchSet contains only BMP code points */
-    matchBMPLen = 0;
-    while((c = matchSet[matchBMPLen]) != 0 && U16_IS_SINGLE(c)) {
-        ++matchBMPLen;
+    సరిపోలిక_BMPLen = 0;
+    అయితే((c = సరిపోలిక_సమితి[సరిపోలిక_BMPLen]) != 0 && U16_IS_SINGLE(c)) {
+        ++సరిపోలిక_BMPLen;
     }
 
     /* second part of matchSet contains BMP and supplementary code points */
-    matchLen = matchBMPLen;
-    while(matchSet[matchLen] != 0) {
-        ++matchLen;
+    సరిపోలిక_Len = సరిపోలిక_BMPLen;
+    అయితే(సరిపోలిక_సమితి[సరిపోలిక_Len] != 0) {
+        ++సరిపోలిక_Len;
     }
 
-    for(strItr = 0; (c = string[strItr]) != 0;) {
+    కొరకు(strItr = 0; (c = string[strItr]) != 0;) {
         ++strItr;
-        if(U16_IS_SINGLE(c)) {
-            if(polarity) {
-                for(matchItr = 0; matchItr < matchLen; ++matchItr) {
-                    if(c == matchSet[matchItr]) {
-                        return strItr - 1; /* one matches */
+        ఒకవేళ(U16_IS_SINGLE(c)) {
+            ఒకవేళ(polarity) {
+                కొరకు(సరిపోలిక_Itr = 0; సరిపోలిక_Itr < సరిపోలిక_Len; ++సరిపోలిక_Itr) {
+                    ఒకవేళ(c == సరిపోలిక_సమితి[సరిపోలిక_Itr]) {
+                        తిరిగి strItr - 1; /* one matches */
                     }
                 }
-            } else {
-                for(matchItr = 0; matchItr < matchLen; ++matchItr) {
-                    if(c == matchSet[matchItr]) {
-                        goto endloop;
+            } లేకపోతే {
+                కొరకు(సరిపోలిక_Itr = 0; సరిపోలిక_Itr < సరిపోలిక_Len; ++సరిపోలిక_Itr) {
+                    ఒకవేళ(c == సరిపోలిక_సమితి[సరిపోలిక_Itr]) {
+                        వెళ్ళు endloop;
                     }
                 }
-                return strItr - 1; /* none matches */
+                తిరిగి strItr - 1; /* none matches */
             }
-        } else {
+        } లేకపోతే {
             /*
              * No need to check for string length before U16_IS_TRAIL
              * because c2 could at worst be the terminating NUL.
              */
-            if(U16_IS_SURROGATE_LEAD(c) && U16_IS_TRAIL(c2 = string[strItr])) {
+            ఒకవేళ(U16_IS_SURROGATE_LEAD(c) && U16_IS_TRAIL(c2 = string[strItr])) {
                 ++strItr;
                 stringCh = U16_GET_SUPPLEMENTARY(c, c2);
-            } else {
+            } లేకపోతే {
                 stringCh = c; /* unpaired trail surrogate */
             }
 
-            if(polarity) {
-                for(matchItr = matchBMPLen; matchItr < matchLen;) {
-                    U16_NEXT(matchSet, matchItr, matchLen, matchCh);
-                    if(stringCh == matchCh) {
-                        return strItr - U16_LENGTH(stringCh); /* one matches */
+            ఒకవేళ(polarity) {
+                కొరకు(సరిపోలిక_Itr = సరిపోలిక_BMPLen; సరిపోలిక_Itr < సరిపోలిక_Len;) {
+                    U16_తదుపరి(సరిపోలిక_సమితి, సరిపోలిక_Itr, సరిపోలిక_Len, సరిపోలిక_Ch);
+                    ఒకవేళ(stringCh == సరిపోలిక_Ch) {
+                        తిరిగి strItr - U16_నిడివి(stringCh); /* one matches */
                     }
                 }
-            } else {
-                for(matchItr = matchBMPLen; matchItr < matchLen;) {
-                    U16_NEXT(matchSet, matchItr, matchLen, matchCh);
-                    if(stringCh == matchCh) {
-                        goto endloop;
+            } లేకపోతే {
+                కొరకు(సరిపోలిక_Itr = సరిపోలిక_BMPLen; సరిపోలిక_Itr < సరిపోలిక_Len;) {
+                    U16_తదుపరి(సరిపోలిక_సమితి, సరిపోలిక_Itr, సరిపోలిక_Len, సరిపోలిక_Ch);
+                    ఒకవేళ(stringCh == సరిపోలిక_Ch) {
+                        వెళ్ళు endloop;
                     }
                 }
-                return strItr - U16_LENGTH(stringCh); /* none matches */
+                తిరిగి strItr - U16_నిడివి(stringCh); /* none matches */
             }
         }
 endloop:
@@ -537,156 +537,156 @@ endloop:
     }
 
     /* Didn't find it. */
-    return -strItr-1;
+    తిరిగి -strItr-1;
 }
 
 /* Search for a codepoint in a string that matches one of the matchSet codepoints. */
 U_CAPI char16_t* U_EXPORT2
-u_strpbrk(const char16_t* string U_LIFETIME_BOUND, const char16_t* matchSet)
+u_strpbrk(స్థిరరాశి char16_t* string U_LIFETIME_BOUND, స్థిరరాశి char16_t* సరిపోలిక_సమితి)
 {
-    int32_t idx = _matchFromSet(string, matchSet, true);
-    if(idx >= 0) {
-        return (char16_t *)string + idx;
-    } else {
-        return nullptr;
+    int32_t idx = సరిపోలిక_From_సమితి(string, సరిపోలిక_సమితి, నిజం);
+    ఒకవేళ(idx >= 0) {
+        తిరిగి (char16_t *)string + idx;
+    } లేకపోతే {
+        తిరిగి శూన్యసూచిక;
     }
 }
 
 /* Search for a codepoint in a string that matches one of the matchSet codepoints. */
 U_CAPI int32_t U_EXPORT2
-u_strcspn(const char16_t *string, const char16_t *matchSet)
+u_strcspn(స్థిరరాశి char16_t *string, స్థిరరాశి char16_t *సరిపోలిక_సమితి)
 {
-    int32_t idx = _matchFromSet(string, matchSet, true);
-    if(idx >= 0) {
-        return idx;
-    } else {
-        return -idx - 1; /* == u_strlen(string) */
+    int32_t idx = సరిపోలిక_From_సమితి(string, సరిపోలిక_సమితి, నిజం);
+    ఒకవేళ(idx >= 0) {
+        తిరిగి idx;
+    } లేకపోతే {
+        తిరిగి -idx - 1; /* == u_strlen(string) */
     }
 }
 
 /* Search for a codepoint in a string that does not match one of the matchSet codepoints. */
 U_CAPI int32_t U_EXPORT2
-u_strspn(const char16_t *string, const char16_t *matchSet)
+u_strspn(స్థిరరాశి char16_t *string, స్థిరరాశి char16_t *సరిపోలిక_సమితి)
 {
-    int32_t idx = _matchFromSet(string, matchSet, false);
-    if(idx >= 0) {
-        return idx;
-    } else {
-        return -idx - 1; /* == u_strlen(string) */
+    int32_t idx = సరిపోలిక_From_సమితి(string, సరిపోలిక_సమితి, అబద్ధం);
+    ఒకవేళ(idx >= 0) {
+        తిరిగి idx;
+    } లేకపోతే {
+        తిరిగి -idx - 1; /* == u_strlen(string) */
     }
 }
 
 /* ----- Text manipulation functions --- */
 
 U_CAPI char16_t* U_EXPORT2
-u_strtok_r(char16_t* src U_LIFETIME_BOUND, const char16_t* delim, char16_t** saveState)
+u_strtok_r(char16_t* src U_LIFETIME_BOUND, స్థిరరాశి char16_t* delim, char16_t** saveState)
 {
-    char16_t *tokSource;
-    char16_t *nextToken;
+    char16_t *tok_ఆధారం;
+    char16_t *తదుపరి_Token;
     uint32_t nonDelimIdx;
 
     /* If saveState is nullptr, the user messed up. */
-    if (src != nullptr) {
-        tokSource = src;
+    ఒకవేళ (src != శూన్యసూచిక) {
+        tok_ఆధారం = src;
         *saveState = src; /* Set to "src" in case there are no delimiters */
     }
-    else if (*saveState) {
-        tokSource = *saveState;
+    లేకపోతే ఒకవేళ (*saveState) {
+        tok_ఆధారం = *saveState;
     }
-    else {
+    లేకపోతే {
         /* src == nullptr && *saveState == nullptr */
         /* This shouldn't happen. We already finished tokenizing. */
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 
     /* Skip initial delimiters */
-    nonDelimIdx = u_strspn(tokSource, delim);
-    tokSource = &tokSource[nonDelimIdx];
+    nonDelimIdx = u_strspn(tok_ఆధారం, delim);
+    tok_ఆధారం = &tok_ఆధారం[nonDelimIdx];
 
-    if (*tokSource) {
-        nextToken = u_strpbrk(tokSource, delim);
-        if (nextToken != nullptr) {
+    ఒకవేళ (*tok_ఆధారం) {
+        తదుపరి_Token = u_strpbrk(tok_ఆధారం, delim);
+        ఒకవేళ (తదుపరి_Token != శూన్యసూచిక) {
             /* Create a token */
-            *(nextToken++) = 0;
-            *saveState = nextToken;
-            return tokSource;
+            *(తదుపరి_Token++) = 0;
+            *saveState = తదుపరి_Token;
+            తిరిగి tok_ఆధారం;
         }
-        else if (*saveState) {
+        లేకపోతే ఒకవేళ (*saveState) {
             /* Return the last token */
-            *saveState = nullptr;
-            return tokSource;
+            *saveState = శూన్యసూచిక;
+            తిరిగి tok_ఆధారం;
         }
     }
-    else {
+    లేకపోతే {
         /* No tokens were found. Only delimiters were left. */
-        *saveState = nullptr;
+        *saveState = శూన్యసూచిక;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 /* Miscellaneous functions -------------------------------------------------- */
 
 U_CAPI char16_t* U_EXPORT2
-u_strcat(char16_t* dst U_LIFETIME_BOUND, const char16_t* src)
+u_strcat(char16_t* dst U_LIFETIME_BOUND, స్థిరరాశి char16_t* src)
 {
     char16_t *anchor = dst;            /* save a pointer to start of dst */
 
-    while(*dst != 0) {              /* To end of first string          */
+    అయితే(*dst != 0) {              /* To end of first string          */
         ++dst;
     }
-    while((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
+    అయితే((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
     }
 
-    return anchor;
+    తిరిగి anchor;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strncat(char16_t* dst U_LIFETIME_BOUND, const char16_t* src, int32_t n)
+u_strncat(char16_t* dst U_LIFETIME_BOUND, స్థిరరాశి char16_t* src, int32_t n)
 {
-    if(n > 0) {
+    ఒకవేళ(n > 0) {
         char16_t *anchor = dst;            /* save a pointer to start of dst */
 
-        while(*dst != 0) {              /* To end of first string          */
+        అయితే(*dst != 0) {              /* To end of first string          */
             ++dst;
         }
-        while((*dst = *src) != 0) {     /* copy string 2 over              */
+        అయితే((*dst = *src) != 0) {     /* copy string 2 over              */
             ++dst;
-            if(--n == 0) {
+            ఒకవేళ(--n == 0) {
                 *dst = 0;
-                break;
+                ఆపు;
             }
             ++src;
         }
 
-        return anchor;
-    } else {
-        return dst;
+        తిరిగి anchor;
+    } లేకపోతే {
+        తిరిగి dst;
     }
 }
 
 /* ----- Text property functions --- */
 
 U_CAPI int32_t   U_EXPORT2
-u_strcmp(const char16_t *s1,
-    const char16_t *s2)
+u_strcmp(స్థిరరాశి char16_t *s1,
+    స్థిరరాశి char16_t *s2)
 {
     char16_t  c1, c2;
 
-    for(;;) {
+    కొరకు(;;) {
         c1=*s1++;
         c2=*s2++;
-        if (c1 != c2 || c1 == 0) {
-            break;
+        ఒకవేళ (c1 != c2 || c1 == 0) {
+            ఆపు;
         }
     }
-    return (int32_t)c1 - (int32_t)c2;
+    తిరిగి (int32_t)c1 - (int32_t)c2;
 }
 
 U_CFUNC int32_t U_EXPORT2
-uprv_strCompare(const char16_t *s1, int32_t length1,
-                const char16_t *s2, int32_t length2,
-                UBool strncmpStyle, UBool codePointOrder) {
-    const char16_t *start1, *start2, *limit1, *limit2;
+uprv_strCompare(స్థిరరాశి char16_t *s1, int32_t length1,
+                స్థిరరాశి char16_t *s2, int32_t length2,
+                UBool strncmpStyle, UBool సంకేతం_బిందువు_క్రమం) {
+    స్థిరరాశి char16_t *start1, *start2, *limit1, *limit2;
     char16_t c1, c2;
 
     /* setup for fix-up */
@@ -694,48 +694,48 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
     start2=s2;
 
     /* compare identical prefixes - they do not need to be fixed up */
-    if(length1<0 && length2<0) {
+    ఒకవేళ(length1<0 && length2<0) {
         /* strcmp style, both NUL-terminated */
-        if(s1==s2) {
-            return 0;
+        ఒకవేళ(s1==s2) {
+            తిరిగి 0;
         }
 
-        for(;;) {
+        కొరకు(;;) {
             c1=*s1;
             c2=*s2;
-            if(c1!=c2) {
-                break;
+            ఒకవేళ(c1!=c2) {
+                ఆపు;
             }
-            if(c1==0) {
-                return 0;
+            ఒకవేళ(c1==0) {
+                తిరిగి 0;
             }
             ++s1;
             ++s2;
         }
 
         /* setup for fix-up */
-        limit1=limit2=nullptr;
-    } else if(strncmpStyle) {
+        limit1=limit2=శూన్యసూచిక;
+    } లేకపోతే ఒకవేళ(strncmpStyle) {
         /* special handling for strncmp, assume length1==length2>=0 but also check for NUL */
-        if(s1==s2) {
-            return 0;
+        ఒకవేళ(s1==s2) {
+            తిరిగి 0;
         }
 
         limit1=start1+length1;
 
-        for(;;) {
+        కొరకు(;;) {
             /* both lengths are same, check only one limit */
-            if(s1==limit1) {
-                return 0;
+            ఒకవేళ(s1==limit1) {
+                తిరిగి 0;
             }
 
             c1=*s1;
             c2=*s2;
-            if(c1!=c2) {
-                break;
+            ఒకవేళ(c1!=c2) {
+                ఆపు;
             }
-            if(c1==0) {
-                return 0;
+            ఒకవేళ(c1==0) {
+                తిరిగి 0;
             }
             ++s1;
             ++s2;
@@ -743,43 +743,43 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
 
         /* setup for fix-up */
         limit2=start2+length1; /* use length1 here, too, to enforce assumption */
-    } else {
+    } లేకపోతే {
         /* memcmp/UnicodeString style, both length-specified */
-        int32_t lengthResult;
+        int32_t నిడివి_ఫలితం;
 
-        if(length1<0) {
+        ఒకవేళ(length1<0) {
             length1=u_strlen(s1);
         }
-        if(length2<0) {
+        ఒకవేళ(length2<0) {
             length2=u_strlen(s2);
         }
 
         /* limit1=start1+min(length1, length2) */
-        if(length1<length2) {
-            lengthResult=-1;
+        ఒకవేళ(length1<length2) {
+            నిడివి_ఫలితం=-1;
             limit1=start1+length1;
-        } else if(length1==length2) {
-            lengthResult=0;
+        } లేకపోతే ఒకవేళ(length1==length2) {
+            నిడివి_ఫలితం=0;
             limit1=start1+length1;
-        } else /* length1>length2 */ {
-            lengthResult=1;
+        } లేకపోతే /* length1>length2 */ {
+            నిడివి_ఫలితం=1;
             limit1=start1+length2;
         }
 
-        if(s1==s2) {
-            return lengthResult;
+        ఒకవేళ(s1==s2) {
+            తిరిగి నిడివి_ఫలితం;
         }
 
-        for(;;) {
+        కొరకు(;;) {
             /* check pseudo-limit */
-            if(s1==limit1) {
-                return lengthResult;
+            ఒకవేళ(s1==limit1) {
+                తిరిగి నిడివి_ఫలితం;
             }
 
             c1=*s1;
             c2=*s2;
-            if(c1!=c2) {
-                break;
+            ఒకవేళ(c1!=c2) {
+                ఆపు;
             }
             ++s1;
             ++s2;
@@ -791,31 +791,31 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
     }
 
     /* if both values are in or above the surrogate range, fix them up */
-    if(c1>=0xd800 && c2>=0xd800 && codePointOrder) {
+    ఒకవేళ(c1>=0xd800 && c2>=0xd800 && సంకేతం_బిందువు_క్రమం) {
         /* subtract 0x2800 from BMP code points to make them smaller than supplementary ones */
-        if(
+        ఒకవేళ(
             (c1<=0xdbff && (s1+1)!=limit1 && U16_IS_TRAIL(*(s1+1))) ||
             (U16_IS_TRAIL(c1) && start1!=s1 && U16_IS_LEAD(*(s1-1)))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } లేకపోతే {
             /* BMP code point - may be surrogate code point - make <d800 */
             c1-=0x2800;
         }
 
-        if(
+        ఒకవేళ(
             (c2<=0xdbff && (s2+1)!=limit2 && U16_IS_TRAIL(*(s2+1))) ||
             (U16_IS_TRAIL(c2) && start2!=s2 && U16_IS_LEAD(*(s2-1)))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } లేకపోతే {
             /* BMP code point - may be surrogate code point - make <d800 */
             c2-=0x2800;
         }
     }
 
     /* now c1 and c2 are in the requested (code unit or code point) order */
-    return (int32_t)c1-(int32_t)c2;
+    తిరిగి (int32_t)c1-(int32_t)c2;
 }
 
 /*
@@ -825,62 +825,62 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
  * have stopped.
  */
 U_CAPI int32_t U_EXPORT2
-u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrder) {
+u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool సంకేతం_బిందువు_క్రమం) {
     UChar32 c1, c2;
 
     /* argument checking */
-    if(iter1==nullptr || iter2==nullptr) {
-        return 0; /* bad arguments */
+    ఒకవేళ(iter1==శూన్యసూచిక || iter2==శూన్యసూచిక) {
+        తిరిగి 0; /* bad arguments */
     }
-    if(iter1==iter2) {
-        return 0; /* identical iterators */
+    ఒకవేళ(iter1==iter2) {
+        తిరిగి 0; /* identical iterators */
     }
 
     /* reset iterators to start? */
-    iter1->move(iter1, 0, UITER_START);
-    iter2->move(iter2, 0, UITER_START);
+    iter1->move(iter1, 0, UITER_ప్రారంభం);
+    iter2->move(iter2, 0, UITER_ప్రారంభం);
 
     /* compare identical prefixes - they do not need to be fixed up */
-    for(;;) {
+    కొరకు(;;) {
         c1=iter1->next(iter1);
         c2=iter2->next(iter2);
-        if(c1!=c2) {
-            break;
+        ఒకవేళ(c1!=c2) {
+            ఆపు;
         }
-        if(c1==-1) {
-            return 0;
+        ఒకవేళ(c1==-1) {
+            తిరిగి 0;
         }
     }
 
     /* if both values are in or above the surrogate range, fix them up */
-    if(c1>=0xd800 && c2>=0xd800 && codePointOrder) {
+    ఒకవేళ(c1>=0xd800 && c2>=0xd800 && సంకేతం_బిందువు_క్రమం) {
         /* subtract 0x2800 from BMP code points to make them smaller than supplementary ones */
-        if(
+        ఒకవేళ(
             (c1<=0xdbff && U16_IS_TRAIL(iter1->current(iter1))) ||
-            (U16_IS_TRAIL(c1) && (iter1->previous(iter1), U16_IS_LEAD(iter1->previous(iter1))))
+            (U16_IS_TRAIL(c1) && (iter1->మునుపటి(iter1), U16_IS_LEAD(iter1->మునుపటి(iter1))))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } లేకపోతే {
             /* BMP code point - may be surrogate code point - make <d800 */
             c1-=0x2800;
         }
 
-        if(
+        ఒకవేళ(
             (c2<=0xdbff && U16_IS_TRAIL(iter2->current(iter2))) ||
-            (U16_IS_TRAIL(c2) && (iter2->previous(iter2), U16_IS_LEAD(iter2->previous(iter2))))
+            (U16_IS_TRAIL(c2) && (iter2->మునుపటి(iter2), U16_IS_LEAD(iter2->మునుపటి(iter2))))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } లేకపోతే {
             /* BMP code point - may be surrogate code point - make <d800 */
             c2-=0x2800;
         }
     }
 
     /* now c1 and c2 are in the requested (code unit or code point) order */
-    return (int32_t)c1-(int32_t)c2;
+    తిరిగి (int32_t)c1-(int32_t)c2;
 }
 
-#if 0
+#ఒకవేళ 0
 /*
  * u_strCompareIter() does not leave the iterators _on_ the different units.
  * This is possible but would cost a few extra indirect function calls to back
@@ -897,134 +897,134 @@ u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrde
  *
  * The following fragment is part of what would need to be done for backing up.
  */
-void fragment {
+శూన్య fragment {
         /* iff a surrogate is part of a surrogate pair, leave >=d800 */
-        if(c1<=0xdbff) {
-            if(!U16_IS_TRAIL(iter1->current(iter1))) {
+        ఒకవేళ(c1<=0xdbff) {
+            ఒకవేళ(!U16_IS_TRAIL(iter1->current(iter1))) {
                 /* lead surrogate code point - make <d800 */
                 c1-=0x2800;
             }
-        } else if(c1<=0xdfff) {
-            int32_t idx=iter1->getIndex(iter1, UITER_CURRENT);
-            iter1->previous(iter1); /* ==c1 */
-            if(!U16_IS_LEAD(iter1->previous(iter1))) {
+        } లేకపోతే ఒకవేళ(c1<=0xdfff) {
+            int32_t idx=iter1->get_సూచీ(iter1, UITER_CURRENT);
+            iter1->మునుపటి(iter1); /* ==c1 */
+            ఒకవేళ(!U16_IS_LEAD(iter1->మునుపటి(iter1))) {
                 /* trail surrogate code point - make <d800 */
                 c1-=0x2800;
             }
             /* go back to behind where the difference is */
             iter1->move(iter1, idx, UITER_ZERO);
-        } else /* 0xe000<=c1<=0xffff */ {
+        } లేకపోతే /* 0xe000<=c1<=0xffff */ {
             /* BMP code point - make <d800 */
             c1-=0x2800;
         }
 }
-#endif
+#అయితే_ముగింపు
 
 U_CAPI int32_t U_EXPORT2
-u_strCompare(const char16_t *s1, int32_t length1,
-             const char16_t *s2, int32_t length2,
-             UBool codePointOrder) {
+u_strCompare(స్థిరరాశి char16_t *s1, int32_t length1,
+             స్థిరరాశి char16_t *s2, int32_t length2,
+             UBool సంకేతం_బిందువు_క్రమం) {
     /* argument checking */
-    if(s1==nullptr || length1<-1 || s2==nullptr || length2<-1) {
-        return 0;
+    ఒకవేళ(s1==శూన్యసూచిక || length1<-1 || s2==శూన్యసూచిక || length2<-1) {
+        తిరిగి 0;
     }
-    return uprv_strCompare(s1, length1, s2, length2, false, codePointOrder);
+    తిరిగి uprv_strCompare(s1, length1, s2, length2, అబద్ధం, సంకేతం_బిందువు_క్రమం);
 }
 
 /* String compare in code point order - u_strcmp() compares in code unit order. */
 U_CAPI int32_t U_EXPORT2
-u_strcmpCodePointOrder(const char16_t *s1, const char16_t *s2) {
-    return uprv_strCompare(s1, -1, s2, -1, false, true);
+u_strcmp_సంకేతం_బిందువు_క్రమం(స్థిరరాశి char16_t *s1, స్థిరరాశి char16_t *s2) {
+    తిరిగి uprv_strCompare(s1, -1, s2, -1, అబద్ధం, నిజం);
 }
 
 U_CAPI int32_t   U_EXPORT2
-u_strncmp(const char16_t  *s1,
-     const char16_t  *s2,
+u_strncmp(స్థిరరాశి char16_t  *s1,
+     స్థిరరాశి char16_t  *s2,
      int32_t     n) 
 {
-    if(n > 0) {
+    ఒకవేళ(n > 0) {
         int32_t rc;
-        for(;;) {
+        కొరకు(;;) {
             rc = (int32_t)*s1 - (int32_t)*s2;
-            if(rc != 0 || *s1 == 0 || --n == 0) {
-                return rc;
+            ఒకవేళ(rc != 0 || *s1 == 0 || --n == 0) {
+                తిరిగి rc;
             }
             ++s1;
             ++s2;
         }
-    } else {
-        return 0;
+    } లేకపోతే {
+        తిరిగి 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-u_strncmpCodePointOrder(const char16_t *s1, const char16_t *s2, int32_t n) {
-    return uprv_strCompare(s1, n, s2, n, true, true);
+u_strncmp_సంకేతం_బిందువు_క్రమం(స్థిరరాశి char16_t *s1, స్థిరరాశి char16_t *s2, int32_t n) {
+    తిరిగి uprv_strCompare(s1, n, s2, n, నిజం, నిజం);
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strcpy(char16_t* dst U_LIFETIME_BOUND, const char16_t* src)
+u_strcpy(char16_t* dst U_LIFETIME_BOUND, స్థిరరాశి char16_t* src)
 {
     char16_t *anchor = dst;            /* save a pointer to start of dst */
 
-    while((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
+    అయితే((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
     }
 
-    return anchor;
+    తిరిగి anchor;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strncpy(char16_t* dst U_LIFETIME_BOUND, const char16_t* src, int32_t n) {
+u_strncpy(char16_t* dst U_LIFETIME_BOUND, స్థిరరాశి char16_t* src, int32_t n) {
     char16_t *anchor = dst;            /* save a pointer to start of dst */
 
     /* copy string 2 over */
-    while(n > 0 && (*(dst++) = *(src++)) != 0) {
+    అయితే(n > 0 && (*(dst++) = *(src++)) != 0) {
         --n;
     }
 
-    return anchor;
+    తిరిగి anchor;
 }
 
 U_CAPI int32_t   U_EXPORT2
-u_strlen(const char16_t *s)
+u_strlen(స్థిరరాశి char16_t *s)
 {
-#if U_SIZEOF_WCHAR_T == U_SIZEOF_UCHAR
-    return (int32_t)uprv_wcslen((const wchar_t *)s);
-#else
-    const char16_t *t = s;
-    while(*t != 0) {
+#ఒకవేళ U_SIZEOF_WCHAR_T == U_SIZEOF_UCHAR
+    తిరిగి (int32_t)uprv_wcslen((స్థిరరాశి wchar_t *)s);
+#లేకపోతే
+    స్థిరరాశి char16_t *t = s;
+    అయితే(*t != 0) {
       ++t;
     }
-    return t - s;
-#endif
+    తిరిగి t - s;
+#అయితే_ముగింపు
 }
 
 U_CAPI int32_t U_EXPORT2
-u_countChar32(const char16_t *s, int32_t length) {
+u_లెక్క_Char32(స్థిరరాశి char16_t *s, int32_t length) {
     int32_t count;
 
-    if(s==nullptr || length<-1) {
-        return 0;
+    ఒకవేళ(s==శూన్యసూచిక || length<-1) {
+        తిరిగి 0;
     }
 
     count=0;
-    if(length>=0) {
-        while(length>0) {
+    ఒకవేళ(length>=0) {
+        అయితే(length>0) {
             ++count;
-            if(U16_IS_LEAD(*s) && length>=2 && U16_IS_TRAIL(*(s+1))) {
+            ఒకవేళ(U16_IS_LEAD(*s) && length>=2 && U16_IS_TRAIL(*(s+1))) {
                 s+=2;
                 length-=2;
-            } else {
+            } లేకపోతే {
                 ++s;
                 --length;
             }
         }
-    } else /* length==-1 */ {
+    } లేకపోతే /* length==-1 */ {
         char16_t c;
 
-        for(;;) {
-            if((c=*s++)==0) {
-                break;
+        కొరకు(;;) {
+            ఒకవేళ((c=*s++)==0) {
+                ఆపు;
             }
             ++count;
 
@@ -1032,55 +1032,55 @@ u_countChar32(const char16_t *s, int32_t length) {
              * sufficient to look ahead one because of UTF-16;
              * safe to look ahead one because at worst that would be the terminating NUL
              */
-            if(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
+            ఒకవేళ(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
                 ++s;
             }
         }
     }
-    return count;
+    తిరిగి count;
 }
 
 U_CAPI UBool U_EXPORT2
-u_strHasMoreChar32Than(const char16_t *s, int32_t length, int32_t number) {
+u_str_Has_మరిన్ని_Char32_Than(స్థిరరాశి char16_t *s, int32_t length, int32_t number) {
 
-    if(number<0) {
-        return true;
+    ఒకవేళ(number<0) {
+        తిరిగి నిజం;
     }
-    if(s==nullptr || length<-1) {
-        return false;
+    ఒకవేళ(s==శూన్యసూచిక || length<-1) {
+        తిరిగి అబద్ధం;
     }
 
-    if(length==-1) {
+    ఒకవేళ(length==-1) {
         /* s is NUL-terminated */
         char16_t c;
 
         /* count code points until they exceed */
-        for(;;) {
-            if((c=*s++)==0) {
-                return false;
+        కొరకు(;;) {
+            ఒకవేళ((c=*s++)==0) {
+                తిరిగి అబద్ధం;
             }
-            if(number==0) {
-                return true;
+            ఒకవేళ(number==0) {
+                తిరిగి నిజం;
             }
-            if(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
+            ఒకవేళ(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
                 ++s;
             }
             --number;
         }
-    } else {
+    } లేకపోతే {
         /* length>=0 known */
-        const char16_t *limit;
+        స్థిరరాశి char16_t *హద్దు;
         int32_t maxSupplementary;
 
         /* s contains at least (length+1)/2 code points: <=2 UChars per cp */
-        if(((length+1)/2)>number) {
-            return true;
+        ఒకవేళ(((length+1)/2)>number) {
+            తిరిగి నిజం;
         }
 
         /* check if s does not even contain enough UChars */
         maxSupplementary=length-number;
-        if(maxSupplementary<=0) {
-            return false;
+        ఒకవేళ(maxSupplementary<=0) {
+            తిరిగి అబద్ధం;
         }
         /* there are maxSupplementary=length-number more UChars than asked-for code points */
 
@@ -1088,19 +1088,19 @@ u_strHasMoreChar32Than(const char16_t *s, int32_t length, int32_t number) {
          * count code points until they exceed and also check that there are
          * no more than maxSupplementary supplementary code points (char16_t pairs)
          */
-        limit=s+length;
-        for(;;) {
-            if(s==limit) {
-                return false;
+        హద్దు=s+length;
+        కొరకు(;;) {
+            ఒకవేళ(s==హద్దు) {
+                తిరిగి అబద్ధం;
             }
-            if(number==0) {
-                return true;
+            ఒకవేళ(number==0) {
+                తిరిగి నిజం;
             }
-            if(U16_IS_LEAD(*s++) && s!=limit && U16_IS_TRAIL(*s)) {
+            ఒకవేళ(U16_IS_LEAD(*s++) && s!=హద్దు && U16_IS_TRAIL(*s)) {
                 ++s;
-                if(--maxSupplementary<=0) {
+                ఒకవేళ(--maxSupplementary<=0) {
                     /* too many pairs - too few code points */
-                    return false;
+                    తిరిగి అబద్ధం;
                 }
             }
             --number;
@@ -1109,61 +1109,61 @@ u_strHasMoreChar32Than(const char16_t *s, int32_t length, int32_t number) {
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memcpy(char16_t* dest U_LIFETIME_BOUND, const char16_t* src, int32_t count) {
-    if(count > 0) {
+u_memcpy(char16_t* dest U_LIFETIME_BOUND, స్థిరరాశి char16_t* src, int32_t count) {
+    ఒకవేళ(count > 0) {
         uprv_memcpy(dest, src, (size_t)count*U_SIZEOF_UCHAR);
     }
-    return dest;
+    తిరిగి dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memmove(char16_t* dest U_LIFETIME_BOUND, const char16_t* src, int32_t count) {
-    if(count > 0) {
+u_memmove(char16_t* dest U_LIFETIME_BOUND, స్థిరరాశి char16_t* src, int32_t count) {
+    ఒకవేళ(count > 0) {
         uprv_memmove(dest, src, (size_t)count*U_SIZEOF_UCHAR);
     }
-    return dest;
+    తిరిగి dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_memset(char16_t* dest U_LIFETIME_BOUND, char16_t c, int32_t count) {
-    if(count > 0) {
+    ఒకవేళ(count > 0) {
         char16_t *ptr = dest;
-        char16_t *limit = dest + count;
+        char16_t *హద్దు = dest + count;
 
-        while (ptr < limit) {
+        అయితే (ptr < హద్దు) {
             *(ptr++) = c;
         }
     }
-    return dest;
+    తిరిగి dest;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_memcmp(const char16_t *buf1, const char16_t *buf2, int32_t count) {
-    if(count > 0) {
-        const char16_t *limit = buf1 + count;
-        int32_t result;
+u_memcmp(స్థిరరాశి char16_t *buf1, స్థిరరాశి char16_t *buf2, int32_t count) {
+    ఒకవేళ(count > 0) {
+        స్థిరరాశి char16_t *హద్దు = buf1 + count;
+        int32_t ఫలితం;
 
-        while (buf1 < limit) {
-            result = (int32_t)(uint16_t)*buf1 - (int32_t)(uint16_t)*buf2;
-            if (result != 0) {
-                return result;
+        అయితే (buf1 < హద్దు) {
+            ఫలితం = (int32_t)(uint16_t)*buf1 - (int32_t)(uint16_t)*buf2;
+            ఒకవేళ (ఫలితం != 0) {
+                తిరిగి ఫలితం;
             }
             buf1++;
             buf2++;
         }
     }
-    return 0;
+    తిరిగి 0;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_memcmpCodePointOrder(const char16_t *s1, const char16_t *s2, int32_t count) {
-    return uprv_strCompare(s1, count, s2, count, false, true);
+u_memcmp_సంకేతం_బిందువు_క్రమం(స్థిరరాశి char16_t *s1, స్థిరరాశి char16_t *s2, int32_t count) {
+    తిరిగి uprv_strCompare(s1, count, s2, count, అబద్ధం, నిజం);
 }
 
 /* u_unescape & support fns ------------------------------------------------- */
 
 /* This map must be in ASCENDING ORDER OF THE ESCAPE CODE */
-static const char16_t UNESCAPE_MAP[] = {
+స్థిర స్థిరరాశి char16_t UNESCAPE_MAP[] = {
     /*"   0x22, 0x22 */
     /*'   0x27, 0x27 */
     /*?   0x3F, 0x3F */
@@ -1177,28 +1177,28 @@ static const char16_t UNESCAPE_MAP[] = {
     /*t*/ 0x74, 0x09,
     /*v*/ 0x76, 0x0b
 };
-enum { UNESCAPE_MAP_LENGTH = UPRV_LENGTHOF(UNESCAPE_MAP) };
+గణన { UNESCAPE_MAP_నిడివి = UPRV_LENGTHOF(UNESCAPE_MAP) };
 
 /* Convert one octal digit to a numeric value 0..7, or -1 on failure */
-static int32_t _digit8(char16_t c) {
-    if (c >= u'0' && c <= u'7') {
-        return c - u'0';
+స్థిర int32_t _digit8(char16_t c) {
+    ఒకవేళ (c >= u'0' && c <= u'7') {
+        తిరిగి c - u'0';
     }
-    return -1;
+    తిరిగి -1;
 }
 
 /* Convert one hex digit to a numeric value 0..F, or -1 on failure */
-static int32_t _digit16(char16_t c) {
-    if (c >= u'0' && c <= u'9') {
-        return c - u'0';
+స్థిర int32_t _digit16(char16_t c) {
+    ఒకవేళ (c >= u'0' && c <= u'9') {
+        తిరిగి c - u'0';
     }
-    if (c >= u'A' && c <= u'F') {
-        return c - (u'A' - 10);
+    ఒకవేళ (c >= u'A' && c <= u'F') {
+        తిరిగి c - (u'A' - 10);
     }
-    if (c >= u'a' && c <= u'f') {
-        return c - (u'a' - 10);
+    ఒకవేళ (c >= u'a' && c <= u'f') {
+        తిరిగి c - (u'a' - 10);
     }
-    return -1;
+    తిరిగి -1;
 }
 
 /* Parse a single escape sequence.  Although this method deals in
@@ -1206,221 +1206,221 @@ static int32_t _digit16(char16_t c) {
  * be used from C contexts. */
 U_CAPI UChar32 U_EXPORT2
 u_unescapeAt(UNESCAPE_CHAR_AT charAt,
-             int32_t *offset,
+             int32_t *స్థానభ్రంశం,
              int32_t length,
-             void *context) {
+             శూన్య *context) {
 
-    int32_t start = *offset;
+    int32_t ప్రారంభం = *స్థానభ్రంశం;
     UChar32 c;
-    UChar32 result = 0;
+    UChar32 ఫలితం = 0;
     int8_t n = 0;
     int8_t minDig = 0;
     int8_t maxDig = 0;
-    int8_t bitsPerDigit = 4; 
+    int8_t బిట్లు_చొప్పున_Digit = 4; 
     int32_t dig;
-    UBool braces = false;
+    UBool braces = అబద్ధం;
 
     /* Check that offset is in range */
-    if (*offset < 0 || *offset >= length) {
-        goto err;
+    ఒకవేళ (*స్థానభ్రంశం < 0 || *స్థానభ్రంశం >= length) {
+        వెళ్ళు err;
     }
 
     /* Fetch first char16_t after '\\' */
-    c = charAt((*offset)++, context);
+    c = charAt((*స్థానభ్రంశం)++, context);
 
     /* Convert hexadecimal and octal escapes */
-    switch (c) {
-    case u'u':
+    ఎంపిక (c) {
+    స్థితి u'u':
         minDig = maxDig = 4;
-        break;
-    case u'U':
+        ఆపు;
+    స్థితి u'U':
         minDig = maxDig = 8;
-        break;
-    case u'x':
+        ఆపు;
+    స్థితి u'x':
         minDig = 1;
-        if (*offset < length && charAt(*offset, context) == u'{') {
-            ++(*offset);
-            braces = true;
+        ఒకవేళ (*స్థానభ్రంశం < length && charAt(*స్థానభ్రంశం, context) == u'{') {
+            ++(*స్థానభ్రంశం);
+            braces = నిజం;
             maxDig = 8;
-        } else {
+        } లేకపోతే {
             maxDig = 2;
         }
-        break;
-    default:
+        ఆపు;
+    అప్రమేయ:
         dig = _digit8(c);
-        if (dig >= 0) {
+        ఒకవేళ (dig >= 0) {
             minDig = 1;
             maxDig = 3;
             n = 1; /* Already have first octal digit */
-            bitsPerDigit = 3;
-            result = dig;
+            బిట్లు_చొప్పున_Digit = 3;
+            ఫలితం = dig;
         }
-        break;
+        ఆపు;
     }
-    if (minDig != 0) {
-        while (*offset < length && n < maxDig) {
-            c = charAt(*offset, context);
-            dig = (bitsPerDigit == 3) ? _digit8(c) : _digit16(c);
-            if (dig < 0) {
-                break;
+    ఒకవేళ (minDig != 0) {
+        అయితే (*స్థానభ్రంశం < length && n < maxDig) {
+            c = charAt(*స్థానభ్రంశం, context);
+            dig = (బిట్లు_చొప్పున_Digit == 3) ? _digit8(c) : _digit16(c);
+            ఒకవేళ (dig < 0) {
+                ఆపు;
             }
-            result = (result << bitsPerDigit) | dig;
-            ++(*offset);
+            ఫలితం = (ఫలితం << బిట్లు_చొప్పున_Digit) | dig;
+            ++(*స్థానభ్రంశం);
             ++n;
         }
-        if (n < minDig) {
-            goto err;
+        ఒకవేళ (n < minDig) {
+            వెళ్ళు err;
         }
-        if (braces) {
-            if (c != u'}') {
-                goto err;
+        ఒకవేళ (braces) {
+            ఒకవేళ (c != u'}') {
+                వెళ్ళు err;
             }
-            ++(*offset);
+            ++(*స్థానభ్రంశం);
         }
-        if (result < 0 || result >= 0x110000) {
-            goto err;
+        ఒకవేళ (ఫలితం < 0 || ఫలితం >= 0x110000) {
+            వెళ్ళు err;
         }
         /* If an escape sequence specifies a lead surrogate, see if
          * there is a trail surrogate after it, either as an escape or
          * as a literal.  If so, join them up into a supplementary.
          */
-        if (*offset < length && U16_IS_LEAD(result)) {
-            int32_t ahead = *offset + 1;
-            c = charAt(*offset, context);
-            if (c == u'\\' && ahead < length) {
+        ఒకవేళ (*స్థానభ్రంశం < length && U16_IS_LEAD(ఫలితం)) {
+            int32_t ahead = *స్థానభ్రంశం + 1;
+            c = charAt(*స్థానభ్రంశం, context);
+            ఒకవేళ (c == u'\\' && ahead < length) {
                 // Calling ourselves recursively may cause a stack overflow if
                 // we have repeated escaped lead surrogates.
                 // Limit the length to 11 ("x{0000DFFF}") after ahead.
-                int32_t tailLimit = ahead + 11;
-                if (tailLimit > length) {
-                    tailLimit = length;
+                int32_t తోక_హద్దు = ahead + 11;
+                ఒకవేళ (తోక_హద్దు > length) {
+                    తోక_హద్దు = length;
                 }
-                c = u_unescapeAt(charAt, &ahead, tailLimit, context);
+                c = u_unescapeAt(charAt, &ahead, తోక_హద్దు, context);
             }
-            if (U16_IS_TRAIL(c)) {
-                *offset = ahead;
-                result = U16_GET_SUPPLEMENTARY(result, c);
+            ఒకవేళ (U16_IS_TRAIL(c)) {
+                *స్థానభ్రంశం = ahead;
+                ఫలితం = U16_GET_SUPPLEMENTARY(ఫలితం, c);
             }
         }
-        return result;
+        తిరిగి ఫలితం;
     }
 
     /* Convert C-style escapes in table */
-    for (int32_t i=0; i<UNESCAPE_MAP_LENGTH; i+=2) {
-        if (c == UNESCAPE_MAP[i]) {
-            return UNESCAPE_MAP[i+1];
-        } else if (c < UNESCAPE_MAP[i]) {
-            break;
+    కొరకు (int32_t i=0; i<UNESCAPE_MAP_నిడివి; i+=2) {
+        ఒకవేళ (c == UNESCAPE_MAP[i]) {
+            తిరిగి UNESCAPE_MAP[i+1];
+        } లేకపోతే ఒకవేళ (c < UNESCAPE_MAP[i]) {
+            ఆపు;
         }
     }
 
     /* Map \cX to control-X: X & 0x1F */
-    if (c == u'c' && *offset < length) {
-        c = charAt((*offset)++, context);
-        if (U16_IS_LEAD(c) && *offset < length) {
-            char16_t c2 = charAt(*offset, context);
-            if (U16_IS_TRAIL(c2)) {
-                ++(*offset);
+    ఒకవేళ (c == u'c' && *స్థానభ్రంశం < length) {
+        c = charAt((*స్థానభ్రంశం)++, context);
+        ఒకవేళ (U16_IS_LEAD(c) && *స్థానభ్రంశం < length) {
+            char16_t c2 = charAt(*స్థానభ్రంశం, context);
+            ఒకవేళ (U16_IS_TRAIL(c2)) {
+                ++(*స్థానభ్రంశం);
                 c = U16_GET_SUPPLEMENTARY(c, c2);
             }
         }
-        return 0x1F & c;
+        తిరిగి 0x1F & c;
     }
 
     /* If no special forms are recognized, then consider
      * the backslash to generically escape the next character.
      * Deal with surrogate pairs. */
-    if (U16_IS_LEAD(c) && *offset < length) {
-        char16_t c2 = charAt(*offset, context);
-        if (U16_IS_TRAIL(c2)) {
-            ++(*offset);
-            return U16_GET_SUPPLEMENTARY(c, c2);
+    ఒకవేళ (U16_IS_LEAD(c) && *స్థానభ్రంశం < length) {
+        char16_t c2 = charAt(*స్థానభ్రంశం, context);
+        ఒకవేళ (U16_IS_TRAIL(c2)) {
+            ++(*స్థానభ్రంశం);
+            తిరిగి U16_GET_SUPPLEMENTARY(c, c2);
         }
     }
-    return c;
+    తిరిగి c;
 
  err:
     /* Invalid escape sequence */
-    *offset = start; /* Reset to initial value */
-    return (UChar32)0xFFFFFFFF;
+    *స్థానభ్రంశం = ప్రారంభం; /* Reset to initial value */
+    తిరిగి (UChar32)0xFFFFFFFF;
 }
 
 /* u_unescapeAt() callback to return a char16_t from a char* */
-static char16_t U_CALLCONV
-_charPtr_charAt(int32_t offset, void *context) {
+స్థిర char16_t U_CALLCONV
+_charPtr_charAt(int32_t స్థానభ్రంశం, శూన్య *context) {
     char16_t c16;
     /* It would be more efficient to access the invariant tables
      * directly but there is no API for that. */
-    u_charsToUChars(static_cast<char*>(context) + offset, &c16, 1);
-    return c16;
+    u_chars_గమ్యం_UChars(static_cast<అక్షరం*>(context) + స్థానభ్రంశం, &c16, 1);
+    తిరిగి c16;
 }
 
 /* Append an escape-free segment of the text; used by u_unescape() */
-static void _appendUChars(char16_t *dest, int32_t destCapacity,
-                          const char *src, int32_t srcLen) {
-    if (destCapacity < 0) {
-        destCapacity = 0;
+స్థిర శూన్య _appendUChars(char16_t *dest, int32_t dest_సామర్థ్యం,
+                          స్థిరరాశి అక్షరం *src, int32_t srcLen) {
+    ఒకవేళ (dest_సామర్థ్యం < 0) {
+        dest_సామర్థ్యం = 0;
     }
-    if (srcLen > destCapacity) {
-        srcLen = destCapacity;
+    ఒకవేళ (srcLen > dest_సామర్థ్యం) {
+        srcLen = dest_సామర్థ్యం;
     }
-    u_charsToUChars(src, dest, srcLen);
+    u_chars_గమ్యం_UChars(src, dest, srcLen);
 }
 
 /* Do an invariant conversion of char* -> char16_t*, with escape parsing */
 U_CAPI int32_t U_EXPORT2
-u_unescape(const char *src, char16_t *dest, int32_t destCapacity) {
-    const char *segment = src;
+u_unescape(స్థిరరాశి అక్షరం *src, char16_t *dest, int32_t dest_సామర్థ్యం) {
+    స్థిరరాశి అక్షరం *segment = src;
     int32_t i = 0;
-    char c;
+    అక్షరం c;
 
-    while ((c=*src) != 0) {
+    అయితే ((c=*src) != 0) {
         /* '\\' intentionally written as compiler-specific
          * character constant to correspond to compiler-specific
          * char* constants. */
-        if (c == '\\') {
+        ఒకవేళ (c == '\\') {
             int32_t lenParsed = 0;
             UChar32 c32;
-            if (src != segment) {
-                if (dest != nullptr) {
-                    _appendUChars(dest + i, destCapacity - i,
+            ఒకవేళ (src != segment) {
+                ఒకవేళ (dest != శూన్యసూచిక) {
+                    _appendUChars(dest + i, dest_సామర్థ్యం - i,
                                   segment, (int32_t)(src - segment));
                 }
                 i += (int32_t)(src - segment);
             }
             ++src; /* advance past '\\' */
-            c32 = u_unescapeAt(_charPtr_charAt, &lenParsed, (int32_t)uprv_strlen(src), const_cast<char*>(src));
-            if (lenParsed == 0) {
-                goto err;
+            c32 = u_unescapeAt(_charPtr_charAt, &lenParsed, (int32_t)uprv_strlen(src), const_cast<అక్షరం*>(src));
+            ఒకవేళ (lenParsed == 0) {
+                వెళ్ళు err;
             }
             src += lenParsed; /* advance past escape seq. */
-            if (dest != nullptr && U16_LENGTH(c32) <= (destCapacity - i)) {
+            ఒకవేళ (dest != శూన్యసూచిక && U16_నిడివి(c32) <= (dest_సామర్థ్యం - i)) {
                 U16_APPEND_UNSAFE(dest, i, c32);
-            } else {
-                i += U16_LENGTH(c32);
+            } లేకపోతే {
+                i += U16_నిడివి(c32);
             }
             segment = src;
-        } else {
+        } లేకపోతే {
             ++src;
         }
     }
-    if (src != segment) {
-        if (dest != nullptr) {
-            _appendUChars(dest + i, destCapacity - i,
+    ఒకవేళ (src != segment) {
+        ఒకవేళ (dest != శూన్యసూచిక) {
+            _appendUChars(dest + i, dest_సామర్థ్యం - i,
                           segment, (int32_t)(src - segment));
         }
         i += (int32_t)(src - segment);
     }
-    if (dest != nullptr && i < destCapacity) {
+    ఒకవేళ (dest != శూన్యసూచిక && i < dest_సామర్థ్యం) {
         dest[i] = 0;
     }
-    return i;
+    తిరిగి i;
 
  err:
-    if (dest != nullptr && destCapacity > 0) {
+    ఒకవేళ (dest != శూన్యసూచిక && dest_సామర్థ్యం > 0) {
         *dest = 0;
     }
-    return 0;
+    తిరిగి 0;
 }
 
 /* NUL-termination of strings ----------------------------------------------- */
@@ -1429,59 +1429,59 @@ u_unescape(const char *src, char16_t *dest, int32_t destCapacity) {
  * NUL-terminate a string no matter what its type.
  * Set warning and error codes accordingly.
  */
-#define __TERMINATE_STRING(dest, destCapacity, length, pErrorCode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(pErrorCode!=nullptr && U_SUCCESS(*pErrorCode)) {                    \
+#నిర్వచించు __TERMINATE_STRING(dest, dest_సామర్థ్యం, length, p_Error_సంకేతం) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(p_Error_సంకేతం!=శూన్యసూచిక && U_SUCCESS(*p_Error_సంకేతం)) {                    \
         /* not a public function, so no complete argument checking */   \
                                                                         \
-        if(length<0) {                                                  \
+        ఒకవేళ(length<0) {                                                  \
             /* assume that the caller handles this */                   \
-        } else if(length<destCapacity) {                                \
+        } లేకపోతే ఒకవేళ(length<dest_సామర్థ్యం) {                                \
             /* NUL-terminate the string, the NUL fits */                \
             dest[length]=0;                                             \
             /* unset the not-terminated warning but leave all others */ \
-            if(*pErrorCode==U_STRING_NOT_TERMINATED_WARNING) {          \
-                *pErrorCode=U_ZERO_ERROR;                               \
+            ఒకవేళ(*p_Error_సంకేతం==U_STRING_NOT_TERMINATED_WARNING) {          \
+                *p_Error_సంకేతం=U_ZERO_ERROR;                               \
             }                                                           \
-        } else if(length==destCapacity) {                               \
+        } లేకపోతే ఒకవేళ(length==dest_సామర్థ్యం) {                               \
             /* unable to NUL-terminate, but the string itself fit - set a warning code */ \
-            *pErrorCode=U_STRING_NOT_TERMINATED_WARNING;                \
-        } else /* length>destCapacity */ {                              \
+            *p_Error_సంకేతం=U_STRING_NOT_TERMINATED_WARNING;                \
+        } లేకపోతే /* length>destCapacity */ {                              \
             /* even the string itself did not fit - set an error code */ \
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;                        \
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;                        \
         }                                                               \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 U_CAPI char16_t U_EXPORT2
-u_asciiToUpper(char16_t c) {
-    if (u'a' <= c && c <= u'z') {
+u_ascii_గమ్యం_పై(char16_t c) {
+    ఒకవేళ (u'a' <= c && c <= u'z') {
         c = c + u'A' - u'a';
     }
-    return c;
+    తిరిగి c;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateUChars(char16_t *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
-    __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+u_terminateUChars(char16_t *dest, int32_t dest_సామర్థ్యం, int32_t length, UError_సంకేతం *p_Error_సంకేతం) {
+    __TERMINATE_STRING(dest, dest_సామర్థ్యం, length, p_Error_సంకేతం);
+    తిరిగి length;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateChars(char *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
-    __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+u_terminateChars(అక్షరం *dest, int32_t dest_సామర్థ్యం, int32_t length, UError_సంకేతం *p_Error_సంకేతం) {
+    __TERMINATE_STRING(dest, dest_సామర్థ్యం, length, p_Error_సంకేతం);
+    తిరిగి length;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateUChar32s(UChar32 *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
-    __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+u_terminateUChar32s(UChar32 *dest, int32_t dest_సామర్థ్యం, int32_t length, UError_సంకేతం *p_Error_సంకేతం) {
+    __TERMINATE_STRING(dest, dest_సామర్థ్యం, length, p_Error_సంకేతం);
+    తిరిగి length;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
-    __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+u_terminateWChars(wchar_t *dest, int32_t dest_సామర్థ్యం, int32_t length, UError_సంకేతం *p_Error_సంకేతం) {
+    __TERMINATE_STRING(dest, dest_సామర్థ్యం, length, p_Error_సంకేతం);
+    తిరిగి length;
 }
 
 // Compute the hash code for a string -------------------------------------- ***
@@ -1498,33 +1498,33 @@ u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCod
   the output range. [LIU]
 */
 
-#define STRING_HASH(TYPE, STR, STRLEN, DEREF) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు STRING_HASH(TYPE, STR, STRLEN, DEREF) UPRV_ఖండం_MACRO_BEGIN { \
     uint32_t hash = 0;                        \
-    const TYPE *p = (const TYPE*) STR;        \
-    if (p != nullptr) {                          \
+    స్థిరరాశి TYPE *p = (స్థిరరాశి TYPE*) STR;        \
+    ఒకవేళ (p != శూన్యసూచిక) {                          \
         int32_t len = (int32_t)(STRLEN);      \
         int32_t inc = ((len - 32) / 32) + 1;  \
-        const TYPE *limit = p + len;          \
-        while (p<limit) {                     \
+        స్థిరరాశి TYPE *హద్దు = p + len;          \
+        అయితే (p<హద్దు) {                     \
             hash = (hash * 37) + DEREF;       \
             p += inc;                         \
         }                                     \
     }                                         \
-    return static_cast<int32_t>(hash);        \
-} UPRV_BLOCK_MACRO_END
+    తిరిగి static_cast<int32_t>(hash);        \
+} UPRV_ఖండం_MACRO_చివర
 
 /* Used by UnicodeString to compute its hashcode - Not public API. */
 U_CAPI int32_t U_EXPORT2
-ustr_hashUCharsN(const char16_t *str, int32_t length) {
+ustr_hashUCharsN(స్థిరరాశి char16_t *str, int32_t length) {
     STRING_HASH(char16_t, str, length, *p);
 }
 
 U_CAPI int32_t U_EXPORT2
-ustr_hashCharsN(const char *str, int32_t length) {
+ustr_hashCharsN(స్థిరరాశి అక్షరం *str, int32_t length) {
     STRING_HASH(uint8_t, str, length, *p);
 }
 
 U_CAPI int32_t U_EXPORT2
-ustr_hashICharsN(const char *str, int32_t length) {
-    STRING_HASH(char, str, length, (uint8_t)uprv_tolower(*p));
+ustr_hashICharsN(స్థిరరాశి అక్షరం *str, int32_t length) {
+    STRING_HASH(అక్షరం, str, length, (uint8_t)uprv_tolower(*p));
 }

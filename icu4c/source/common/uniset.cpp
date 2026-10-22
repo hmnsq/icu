@@ -10,40 +10,40 @@
 **********************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/uniset.h"
-#include "unicode/ustring.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "ruleiter.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "patternprops.h"
-#include "uelement.h"
-#include "util.h"
-#include "uvector.h"
-#include "charstr.h"
-#include "ustrfmt.h"
-#include "uassert.h"
-#include "bmpset.h"
-#include "unisetspan.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/parsepos.h"
+#అన్తర్భావ "unicode/symtable.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "ruleiter.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "patternprops.h"
+#అన్తర్భావ "uelement.h"
+#అన్తర్భావ "util.h"
+#అన్తర్భావ "uvector.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "ustrfmt.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "bmpset.h"
+#అన్తర్భావ "unisetspan.h"
 
 // HIGH_VALUE > all valid values. 110000 for codepoints
-#define UNICODESET_HIGH 0x0110000
+#నిర్వచించు UNICODESET_ఎగువ 0x0110000
 
 // LOW <= all valid values. ZERO for codepoints
-#define UNICODESET_LOW 0x000000
+#నిర్వచించు UNICODESET_దిగువ 0x000000
 
 /** Max list [0, 1, 2, ..., max code point, HIGH] */
-constexpr int32_t MAX_LENGTH = UNICODESET_HIGH + 1;
+constexpr int32_t MAX_నిడివి = UNICODESET_ఎగువ + 1;
 
 U_NAMESPACE_BEGIN
 
-SymbolTable::~SymbolTable() {}
+చిహ్నం_పట్టిక::~చిహ్నం_పట్టిక() {}
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSet)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Unicode_సమితి)
 
 /**
  * Modify the given UChar32 variable so that it is in range, by
@@ -51,13 +51,13 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSet)
  * pinning values > UNICODESET_HIGH-1 to UNICODESET_HIGH-1.
  * It modifies its argument in-place and also returns it.
  */
-static inline UChar32 pinCodePoint(UChar32& c) {
-    if (c < UNICODESET_LOW) {
-        c = UNICODESET_LOW;
-    } else if (c > (UNICODESET_HIGH-1)) {
-        c = (UNICODESET_HIGH-1);
+స్థిర అంతఃవరుస UChar32 pin_సంకేతం_బిందువు(UChar32& c) {
+    ఒకవేళ (c < UNICODESET_దిగువ) {
+        c = UNICODESET_దిగువ;
+    } లేకపోతే ఒకవేళ (c > (UNICODESET_ఎగువ-1)) {
+        c = (UNICODESET_ఎగువ-1);
     }
-    return c;
+    తిరిగి c;
 }
 
 //----------------------------------------------------------------
@@ -76,57 +76,57 @@ static inline UChar32 pinCodePoint(UChar32& c) {
 
 // #define DEBUG_MEM
 
-#ifdef DEBUG_MEM
-#include <stdio.h>
-static int32_t _dbgCount = 0;
+#నిర్వచితమైతే DEBUG_MEM
+#అన్తర్భావ <stdio.h>
+స్థిర int32_t dbg_లెక్క = 0;
 
-static inline void _dbgct(UnicodeSet* set) {
+స్థిర అంతఃవరుస శూన్య _dbgct(Unicode_సమితి* సమితి) {
     UnicodeString str;
-    set->toPattern(str, true);
-    char buf[40];
+    సమితి->గమ్యం_నమూనా(str, నిజం);
+    అక్షరం buf[40];
     str.extract(0, 39, buf, "");
-    printf("DEBUG UnicodeSet: ct 0x%08X; %d %s\n", set, ++_dbgCount, buf);
+    రాయి("DEBUG UnicodeSet: ct 0x%08X; %d %s\n", సమితి, ++dbg_లెక్క, buf);
 }
 
-static inline void _dbgdt(UnicodeSet* set) {
+స్థిర అంతఃవరుస శూన్య _dbgdt(Unicode_సమితి* సమితి) {
     UnicodeString str;
-    set->toPattern(str, true);
-    char buf[40];
+    సమితి->గమ్యం_నమూనా(str, నిజం);
+    అక్షరం buf[40];
     str.extract(0, 39, buf, "");
-    printf("DEBUG UnicodeSet: dt 0x%08X; %d %s\n", set, --_dbgCount, buf);
+    రాయి("DEBUG UnicodeSet: dt 0x%08X; %d %s\n", సమితి, --dbg_లెక్క, buf);
 }
 
-#else
+#లేకపోతే
 
-#define _dbgct(set)
-#define _dbgdt(set)
+#నిర్వచించు _dbgct(సమితి)
+#నిర్వచించు _dbgdt(సమితి)
 
-#endif
+#అయితే_ముగింపు
 
 //----------------------------------------------------------------
 // UnicodeString in UVector support
 //----------------------------------------------------------------
 
-static void U_CALLCONV cloneUnicodeString(UElement *dst, UElement *src) {
-    dst->pointer = new UnicodeString(*static_cast<UnicodeString*>(src->pointer));
+స్థిర శూన్య U_CALLCONV cloneUnicodeString(UElement *dst, UElement *src) {
+    dst->సూచిక = కొత్త UnicodeString(*static_cast<UnicodeString*>(src->సూచిక));
 }
 
-static int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
-    const UnicodeString& a = *static_cast<const UnicodeString*>(t1.pointer);
-    const UnicodeString& b = *static_cast<const UnicodeString*>(t2.pointer);
-    return a.compare(b);
+స్థిర int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
+    స్థిరరాశి UnicodeString& a = *static_cast<స్థిరరాశి UnicodeString*>(t1.సూచిక);
+    స్థిరరాశి UnicodeString& b = *static_cast<స్థిరరాశి UnicodeString*>(t2.సూచిక);
+    తిరిగి a.compare(b);
 }
 
-UBool UnicodeSet::hasStrings() const {
-    return strings_ != nullptr && !strings_->isEmpty();
+UBool Unicode_సమితి::has_అక్షరశ్రేణులు() స్థిరరాశి {
+    తిరిగి అక్షరశ్రేణులు_2 != శూన్యసూచిక && !అక్షరశ్రేణులు_2->is_ఖాళీలు();
 }
 
-int32_t UnicodeSet::stringsSize() const {
-    return strings_ == nullptr ? 0 : strings_->size();
+int32_t Unicode_సమితి::అక్షరశ్రేణులు_కొలత() స్థిరరాశి {
+    తిరిగి అక్షరశ్రేణులు_2 == శూన్యసూచిక ? 0 : అక్షరశ్రేణులు_2->size();
 }
 
-UBool UnicodeSet::stringsContains(const UnicodeString &s) const {
-    return strings_ != nullptr && strings_->contains((void*) &s);
+UBool Unicode_సమితి::అక్షరశ్రేణులు_కలిగియుంది(స్థిరరాశి UnicodeString &s) స్థిరరాశి {
+    తిరిగి అక్షరశ్రేణులు_2 != శూన్యసూచిక && అక్షరశ్రేణులు_2->కలిగియుంది((శూన్య*) &s);
 }
 
 //----------------------------------------------------------------
@@ -136,9 +136,9 @@ UBool UnicodeSet::stringsContains(const UnicodeString &s) const {
 /**
  * Constructs an empty set.
  */
-UnicodeSet::UnicodeSet() {
-    list[0] = UNICODESET_HIGH;
-    _dbgct(this);
+Unicode_సమితి::Unicode_సమితి() {
+    list[0] = UNICODESET_ఎగువ;
+    _dbgct(ఇది);
 }
 
 /**
@@ -148,111 +148,111 @@ UnicodeSet::UnicodeSet() {
  * @param start first character, inclusive, of range
  * @param end last character, inclusive, of range
  */
-UnicodeSet::UnicodeSet(UChar32 start, UChar32 end) {
-    list[0] = UNICODESET_HIGH;
-    add(start, end);
-    _dbgct(this);
+Unicode_సమితి::Unicode_సమితి(UChar32 ప్రారంభం, UChar32 చివర) {
+    list[0] = UNICODESET_ఎగువ;
+    కూడు(ప్రారంభం, చివర);
+    _dbgct(ఇది);
 }
 
 /**
  * Constructs a set that is identical to the given UnicodeSet.
  */
-UnicodeSet::UnicodeSet(const UnicodeSet& o) : UnicodeFilter(o) {
-    *this = o;
-    _dbgct(this);
+Unicode_సమితి::Unicode_సమితి(స్థిరరాశి Unicode_సమితి& o) : UnicodeFilter(o) {
+    *ఇది = o;
+    _dbgct(ఇది);
 }
 
 // Copy-construct as thawed.
-UnicodeSet::UnicodeSet(const UnicodeSet& o, UBool /* asThawed */) : UnicodeFilter(o) {
-    if (ensureCapacity(o.len)) {
+Unicode_సమితి::Unicode_సమితి(స్థిరరాశి Unicode_సమితి& o, UBool /* asThawed */) : UnicodeFilter(o) {
+    ఒకవేళ (ensure_సామర్థ్యం(o.len)) {
         // *this = o except for bmpSet and stringSpan
         len = o.len;
-        uprv_memcpy(list, o.list, (size_t)len*sizeof(UChar32));
-        if (o.hasStrings()) {
-            UErrorCode status = U_ZERO_ERROR;
-            if (!allocateStrings(status) ||
-                    (strings_->assign(*o.strings_, cloneUnicodeString, status), U_FAILURE(status))) {
-                setToBogus();
-                return;
+        uprv_memcpy(list, o.list, (size_t)len*పరిమాణం(UChar32));
+        ఒకవేళ (o.has_అక్షరశ్రేణులు()) {
+            UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+            ఒకవేళ (!allocate_అక్షరశ్రేణులు(స్థితి_2) ||
+                    (అక్షరశ్రేణులు_2->assign(*o.అక్షరశ్రేణులు_2, cloneUnicodeString, స్థితి_2), U_FAILURE(స్థితి_2))) {
+                సమితి_గమ్యం_Bogus();
+                తిరిగి;
             }
         }
-        if (o.pat) {
-            setPattern(o.pat, o.patLen);
+        ఒకవేళ (o.pat) {
+            సమితి_నమూనా(o.pat, o.patLen);
         }
-        _dbgct(this);
+        _dbgct(ఇది);
     }
 }
 
 /**
  * Destructs the set.
  */
-UnicodeSet::~UnicodeSet() {
-    _dbgdt(this); // first!
-    if (list != stackList) {
+Unicode_సమితి::~Unicode_సమితి() {
+    _dbgdt(ఇది); // first!
+    ఒకవేళ (list != దొంతర_List) {
         uprv_free(list);
     }
-    delete bmpSet;
-    if (buffer != stackList) {
-        uprv_free(buffer);
+    తొలగించు bmp_సమితి;
+    ఒకవేళ (బఫరు != దొంతర_List) {
+        uprv_free(బఫరు);
     }
-    delete strings_;
-    delete stringSpan;
-    releasePattern();
+    తొలగించు అక్షరశ్రేణులు_2;
+    తొలగించు string_పరిధి;
+    release_నమూనా();
 }
 
 /**
  * Assigns this object to be a copy of another.
  */
-UnicodeSet& UnicodeSet::operator=(const UnicodeSet& o) U_LIFETIME_BOUND {
-    return copyFrom(o, false);
+Unicode_సమితి& Unicode_సమితి::క్రియాకారకం=(స్థిరరాశి Unicode_సమితి& o) U_LIFETIME_BOUND {
+    తిరిగి copyFrom(o, అబద్ధం);
 }
 
-UnicodeSet& UnicodeSet::copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME_BOUND {
-    if (this == &o) {
-        return *this;
+Unicode_సమితి& Unicode_సమితి::copyFrom(స్థిరరాశి Unicode_సమితి& o, UBool asThawed) U_LIFETIME_BOUND {
+    ఒకవేళ (ఇది == &o) {
+        తిరిగి *ఇది;
     }
-    if (isFrozen()) {
-        return *this;
+    ఒకవేళ (isFrozen()) {
+        తిరిగి *ఇది;
     }
-    if (o.isBogus()) {
-        setToBogus();
-        return *this;
+    ఒకవేళ (o.isBogus()) {
+        సమితి_గమ్యం_Bogus();
+        తిరిగి *ఇది;
     }
-    if (!ensureCapacity(o.len)) {
+    ఒకవేళ (!ensure_సామర్థ్యం(o.len)) {
         // ensureCapacity will mark the UnicodeSet as Bogus if OOM failure happens.
-        return *this;
+        తిరిగి *ఇది;
     }
     len = o.len;
-    uprv_memcpy(list, o.list, (size_t)len*sizeof(UChar32));
-    if (o.bmpSet != nullptr && !asThawed) {
-        bmpSet = new BMPSet(*o.bmpSet, list, len);
-        if (bmpSet == nullptr) { // Check for memory allocation error.
-            setToBogus();
-            return *this;
+    uprv_memcpy(list, o.list, (size_t)len*పరిమాణం(UChar32));
+    ఒకవేళ (o.bmp_సమితి != శూన్యసూచిక && !asThawed) {
+        bmp_సమితి = కొత్త BMPSet(*o.bmp_సమితి, list, len);
+        ఒకవేళ (bmp_సమితి == శూన్యసూచిక) { // Check for memory allocation error.
+            సమితి_గమ్యం_Bogus();
+            తిరిగి *ఇది;
         }
     }
-    if (o.hasStrings()) {
-        UErrorCode status = U_ZERO_ERROR;
-        if ((strings_ == nullptr && !allocateStrings(status)) ||
-                (strings_->assign(*o.strings_, cloneUnicodeString, status), U_FAILURE(status))) {
-            setToBogus();
-            return *this;
+    ఒకవేళ (o.has_అక్షరశ్రేణులు()) {
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+        ఒకవేళ ((అక్షరశ్రేణులు_2 == శూన్యసూచిక && !allocate_అక్షరశ్రేణులు(స్థితి_2)) ||
+                (అక్షరశ్రేణులు_2->assign(*o.అక్షరశ్రేణులు_2, cloneUnicodeString, స్థితి_2), U_FAILURE(స్థితి_2))) {
+            సమితి_గమ్యం_Bogus();
+            తిరిగి *ఇది;
         }
-    } else if (hasStrings()) {
-        strings_->removeAllElements();
+    } లేకపోతే ఒకవేళ (has_అక్షరశ్రేణులు()) {
+        అక్షరశ్రేణులు_2->removeAllElements();
     }
-    if (o.stringSpan != nullptr && strings_ != nullptr && !asThawed) {
-        stringSpan = new UnicodeSetStringSpan(*o.stringSpan, *strings_);
-        if (stringSpan == nullptr) { // Check for memory allocation error.
-            setToBogus();
-            return *this;
+    ఒకవేళ (o.string_పరిధి != శూన్యసూచిక && అక్షరశ్రేణులు_2 != శూన్యసూచిక && !asThawed) {
+        string_పరిధి = కొత్త Unicode_సమితి_String_పరిధి(*o.string_పరిధి, *అక్షరశ్రేణులు_2);
+        ఒకవేళ (string_పరిధి == శూన్యసూచిక) { // Check for memory allocation error.
+            సమితి_గమ్యం_Bogus();
+            తిరిగి *ఇది;
         }
     }
-    releasePattern();
-    if (o.pat) {
-        setPattern(o.pat, o.patLen);
+    release_నమూనా();
+    ఒకవేళ (o.pat) {
+        సమితి_నమూనా(o.pat, o.patLen);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -260,12 +260,12 @@ UnicodeSet& UnicodeSet::copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME
  * to support cloning in order to allow classes using
  * UnicodeMatchers, such as Transliterator, to implement cloning.
  */
-UnicodeSet* UnicodeSet::clone() const {
-    return new UnicodeSet(*this);
+Unicode_సమితి* Unicode_సమితి::clone() స్థిరరాశి {
+    తిరిగి కొత్త Unicode_సమితి(*ఇది);
 }
 
-UnicodeSet *UnicodeSet::cloneAsThawed() const {
-    return new UnicodeSet(*this, true);
+Unicode_సమితి *Unicode_సమితి::cloneAsThawed() స్థిరరాశి {
+    తిరిగి కొత్త Unicode_సమితి(*ఇది, నిజం);
 }
 
 /**
@@ -278,14 +278,14 @@ UnicodeSet *UnicodeSet::cloneAsThawed() const {
  * @param o set to be compared for equality with this set.
  * @return <tt>true</tt> if the specified set is equal to this set.
  */
-bool UnicodeSet::operator==(const UnicodeSet& o) const {
-    if (len != o.len) return false;
-    for (int32_t i = 0; i < len; ++i) {
-        if (list[i] != o.list[i]) return false;
+తార్కిక Unicode_సమితి::క్రియాకారకం==(స్థిరరాశి Unicode_సమితి& o) స్థిరరాశి {
+    ఒకవేళ (len != o.len) తిరిగి అబద్ధం;
+    కొరకు (int32_t i = 0; i < len; ++i) {
+        ఒకవేళ (list[i] != o.list[i]) తిరిగి అబద్ధం;
     }
-    if (hasStrings() != o.hasStrings()) { return false; }
-    if (hasStrings() && *strings_ != *o.strings_) return false;
-    return true;
+    ఒకవేళ (has_అక్షరశ్రేణులు() != o.has_అక్షరశ్రేణులు()) { తిరిగి అబద్ధం; }
+    ఒకవేళ (has_అక్షరశ్రేణులు() && *అక్షరశ్రేణులు_2 != *o.అక్షరశ్రేణులు_2) తిరిగి అబద్ధం;
+    తిరిగి నిజం;
 }
 
 /**
@@ -294,13 +294,13 @@ bool UnicodeSet::operator==(const UnicodeSet& o) const {
  * @return the hash code value for this set.
  * @see Object#hashCode()
  */
-int32_t UnicodeSet::hashCode() const {
-    uint32_t result = static_cast<uint32_t>(len);
-    for (int32_t i = 0; i < len; ++i) {
-        result *= 1000003u;
-        result += list[i];
+int32_t Unicode_సమితి::hash_సంకేతం() స్థిరరాశి {
+    uint32_t ఫలితం = static_cast<uint32_t>(len);
+    కొరకు (int32_t i = 0; i < len; ++i) {
+        ఫలితం *= 1000003u;
+        ఫలితం += list[i];
     }
-    return static_cast<int32_t>(result);
+    తిరిగి static_cast<int32_t>(ఫలితం);
 }
 
 //----------------------------------------------------------------
@@ -314,13 +314,13 @@ int32_t UnicodeSet::hashCode() const {
  *
  * @return the number of elements in this set (its cardinality).
  */
-int32_t UnicodeSet::size() const {
+int32_t Unicode_సమితి::size() స్థిరరాశి {
     int32_t n = 0;
-    int32_t count = getRangeCount();
-    for (int32_t i = 0; i < count; ++i) {
-        n += getRangeEnd(i) - getRangeStart(i) + 1;
+    int32_t count = get_Range_లెక్క();
+    కొరకు (int32_t i = 0; i < count; ++i) {
+        n += get_Range_చివర(i) - get_Range_ప్రారంభం(i) + 1;
     }
-    return n + stringsSize();
+    తిరిగి n + అక్షరశ్రేణులు_కొలత();
 }
 
 /**
@@ -328,8 +328,8 @@ int32_t UnicodeSet::size() const {
  *
  * @return <tt>true</tt> if this set contains no elements.
  */
-UBool UnicodeSet::isEmpty() const {
-    return len == 1 && !hasStrings();
+UBool Unicode_సమితి::is_ఖాళీలు() స్థిరరాశి {
+    తిరిగి len == 1 && !has_అక్షరశ్రేణులు();
 }
 
 /**
@@ -337,7 +337,7 @@ UBool UnicodeSet::isEmpty() const {
  * @param c character to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::contains(UChar32 c) const {
+UBool Unicode_సమితి::కలిగియుంది(UChar32 c) స్థిరరాశి {
     // Set i to the index of the start item greater than ch
     // We know we will terminate without length test!
     // LATER: for large sets, add binary search
@@ -345,17 +345,17 @@ UBool UnicodeSet::contains(UChar32 c) const {
     //for (;;) {
     //    if (c < list[++i]) break;
     //}
-    if (bmpSet != nullptr) {
-        return bmpSet->contains(c);
+    ఒకవేళ (bmp_సమితి != శూన్యసూచిక) {
+        తిరిగి bmp_సమితి->కలిగియుంది(c);
     }
-    if (stringSpan != nullptr) {
-        return stringSpan->contains(c);
+    ఒకవేళ (string_పరిధి != శూన్యసూచిక) {
+        తిరిగి string_పరిధి->కలిగియుంది(c);
     }
-    if (c >= UNICODESET_HIGH) { // Don't need to check LOW bound
-        return false;
+    ఒకవేళ (c >= UNICODESET_ఎగువ) { // Don't need to check LOW bound
+        తిరిగి అబద్ధం;
     }
-    int32_t i = findCodePoint(c);
-    return i & 1; // return true if odd
+    int32_t i = కనుగొను_సంకేతం_బిందువు(c);
+    తిరిగి i & 1; // return true if odd
 }
 
 /**
@@ -367,7 +367,7 @@ UBool UnicodeSet::contains(UChar32 c) const {
  * @return the smallest integer i in the range 0..len-1,
  * inclusive, such that c < list[i]
  */
-int32_t UnicodeSet::findCodePoint(UChar32 c) const {
+int32_t Unicode_సమితి::కనుగొను_సంకేతం_బిందువు(UChar32 c) స్థిరరాశి {
     /* Examples:
                                        findCodePoint(c)
        set              list[]         c=0 1 3 4 7 8
@@ -380,27 +380,27 @@ int32_t UnicodeSet::findCodePoint(UChar32 c) const {
 
     // Return the smallest i such that c < list[i].  Assume
     // list[len - 1] == HIGH and that c is legal (0..HIGH-1).
-    if (c < list[0])
-        return 0;
+    ఒకవేళ (c < list[0])
+        తిరిగి 0;
     // High runner test.  c is often after the last range, so an
     // initial check for this condition pays off.
     int32_t lo = 0;
     int32_t hi = len - 1;
-    if (lo >= hi || c >= list[hi-1])
-        return hi;
+    ఒకవేళ (lo >= hi || c >= list[hi-1])
+        తిరిగి hi;
     // invariant: c >= list[lo]
     // invariant: c < list[hi]
-    for (;;) {
+    కొరకు (;;) {
         int32_t i = (lo + hi) >> 1;
-        if (i == lo) {
-            break; // Found!
-        } else if (c < list[i]) {
+        ఒకవేళ (i == lo) {
+            ఆపు; // Found!
+        } లేకపోతే ఒకవేళ (c < list[i]) {
             hi = i;
-        } else {
+        } లేకపోతే {
             lo = i;
         }
     }
-    return hi;
+    తిరిగి hi;
 }
 
 /**
@@ -410,13 +410,13 @@ int32_t UnicodeSet::findCodePoint(UChar32 c) const {
  * @param end last character, inclusive, of the range
  * @return true if the test condition is met
  */
-UBool UnicodeSet::contains(UChar32 start, UChar32 end) const {
+UBool Unicode_సమితి::కలిగియుంది(UChar32 ప్రారంభం, UChar32 చివర) స్థిరరాశి {
     //int32_t i = -1;
     //for (;;) {
     //    if (start < list[++i]) break;
     //}
-    int32_t i = findCodePoint(start);
-    return ((i & 1) != 0 && end < list[i]);
+    int32_t i = కనుగొను_సంకేతం_బిందువు(ప్రారంభం);
+    తిరిగి ((i & 1) != 0 && చివర < list[i]);
 }
 
 /**
@@ -425,12 +425,12 @@ UBool UnicodeSet::contains(UChar32 start, UChar32 end) const {
  * @param s string to be checked for containment
  * @return <tt>true</tt> if this set contains the specified string
  */
-UBool UnicodeSet::contains(const UnicodeString& s) const {
+UBool Unicode_సమితి::కలిగియుంది(స్థిరరాశి UnicodeString& s) స్థిరరాశి {
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        return stringsContains(s);
-    } else {
-        return contains(static_cast<UChar32>(cp));
+    ఒకవేళ (cp < 0) {
+        తిరిగి అక్షరశ్రేణులు_కలిగియుంది(s);
+    } లేకపోతే {
+        తిరిగి కలిగియుంది(static_cast<UChar32>(cp));
     }
 }
 
@@ -440,17 +440,17 @@ UBool UnicodeSet::contains(const UnicodeString& s) const {
  * @param c set to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsAll(const UnicodeSet& c) const {
+UBool Unicode_సమితి::కలిగియుంది_All(స్థిరరాశి Unicode_సమితి& c) స్థిరరాశి {
     // The specified set is a subset if all of its pairs are contained in
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
-    int32_t n = c.getRangeCount();
-    for (int i=0; i<n; ++i) {
-        if (!contains(c.getRangeStart(i), c.getRangeEnd(i))) {
-            return false;
+    int32_t n = c.get_Range_లెక్క();
+    కొరకు (పూర్ణాంకం i=0; i<n; ++i) {
+        ఒకవేళ (!కలిగియుంది(c.get_Range_ప్రారంభం(i), c.get_Range_చివర(i))) {
+            తిరిగి అబద్ధం;
         }
     }
-    return !c.hasStrings() || (strings_ != nullptr && strings_->containsAll(*c.strings_));
+    తిరిగి !c.has_అక్షరశ్రేణులు() || (అక్షరశ్రేణులు_2 != శూన్యసూచిక && అక్షరశ్రేణులు_2->కలిగియుంది_All(*c.అక్షరశ్రేణులు_2));
 }
 
 /**
@@ -459,8 +459,8 @@ UBool UnicodeSet::containsAll(const UnicodeSet& c) const {
  * @param s string containing characters to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsAll(const UnicodeString& s) const {
-    return span(s.getBuffer(), s.length(), USET_SPAN_CONTAINED) == s.length();
+UBool Unicode_సమితి::కలిగియుంది_All(స్థిరరాశి UnicodeString& s) స్థిరరాశి {
+    తిరిగి పరిధి(s.get_బఫరు(), s.length(), USET_పరిధి_CONTAINED) == s.length();
 }
 
 /**
@@ -470,13 +470,13 @@ UBool UnicodeSet::containsAll(const UnicodeString& s) const {
  * @param end last character, inclusive, of the range
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsNone(UChar32 start, UChar32 end) const {
+UBool Unicode_సమితి::కలిగియుంది_None(UChar32 ప్రారంభం, UChar32 చివర) స్థిరరాశి {
     //int32_t i = -1;
     //for (;;) {
     //    if (start < list[++i]) break;
     //}
-    int32_t i = findCodePoint(start);
-    return ((i & 1) == 0 && end < list[i]);
+    int32_t i = కనుగొను_సంకేతం_బిందువు(ప్రారంభం);
+    తిరిగి ((i & 1) == 0 && చివర < list[i]);
 }
 
 /**
@@ -485,17 +485,17 @@ UBool UnicodeSet::containsNone(UChar32 start, UChar32 end) const {
  * @param c set to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsNone(const UnicodeSet& c) const {
+UBool Unicode_సమితి::కలిగియుంది_None(స్థిరరాశి Unicode_సమితి& c) స్థిరరాశి {
     // The specified set is a subset if all of its pairs are contained in
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
-    int32_t n = c.getRangeCount();
-    for (int32_t i=0; i<n; ++i) {
-        if (!containsNone(c.getRangeStart(i), c.getRangeEnd(i))) {
-            return false;
+    int32_t n = c.get_Range_లెక్క();
+    కొరకు (int32_t i=0; i<n; ++i) {
+        ఒకవేళ (!కలిగియుంది_None(c.get_Range_ప్రారంభం(i), c.get_Range_చివర(i))) {
+            తిరిగి అబద్ధం;
         }
     }
-    return strings_ == nullptr || !c.hasStrings() || strings_->containsNone(*c.strings_);
+    తిరిగి అక్షరశ్రేణులు_2 == శూన్యసూచిక || !c.has_అక్షరశ్రేణులు() || అక్షరశ్రేణులు_2->కలిగియుంది_None(*c.అక్షరశ్రేణులు_2);
 }
 
 /**
@@ -504,8 +504,8 @@ UBool UnicodeSet::containsNone(const UnicodeSet& c) const {
  * @param s string containing characters to be checked for containment
  * @return true if the test condition is met
  */
-UBool UnicodeSet::containsNone(const UnicodeString& s) const {
-    return span(s.getBuffer(), s.length(), USET_SPAN_NOT_CONTAINED) == s.length();
+UBool Unicode_సమితి::కలిగియుంది_None(స్థిరరాశి UnicodeString& s) స్థిరరాశి {
+    తిరిగి పరిధి(s.get_బఫరు(), s.length(), USET_పరిధి_NOT_CONTAINED) == s.length();
 }
 
 /**
@@ -513,7 +513,7 @@ UBool UnicodeSet::containsNone(const UnicodeString& s) const {
  * is the given value.  This is used by <tt>RuleBasedTransliterator</tt> for
  * indexing.
  */
-UBool UnicodeSet::matchesIndexValue(uint8_t v) const {
+UBool Unicode_సమితి::matches_సూచీ_విలువ(uint8_t v) స్థిరరాశి {
     /* The index value v, in the range [0,255], is contained in this set if
      * it is contained in any pair of this set.  Pairs either have the high
      * bytes equal, or unequal.  If the high bytes are equal, then we have
@@ -523,49 +523,49 @@ UBool UnicodeSet::matchesIndexValue(uint8_t v) const {
      * time zone month containment logic.)
      */
     int32_t i;
-    int32_t rangeCount=getRangeCount();
-    for (i=0; i<rangeCount; ++i) {
-        UChar32 low = getRangeStart(i);
-        UChar32 high = getRangeEnd(i);
-        if ((low & ~0xFF) == (high & ~0xFF)) {
-            if ((low & 0xFF) <= v && v <= (high & 0xFF)) {
-                return true;
+    int32_t range_లెక్క=get_Range_లెక్క();
+    కొరకు (i=0; i<range_లెక్క; ++i) {
+        UChar32 దిగువ = get_Range_ప్రారంభం(i);
+        UChar32 ఎగువ = get_Range_చివర(i);
+        ఒకవేళ ((దిగువ & ~0xFF) == (ఎగువ & ~0xFF)) {
+            ఒకవేళ ((దిగువ & 0xFF) <= v && v <= (ఎగువ & 0xFF)) {
+                తిరిగి నిజం;
             }
-        } else if ((low & 0xFF) <= v || v <= (high & 0xFF)) {
-            return true;
+        } లేకపోతే ఒకవేళ ((దిగువ & 0xFF) <= v || v <= (ఎగువ & 0xFF)) {
+            తిరిగి నిజం;
         }
     }
-    if (hasStrings()) {
-        for (i=0; i<strings_->size(); ++i) {
-            const UnicodeString& s = *static_cast<const UnicodeString*>(strings_->elementAt(i));
-            if (s.isEmpty()) {
-                continue;  // skip the empty string
+    ఒకవేళ (has_అక్షరశ్రేణులు()) {
+        కొరకు (i=0; i<అక్షరశ్రేణులు_2->size(); ++i) {
+            స్థిరరాశి UnicodeString& s = *static_cast<స్థిరరాశి UnicodeString*>(అక్షరశ్రేణులు_2->elementAt(i));
+            ఒకవేళ (s.is_ఖాళీలు()) {
+                కొనసాగు;  // skip the empty string
             }
             UChar32 c = s.char32At(0);
-            if ((c & 0xFF) == v) {
-                return true;
+            ఒకవేళ ((c & 0xFF) == v) {
+                తిరిగి నిజం;
             }
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
 /**
  * Implementation of UnicodeMatcher::matches().  Always matches the
  * longest possible multichar string.
  */
-UMatchDegree UnicodeSet::matches(const Replaceable& text,
-                                 int32_t& offset,
-                                 int32_t limit,
+UMatchDegree Unicode_సమితి::matches(స్థిరరాశి Replaceable& పాఠ్యం,
+                                 int32_t& స్థానభ్రంశం,
+                                 int32_t హద్దు,
                                  UBool incremental) {
-    if (offset == limit) {
-        if (contains(U_ETHER)) {
-            return incremental ? U_PARTIAL_MATCH : U_MATCH;
-        } else {
-            return U_MISMATCH;
+    ఒకవేళ (స్థానభ్రంశం == హద్దు) {
+        ఒకవేళ (కలిగియుంది(U_ETHER)) {
+            తిరిగి incremental ? U_PARTIAL_సరిపోలిక : U_సరిపోలిక;
+        } లేకపోతే {
+            తిరిగి U_MISMATCH;
         }
-    } else {
-        if (hasStrings()) { // try strings first
+    } లేకపోతే {
+        ఒకవేళ (has_అక్షరశ్రేణులు()) { // try strings first
 
             // might separate forward and backward loops later
             // for now they are combined
@@ -575,62 +575,62 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
             // can assume the strings are sorted.
 
             int32_t i;
-            UBool forward = offset < limit;
+            UBool forward = స్థానభ్రంశం < హద్దు;
 
             // firstChar is the leftmost char to match in the
             // forward direction or the rightmost char to match in
             // the reverse direction.
-            char16_t firstChar = text.charAt(offset);
+            char16_t మొదటి_Char = పాఠ్యం.charAt(స్థానభ్రంశం);
 
             // If there are multiple strings that can match we
             // return the longest match.
-            int32_t highWaterLength = 0;
+            int32_t ఎగువ_Water_నిడివి = 0;
 
-            for (i=0; i<strings_->size(); ++i) {
-                const UnicodeString& trial = *static_cast<const UnicodeString*>(strings_->elementAt(i));
-                if (trial.isEmpty()) {
-                    continue;  // skip the empty string
+            కొరకు (i=0; i<అక్షరశ్రేణులు_2->size(); ++i) {
+                స్థిరరాశి UnicodeString& trial = *static_cast<స్థిరరాశి UnicodeString*>(అక్షరశ్రేణులు_2->elementAt(i));
+                ఒకవేళ (trial.is_ఖాళీలు()) {
+                    కొనసాగు;  // skip the empty string
                 }
 
                 char16_t c = trial.charAt(forward ? 0 : trial.length() - 1);
 
                 // Strings are sorted, so we can optimize in the
                 // forward direction.
-                if (forward && c > firstChar) break;
-                if (c != firstChar) continue;
+                ఒకవేళ (forward && c > మొదటి_Char) ఆపు;
+                ఒకవేళ (c != మొదటి_Char) కొనసాగు;
 
-                int32_t matchLen = matchRest(text, offset, limit, trial);
+                int32_t సరిపోలిక_Len = సరిపోలిక_Rest(పాఠ్యం, స్థానభ్రంశం, హద్దు, trial);
 
-                if (incremental) {
-                    int32_t maxLen = forward ? limit-offset : offset-limit;
-                    if (matchLen == maxLen) {
+                ఒకవేళ (incremental) {
+                    int32_t maxLen = forward ? హద్దు-స్థానభ్రంశం : స్థానభ్రంశం-హద్దు;
+                    ఒకవేళ (సరిపోలిక_Len == maxLen) {
                         // We have successfully matched but only up to limit.
-                        return U_PARTIAL_MATCH;
+                        తిరిగి U_PARTIAL_సరిపోలిక;
                     }
                 }
 
-                if (matchLen == trial.length()) {
+                ఒకవేళ (సరిపోలిక_Len == trial.length()) {
                     // We have successfully matched the whole string.
-                    if (matchLen > highWaterLength) {
-                        highWaterLength = matchLen;
+                    ఒకవేళ (సరిపోలిక_Len > ఎగువ_Water_నిడివి) {
+                        ఎగువ_Water_నిడివి = సరిపోలిక_Len;
                     }
                     // In the forward direction we know strings
                     // are sorted so we can bail early.
-                    if (forward && matchLen < highWaterLength) {
-                        break;
+                    ఒకవేళ (forward && సరిపోలిక_Len < ఎగువ_Water_నిడివి) {
+                        ఆపు;
                     }
-                    continue;
+                    కొనసాగు;
                 }
             }
 
             // We've checked all strings without a partial match.
             // If we have full matches, return the longest one.
-            if (highWaterLength != 0) {
-                offset += forward ? highWaterLength : -highWaterLength;
-                return U_MATCH;
+            ఒకవేళ (ఎగువ_Water_నిడివి != 0) {
+                స్థానభ్రంశం += forward ? ఎగువ_Water_నిడివి : -ఎగువ_Water_నిడివి;
+                తిరిగి U_సరిపోలిక;
             }
         }
-        return UnicodeFilter::matches(text, offset, limit, incremental);
+        తిరిగి UnicodeFilter::matches(పాఠ్యం, స్థానభ్రంశం, హద్దు, incremental);
     }
 }
 
@@ -655,34 +655,34 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
  * s.length().  If there is a mismatch between s and text, return
  * 0
  */
-int32_t UnicodeSet::matchRest(const Replaceable& text,
-                              int32_t start, int32_t limit,
-                              const UnicodeString& s) {
+int32_t Unicode_సమితి::సరిపోలిక_Rest(స్థిరరాశి Replaceable& పాఠ్యం,
+                              int32_t ప్రారంభం, int32_t హద్దు,
+                              స్థిరరాశి UnicodeString& s) {
     int32_t i;
     int32_t maxLen;
     int32_t slen = s.length();
-    if (start < limit) {
-        maxLen = limit - start;
-        if (maxLen > slen) maxLen = slen;
-        for (i = 1; i < maxLen; ++i) {
-            if (text.charAt(start + i) != s.charAt(i)) return 0;
+    ఒకవేళ (ప్రారంభం < హద్దు) {
+        maxLen = హద్దు - ప్రారంభం;
+        ఒకవేళ (maxLen > slen) maxLen = slen;
+        కొరకు (i = 1; i < maxLen; ++i) {
+            ఒకవేళ (పాఠ్యం.charAt(ప్రారంభం + i) != s.charAt(i)) తిరిగి 0;
         }
-    } else {
-        maxLen = start - limit;
-        if (maxLen > slen) maxLen = slen;
+    } లేకపోతే {
+        maxLen = ప్రారంభం - హద్దు;
+        ఒకవేళ (maxLen > slen) maxLen = slen;
         --slen; // <=> slen = s.length() - 1;
-        for (i = 1; i < maxLen; ++i) {
-            if (text.charAt(start - i) != s.charAt(slen - i)) return 0;
+        కొరకు (i = 1; i < maxLen; ++i) {
+            ఒకవేళ (పాఠ్యం.charAt(ప్రారంభం - i) != s.charAt(slen - i)) తిరిగి 0;
         }
     }
-    return maxLen;
+    తిరిగి maxLen;
 }
 
 /**
  * Implement of UnicodeMatcher
  */
-void UnicodeSet::addMatchSetTo(UnicodeSet& toUnionTo) const {
-    toUnionTo.addAll(*this);
+శూన్య Unicode_సమితి::కూడు_సరిపోలిక_సమితి_గమ్యం(Unicode_సమితి& గమ్యం_Union_గమ్యం) స్థిరరాశి {
+    గమ్యం_Union_గమ్యం.కూడు_All(*ఇది);
 }
 
 /**
@@ -692,22 +692,22 @@ void UnicodeSet::addMatchSetTo(UnicodeSet& toUnionTo) const {
  * <code>charAt()</code>.
  * @return an index from 0..size()-1, or -1
  */
-int32_t UnicodeSet::indexOf(UChar32 c) const {
-    if (c < MIN_VALUE || c > MAX_VALUE) {
-        return -1;
+int32_t Unicode_సమితి::సూచీ_యొక్క(UChar32 c) స్థిరరాశి {
+    ఒకవేళ (c < MIN_విలువ || c > MAX_విలువ) {
+        తిరిగి -1;
     }
     int32_t i = 0;
     int32_t n = 0;
-    for (;;) {
-        UChar32 start = list[i++];
-        if (c < start) {
-            return -1;
+    కొరకు (;;) {
+        UChar32 ప్రారంభం = list[i++];
+        ఒకవేళ (c < ప్రారంభం) {
+            తిరిగి -1;
         }
-        UChar32 limit = list[i++];
-        if (c < limit) {
-            return n + c - start;
+        UChar32 హద్దు = list[i++];
+        ఒకవేళ (c < హద్దు) {
+            తిరిగి n + c - ప్రారంభం;
         }
-        n += limit - start;
+        n += హద్దు - ప్రారంభం;
     }
 }
 
@@ -719,22 +719,22 @@ int32_t UnicodeSet::indexOf(UChar32 c) const {
  * @param index an index from 0..size()-1
  * @return the character at the given index, or (UChar32)-1.
  */
-UChar32 UnicodeSet::charAt(int32_t index) const {
-    if (index >= 0) {
+UChar32 Unicode_సమితి::charAt(int32_t సూచీ) స్థిరరాశి {
+    ఒకవేళ (సూచీ >= 0) {
         // len2 is the largest even integer <= len, that is, it is len
         // for even values and len-1 for odd values.  With odd values
         // the last entry is UNICODESET_HIGH.
         int32_t len2 = len & ~1;
-        for (int32_t i=0; i < len2;) {
-            UChar32 start = list[i++];
-            int32_t count = list[i++] - start;
-            if (index < count) {
-                return static_cast<UChar32>(start + index);
+        కొరకు (int32_t i=0; i < len2;) {
+            UChar32 ప్రారంభం = list[i++];
+            int32_t count = list[i++] - ప్రారంభం;
+            ఒకవేళ (సూచీ < count) {
+                తిరిగి static_cast<UChar32>(ప్రారంభం + సూచీ);
             }
-            index -= count;
+            సూచీ -= count;
         }
     }
-    return static_cast<UChar32>(-1);
+    తిరిగి static_cast<UChar32>(-1);
 }
 
 /**
@@ -745,10 +745,10 @@ UChar32 UnicodeSet::charAt(int32_t index) const {
  * @param start first character in the set, inclusive
  * @rparam end last character in the set, inclusive
  */
-UnicodeSet& UnicodeSet::set(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
+Unicode_సమితి& Unicode_సమితి::సమితి(UChar32 ప్రారంభం, UChar32 చివర) U_LIFETIME_BOUND {
     clear();
-    complement(start, end);
-    return *this;
+    complement(ప్రారంభం, చివర);
+    తిరిగి *ఇది;
 }
 
 /**
@@ -762,82 +762,82 @@ UnicodeSet& UnicodeSet::set(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
  * @param end last character, inclusive, of range to be added
  * to this set.
  */
-UnicodeSet& UnicodeSet::add(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) < pinCodePoint(end)) {
-        UChar32 limit = end + 1;
+Unicode_సమితి& Unicode_సమితి::కూడు(UChar32 ప్రారంభం, UChar32 చివర) U_LIFETIME_BOUND {
+    ఒకవేళ (pin_సంకేతం_బిందువు(ప్రారంభం) < pin_సంకేతం_బిందువు(చివర)) {
+        UChar32 హద్దు = చివర + 1;
         // Fast path for adding a new range after the last one.
         // Odd list length: [..., lastStart, lastLimit, HIGH]
-        if ((len & 1) != 0) {
+        ఒకవేళ ((len & 1) != 0) {
             // If the list is empty, set lastLimit low enough to not be adjacent to 0.
-            UChar32 lastLimit = len == 1 ? -2 : list[len - 2];
-            if (lastLimit <= start && !isFrozen() && !isBogus()) {
-                if (lastLimit == start) {
+            UChar32 చివరి_హద్దు = len == 1 ? -2 : list[len - 2];
+            ఒకవేళ (చివరి_హద్దు <= ప్రారంభం && !isFrozen() && !isBogus()) {
+                ఒకవేళ (చివరి_హద్దు == ప్రారంభం) {
                     // Extend the last range.
-                    list[len - 2] = limit;
-                    if (limit == UNICODESET_HIGH) {
+                    list[len - 2] = హద్దు;
+                    ఒకవేళ (హద్దు == UNICODESET_ఎగువ) {
                         --len;
                     }
-                } else {
-                    list[len - 1] = start;
-                    if (limit < UNICODESET_HIGH) {
-                        if (ensureCapacity(len + 2)) {
-                            list[len++] = limit;
-                            list[len++] = UNICODESET_HIGH;
+                } లేకపోతే {
+                    list[len - 1] = ప్రారంభం;
+                    ఒకవేళ (హద్దు < UNICODESET_ఎగువ) {
+                        ఒకవేళ (ensure_సామర్థ్యం(len + 2)) {
+                            list[len++] = హద్దు;
+                            list[len++] = UNICODESET_ఎగువ;
                         }
-                    } else {  // limit == UNICODESET_HIGH
-                        if (ensureCapacity(len + 1)) {
-                            list[len++] = UNICODESET_HIGH;
+                    } లేకపోతే {  // limit == UNICODESET_HIGH
+                        ఒకవేళ (ensure_సామర్థ్యం(len + 1)) {
+                            list[len++] = UNICODESET_ఎగువ;
                         }
                     }
                 }
-                releasePattern();
-                return *this;
+                release_నమూనా();
+                తిరిగి *ఇది;
             }
         }
         // This is slow. Could be much faster using findCodePoint(start)
         // and modifying the list, dealing with adjacent & overlapping ranges.
-        UChar32 range[3] = { start, limit, UNICODESET_HIGH };
-        add(range, 2, 0);
-    } else if (start == end) {
-        add(start);
+        UChar32 range[3] = { ప్రారంభం, హద్దు, UNICODESET_ఎగువ };
+        కూడు(range, 2, 0);
+    } లేకపోతే ఒకవేళ (ప్రారంభం == చివర) {
+        కూడు(ప్రారంభం);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 // #define DEBUG_US_ADD
 
-#ifdef DEBUG_US_ADD
-#include <stdio.h>
-void dump(UChar32 c) {
-    if (c <= 0xFF) {
-        printf("%c", (char)c);
-    } else {
-        printf("U+%04X", c);
+#నిర్వచితమైతే DEBUG_US_కూడు
+#అన్తర్భావ <stdio.h>
+శూన్య dump(UChar32 c) {
+    ఒకవేళ (c <= 0xFF) {
+        రాయి("%c", (అక్షరం)c);
+    } లేకపోతే {
+        రాయి("U+%04X", c);
     }
 }
-void dump(const UChar32* list, int32_t len) {
-    printf("[");
-    for (int32_t i=0; i<len; ++i) {
-        if (i != 0) printf(", ");
+శూన్య dump(స్థిరరాశి UChar32* list, int32_t len) {
+    రాయి("[");
+    కొరకు (int32_t i=0; i<len; ++i) {
+        ఒకవేళ (i != 0) రాయి(", ");
         dump(list[i]);
     }
-    printf("]");
+    రాయి("]");
 }
-#endif
+#అయితే_ముగింపు
 
 /**
  * Adds the specified character to this set if it is not already
  * present.  If this set already contains the specified character,
  * the call leaves this set unchanged.
  */
-UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
+Unicode_సమితి& Unicode_సమితి::కూడు(UChar32 c) U_LIFETIME_BOUND {
     // find smallest i such that c < list[i]
     // if odd, then it is IN the set
     // if even, then it is OUT of the set
-    int32_t i = findCodePoint(pinCodePoint(c));
+    int32_t i = కనుగొను_సంకేతం_బిందువు(pin_సంకేతం_బిందువు(c));
 
     // already in set?
-    if ((i & 1) != 0  || isFrozen() || isBogus()) return *this;
+    ఒకవేళ ((i & 1) != 0  || isFrozen() || isBogus()) తిరిగి *ఇది;
 
     // HIGH is 0x110000
     // assert(list[len-1] == HIGH);
@@ -851,27 +851,27 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
 
     // i == 0 means c is before the first range
 
-#ifdef DEBUG_US_ADD
-    printf("Add of ");
+#నిర్వచితమైతే DEBUG_US_కూడు
+    రాయి("Add of ");
     dump(c);
-    printf(" found at %d", i);
-    printf(": ");
+    రాయి(" found at %d", i);
+    రాయి(": ");
     dump(list, len);
-    printf(" => ");
-#endif
+    రాయి(" => ");
+#అయితే_ముగింపు
 
-    if (c == list[i]-1) {
+    ఒకవేళ (c == list[i]-1) {
         // c is before start of next range
         list[i] = c;
         // if we touched the HIGH mark, then add a new one
-        if (c == (UNICODESET_HIGH - 1)) {
-            if (!ensureCapacity(len+1)) {
+        ఒకవేళ (c == (UNICODESET_ఎగువ - 1)) {
+            ఒకవేళ (!ensure_సామర్థ్యం(len+1)) {
                 // ensureCapacity will mark the object as Bogus if OOM failure happens.
-                return *this;
+                తిరిగి *ఇది;
             }
-            list[len++] = UNICODESET_HIGH;
+            list[len++] = UNICODESET_ఎగువ;
         }
-        if (i > 0 && c == list[i-1]) {
+        ఒకవేళ (i > 0 && c == list[i-1]) {
             // collapse adjacent ranges
 
             // [..., start_k-1, c, c, limit_k, ..., HIGH]
@@ -884,19 +884,19 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
             UChar32* dst = list + i - 1;
             UChar32* src = dst + 2;
             UChar32* srclimit = list + len;
-            while (src < srclimit) *(dst++) = *(src++);
+            అయితే (src < srclimit) *(dst++) = *(src++);
 
             len -= 2;
         }
     }
 
-    else if (i > 0 && c == list[i-1]) {
+    లేకపోతే ఒకవేళ (i > 0 && c == list[i-1]) {
         // c is after end of prior range
         list[i-1]++;
         // no need to check for collapse here
     }
 
-    else {
+    లేకపోతే {
         // At this point we know the new char is not adjacent to
         // any existing ranges, and it is not 10FFFF.
 
@@ -909,33 +909,33 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
         //                             ^
         //                             list[i]
 
-        if (!ensureCapacity(len+2)) {
+        ఒకవేళ (!ensure_సామర్థ్యం(len+2)) {
             // ensureCapacity will mark the object as Bogus if OOM failure happens.
-            return *this;
+            తిరిగి *ఇది;
         }
 
         UChar32 *p = list + i;
-        uprv_memmove(p + 2, p, (len - i) * sizeof(*p));
+        uprv_memmove(p + 2, p, (len - i) * పరిమాణం(*p));
         list[i] = c;
         list[i+1] = c+1;
         len += 2;
     }
 
-#ifdef DEBUG_US_ADD
+#నిర్వచితమైతే DEBUG_US_కూడు
     dump(list, len);
-    printf("\n");
+    రాయి("\n");
 
-    for (i=1; i<len; ++i) {
-        if (list[i] <= list[i-1]) {
+    కొరకు (i=1; i<len; ++i) {
+        ఒకవేళ (list[i] <= list[i-1]) {
             // Corrupt array!
-            printf("ERROR: list has been corrupted\n");
-            exit(1);
+            రాయి("ERROR: list has been corrupted\n");
+            నిష్క్రమించు(1);
         }
     }
-#endif
+#అయితే_ముగింపు
 
-    releasePattern();
-    return *this;
+    release_నమూనా();
+    తిరిగి *ఇది;
 }
 
 /**
@@ -947,41 +947,41 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
  * @param s the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::add(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+Unicode_సమితి& Unicode_సమితి::కూడు(స్థిరరాశి UnicodeString& s) U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) తిరిగి *ఇది;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (!stringsContains(s)) {
-            _add(s);
-            releasePattern();
+    ఒకవేళ (cp < 0) {
+        ఒకవేళ (!అక్షరశ్రేణులు_కలిగియుంది(s)) {
+            కూడు_2(s);
+            release_నమూనా();
         }
-    } else {
-        add(static_cast<UChar32>(cp));
+    } లేకపోతే {
+        కూడు(static_cast<UChar32>(cp));
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
  * Adds the given string, in order, to 'strings_'.  The given string
  * must have been checked by the caller to not already be in 'strings_'.
  */
-void UnicodeSet::_add(const UnicodeString& s) {
-    if (isFrozen() || isBogus()) {
-        return;
+శూన్య Unicode_సమితి::కూడు_2(స్థిరరాశి UnicodeString& s) {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి;
     }
-    UErrorCode ec = U_ZERO_ERROR;
-    if (strings_ == nullptr && !allocateStrings(ec)) {
-        setToBogus();
-        return;
+    UError_సంకేతం ec = U_ZERO_ERROR;
+    ఒకవేళ (అక్షరశ్రేణులు_2 == శూన్యసూచిక && !allocate_అక్షరశ్రేణులు(ec)) {
+        సమితి_గమ్యం_Bogus();
+        తిరిగి;
     }
-    LocalPointer<UnicodeString> t(new UnicodeString(s));
-    if (t.isNull()) { // Check for memory allocation error.
-        setToBogus();
-        return;
+    Local_సూచిక<UnicodeString> t(కొత్త UnicodeString(s));
+    ఒకవేళ (t.isNull()) { // Check for memory allocation error.
+        సమితి_గమ్యం_Bogus();
+        తిరిగి;
     }
-    strings_->sortedInsert(t.orphan(), compareUnicodeString, ec);
-    if (U_FAILURE(ec)) {
-        setToBogus();
+    అక్షరశ్రేణులు_2->sorted_చొప్పించు(t.orphan(), compareUnicodeString, ec);
+    ఒకవేళ (U_FAILURE(ec)) {
+        సమితి_గమ్యం_Bogus();
     }
 }
 
@@ -990,16 +990,16 @@ void UnicodeSet::_add(const UnicodeString& s) {
  * otherwise returns -1.
  * @param string to test
  */
-int32_t UnicodeSet::getSingleCP(const UnicodeString& s) {
-    int32_t sLength = s.length();
-    if (sLength == 1) return s.charAt(0);
-    if (sLength == 2) {
+int32_t Unicode_సమితి::getSingleCP(స్థిరరాశి UnicodeString& s) {
+    int32_t s_నిడివి = s.length();
+    ఒకవేళ (s_నిడివి == 1) తిరిగి s.charAt(0);
+    ఒకవేళ (s_నిడివి == 2) {
         UChar32 cp = s.char32At(0);
-        if (cp > 0xFFFF) { // is surrogate pair
-            return cp;
+        ఒకవేళ (cp > 0xFFFF) { // is surrogate pair
+            తిరిగి cp;
         }
     }
-    return -1;
+    తిరిగి -1;
 }
 
 /**
@@ -1008,13 +1008,13 @@ int32_t UnicodeSet::getSingleCP(const UnicodeString& s) {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::addAll(const UnicodeString& s) U_LIFETIME_BOUND {
+Unicode_సమితి& Unicode_సమితి::కూడు_All(స్థిరరాశి UnicodeString& s) U_LIFETIME_BOUND {
     UChar32 cp;
-    for (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
+    కొరకు (int32_t i = 0; i < s.length(); i += U16_నిడివి(cp)) {
         cp = s.char32At(i);
-        add(cp);
+        కూడు(cp);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1023,11 +1023,11 @@ UnicodeSet& UnicodeSet::addAll(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::retainAll(const UnicodeString& s) U_LIFETIME_BOUND {
-    UnicodeSet set;
-    set.addAll(s);
-    retainAll(set);
-    return *this;
+Unicode_సమితి& Unicode_సమితి::retainAll(స్థిరరాశి UnicodeString& s) U_LIFETIME_BOUND {
+    Unicode_సమితి సమితి;
+    సమితి.కూడు_All(s);
+    retainAll(సమితి);
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1036,11 +1036,11 @@ UnicodeSet& UnicodeSet::retainAll(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::complementAll(const UnicodeString& s) U_LIFETIME_BOUND {
-    UnicodeSet set;
-    set.addAll(s);
-    complementAll(set);
-    return *this;
+Unicode_సమితి& Unicode_సమితి::complementAll(స్థిరరాశి UnicodeString& s) U_LIFETIME_BOUND {
+    Unicode_సమితి సమితి;
+    సమితి.కూడు_All(s);
+    complementAll(సమితి);
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1049,19 +1049,19 @@ UnicodeSet& UnicodeSet::complementAll(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::removeAll(const UnicodeString& s) U_LIFETIME_BOUND {
-    UnicodeSet set;
-    set.addAll(s);
-    removeAll(set);
-    return *this;
+Unicode_సమితి& Unicode_సమితి::removeAll(స్థిరరాశి UnicodeString& s) U_LIFETIME_BOUND {
+    Unicode_సమితి సమితి;
+    సమితి.కూడు_All(s);
+    removeAll(సమితి);
+    తిరిగి *ఇది;
 }
 
-UnicodeSet& UnicodeSet::removeAllStrings() U_LIFETIME_BOUND {
-    if (!isFrozen() && hasStrings()) {
-        strings_->removeAllElements();
-        releasePattern();
+Unicode_సమితి& Unicode_సమితి::remove_All_అక్షరశ్రేణులు() U_LIFETIME_BOUND {
+    ఒకవేళ (!isFrozen() && has_అక్షరశ్రేణులు()) {
+        అక్షరశ్రేణులు_2->removeAllElements();
+        release_నమూనా();
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 
@@ -1071,12 +1071,12 @@ UnicodeSet& UnicodeSet::removeAllStrings() U_LIFETIME_BOUND {
  * @param the source string
  * @return a newly created set containing the given string
  */
-UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(const UnicodeString& s) {
-    UnicodeSet *set = new UnicodeSet();
-    if (set != nullptr) { // Check for memory allocation error.
-        set->add(s);
+Unicode_సమితి* U_EXPORT2 Unicode_సమితి::createFrom(స్థిరరాశి UnicodeString& s) {
+    Unicode_సమితి *సమితి = కొత్త Unicode_సమితి();
+    ఒకవేళ (సమితి != శూన్యసూచిక) { // Check for memory allocation error.
+        సమితి->కూడు(s);
     }
-    return set;
+    తిరిగి సమితి;
 }
 
 
@@ -1085,12 +1085,12 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(const UnicodeString& s) {
  * @param the source string
  * @return a newly created set containing the given characters
  */
-UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(const UnicodeString& s) {
-    UnicodeSet *set = new UnicodeSet();
-    if (set != nullptr) { // Check for memory allocation error.
-        set->addAll(s);
+Unicode_సమితి* U_EXPORT2 Unicode_సమితి::createFromAll(స్థిరరాశి UnicodeString& s) {
+    Unicode_సమితి *సమితి = కొత్త Unicode_సమితి();
+    ఒకవేళ (సమితి != శూన్యసూచిక) { // Check for memory allocation error.
+        సమితి->కూడు_All(s);
     }
-    return set;
+    తిరిగి సమితి;
 }
 
 /**
@@ -1103,38 +1103,38 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(const UnicodeString& s) {
  * @param end last character, inclusive, of range to be retained
  * to this set.
  */
-UnicodeSet& UnicodeSet::retain(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+Unicode_సమితి& Unicode_సమితి::retain(UChar32 ప్రారంభం, UChar32 చివర) U_LIFETIME_BOUND {
+    ఒకవేళ (pin_సంకేతం_బిందువు(ప్రారంభం) <= pin_సంకేతం_బిందువు(చివర)) {
+        UChar32 range[3] = { ప్రారంభం, చివర+1, UNICODESET_ఎగువ };
         retain(range, 2, 0);
-    } else {
+    } లేకపోతే {
         clear();
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-UnicodeSet& UnicodeSet::retain(UChar32 c) U_LIFETIME_BOUND {
-    return retain(c, c);
+Unicode_సమితి& Unicode_సమితి::retain(UChar32 c) U_LIFETIME_BOUND {
+    తిరిగి retain(c, c);
 }
 
-UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) { return *this; }
+Unicode_సమితి& Unicode_సమితి::retain(స్థిరరాశి UnicodeString &s) U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) { తిరిగి *ఇది; }
     UChar32 cp = getSingleCP(s);
-    if (cp < 0) {
-        bool isIn = stringsContains(s);
+    ఒకవేళ (cp < 0) {
+        తార్కిక is_లోపల = అక్షరశ్రేణులు_కలిగియుంది(s);
         // Check for getRangeCount() first to avoid somewhat-expensive size()
         // when there are single code points.
-        if (isIn && getRangeCount() == 0 && size() == 1) {
-            return *this;
+        ఒకవేళ (is_లోపల && get_Range_లెక్క() == 0 && size() == 1) {
+            తిరిగి *ఇది;
         }
         clear();
-        if (isIn) {
-            _add(s);
+        ఒకవేళ (is_లోపల) {
+            కూడు_2(s);
         }
-    } else {
+    } లేకపోతే {
         retain(cp, cp);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1148,12 +1148,12 @@ UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
  * @param end last character, inclusive, of range to be removed
  * from this set.
  */
-UnicodeSet& UnicodeSet::remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+Unicode_సమితి& Unicode_సమితి::remove(UChar32 ప్రారంభం, UChar32 చివర) U_LIFETIME_BOUND {
+    ఒకవేళ (pin_సంకేతం_బిందువు(ప్రారంభం) <= pin_సంకేతం_బిందువు(చివర)) {
+        UChar32 range[3] = { ప్రారంభం, చివర+1, UNICODESET_ఎగువ };
         retain(range, 2, 2);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1161,8 +1161,8 @@ UnicodeSet& UnicodeSet::remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
  * The set will not contain the specified range once the call
  * returns.
  */
-UnicodeSet& UnicodeSet::remove(UChar32 c) U_LIFETIME_BOUND {
-    return remove(c, c);
+Unicode_సమితి& Unicode_సమితి::remove(UChar32 c) U_LIFETIME_BOUND {
+    తిరిగి remove(c, c);
 }
 
 /**
@@ -1172,17 +1172,17 @@ UnicodeSet& UnicodeSet::remove(UChar32 c) U_LIFETIME_BOUND {
  * @param the source string
  * @return the modified set, for chaining
  */
-UnicodeSet& UnicodeSet::remove(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+Unicode_సమితి& Unicode_సమితి::remove(స్థిరరాశి UnicodeString& s) U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) తిరిగి *ఇది;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (strings_ != nullptr && strings_->removeElement((void*) &s)) {
-            releasePattern();
+    ఒకవేళ (cp < 0) {
+        ఒకవేళ (అక్షరశ్రేణులు_2 != శూన్యసూచిక && అక్షరశ్రేణులు_2->removeElement((శూన్య*) &s)) {
+            release_నమూనా();
         }
-    } else {
+    } లేకపోతే {
         remove(static_cast<UChar32>(cp), static_cast<UChar32>(cp));
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1196,43 +1196,43 @@ UnicodeSet& UnicodeSet::remove(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param end last character, inclusive, of range to be removed
  * from this set.
  */
-UnicodeSet& UnicodeSet::complement(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_సమితి& Unicode_సమితి::complement(UChar32 ప్రారంభం, UChar32 చివర) U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి *ఇది;
     }
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+    ఒకవేళ (pin_సంకేతం_బిందువు(ప్రారంభం) <= pin_సంకేతం_బిందువు(చివర)) {
+        UChar32 range[3] = { ప్రారంభం, చివర+1, UNICODESET_ఎగువ };
         exclusiveOr(range, 2, 0);
     }
-    releasePattern();
-    return *this;
+    release_నమూనా();
+    తిరిగి *ఇది;
 }
 
-UnicodeSet& UnicodeSet::complement(UChar32 c) U_LIFETIME_BOUND {
-    return complement(c, c);
+Unicode_సమితి& Unicode_సమితి::complement(UChar32 c) U_LIFETIME_BOUND {
+    తిరిగి complement(c, c);
 }
 
 /**
  * This is equivalent to
  * <code>complement(MIN_VALUE, MAX_VALUE)</code>.
  */
-UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_సమితి& Unicode_సమితి::complement() U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి *ఇది;
     }
-    if (list[0] == UNICODESET_LOW) {
-        uprv_memmove(list, list + 1, (size_t)(len-1)*sizeof(UChar32));
+    ఒకవేళ (list[0] == UNICODESET_దిగువ) {
+        uprv_memmove(list, list + 1, (size_t)(len-1)*పరిమాణం(UChar32));
         --len;
-    } else {
-        if (!ensureCapacity(len+1)) {
-            return *this;
+    } లేకపోతే {
+        ఒకవేళ (!ensure_సామర్థ్యం(len+1)) {
+            తిరిగి *ఇది;
         }
-        uprv_memmove(list + 1, list, (size_t)len*sizeof(UChar32));
-        list[0] = UNICODESET_LOW;
+        uprv_memmove(list + 1, list, (size_t)len*పరిమాణం(UChar32));
+        list[0] = UNICODESET_దిగువ;
         ++len;
     }
-    releasePattern();
-    return *this;
+    release_నమూనా();
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1243,20 +1243,20 @@ UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
  * @param s the string to complement
  * @return this object, for chaining
  */
-UnicodeSet& UnicodeSet::complement(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+Unicode_సమితి& Unicode_సమితి::complement(స్థిరరాశి UnicodeString& s) U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) తిరిగి *ఇది;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (stringsContains(s)) {
-            strings_->removeElement((void*) &s);
-        } else {
-            _add(s);
+    ఒకవేళ (cp < 0) {
+        ఒకవేళ (అక్షరశ్రేణులు_కలిగియుంది(s)) {
+            అక్షరశ్రేణులు_2->removeElement((శూన్య*) &s);
+        } లేకపోతే {
+            కూడు_2(s);
         }
-        releasePattern();
-    } else {
+        release_నమూనా();
+    } లేకపోతే {
         complement(static_cast<UChar32>(cp), static_cast<UChar32>(cp));
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1269,21 +1269,21 @@ UnicodeSet& UnicodeSet::complement(const UnicodeString& s) U_LIFETIME_BOUND {
  * @param c set whose elements are to be added to this set.
  * @see #add(char, char)
  */
-UnicodeSet& UnicodeSet::addAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if ( c.len>0 && c.list!=nullptr ) {
-        add(c.list, c.len, 0);
+Unicode_సమితి& Unicode_సమితి::కూడు_All(స్థిరరాశి Unicode_సమితి& c) U_LIFETIME_BOUND {
+    ఒకవేళ ( c.len>0 && c.list!=శూన్యసూచిక ) {
+        కూడు(c.list, c.len, 0);
     }
 
     // Add strings in order
-    if ( c.strings_!=nullptr ) {
-        for (int32_t i=0; i<c.strings_->size(); ++i) {
-            const UnicodeString* s = static_cast<const UnicodeString*>(c.strings_->elementAt(i));
-            if (!stringsContains(*s)) {
-                _add(*s);
+    ఒకవేళ ( c.అక్షరశ్రేణులు_2!=శూన్యసూచిక ) {
+        కొరకు (int32_t i=0; i<c.అక్షరశ్రేణులు_2->size(); ++i) {
+            స్థిరరాశి UnicodeString* s = static_cast<స్థిరరాశి UnicodeString*>(c.అక్షరశ్రేణులు_2->elementAt(i));
+            ఒకవేళ (!అక్షరశ్రేణులు_కలిగియుంది(*s)) {
+                కూడు_2(*s);
             }
         }
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1295,19 +1295,19 @@ UnicodeSet& UnicodeSet::addAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  *
  * @param c set that defines which elements this set will retain.
  */
-UnicodeSet& UnicodeSet::retainAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_సమితి& Unicode_సమితి::retainAll(స్థిరరాశి Unicode_సమితి& c) U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి *ఇది;
     }
     retain(c.list, c.len, 0);
-    if (hasStrings()) {
-        if (!c.hasStrings()) {
-            strings_->removeAllElements();
-        } else {
-            strings_->retainAll(*c.strings_);
+    ఒకవేళ (has_అక్షరశ్రేణులు()) {
+        ఒకవేళ (!c.has_అక్షరశ్రేణులు()) {
+            అక్షరశ్రేణులు_2->removeAllElements();
+        } లేకపోతే {
+            అక్షరశ్రేణులు_2->retainAll(*c.అక్షరశ్రేణులు_2);
         }
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1319,15 +1319,15 @@ UnicodeSet& UnicodeSet::retainAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  * @param c set that defines which elements will be removed from
  *          this set.
  */
-UnicodeSet& UnicodeSet::removeAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_సమితి& Unicode_సమితి::removeAll(స్థిరరాశి Unicode_సమితి& c) U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి *ఇది;
     }
     retain(c.list, c.len, 2);
-    if (hasStrings() && c.hasStrings()) {
-        strings_->removeAll(*c.strings_);
+    ఒకవేళ (has_అక్షరశ్రేణులు() && c.has_అక్షరశ్రేణులు()) {
+        అక్షరశ్రేణులు_2->removeAll(*c.అక్షరశ్రేణులు_2);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1338,40 +1338,40 @@ UnicodeSet& UnicodeSet::removeAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  * @param c set that defines which elements will be xor'ed from
  *          this set.
  */
-UnicodeSet& UnicodeSet::complementAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_సమితి& Unicode_సమితి::complementAll(స్థిరరాశి Unicode_సమితి& c) U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి *ఇది;
     }
     exclusiveOr(c.list, c.len, 0);
 
-    if (c.strings_ != nullptr) {
-        for (int32_t i=0; i<c.strings_->size(); ++i) {
-            void* e = c.strings_->elementAt(i);
-            if (strings_ == nullptr || !strings_->removeElement(e)) {
-                _add(*static_cast<const UnicodeString*>(e));
+    ఒకవేళ (c.అక్షరశ్రేణులు_2 != శూన్యసూచిక) {
+        కొరకు (int32_t i=0; i<c.అక్షరశ్రేణులు_2->size(); ++i) {
+            శూన్య* e = c.అక్షరశ్రేణులు_2->elementAt(i);
+            ఒకవేళ (అక్షరశ్రేణులు_2 == శూన్యసూచిక || !అక్షరశ్రేణులు_2->removeElement(e)) {
+                కూడు_2(*static_cast<స్థిరరాశి UnicodeString*>(e));
             }
         }
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
  * Removes all of the elements from this set.  This set will be
  * empty after this call returns.
  */
-UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
-    if (isFrozen()) {
-        return *this;
+Unicode_సమితి& Unicode_సమితి::clear() U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen()) {
+        తిరిగి *ఇది;
     }
-    list[0] = UNICODESET_HIGH;
+    list[0] = UNICODESET_ఎగువ;
     len = 1;
-    releasePattern();
-    if (strings_ != nullptr) {
-        strings_->removeAllElements();
+    release_నమూనా();
+    ఒకవేళ (అక్షరశ్రేణులు_2 != శూన్యసూచిక) {
+        అక్షరశ్రేణులు_2->removeAllElements();
     }
     // Remove bogus
     fFlags = 0;
-    return *this;
+    తిరిగి *ఇది;
 }
 
 /**
@@ -1380,8 +1380,8 @@ UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
  * @see #getRangeStart
  * @see #getRangeEnd
  */
-int32_t UnicodeSet::getRangeCount() const {
-    return len/2;
+int32_t Unicode_సమితి::get_Range_లెక్క() స్థిరరాశి {
+    తిరిగి len/2;
 }
 
 /**
@@ -1390,8 +1390,8 @@ int32_t UnicodeSet::getRangeCount() const {
  * @see #getRangeCount
  * @see #getRangeEnd
  */
-UChar32 UnicodeSet::getRangeStart(int32_t index) const {
-    return list[index*2];
+UChar32 Unicode_సమితి::get_Range_ప్రారంభం(int32_t సూచీ) స్థిరరాశి {
+    తిరిగి list[సూచీ*2];
 }
 
 /**
@@ -1400,156 +1400,156 @@ UChar32 UnicodeSet::getRangeStart(int32_t index) const {
  * @see #getRangeStart
  * @see #getRangeEnd
  */
-UChar32 UnicodeSet::getRangeEnd(int32_t index) const {
-    return list[index*2 + 1] - 1;
+UChar32 Unicode_సమితి::get_Range_చివర(int32_t సూచీ) స్థిరరాశి {
+    తిరిగి list[సూచీ*2 + 1] - 1;
 }
 
-const UnicodeString* UnicodeSet::getString(int32_t index) const U_LIFETIME_BOUND {
-    return static_cast<const UnicodeString*>(strings_->elementAt(index));
+స్థిరరాశి UnicodeString* Unicode_సమితి::getString(int32_t సూచీ) స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి static_cast<స్థిరరాశి UnicodeString*>(అక్షరశ్రేణులు_2->elementAt(సూచీ));
 }
 
 /**
  * Reallocate this objects internal structures to take up the least
  * possible space, without changing this object's value.
  */
-UnicodeSet& UnicodeSet::compact() U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+Unicode_సమితి& Unicode_సమితి::compact() U_LIFETIME_BOUND {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి *ఇది;
     }
     // Delete buffer first to defragment memory less.
-    if (buffer != stackList) {
-        uprv_free(buffer);
-        buffer = nullptr;
-        bufferCapacity = 0;
+    ఒకవేళ (బఫరు != దొంతర_List) {
+        uprv_free(బఫరు);
+        బఫరు = శూన్యసూచిక;
+        బఫరు_సామర్థ్యం = 0;
     }
-    if (list == stackList) {
+    ఒకవేళ (list == దొంతర_List) {
         // pass
-    } else if (len <= INITIAL_CAPACITY) {
-        uprv_memcpy(stackList, list, len * sizeof(UChar32));
+    } లేకపోతే ఒకవేళ (len <= INITIAL_సామర్థ్యం) {
+        uprv_memcpy(దొంతర_List, list, len * పరిమాణం(UChar32));
         uprv_free(list);
-        list = stackList;
-        capacity = INITIAL_CAPACITY;
-    } else if ((len + 7) < capacity) {
+        list = దొంతర_List;
+        capacity = INITIAL_సామర్థ్యం;
+    } లేకపోతే ఒకవేళ ((len + 7) < capacity) {
         // If we have more than a little unused capacity, shrink it to len.
-        UChar32* temp = static_cast<UChar32*>(uprv_realloc(list, sizeof(UChar32) * len));
-        if (temp) {
-            list = temp;
+        UChar32* తాత్కాలిక = static_cast<UChar32*>(uprv_realloc(list, పరిమాణం(UChar32) * len));
+        ఒకవేళ (తాత్కాలిక) {
+            list = తాత్కాలిక;
             capacity = len;
         }
         // else what the heck happened?! We allocated less memory!
         // Oh well. We'll keep our original array.
     }
-    if (strings_ != nullptr && strings_->isEmpty()) {
-        delete strings_;
-        strings_ = nullptr;
+    ఒకవేళ (అక్షరశ్రేణులు_2 != శూన్యసూచిక && అక్షరశ్రేణులు_2->is_ఖాళీలు()) {
+        తొలగించు అక్షరశ్రేణులు_2;
+        అక్షరశ్రేణులు_2 = శూన్యసూచిక;
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-#ifdef DEBUG_SERIALIZE
-#include <stdio.h>
-#endif
+#నిర్వచితమైతే DEBUG_SERIALIZE
+#అన్తర్భావ <stdio.h>
+#అయితే_ముగింపు
 
 /**
  * Deserialize constructor.
  */
-UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization serialization,
-                       UErrorCode &ec) {
+Unicode_సమితి::Unicode_సమితి(స్థిరరాశి uint16_t దత్తాంశం[], int32_t దత్తాంశం_Len, ESerialization serialization,
+                       UError_సంకేతం &ec) {
 
-  if(U_FAILURE(ec)) {
-    setToBogus();
-    return;
+  ఒకవేళ(U_FAILURE(ec)) {
+    సమితి_గమ్యం_Bogus();
+    తిరిగి;
   }
 
-  if( (serialization != kSerialized)
-      || (data==nullptr)
-      || (dataLen < 1)) {
-    ec = U_ILLEGAL_ARGUMENT_ERROR;
-    setToBogus();
-    return;
+  ఒకవేళ( (serialization != kSerialized)
+      || (దత్తాంశం==శూన్యసూచిక)
+      || (దత్తాంశం_Len < 1)) {
+    ec = U_ILLEGAL_వాదం_ERROR;
+    సమితి_గమ్యం_Bogus();
+    తిరిగి;
   }
 
   // bmp?
-  int32_t headerSize = ((data[0]&0x8000)) ?2:1;
-  int32_t bmpLength = (headerSize==1)?data[0]:data[1];
+  int32_t శీర్షిక_కొలత = ((దత్తాంశం[0]&0x8000)) ?2:1;
+  int32_t bmp_నిడివి = (శీర్షిక_కొలత==1)?దత్తాంశం[0]:దత్తాంశం[1];
 
-  int32_t newLength = (((data[0]&0x7FFF)-bmpLength)/2)+bmpLength;
-#ifdef DEBUG_SERIALIZE
-  printf("dataLen %d headerSize %d bmpLen %d len %d. data[0]=%X/%X/%X/%X\n", dataLen,headerSize,bmpLength,newLength, data[0],data[1],data[2],data[3]);
-#endif
-  if(!ensureCapacity(newLength + 1)) {  // +1 for HIGH
-    return;
+  int32_t new_నిడివి = (((దత్తాంశం[0]&0x7FFF)-bmp_నిడివి)/2)+bmp_నిడివి;
+#నిర్వచితమైతే DEBUG_SERIALIZE
+  రాయి("dataLen %d headerSize %d bmpLen %d len %d. data[0]=%X/%X/%X/%X\n", దత్తాంశం_Len,శీర్షిక_కొలత,bmp_నిడివి,new_నిడివి, దత్తాంశం[0],దత్తాంశం[1],దత్తాంశం[2],దత్తాంశం[3]);
+#అయితే_ముగింపు
+  ఒకవేళ(!ensure_సామర్థ్యం(new_నిడివి + 1)) {  // +1 for HIGH
+    తిరిగి;
   }
   // copy bmp
   int32_t i;
-  for(i = 0; i< bmpLength;i++) {
-    list[i] = data[i+headerSize];
-#ifdef DEBUG_SERIALIZE
-    printf("<<16@%d[%d] %X\n", i+headerSize, i, list[i]);
-#endif
+  కొరకు(i = 0; i< bmp_నిడివి;i++) {
+    list[i] = దత్తాంశం[i+శీర్షిక_కొలత];
+#నిర్వచితమైతే DEBUG_SERIALIZE
+    రాయి("<<16@%d[%d] %X\n", i+శీర్షిక_కొలత, i, list[i]);
+#అయితే_ముగింపు
   }
   // copy smp
-  for(i=bmpLength;i<newLength;i++) {
-    list[i] = (static_cast<UChar32>(data[headerSize + bmpLength + (i - bmpLength) * 2 + 0]) << 16) +
-               static_cast<UChar32>(data[headerSize + bmpLength + (i - bmpLength) * 2 + 1]);
-#ifdef DEBUG_SERIALIZE
-    printf("<<32@%d+[%d] %lX\n", headerSize+bmpLength+i, i, list[i]);
-#endif
+  కొరకు(i=bmp_నిడివి;i<new_నిడివి;i++) {
+    list[i] = (static_cast<UChar32>(దత్తాంశం[శీర్షిక_కొలత + bmp_నిడివి + (i - bmp_నిడివి) * 2 + 0]) << 16) +
+               static_cast<UChar32>(దత్తాంశం[శీర్షిక_కొలత + bmp_నిడివి + (i - bmp_నిడివి) * 2 + 1]);
+#నిర్వచితమైతే DEBUG_SERIALIZE
+    రాయి("<<32@%d+[%d] %lX\n", శీర్షిక_కొలత+bmp_నిడివి+i, i, list[i]);
+#అయితే_ముగింపు
   }
-  U_ASSERT(i == newLength);
-  if (i == 0 || list[i - 1] != UNICODESET_HIGH) {
-    list[i++] = UNICODESET_HIGH;
+  U_ASSERT(i == new_నిడివి);
+  ఒకవేళ (i == 0 || list[i - 1] != UNICODESET_ఎగువ) {
+    list[i++] = UNICODESET_ఎగువ;
   }
   len = i;
 }
 
 
-int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& ec) const {
-    int32_t bmpLength, length, destLength;
+int32_t Unicode_సమితి::serialize(uint16_t *dest, int32_t dest_సామర్థ్యం, UError_సంకేతం& ec) స్థిరరాశి {
+    int32_t bmp_నిడివి, length, dest_నిడివి;
 
-    if (U_FAILURE(ec)) {
-        return 0;
+    ఒకవేళ (U_FAILURE(ec)) {
+        తిరిగి 0;
     }
 
-    if (destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
-        ec=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ (dest_సామర్థ్యం<0 || (dest_సామర్థ్యం>0 && dest==శూన్యసూచిక)) {
+        ec=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* count necessary 16-bit units */
-    length=this->len-1; // Subtract 1 to ignore final UNICODESET_HIGH
+    length=ఇది->len-1; // Subtract 1 to ignore final UNICODESET_HIGH
     // assert(length>=0);
-    if (length==0) {
+    ఒకవేళ (length==0) {
         /* empty set */
-        if (destCapacity>0) {
+        ఒకవేళ (dest_సామర్థ్యం>0) {
             *dest=0;
-        } else {
-            ec=U_BUFFER_OVERFLOW_ERROR;
+        } లేకపోతే {
+            ec=U_బఫరు_అధికప్రవాహం_ERROR;
         }
-        return 1;
+        తిరిగి 1;
     }
     /* now length>0 */
 
-    if (this->list[length-1]<=0xffff) {
+    ఒకవేళ (ఇది->list[length-1]<=0xffff) {
         /* all BMP */
-        bmpLength=length;
-    } else if (this->list[0]>=0x10000) {
+        bmp_నిడివి=length;
+    } లేకపోతే ఒకవేళ (ఇది->list[0]>=0x10000) {
         /* all supplementary */
-        bmpLength=0;
+        bmp_నిడివి=0;
         length*=2;
-    } else {
+    } లేకపోతే {
         /* some BMP, some supplementary */
-        for (bmpLength=0; bmpLength<length && this->list[bmpLength]<=0xffff; ++bmpLength) {}
-        length=bmpLength+2*(length-bmpLength);
+        కొరకు (bmp_నిడివి=0; bmp_నిడివి<length && ఇది->list[bmp_నిడివి]<=0xffff; ++bmp_నిడివి) {}
+        length=bmp_నిడివి+2*(length-bmp_నిడివి);
     }
-#ifdef DEBUG_SERIALIZE
-    printf(">> bmpLength%d length%d len%d\n", bmpLength, length, len);
-#endif
+#నిర్వచితమైతే DEBUG_SERIALIZE
+    రాయి(">> bmpLength%d length%d len%d\n", bmp_నిడివి, length, len);
+#అయితే_ముగింపు
     /* length: number of 16-bit array units */
-    if (length>0x7fff) {
+    ఒకవేళ (length>0x7fff) {
         /* there are only 15 bits for the length in the first serialized word */
-        ec=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        ec=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0;
     }
 
     /*
@@ -1558,42 +1558,42 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
      * 1 length unit (always) +
      * 1 bmpLength unit (if there are supplementary values)
      */
-    destLength=length+((length>bmpLength)?2:1);
-    if (destLength<=destCapacity) {
-        const UChar32 *p;
+    dest_నిడివి=length+((length>bmp_నిడివి)?2:1);
+    ఒకవేళ (dest_నిడివి<=dest_సామర్థ్యం) {
+        స్థిరరాశి UChar32 *p;
         int32_t i;
 
-#ifdef DEBUG_SERIALIZE
-        printf("writeHdr\n");
-#endif
+#నిర్వచితమైతే DEBUG_SERIALIZE
+        రాయి("writeHdr\n");
+#అయితే_ముగింపు
         *dest = static_cast<uint16_t>(length);
-        if (length>bmpLength) {
+        ఒకవేళ (length>bmp_నిడివి) {
             *dest|=0x8000;
-            *++dest = static_cast<uint16_t>(bmpLength);
+            *++dest = static_cast<uint16_t>(bmp_నిడివి);
         }
         ++dest;
 
         /* write the BMP part of the array */
-        p=this->list;
-        for (i=0; i<bmpLength; ++i) {
-#ifdef DEBUG_SERIALIZE
-          printf("writebmp: %x\n", (int)*p);
-#endif
+        p=ఇది->list;
+        కొరకు (i=0; i<bmp_నిడివి; ++i) {
+#నిర్వచితమైతే DEBUG_SERIALIZE
+          రాయి("writebmp: %x\n", (పూర్ణాంకం)*p);
+#అయితే_ముగింపు
             *dest++ = static_cast<uint16_t>(*p++);
         }
 
         /* write the supplementary part of the array */
-        for (; i<length; i+=2) {
-#ifdef DEBUG_SERIALIZE
-          printf("write32: %x\n", (int)*p);
-#endif
+        కొరకు (; i<length; i+=2) {
+#నిర్వచితమైతే DEBUG_SERIALIZE
+          రాయి("write32: %x\n", (పూర్ణాంకం)*p);
+#అయితే_ముగింపు
             *dest++ = static_cast<uint16_t>(*p >> 16);
             *dest++ = static_cast<uint16_t>(*p++);
         }
-    } else {
-        ec=U_BUFFER_OVERFLOW_ERROR;
+    } లేకపోతే {
+        ec=U_బఫరు_అధికప్రవాహం_ERROR;
     }
-    return destLength;
+    తిరిగి dest_నిడివి;
 }
 
 //----------------------------------------------------------------
@@ -1603,100 +1603,100 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
 /**
  * Allocate our strings vector and return true if successful.
  */
-UBool UnicodeSet::allocateStrings(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool Unicode_సమితి::allocate_అక్షరశ్రేణులు(UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    strings_ = new UVector(uprv_deleteUObject,
-                          uhash_compareUnicodeString, 1, status);
-    if (strings_ == nullptr) { // Check for memory allocation error.
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+    అక్షరశ్రేణులు_2 = కొత్త UVector(uprv_deleteUObject,
+                          uhash_compareUnicodeString, 1, స్థితి_2);
+    ఒకవేళ (అక్షరశ్రేణులు_2 == శూన్యసూచిక) { // Check for memory allocation error.
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి అబద్ధం;
     }
-    if (U_FAILURE(status)) {
-        delete strings_;
-        strings_ = nullptr;
-        return false;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తొలగించు అక్షరశ్రేణులు_2;
+        అక్షరశ్రేణులు_2 = శూన్యసూచిక;
+        తిరిగి అబద్ధం;
     } 
-    return true;
+    తిరిగి నిజం;
 }
 
-int32_t UnicodeSet::nextCapacity(int32_t minCapacity) {
+int32_t Unicode_సమితి::తదుపరి_సామర్థ్యం(int32_t min_సామర్థ్యం) {
     // Grow exponentially to reduce the frequency of allocations.
-    if (minCapacity < INITIAL_CAPACITY) {
-        return minCapacity + INITIAL_CAPACITY;
-    } else if (minCapacity <= 2500) {
-        return 5 * minCapacity;
-    } else {
-        int32_t newCapacity = 2 * minCapacity;
-        if (newCapacity > MAX_LENGTH) {
-            newCapacity = MAX_LENGTH;
+    ఒకవేళ (min_సామర్థ్యం < INITIAL_సామర్థ్యం) {
+        తిరిగి min_సామర్థ్యం + INITIAL_సామర్థ్యం;
+    } లేకపోతే ఒకవేళ (min_సామర్థ్యం <= 2500) {
+        తిరిగి 5 * min_సామర్థ్యం;
+    } లేకపోతే {
+        int32_t new_సామర్థ్యం = 2 * min_సామర్థ్యం;
+        ఒకవేళ (new_సామర్థ్యం > MAX_నిడివి) {
+            new_సామర్థ్యం = MAX_నిడివి;
         }
-        return newCapacity;
+        తిరిగి new_సామర్థ్యం;
     }
 }
 
-bool UnicodeSet::ensureCapacity(int32_t newLen) {
-    if (newLen > MAX_LENGTH) {
-        newLen = MAX_LENGTH;
+తార్కిక Unicode_సమితి::ensure_సామర్థ్యం(int32_t newLen) {
+    ఒకవేళ (newLen > MAX_నిడివి) {
+        newLen = MAX_నిడివి;
     }
-    if (newLen <= capacity) {
-        return true;
+    ఒకవేళ (newLen <= capacity) {
+        తిరిగి నిజం;
     }
-    int32_t newCapacity = nextCapacity(newLen);
-    UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * sizeof(UChar32)));
-    if (temp == nullptr) {
-        setToBogus(); // set the object to bogus state if an OOM failure occurred.
-        return false;
+    int32_t new_సామర్థ్యం = తదుపరి_సామర్థ్యం(newLen);
+    UChar32* తాత్కాలిక = static_cast<UChar32*>(uprv_malloc(new_సామర్థ్యం * పరిమాణం(UChar32)));
+    ఒకవేళ (తాత్కాలిక == శూన్యసూచిక) {
+        సమితి_గమ్యం_Bogus(); // set the object to bogus state if an OOM failure occurred.
+        తిరిగి అబద్ధం;
     }
     // Copy only the actual contents.
-    uprv_memcpy(temp, list, len * sizeof(UChar32));
-    if (list != stackList) {
+    uprv_memcpy(తాత్కాలిక, list, len * పరిమాణం(UChar32));
+    ఒకవేళ (list != దొంతర_List) {
         uprv_free(list);
     }
-    list = temp;
-    capacity = newCapacity;
-    return true;
+    list = తాత్కాలిక;
+    capacity = new_సామర్థ్యం;
+    తిరిగి నిజం;
 }
 
-bool UnicodeSet::ensureBufferCapacity(int32_t newLen) {
-    if (newLen > MAX_LENGTH) {
-        newLen = MAX_LENGTH;
+తార్కిక Unicode_సమితి::ensure_బఫరు_సామర్థ్యం(int32_t newLen) {
+    ఒకవేళ (newLen > MAX_నిడివి) {
+        newLen = MAX_నిడివి;
     }
-    if (newLen <= bufferCapacity) {
-        return true;
+    ఒకవేళ (newLen <= బఫరు_సామర్థ్యం) {
+        తిరిగి నిజం;
     }
-    int32_t newCapacity = nextCapacity(newLen);
-    UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * sizeof(UChar32)));
-    if (temp == nullptr) {
-        setToBogus();
-        return false;
+    int32_t new_సామర్థ్యం = తదుపరి_సామర్థ్యం(newLen);
+    UChar32* తాత్కాలిక = static_cast<UChar32*>(uprv_malloc(new_సామర్థ్యం * పరిమాణం(UChar32)));
+    ఒకవేళ (తాత్కాలిక == శూన్యసూచిక) {
+        సమితి_గమ్యం_Bogus();
+        తిరిగి అబద్ధం;
     }
     // The buffer has no contents to be copied.
     // It is always filled from scratch after this call.
-    if (buffer != stackList) {
-        uprv_free(buffer);
+    ఒకవేళ (బఫరు != దొంతర_List) {
+        uprv_free(బఫరు);
     }
-    buffer = temp;
-    bufferCapacity = newCapacity;
-    return true;
+    బఫరు = తాత్కాలిక;
+    బఫరు_సామర్థ్యం = new_సామర్థ్యం;
+    తిరిగి నిజం;
 }
 
 /**
  * Swap list and buffer.
  */
-void UnicodeSet::swapBuffers() {
+శూన్య Unicode_సమితి::మార్పిడి_Buffers() {
     // swap list and buffer
-    UChar32* temp = list;
-    list = buffer;
-    buffer = temp;
+    UChar32* తాత్కాలిక = list;
+    list = బఫరు;
+    బఫరు = తాత్కాలిక;
 
     int32_t c = capacity;
-    capacity = bufferCapacity;
-    bufferCapacity = c;
+    capacity = బఫరు_సామర్థ్యం;
+    బఫరు_సామర్థ్యం = c;
 }
 
-void UnicodeSet::setToBogus() {
+శూన్య Unicode_సమితి::సమితి_గమ్యం_Bogus() {
     clear(); // Remove everything in the set.
     fFlags = kIsBogus;
 }
@@ -1705,54 +1705,54 @@ void UnicodeSet::setToBogus() {
 // Implementation: Fundamental operators
 //----------------------------------------------------------------
 
-static inline UChar32 max(UChar32 a, UChar32 b) {
-    return (a > b) ? a : b;
+స్థిర అంతఃవరుస UChar32 max(UChar32 a, UChar32 b) {
+    తిరిగి (a > b) ? a : b;
 }
 
 // polarity = 0, 3 is normal: x xor y
 // polarity = 1, 2: x xor ~y == x === y
 
-void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus()) {
-        return;
+శూన్య Unicode_సమితి::exclusiveOr(స్థిరరాశి UChar32* other, int32_t otherLen, int8_t polarity) {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    ఒకవేళ (!ensure_బఫరు_సామర్థ్యం(len + otherLen)) {
+        తిరిగి;
     }
 
     int32_t i = 0, j = 0, k = 0;
     UChar32 a = list[i++];
     UChar32 b;
-    if (polarity == 1 || polarity == 2) {
-        b = UNICODESET_LOW;
-        if (other[j] == UNICODESET_LOW) { // skip base if already LOW
+    ఒకవేళ (polarity == 1 || polarity == 2) {
+        b = UNICODESET_దిగువ;
+        ఒకవేళ (other[j] == UNICODESET_దిగువ) { // skip base if already LOW
             ++j;
             b = other[j];
         }
-    } else {
+    } లేకపోతే {
         b = other[j++];
     }
     // simplest of all the routines
     // sort the values, discarding identicals!
-    for (;;) {
-        if (a < b) {
-            buffer[k++] = a;
+    కొరకు (;;) {
+        ఒకవేళ (a < b) {
+            బఫరు[k++] = a;
             a = list[i++];
-        } else if (b < a) {
-            buffer[k++] = b;
+        } లేకపోతే ఒకవేళ (b < a) {
+            బఫరు[k++] = b;
             b = other[j++];
-        } else if (a != UNICODESET_HIGH) { // at this point, a == b
+        } లేకపోతే ఒకవేళ (a != UNICODESET_ఎగువ) { // at this point, a == b
             // discard both values!
             a = list[i++];
             b = other[j++];
-        } else { // DONE!
-            buffer[k++] = UNICODESET_HIGH;
+        } లేకపోతే { // DONE!
+            బఫరు[k++] = UNICODESET_ఎగువ;
             len = k;
-            break;
+            ఆపు;
         }
     }
-    swapBuffers();
-    releasePattern();
+    మార్పిడి_Buffers();
+    release_నమూనా();
 }
 
 // polarity = 0 is normal: x union y
@@ -1760,12 +1760,12 @@ void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t pola
 // polarity = 1: ~x union y
 // polarity = 3: ~x union ~y
 
-void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus() || other==nullptr) {
-        return;
+శూన్య Unicode_సమితి::కూడు(స్థిరరాశి UChar32* other, int32_t otherLen, int8_t polarity) {
+    ఒకవేళ (isFrozen() || isBogus() || other==శూన్యసూచిక) {
+        తిరిగి;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    ఒకవేళ (!ensure_బఫరు_సామర్థ్యం(len + otherLen)) {
+        తిరిగి;
     }
 
     int32_t i = 0, j = 0, k = 0;
@@ -1773,39 +1773,39 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
     UChar32 b = other[j++];
     // change from xor is that we have to check overlapping pairs
     // polarity bit 1 means a is second, bit 2 means b is.
-    for (;;) {
-        switch (polarity) {
-          case 0: // both first; take lower if unequal
-            if (a < b) { // take a
+    కొరకు (;;) {
+        ఎంపిక (polarity) {
+          స్థితి 0: // both first; take lower if unequal
+            ఒకవేళ (a < b) { // take a
                 // Back up over overlapping ranges in buffer[]
-                if (k > 0 && a <= buffer[k-1]) {
+                ఒకవేళ (k > 0 && a <= బఫరు[k-1]) {
                     // Pick latter end value in buffer[] vs. list[]
-                    a = max(list[i], buffer[--k]);
-                } else {
+                    a = max(list[i], బఫరు[--k]);
+                } లేకపోతే {
                     // No overlap
-                    buffer[k++] = a;
+                    బఫరు[k++] = a;
                     a = list[i];
                 }
                 i++; // Common if/else code factored out
                 polarity ^= 1;
-            } else if (b < a) { // take b
-                if (k > 0 && b <= buffer[k-1]) {
-                    b = max(other[j], buffer[--k]);
-                } else {
-                    buffer[k++] = b;
+            } లేకపోతే ఒకవేళ (b < a) { // take b
+                ఒకవేళ (k > 0 && b <= బఫరు[k-1]) {
+                    b = max(other[j], బఫరు[--k]);
+                } లేకపోతే {
+                    బఫరు[k++] = b;
                     b = other[j];
                 }
                 j++;
                 polarity ^= 2;
-            } else { // a == b, take a, drop b
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } లేకపోతే { // a == b, take a, drop b
+                ఒకవేళ (a == UNICODESET_ఎగువ) వెళ్ళు loop_చివర;
                 // This is symmetrical; it doesn't matter if
                 // we backtrack with a or b. - liu
-                if (k > 0 && a <= buffer[k-1]) {
-                    a = max(list[i], buffer[--k]);
-                } else {
+                ఒకవేళ (k > 0 && a <= బఫరు[k-1]) {
+                    a = max(list[i], బఫరు[--k]);
+                } లేకపోతే {
                     // No overlap
-                    buffer[k++] = a;
+                    బఫరు[k++] = a;
                     a = list[i];
                 }
                 i++;
@@ -1813,57 +1813,57 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 3: // both second; take higher if unequal, and drop other
-            if (b <= a) { // take a
-                if (a == UNICODESET_HIGH) goto loop_end;
-                buffer[k++] = a;
-            } else { // take b
-                if (b == UNICODESET_HIGH) goto loop_end;
-                buffer[k++] = b;
+            ఆపు;
+          స్థితి 3: // both second; take higher if unequal, and drop other
+            ఒకవేళ (b <= a) { // take a
+                ఒకవేళ (a == UNICODESET_ఎగువ) వెళ్ళు loop_చివర;
+                బఫరు[k++] = a;
+            } లేకపోతే { // take b
+                ఒకవేళ (b == UNICODESET_ఎగువ) వెళ్ళు loop_చివర;
+                బఫరు[k++] = b;
             }
             a = list[i++];
             polarity ^= 1;   // factored common code
             b = other[j++];
             polarity ^= 2;
-            break;
-          case 1: // a second, b first; if b < a, overlap
-            if (a < b) { // no overlap, take a
-                buffer[k++] = a; a = list[i++]; polarity ^= 1;
-            } else if (b < a) { // OVERLAP, drop b
+            ఆపు;
+          స్థితి 1: // a second, b first; if b < a, overlap
+            ఒకవేళ (a < b) { // no overlap, take a
+                బఫరు[k++] = a; a = list[i++]; polarity ^= 1;
+            } లేకపోతే ఒకవేళ (b < a) { // OVERLAP, drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } లేకపోతే { // a == b, drop both!
+                ఒకవేళ (a == UNICODESET_ఎగువ) వెళ్ళు loop_చివర;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 2: // a first, b second; if a < b, overlap
-            if (b < a) { // no overlap, take b
-                buffer[k++] = b;
+            ఆపు;
+          స్థితి 2: // a first, b second; if a < b, overlap
+            ఒకవేళ (b < a) { // no overlap, take b
+                బఫరు[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else  if (a < b) { // OVERLAP, drop a
+            } లేకపోతే  ఒకవేళ (a < b) { // OVERLAP, drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } లేకపోతే { // a == b, drop both!
+                ఒకవేళ (a == UNICODESET_ఎగువ) వెళ్ళు loop_చివర;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
+            ఆపు;
         }
     }
- loop_end:
-    buffer[k++] = UNICODESET_HIGH;    // terminate
+ loop_చివర:
+    బఫరు[k++] = UNICODESET_ఎగువ;    // terminate
     len = k;
-    swapBuffers();
-    releasePattern();
+    మార్పిడి_Buffers();
+    release_నమూనా();
 }
 
 // polarity = 0 is normal: x intersect y
@@ -1871,12 +1871,12 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
 // polarity = 1: ~x intersect y
 // polarity = 3: ~x intersect ~y
 
-void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus()) {
-        return;
+శూన్య Unicode_సమితి::retain(స్థిరరాశి UChar32* other, int32_t otherLen, int8_t polarity) {
+    ఒకవేళ (isFrozen() || isBogus()) {
+        తిరిగి;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    ఒకవేళ (!ensure_బఫరు_సామర్థ్యం(len + otherLen)) {
+        తిరిగి;
     }
 
     int32_t i = 0, j = 0, k = 0;
@@ -1884,91 +1884,91 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
     UChar32 b = other[j++];
     // change from xor is that we have to check overlapping pairs
     // polarity bit 1 means a is second, bit 2 means b is.
-    for (;;) {
-        switch (polarity) {
-          case 0: // both first; drop the smaller
-            if (a < b) { // drop a
+    కొరకు (;;) {
+        ఎంపిక (polarity) {
+          స్థితి 0: // both first; drop the smaller
+            ఒకవేళ (a < b) { // drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // drop b
+            } లేకపోతే ఒకవేళ (b < a) { // drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
-                buffer[k++] = a;
-                a = list[i++];
-                polarity ^= 1;
-                b = other[j++];
-                polarity ^= 2;
-            }
-            break;
-          case 3: // both second; take lower if unequal
-            if (a < b) { // take a
-                buffer[k++] = a;
-                a = list[i++];
-                polarity ^= 1;
-            } else if (b < a) { // take b
-                buffer[k++] = b;
-                b = other[j++];
-                polarity ^= 2;
-            } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
-                buffer[k++] = a;
+            } లేకపోతే { // a == b, take one, drop other
+                ఒకవేళ (a == UNICODESET_ఎగువ) వెళ్ళు loop_చివర;
+                బఫరు[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
-          case 1: // a second, b first;
-            if (a < b) { // NO OVERLAP, drop a
+            ఆపు;
+          స్థితి 3: // both second; take lower if unequal
+            ఒకవేళ (a < b) { // take a
+                బఫరు[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // OVERLAP, take b
-                buffer[k++] = b;
+            } లేకపోతే ఒకవేళ (b < a) { // take b
+                బఫరు[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
-                a = list[i++];
-                polarity ^= 1;
-                b = other[j++];
-                polarity ^= 2;
-            }
-            break;
-          case 2: // a first, b second; if a < b, overlap
-            if (b < a) { // no overlap, drop b
-                b = other[j++];
-                polarity ^= 2;
-            } else  if (a < b) { // OVERLAP, take a
-                buffer[k++] = a;
-                a = list[i++];
-                polarity ^= 1;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } లేకపోతే { // a == b, take one, drop other
+                ఒకవేళ (a == UNICODESET_ఎగువ) వెళ్ళు loop_చివర;
+                బఫరు[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
                 polarity ^= 2;
             }
-            break;
+            ఆపు;
+          స్థితి 1: // a second, b first;
+            ఒకవేళ (a < b) { // NO OVERLAP, drop a
+                a = list[i++];
+                polarity ^= 1;
+            } లేకపోతే ఒకవేళ (b < a) { // OVERLAP, take b
+                బఫరు[k++] = b;
+                b = other[j++];
+                polarity ^= 2;
+            } లేకపోతే { // a == b, drop both!
+                ఒకవేళ (a == UNICODESET_ఎగువ) వెళ్ళు loop_చివర;
+                a = list[i++];
+                polarity ^= 1;
+                b = other[j++];
+                polarity ^= 2;
+            }
+            ఆపు;
+          స్థితి 2: // a first, b second; if a < b, overlap
+            ఒకవేళ (b < a) { // no overlap, drop b
+                b = other[j++];
+                polarity ^= 2;
+            } లేకపోతే  ఒకవేళ (a < b) { // OVERLAP, take a
+                బఫరు[k++] = a;
+                a = list[i++];
+                polarity ^= 1;
+            } లేకపోతే { // a == b, drop both!
+                ఒకవేళ (a == UNICODESET_ఎగువ) వెళ్ళు loop_చివర;
+                a = list[i++];
+                polarity ^= 1;
+                b = other[j++];
+                polarity ^= 2;
+            }
+            ఆపు;
         }
     }
- loop_end:
-    buffer[k++] = UNICODESET_HIGH;    // terminate
+ loop_చివర:
+    బఫరు[k++] = UNICODESET_ఎగువ;    // terminate
     len = k;
-    swapBuffers();
-    releasePattern();
+    మార్పిడి_Buffers();
+    release_నమూనా();
 }
 
 /**
  * Append the <code>toPattern()</code> representation of a
  * string to the given <code>StringBuffer</code>.
  */
-void UnicodeSet::_appendToPat(UnicodeString& buf, const UnicodeString& s, UBool escapeUnprintable) {
+శూన్య Unicode_సమితి::append_గమ్యం_Pat(UnicodeString& buf, స్థిరరాశి UnicodeString& s, UBool escapeUnprintable) {
     UChar32 cp;
-    for (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
-        _appendToPat(buf, cp = s.char32At(i), escapeUnprintable);
+    కొరకు (int32_t i = 0; i < s.length(); i += U16_నిడివి(cp)) {
+        append_గమ్యం_Pat(buf, cp = s.char32At(i), escapeUnprintable);
     }
 }
 
@@ -1976,47 +1976,47 @@ void UnicodeSet::_appendToPat(UnicodeString& buf, const UnicodeString& s, UBool 
  * Append the <code>toPattern()</code> representation of a
  * character to the given <code>StringBuffer</code>.
  */
-void UnicodeSet::_appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable) {
-    if (escapeUnprintable ? ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
+శూన్య Unicode_సమితి::append_గమ్యం_Pat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable) {
+    ఒకవేళ (escapeUnprintable ? ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
         // Use hex escape notation (\uxxxx or \Uxxxxxxxx) for anything
         // unprintable
         ICU_Utility::escape(buf, c);
-        return;
+        తిరిగి;
     }
     // Okay to let ':' pass through
-    switch (c) {
-    case u'[':
-    case u']':
-    case u'-':
-    case u'^':
-    case u'&':
-    case u'\\':
-    case u'{':
-    case u'}':
-    case u':':
-    case SymbolTable::SYMBOL_REF:
+    ఎంపిక (c) {
+    స్థితి u'[':
+    స్థితి u']':
+    స్థితి u'-':
+    స్థితి u'^':
+    స్థితి u'&':
+    స్థితి u'\\':
+    స్థితి u'{':
+    స్థితి u'}':
+    స్థితి u':':
+    స్థితి చిహ్నం_పట్టిక::చిహ్నం_REF:
         buf.append(u'\\');
-        break;
-    default:
+        ఆపు;
+    అప్రమేయ:
         // Escape whitespace
-        if (PatternProps::isWhiteSpace(c)) {
+        ఒకవేళ (నమూనా_Props::isWhiteSpace(c)) {
             buf.append(u'\\');
         }
-        break;
+        ఆపు;
     }
     buf.append(c);
 }
 
-void UnicodeSet::_appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
+శూన్య Unicode_సమితి::append_గమ్యం_Pat(UnicodeString &ఫలితం, UChar32 ప్రారంభం, UChar32 చివర,
                               UBool escapeUnprintable) {
-    _appendToPat(result, start, escapeUnprintable);
-    if (start != end) {
-        if ((start+1) != end ||
+    append_గమ్యం_Pat(ఫలితం, ప్రారంభం, escapeUnprintable);
+    ఒకవేళ (ప్రారంభం != చివర) {
+        ఒకవేళ ((ప్రారంభం+1) != చివర ||
                 // Avoid writing what looks like a lead+trail surrogate pair.
-                start == 0xdbff) {
-            result.append(u'-');
+                ప్రారంభం == 0xdbff) {
+            ఫలితం.append(u'-');
         }
-        _appendToPat(result, end, escapeUnprintable);
+        append_గమ్యం_Pat(ఫలితం, చివర, escapeUnprintable);
     }
 }
 
@@ -2025,39 +2025,39 @@ void UnicodeSet::_appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
  * a cleaned version of the string passed to applyPattern(), if there
  * is one.  Otherwise it will be generated.
  */
-UnicodeString& UnicodeSet::_toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                      UBool escapeUnprintable) const
+UnicodeString& Unicode_సమితి::గమ్యం_నమూనా_2(UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                      UBool escapeUnprintable) స్థిరరాశి
 {
-    if (pat != nullptr) {
+    ఒకవేళ (pat != శూన్యసూచిక) {
         int32_t i;
-        int32_t backslashCount = 0;
-        for (i=0; i<patLen; ) {
+        int32_t backslash_లెక్క = 0;
+        కొరకు (i=0; i<patLen; ) {
             UChar32 c;
-            U16_NEXT(pat, i, patLen, c);
-            if (escapeUnprintable ?
+            U16_తదుపరి(pat, i, patLen, c);
+            ఒకవేళ (escapeUnprintable ?
                     ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
                 // If the unprintable character is preceded by an odd
                 // number of backslashes, then it has been escaped.
                 // Before unescaping it, we delete the final
                 // backslash.
-                if ((backslashCount % 2) == 1) {
-                    result.truncate(result.length() - 1);
+                ఒకవేళ ((backslash_లెక్క % 2) == 1) {
+                    ఫలితం.truncate(ఫలితం.length() - 1);
                 }
-                ICU_Utility::escape(result, c);
-                backslashCount = 0;
-            } else {
-                result.append(c);
-                if (c == u'\\') {
-                    ++backslashCount;
-                } else {
-                    backslashCount = 0;
+                ICU_Utility::escape(ఫలితం, c);
+                backslash_లెక్క = 0;
+            } లేకపోతే {
+                ఫలితం.append(c);
+                ఒకవేళ (c == u'\\') {
+                    ++backslash_లెక్క;
+                } లేకపోతే {
+                    backslash_లెక్క = 0;
                 }
             }
         }
-        return result;
+        తిరిగి ఫలితం;
     }
 
-    return _generatePattern(result, escapeUnprintable);
+    తిరిగి generate_నమూనా(ఫలితం, escapeUnprintable);
 }
 
 /**
@@ -2065,11 +2065,11 @@ UnicodeString& UnicodeSet::_toPattern(UnicodeString& result U_LIFETIME_BOUND,
  * calling this function is passed to a UnicodeSet constructor, it
  * will produce another set that is equal to this one.
  */
-UnicodeString& UnicodeSet::toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                     UBool escapeUnprintable) const
+UnicodeString& Unicode_సమితి::గమ్యం_నమూనా(UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                     UBool escapeUnprintable) స్థిరరాశి
 {
-    result.truncate(0);
-    return _toPattern(result, escapeUnprintable);
+    ఫలితం.truncate(0);
+    తిరిగి గమ్యం_నమూనా_2(ఫలితం, escapeUnprintable);
 }
 
 /**
@@ -2077,13 +2077,13 @@ UnicodeString& UnicodeSet::toPattern(UnicodeString& result U_LIFETIME_BOUND,
  * This does not use this.pat, the cleaned up copy of the string
  * passed to applyPattern().
  */
-UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOUND,
-                                            UBool escapeUnprintable) const
+UnicodeString& Unicode_సమితి::generate_నమూనా(UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                            UBool escapeUnprintable) స్థిరరాశి
 {
-    result.append(u'[');
+    ఫలితం.append(u'[');
 
     int32_t i = 0;
-    int32_t limit = len & ~1;  // = 2 * getRangeCount()
+    int32_t హద్దు = len & ~1;  // = 2 * getRangeCount()
 
     // If the set contains at least 2 intervals and includes both
     // MIN_VALUE and MAX_VALUE, then the inverse representation will
@@ -2096,60 +2096,60 @@ UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOU
     //
     // *But* do not write the inverse (complement) if there are strings.
     // Since ICU 70, the '^' performs a code point complement which removes all strings.
-    if (len >= 4 && list[0] == 0 && limit == len && !hasStrings()) {
+    ఒకవేళ (len >= 4 && list[0] == 0 && హద్దు == len && !has_అక్షరశ్రేణులు()) {
         // Emit the inverse
-        result.append(u'^');
+        ఫలితం.append(u'^');
         // Offsetting the inversion list index by one lets us
         // iterate over the ranges of the set complement.
         i = 1;
-        --limit;
+        --హద్దు;
     }
 
     // Emit the ranges as pairs.
-    while (i < limit) {
-        UChar32 start = list[i];  // getRangeStart()
-        UChar32 end = list[i + 1] - 1;  // getRangeEnd() = range limit minus one
-        if (!(0xd800 <= end && end <= 0xdbff)) {
-            _appendToPat(result, start, end, escapeUnprintable);
+    అయితే (i < హద్దు) {
+        UChar32 ప్రారంభం = list[i];  // getRangeStart()
+        UChar32 చివర = list[i + 1] - 1;  // getRangeEnd() = range limit minus one
+        ఒకవేళ (!(0xd800 <= చివర && చివర <= 0xdbff)) {
+            append_గమ్యం_Pat(ఫలితం, ప్రారంభం, చివర, escapeUnprintable);
             i += 2;
-        } else {
+        } లేకపోతే {
             // The range ends with a lead surrogate.
             // Avoid writing what looks like a lead+trail surrogate pair.
             // 1. Postpone ranges that start with a lead surrogate code point.
-            int32_t firstLead = i;
-            while ((i += 2) < limit && list[i] <= 0xdbff) {}
-            int32_t firstAfterLead = i;
+            int32_t మొదటి_Lead = i;
+            అయితే ((i += 2) < హద్దు && list[i] <= 0xdbff) {}
+            int32_t మొదటి_After_Lead = i;
             // 2. Write following ranges that start with a trail surrogate code point.
-            while (i < limit && (start = list[i]) <= 0xdfff) {
-                _appendToPat(result, start, list[i + 1] - 1, escapeUnprintable);
+            అయితే (i < హద్దు && (ప్రారంభం = list[i]) <= 0xdfff) {
+                append_గమ్యం_Pat(ఫలితం, ప్రారంభం, list[i + 1] - 1, escapeUnprintable);
                 i += 2;
             }
             // 3. Now write the postponed ranges.
-            for (int j = firstLead; j < firstAfterLead; j += 2) {
-                _appendToPat(result, list[j], list[j + 1] - 1, escapeUnprintable);
+            కొరకు (పూర్ణాంకం j = మొదటి_Lead; j < మొదటి_After_Lead; j += 2) {
+                append_గమ్యం_Pat(ఫలితం, list[j], list[j + 1] - 1, escapeUnprintable);
             }
         }
     }
 
-    if (strings_ != nullptr) {
-        for (int32_t i = 0; i<strings_->size(); ++i) {
-            result.append(u'{');
-            _appendToPat(result,
-                         *static_cast<const UnicodeString*>(strings_->elementAt(i)),
+    ఒకవేళ (అక్షరశ్రేణులు_2 != శూన్యసూచిక) {
+        కొరకు (int32_t i = 0; i<అక్షరశ్రేణులు_2->size(); ++i) {
+            ఫలితం.append(u'{');
+            append_గమ్యం_Pat(ఫలితం,
+                         *static_cast<స్థిరరాశి UnicodeString*>(అక్షరశ్రేణులు_2->elementAt(i)),
                          escapeUnprintable);
-            result.append(u'}');
+            ఫలితం.append(u'}');
         }
     }
-    return result.append(u']');
+    తిరిగి ఫలితం.append(u']');
 }
 
 /**
 * Release existing cached pattern
 */
-void UnicodeSet::releasePattern() {
-    if (pat) {
+శూన్య Unicode_సమితి::release_నమూనా() {
+    ఒకవేళ (pat) {
         uprv_free(pat);
-        pat = nullptr;
+        pat = శూన్యసూచిక;
         patLen = 0;
     }
 }
@@ -2157,10 +2157,10 @@ void UnicodeSet::releasePattern() {
 /**
 * Set the new pattern to cache.
 */
-void UnicodeSet::setPattern(const char16_t *newPat, int32_t newPatLen) {
-    releasePattern();
-    pat = static_cast<char16_t*>(uprv_malloc((newPatLen + 1) * sizeof(char16_t)));
-    if (pat) {
+శూన్య Unicode_సమితి::సమితి_నమూనా(స్థిరరాశి char16_t *newPat, int32_t newPatLen) {
+    release_నమూనా();
+    pat = static_cast<char16_t*>(uprv_malloc((newPatLen + 1) * పరిమాణం(char16_t)));
+    ఒకవేళ (pat) {
         patLen = newPatLen;
         u_memcpy(pat, newPat, patLen);
         pat[patLen] = 0;
@@ -2169,185 +2169,185 @@ void UnicodeSet::setPattern(const char16_t *newPat, int32_t newPatLen) {
     // We can regenerate an equivalent pattern later when requested.
 }
 
-UnicodeSet* UnicodeSet::freeze() U_LIFETIME_BOUND {
-    if(!isFrozen() && !isBogus()) {
+Unicode_సమితి* Unicode_సమితి::freeze() U_LIFETIME_BOUND {
+    ఒకవేళ(!isFrozen() && !isBogus()) {
         compact();
 
         // Optimize contains() and span() and similar functions.
-        if (hasStrings()) {
-            stringSpan = new UnicodeSetStringSpan(*this, *strings_, UnicodeSetStringSpan::ALL);
-            if (stringSpan == nullptr) {
-                setToBogus();
-                return this;
-            } else if (!stringSpan->needsStringSpanUTF16()) {
+        ఒకవేళ (has_అక్షరశ్రేణులు()) {
+            string_పరిధి = కొత్త Unicode_సమితి_String_పరిధి(*ఇది, *అక్షరశ్రేణులు_2, Unicode_సమితి_String_పరిధి::ALL);
+            ఒకవేళ (string_పరిధి == శూన్యసూచిక) {
+                సమితి_గమ్యం_Bogus();
+                తిరిగి ఇది;
+            } లేకపోతే ఒకవేళ (!string_పరిధి->needs_String_పరిధి_UTF16()) {
                 // All strings are irrelevant for span() etc. because
                 // all of each string's code points are contained in this set.
                 // Do not check needsStringSpanUTF8() because UTF-8 has at most as
                 // many relevant strings as UTF-16.
                 // (Thus needsStringSpanUTF8() implies needsStringSpanUTF16().)
-                delete stringSpan;
-                stringSpan = nullptr;
+                తొలగించు string_పరిధి;
+                string_పరిధి = శూన్యసూచిక;
             }
         }
-        if (stringSpan == nullptr) {
+        ఒకవేళ (string_పరిధి == శూన్యసూచిక) {
             // No span-relevant strings: Optimize for code point spans.
-            bmpSet=new BMPSet(list, len);
-            if (bmpSet == nullptr) { // Check for memory allocation error.
-                setToBogus();
+            bmp_సమితి=కొత్త BMPSet(list, len);
+            ఒకవేళ (bmp_సమితి == శూన్యసూచిక) { // Check for memory allocation error.
+                సమితి_గమ్యం_Bogus();
             }
         }
     }
-    return this;
+    తిరిగి ఇది;
 }
 
-int32_t UnicodeSet::span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        return static_cast<int32_t>(bmpSet->span(s, s + length, spanCondition) - s);
+int32_t Unicode_సమితి::పరిధి(స్థిరరాశి char16_t *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి {
+    ఒకవేళ(length>0 && bmp_సమితి!=శూన్యసూచిక) {
+        తిరిగి static_cast<int32_t>(bmp_సమితి->పరిధి(s, s + length, పరిధి_Condition) - s);
     }
-    if(length<0) {
+    ఒకవేళ(length<0) {
         length=u_strlen(s);
     }
-    if(length==0) {
-        return 0;
+    ఒకవేళ(length==0) {
+        తిరిగి 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->span(s, length, spanCondition);
-    } else if(hasStrings()) {
-        uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
-                            UnicodeSetStringSpan::FWD_UTF16_NOT_CONTAINED :
-                            UnicodeSetStringSpan::FWD_UTF16_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF16()) {
-            return strSpan.span(s, length, spanCondition);
+    ఒకవేళ(string_పరిధి!=శూన్యసూచిక) {
+        తిరిగి string_పరిధి->పరిధి(s, length, పరిధి_Condition);
+    } లేకపోతే ఒకవేళ(has_అక్షరశ్రేణులు()) {
+        uint32_t which= పరిధి_Condition==USET_పరిధి_NOT_CONTAINED ?
+                            Unicode_సమితి_String_పరిధి::FWD_UTF16_NOT_CONTAINED :
+                            Unicode_సమితి_String_పరిధి::FWD_UTF16_CONTAINED;
+        Unicode_సమితి_String_పరిధి str_పరిధి(*ఇది, *అక్షరశ్రేణులు_2, which);
+        ఒకవేళ(str_పరిధి.needs_String_పరిధి_UTF16()) {
+            తిరిగి str_పరిధి.పరిధి(s, length, పరిధి_Condition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    ఒకవేళ(పరిధి_Condition!=USET_పరిధి_NOT_CONTAINED) {
+        పరిధి_Condition=USET_పరిధి_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
-    int32_t start=0, prev=0;
-    do {
-        U16_NEXT(s, start, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+    int32_t ప్రారంభం=0, prev=0;
+    చేయి {
+        U16_తదుపరి(s, ప్రారంభం, length, c);
+        ఒకవేళ(పరిధి_Condition!=కలిగియుంది(c)) {
+            ఆపు;
         }
-    } while((prev=start)<length);
-    return prev;
+    } అయితే((prev=ప్రారంభం)<length);
+    తిరిగి prev;
 }
 
-int32_t UnicodeSet::spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        return static_cast<int32_t>(bmpSet->spanBack(s, s + length, spanCondition) - s);
+int32_t Unicode_సమితి::పరిధి_వెనుక(స్థిరరాశి char16_t *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి {
+    ఒకవేళ(length>0 && bmp_సమితి!=శూన్యసూచిక) {
+        తిరిగి static_cast<int32_t>(bmp_సమితి->పరిధి_వెనుక(s, s + length, పరిధి_Condition) - s);
     }
-    if(length<0) {
+    ఒకవేళ(length<0) {
         length=u_strlen(s);
     }
-    if(length==0) {
-        return 0;
+    ఒకవేళ(length==0) {
+        తిరిగి 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanBack(s, length, spanCondition);
-    } else if(hasStrings()) {
-        uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
-                            UnicodeSetStringSpan::BACK_UTF16_NOT_CONTAINED :
-                            UnicodeSetStringSpan::BACK_UTF16_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF16()) {
-            return strSpan.spanBack(s, length, spanCondition);
+    ఒకవేళ(string_పరిధి!=శూన్యసూచిక) {
+        తిరిగి string_పరిధి->పరిధి_వెనుక(s, length, పరిధి_Condition);
+    } లేకపోతే ఒకవేళ(has_అక్షరశ్రేణులు()) {
+        uint32_t which= పరిధి_Condition==USET_పరిధి_NOT_CONTAINED ?
+                            Unicode_సమితి_String_పరిధి::వెనుక_UTF16_NOT_CONTAINED :
+                            Unicode_సమితి_String_పరిధి::వెనుక_UTF16_CONTAINED;
+        Unicode_సమితి_String_పరిధి str_పరిధి(*ఇది, *అక్షరశ్రేణులు_2, which);
+        ఒకవేళ(str_పరిధి.needs_String_పరిధి_UTF16()) {
+            తిరిగి str_పరిధి.పరిధి_వెనుక(s, length, పరిధి_Condition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    ఒకవేళ(పరిధి_Condition!=USET_పరిధి_NOT_CONTAINED) {
+        పరిధి_Condition=USET_పరిధి_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
     int32_t prev=length;
-    do {
+    చేయి {
         U16_PREV(s, 0, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+        ఒకవేళ(పరిధి_Condition!=కలిగియుంది(c)) {
+            ఆపు;
         }
-    } while((prev=length)>0);
-    return prev;
+    } అయితే((prev=length)>0);
+    తిరిగి prev;
 }
 
-int32_t UnicodeSet::spanUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        const uint8_t* s0 = reinterpret_cast<const uint8_t*>(s);
-        return static_cast<int32_t>(bmpSet->spanUTF8(s0, length, spanCondition) - s0);
+int32_t Unicode_సమితి::పరిధి_UTF8(స్థిరరాశి అక్షరం *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి {
+    ఒకవేళ(length>0 && bmp_సమితి!=శూన్యసూచిక) {
+        స్థిరరాశి uint8_t* s0 = reinterpret_cast<స్థిరరాశి uint8_t*>(s);
+        తిరిగి static_cast<int32_t>(bmp_సమితి->పరిధి_UTF8(s0, length, పరిధి_Condition) - s0);
     }
-    if(length<0) {
+    ఒకవేళ(length<0) {
         length = static_cast<int32_t>(uprv_strlen(s));
     }
-    if(length==0) {
-        return 0;
+    ఒకవేళ(length==0) {
+        తిరిగి 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
-    } else if(hasStrings()) {
-        uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
-                            UnicodeSetStringSpan::FWD_UTF8_NOT_CONTAINED :
-                            UnicodeSetStringSpan::FWD_UTF8_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF8()) {
-            return strSpan.spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+    ఒకవేళ(string_పరిధి!=శూన్యసూచిక) {
+        తిరిగి string_పరిధి->పరిధి_UTF8(reinterpret_cast<స్థిరరాశి uint8_t*>(s), length, పరిధి_Condition);
+    } లేకపోతే ఒకవేళ(has_అక్షరశ్రేణులు()) {
+        uint32_t which= పరిధి_Condition==USET_పరిధి_NOT_CONTAINED ?
+                            Unicode_సమితి_String_పరిధి::FWD_UTF8_NOT_CONTAINED :
+                            Unicode_సమితి_String_పరిధి::FWD_UTF8_CONTAINED;
+        Unicode_సమితి_String_పరిధి str_పరిధి(*ఇది, *అక్షరశ్రేణులు_2, which);
+        ఒకవేళ(str_పరిధి.needs_String_పరిధి_UTF8()) {
+            తిరిగి str_పరిధి.పరిధి_UTF8(reinterpret_cast<స్థిరరాశి uint8_t*>(s), length, పరిధి_Condition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    ఒకవేళ(పరిధి_Condition!=USET_పరిధి_NOT_CONTAINED) {
+        పరిధి_Condition=USET_పరిధి_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
-    int32_t start=0, prev=0;
-    do {
-        U8_NEXT_OR_FFFD(s, start, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+    int32_t ప్రారంభం=0, prev=0;
+    చేయి {
+        U8_తదుపరి_OR_FFFD(s, ప్రారంభం, length, c);
+        ఒకవేళ(పరిధి_Condition!=కలిగియుంది(c)) {
+            ఆపు;
         }
-    } while((prev=start)<length);
-    return prev;
+    } అయితే((prev=ప్రారంభం)<length);
+    తిరిగి prev;
 }
 
-int32_t UnicodeSet::spanBackUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        const uint8_t* s0 = reinterpret_cast<const uint8_t*>(s);
-        return bmpSet->spanBackUTF8(s0, length, spanCondition);
+int32_t Unicode_సమితి::పరిధి_వెనుక_UTF8(స్థిరరాశి అక్షరం *s, int32_t length, USet_పరిధి_Condition పరిధి_Condition) స్థిరరాశి {
+    ఒకవేళ(length>0 && bmp_సమితి!=శూన్యసూచిక) {
+        స్థిరరాశి uint8_t* s0 = reinterpret_cast<స్థిరరాశి uint8_t*>(s);
+        తిరిగి bmp_సమితి->పరిధి_వెనుక_UTF8(s0, length, పరిధి_Condition);
     }
-    if(length<0) {
+    ఒకవేళ(length<0) {
         length = static_cast<int32_t>(uprv_strlen(s));
     }
-    if(length==0) {
-        return 0;
+    ఒకవేళ(length==0) {
+        తిరిగి 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
-    } else if(hasStrings()) {
-        uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
-                            UnicodeSetStringSpan::BACK_UTF8_NOT_CONTAINED :
-                            UnicodeSetStringSpan::BACK_UTF8_CONTAINED;
-        UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF8()) {
-            return strSpan.spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+    ఒకవేళ(string_పరిధి!=శూన్యసూచిక) {
+        తిరిగి string_పరిధి->పరిధి_వెనుక_UTF8(reinterpret_cast<స్థిరరాశి uint8_t*>(s), length, పరిధి_Condition);
+    } లేకపోతే ఒకవేళ(has_అక్షరశ్రేణులు()) {
+        uint32_t which= పరిధి_Condition==USET_పరిధి_NOT_CONTAINED ?
+                            Unicode_సమితి_String_పరిధి::వెనుక_UTF8_NOT_CONTAINED :
+                            Unicode_సమితి_String_పరిధి::వెనుక_UTF8_CONTAINED;
+        Unicode_సమితి_String_పరిధి str_పరిధి(*ఇది, *అక్షరశ్రేణులు_2, which);
+        ఒకవేళ(str_పరిధి.needs_String_పరిధి_UTF8()) {
+            తిరిగి str_పరిధి.పరిధి_వెనుక_UTF8(reinterpret_cast<స్థిరరాశి uint8_t*>(s), length, పరిధి_Condition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
-        spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
+    ఒకవేళ(పరిధి_Condition!=USET_పరిధి_NOT_CONTAINED) {
+        పరిధి_Condition=USET_పరిధి_CONTAINED;  // Pin to 0/1 values.
     }
 
     UChar32 c;
     int32_t prev=length;
-    do {
+    చేయి {
         U8_PREV_OR_FFFD(s, 0, length, c);
-        if(spanCondition!=contains(c)) {
-            break;
+        ఒకవేళ(పరిధి_Condition!=కలిగియుంది(c)) {
+            ఆపు;
         }
-    } while((prev=length)>0);
-    return prev;
+    } అయితే((prev=length)>0);
+    తిరిగి prev;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

@@ -10,16 +10,16 @@
 **********************************************************************
 */
 
-#ifndef DBBI_H
-#define DBBI_H
+#నిర్వచితం_కాకపోతే DBBI_H
+#నిర్వచించు DBBI_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/rbbi.h"
+#అన్తర్భావ "unicode/rbbi.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * \file
@@ -28,21 +28,21 @@
  
 U_NAMESPACE_BEGIN
 
-#ifndef U_HIDE_DEPRECATED_API
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
 /**
  * An obsolete subclass of RuleBasedBreakIterator. Handling of dictionary-
  * based break iteration has been folded into the base class. This class
  * is deprecated as of ICU 3.6.
  * @deprecated ICU 3.6
  */
-typedef RuleBasedBreakIterator DictionaryBasedBreakIterator;
+రకనిర్వచనం నియమం_Based_Break_Iterator DictionaryBasedBreakIterator;
 
-#endif  /* U_HIDE_DEPRECATED_API */
+#అయితే_ముగింపు  /* U_HIDE_DEPRECATED_API */
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#అయితే_ముగింపు

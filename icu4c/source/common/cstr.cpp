@@ -7,48 +7,48 @@
 *******************************************************************************
 *   file name:  charstr.cpp
 */
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/unistr.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/unistr.h"
 
-#include "cstr.h"
+#అన్తర్భావ "cstr.h"
 
-#include "charstr.h"
-#include "uinvchar.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "uinvchar.h"
 
 U_NAMESPACE_BEGIN
 
-CStr::CStr(const UnicodeString &in) {
-    UErrorCode status = U_ZERO_ERROR;
-#if !UCONFIG_NO_CONVERSION || U_CHARSET_IS_UTF8
-    int32_t length = in.extract(0, in.length(), static_cast<char *>(nullptr), static_cast<uint32_t>(0));
-    int32_t resultCapacity = 0;
-    char *buf = s.getAppendBuffer(length, length, resultCapacity, status);
-    if (U_SUCCESS(status)) {
-        in.extract(0, in.length(), buf, resultCapacity);
-        s.append(buf, length, status);
+CStr::CStr(స్థిరరాశి UnicodeString &in) {
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+#ఒకవేళ !UCONFIG_NO_CONVERSION || U_CHARSET_IS_UTF8
+    int32_t length = in.extract(0, in.length(), static_cast<అక్షరం *>(శూన్యసూచిక), static_cast<uint32_t>(0));
+    int32_t ఫలితం_సామర్థ్యం = 0;
+    అక్షరం *buf = s.get_Append_బఫరు(length, length, ఫలితం_సామర్థ్యం, స్థితి_2);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        in.extract(0, in.length(), buf, ఫలితం_సామర్థ్యం);
+        s.append(buf, length, స్థితి_2);
     }
-#else
+#లేకపోతే
     // No conversion available. Convert any invariant characters; substitute '?' for the rest.
     // Note: can't just call u_UCharsToChars() or CharString.appendInvariantChars() on the 
     //       whole string because they require that the entire input be invariant.
-    char buf[2];
-    for (int i=0; i<in.length(); i = in.moveIndex32(i, 1)) {
-        if (uprv_isInvariantUString(in.getBuffer()+i, 1)) {
-            u_UCharsToChars(in.getBuffer()+i, buf, 1);
-        } else {
+    అక్షరం buf[2];
+    కొరకు (పూర్ణాంకం i=0; i<in.length(); i = in.moveIndex32(i, 1)) {
+        ఒకవేళ (uprv_isInvariantUString(in.get_బఫరు()+i, 1)) {
+            u_UChars_గమ్యం_Chars(in.get_బఫరు()+i, buf, 1);
+        } లేకపోతే {
             buf[0] = '?';
         }
-        s.append(buf, 1, status);
+        s.append(buf, 1, స్థితి_2);
     }
-#endif
+#అయితే_ముగింపు
 }
 
 CStr::~CStr() {
 }
 
-const char * CStr::operator ()() const {
-    return s.data();
+స్థిరరాశి అక్షరం * CStr::క్రియాకారకం ()() స్థిరరాశి {
+    తిరిగి s.దత్తాంశం();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

@@ -21,37 +21,37 @@
 *   06/20/2000  helena      OS/400 port changes; mostly typecast.
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include <memory>
+#అన్తర్భావ <memory>
 
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/uset.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "putilimp.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "utracimp.h"
-#include "ustr_imp.h"
-#include "ucnv_imp.h"
-#include "ucnv_cnv.h"
-#include "ucnv_bld.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/ucnv_err.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "unicode/utf.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "utracimp.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "ucnv_imp.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "ucnv_bld.h"
 
 /* size of intermediate and preflighting buffers in ucnv_convert() */
-#define CHUNK_SIZE 1024
+#నిర్వచించు CHUNK_కొలత 1024
 
-typedef struct UAmbiguousConverter {
-    const char *name;
-    const char16_t variant5c;
+రకనిర్వచనం నిర్మాణం UAmbiguousConverter {
+    స్థిరరాశి అక్షరం *name;
+    స్థిరరాశి char16_t variant5c;
 } UAmbiguousConverter;
 
-static const UAmbiguousConverter ambiguousConverters[]={
+స్థిర స్థిరరాశి UAmbiguousConverter ambiguousConverters[]={
     { "ibm-897_P100-1995", 0xa5 },
     { "ibm-942_P120-1999", 0xa5 },
     { "ibm-943_P130-1999", 0xa5 },
@@ -70,42 +70,42 @@ static const UAmbiguousConverter ambiguousConverters[]={
 
 /*Calls through createConverter */
 U_CAPI UConverter* U_EXPORT2
-ucnv_open (const char *name,
-                       UErrorCode * err)
+ucnv_open (స్థిరరాశి అక్షరం *name,
+                       UError_సంకేతం * err)
 {
     UConverter *r;
 
-    if (err == nullptr || U_FAILURE (*err)) {
-        return nullptr;
+    ఒకవేళ (err == శూన్యసూచిక || U_FAILURE (*err)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    r =  ucnv_createConverter(nullptr, name, err);
-    return r;
+    r =  ucnv_createConverter(శూన్యసూచిక, name, err);
+    తిరిగి r;
 }
 
 U_CAPI UConverter* U_EXPORT2 
-ucnv_openPackage   (const char *packageName, const char *converterName, UErrorCode * err)
+ucnv_openPackage   (స్థిరరాశి అక్షరం *packageName, స్థిరరాశి అక్షరం *converterName, UError_సంకేతం * err)
 {
-    return ucnv_createConverterFromPackage(packageName, converterName,  err);
+    తిరిగి ucnv_createConverterFromPackage(packageName, converterName,  err);
 }
 
 /*Extracts the char16_t* to a char* and calls through createConverter */
 U_CAPI UConverter*   U_EXPORT2
-ucnv_openU (const char16_t * name,
-                         UErrorCode * err)
+ucnv_openU (స్థిరరాశి char16_t * name,
+                         UError_సంకేతం * err)
 {
-    char asciiName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    అక్షరం asciiName[UCNV_MAX_CONVERTER_NAME_నిడివి];
 
-    if (err == nullptr || U_FAILURE(*err))
-        return nullptr;
-    if (name == nullptr)
-        return ucnv_open (nullptr, err);
-    if (u_strlen(name) >= UCNV_MAX_CONVERTER_NAME_LENGTH)
+    ఒకవేళ (err == శూన్యసూచిక || U_FAILURE(*err))
+        తిరిగి శూన్యసూచిక;
+    ఒకవేళ (name == శూన్యసూచిక)
+        తిరిగి ucnv_open (శూన్యసూచిక, err);
+    ఒకవేళ (u_strlen(name) >= UCNV_MAX_CONVERTER_NAME_నిడివి)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    return ucnv_open(u_austrcpy(asciiName, name), err);
+    తిరిగి ucnv_open(u_austrcpy(asciiName, name), err);
 }
 
 /* Copy the string that is represented by the UConverterPlatform enum
@@ -113,21 +113,21 @@ ucnv_openU (const char16_t * name,
  * @param platform An enum representing a platform
  * @return the length of the copied string.
  */
-static int32_t
-ucnv_copyPlatformString(char *platformString, UConverterPlatform pltfrm)
+స్థిర int32_t
+ucnv_copyPlatformString(అక్షరం *platformString, UConverterPlatform pltfrm)
 {
-    switch (pltfrm)
+    ఎంపిక (pltfrm)
     {
-    case UCNV_IBM:
+    స్థితి UCNV_IBM:
         uprv_strcpy(platformString, "ibm-");
-        return 4;
-    case UCNV_UNKNOWN:
-        break;
+        తిరిగి 4;
+    స్థితి UCNV_UNKNOWN:
+        ఆపు;
     }
 
     /* default to empty string */
     *platformString = 0;
-    return 0;
+    తిరిగి 0;
 }
 
 /*Assumes a $platform-#codepage.$CONVERTER_FILE_EXTENSION scheme and calls
@@ -135,19 +135,19 @@ ucnv_copyPlatformString(char *platformString, UConverterPlatform pltfrm)
 U_CAPI UConverter*   U_EXPORT2
 ucnv_openCCSID (int32_t codepage,
                 UConverterPlatform platform,
-                UErrorCode * err)
+                UError_సంకేతం * err)
 {
-    char myName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    అక్షరం myName[UCNV_MAX_CONVERTER_NAME_నిడివి];
     int32_t myNameLen;
 
-    if (err == nullptr || U_FAILURE (*err))
-        return nullptr;
+    ఒకవేళ (err == శూన్యసూచిక || U_FAILURE (*err))
+        తిరిగి శూన్యసూచిక;
 
     /* ucnv_copyPlatformString could return "ibm-" or "cp" */
     myNameLen = ucnv_copyPlatformString(myName, platform);
-    T_CString_integerToString(myName + myNameLen, codepage, 10);
+    T_CString_integer_గమ్యం_String(myName + myNameLen, codepage, 10);
 
-    return ucnv_createConverter(nullptr, myName, err);
+    తిరిగి ucnv_createConverter(శూన్యసూచిక, myName, err);
 }
 
 /* Creating a temporary stack-based object that can be used in one thread, 
@@ -155,248 +155,248 @@ and created from a converter that is shared across threads.
 */
 
 U_CAPI UConverter* U_EXPORT2
-ucnv_safeClone(const UConverter* cnv,
-               void* stackBuffer U_LIFETIME_BOUND,
-               int32_t* pBufferSize,
-               UErrorCode* status)
+ucnv_సురక్షిత_Clone(స్థిరరాశి UConverter* cnv,
+               శూన్య* దొంతర_బఫరు U_LIFETIME_BOUND,
+               int32_t* p_బఫరు_కొలత,
+               UError_సంకేతం* స్థితి_2)
 {
     UConverter *localConverter, *allocatedConverter;
-    int32_t stackBufferSize;
-    int32_t bufferSizeNeeded;
-    UErrorCode cbErr;
-    UConverterToUnicodeArgs toUArgs = {
-        sizeof(UConverterToUnicodeArgs),
-            true,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr
+    int32_t దొంతర_బఫరు_కొలత;
+    int32_t బఫరు_కొలత_Needed;
+    UError_సంకేతం cbErr;
+    UConverter_గమ్యం_Unicode_వాదనలు గమ్యం_UArgs = {
+        పరిమాణం(UConverter_గమ్యం_Unicode_వాదనలు),
+            నిజం,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక
     };
-    UConverterFromUnicodeArgs fromUArgs = {
-        sizeof(UConverterFromUnicodeArgs),
-            true,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr
+    UConverter_From_Unicode_వాదనలు fromUArgs = {
+        పరిమాణం(UConverter_From_Unicode_వాదనలు),
+            నిజం,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక
     };
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_CLONE);
+    UTRACE_నమోదు_OC(UTRACE_UCNV_CLONE);
 
-    if (status == nullptr || U_FAILURE(*status)){
-        UTRACE_EXIT_STATUS(status? *status: U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+    ఒకవేళ (స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        UTRACE_EXIT_స్థితి(స్థితి_2? *స్థితి_2: U_ILLEGAL_వాదం_ERROR);
+        తిరిగి శూన్యసూచిక;
     }
 
-    if (cnv == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        UTRACE_EXIT_STATUS(*status);
-        return nullptr;
+    ఒకవేళ (cnv == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        UTRACE_EXIT_స్థితి(*స్థితి_2);
+        తిరిగి శూన్యసూచిక;
     }
 
     UTRACE_DATA3(UTRACE_OPEN_CLOSE, "clone converter %s at %p into stackBuffer %p",
-                                    ucnv_getName(cnv, status), cnv, stackBuffer);
+                                    ucnv_getName(cnv, స్థితి_2), cnv, దొంతర_బఫరు);
 
-    if (cnv->sharedData->impl->safeClone != nullptr) {
+    ఒకవేళ (cnv->shared_దత్తాంశం->impl->సురక్షిత_Clone != శూన్యసూచిక) {
         /* call the custom safeClone function for sizing */
-        bufferSizeNeeded = 0;
-        cnv->sharedData->impl->safeClone(cnv, nullptr, &bufferSizeNeeded, status);
-        if (U_FAILURE(*status)) {
-            UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+        బఫరు_కొలత_Needed = 0;
+        cnv->shared_దత్తాంశం->impl->సురక్షిత_Clone(cnv, శూన్యసూచిక, &బఫరు_కొలత_Needed, స్థితి_2);
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            UTRACE_EXIT_స్థితి(*స్థితి_2);
+            తిరిగి శూన్యసూచిక;
         }
     }
-    else
+    లేకపోతే
     {
         /* inherent sizing */
-        bufferSizeNeeded = sizeof(UConverter);
+        బఫరు_కొలత_Needed = పరిమాణం(UConverter);
     }
 
-    if (pBufferSize == nullptr) {
-        stackBufferSize = 1;
-        pBufferSize = &stackBufferSize;
-    } else {
-        stackBufferSize = *pBufferSize;
-        if (stackBufferSize <= 0){ /* 'preflighting' request - set needed size into *pBufferSize */
-            *pBufferSize = bufferSizeNeeded;
-            UTRACE_EXIT_VALUE(bufferSizeNeeded);
-            return nullptr;
+    ఒకవేళ (p_బఫరు_కొలత == శూన్యసూచిక) {
+        దొంతర_బఫరు_కొలత = 1;
+        p_బఫరు_కొలత = &దొంతర_బఫరు_కొలత;
+    } లేకపోతే {
+        దొంతర_బఫరు_కొలత = *p_బఫరు_కొలత;
+        ఒకవేళ (దొంతర_బఫరు_కొలత <= 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+            *p_బఫరు_కొలత = బఫరు_కొలత_Needed;
+            UTRACE_EXIT_విలువ(బఫరు_కొలత_Needed);
+            తిరిగి శూన్యసూచిక;
         }
     }
 
     /* Adjust (if necessary) the stackBuffer pointer to be aligned correctly for a UConverter.
      * TODO(Jira ICU-20736) Redo this using std::align() once g++4.9 compatibility is no longer needed.
      */
-    if (stackBuffer) {
-        uintptr_t p = reinterpret_cast<uintptr_t>(stackBuffer);
+    ఒకవేళ (దొంతర_బఫరు) {
+        uintptr_t p = reinterpret_cast<uintptr_t>(దొంతర_బఫరు);
         uintptr_t aligned_p = (p + alignof(UConverter) - 1) & ~(alignof(UConverter) - 1);
-        ptrdiff_t pointerAdjustment = aligned_p - p;
-        if (bufferSizeNeeded + pointerAdjustment <= stackBufferSize) {
-            stackBuffer = reinterpret_cast<void *>(aligned_p);
-            stackBufferSize -= static_cast<int32_t>(pointerAdjustment);
-        } else {
+        ptrdiff_t సూచిక_Adjustment = aligned_p - p;
+        ఒకవేళ (బఫరు_కొలత_Needed + సూచిక_Adjustment <= దొంతర_బఫరు_కొలత) {
+            దొంతర_బఫరు = reinterpret_cast<శూన్య *>(aligned_p);
+            దొంతర_బఫరు_కొలత -= static_cast<int32_t>(సూచిక_Adjustment);
+        } లేకపోతే {
             /* prevent using the stack buffer but keep the size > 0 so that we do not just preflight */
-            stackBufferSize = 1;
+            దొంతర_బఫరు_కొలత = 1;
         }
     }
 
     /* Now, see if we must allocate any memory */
-    if (stackBufferSize < bufferSizeNeeded || stackBuffer == nullptr)
+    ఒకవేళ (దొంతర_బఫరు_కొలత < బఫరు_కొలత_Needed || దొంతర_బఫరు == శూన్యసూచిక)
     {
         /* allocate one here...*/
-        localConverter = allocatedConverter = (UConverter *) uprv_malloc (bufferSizeNeeded);
+        localConverter = allocatedConverter = (UConverter *) uprv_malloc (బఫరు_కొలత_Needed);
 
-        if(localConverter == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+        ఒకవేళ(localConverter == శూన్యసూచిక) {
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            UTRACE_EXIT_స్థితి(*స్థితి_2);
+            తిరిగి శూన్యసూచిక;
         }
         // If pBufferSize was nullptr as the input, pBufferSize is set to &stackBufferSize in this function.
-        if (pBufferSize != &stackBufferSize) {
-            *status = U_SAFECLONE_ALLOCATED_WARNING;
+        ఒకవేళ (p_బఫరు_కొలత != &దొంతర_బఫరు_కొలత) {
+            *స్థితి_2 = U_SAFECLONE_ALLOCATED_WARNING;
         }
 
         /* record the fact that memory was allocated */
-        *pBufferSize = bufferSizeNeeded;
-    } else {
+        *p_బఫరు_కొలత = బఫరు_కొలత_Needed;
+    } లేకపోతే {
         /* just use the stack buffer */
-        localConverter = (UConverter*) stackBuffer;
-        allocatedConverter = nullptr;
+        localConverter = (UConverter*) దొంతర_బఫరు;
+        allocatedConverter = శూన్యసూచిక;
     }
 
-    uprv_memset(localConverter, 0, bufferSizeNeeded);
+    uprv_memset(localConverter, 0, బఫరు_కొలత_Needed);
 
     /* Copy initial state */
-    uprv_memcpy(localConverter, cnv, sizeof(UConverter));
-    localConverter->isCopyLocal = localConverter->isExtraLocal = false;
+    uprv_memcpy(localConverter, cnv, పరిమాణం(UConverter));
+    localConverter->isCopyLocal = localConverter->isExtraLocal = అబద్ధం;
 
     /* copy the substitution string */
-    if (cnv->subChars == (uint8_t *)cnv->subUChars) {
+    ఒకవేళ (cnv->subChars == (uint8_t *)cnv->subUChars) {
         localConverter->subChars = (uint8_t *)localConverter->subUChars;
-    } else {
-        localConverter->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
-        if (localConverter->subChars == nullptr) {
+    } లేకపోతే {
+        localConverter->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_బఫరు_నిడివి * U_SIZEOF_UCHAR);
+        ఒకవేళ (localConverter->subChars == శూన్యసూచిక) {
             uprv_free(allocatedConverter);
-            UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+            UTRACE_EXIT_స్థితి(*స్థితి_2);
+            తిరిగి శూన్యసూచిక;
         }
-        uprv_memcpy(localConverter->subChars, cnv->subChars, UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
+        uprv_memcpy(localConverter->subChars, cnv->subChars, UCNV_ERROR_బఫరు_నిడివి * U_SIZEOF_UCHAR);
     }
 
     /* now either call the safeclone fcn or not */
-    if (cnv->sharedData->impl->safeClone != nullptr) {
+    ఒకవేళ (cnv->shared_దత్తాంశం->impl->సురక్షిత_Clone != శూన్యసూచిక) {
         /* call the custom safeClone function */
-        localConverter = cnv->sharedData->impl->safeClone(cnv, localConverter, pBufferSize, status);
+        localConverter = cnv->shared_దత్తాంశం->impl->సురక్షిత_Clone(cnv, localConverter, p_బఫరు_కొలత, స్థితి_2);
     }
 
-    if(localConverter==nullptr || U_FAILURE(*status)) {
-        if (allocatedConverter != nullptr && allocatedConverter->subChars != (uint8_t *)allocatedConverter->subUChars) {
+    ఒకవేళ(localConverter==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        ఒకవేళ (allocatedConverter != శూన్యసూచిక && allocatedConverter->subChars != (uint8_t *)allocatedConverter->subUChars) {
             uprv_free(allocatedConverter->subChars);
         }
         uprv_free(allocatedConverter);
-        UTRACE_EXIT_STATUS(*status);
-        return nullptr;
+        UTRACE_EXIT_స్థితి(*స్థితి_2);
+        తిరిగి శూన్యసూచిక;
     }
 
     /* increment refcount of shared data if needed */
-    if (cnv->sharedData->isReferenceCounted) {
-        ucnv_incrementRefCount(cnv->sharedData);
+    ఒకవేళ (cnv->shared_దత్తాంశం->isReferenceCounted) {
+        ucnv_increment_Ref_లెక్క(cnv->shared_దత్తాంశం);
     }
 
-    if(localConverter == (UConverter*)stackBuffer) {
+    ఒకవేళ(localConverter == (UConverter*)దొంతర_బఫరు) {
         /* we're using user provided data - set to not destroy */
-        localConverter->isCopyLocal = true;
+        localConverter->isCopyLocal = నిజం;
     }
 
     /* allow callback functions to handle any memory allocation */
-    toUArgs.converter = fromUArgs.converter = localConverter;
+    గమ్యం_UArgs.converter = fromUArgs.converter = localConverter;
     cbErr = U_ZERO_ERROR;
-    cnv->fromCharErrorBehaviour(cnv->toUContext, &toUArgs, nullptr, 0, UCNV_CLONE, &cbErr);
+    cnv->fromCharErrorBehaviour(cnv->గమ్యం_UContext, &గమ్యం_UArgs, శూన్యసూచిక, 0, UCNV_CLONE, &cbErr);
     cbErr = U_ZERO_ERROR;
-    cnv->fromUCharErrorBehaviour(cnv->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_CLONE, &cbErr);
+    cnv->fromUCharErrorBehaviour(cnv->fromUContext, &fromUArgs, శూన్యసూచిక, 0, 0, UCNV_CLONE, &cbErr);
 
-    UTRACE_EXIT_PTR_STATUS(localConverter, *status);
-    return localConverter;
+    UTRACE_EXIT_PTR_స్థితి(localConverter, *స్థితి_2);
+    తిరిగి localConverter;
 }
 
 U_CAPI UConverter* U_EXPORT2
-ucnv_clone(const UConverter* cnv, UErrorCode *status)
+ucnv_clone(స్థిరరాశి UConverter* cnv, UError_సంకేతం *స్థితి_2)
 {
-    return ucnv_safeClone(cnv, nullptr, nullptr, status);
+    తిరిగి ucnv_సురక్షిత_Clone(cnv, శూన్యసూచిక, శూన్యసూచిక, స్థితి_2);
 }
 
 /*Decreases the reference counter in the shared immutable section of the object
  *and frees the mutable part*/
 
-U_CAPI void  U_EXPORT2
+U_CAPI శూన్య  U_EXPORT2
 ucnv_close (UConverter * converter)
 {
-    UErrorCode errorCode = U_ZERO_ERROR;
+    UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_CLOSE);
+    UTRACE_నమోదు_OC(UTRACE_UCNV_CLOSE);
 
-    if (converter == nullptr)
+    ఒకవేళ (converter == శూన్యసూచిక)
     {
         UTRACE_EXIT();
-        return;
+        తిరిగి;
     }
 
     UTRACE_DATA3(UTRACE_OPEN_CLOSE, "close converter %s at %p, isCopyLocal=%b",
-        ucnv_getName(converter, &errorCode), converter, converter->isCopyLocal);
+        ucnv_getName(converter, &error_సంకేతం), converter, converter->isCopyLocal);
 
     /* In order to speed up the close, only call the callbacks when they have been changed.
     This performance check will only work when the callbacks are set within a shared library
     or from user code that statically links this code. */
     /* first, notify the callback functions that the converter is closed */
-    if (converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
-        UConverterToUnicodeArgs toUArgs = {
-            sizeof(UConverterToUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+    ఒకవేళ (converter->fromCharErrorBehaviour != UCNV_గమ్యం_U_DEFAULT_CALLBACK) {
+        UConverter_గమ్యం_Unicode_వాదనలు గమ్యం_UArgs = {
+            పరిమాణం(UConverter_గమ్యం_Unicode_వాదనలు),
+                నిజం,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక
         };
 
-        toUArgs.converter = converter;
-        errorCode = U_ZERO_ERROR;
-        converter->fromCharErrorBehaviour(converter->toUContext, &toUArgs, nullptr, 0, UCNV_CLOSE, &errorCode);
+        గమ్యం_UArgs.converter = converter;
+        error_సంకేతం = U_ZERO_ERROR;
+        converter->fromCharErrorBehaviour(converter->గమ్యం_UContext, &గమ్యం_UArgs, శూన్యసూచిక, 0, UCNV_CLOSE, &error_సంకేతం);
     }
-    if (converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
-        UConverterFromUnicodeArgs fromUArgs = {
-            sizeof(UConverterFromUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+    ఒకవేళ (converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
+        UConverter_From_Unicode_వాదనలు fromUArgs = {
+            పరిమాణం(UConverter_From_Unicode_వాదనలు),
+                నిజం,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక
         };
         fromUArgs.converter = converter;
-        errorCode = U_ZERO_ERROR;
-        converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_CLOSE, &errorCode);
+        error_సంకేతం = U_ZERO_ERROR;
+        converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, శూన్యసూచిక, 0, 0, UCNV_CLOSE, &error_సంకేతం);
     }
 
-    if (converter->sharedData->impl->close != nullptr) {
-        converter->sharedData->impl->close(converter);
+    ఒకవేళ (converter->shared_దత్తాంశం->impl->close != శూన్యసూచిక) {
+        converter->shared_దత్తాంశం->impl->close(converter);
     }
 
-    if (converter->subChars != (uint8_t *)converter->subUChars) {
+    ఒకవేళ (converter->subChars != (uint8_t *)converter->subUChars) {
         uprv_free(converter->subChars);
     }
 
-    if (converter->sharedData->isReferenceCounted) {
-        ucnv_unloadSharedDataIfReady(converter->sharedData);
+    ఒకవేళ (converter->shared_దత్తాంశం->isReferenceCounted) {
+        ucnv_unload_Shared_దత్తాంశం_If_Ready(converter->shared_దత్తాంశం);
     }
 
-    if(!converter->isCopyLocal){
+    ఒకవేళ(!converter->isCopyLocal){
         uprv_free(converter);
     }
 
@@ -405,66 +405,66 @@ ucnv_close (UConverter * converter)
 
 /*returns a single Name from the list, will return nullptr if out of bounds
  */
-U_CAPI const char*   U_EXPORT2
-ucnv_getAvailableName (int32_t n)
+U_CAPI స్థిరరాశి అక్షరం*   U_EXPORT2
+ucnv_get_అందుబాటు_Name (int32_t n)
 {
-    if (0 <= n && n <= 0xffff) {
-        UErrorCode err = U_ZERO_ERROR;
-        const char *name = ucnv_bld_getAvailableConverter((uint16_t)n, &err);
-        if (U_SUCCESS(err)) {
-            return name;
+    ఒకవేళ (0 <= n && n <= 0xffff) {
+        UError_సంకేతం err = U_ZERO_ERROR;
+        స్థిరరాశి అక్షరం *name = ucnv_bld_get_అందుబాటు_Converter((uint16_t)n, &err);
+        ఒకవేళ (U_SUCCESS(err)) {
+            తిరిగి name;
         }
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 U_CAPI int32_t   U_EXPORT2
-ucnv_countAvailable ()
+ucnv_లెక్క_అందుబాటు ()
 {
-    UErrorCode err = U_ZERO_ERROR;
-    return ucnv_bld_countAvailableConverters(&err);
+    UError_సంకేతం err = U_ZERO_ERROR;
+    తిరిగి ucnv_bld_లెక్క_అందుబాటు_Converters(&err);
 }
 
-U_CAPI void    U_EXPORT2
-ucnv_getSubstChars (const UConverter * converter,
-                    char *mySubChar,
+U_CAPI శూన్య    U_EXPORT2
+ucnv_getSubstChars (స్థిరరాశి UConverter * converter,
+                    అక్షరం *mySubChar,
                     int8_t * len,
-                    UErrorCode * err)
+                    UError_సంకేతం * err)
 {
-    if (U_FAILURE (*err))
-        return;
+    ఒకవేళ (U_FAILURE (*err))
+        తిరిగి;
 
-    if (converter->subCharLen <= 0) {
+    ఒకవేళ (converter->subCharLen <= 0) {
         /* Unicode string or empty string from ucnv_setSubstString(). */
         *len = 0;
-        return;
+        తిరిగి;
     }
 
-    if (*len < converter->subCharLen) /*not enough space in subChars */
+    ఒకవేళ (*len < converter->subCharLen) /*not enough space in subChars */
     {
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *err = U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి;
     }
 
     uprv_memcpy (mySubChar, converter->subChars, converter->subCharLen);   /*fills in the subchars */
     *len = converter->subCharLen; /*store # of bytes copied to buffer */
 }
 
-U_CAPI void    U_EXPORT2
-ucnv_setSubstChars (UConverter * converter,
-                    const char *mySubChar,
+U_CAPI శూన్య    U_EXPORT2
+ucnv_సమితి_Subst_Chars (UConverter * converter,
+                    స్థిరరాశి అక్షరం *mySubChar,
                     int8_t len,
-                    UErrorCode * err)
+                    UError_సంకేతం * err)
 {
-    if (U_FAILURE (*err))
-        return;
+    ఒకవేళ (U_FAILURE (*err))
+        తిరిగి;
     
     /*Makes sure that the subChar is within the codepages char length boundaries */
-    if ((len > converter->sharedData->staticData->maxBytesPerChar)
-     || (len < converter->sharedData->staticData->minBytesPerChar))
+    ఒకవేళ ((len > converter->shared_దత్తాంశం->static_దత్తాంశం->max_బైట్లు_చొప్పున_Char)
+     || (len < converter->shared_దత్తాంశం->static_దత్తాంశం->min_బైట్లు_చొప్పున_Char))
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
     
     uprv_memcpy (converter->subChars, mySubChar, len); /*copies the subchars */
@@ -478,54 +478,54 @@ ucnv_setSubstChars (UConverter * converter,
     converter->subChar1 = 0;
 }
 
-U_CAPI void U_EXPORT2
-ucnv_setSubstString(UConverter *cnv,
-                    const char16_t *s,
+U_CAPI శూన్య U_EXPORT2
+ucnv_సమితి_Subst_String(UConverter *cnv,
+                    స్థిరరాశి char16_t *s,
                     int32_t length,
-                    UErrorCode *err) {
-    alignas(UConverter) char cloneBuffer[U_CNV_SAFECLONE_BUFFERSIZE];
-    char chars[UCNV_ERROR_BUFFER_LENGTH];
+                    UError_సంకేతం *err) {
+    alignas(UConverter) అక్షరం clone_బఫరు[U_CNV_SAFECLONE_BUFFERSIZE];
+    అక్షరం chars[UCNV_ERROR_బఫరు_నిడివి];
 
     UConverter *clone;
     uint8_t *subChars;
-    int32_t cloneSize, length8;
+    int32_t clone_కొలత, length8;
 
     /* Let the following functions check all arguments. */
-    cloneSize = sizeof(cloneBuffer);
-    clone = ucnv_safeClone(cnv, cloneBuffer, &cloneSize, err);
-    ucnv_setFromUCallBack(clone, UCNV_FROM_U_CALLBACK_STOP, nullptr, nullptr, nullptr, err);
-    length8 = ucnv_fromUChars(clone, chars, (int32_t)sizeof(chars), s, length, err);
+    clone_కొలత = పరిమాణం(clone_బఫరు);
+    clone = ucnv_సురక్షిత_Clone(cnv, clone_బఫరు, &clone_కొలత, err);
+    ucnv_సమితి_From_UCall_వెనుక(clone, UCNV_FROM_U_CALLBACK_STOP, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, err);
+    length8 = ucnv_fromUChars(clone, chars, (int32_t)పరిమాణం(chars), s, length, err);
     ucnv_close(clone);
-    if (U_FAILURE(*err)) {
-        return;
+    ఒకవేళ (U_FAILURE(*err)) {
+        తిరిగి;
     }
 
-    if (cnv->sharedData->impl->writeSub == nullptr
-#if !UCONFIG_NO_LEGACY_CONVERSION
-        || (cnv->sharedData->staticData->conversionType == UCNV_MBCS &&
+    ఒకవేళ (cnv->shared_దత్తాంశం->impl->writeSub == శూన్యసూచిక
+#ఒకవేళ !UCONFIG_NO_LEGACY_CONVERSION
+        || (cnv->shared_దత్తాంశం->static_దత్తాంశం->conversionType == UCNV_MBCS &&
          ucnv_MBCSGetType(cnv) != UCNV_EBCDIC_STATEFUL)
-#endif
+#అయితే_ముగింపు
     ) {
         /* The converter is not stateful. Store the charset bytes as a fixed string. */
         subChars = (uint8_t *)chars;
-    } else {
+    } లేకపోతే {
         /*
          * The converter has a non-default writeSub() function, indicating
          * that it is stateful.
          * Store the Unicode string for on-the-fly conversion for correct
          * state handling.
          */
-        if (length > UCNV_ERROR_BUFFER_LENGTH) {
+        ఒకవేళ (length > UCNV_ERROR_బఫరు_నిడివి) {
             /*
              * Should not occur. The converter should output at least one byte
              * per char16_t, which means that ucnv_fromUChars() should catch all
              * overflows.
              */
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            return;
+            *err = U_బఫరు_అధికప్రవాహం_ERROR;
+            తిరిగి;
         }
         subChars = (uint8_t *)s;
-        if (length < 0) {
+        ఒకవేళ (length < 0) {
             length = u_strlen(s);
         }
         length8 = length * U_SIZEOF_UCHAR;
@@ -535,28 +535,28 @@ ucnv_setSubstString(UConverter *cnv,
      * For storing the substitution string, select either the small buffer inside
      * UConverter or allocate a subChars buffer.
      */
-    if (length8 > UCNV_MAX_SUBCHAR_LEN) {
+    ఒకవేళ (length8 > UCNV_MAX_SUBCHAR_LEN) {
         /* Use a separate buffer for the string. Outside UConverter to not make it too large. */
-        if (cnv->subChars == (uint8_t *)cnv->subUChars) {
+        ఒకవేళ (cnv->subChars == (uint8_t *)cnv->subUChars) {
             /* Allocate a new buffer for the string. */
-            cnv->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
-            if (cnv->subChars == nullptr) {
+            cnv->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_బఫరు_నిడివి * U_SIZEOF_UCHAR);
+            ఒకవేళ (cnv->subChars == శూన్యసూచిక) {
                 cnv->subChars = (uint8_t *)cnv->subUChars;
-                *err = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                *err = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి;
             }
-            uprv_memset(cnv->subChars, 0, UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
+            uprv_memset(cnv->subChars, 0, UCNV_ERROR_బఫరు_నిడివి * U_SIZEOF_UCHAR);
         }
     }
 
     /* Copy the substitution string into the UConverter or its subChars buffer. */
-    if (length8 == 0) {
+    ఒకవేళ (length8 == 0) {
         cnv->subCharLen = 0;
-    } else {
+    } లేకపోతే {
         uprv_memcpy(cnv->subChars, subChars, length8);
-        if (subChars == (uint8_t *)chars) {
+        ఒకవేళ (subChars == (uint8_t *)chars) {
             cnv->subCharLen = (int8_t)length8;
-        } else /* subChars == s */ {
+        } లేకపోతే /* subChars == s */ {
             cnv->subCharLen = (int8_t)-length;
         }
     }
@@ -568,212 +568,212 @@ ucnv_setSubstString(UConverter *cnv,
 /*resets the internal states of a converter
  *goal : have the same behaviour than a freshly created converter
  */
-static void _reset(UConverter *converter, UConverterResetChoice choice,
+స్థిర శూన్య _reset(UConverter *converter, UConverterResetChoice choice,
                    UBool callCallback) {
-    if(converter == nullptr) {
-        return;
+    ఒకవేళ(converter == శూన్యసూచిక) {
+        తిరిగి;
     }
 
-    if(callCallback) {
+    ఒకవేళ(callCallback) {
         /* first, notify the callback functions that the converter is reset */
-        UErrorCode errorCode;
+        UError_సంకేతం error_సంకేతం;
 
-        if(choice<=UCNV_RESET_TO_UNICODE && converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
-            UConverterToUnicodeArgs toUArgs = {
-                sizeof(UConverterToUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+        ఒకవేళ(choice<=UCNV_RESET_గమ్యం_UNICODE && converter->fromCharErrorBehaviour != UCNV_గమ్యం_U_DEFAULT_CALLBACK) {
+            UConverter_గమ్యం_Unicode_వాదనలు గమ్యం_UArgs = {
+                పరిమాణం(UConverter_గమ్యం_Unicode_వాదనలు),
+                నిజం,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక
             };
-            toUArgs.converter = converter;
-            errorCode = U_ZERO_ERROR;
-            converter->fromCharErrorBehaviour(converter->toUContext, &toUArgs, nullptr, 0, UCNV_RESET, &errorCode);
+            గమ్యం_UArgs.converter = converter;
+            error_సంకేతం = U_ZERO_ERROR;
+            converter->fromCharErrorBehaviour(converter->గమ్యం_UContext, &గమ్యం_UArgs, శూన్యసూచిక, 0, UCNV_RESET, &error_సంకేతం);
         }
-        if(choice!=UCNV_RESET_TO_UNICODE && converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
-            UConverterFromUnicodeArgs fromUArgs = {
-                sizeof(UConverterFromUnicodeArgs),
-                true,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr
+        ఒకవేళ(choice!=UCNV_RESET_గమ్యం_UNICODE && converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
+            UConverter_From_Unicode_వాదనలు fromUArgs = {
+                పరిమాణం(UConverter_From_Unicode_వాదనలు),
+                నిజం,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక,
+                శూన్యసూచిక
             };
             fromUArgs.converter = converter;
-            errorCode = U_ZERO_ERROR;
-            converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_RESET, &errorCode);
+            error_సంకేతం = U_ZERO_ERROR;
+            converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, శూన్యసూచిక, 0, 0, UCNV_RESET, &error_సంకేతం);
         }
     }
 
     /* now reset the converter itself */
-    if(choice<=UCNV_RESET_TO_UNICODE) {
-        converter->toUnicodeStatus = converter->sharedData->toUnicodeStatus;
-        converter->mode = 0;
-        converter->toULength = 0;
-        converter->invalidCharLength = converter->UCharErrorBufferLength = 0;
-        converter->preToULength = 0;
+    ఒకవేళ(choice<=UCNV_RESET_గమ్యం_UNICODE) {
+        converter->గమ్యం_Unicode_స్థితి = converter->shared_దత్తాంశం->గమ్యం_Unicode_స్థితి;
+        converter->బహుళకం = 0;
+        converter->గమ్యం_ULength = 0;
+        converter->invalid_Char_నిడివి = converter->UChar_Error_బఫరు_నిడివి = 0;
+        converter->pre_గమ్యం_ULength = 0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
-        converter->fromUnicodeStatus = 0;
+    ఒకవేళ(choice!=UCNV_RESET_గమ్యం_UNICODE) {
+        converter->from_Unicode_స్థితి = 0;
         converter->fromUChar32 = 0;
-        converter->invalidUCharLength = converter->charErrorBufferLength = 0;
+        converter->invalid_UChar_నిడివి = converter->char_Error_బఫరు_నిడివి = 0;
         converter->preFromUFirstCP = U_SENTINEL;
         converter->preFromULength = 0;
     }
 
-    if (converter->sharedData->impl->reset != nullptr) {
+    ఒకవేళ (converter->shared_దత్తాంశం->impl->reset != శూన్యసూచిక) {
         /* call the custom reset function */
-        converter->sharedData->impl->reset(converter, choice);
+        converter->shared_దత్తాంశం->impl->reset(converter, choice);
     }
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI శూన్య  U_EXPORT2
 ucnv_reset(UConverter *converter)
 {
-    _reset(converter, UCNV_RESET_BOTH, true);
+    _reset(converter, UCNV_RESET_BOTH, నిజం);
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_resetToUnicode(UConverter *converter)
+U_CAPI శూన్య  U_EXPORT2
+ucnv_reset_గమ్యం_Unicode(UConverter *converter)
 {
-    _reset(converter, UCNV_RESET_TO_UNICODE, true);
+    _reset(converter, UCNV_RESET_గమ్యం_UNICODE, నిజం);
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI శూన్య  U_EXPORT2
 ucnv_resetFromUnicode(UConverter *converter)
 {
-    _reset(converter, UCNV_RESET_FROM_UNICODE, true);
+    _reset(converter, UCNV_RESET_FROM_UNICODE, నిజం);
 }
 
 U_CAPI int8_t   U_EXPORT2
-ucnv_getMaxCharSize (const UConverter * converter)
+ucnv_get_Max_Char_కొలత (స్థిరరాశి UConverter * converter)
 {
-    return converter->maxBytesPerUChar;
+    తిరిగి converter->max_బైట్లు_చొప్పున_UChar;
 }
 
 
 U_CAPI int8_t   U_EXPORT2
-ucnv_getMinCharSize (const UConverter * converter)
+ucnv_get_Min_Char_కొలత (స్థిరరాశి UConverter * converter)
 {
-    return converter->sharedData->staticData->minBytesPerChar;
+    తిరిగి converter->shared_దత్తాంశం->static_దత్తాంశం->min_బైట్లు_చొప్పున_Char;
 }
 
-U_CAPI const char* U_EXPORT2
-ucnv_getName(const UConverter* converter U_LIFETIME_BOUND, UErrorCode* err)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ucnv_getName(స్థిరరాశి UConverter* converter U_LIFETIME_BOUND, UError_సంకేతం* err)
 {
-    if (U_FAILURE (*err))
-        return nullptr;
-    if(converter->sharedData->impl->getName){
-        const char* temp= converter->sharedData->impl->getName(converter);
-        if(temp)
-            return temp;
+    ఒకవేళ (U_FAILURE (*err))
+        తిరిగి శూన్యసూచిక;
+    ఒకవేళ(converter->shared_దత్తాంశం->impl->getName){
+        స్థిరరాశి అక్షరం* తాత్కాలిక= converter->shared_దత్తాంశం->impl->getName(converter);
+        ఒకవేళ(తాత్కాలిక)
+            తిరిగి తాత్కాలిక;
     }
-    return converter->sharedData->staticData->name;
+    తిరిగి converter->shared_దత్తాంశం->static_దత్తాంశం->name;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_getCCSID(const UConverter * converter,
-              UErrorCode * err)
+ucnv_getCCSID(స్థిరరాశి UConverter * converter,
+              UError_సంకేతం * err)
 {
     int32_t ccsid;
-    if (U_FAILURE (*err))
-        return -1;
+    ఒకవేళ (U_FAILURE (*err))
+        తిరిగి -1;
 
-    ccsid = converter->sharedData->staticData->codepage;
-    if (ccsid == 0) {
+    ccsid = converter->shared_దత్తాంశం->static_దత్తాంశం->codepage;
+    ఒకవేళ (ccsid == 0) {
         /* Rare case. This is for cases like gb18030,
         which doesn't have an IBM canonical name, but does have an IBM alias. */
-        const char *standardName = ucnv_getStandardName(ucnv_getName(converter, err), "IBM", err);
-        if (U_SUCCESS(*err) && standardName) {
-            const char *ccsidStr = uprv_strchr(standardName, '-');
-            if (ccsidStr) {
+        స్థిరరాశి అక్షరం *standardName = ucnv_getStandardName(ucnv_getName(converter, err), "IBM", err);
+        ఒకవేళ (U_SUCCESS(*err) && standardName) {
+            స్థిరరాశి అక్షరం *ccsidStr = uprv_strchr(standardName, '-');
+            ఒకవేళ (ccsidStr) {
                 ccsid = (int32_t)atol(ccsidStr+1);  /* +1 to skip '-' */
             }
         }
     }
-    return ccsid;
+    తిరిగి ccsid;
 }
 
 
 U_CAPI UConverterPlatform   U_EXPORT2
-ucnv_getPlatform (const UConverter * converter,
-                                      UErrorCode * err)
+ucnv_getPlatform (స్థిరరాశి UConverter * converter,
+                                      UError_సంకేతం * err)
 {
-    if (U_FAILURE (*err))
-        return UCNV_UNKNOWN;
+    ఒకవేళ (U_FAILURE (*err))
+        తిరిగి UCNV_UNKNOWN;
 
-    return (UConverterPlatform)converter->sharedData->staticData->platform;
+    తిరిగి (UConverterPlatform)converter->shared_దత్తాంశం->static_దత్తాంశం->platform;
 }
 
-U_CAPI void U_EXPORT2
-    ucnv_getToUCallBack (const UConverter * converter,
-                         UConverterToUCallback *action,
-                         const void **context)
+U_CAPI శూన్య U_EXPORT2
+    ucnv_get_గమ్యం_UCall_వెనుక (స్థిరరాశి UConverter * converter,
+                         UConverter_గమ్యం_UCallback *action,
+                         స్థిరరాశి శూన్య **context)
 {
     *action = converter->fromCharErrorBehaviour;
-    *context = converter->toUContext;
+    *context = converter->గమ్యం_UContext;
 }
 
-U_CAPI void U_EXPORT2
-    ucnv_getFromUCallBack (const UConverter * converter,
+U_CAPI శూన్య U_EXPORT2
+    ucnv_get_From_UCall_వెనుక (స్థిరరాశి UConverter * converter,
                            UConverterFromUCallback *action,
-                           const void **context)
+                           స్థిరరాశి శూన్య **context)
 {
     *action = converter->fromUCharErrorBehaviour;
     *context = converter->fromUContext;
 }
 
-U_CAPI void    U_EXPORT2
-ucnv_setToUCallBack (UConverter * converter,
-                            UConverterToUCallback newAction,
-                            const void* newContext,
-                            UConverterToUCallback *oldAction,
-                            const void** oldContext,
-                            UErrorCode * err)
+U_CAPI శూన్య    U_EXPORT2
+ucnv_సమితి_గమ్యం_UCall_వెనుక (UConverter * converter,
+                            UConverter_గమ్యం_UCallback newAction,
+                            స్థిరరాశి శూన్య* newContext,
+                            UConverter_గమ్యం_UCallback *oldAction,
+                            స్థిరరాశి శూన్య** oldContext,
+                            UError_సంకేతం * err)
 {
-    if (U_FAILURE (*err))
-        return;
-    if (oldAction) *oldAction = converter->fromCharErrorBehaviour;
+    ఒకవేళ (U_FAILURE (*err))
+        తిరిగి;
+    ఒకవేళ (oldAction) *oldAction = converter->fromCharErrorBehaviour;
     converter->fromCharErrorBehaviour = newAction;
-    if (oldContext) *oldContext = converter->toUContext;
-    converter->toUContext = newContext;
+    ఒకవేళ (oldContext) *oldContext = converter->గమ్యం_UContext;
+    converter->గమ్యం_UContext = newContext;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_setFromUCallBack (UConverter * converter,
+U_CAPI శూన్య  U_EXPORT2
+ucnv_సమితి_From_UCall_వెనుక (UConverter * converter,
                             UConverterFromUCallback newAction,
-                            const void* newContext,
+                            స్థిరరాశి శూన్య* newContext,
                             UConverterFromUCallback *oldAction,
-                            const void** oldContext,
-                            UErrorCode * err)
+                            స్థిరరాశి శూన్య** oldContext,
+                            UError_సంకేతం * err)
 {
-    if (U_FAILURE (*err))
-        return;
-    if (oldAction) *oldAction = converter->fromUCharErrorBehaviour;
+    ఒకవేళ (U_FAILURE (*err))
+        తిరిగి;
+    ఒకవేళ (oldAction) *oldAction = converter->fromUCharErrorBehaviour;
     converter->fromUCharErrorBehaviour = newAction;
-    if (oldContext) *oldContext = converter->fromUContext;
+    ఒకవేళ (oldContext) *oldContext = converter->fromUContext;
     converter->fromUContext = newContext;
 }
 
-static void
+స్థిర శూన్య
 _updateOffsets(int32_t *offsets, int32_t length,
-               int32_t sourceIndex, int32_t errorInputLength) {
-    int32_t *limit;
-    int32_t delta, offset;
+               int32_t ఆధారం_సూచీ, int32_t error_ఆదానం_నిడివి) {
+    int32_t *హద్దు;
+    int32_t delta, స్థానభ్రంశం;
 
-    if(sourceIndex>=0) {
+    ఒకవేళ(ఆధారం_సూచీ>=0) {
         /*
          * adjust each offset by adding the previous sourceIndex
          * minus the length of the input sequence that caused an
          * error, if any
          */
-        delta=sourceIndex-errorInputLength;
-    } else {
+        delta=ఆధారం_సూచీ-error_ఆదానం_నిడివి;
+    } లేకపోతే {
         /*
          * set each offset to -1 because this conversion function
          * does not handle offsets
@@ -781,25 +781,25 @@ _updateOffsets(int32_t *offsets, int32_t length,
         delta=-1;
     }
 
-    limit=offsets+length;
-    if(delta==0) {
+    హద్దు=offsets+length;
+    ఒకవేళ(delta==0) {
         /* most common case, nothing to do */
-    } else if(delta>0) {
+    } లేకపోతే ఒకవేళ(delta>0) {
         /* add the delta to each offset (but not if the offset is <0) */
-        while(offsets<limit) {
-            offset=*offsets;
-            if(offset>=0) {
-                *offsets=offset+delta;
+        అయితే(offsets<హద్దు) {
+            స్థానభ్రంశం=*offsets;
+            ఒకవేళ(స్థానభ్రంశం>=0) {
+                *offsets=స్థానభ్రంశం+delta;
             }
             ++offsets;
         }
-    } else /* delta<0 */ {
+    } లేకపోతే /* delta<0 */ {
         /*
          * set each offset to -1 because this conversion function
          * does not handle offsets
          * or the error input sequence started in a previous buffer
          */
-        while(offsets<limit) {
+        అయితే(offsets<హద్దు) {
             *offsets++=-1;
         }
     }
@@ -829,70 +829,70 @@ _updateOffsets(int32_t *offsets, int32_t length,
  * and wrong output, but they will not cause a crash.
  */
 
-static void
-_fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
+స్థిర శూన్య
+_fromUnicodeWithCallback(UConverter_From_Unicode_వాదనలు *p_వాదనలు, UError_సంకేతం *err) {
     UConverterFromUnicode fromUnicode;
     UConverter *cnv;
-    const char16_t *s;
-    char *t;
+    స్థిరరాశి char16_t *s;
+    అక్షరం *t;
     int32_t *offsets;
-    int32_t sourceIndex;
-    int32_t errorInputLength;
-    UBool converterSawEndOfInput, calledCallback;
+    int32_t ఆధారం_సూచీ;
+    int32_t error_ఆదానం_నిడివి;
+    UBool converter_Saw_చివర_యొక్క_ఆదానం, calledCallback;
 
     /* variables for m:n conversion */
     char16_t replay[UCNV_EXT_MAX_UCHARS];
-    const char16_t *realSource, *realSourceLimit;
-    int32_t realSourceIndex;
+    స్థిరరాశి char16_t *real_ఆధారం, *real_ఆధారం_హద్దు;
+    int32_t real_ఆధారం_సూచీ;
     UBool realFlush;
 
-    cnv=pArgs->converter;
-    s=pArgs->source;
-    t=pArgs->target;
-    offsets=pArgs->offsets;
+    cnv=p_వాదనలు->converter;
+    s=p_వాదనలు->ఆధారం;
+    t=p_వాదనలు->లక్ష్యం;
+    offsets=p_వాదనలు->offsets;
 
     /* get the converter implementation function */
-    sourceIndex=0;
-    if(offsets==nullptr) {
-        fromUnicode=cnv->sharedData->impl->fromUnicode;
-    } else {
-        fromUnicode=cnv->sharedData->impl->fromUnicodeWithOffsets;
-        if(fromUnicode==nullptr) {
+    ఆధారం_సూచీ=0;
+    ఒకవేళ(offsets==శూన్యసూచిక) {
+        fromUnicode=cnv->shared_దత్తాంశం->impl->fromUnicode;
+    } లేకపోతే {
+        fromUnicode=cnv->shared_దత్తాంశం->impl->fromUnicodeWithOffsets;
+        ఒకవేళ(fromUnicode==శూన్యసూచిక) {
             /* there is no WithOffsets implementation */
-            fromUnicode=cnv->sharedData->impl->fromUnicode;
+            fromUnicode=cnv->shared_దత్తాంశం->impl->fromUnicode;
             /* we will write -1 for each offset */
-            sourceIndex=-1;
+            ఆధారం_సూచీ=-1;
         }
     }
 
-    if(cnv->preFromULength>=0) {
+    ఒకవేళ(cnv->preFromULength>=0) {
         /* normal mode */
-        realSource=nullptr;
+        real_ఆధారం=శూన్యసూచిక;
 
         /* avoid compiler warnings - not otherwise necessary, and the values do not matter */
-        realSourceLimit=nullptr;
-        realFlush=false;
-        realSourceIndex=0;
-    } else {
+        real_ఆధారం_హద్దు=శూన్యసూచిక;
+        realFlush=అబద్ధం;
+        real_ఆధారం_సూచీ=0;
+    } లేకపోతే {
         /*
          * Previous m:n conversion stored source units from a partial match
          * and failed to consume all of them.
          * We need to "replay" them from a temporary buffer and convert them first.
          */
-        if (!pArgs->source) {
-            *err=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        ఒకవేళ (!p_వాదనలు->ఆధారం) {
+            *err=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
-        realSource=pArgs->source;
-        realSourceLimit=pArgs->sourceLimit;
-        realFlush=pArgs->flush;
-        realSourceIndex=sourceIndex;
+        real_ఆధారం=p_వాదనలు->ఆధారం;
+        real_ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+        realFlush=p_వాదనలు->flush;
+        real_ఆధారం_సూచీ=ఆధారం_సూచీ;
 
         uprv_memcpy(replay, cnv->preFromU, -cnv->preFromULength*U_SIZEOF_UCHAR);
-        pArgs->source=replay;
-        pArgs->sourceLimit=replay-cnv->preFromULength;
-        pArgs->flush=false;
-        sourceIndex=-1;
+        p_వాదనలు->ఆధారం=replay;
+        p_వాదనలు->ఆధారం_హద్దు=replay-cnv->preFromULength;
+        p_వాదనలు->flush=అబద్ధం;
+        ఆధారం_సూచీ=-1;
 
         cnv->preFromULength=0;
     }
@@ -909,10 +909,10 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
      *   }
      * }
      */
-    for(;;) {
-        if(U_SUCCESS(*err)) {
+    కొరకు(;;) {
+        ఒకవేళ(U_SUCCESS(*err)) {
             /* convert */
-            fromUnicode(pArgs, err);
+            fromUnicode(p_వాదనలు, err);
 
             /*
              * set a flag for whether the converter
@@ -921,20 +921,20 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
              * need not check cnv->preFromULength==0 because a replay (<0) will cause
              * s<sourceLimit before converterSawEndOfInput is checked
              */
-            converterSawEndOfInput=
+            converter_Saw_చివర_యొక్క_ఆదానం=
                 static_cast<UBool>(U_SUCCESS(*err) &&
-                        pArgs->flush && pArgs->source==pArgs->sourceLimit &&
+                        p_వాదనలు->flush && p_వాదనలు->ఆధారం==p_వాదనలు->ఆధారం_హద్దు &&
                         cnv->fromUChar32==0);
-        } else {
+        } లేకపోతే {
             /* handle error from ucnv_convertEx() */
-            converterSawEndOfInput=false;
+            converter_Saw_చివర_యొక్క_ఆదానం=అబద్ధం;
         }
 
         /* no callback called yet for this iteration */
-        calledCallback=false;
+        calledCallback=అబద్ధం;
 
         /* no sourceIndex adjustment for conversion, only for callback output */
-        errorInputLength=0;
+        error_ఆదానం_నిడివి=0;
 
         /*
          * loop for offsets and error handling
@@ -944,12 +944,12 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
          * 2. after the callback
          * 3. after the callback again if there was truncated input
          */
-        for(;;) {
+        కొరకు(;;) {
             /* update offsets if we write any */
-            if(offsets!=nullptr) {
-                int32_t length = static_cast<int32_t>(pArgs->target - t);
-                if(length>0) {
-                    _updateOffsets(offsets, length, sourceIndex, errorInputLength);
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                int32_t length = static_cast<int32_t>(p_వాదనలు->లక్ష్యం - t);
+                ఒకవేళ(length>0) {
+                    _updateOffsets(offsets, length, ఆధారం_సూచీ, error_ఆదానం_నిడివి);
 
                     /*
                      * if a converter handles offsets and updates the offsets
@@ -958,73 +958,73 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                      * however, some converters do not handle offsets at all
                      * (sourceIndex<0) or may not update the offsets pointer
                      */
-                    pArgs->offsets=offsets+=length;
+                    p_వాదనలు->offsets=offsets+=length;
                 }
 
-                if(sourceIndex>=0) {
-                    sourceIndex += static_cast<int32_t>(pArgs->source - s);
+                ఒకవేళ(ఆధారం_సూచీ>=0) {
+                    ఆధారం_సూచీ += static_cast<int32_t>(p_వాదనలు->ఆధారం - s);
                 }
             }
 
-            if(cnv->preFromULength<0) {
+            ఒకవేళ(cnv->preFromULength<0) {
                 /*
                  * switch the source to new replay units (cannot occur while replaying)
                  * after offset handling and before end-of-input and callback handling
                  */
-                if(realSource==nullptr) {
-                    realSource=pArgs->source;
-                    realSourceLimit=pArgs->sourceLimit;
-                    realFlush=pArgs->flush;
-                    realSourceIndex=sourceIndex;
+                ఒకవేళ(real_ఆధారం==శూన్యసూచిక) {
+                    real_ఆధారం=p_వాదనలు->ఆధారం;
+                    real_ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+                    realFlush=p_వాదనలు->flush;
+                    real_ఆధారం_సూచీ=ఆధారం_సూచీ;
 
                     uprv_memcpy(replay, cnv->preFromU, -cnv->preFromULength*U_SIZEOF_UCHAR);
-                    pArgs->source=replay;
-                    pArgs->sourceLimit=replay-cnv->preFromULength;
-                    pArgs->flush=false;
-                    if((sourceIndex+=cnv->preFromULength)<0) {
-                        sourceIndex=-1;
+                    p_వాదనలు->ఆధారం=replay;
+                    p_వాదనలు->ఆధారం_హద్దు=replay-cnv->preFromULength;
+                    p_వాదనలు->flush=అబద్ధం;
+                    ఒకవేళ((ఆధారం_సూచీ+=cnv->preFromULength)<0) {
+                        ఆధారం_సూచీ=-1;
                     }
 
                     cnv->preFromULength=0;
-                } else {
+                } లేకపోతే {
                     /* see implementation note before _fromUnicodeWithCallback() */
-                    U_ASSERT(realSource==nullptr);
-                    *err=U_INTERNAL_PROGRAM_ERROR;
+                    U_ASSERT(real_ఆధారం==శూన్యసూచిక);
+                    *err=U_అంతర్గత_కార్యక్రమం_ERROR;
                 }
             }
 
             /* update pointers */
-            s=pArgs->source;
-            t=pArgs->target;
+            s=p_వాదనలు->ఆధారం;
+            t=p_వాదనలు->లక్ష్యం;
 
-            if(U_SUCCESS(*err)) {
-                if(s<pArgs->sourceLimit) {
+            ఒకవేళ(U_SUCCESS(*err)) {
+                ఒకవేళ(s<p_వాదనలు->ఆధారం_హద్దు) {
                     /*
                      * continue with the conversion loop while there is still input left
                      * (continue converting by breaking out of only the inner loop)
                      */
-                    break;
-                } else if(realSource!=nullptr) {
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(real_ఆధారం!=శూన్యసూచిక) {
                     /* switch back from replaying to the real source and continue */
-                    pArgs->source=realSource;
-                    pArgs->sourceLimit=realSourceLimit;
-                    pArgs->flush=realFlush;
-                    sourceIndex=realSourceIndex;
+                    p_వాదనలు->ఆధారం=real_ఆధారం;
+                    p_వాదనలు->ఆధారం_హద్దు=real_ఆధారం_హద్దు;
+                    p_వాదనలు->flush=realFlush;
+                    ఆధారం_సూచీ=real_ఆధారం_సూచీ;
 
-                    realSource=nullptr;
-                    break;
-                } else if(pArgs->flush && cnv->fromUChar32!=0) {
+                    real_ఆధారం=శూన్యసూచిక;
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(p_వాదనలు->flush && cnv->fromUChar32!=0) {
                     /*
                      * the entire input stream is consumed
                      * and there is a partial, truncated input sequence left
                      */
 
                     /* inject an error and continue with callback handling */
-                    *err=U_TRUNCATED_CHAR_FOUND;
-                    calledCallback=false; /* new error condition */
-                } else {
+                    *err=U_TRUNCATED_CHAR_దొరికింది;
+                    calledCallback=అబద్ధం; /* new error condition */
+                } లేకపోతే {
                     /* input consumed */
-                    if(pArgs->flush) {
+                    ఒకవేళ(p_వాదనలు->flush) {
                         /*
                          * return to the conversion loop once more if the flush
                          * flag is set and the conversion function has not
@@ -1032,28 +1032,28 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                          *
                          * (continue converting by breaking out of only the inner loop)
                          */
-                        if(!converterSawEndOfInput) {
-                            break;
+                        ఒకవేళ(!converter_Saw_చివర_యొక్క_ఆదానం) {
+                            ఆపు;
                         }
 
                         /* reset the converter without calling the callback function */
-                        _reset(cnv, UCNV_RESET_FROM_UNICODE, false);
+                        _reset(cnv, UCNV_RESET_FROM_UNICODE, అబద్ధం);
                     }
 
                     /* done successfully */
-                    return;
+                    తిరిగి;
                 }
             }
 
             /* U_FAILURE(*err) */
             {
-                UErrorCode e;
+                UError_సంకేతం e;
 
-                if( calledCallback ||
-                    (e=*err)==U_BUFFER_OVERFLOW_ERROR ||
-                    (e!=U_INVALID_CHAR_FOUND &&
-                     e!=U_ILLEGAL_CHAR_FOUND &&
-                     e!=U_TRUNCATED_CHAR_FOUND)
+                ఒకవేళ( calledCallback ||
+                    (e=*err)==U_బఫరు_అధికప్రవాహం_ERROR ||
+                    (e!=U_INVALID_CHAR_దొరికింది &&
+                     e!=U_ILLEGAL_CHAR_దొరికింది &&
+                     e!=U_TRUNCATED_CHAR_దొరికింది)
                 ) {
                     /*
                      * the callback did not or cannot resolve the error:
@@ -1067,43 +1067,43 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                      * copied back into the UConverter
                      * and the real arguments must be restored
                      */
-                    if(realSource!=nullptr) {
+                    ఒకవేళ(real_ఆధారం!=శూన్యసూచిక) {
                         int32_t length;
 
                         U_ASSERT(cnv->preFromULength==0);
 
-                        length = static_cast<int32_t>(pArgs->sourceLimit - pArgs->source);
-                        if(length>0) {
-                            u_memcpy(cnv->preFromU, pArgs->source, length);
+                        length = static_cast<int32_t>(p_వాదనలు->ఆధారం_హద్దు - p_వాదనలు->ఆధారం);
+                        ఒకవేళ(length>0) {
+                            u_memcpy(cnv->preFromU, p_వాదనలు->ఆధారం, length);
                             cnv->preFromULength = static_cast<int8_t>(-length);
                         }
 
-                        pArgs->source=realSource;
-                        pArgs->sourceLimit=realSourceLimit;
-                        pArgs->flush=realFlush;
+                        p_వాదనలు->ఆధారం=real_ఆధారం;
+                        p_వాదనలు->ఆధారం_హద్దు=real_ఆధారం_హద్దు;
+                        p_వాదనలు->flush=realFlush;
                     }
 
-                    return;
+                    తిరిగి;
                 }
             }
 
             /* callback handling */
             {
-                UChar32 codePoint;
+                UChar32 సంకేతం_బిందువు;
 
                 /* get and write the code point */
-                codePoint=cnv->fromUChar32;
-                errorInputLength=0;
-                U16_APPEND_UNSAFE(cnv->invalidUCharBuffer, errorInputLength, codePoint);
-                cnv->invalidUCharLength = static_cast<int8_t>(errorInputLength);
+                సంకేతం_బిందువు=cnv->fromUChar32;
+                error_ఆదానం_నిడివి=0;
+                U16_APPEND_UNSAFE(cnv->invalid_UChar_బఫరు, error_ఆదానం_నిడివి, సంకేతం_బిందువు);
+                cnv->invalid_UChar_నిడివి = static_cast<int8_t>(error_ఆదానం_నిడివి);
 
                 /* set the converter state to deal with the next character */
                 cnv->fromUChar32=0;
 
                 /* call the callback function */
-                cnv->fromUCharErrorBehaviour(cnv->fromUContext, pArgs,
-                    cnv->invalidUCharBuffer, errorInputLength, codePoint,
-                    *err==U_INVALID_CHAR_FOUND ? UCNV_UNASSIGNED : UCNV_ILLEGAL,
+                cnv->fromUCharErrorBehaviour(cnv->fromUContext, p_వాదనలు,
+                    cnv->invalid_UChar_బఫరు, error_ఆదానం_నిడివి, సంకేతం_బిందువు,
+                    *err==U_INVALID_CHAR_దొరికింది ? UCNV_UNASSIGNED : UCNV_ILLEGAL,
                     err);
             }
 
@@ -1114,7 +1114,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
              * that a callback was called;
              * if the callback did not resolve the error, then we return
              */
-            calledCallback=true;
+            calledCallback=నిజం;
         }
     }
 }
@@ -1124,90 +1124,90 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
  * Call this function if(cnv->charErrorBufferLength>0).
  * @return true if overflow
  */
-static UBool
-ucnv_outputOverflowFromUnicode(UConverter *cnv,
-                               char **target, const char *targetLimit,
+స్థిర UBool
+ucnv_output_అధికప్రవాహం_From_Unicode(UConverter *cnv,
+                               అక్షరం **లక్ష్యం, స్థిరరాశి అక్షరం *లక్ష్యం_హద్దు,
                                int32_t **pOffsets,
-                               UErrorCode *err) {
+                               UError_సంకేతం *err) {
     int32_t *offsets;
-    char *overflow, *t;
+    అక్షరం *అధికప్రవాహం, *t;
     int32_t i, length;
 
-    t=*target;
-    if(pOffsets!=nullptr) {
+    t=*లక్ష్యం;
+    ఒకవేళ(pOffsets!=శూన్యసూచిక) {
         offsets=*pOffsets;
-    } else {
-        offsets=nullptr;
+    } లేకపోతే {
+        offsets=శూన్యసూచిక;
     }
 
-    overflow = reinterpret_cast<char*>(cnv->charErrorBuffer);
-    length=cnv->charErrorBufferLength;
+    అధికప్రవాహం = reinterpret_cast<అక్షరం*>(cnv->char_Error_బఫరు);
+    length=cnv->char_Error_బఫరు_నిడివి;
     i=0;
-    while(i<length) {
-        if(t==targetLimit) {
+    అయితే(i<length) {
+        ఒకవేళ(t==లక్ష్యం_హద్దు) {
             /* the overflow buffer contains too much, keep the rest */
             int32_t j=0;
 
-            do {
-                overflow[j++]=overflow[i++];
-            } while(i<length);
+            చేయి {
+                అధికప్రవాహం[j++]=అధికప్రవాహం[i++];
+            } అయితే(i<length);
 
-            cnv->charErrorBufferLength = static_cast<int8_t>(j);
-            *target=t;
-            if(offsets!=nullptr) {
+            cnv->char_Error_బఫరు_నిడివి = static_cast<int8_t>(j);
+            *లక్ష్యం=t;
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
                 *pOffsets=offsets;
             }
-            *err=U_BUFFER_OVERFLOW_ERROR;
-            return true;
+            *err=U_బఫరు_అధికప్రవాహం_ERROR;
+            తిరిగి నిజం;
         }
 
         /* copy the overflow contents to the target */
-        *t++=overflow[i++];
-        if(offsets!=nullptr) {
+        *t++=అధికప్రవాహం[i++];
+        ఒకవేళ(offsets!=శూన్యసూచిక) {
             *offsets++=-1; /* no source index available for old output */
         }
     }
 
     /* the overflow buffer is completely copied to the target */
-    cnv->charErrorBufferLength=0;
-    *target=t;
-    if(offsets!=nullptr) {
+    cnv->char_Error_బఫరు_నిడివి=0;
+    *లక్ష్యం=t;
+    ఒకవేళ(offsets!=శూన్యసూచిక) {
         *pOffsets=offsets;
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ucnv_fromUnicode(UConverter *cnv,
-                 char **target, const char *targetLimit,
-                 const char16_t **source, const char16_t *sourceLimit,
+                 అక్షరం **లక్ష్యం, స్థిరరాశి అక్షరం *లక్ష్యం_హద్దు,
+                 స్థిరరాశి char16_t **ఆధారం, స్థిరరాశి char16_t *ఆధారం_హద్దు,
                  int32_t *offsets,
                  UBool flush,
-                 UErrorCode *err) {
-    UConverterFromUnicodeArgs args;
-    const char16_t *s;
-    char *t;
+                 UError_సంకేతం *err) {
+    UConverter_From_Unicode_వాదనలు వాదనలు_2;
+    స్థిరరాశి char16_t *s;
+    అక్షరం *t;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    ఒకవేళ(err==శూన్యసూచిక || U_FAILURE(*err)) {
+        తిరిగి;
     }
 
-    if(cnv==nullptr || target==nullptr || source==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ(cnv==శూన్యసూచిక || లక్ష్యం==శూన్యసూచిక || ఆధారం==శూన్యసూచిక) {
+        *err=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    s=*source;
-    t=*target;
+    s=*ఆధారం;
+    t=*లక్ష్యం;
 
-    if ((const void *)U_MAX_PTR(sourceLimit) == (const void *)sourceLimit) {
+    ఒకవేళ ((స్థిరరాశి శూన్య *)U_MAX_PTR(ఆధారం_హద్దు) == (స్థిరరాశి శూన్య *)ఆధారం_హద్దు) {
         /*
         Prevent code from going into an infinite loop in case we do hit this
         limit. The limit pointer is expected to be on a char16_t * boundary.
         This also prevents the next argument check from failing.
         */
-        sourceLimit = (const char16_t *)(((const char *)sourceLimit) - 1);
+        ఆధారం_హద్దు = (స్థిరరాశి char16_t *)(((స్థిరరాశి అక్షరం *)ఆధారం_హద్దు) - 1);
     }
 
     /*
@@ -1229,27 +1229,27 @@ ucnv_fromUnicode(UConverter *cnv,
      * 3) Make sure that the user didn't incorrectly cast a char16_t * pointer
      * to a char * pointer and provide an incomplete char16_t code unit.
      */
-    if (sourceLimit<s || targetLimit<t ||
-        ((size_t)(sourceLimit-s)>(size_t)0x3fffffff && sourceLimit>s) ||
-        ((size_t)(targetLimit-t)>(size_t)0x7fffffff && targetLimit>t) ||
-        (((const char *)sourceLimit-(const char *)s) & 1) != 0)
+    ఒకవేళ (ఆధారం_హద్దు<s || లక్ష్యం_హద్దు<t ||
+        ((size_t)(ఆధారం_హద్దు-s)>(size_t)0x3fffffff && ఆధారం_హద్దు>s) ||
+        ((size_t)(లక్ష్యం_హద్దు-t)>(size_t)0x7fffffff && లక్ష్యం_హద్దు>t) ||
+        (((స్థిరరాశి అక్షరం *)ఆధారం_హద్దు-(స్థిరరాశి అక్షరం *)s) & 1) != 0)
     {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
     
     /* output the target overflow buffer */
-    if( cnv->charErrorBufferLength>0 &&
-        ucnv_outputOverflowFromUnicode(cnv, target, targetLimit, &offsets, err)
+    ఒకవేళ( cnv->char_Error_బఫరు_నిడివి>0 &&
+        ucnv_output_అధికప్రవాహం_From_Unicode(cnv, లక్ష్యం, లక్ష్యం_హద్దు, &offsets, err)
     ) {
         /* U_BUFFER_OVERFLOW_ERROR */
-        return;
+        తిరిగి;
     }
     /* *target may have moved, therefore stop using t */
 
-    if(!flush && s==sourceLimit && cnv->preFromULength>=0) {
+    ఒకవేళ(!flush && s==ఆధారం_హద్దు && cnv->preFromULength>=0) {
         /* the overflow buffer is emptied and there is no new input: we are done */
-        return;
+        తిరిగి;
     }
 
     /*
@@ -1261,89 +1261,89 @@ ucnv_fromUnicode(UConverter *cnv,
      */
 
     /* prepare the converter arguments */
-    args.converter=cnv;
-    args.flush=flush;
-    args.offsets=offsets;
-    args.source=s;
-    args.sourceLimit=sourceLimit;
-    args.target=*target;
-    args.targetLimit=targetLimit;
-    args.size=sizeof(args);
+    వాదనలు_2.converter=cnv;
+    వాదనలు_2.flush=flush;
+    వాదనలు_2.offsets=offsets;
+    వాదనలు_2.ఆధారం=s;
+    వాదనలు_2.ఆధారం_హద్దు=ఆధారం_హద్దు;
+    వాదనలు_2.లక్ష్యం=*లక్ష్యం;
+    వాదనలు_2.లక్ష్యం_హద్దు=లక్ష్యం_హద్దు;
+    వాదనలు_2.size=పరిమాణం(వాదనలు_2);
 
-    _fromUnicodeWithCallback(&args, err);
+    _fromUnicodeWithCallback(&వాదనలు_2, err);
 
-    *source=args.source;
-    *target=args.target;
+    *ఆధారం=వాదనలు_2.ఆధారం;
+    *లక్ష్యం=వాదనలు_2.లక్ష్యం;
 }
 
 /* ucnv_toUnicode() --------------------------------------------------------- */
 
-static void
-_toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
-    UConverterToUnicode toUnicode;
+స్థిర శూన్య
+గమ్యం_Unicode_With_Callback(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు, UError_సంకేతం *err) {
+    UConverter_గమ్యం_Unicode గమ్యం_Unicode;
     UConverter *cnv;
-    const char *s;
+    స్థిరరాశి అక్షరం *s;
     char16_t *t;
     int32_t *offsets;
-    int32_t sourceIndex;
-    int32_t errorInputLength;
-    UBool converterSawEndOfInput, calledCallback;
+    int32_t ఆధారం_సూచీ;
+    int32_t error_ఆదానం_నిడివి;
+    UBool converter_Saw_చివర_యొక్క_ఆదానం, calledCallback;
 
     /* variables for m:n conversion */
-    char replay[UCNV_EXT_MAX_BYTES];
-    const char *realSource, *realSourceLimit;
-    int32_t realSourceIndex;
+    అక్షరం replay[UCNV_EXT_MAX_బైట్లు];
+    స్థిరరాశి అక్షరం *real_ఆధారం, *real_ఆధారం_హద్దు;
+    int32_t real_ఆధారం_సూచీ;
     UBool realFlush;
 
-    cnv=pArgs->converter;
-    s=pArgs->source;
-    t=pArgs->target;
-    offsets=pArgs->offsets;
+    cnv=p_వాదనలు->converter;
+    s=p_వాదనలు->ఆధారం;
+    t=p_వాదనలు->లక్ష్యం;
+    offsets=p_వాదనలు->offsets;
 
     /* get the converter implementation function */
-    sourceIndex=0;
-    if(offsets==nullptr) {
-        toUnicode=cnv->sharedData->impl->toUnicode;
-    } else {
-        toUnicode=cnv->sharedData->impl->toUnicodeWithOffsets;
-        if(toUnicode==nullptr) {
+    ఆధారం_సూచీ=0;
+    ఒకవేళ(offsets==శూన్యసూచిక) {
+        గమ్యం_Unicode=cnv->shared_దత్తాంశం->impl->గమ్యం_Unicode;
+    } లేకపోతే {
+        గమ్యం_Unicode=cnv->shared_దత్తాంశం->impl->గమ్యం_Unicode_With_Offsets;
+        ఒకవేళ(గమ్యం_Unicode==శూన్యసూచిక) {
             /* there is no WithOffsets implementation */
-            toUnicode=cnv->sharedData->impl->toUnicode;
+            గమ్యం_Unicode=cnv->shared_దత్తాంశం->impl->గమ్యం_Unicode;
             /* we will write -1 for each offset */
-            sourceIndex=-1;
+            ఆధారం_సూచీ=-1;
         }
     }
 
-    if(cnv->preToULength>=0) {
+    ఒకవేళ(cnv->pre_గమ్యం_ULength>=0) {
         /* normal mode */
-        realSource=nullptr;
+        real_ఆధారం=శూన్యసూచిక;
 
         /* avoid compiler warnings - not otherwise necessary, and the values do not matter */
-        realSourceLimit=nullptr;
-        realFlush=false;
-        realSourceIndex=0;
-    } else {
+        real_ఆధారం_హద్దు=శూన్యసూచిక;
+        realFlush=అబద్ధం;
+        real_ఆధారం_సూచీ=0;
+    } లేకపోతే {
         /*
          * Previous m:n conversion stored source units from a partial match
          * and failed to consume all of them.
          * We need to "replay" them from a temporary buffer and convert them first.
          */
-        if (!pArgs->source) {
-            *err=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        ఒకవేళ (!p_వాదనలు->ఆధారం) {
+            *err=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
-        realSource=pArgs->source;
-        realSourceLimit=pArgs->sourceLimit;
-        realFlush=pArgs->flush;
-        realSourceIndex=sourceIndex;
+        real_ఆధారం=p_వాదనలు->ఆధారం;
+        real_ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+        realFlush=p_వాదనలు->flush;
+        real_ఆధారం_సూచీ=ఆధారం_సూచీ;
 
-        uprv_memcpy(replay, cnv->preToU, -cnv->preToULength);
-        pArgs->source=replay;
-        pArgs->sourceLimit=replay-cnv->preToULength;
-        pArgs->flush=false;
-        sourceIndex=-1;
+        uprv_memcpy(replay, cnv->pre_గమ్యం_U, -cnv->pre_గమ్యం_ULength);
+        p_వాదనలు->ఆధారం=replay;
+        p_వాదనలు->ఆధారం_హద్దు=replay-cnv->pre_గమ్యం_ULength;
+        p_వాదనలు->flush=అబద్ధం;
+        ఆధారం_సూచీ=-1;
 
-        cnv->preToULength=0;
+        cnv->pre_గమ్యం_ULength=0;
     }
 
     /*
@@ -1358,10 +1358,10 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
      *   }
      * }
      */
-    for(;;) {
-        if(U_SUCCESS(*err)) {
+    కొరకు(;;) {
+        ఒకవేళ(U_SUCCESS(*err)) {
             /* convert */
-            toUnicode(pArgs, err);
+            గమ్యం_Unicode(p_వాదనలు, err);
 
             /*
              * set a flag for whether the converter
@@ -1370,20 +1370,20 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
              * need not check cnv->preToULength==0 because a replay (<0) will cause
              * s<sourceLimit before converterSawEndOfInput is checked
              */
-            converterSawEndOfInput=
+            converter_Saw_చివర_యొక్క_ఆదానం=
                 static_cast<UBool>(U_SUCCESS(*err) &&
-                        pArgs->flush && pArgs->source==pArgs->sourceLimit &&
-                        cnv->toULength==0);
-        } else {
+                        p_వాదనలు->flush && p_వాదనలు->ఆధారం==p_వాదనలు->ఆధారం_హద్దు &&
+                        cnv->గమ్యం_ULength==0);
+        } లేకపోతే {
             /* handle error from getNextUChar() or ucnv_convertEx() */
-            converterSawEndOfInput=false;
+            converter_Saw_చివర_యొక్క_ఆదానం=అబద్ధం;
         }
 
         /* no callback called yet for this iteration */
-        calledCallback=false;
+        calledCallback=అబద్ధం;
 
         /* no sourceIndex adjustment for conversion, only for callback output */
-        errorInputLength=0;
+        error_ఆదానం_నిడివి=0;
 
         /*
          * loop for offsets and error handling
@@ -1393,12 +1393,12 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
          * 2. after the callback
          * 3. after the callback again if there was truncated input
          */
-        for(;;) {
+        కొరకు(;;) {
             /* update offsets if we write any */
-            if(offsets!=nullptr) {
-                int32_t length = static_cast<int32_t>(pArgs->target - t);
-                if(length>0) {
-                    _updateOffsets(offsets, length, sourceIndex, errorInputLength);
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                int32_t length = static_cast<int32_t>(p_వాదనలు->లక్ష్యం - t);
+                ఒకవేళ(length>0) {
+                    _updateOffsets(offsets, length, ఆధారం_సూచీ, error_ఆదానం_నిడివి);
 
                     /*
                      * if a converter handles offsets and updates the offsets
@@ -1407,73 +1407,73 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                      * however, some converters do not handle offsets at all
                      * (sourceIndex<0) or may not update the offsets pointer
                      */
-                    pArgs->offsets=offsets+=length;
+                    p_వాదనలు->offsets=offsets+=length;
                 }
 
-                if(sourceIndex>=0) {
-                    sourceIndex += static_cast<int32_t>(pArgs->source - s);
+                ఒకవేళ(ఆధారం_సూచీ>=0) {
+                    ఆధారం_సూచీ += static_cast<int32_t>(p_వాదనలు->ఆధారం - s);
                 }
             }
 
-            if(cnv->preToULength<0) {
+            ఒకవేళ(cnv->pre_గమ్యం_ULength<0) {
                 /*
                  * switch the source to new replay units (cannot occur while replaying)
                  * after offset handling and before end-of-input and callback handling
                  */
-                if(realSource==nullptr) {
-                    realSource=pArgs->source;
-                    realSourceLimit=pArgs->sourceLimit;
-                    realFlush=pArgs->flush;
-                    realSourceIndex=sourceIndex;
+                ఒకవేళ(real_ఆధారం==శూన్యసూచిక) {
+                    real_ఆధారం=p_వాదనలు->ఆధారం;
+                    real_ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+                    realFlush=p_వాదనలు->flush;
+                    real_ఆధారం_సూచీ=ఆధారం_సూచీ;
 
-                    uprv_memcpy(replay, cnv->preToU, -cnv->preToULength);
-                    pArgs->source=replay;
-                    pArgs->sourceLimit=replay-cnv->preToULength;
-                    pArgs->flush=false;
-                    if((sourceIndex+=cnv->preToULength)<0) {
-                        sourceIndex=-1;
+                    uprv_memcpy(replay, cnv->pre_గమ్యం_U, -cnv->pre_గమ్యం_ULength);
+                    p_వాదనలు->ఆధారం=replay;
+                    p_వాదనలు->ఆధారం_హద్దు=replay-cnv->pre_గమ్యం_ULength;
+                    p_వాదనలు->flush=అబద్ధం;
+                    ఒకవేళ((ఆధారం_సూచీ+=cnv->pre_గమ్యం_ULength)<0) {
+                        ఆధారం_సూచీ=-1;
                     }
 
-                    cnv->preToULength=0;
-                } else {
+                    cnv->pre_గమ్యం_ULength=0;
+                } లేకపోతే {
                     /* see implementation note before _fromUnicodeWithCallback() */
-                    U_ASSERT(realSource==nullptr);
-                    *err=U_INTERNAL_PROGRAM_ERROR;
+                    U_ASSERT(real_ఆధారం==శూన్యసూచిక);
+                    *err=U_అంతర్గత_కార్యక్రమం_ERROR;
                 }
             }
 
             /* update pointers */
-            s=pArgs->source;
-            t=pArgs->target;
+            s=p_వాదనలు->ఆధారం;
+            t=p_వాదనలు->లక్ష్యం;
 
-            if(U_SUCCESS(*err)) {
-                if(s<pArgs->sourceLimit) {
+            ఒకవేళ(U_SUCCESS(*err)) {
+                ఒకవేళ(s<p_వాదనలు->ఆధారం_హద్దు) {
                     /*
                      * continue with the conversion loop while there is still input left
                      * (continue converting by breaking out of only the inner loop)
                      */
-                    break;
-                } else if(realSource!=nullptr) {
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(real_ఆధారం!=శూన్యసూచిక) {
                     /* switch back from replaying to the real source and continue */
-                    pArgs->source=realSource;
-                    pArgs->sourceLimit=realSourceLimit;
-                    pArgs->flush=realFlush;
-                    sourceIndex=realSourceIndex;
+                    p_వాదనలు->ఆధారం=real_ఆధారం;
+                    p_వాదనలు->ఆధారం_హద్దు=real_ఆధారం_హద్దు;
+                    p_వాదనలు->flush=realFlush;
+                    ఆధారం_సూచీ=real_ఆధారం_సూచీ;
 
-                    realSource=nullptr;
-                    break;
-                } else if(pArgs->flush && cnv->toULength>0) {
+                    real_ఆధారం=శూన్యసూచిక;
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(p_వాదనలు->flush && cnv->గమ్యం_ULength>0) {
                     /*
                      * the entire input stream is consumed
                      * and there is a partial, truncated input sequence left
                      */
 
                     /* inject an error and continue with callback handling */
-                    *err=U_TRUNCATED_CHAR_FOUND;
-                    calledCallback=false; /* new error condition */
-                } else {
+                    *err=U_TRUNCATED_CHAR_దొరికింది;
+                    calledCallback=అబద్ధం; /* new error condition */
+                } లేకపోతే {
                     /* input consumed */
-                    if(pArgs->flush) {
+                    ఒకవేళ(p_వాదనలు->flush) {
                         /*
                          * return to the conversion loop once more if the flush
                          * flag is set and the conversion function has not
@@ -1481,28 +1481,28 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                          *
                          * (continue converting by breaking out of only the inner loop)
                          */
-                        if(!converterSawEndOfInput) {
-                            break;
+                        ఒకవేళ(!converter_Saw_చివర_యొక్క_ఆదానం) {
+                            ఆపు;
                         }
 
                         /* reset the converter without calling the callback function */
-                        _reset(cnv, UCNV_RESET_TO_UNICODE, false);
+                        _reset(cnv, UCNV_RESET_గమ్యం_UNICODE, అబద్ధం);
                     }
 
                     /* done successfully */
-                    return;
+                    తిరిగి;
                 }
             }
 
             /* U_FAILURE(*err) */
             {
-                UErrorCode e;
+                UError_సంకేతం e;
 
-                if( calledCallback ||
-                    (e=*err)==U_BUFFER_OVERFLOW_ERROR ||
-                    (e!=U_INVALID_CHAR_FOUND &&
-                     e!=U_ILLEGAL_CHAR_FOUND &&
-                     e!=U_TRUNCATED_CHAR_FOUND &&
+                ఒకవేళ( calledCallback ||
+                    (e=*err)==U_బఫరు_అధికప్రవాహం_ERROR ||
+                    (e!=U_INVALID_CHAR_దొరికింది &&
+                     e!=U_ILLEGAL_CHAR_దొరికింది &&
+                     e!=U_TRUNCATED_CHAR_దొరికింది &&
                      e!=U_ILLEGAL_ESCAPE_SEQUENCE &&
                      e!=U_UNSUPPORTED_ESCAPE_SEQUENCE)
                 ) {
@@ -1518,44 +1518,44 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                      * copied back into the UConverter
                      * and the real arguments must be restored
                      */
-                    if(realSource!=nullptr) {
+                    ఒకవేళ(real_ఆధారం!=శూన్యసూచిక) {
                         int32_t length;
 
-                        U_ASSERT(cnv->preToULength==0);
+                        U_ASSERT(cnv->pre_గమ్యం_ULength==0);
 
-                        length = static_cast<int32_t>(pArgs->sourceLimit - pArgs->source);
-                        if(length>0) {
-                            uprv_memcpy(cnv->preToU, pArgs->source, length);
-                            cnv->preToULength = static_cast<int8_t>(-length);
+                        length = static_cast<int32_t>(p_వాదనలు->ఆధారం_హద్దు - p_వాదనలు->ఆధారం);
+                        ఒకవేళ(length>0) {
+                            uprv_memcpy(cnv->pre_గమ్యం_U, p_వాదనలు->ఆధారం, length);
+                            cnv->pre_గమ్యం_ULength = static_cast<int8_t>(-length);
                         }
 
-                        pArgs->source=realSource;
-                        pArgs->sourceLimit=realSourceLimit;
-                        pArgs->flush=realFlush;
+                        p_వాదనలు->ఆధారం=real_ఆధారం;
+                        p_వాదనలు->ఆధారం_హద్దు=real_ఆధారం_హద్దు;
+                        p_వాదనలు->flush=realFlush;
                     }
 
-                    return;
+                    తిరిగి;
                 }
             }
 
             /* copy toUBytes[] to invalidCharBuffer[] */
-            errorInputLength=cnv->invalidCharLength=cnv->toULength;
-            if(errorInputLength>0) {
-                uprv_memcpy(cnv->invalidCharBuffer, cnv->toUBytes, errorInputLength);
+            error_ఆదానం_నిడివి=cnv->invalid_Char_నిడివి=cnv->గమ్యం_ULength;
+            ఒకవేళ(error_ఆదానం_నిడివి>0) {
+                uprv_memcpy(cnv->invalid_Char_బఫరు, cnv->గమ్యం_UBytes, error_ఆదానం_నిడివి);
             }
 
             /* set the converter state to deal with the next character */
-            cnv->toULength=0;
+            cnv->గమ్యం_ULength=0;
 
             /* call the callback function */
-            if(cnv->toUCallbackReason==UCNV_ILLEGAL && *err==U_INVALID_CHAR_FOUND) {
-                cnv->toUCallbackReason = UCNV_UNASSIGNED;
+            ఒకవేళ(cnv->గమ్యం_UCallback_Reason==UCNV_ILLEGAL && *err==U_INVALID_CHAR_దొరికింది) {
+                cnv->గమ్యం_UCallback_Reason = UCNV_UNASSIGNED;
             }
-            cnv->fromCharErrorBehaviour(cnv->toUContext, pArgs,
-                cnv->invalidCharBuffer, errorInputLength,
-                cnv->toUCallbackReason,
+            cnv->fromCharErrorBehaviour(cnv->గమ్యం_UContext, p_వాదనలు,
+                cnv->invalid_Char_బఫరు, error_ఆదానం_నిడివి,
+                cnv->గమ్యం_UCallback_Reason,
                 err);
-            cnv->toUCallbackReason = UCNV_ILLEGAL; /* reset to default value */
+            cnv->గమ్యం_UCallback_Reason = UCNV_ILLEGAL; /* reset to default value */
 
             /*
              * loop back to the offset handling
@@ -1564,7 +1564,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
              * that a callback was called;
              * if the callback did not resolve the error, then we return
              */
-            calledCallback=true;
+            calledCallback=నిజం;
         }
     }
 }
@@ -1574,90 +1574,90 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
  * Call this function if(cnv->UCharErrorBufferLength>0).
  * @return true if overflow
  */
-static UBool
-ucnv_outputOverflowToUnicode(UConverter *cnv,
-                             char16_t **target, const char16_t *targetLimit,
+స్థిర UBool
+ucnv_output_అధికప్రవాహం_గమ్యం_Unicode(UConverter *cnv,
+                             char16_t **లక్ష్యం, స్థిరరాశి char16_t *లక్ష్యం_హద్దు,
                              int32_t **pOffsets,
-                             UErrorCode *err) {
+                             UError_సంకేతం *err) {
     int32_t *offsets;
-    char16_t *overflow, *t;
+    char16_t *అధికప్రవాహం, *t;
     int32_t i, length;
 
-    t=*target;
-    if(pOffsets!=nullptr) {
+    t=*లక్ష్యం;
+    ఒకవేళ(pOffsets!=శూన్యసూచిక) {
         offsets=*pOffsets;
-    } else {
-        offsets=nullptr;
+    } లేకపోతే {
+        offsets=శూన్యసూచిక;
     }
 
-    overflow=cnv->UCharErrorBuffer;
-    length=cnv->UCharErrorBufferLength;
+    అధికప్రవాహం=cnv->UChar_Error_బఫరు;
+    length=cnv->UChar_Error_బఫరు_నిడివి;
     i=0;
-    while(i<length) {
-        if(t==targetLimit) {
+    అయితే(i<length) {
+        ఒకవేళ(t==లక్ష్యం_హద్దు) {
             /* the overflow buffer contains too much, keep the rest */
             int32_t j=0;
 
-            do {
-                overflow[j++]=overflow[i++];
-            } while(i<length);
+            చేయి {
+                అధికప్రవాహం[j++]=అధికప్రవాహం[i++];
+            } అయితే(i<length);
 
-            cnv->UCharErrorBufferLength = static_cast<int8_t>(j);
-            *target=t;
-            if(offsets!=nullptr) {
+            cnv->UChar_Error_బఫరు_నిడివి = static_cast<int8_t>(j);
+            *లక్ష్యం=t;
+            ఒకవేళ(offsets!=శూన్యసూచిక) {
                 *pOffsets=offsets;
             }
-            *err=U_BUFFER_OVERFLOW_ERROR;
-            return true;
+            *err=U_బఫరు_అధికప్రవాహం_ERROR;
+            తిరిగి నిజం;
         }
 
         /* copy the overflow contents to the target */
-        *t++=overflow[i++];
-        if(offsets!=nullptr) {
+        *t++=అధికప్రవాహం[i++];
+        ఒకవేళ(offsets!=శూన్యసూచిక) {
             *offsets++=-1; /* no source index available for old output */
         }
     }
 
     /* the overflow buffer is completely copied to the target */
-    cnv->UCharErrorBufferLength=0;
-    *target=t;
-    if(offsets!=nullptr) {
+    cnv->UChar_Error_బఫరు_నిడివి=0;
+    *లక్ష్యం=t;
+    ఒకవేళ(offsets!=శూన్యసూచిక) {
         *pOffsets=offsets;
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-U_CAPI void U_EXPORT2
-ucnv_toUnicode(UConverter *cnv,
-               char16_t **target, const char16_t *targetLimit,
-               const char **source, const char *sourceLimit,
+U_CAPI శూన్య U_EXPORT2
+ucnv_గమ్యం_Unicode(UConverter *cnv,
+               char16_t **లక్ష్యం, స్థిరరాశి char16_t *లక్ష్యం_హద్దు,
+               స్థిరరాశి అక్షరం **ఆధారం, స్థిరరాశి అక్షరం *ఆధారం_హద్దు,
                int32_t *offsets,
                UBool flush,
-               UErrorCode *err) {
-    UConverterToUnicodeArgs args;
-    const char *s;
+               UError_సంకేతం *err) {
+    UConverter_గమ్యం_Unicode_వాదనలు వాదనలు_2;
+    స్థిరరాశి అక్షరం *s;
     char16_t *t;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    ఒకవేళ(err==శూన్యసూచిక || U_FAILURE(*err)) {
+        తిరిగి;
     }
 
-    if(cnv==nullptr || target==nullptr || source==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ(cnv==శూన్యసూచిక || లక్ష్యం==శూన్యసూచిక || ఆధారం==శూన్యసూచిక) {
+        *err=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    s=*source;
-    t=*target;
+    s=*ఆధారం;
+    t=*లక్ష్యం;
 
-    if ((const void *)U_MAX_PTR(targetLimit) == (const void *)targetLimit) {
+    ఒకవేళ ((స్థిరరాశి శూన్య *)U_MAX_PTR(లక్ష్యం_హద్దు) == (స్థిరరాశి శూన్య *)లక్ష్యం_హద్దు) {
         /*
         Prevent code from going into an infinite loop in case we do hit this
         limit. The limit pointer is expected to be on a char16_t * boundary.
         This also prevents the next argument check from failing.
         */
-        targetLimit = (const char16_t *)(((const char *)targetLimit) - 1);
+        లక్ష్యం_హద్దు = (స్థిరరాశి char16_t *)(((స్థిరరాశి అక్షరం *)లక్ష్యం_హద్దు) - 1);
     }
 
     /*
@@ -1679,27 +1679,27 @@ ucnv_toUnicode(UConverter *cnv,
      * 3) Make sure that the user didn't incorrectly cast a char16_t * pointer
      * to a char * pointer and provide an incomplete char16_t code unit.
      */
-    if (sourceLimit<s || targetLimit<t ||
-        ((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s) ||
-        ((size_t)(targetLimit-t)>(size_t)0x3fffffff && targetLimit>t) ||
-        (((const char *)targetLimit-(const char *)t) & 1) != 0
+    ఒకవేళ (ఆధారం_హద్దు<s || లక్ష్యం_హద్దు<t ||
+        ((size_t)(ఆధారం_హద్దు-s)>(size_t)0x7fffffff && ఆధారం_హద్దు>s) ||
+        ((size_t)(లక్ష్యం_హద్దు-t)>(size_t)0x3fffffff && లక్ష్యం_హద్దు>t) ||
+        (((స్థిరరాశి అక్షరం *)లక్ష్యం_హద్దు-(స్థిరరాశి అక్షరం *)t) & 1) != 0
     ) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
     
     /* output the target overflow buffer */
-    if( cnv->UCharErrorBufferLength>0 &&
-        ucnv_outputOverflowToUnicode(cnv, target, targetLimit, &offsets, err)
+    ఒకవేళ( cnv->UChar_Error_బఫరు_నిడివి>0 &&
+        ucnv_output_అధికప్రవాహం_గమ్యం_Unicode(cnv, లక్ష్యం, లక్ష్యం_హద్దు, &offsets, err)
     ) {
         /* U_BUFFER_OVERFLOW_ERROR */
-        return;
+        తిరిగి;
     }
     /* *target may have moved, therefore stop using t */
 
-    if(!flush && s==sourceLimit && cnv->preToULength>=0) {
+    ఒకవేళ(!flush && s==ఆధారం_హద్దు && cnv->pre_గమ్యం_ULength>=0) {
         /* the overflow buffer is emptied and there is no new input: we are done */
-        return;
+        తిరిగి;
     }
 
     /*
@@ -1711,171 +1711,171 @@ ucnv_toUnicode(UConverter *cnv,
      */
 
     /* prepare the converter arguments */
-    args.converter=cnv;
-    args.flush=flush;
-    args.offsets=offsets;
-    args.source=s;
-    args.sourceLimit=sourceLimit;
-    args.target=*target;
-    args.targetLimit=targetLimit;
-    args.size=sizeof(args);
+    వాదనలు_2.converter=cnv;
+    వాదనలు_2.flush=flush;
+    వాదనలు_2.offsets=offsets;
+    వాదనలు_2.ఆధారం=s;
+    వాదనలు_2.ఆధారం_హద్దు=ఆధారం_హద్దు;
+    వాదనలు_2.లక్ష్యం=*లక్ష్యం;
+    వాదనలు_2.లక్ష్యం_హద్దు=లక్ష్యం_హద్దు;
+    వాదనలు_2.size=పరిమాణం(వాదనలు_2);
 
-    _toUnicodeWithCallback(&args, err);
+    గమ్యం_Unicode_With_Callback(&వాదనలు_2, err);
 
-    *source=args.source;
-    *target=args.target;
+    *ఆధారం=వాదనలు_2.ఆధారం;
+    *లక్ష్యం=వాదనలు_2.లక్ష్యం;
 }
 
 /* ucnv_to/fromUChars() ----------------------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
 ucnv_fromUChars(UConverter *cnv,
-                char *dest, int32_t destCapacity,
-                const char16_t *src, int32_t srcLength,
-                UErrorCode *pErrorCode) {
-    const char16_t *srcLimit;
-    char *originalDest, *destLimit;
-    int32_t destLength;
+                అక్షరం *dest, int32_t dest_సామర్థ్యం,
+                స్థిరరాశి char16_t *src, int32_t src_నిడివి,
+                UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి char16_t *src_హద్దు;
+    అక్షరం *originalDest, *dest_హద్దు;
+    int32_t dest_నిడివి;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
-    if( cnv==nullptr ||
-        destCapacity<0 || (destCapacity>0 && dest==nullptr) ||
-        srcLength<-1 || (srcLength!=0 && src==nullptr)
+    ఒకవేళ( cnv==శూన్యసూచిక ||
+        dest_సామర్థ్యం<0 || (dest_సామర్థ్యం>0 && dest==శూన్యసూచిక) ||
+        src_నిడివి<-1 || (src_నిడివి!=0 && src==శూన్యసూచిక)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* initialize */
     ucnv_resetFromUnicode(cnv);
     originalDest=dest;
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    ఒకవేళ(src_నిడివి==-1) {
+        src_నిడివి=u_strlen(src);
     }
-    if(srcLength>0) {
-        srcLimit=src+srcLength;
-        destCapacity=pinCapacity(dest, destCapacity);
-        destLimit=dest+destCapacity;
+    ఒకవేళ(src_నిడివి>0) {
+        src_హద్దు=src+src_నిడివి;
+        dest_సామర్థ్యం=pin_సామర్థ్యం(dest, dest_సామర్థ్యం);
+        dest_హద్దు=dest+dest_సామర్థ్యం;
 
         /* perform the conversion */
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-        destLength=(int32_t)(dest-originalDest);
+        UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
+        ucnv_fromUnicode(cnv, &dest, dest_హద్దు, &src, src_హద్దు, శూన్యసూచిక, నిజం, &బఫరు_స్థితి);
+        dest_నిడివి=(int32_t)(dest-originalDest);
 
         /* if an overflow occurs, then get the preflighting length */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
-            char buffer[1024];
+        ఒకవేళ(బఫరు_స్థితి==U_బఫరు_అధికప్రవాహం_ERROR) {
+            అక్షరం బఫరు[1024];
 
-            destLimit=buffer+sizeof(buffer);
-            do {
-                dest=buffer;
-                bufferStatus=U_ZERO_ERROR;
-                ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-                destLength+=(int32_t)(dest-buffer);
-            } while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+            dest_హద్దు=బఫరు+పరిమాణం(బఫరు);
+            చేయి {
+                dest=బఫరు;
+                బఫరు_స్థితి=U_ZERO_ERROR;
+                ucnv_fromUnicode(cnv, &dest, dest_హద్దు, &src, src_హద్దు, శూన్యసూచిక, నిజం, &బఫరు_స్థితి);
+                dest_నిడివి+=(int32_t)(dest-బఫరు);
+            } అయితే(బఫరు_స్థితి==U_బఫరు_అధికప్రవాహం_ERROR);
         }
-        if (U_FAILURE(bufferStatus)) {
-            *pErrorCode = bufferStatus;
+        ఒకవేళ (U_FAILURE(బఫరు_స్థితి)) {
+            *p_Error_సంకేతం = బఫరు_స్థితి;
         }
-    } else {
-        destLength=0;
+    } లేకపోతే {
+        dest_నిడివి=0;
     }
 
-    return u_terminateChars(originalDest, destCapacity, destLength, pErrorCode);
+    తిరిగి u_terminateChars(originalDest, dest_సామర్థ్యం, dest_నిడివి, p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_toUChars(UConverter *cnv,
-              char16_t *dest, int32_t destCapacity,
-              const char *src, int32_t srcLength,
-              UErrorCode *pErrorCode) {
-    const char *srcLimit;
-    char16_t *originalDest, *destLimit;
-    int32_t destLength;
+ucnv_గమ్యం_UChars(UConverter *cnv,
+              char16_t *dest, int32_t dest_సామర్థ్యం,
+              స్థిరరాశి అక్షరం *src, int32_t src_నిడివి,
+              UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి అక్షరం *src_హద్దు;
+    char16_t *originalDest, *dest_హద్దు;
+    int32_t dest_నిడివి;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
-    if( cnv==nullptr ||
-        destCapacity<0 || (destCapacity>0 && dest==nullptr) ||
-        srcLength<-1 || (srcLength!=0 && src==nullptr))
+    ఒకవేళ( cnv==శూన్యసూచిక ||
+        dest_సామర్థ్యం<0 || (dest_సామర్థ్యం>0 && dest==శూన్యసూచిక) ||
+        src_నిడివి<-1 || (src_నిడివి!=0 && src==శూన్యసూచిక))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* initialize */
-    ucnv_resetToUnicode(cnv);
+    ucnv_reset_గమ్యం_Unicode(cnv);
     originalDest=dest;
-    if(srcLength==-1) {
-        srcLength=(int32_t)uprv_strlen(src);
+    ఒకవేళ(src_నిడివి==-1) {
+        src_నిడివి=(int32_t)uprv_strlen(src);
     }
-    if(srcLength>0) {
-        srcLimit=src+srcLength;
-        destCapacity=pinCapacity(dest, destCapacity);
-        destLimit=dest+destCapacity;
+    ఒకవేళ(src_నిడివి>0) {
+        src_హద్దు=src+src_నిడివి;
+        dest_సామర్థ్యం=pin_సామర్థ్యం(dest, dest_సామర్థ్యం);
+        dest_హద్దు=dest+dest_సామర్థ్యం;
 
         /* perform the conversion */
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        ucnv_toUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-        destLength=(int32_t)(dest-originalDest);
+        UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
+        ucnv_గమ్యం_Unicode(cnv, &dest, dest_హద్దు, &src, src_హద్దు, శూన్యసూచిక, నిజం, &బఫరు_స్థితి);
+        dest_నిడివి=(int32_t)(dest-originalDest);
 
         /* if an overflow occurs, then get the preflighting length */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR)
+        ఒకవేళ(బఫరు_స్థితి==U_బఫరు_అధికప్రవాహం_ERROR)
         {
-            char16_t buffer[1024];
+            char16_t బఫరు[1024];
 
-            destLimit=buffer+UPRV_LENGTHOF(buffer);
-            do {
-                dest=buffer;
-                bufferStatus=U_ZERO_ERROR;
-                ucnv_toUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-                destLength+=(int32_t)(dest-buffer);
+            dest_హద్దు=బఫరు+UPRV_LENGTHOF(బఫరు);
+            చేయి {
+                dest=బఫరు;
+                బఫరు_స్థితి=U_ZERO_ERROR;
+                ucnv_గమ్యం_Unicode(cnv, &dest, dest_హద్దు, &src, src_హద్దు, శూన్యసూచిక, నిజం, &బఫరు_స్థితి);
+                dest_నిడివి+=(int32_t)(dest-బఫరు);
             }
-            while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+            అయితే(బఫరు_స్థితి==U_బఫరు_అధికప్రవాహం_ERROR);
         }
-        if (U_FAILURE(bufferStatus)) {
-            *pErrorCode = bufferStatus;
+        ఒకవేళ (U_FAILURE(బఫరు_స్థితి)) {
+            *p_Error_సంకేతం = బఫరు_స్థితి;
         }
-    } else {
-        destLength=0;
+    } లేకపోతే {
+        dest_నిడివి=0;
     }
 
-    return u_terminateUChars(originalDest, destCapacity, destLength, pErrorCode);
+    తిరిగి u_terminateUChars(originalDest, dest_సామర్థ్యం, dest_నిడివి, p_Error_సంకేతం);
 }
 
 /* ucnv_getNextUChar() ------------------------------------------------------ */
 
 U_CAPI UChar32 U_EXPORT2
-ucnv_getNextUChar(UConverter *cnv,
-                  const char **source, const char *sourceLimit,
-                  UErrorCode *err) {
-    UConverterToUnicodeArgs args;
-    char16_t buffer[U16_MAX_LENGTH];
-    const char *s;
+ucnv_get_తదుపరి_UChar(UConverter *cnv,
+                  స్థిరరాశి అక్షరం **ఆధారం, స్థిరరాశి అక్షరం *ఆధారం_హద్దు,
+                  UError_సంకేతం *err) {
+    UConverter_గమ్యం_Unicode_వాదనలు వాదనలు_2;
+    char16_t బఫరు[U16_MAX_నిడివి];
+    స్థిరరాశి అక్షరం *s;
     UChar32 c;
     int32_t i, length;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return 0xffff;
+    ఒకవేళ(err==శూన్యసూచిక || U_FAILURE(*err)) {
+        తిరిగి 0xffff;
     }
 
-    if(cnv==nullptr || source==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+    ఒకవేళ(cnv==శూన్యసూచిక || ఆధారం==శూన్యసూచిక) {
+        *err=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0xffff;
     }
 
-    s=*source;
-    if(sourceLimit<s) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+    s=*ఆధారం;
+    ఒకవేళ(ఆధారం_హద్దు<s) {
+        *err=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0xffff;
     }
 
     /*
@@ -1890,30 +1890,30 @@ ucnv_getNextUChar(UConverter *cnv,
      * consumed or the target filled (unless an error occurs).
      * An adjustment would be sourceLimit=t+0x7fffffff; for example.
      */
-    if(((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s)) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+    ఒకవేళ(((size_t)(ఆధారం_హద్దు-s)>(size_t)0x7fffffff && ఆధారం_హద్దు>s)) {
+        *err=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0xffff;
     }
 
     c=U_SENTINEL;
 
     /* flush the target overflow buffer */
-    if(cnv->UCharErrorBufferLength>0) {
-        char16_t *overflow;
+    ఒకవేళ(cnv->UChar_Error_బఫరు_నిడివి>0) {
+        char16_t *అధికప్రవాహం;
 
-        overflow=cnv->UCharErrorBuffer;
+        అధికప్రవాహం=cnv->UChar_Error_బఫరు;
         i=0;
-        length=cnv->UCharErrorBufferLength;
-        U16_NEXT(overflow, i, length, c);
+        length=cnv->UChar_Error_బఫరు_నిడివి;
+        U16_తదుపరి(అధికప్రవాహం, i, length, c);
 
         /* move the remaining overflow contents up to the beginning */
-        if((cnv->UCharErrorBufferLength=(int8_t)(length-i))>0) {
-            uprv_memmove(cnv->UCharErrorBuffer, cnv->UCharErrorBuffer+i,
-                         cnv->UCharErrorBufferLength*U_SIZEOF_UCHAR);
+        ఒకవేళ((cnv->UChar_Error_బఫరు_నిడివి=(int8_t)(length-i))>0) {
+            uprv_memmove(cnv->UChar_Error_బఫరు, cnv->UChar_Error_బఫరు+i,
+                         cnv->UChar_Error_బఫరు_నిడివి*U_SIZEOF_UCHAR);
         }
 
-        if(!U16_IS_LEAD(c) || i<length) {
-            return c;
+        ఒకవేళ(!U16_IS_LEAD(c) || i<length) {
+            తిరిగి c;
         }
         /*
          * Continue if the overflow buffer contained only a lead surrogate,
@@ -1930,16 +1930,16 @@ ucnv_getNextUChar(UConverter *cnv,
      */
 
     /* prepare the converter arguments */
-    args.converter=cnv;
-    args.flush=true;
-    args.offsets=nullptr;
-    args.source=s;
-    args.sourceLimit=sourceLimit;
-    args.target=buffer;
-    args.targetLimit=buffer+1;
-    args.size=sizeof(args);
+    వాదనలు_2.converter=cnv;
+    వాదనలు_2.flush=నిజం;
+    వాదనలు_2.offsets=శూన్యసూచిక;
+    వాదనలు_2.ఆధారం=s;
+    వాదనలు_2.ఆధారం_హద్దు=ఆధారం_హద్దు;
+    వాదనలు_2.లక్ష్యం=బఫరు;
+    వాదనలు_2.లక్ష్యం_హద్దు=బఫరు+1;
+    వాదనలు_2.size=పరిమాణం(వాదనలు_2);
 
-    if(c<0) {
+    ఒకవేళ(c<0) {
         /*
          * call the native getNextUChar() implementation if we are
          * at a character boundary (toULength==0)
@@ -1948,15 +1948,15 @@ ucnv_getNextUChar(UConverter *cnv,
          * U_TRUNCATED_CHAR_FOUND for truncated input,
          * in addition to setting toULength/toUBytes[]
          */
-        if(cnv->toULength==0 && cnv->sharedData->impl->getNextUChar!=nullptr) {
-            c=cnv->sharedData->impl->getNextUChar(&args, err);
-            *source=s=args.source;
-            if(*err==U_INDEX_OUTOFBOUNDS_ERROR) {
+        ఒకవేళ(cnv->గమ్యం_ULength==0 && cnv->shared_దత్తాంశం->impl->get_తదుపరి_UChar!=శూన్యసూచిక) {
+            c=cnv->shared_దత్తాంశం->impl->get_తదుపరి_UChar(&వాదనలు_2, err);
+            *ఆధారం=s=వాదనలు_2.ఆధారం;
+            ఒకవేళ(*err==U_సూచీ_OUTOFBOUNDS_ERROR) {
                 /* reset the converter without calling the callback function */
-                _reset(cnv, UCNV_RESET_TO_UNICODE, false);
-                return 0xffff; /* no output */
-            } else if(U_SUCCESS(*err) && c>=0) {
-                return c;
+                _reset(cnv, UCNV_RESET_గమ్యం_UNICODE, అబద్ధం);
+                తిరిగి 0xffff; /* no output */
+            } లేకపోతే ఒకవేళ(U_SUCCESS(*err) && c>=0) {
+                తిరిగి c;
             /*
              * else fall through to use _toUnicode() because
              *   UCNV_GET_NEXT_UCHAR_USE_TO_U: the native function did not want to handle it after all
@@ -1966,64 +1966,64 @@ ucnv_getNextUChar(UConverter *cnv,
         }
 
         /* convert to one char16_t in buffer[0], or handle getNextUChar() errors */
-        _toUnicodeWithCallback(&args, err);
+        గమ్యం_Unicode_With_Callback(&వాదనలు_2, err);
 
-        if(*err==U_BUFFER_OVERFLOW_ERROR) {
+        ఒకవేళ(*err==U_బఫరు_అధికప్రవాహం_ERROR) {
             *err=U_ZERO_ERROR;
         }
 
         i=0;
-        length=(int32_t)(args.target-buffer);
-    } else {
+        length=(int32_t)(వాదనలు_2.లక్ష్యం-బఫరు);
+    } లేకపోతే {
         /* write the lead surrogate from the overflow buffer */
-        buffer[0]=(char16_t)c;
-        args.target=buffer+1;
+        బఫరు[0]=(char16_t)c;
+        వాదనలు_2.లక్ష్యం=బఫరు+1;
         i=0;
         length=1;
     }
 
     /* buffer contents starts at i and ends before length */
 
-    if(U_FAILURE(*err)) {
+    ఒకవేళ(U_FAILURE(*err)) {
         c=0xffff; /* no output */
-    } else if(length==0) {
+    } లేకపోతే ఒకవేళ(length==0) {
         /* no input or only state changes */
-        *err=U_INDEX_OUTOFBOUNDS_ERROR;
+        *err=U_సూచీ_OUTOFBOUNDS_ERROR;
         /* no need to reset explicitly because _toUnicodeWithCallback() did it */
         c=0xffff; /* no output */
-    } else {
-        c=buffer[0];
+    } లేకపోతే {
+        c=బఫరు[0];
         i=1;
-        if(!U16_IS_LEAD(c)) {
+        ఒకవేళ(!U16_IS_LEAD(c)) {
             /* consume c=buffer[0], done */
-        } else {
+        } లేకపోతే {
             /* got a lead surrogate, see if a trail surrogate follows */
             char16_t c2;
 
-            if(cnv->UCharErrorBufferLength>0) {
+            ఒకవేళ(cnv->UChar_Error_బఫరు_నిడివి>0) {
                 /* got overflow output from the conversion */
-                if(U16_IS_TRAIL(c2=cnv->UCharErrorBuffer[0])) {
+                ఒకవేళ(U16_IS_TRAIL(c2=cnv->UChar_Error_బఫరు[0])) {
                     /* got a trail surrogate, too */
                     c=U16_GET_SUPPLEMENTARY(c, c2);
 
                     /* move the remaining overflow contents up to the beginning */
-                    if((--cnv->UCharErrorBufferLength)>0) {
-                        uprv_memmove(cnv->UCharErrorBuffer, cnv->UCharErrorBuffer+1,
-                                     cnv->UCharErrorBufferLength*U_SIZEOF_UCHAR);
+                    ఒకవేళ((--cnv->UChar_Error_బఫరు_నిడివి)>0) {
+                        uprv_memmove(cnv->UChar_Error_బఫరు, cnv->UChar_Error_బఫరు+1,
+                                     cnv->UChar_Error_బఫరు_నిడివి*U_SIZEOF_UCHAR);
                     }
-                } else {
+                } లేకపోతే {
                     /* c is an unpaired lead surrogate, just return it */
                 }
-            } else if(args.source<sourceLimit) {
+            } లేకపోతే ఒకవేళ(వాదనలు_2.ఆధారం<ఆధారం_హద్దు) {
                 /* convert once more, to buffer[1] */
-                args.targetLimit=buffer+2;
-                _toUnicodeWithCallback(&args, err);
-                if(*err==U_BUFFER_OVERFLOW_ERROR) {
+                వాదనలు_2.లక్ష్యం_హద్దు=బఫరు+2;
+                గమ్యం_Unicode_With_Callback(&వాదనలు_2, err);
+                ఒకవేళ(*err==U_బఫరు_అధికప్రవాహం_ERROR) {
                     *err=U_ZERO_ERROR;
                 }
 
-                length=(int32_t)(args.target-buffer);
-                if(U_SUCCESS(*err) && length==2 && U16_IS_TRAIL(c2=buffer[1])) {
+                length=(int32_t)(వాదనలు_2.లక్ష్యం-బఫరు);
+                ఒకవేళ(U_SUCCESS(*err) && length==2 && U16_IS_TRAIL(c2=బఫరు[1])) {
                     /* got a trail surrogate, too */
                     c=U16_GET_SUPPLEMENTARY(c, c2);
                     i=2;
@@ -2036,135 +2036,135 @@ ucnv_getNextUChar(UConverter *cnv,
      * move leftover output from buffer[i..length[
      * into the beginning of the overflow buffer
      */
-    if(i<length) {
+    ఒకవేళ(i<length) {
         /* move further overflow back */
         int32_t delta=length-i;
-        if((length=cnv->UCharErrorBufferLength)>0) {
-            uprv_memmove(cnv->UCharErrorBuffer+delta, cnv->UCharErrorBuffer,
+        ఒకవేళ((length=cnv->UChar_Error_బఫరు_నిడివి)>0) {
+            uprv_memmove(cnv->UChar_Error_బఫరు+delta, cnv->UChar_Error_బఫరు,
                          length*U_SIZEOF_UCHAR);
         }
-        cnv->UCharErrorBufferLength=(int8_t)(length+delta);
+        cnv->UChar_Error_బఫరు_నిడివి=(int8_t)(length+delta);
 
-        cnv->UCharErrorBuffer[0]=buffer[i++];
-        if(delta>1) {
-            cnv->UCharErrorBuffer[1]=buffer[i];
+        cnv->UChar_Error_బఫరు[0]=బఫరు[i++];
+        ఒకవేళ(delta>1) {
+            cnv->UChar_Error_బఫరు[1]=బఫరు[i];
         }
     }
 
-    *source=args.source;
-    return c;
+    *ఆధారం=వాదనలు_2.ఆధారం;
+    తిరిగి c;
 }
 
 /* ucnv_convert() and siblings ---------------------------------------------- */
 
-U_CAPI void U_EXPORT2
-ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
-               char **target, const char *targetLimit,
-               const char **source, const char *sourceLimit,
-               char16_t *pivotStart, char16_t **pivotSource,
-               char16_t **pivotTarget, const char16_t *pivotLimit,
+U_CAPI శూన్య U_EXPORT2
+ucnv_convertEx(UConverter *లక్ష్యం_Cnv, UConverter *ఆధారం_Cnv,
+               అక్షరం **లక్ష్యం, స్థిరరాశి అక్షరం *లక్ష్యం_హద్దు,
+               స్థిరరాశి అక్షరం **ఆధారం, స్థిరరాశి అక్షరం *ఆధారం_హద్దు,
+               char16_t *ఇరుసు_ప్రారంభం, char16_t **ఇరుసు_ఆధారం,
+               char16_t **ఇరుసు_లక్ష్యం, స్థిరరాశి char16_t *ఇరుసు_హద్దు,
                UBool reset, UBool flush,
-               UErrorCode *pErrorCode) {
-    char16_t pivotBuffer[CHUNK_SIZE];
-    const char16_t *myPivotSource;
-    char16_t *myPivotTarget;
-    const char *s;
-    char *t;
+               UError_సంకేతం *p_Error_సంకేతం) {
+    char16_t ఇరుసు_బఫరు[CHUNK_కొలత];
+    స్థిరరాశి char16_t *my_ఇరుసు_ఆధారం;
+    char16_t *my_ఇరుసు_లక్ష్యం;
+    స్థిరరాశి అక్షరం *s;
+    అక్షరం *t;
 
-    UConverterToUnicodeArgs toUArgs;
-    UConverterFromUnicodeArgs fromUArgs;
+    UConverter_గమ్యం_Unicode_వాదనలు గమ్యం_UArgs;
+    UConverter_From_Unicode_వాదనలు fromUArgs;
     UConverterConvert convert;
 
     /* error checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
 
-    if( targetCnv==nullptr || sourceCnv==nullptr ||
-        source==nullptr || *source==nullptr ||
-        target==nullptr || *target==nullptr || targetLimit==nullptr
+    ఒకవేళ( లక్ష్యం_Cnv==శూన్యసూచిక || ఆధారం_Cnv==శూన్యసూచిక ||
+        ఆధారం==శూన్యసూచిక || *ఆధారం==శూన్యసూచిక ||
+        లక్ష్యం==శూన్యసూచిక || *లక్ష్యం==శూన్యసూచిక || లక్ష్యం_హద్దు==శూన్యసూచిక
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    s=*source;
-    t=*target;
-    if((sourceLimit!=nullptr && sourceLimit<s) || targetLimit<t) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    s=*ఆధారం;
+    t=*లక్ష్యం;
+    ఒకవేళ((ఆధారం_హద్దు!=శూన్యసూచిక && ఆధారం_హద్దు<s) || లక్ష్యం_హద్దు<t) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
     /*
      * Make sure that the buffer sizes do not exceed the number range for
      * int32_t. See ucnv_toUnicode() for a more detailed comment.
      */
-    if(
-        (sourceLimit!=nullptr && ((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s)) ||
-        ((size_t)(targetLimit-t)>(size_t)0x7fffffff && targetLimit>t)
+    ఒకవేళ(
+        (ఆధారం_హద్దు!=శూన్యసూచిక && ((size_t)(ఆధారం_హద్దు-s)>(size_t)0x7fffffff && ఆధారం_హద్దు>s)) ||
+        ((size_t)(లక్ష్యం_హద్దు-t)>(size_t)0x7fffffff && లక్ష్యం_హద్దు>t)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
     
-    if(pivotStart==nullptr) {
-        if(!flush) {
+    ఒకవేళ(ఇరుసు_ప్రారంభం==శూన్యసూచిక) {
+        ఒకవేళ(!flush) {
             /* streaming conversion requires an explicit pivot buffer */
-            *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
 
         /* use the stack pivot buffer */
-        myPivotSource=myPivotTarget=pivotStart=pivotBuffer;
-        pivotSource=(char16_t **)&myPivotSource;
-        pivotTarget=&myPivotTarget;
-        pivotLimit=pivotBuffer+CHUNK_SIZE;
-    } else if(  pivotStart>=pivotLimit ||
-                pivotSource==nullptr || *pivotSource==nullptr ||
-                pivotTarget==nullptr || *pivotTarget==nullptr ||
-                pivotLimit==nullptr
+        my_ఇరుసు_ఆధారం=my_ఇరుసు_లక్ష్యం=ఇరుసు_ప్రారంభం=ఇరుసు_బఫరు;
+        ఇరుసు_ఆధారం=(char16_t **)&my_ఇరుసు_ఆధారం;
+        ఇరుసు_లక్ష్యం=&my_ఇరుసు_లక్ష్యం;
+        ఇరుసు_హద్దు=ఇరుసు_బఫరు+CHUNK_కొలత;
+    } లేకపోతే ఒకవేళ(  ఇరుసు_ప్రారంభం>=ఇరుసు_హద్దు ||
+                ఇరుసు_ఆధారం==శూన్యసూచిక || *ఇరుసు_ఆధారం==శూన్యసూచిక ||
+                ఇరుసు_లక్ష్యం==శూన్యసూచిక || *ఇరుసు_లక్ష్యం==శూన్యసూచిక ||
+                ఇరుసు_హద్దు==శూన్యసూచిక
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    if(sourceLimit==nullptr) {
+    ఒకవేళ(ఆధారం_హద్దు==శూన్యసూచిక) {
         /* get limit of single-byte-NUL-terminated source string */
-        sourceLimit=uprv_strchr(*source, 0);
+        ఆధారం_హద్దు=uprv_strchr(*ఆధారం, 0);
     }
 
-    if(reset) {
-        ucnv_resetToUnicode(sourceCnv);
-        ucnv_resetFromUnicode(targetCnv);
-        *pivotSource=*pivotTarget=pivotStart;
-    } else if(targetCnv->charErrorBufferLength>0) {
+    ఒకవేళ(reset) {
+        ucnv_reset_గమ్యం_Unicode(ఆధారం_Cnv);
+        ucnv_resetFromUnicode(లక్ష్యం_Cnv);
+        *ఇరుసు_ఆధారం=*ఇరుసు_లక్ష్యం=ఇరుసు_ప్రారంభం;
+    } లేకపోతే ఒకవేళ(లక్ష్యం_Cnv->char_Error_బఫరు_నిడివి>0) {
         /* output the targetCnv overflow buffer */
-        if(ucnv_outputOverflowFromUnicode(targetCnv, target, targetLimit, nullptr, pErrorCode)) {
+        ఒకవేళ(ucnv_output_అధికప్రవాహం_From_Unicode(లక్ష్యం_Cnv, లక్ష్యం, లక్ష్యం_హద్దు, శూన్యసూచిక, p_Error_సంకేతం)) {
             /* U_BUFFER_OVERFLOW_ERROR */
-            return;
+            తిరిగి;
         }
         /* *target has moved, therefore stop using t */
 
-        if( !flush &&
-            targetCnv->preFromULength>=0 && *pivotSource==*pivotTarget &&
-            sourceCnv->UCharErrorBufferLength==0 && sourceCnv->preToULength>=0 && s==sourceLimit
+        ఒకవేళ( !flush &&
+            లక్ష్యం_Cnv->preFromULength>=0 && *ఇరుసు_ఆధారం==*ఇరుసు_లక్ష్యం &&
+            ఆధారం_Cnv->UChar_Error_బఫరు_నిడివి==0 && ఆధారం_Cnv->pre_గమ్యం_ULength>=0 && s==ఆధారం_హద్దు
         ) {
             /* the fromUnicode overflow buffer is emptied and there is no new input: we are done */
-            return;
+            తిరిగి;
         }
     }
 
     /* Is direct-UTF-8 conversion available? */
-    if( sourceCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
-        targetCnv->sharedData->impl->fromUTF8!=nullptr
+    ఒకవేళ( ఆధారం_Cnv->shared_దత్తాంశం->static_దత్తాంశం->conversionType==UCNV_UTF8 &&
+        లక్ష్యం_Cnv->shared_దత్తాంశం->impl->fromUTF8!=శూన్యసూచిక
     ) {
-        convert=targetCnv->sharedData->impl->fromUTF8;
-    } else if( targetCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
-               sourceCnv->sharedData->impl->toUTF8!=nullptr
+        convert=లక్ష్యం_Cnv->shared_దత్తాంశం->impl->fromUTF8;
+    } లేకపోతే ఒకవేళ( లక్ష్యం_Cnv->shared_దత్తాంశం->static_దత్తాంశం->conversionType==UCNV_UTF8 &&
+               ఆధారం_Cnv->shared_దత్తాంశం->impl->గమ్యం_UTF8!=శూన్యసూచిక
     ) {
-        convert=sourceCnv->sharedData->impl->toUTF8;
-    } else {
-        convert=nullptr;
+        convert=ఆధారం_Cnv->shared_దత్తాంశం->impl->గమ్యం_UTF8;
+    } లేకపోతే {
+        convert=శూన్యసూచిక;
     }
 
     /*
@@ -2186,25 +2186,25 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      * conversion, with function call overhead outweighing the benefits
      * of direct conversion.
      */
-    if(convert!=nullptr && (pivotLimit-pivotStart)>32) {
-        pivotLimit=pivotStart+32;
+    ఒకవేళ(convert!=శూన్యసూచిక && (ఇరుసు_హద్దు-ఇరుసు_ప్రారంభం)>32) {
+        ఇరుసు_హద్దు=ఇరుసు_ప్రారంభం+32;
     }
 
     /* prepare the converter arguments */
-    fromUArgs.converter=targetCnv;
-    fromUArgs.flush=false;
-    fromUArgs.offsets=nullptr;
-    fromUArgs.target=*target;
-    fromUArgs.targetLimit=targetLimit;
-    fromUArgs.size=sizeof(fromUArgs);
+    fromUArgs.converter=లక్ష్యం_Cnv;
+    fromUArgs.flush=అబద్ధం;
+    fromUArgs.offsets=శూన్యసూచిక;
+    fromUArgs.లక్ష్యం=*లక్ష్యం;
+    fromUArgs.లక్ష్యం_హద్దు=లక్ష్యం_హద్దు;
+    fromUArgs.size=పరిమాణం(fromUArgs);
 
-    toUArgs.converter=sourceCnv;
-    toUArgs.flush=flush;
-    toUArgs.offsets=nullptr;
-    toUArgs.source=s;
-    toUArgs.sourceLimit=sourceLimit;
-    toUArgs.targetLimit=pivotLimit;
-    toUArgs.size=sizeof(toUArgs);
+    గమ్యం_UArgs.converter=ఆధారం_Cnv;
+    గమ్యం_UArgs.flush=flush;
+    గమ్యం_UArgs.offsets=శూన్యసూచిక;
+    గమ్యం_UArgs.ఆధారం=s;
+    గమ్యం_UArgs.ఆధారం_హద్దు=ఆధారం_హద్దు;
+    గమ్యం_UArgs.లక్ష్యం_హద్దు=ఇరుసు_హద్దు;
+    గమ్యం_UArgs.size=పరిమాణం(గమ్యం_UArgs);
 
     /*
      * TODO: Consider separating this function into two functions,
@@ -2213,7 +2213,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      *
      * Otherwise stop using s and t from here on.
      */
-    s=t=nullptr;
+    s=t=శూన్యసూచిక;
 
     /*
      * conversion loop
@@ -2226,7 +2226,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      *
      * The targetCnv overflow buffer is flushed out only once before the loop.
      */
-    for(;;) {
+    కొరకు(;;) {
         /*
          * if(pivot not empty or error or replay or flush fromUnicode) {
          *   fromUnicode(pivot -> target);
@@ -2235,18 +2235,18 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * For pivoting conversion; and for direct conversion for
          * error callback handling and flushing the replay buffer.
          */
-        if( *pivotSource<*pivotTarget ||
-            U_FAILURE(*pErrorCode) ||
-            targetCnv->preFromULength<0 ||
+        ఒకవేళ( *ఇరుసు_ఆధారం<*ఇరుసు_లక్ష్యం ||
+            U_FAILURE(*p_Error_సంకేతం) ||
+            లక్ష్యం_Cnv->preFromULength<0 ||
             fromUArgs.flush
         ) {
-            fromUArgs.source=*pivotSource;
-            fromUArgs.sourceLimit=*pivotTarget;
-            _fromUnicodeWithCallback(&fromUArgs, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            fromUArgs.ఆధారం=*ఇరుసు_ఆధారం;
+            fromUArgs.ఆధారం_హద్దు=*ఇరుసు_లక్ష్యం;
+            _fromUnicodeWithCallback(&fromUArgs, p_Error_సంకేతం);
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                 /* target overflow, or conversion error */
-                *pivotSource=(char16_t *)fromUArgs.source;
-                break;
+                *ఇరుసు_ఆధారం=(char16_t *)fromUArgs.ఆధారం;
+                ఆపు;
             }
 
             /*
@@ -2256,7 +2256,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
         }
 
         /* The pivot buffer is empty; reset it so we start at pivotStart. */
-        *pivotSource=*pivotTarget=pivotStart;
+        *ఇరుసు_ఆధారం=*ఇరుసు_లక్ష్యం=ఇరుసు_ప్రారంభం;
 
         /*
          * if(sourceCnv overflow buffer not empty) {
@@ -2265,12 +2265,12 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * }
          */
         /* output the sourceCnv overflow buffer */
-        if(sourceCnv->UCharErrorBufferLength>0) {
-            if(ucnv_outputOverflowToUnicode(sourceCnv, pivotTarget, pivotLimit, nullptr, pErrorCode)) {
+        ఒకవేళ(ఆధారం_Cnv->UChar_Error_బఫరు_నిడివి>0) {
+            ఒకవేళ(ucnv_output_అధికప్రవాహం_గమ్యం_Unicode(ఆధారం_Cnv, ఇరుసు_లక్ష్యం, ఇరుసు_హద్దు, శూన్యసూచిక, p_Error_సంకేతం)) {
                 /* U_BUFFER_OVERFLOW_ERROR */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_సంకేతం=U_ZERO_ERROR;
             }
-            continue;
+            కొనసాగు;
         }
 
         /*
@@ -2280,12 +2280,12 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * have been called with the flush flag set if the ucnv_convertEx()
          * caller set it.
          */
-        if( toUArgs.source==sourceLimit &&
-            sourceCnv->preToULength>=0 && sourceCnv->toULength==0 &&
+        ఒకవేళ( గమ్యం_UArgs.ఆధారం==ఆధారం_హద్దు &&
+            ఆధారం_Cnv->pre_గమ్యం_ULength>=0 && ఆధారం_Cnv->గమ్యం_ULength==0 &&
             (!flush || fromUArgs.flush)
         ) {
             /* done successfully */
-            break;
+            ఆపు;
         }
 
         /*
@@ -2293,16 +2293,16 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * but not if continuing a partial match
          * or flushing the toUnicode replay buffer
          */
-        if(convert!=nullptr && targetCnv->preFromUFirstCP<0 && sourceCnv->preToULength==0) {
-            if(*pErrorCode==U_USING_DEFAULT_WARNING) {
+        ఒకవేళ(convert!=శూన్యసూచిక && లక్ష్యం_Cnv->preFromUFirstCP<0 && ఆధారం_Cnv->pre_గమ్యం_ULength==0) {
+            ఒకవేళ(*p_Error_సంకేతం==U_USING_DEFAULT_WARNING) {
                 /* remove a warning that may be set by this function */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_సంకేతం=U_ZERO_ERROR;
             }
-            convert(&fromUArgs, &toUArgs, pErrorCode);
-            if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
-                break;
-            } else if(U_FAILURE(*pErrorCode)) {
-                if(sourceCnv->toULength>0) {
+            convert(&fromUArgs, &గమ్యం_UArgs, p_Error_సంకేతం);
+            ఒకవేళ(*p_Error_సంకేతం==U_బఫరు_అధికప్రవాహం_ERROR) {
+                ఆపు;
+            } లేకపోతే ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+                ఒకవేళ(ఆధారం_Cnv->గమ్యం_ULength>0) {
                     /*
                      * Fall through to calling _toUnicodeWithCallback()
                      * for callback handling.
@@ -2312,47 +2312,47 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
                      * which indicates a toUnicode error to the caller
                      * (*pivotSource==pivotStart shows no pivot UChars consumed).
                      */
-                } else {
+                } లేకపోతే {
                     /*
                      * Indicate a fromUnicode error to the caller
                      * (*pivotSource>pivotStart shows some pivot UChars consumed).
                      */
-                    *pivotSource=*pivotTarget=pivotStart+1;
+                    *ఇరుసు_ఆధారం=*ఇరుసు_లక్ష్యం=ఇరుసు_ప్రారంభం+1;
                     /*
                      * Loop around to calling _fromUnicodeWithCallbacks()
                      * for callback handling.
                      */
-                    continue;
+                    కొనసాగు;
                 }
-            } else if(*pErrorCode==U_USING_DEFAULT_WARNING) {
+            } లేకపోతే ఒకవేళ(*p_Error_సంకేతం==U_USING_DEFAULT_WARNING) {
                 /*
                  * No error, but the implementation requested to temporarily
                  * fall back to pivoting.
                  */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_సంకేతం=U_ZERO_ERROR;
             /*
              * The following else branches are almost identical to the end-of-input
              * handling in _toUnicodeWithCallback().
              * Avoid calling it just for the end of input.
              */
-            } else if(flush && sourceCnv->toULength>0) { /* flush==toUArgs.flush */
+            } లేకపోతే ఒకవేళ(flush && ఆధారం_Cnv->గమ్యం_ULength>0) { /* flush==toUArgs.flush */
                 /*
                  * the entire input stream is consumed
                  * and there is a partial, truncated input sequence left
                  */
 
                 /* inject an error and continue with callback handling */
-                *pErrorCode=U_TRUNCATED_CHAR_FOUND;
-            } else {
+                *p_Error_సంకేతం=U_TRUNCATED_CHAR_దొరికింది;
+            } లేకపోతే {
                 /* input consumed */
-                if(flush) {
+                ఒకవేళ(flush) {
                     /* reset the converters without calling the callback functions */
-                    _reset(sourceCnv, UCNV_RESET_TO_UNICODE, false);
-                    _reset(targetCnv, UCNV_RESET_FROM_UNICODE, false);
+                    _reset(ఆధారం_Cnv, UCNV_RESET_గమ్యం_UNICODE, అబద్ధం);
+                    _reset(లక్ష్యం_Cnv, UCNV_RESET_FROM_UNICODE, అబద్ధం);
                 }
 
                 /* done successfully */
-                break;
+                ఆపు;
             }
         }
         
@@ -2365,16 +2365,16 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          *
          * The pivot buffer is empty and reset.
          */
-        toUArgs.target=pivotStart; /* ==*pivotTarget */
+        గమ్యం_UArgs.లక్ష్యం=ఇరుసు_ప్రారంభం; /* ==*pivotTarget */
         /* toUArgs.targetLimit=pivotLimit; already set before the loop */
-        _toUnicodeWithCallback(&toUArgs, pErrorCode);
-        *pivotTarget=toUArgs.target;
-        if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
+        గమ్యం_Unicode_With_Callback(&గమ్యం_UArgs, p_Error_సంకేతం);
+        *ఇరుసు_లక్ష్యం=గమ్యం_UArgs.లక్ష్యం;
+        ఒకవేళ(*p_Error_సంకేతం==U_బఫరు_అధికప్రవాహం_ERROR) {
             /* pivot overflow: continue with the conversion loop */
-            *pErrorCode=U_ZERO_ERROR;
-        } else if(U_FAILURE(*pErrorCode) || (!flush && *pivotTarget==pivotStart)) {
+            *p_Error_సంకేతం=U_ZERO_ERROR;
+        } లేకపోతే ఒకవేళ(U_FAILURE(*p_Error_సంకేతం) || (!flush && *ఇరుసు_లక్ష్యం==ఇరుసు_ప్రారంభం)) {
             /* conversion error, or there was nothing left to convert */
-            break;
+            ఆపు;
         }
         /*
          * else:
@@ -2384,11 +2384,11 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * Set the fromUnicode flush flag if we flush and if toUnicode has
          * processed the end of the input.
          */
-        if( flush && toUArgs.source==sourceLimit &&
-            sourceCnv->preToULength>=0 &&
-            sourceCnv->UCharErrorBufferLength==0
+        ఒకవేళ( flush && గమ్యం_UArgs.ఆధారం==ఆధారం_హద్దు &&
+            ఆధారం_Cnv->pre_గమ్యం_ULength>=0 &&
+            ఆధారం_Cnv->UChar_Error_బఫరు_నిడివి==0
         ) {
-            fromUArgs.flush=true;
+            fromUArgs.flush=నిజం;
         }
     }
 
@@ -2399,63 +2399,63 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      * - a conversion error occurred
      */
 
-    *source=toUArgs.source;
-    *target=fromUArgs.target;
+    *ఆధారం=గమ్యం_UArgs.ఆధారం;
+    *లక్ష్యం=fromUArgs.లక్ష్యం;
 
     /* terminate the target buffer if possible */
-    if(flush && U_SUCCESS(*pErrorCode)) {
-        if(*target!=targetLimit) {
-            **target=0;
-            if(*pErrorCode==U_STRING_NOT_TERMINATED_WARNING) {
-                *pErrorCode=U_ZERO_ERROR;
+    ఒకవేళ(flush && U_SUCCESS(*p_Error_సంకేతం)) {
+        ఒకవేళ(*లక్ష్యం!=లక్ష్యం_హద్దు) {
+            **లక్ష్యం=0;
+            ఒకవేళ(*p_Error_సంకేతం==U_STRING_NOT_TERMINATED_WARNING) {
+                *p_Error_సంకేతం=U_ZERO_ERROR;
             }
-        } else {
-            *pErrorCode=U_STRING_NOT_TERMINATED_WARNING;
+        } లేకపోతే {
+            *p_Error_సంకేతం=U_STRING_NOT_TERMINATED_WARNING;
         }
     }
 }
 
 /* internal implementation of ucnv_convert() etc. with preflighting */
-static int32_t
-ucnv_internalConvert(UConverter *outConverter, UConverter *inConverter,
-                     char *target, int32_t targetCapacity,
-                     const char *source, int32_t sourceLength,
-                     UErrorCode *pErrorCode) {
-    char16_t pivotBuffer[CHUNK_SIZE];
-    char16_t *pivot, *pivot2;
+స్థిర int32_t
+ucnv_అంతర్గత_Convert(UConverter *బహిర్గతం_Converter, UConverter *లోపల_Converter,
+                     అక్షరం *లక్ష్యం, int32_t లక్ష్యం_సామర్థ్యం,
+                     స్థిరరాశి అక్షరం *ఆధారం, int32_t ఆధారం_నిడివి,
+                     UError_సంకేతం *p_Error_సంకేతం) {
+    char16_t ఇరుసు_బఫరు[CHUNK_కొలత];
+    char16_t *ఇరుసు, *pivot2;
 
-    char *myTarget;
-    const char *sourceLimit;
-    const char *targetLimit;
-    int32_t targetLength=0;
+    అక్షరం *my_లక్ష్యం;
+    స్థిరరాశి అక్షరం *ఆధారం_హద్దు;
+    స్థిరరాశి అక్షరం *లక్ష్యం_హద్దు;
+    int32_t లక్ష్యం_నిడివి=0;
 
     /* set up */
-    if(sourceLength<0) {
-        sourceLimit=uprv_strchr(source, 0);
-    } else {
-        sourceLimit=source+sourceLength;
+    ఒకవేళ(ఆధారం_నిడివి<0) {
+        ఆధారం_హద్దు=uprv_strchr(ఆధారం, 0);
+    } లేకపోతే {
+        ఆధారం_హద్దు=ఆధారం+ఆధారం_నిడివి;
     }
 
     /* if there is no input data, we're done */
-    if(source==sourceLimit) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    ఒకవేళ(ఆధారం==ఆధారం_హద్దు) {
+        తిరిగి u_terminateChars(లక్ష్యం, లక్ష్యం_సామర్థ్యం, 0, p_Error_సంకేతం);
     }
 
-    pivot=pivot2=pivotBuffer;
-    myTarget=target;
-    targetLength=0;
+    ఇరుసు=pivot2=ఇరుసు_బఫరు;
+    my_లక్ష్యం=లక్ష్యం;
+    లక్ష్యం_నిడివి=0;
 
-    if(targetCapacity>0) {
+    ఒకవేళ(లక్ష్యం_సామర్థ్యం>0) {
         /* perform real conversion */
-        targetLimit=target+targetCapacity;
-        ucnv_convertEx(outConverter, inConverter,
-                       &myTarget, targetLimit,
-                       &source, sourceLimit,
-                       pivotBuffer, &pivot, &pivot2, pivotBuffer+CHUNK_SIZE,
-                       false,
-                       true,
-                       pErrorCode);
-        targetLength = static_cast<int32_t>(myTarget - target);
+        లక్ష్యం_హద్దు=లక్ష్యం+లక్ష్యం_సామర్థ్యం;
+        ucnv_convertEx(బహిర్గతం_Converter, లోపల_Converter,
+                       &my_లక్ష్యం, లక్ష్యం_హద్దు,
+                       &ఆధారం, ఆధారం_హద్దు,
+                       ఇరుసు_బఫరు, &ఇరుసు, &pivot2, ఇరుసు_బఫరు+CHUNK_కొలత,
+                       అబద్ధం,
+                       నిజం,
+                       p_Error_సంకేతం);
+        లక్ష్యం_నిడివి = static_cast<int32_t>(my_లక్ష్యం - లక్ష్యం);
     }
 
     /*
@@ -2463,375 +2463,375 @@ ucnv_internalConvert(UConverter *outConverter, UConverter *inConverter,
      * to it but continue the conversion in order to store in targetCapacity
      * the number of bytes that was required.
      */
-    if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR || targetCapacity==0)
+    ఒకవేళ(*p_Error_సంకేతం==U_బఫరు_అధికప్రవాహం_ERROR || లక్ష్యం_సామర్థ్యం==0)
     {
-        char targetBuffer[CHUNK_SIZE];
+        అక్షరం లక్ష్యం_బఫరు[CHUNK_కొలత];
 
-        targetLimit=targetBuffer+CHUNK_SIZE;
-        do {
-            *pErrorCode=U_ZERO_ERROR;
-            myTarget=targetBuffer;
-            ucnv_convertEx(outConverter, inConverter,
-                           &myTarget, targetLimit,
-                           &source, sourceLimit,
-                           pivotBuffer, &pivot, &pivot2, pivotBuffer+CHUNK_SIZE,
-                           false,
-                           true,
-                           pErrorCode);
-            targetLength += static_cast<int32_t>(myTarget - targetBuffer);
-        } while(*pErrorCode==U_BUFFER_OVERFLOW_ERROR);
+        లక్ష్యం_హద్దు=లక్ష్యం_బఫరు+CHUNK_కొలత;
+        చేయి {
+            *p_Error_సంకేతం=U_ZERO_ERROR;
+            my_లక్ష్యం=లక్ష్యం_బఫరు;
+            ucnv_convertEx(బహిర్గతం_Converter, లోపల_Converter,
+                           &my_లక్ష్యం, లక్ష్యం_హద్దు,
+                           &ఆధారం, ఆధారం_హద్దు,
+                           ఇరుసు_బఫరు, &ఇరుసు, &pivot2, ఇరుసు_బఫరు+CHUNK_కొలత,
+                           అబద్ధం,
+                           నిజం,
+                           p_Error_సంకేతం);
+            లక్ష్యం_నిడివి += static_cast<int32_t>(my_లక్ష్యం - లక్ష్యం_బఫరు);
+        } అయితే(*p_Error_సంకేతం==U_బఫరు_అధికప్రవాహం_ERROR);
 
         /* done with preflighting, set warnings and errors as appropriate */
-        return u_terminateChars(target, targetCapacity, targetLength, pErrorCode);
+        తిరిగి u_terminateChars(లక్ష్యం, లక్ష్యం_సామర్థ్యం, లక్ష్యం_నిడివి, p_Error_సంకేతం);
     }
 
     /* no need to call u_terminateChars() because ucnv_convertEx() took care of that */
-    return targetLength;
+    తిరిగి లక్ష్యం_నిడివి;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_convert(const char *toConverterName, const char *fromConverterName,
-             char *target, int32_t targetCapacity,
-             const char *source, int32_t sourceLength,
-             UErrorCode *pErrorCode) {
+ucnv_convert(స్థిరరాశి అక్షరం *గమ్యం_Converter_Name, స్థిరరాశి అక్షరం *fromConverterName,
+             అక్షరం *లక్ష్యం, int32_t లక్ష్యం_సామర్థ్యం,
+             స్థిరరాశి అక్షరం *ఆధారం, int32_t ఆధారం_నిడివి,
+             UError_సంకేతం *p_Error_సంకేతం) {
     UConverter in, out; /* stack-allocated */
-    UConverter *inConverter, *outConverter;
-    int32_t targetLength;
+    UConverter *లోపల_Converter, *బహిర్గతం_Converter;
+    int32_t లక్ష్యం_నిడివి;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
-    if( source==nullptr || sourceLength<-1 ||
-        targetCapacity<0 || (targetCapacity>0 && target==nullptr)
+    ఒకవేళ( ఆధారం==శూన్యసూచిక || ఆధారం_నిడివి<-1 ||
+        లక్ష్యం_సామర్థ్యం<0 || (లక్ష్యం_సామర్థ్యం>0 && లక్ష్యం==శూన్యసూచిక)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* if there is no input data, we're done */
-    if(sourceLength==0 || (sourceLength<0 && *source==0)) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    ఒకవేళ(ఆధారం_నిడివి==0 || (ఆధారం_నిడివి<0 && *ఆధారం==0)) {
+        తిరిగి u_terminateChars(లక్ష్యం, లక్ష్యం_సామర్థ్యం, 0, p_Error_సంకేతం);
     }
 
     /* create the converters */
-    inConverter=ucnv_createConverter(&in, fromConverterName, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    లోపల_Converter=ucnv_createConverter(&in, fromConverterName, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
-    outConverter=ucnv_createConverter(&out, toConverterName, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        ucnv_close(inConverter);
-        return 0;
+    బహిర్గతం_Converter=ucnv_createConverter(&out, గమ్యం_Converter_Name, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        ucnv_close(లోపల_Converter);
+        తిరిగి 0;
     }
 
-    targetLength=ucnv_internalConvert(outConverter, inConverter,
-                                      target, targetCapacity,
-                                      source, sourceLength,
-                                      pErrorCode);
+    లక్ష్యం_నిడివి=ucnv_అంతర్గత_Convert(బహిర్గతం_Converter, లోపల_Converter,
+                                      లక్ష్యం, లక్ష్యం_సామర్థ్యం,
+                                      ఆధారం, ఆధారం_నిడివి,
+                                      p_Error_సంకేతం);
 
-    ucnv_close(inConverter);
-    ucnv_close(outConverter);
+    ucnv_close(లోపల_Converter);
+    ucnv_close(బహిర్గతం_Converter);
 
-    return targetLength;
+    తిరిగి లక్ష్యం_నిడివి;
 }
 
 /* @internal */
-static int32_t
-ucnv_convertAlgorithmic(UBool convertToAlgorithmic,
+స్థిర int32_t
+ucnv_convertAlgorithmic(UBool convert_గమ్యం_Algorithmic,
                         UConverterType algorithmicType,
                         UConverter *cnv,
-                        char *target, int32_t targetCapacity,
-                        const char *source, int32_t sourceLength,
-                        UErrorCode *pErrorCode) {
+                        అక్షరం *లక్ష్యం, int32_t లక్ష్యం_సామర్థ్యం,
+                        స్థిరరాశి అక్షరం *ఆధారం, int32_t ఆధారం_నిడివి,
+                        UError_సంకేతం *p_Error_సంకేతం) {
     UConverter algoConverterStatic; /* stack-allocated */
-    UConverter *algoConverter, *to, *from;
-    int32_t targetLength;
+    UConverter *algoConverter, *గమ్యం, *from;
+    int32_t లక్ష్యం_నిడివి;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
-    if( cnv==nullptr || source==nullptr || sourceLength<-1 ||
-        targetCapacity<0 || (targetCapacity>0 && target==nullptr)
+    ఒకవేళ( cnv==శూన్యసూచిక || ఆధారం==శూన్యసూచిక || ఆధారం_నిడివి<-1 ||
+        లక్ష్యం_సామర్థ్యం<0 || (లక్ష్యం_సామర్థ్యం>0 && లక్ష్యం==శూన్యసూచిక)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* if there is no input data, we're done */
-    if(sourceLength==0 || (sourceLength<0 && *source==0)) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    ఒకవేళ(ఆధారం_నిడివి==0 || (ఆధారం_నిడివి<0 && *ఆధారం==0)) {
+        తిరిగి u_terminateChars(లక్ష్యం, లక్ష్యం_సామర్థ్యం, 0, p_Error_సంకేతం);
     }
 
     /* create the algorithmic converter */
     algoConverter=ucnv_createAlgorithmicConverter(&algoConverterStatic, algorithmicType,
-                                                  "", 0, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+                                                  "", 0, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
     /* reset the other converter */
-    if(convertToAlgorithmic) {
+    ఒకవేళ(convert_గమ్యం_Algorithmic) {
         /* cnv->Unicode->algo */
-        ucnv_resetToUnicode(cnv);
-        to=algoConverter;
+        ucnv_reset_గమ్యం_Unicode(cnv);
+        గమ్యం=algoConverter;
         from=cnv;
-    } else {
+    } లేకపోతే {
         /* algo->Unicode->cnv */
         ucnv_resetFromUnicode(cnv);
         from=algoConverter;
-        to=cnv;
+        గమ్యం=cnv;
     }
 
-    targetLength=ucnv_internalConvert(to, from,
-                                      target, targetCapacity,
-                                      source, sourceLength,
-                                      pErrorCode);
+    లక్ష్యం_నిడివి=ucnv_అంతర్గత_Convert(గమ్యం, from,
+                                      లక్ష్యం, లక్ష్యం_సామర్థ్యం,
+                                      ఆధారం, ఆధారం_నిడివి,
+                                      p_Error_సంకేతం);
 
     ucnv_close(algoConverter);
 
-    return targetLength;
+    తిరిగి లక్ష్యం_నిడివి;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_toAlgorithmic(UConverterType algorithmicType,
+ucnv_గమ్యం_Algorithmic(UConverterType algorithmicType,
                    UConverter *cnv,
-                   char *target, int32_t targetCapacity,
-                   const char *source, int32_t sourceLength,
-                   UErrorCode *pErrorCode) {
-    return ucnv_convertAlgorithmic(true, algorithmicType, cnv,
-                                   target, targetCapacity,
-                                   source, sourceLength,
-                                   pErrorCode);
+                   అక్షరం *లక్ష్యం, int32_t లక్ష్యం_సామర్థ్యం,
+                   స్థిరరాశి అక్షరం *ఆధారం, int32_t ఆధారం_నిడివి,
+                   UError_సంకేతం *p_Error_సంకేతం) {
+    తిరిగి ucnv_convertAlgorithmic(నిజం, algorithmicType, cnv,
+                                   లక్ష్యం, లక్ష్యం_సామర్థ్యం,
+                                   ఆధారం, ఆధారం_నిడివి,
+                                   p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
 ucnv_fromAlgorithmic(UConverter *cnv,
                      UConverterType algorithmicType,
-                     char *target, int32_t targetCapacity,
-                     const char *source, int32_t sourceLength,
-                     UErrorCode *pErrorCode) UPRV_NO_SANITIZE_UNDEFINED {
+                     అక్షరం *లక్ష్యం, int32_t లక్ష్యం_సామర్థ్యం,
+                     స్థిరరాశి అక్షరం *ఆధారం, int32_t ఆధారం_నిడివి,
+                     UError_సంకేతం *p_Error_సంకేతం) UPRV_NO_SANITIZE_UNDEFINED {
 
-    if(algorithmicType<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=algorithmicType) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(algorithmicType<0 || UCNV_సంఖ్య_యొక్క_SUPPORTED_CONVERTER_TYPES<=algorithmicType) {
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    return ucnv_convertAlgorithmic(false, algorithmicType, cnv,
-                                   target, targetCapacity,
-                                   source, sourceLength,
-                                   pErrorCode);
+    తిరిగి ucnv_convertAlgorithmic(అబద్ధం, algorithmicType, cnv,
+                                   లక్ష్యం, లక్ష్యం_సామర్థ్యం,
+                                   ఆధారం, ఆధారం_నిడివి,
+                                   p_Error_సంకేతం);
 }
 
 U_CAPI UConverterType  U_EXPORT2
-ucnv_getType(const UConverter* converter)
+ucnv_getType(స్థిరరాశి UConverter* converter)
 {
-    int8_t type = converter->sharedData->staticData->conversionType;
-#if !UCONFIG_NO_LEGACY_CONVERSION
-    if(type == UCNV_MBCS) {
-        return ucnv_MBCSGetType(converter);
+    int8_t type = converter->shared_దత్తాంశం->static_దత్తాంశం->conversionType;
+#ఒకవేళ !UCONFIG_NO_LEGACY_CONVERSION
+    ఒకవేళ(type == UCNV_MBCS) {
+        తిరిగి ucnv_MBCSGetType(converter);
     }
-#endif
-    return (UConverterType)type;
+#అయితే_ముగింపు
+    తిరిగి (UConverterType)type;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_getStarters(const UConverter* converter, 
+U_CAPI శూన్య  U_EXPORT2
+ucnv_getStarters(స్థిరరాశి UConverter* converter, 
                  UBool starters[256],
-                 UErrorCode* err)
+                 UError_సంకేతం* err)
 {
-    if (err == nullptr || U_FAILURE(*err)) {
-        return;
+    ఒకవేళ (err == శూన్యసూచిక || U_FAILURE(*err)) {
+        తిరిగి;
     }
 
-    if(converter->sharedData->impl->getStarters != nullptr) {
-        converter->sharedData->impl->getStarters(converter, starters, err);
-    } else {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
+    ఒకవేళ(converter->shared_దత్తాంశం->impl->getStarters != శూన్యసూచిక) {
+        converter->shared_దత్తాంశం->impl->getStarters(converter, starters, err);
+    } లేకపోతే {
+        *err = U_ILLEGAL_వాదం_ERROR;
     }
 }
 
-static const UAmbiguousConverter *ucnv_getAmbiguous(const UConverter *cnv)
+స్థిర స్థిరరాశి UAmbiguousConverter *ucnv_getAmbiguous(స్థిరరాశి UConverter *cnv)
 {
-    UErrorCode errorCode;
-    const char *name;
+    UError_సంకేతం error_సంకేతం;
+    స్థిరరాశి అక్షరం *name;
     int32_t i;
 
-    if(cnv==nullptr) {
-        return nullptr;
+    ఒకవేళ(cnv==శూన్యసూచిక) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    errorCode=U_ZERO_ERROR;
-    name=ucnv_getName(cnv, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    error_సంకేతం=U_ZERO_ERROR;
+    name=ucnv_getName(cnv, &error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    for(i=0; i<UPRV_LENGTHOF(ambiguousConverters); ++i)
+    కొరకు(i=0; i<UPRV_LENGTHOF(ambiguousConverters); ++i)
     {
-        if(0==uprv_strcmp(name, ambiguousConverters[i].name))
+        ఒకవేళ(0==uprv_strcmp(name, ambiguousConverters[i].name))
         {
-            return ambiguousConverters+i;
+            తిరిగి ambiguousConverters+i;
         }
     }
 
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_fixFileSeparator(const UConverter *cnv, 
-                      char16_t* source,
-                      int32_t sourceLength) {
-    const UAmbiguousConverter *a;
+U_CAPI శూన్య  U_EXPORT2
+ucnv_fixFileSeparator(స్థిరరాశి UConverter *cnv, 
+                      char16_t* ఆధారం,
+                      int32_t ఆధారం_నిడివి) {
+    స్థిరరాశి UAmbiguousConverter *a;
     int32_t i;
     char16_t variant5c;
 
-    if(cnv==nullptr || source==nullptr || sourceLength<=0 || (a=ucnv_getAmbiguous(cnv))==nullptr)
+    ఒకవేళ(cnv==శూన్యసూచిక || ఆధారం==శూన్యసూచిక || ఆధారం_నిడివి<=0 || (a=ucnv_getAmbiguous(cnv))==శూన్యసూచిక)
     {
-        return;
+        తిరిగి;
     }
 
     variant5c=a->variant5c;
-    for(i=0; i<sourceLength; ++i) {
-        if(source[i]==variant5c) {
-            source[i]=0x5c;
+    కొరకు(i=0; i<ఆధారం_నిడివి; ++i) {
+        ఒకవేళ(ఆధారం[i]==variant5c) {
+            ఆధారం[i]=0x5c;
         }
     }
 }
 
 U_CAPI UBool  U_EXPORT2
-ucnv_isAmbiguous(const UConverter *cnv) {
-    return ucnv_getAmbiguous(cnv)!=nullptr;
+ucnv_isAmbiguous(స్థిరరాశి UConverter *cnv) {
+    తిరిగి ucnv_getAmbiguous(cnv)!=శూన్యసూచిక;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_setFallback(UConverter *cnv, UBool usesFallback)
+U_CAPI శూన్య  U_EXPORT2
+ucnv_సమితి_Fallback(UConverter *cnv, UBool ఉపయోగిస్తుంది_Fallback)
 {
-    cnv->useFallback = usesFallback;
+    cnv->useFallback = ఉపయోగిస్తుంది_Fallback;
 }
 
 U_CAPI UBool  U_EXPORT2
-ucnv_usesFallback(const UConverter *cnv)
+ucnv_ఉపయోగిస్తుంది_Fallback(స్థిరరాశి UConverter *cnv)
 {
-    return cnv->useFallback;
+    తిరిగి cnv->useFallback;
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_getInvalidChars (const UConverter * converter,
-                      char *errBytes,
+U_CAPI శూన్య  U_EXPORT2
+ucnv_getInvalidChars (స్థిరరాశి UConverter * converter,
+                      అక్షరం *err_బైట్లు,
                       int8_t * len,
-                      UErrorCode * err)
+                      UError_సంకేతం * err)
 {
-    if (err == nullptr || U_FAILURE(*err))
+    ఒకవేళ (err == శూన్యసూచిక || U_FAILURE(*err))
     {
-        return;
+        తిరిగి;
     }
-    if (len == nullptr || errBytes == nullptr || converter == nullptr)
+    ఒకవేళ (len == శూన్యసూచిక || err_బైట్లు == శూన్యసూచిక || converter == శూన్యసూచిక)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    if (*len < converter->invalidCharLength)
+    ఒకవేళ (*len < converter->invalid_Char_నిడివి)
     {
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *err = U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి;
     }
-    if ((*len = converter->invalidCharLength) > 0)
+    ఒకవేళ ((*len = converter->invalid_Char_నిడివి) > 0)
     {
-        uprv_memcpy (errBytes, converter->invalidCharBuffer, *len);
+        uprv_memcpy (err_బైట్లు, converter->invalid_Char_బఫరు, *len);
     }
 }
 
-U_CAPI void  U_EXPORT2
-ucnv_getInvalidUChars (const UConverter * converter,
+U_CAPI శూన్య  U_EXPORT2
+ucnv_getInvalidUChars (స్థిరరాశి UConverter * converter,
                        char16_t *errChars,
                        int8_t * len,
-                       UErrorCode * err)
+                       UError_సంకేతం * err)
 {
-    if (err == nullptr || U_FAILURE(*err))
+    ఒకవేళ (err == శూన్యసూచిక || U_FAILURE(*err))
     {
-        return;
+        తిరిగి;
     }
-    if (len == nullptr || errChars == nullptr || converter == nullptr)
+    ఒకవేళ (len == శూన్యసూచిక || errChars == శూన్యసూచిక || converter == శూన్యసూచిక)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    if (*len < converter->invalidUCharLength)
+    ఒకవేళ (*len < converter->invalid_UChar_నిడివి)
     {
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *err = U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి;
     }
-    if ((*len = converter->invalidUCharLength) > 0)
+    ఒకవేళ ((*len = converter->invalid_UChar_నిడివి) > 0)
     {
-        u_memcpy (errChars, converter->invalidUCharBuffer, *len);
+        u_memcpy (errChars, converter->invalid_UChar_బఫరు, *len);
     }
 }
 
-#define SIG_MAX_LEN 5
+#నిర్వచించు SIG_MAX_LEN 5
 
-U_CAPI const char* U_EXPORT2
-ucnv_detectUnicodeSignature( const char* source,
-                             int32_t sourceLength,
-                             int32_t* signatureLength,
-                             UErrorCode* pErrorCode) {
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+ucnv_detectUnicodeSignature( స్థిరరాశి అక్షరం* ఆధారం,
+                             int32_t ఆధారం_నిడివి,
+                             int32_t* signature_నిడివి,
+                             UError_సంకేతం* p_Error_సంకేతం) {
     int32_t dummy;
 
     /* initial 0xa5 bytes: make sure that if we read <SIG_MAX_LEN
      * bytes we don't misdetect something 
      */
-    char start[SIG_MAX_LEN]={ '\xa5', '\xa5', '\xa5', '\xa5', '\xa5' };
-    int i = 0;
+    అక్షరం ప్రారంభం[SIG_MAX_LEN]={ '\xa5', '\xa5', '\xa5', '\xa5', '\xa5' };
+    పూర్ణాంకం i = 0;
 
-    if((pErrorCode==nullptr) || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ఒకవేళ((p_Error_సంకేతం==శూన్యసూచిక) || U_FAILURE(*p_Error_సంకేతం)){
+        తిరిగి శూన్యసూచిక;
     }
     
-    if(source == nullptr || sourceLength < -1){
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ(ఆధారం == శూన్యసూచిక || ఆధారం_నిడివి < -1){
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(signatureLength == nullptr) {
-        signatureLength = &dummy;
+    ఒకవేళ(signature_నిడివి == శూన్యసూచిక) {
+        signature_నిడివి = &dummy;
     }
 
-    if(sourceLength==-1){
-        sourceLength=(int32_t)uprv_strlen(source);
+    ఒకవేళ(ఆధారం_నిడివి==-1){
+        ఆధారం_నిడివి=(int32_t)uprv_strlen(ఆధారం);
     }
 
     
-    while(i<sourceLength&& i<SIG_MAX_LEN){
-        start[i]=source[i];
+    అయితే(i<ఆధారం_నిడివి&& i<SIG_MAX_LEN){
+        ప్రారంభం[i]=ఆధారం[i];
         i++;
     }
 
-    if(start[0] == '\xFE' && start[1] == '\xFF') {
-        *signatureLength=2;
-        return  "UTF-16BE";
-    } else if(start[0] == '\xFF' && start[1] == '\xFE') {
-        if(start[2] == '\x00' && start[3] =='\x00') {
-            *signatureLength=4;
-            return "UTF-32LE";
-        } else {
-            *signatureLength=2;
-            return  "UTF-16LE";
+    ఒకవేళ(ప్రారంభం[0] == '\xFE' && ప్రారంభం[1] == '\xFF') {
+        *signature_నిడివి=2;
+        తిరిగి  "UTF-16BE";
+    } లేకపోతే ఒకవేళ(ప్రారంభం[0] == '\xFF' && ప్రారంభం[1] == '\xFE') {
+        ఒకవేళ(ప్రారంభం[2] == '\x00' && ప్రారంభం[3] =='\x00') {
+            *signature_నిడివి=4;
+            తిరిగి "UTF-32LE";
+        } లేకపోతే {
+            *signature_నిడివి=2;
+            తిరిగి  "UTF-16LE";
         }
-    } else if(start[0] == '\xEF' && start[1] == '\xBB' && start[2] == '\xBF') {
-        *signatureLength=3;
-        return  "UTF-8";
-    } else if(start[0] == '\x00' && start[1] == '\x00' && 
-              start[2] == '\xFE' && start[3]=='\xFF') {
-        *signatureLength=4;
-        return  "UTF-32BE";
-    } else if(start[0] == '\x0E' && start[1] == '\xFE' && start[2] == '\xFF') {
-        *signatureLength=3;
-        return "SCSU";
-    } else if(start[0] == '\xFB' && start[1] == '\xEE' && start[2] == '\x28') {
-        *signatureLength=3;
-        return "BOCU-1";
-    } else if(start[0] == '\x2B' && start[1] == '\x2F' && start[2] == '\x76') {
+    } లేకపోతే ఒకవేళ(ప్రారంభం[0] == '\xEF' && ప్రారంభం[1] == '\xBB' && ప్రారంభం[2] == '\xBF') {
+        *signature_నిడివి=3;
+        తిరిగి  "UTF-8";
+    } లేకపోతే ఒకవేళ(ప్రారంభం[0] == '\x00' && ప్రారంభం[1] == '\x00' && 
+              ప్రారంభం[2] == '\xFE' && ప్రారంభం[3]=='\xFF') {
+        *signature_నిడివి=4;
+        తిరిగి  "UTF-32BE";
+    } లేకపోతే ఒకవేళ(ప్రారంభం[0] == '\x0E' && ప్రారంభం[1] == '\xFE' && ప్రారంభం[2] == '\xFF') {
+        *signature_నిడివి=3;
+        తిరిగి "SCSU";
+    } లేకపోతే ఒకవేళ(ప్రారంభం[0] == '\xFB' && ప్రారంభం[1] == '\xEE' && ప్రారంభం[2] == '\x28') {
+        *signature_నిడివి=3;
+        తిరిగి "BOCU-1";
+    } లేకపోతే ఒకవేళ(ప్రారంభం[0] == '\x2B' && ప్రారంభం[1] == '\x2F' && ప్రారంభం[2] == '\x76') {
         /*
          * UTF-7: Initial U+FEFF is encoded as +/v8  or  +/v9  or  +/v+  or  +/v/
          * depending on the second UTF-16 code unit.
@@ -2840,93 +2840,93 @@ ucnv_detectUnicodeSignature( const char* source,
          *
          * So far we have +/v
          */
-        if(start[3] == '\x38' && start[4] == '\x2D') {
+        ఒకవేళ(ప్రారంభం[3] == '\x38' && ప్రారంభం[4] == '\x2D') {
             /* 5 bytes +/v8- */
-            *signatureLength=5;
-            return "UTF-7";
-        } else if(start[3] == '\x38' || start[3] == '\x39' || start[3] == '\x2B' || start[3] == '\x2F') {
+            *signature_నిడివి=5;
+            తిరిగి "UTF-7";
+        } లేకపోతే ఒకవేళ(ప్రారంభం[3] == '\x38' || ప్రారంభం[3] == '\x39' || ప్రారంభం[3] == '\x2B' || ప్రారంభం[3] == '\x2F') {
             /* 4 bytes +/v8  or  +/v9  or  +/v+  or  +/v/ */
-            *signatureLength=4;
-            return "UTF-7";
+            *signature_నిడివి=4;
+            తిరిగి "UTF-7";
         }
-    }else if(start[0]=='\xDD' && start[1]== '\x73'&& start[2]=='\x66' && start[3]=='\x73'){
-        *signatureLength=4;
-        return "UTF-EBCDIC";
+    }లేకపోతే ఒకవేళ(ప్రారంభం[0]=='\xDD' && ప్రారంభం[1]== '\x73'&& ప్రారంభం[2]=='\x66' && ప్రారంభం[3]=='\x73'){
+        *signature_నిడివి=4;
+        తిరిగి "UTF-EBCDIC";
     }
 
 
     /* no known Unicode signature byte sequence recognized */
-    *signatureLength=0;
-    return nullptr;
+    *signature_నిడివి=0;
+    తిరిగి శూన్యసూచిక;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_fromUCountPending(const UConverter* cnv, UErrorCode* status)
+ucnv_fromUCountPending(స్థిరరాశి UConverter* cnv, UError_సంకేతం* స్థితి_2)
 {
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి -1;
     }
-    if(cnv == nullptr){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
+    ఒకవేళ(cnv == శూన్యసూచిక){
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి -1;
     }
 
-    if(cnv->preFromUFirstCP >= 0){
-        return U16_LENGTH(cnv->preFromUFirstCP)+cnv->preFromULength ;
-    }else if(cnv->preFromULength < 0){
-        return -cnv->preFromULength ;
-    }else if(cnv->fromUChar32 > 0){
-        return 1;
+    ఒకవేళ(cnv->preFromUFirstCP >= 0){
+        తిరిగి U16_నిడివి(cnv->preFromUFirstCP)+cnv->preFromULength ;
+    }లేకపోతే ఒకవేళ(cnv->preFromULength < 0){
+        తిరిగి -cnv->preFromULength ;
+    }లేకపోతే ఒకవేళ(cnv->fromUChar32 > 0){
+        తిరిగి 1;
     }
-    return 0; 
+    తిరిగి 0; 
 
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_toUCountPending(const UConverter* cnv, UErrorCode* status){
+ucnv_గమ్యం_UCount_Pending(స్థిరరాశి UConverter* cnv, UError_సంకేతం* స్థితి_2){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి -1;
     }
-    if(cnv == nullptr){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
+    ఒకవేళ(cnv == శూన్యసూచిక){
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి -1;
     }
 
-    if(cnv->preToULength > 0){
-        return cnv->preToULength ;
-    }else if(cnv->preToULength < 0){
-        return -cnv->preToULength;
-    }else if(cnv->toULength > 0){
-        return cnv->toULength;
+    ఒకవేళ(cnv->pre_గమ్యం_ULength > 0){
+        తిరిగి cnv->pre_గమ్యం_ULength ;
+    }లేకపోతే ఒకవేళ(cnv->pre_గమ్యం_ULength < 0){
+        తిరిగి -cnv->pre_గమ్యం_ULength;
+    }లేకపోతే ఒకవేళ(cnv->గమ్యం_ULength > 0){
+        తిరిగి cnv->గమ్యం_ULength;
     }
-    return 0;
+    తిరిగి 0;
 }
 
 U_CAPI UBool U_EXPORT2
-ucnv_isFixedWidth(UConverter *cnv, UErrorCode *status){
-    if (U_FAILURE(*status)) {
-        return false;
+ucnv_is_Fixed_వెడల్పు(UConverter *cnv, UError_సంకేతం *స్థితి_2){
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
 
-    if (cnv == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+    ఒకవేళ (cnv == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి అబద్ధం;
     }
 
-    switch (ucnv_getType(cnv)) {
-        case UCNV_SBCS:
-        case UCNV_DBCS:
-        case UCNV_UTF32_BigEndian:
-        case UCNV_UTF32_LittleEndian:
-        case UCNV_UTF32:
-        case UCNV_US_ASCII:
-            return true;
-        default:
-            return false;
+    ఎంపిక (ucnv_getType(cnv)) {
+        స్థితి UCNV_SBCS:
+        స్థితి UCNV_DBCS:
+        స్థితి UCNV_UTF32_BigEndian:
+        స్థితి UCNV_UTF32_LittleEndian:
+        స్థితి UCNV_UTF32:
+        స్థితి UCNV_US_ASCII:
+            తిరిగి నిజం;
+        అప్రమేయ:
+            తిరిగి అబద్ధం;
     }
 }
-#endif
+#అయితే_ముగింపు
 
 /*
  * Hey, Emacs, please set the following:

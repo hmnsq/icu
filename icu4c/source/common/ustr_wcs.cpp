@@ -19,123 +19,123 @@
 *   moved here from ustrtrns.c for better modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "cwchar.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
-#include "ustr_cnv.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cwchar.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "ustr_cnv.h"
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#ఒకవేళ defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 
-#define _STACK_BUFFER_CAPACITY 1000
-#define _BUFFER_CAPACITY_MULTIPLIER 2
+#నిర్వచించు దొంతర_బఫరు_సామర్థ్యం 1000
+#నిర్వచించు బఫరు_సామర్థ్యం_MULTIPLIER 2
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#ఒకవేళ !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 // TODO: We should use CharString for char buffers and UnicodeString for char16_t buffers.
 // Then we could change this to work only with wchar_t buffers.
-static inline UBool 
-u_growAnyBufferFromStatic(void *context,
-                       void **pBuffer, int32_t *pCapacity, int32_t reqCapacity,
+స్థిర అంతఃవరుస UBool 
+u_grow_Any_బఫరు_From_Static(శూన్య *context,
+                       శూన్య **p_బఫరు, int32_t *p_సామర్థ్యం, int32_t req_సామర్థ్యం,
                        int32_t length, int32_t size) {
     // Use char* not void* to avoid the compiler's strict-aliasing assumptions
     // and related warnings.
-    char *newBuffer=(char *)uprv_malloc(reqCapacity*size);
-    if(newBuffer!=nullptr) {
-        if(length>0) {
-            uprv_memcpy(newBuffer, *pBuffer, (size_t)length*size);
+    అక్షరం *new_బఫరు=(అక్షరం *)uprv_malloc(req_సామర్థ్యం*size);
+    ఒకవేళ(new_బఫరు!=శూన్యసూచిక) {
+        ఒకవేళ(length>0) {
+            uprv_memcpy(new_బఫరు, *p_బఫరు, (size_t)length*size);
         }
-        *pCapacity=reqCapacity;
-    } else {
-        *pCapacity=0;
+        *p_సామర్థ్యం=req_సామర్థ్యం;
+    } లేకపోతే {
+        *p_సామర్థ్యం=0;
     }
 
     /* release the old pBuffer if it was not statically allocated */
-    if(*pBuffer!=(char *)context) {
-        uprv_free(*pBuffer);
+    ఒకవేళ(*p_బఫరు!=(అక్షరం *)context) {
+        uprv_free(*p_బఫరు);
     }
 
-    *pBuffer=newBuffer;
-    return newBuffer!=nullptr;
+    *p_బఫరు=new_బఫరు;
+    తిరిగి new_బఫరు!=శూన్యసూచిక;
 }
 
 /* helper function */
-static wchar_t* 
-_strToWCS(wchar_t *dest, 
-           int32_t destCapacity,
-           int32_t *pDestLength,
-           const char16_t *src,
-           int32_t srcLength,
-           UErrorCode *pErrorCode){
+స్థిర wchar_t* 
+str_గమ్యం_WCS(wchar_t *dest, 
+           int32_t dest_సామర్థ్యం,
+           int32_t *p_Dest_నిడివి,
+           స్థిరరాశి char16_t *src,
+           int32_t src_నిడివి,
+           UError_సంకేతం *p_Error_సంకేతం){
 
-    char stackBuffer [_STACK_BUFFER_CAPACITY];
-    char* tempBuf = stackBuffer;
-    int32_t tempBufCapacity = _STACK_BUFFER_CAPACITY;
-    char* tempBufLimit = stackBuffer + tempBufCapacity;
-    UConverter* conv = nullptr;
-    char* saveBuf = tempBuf;
-    wchar_t* intTarget=nullptr;
-    int32_t intTargetCapacity=0;
-    int count=0,retVal=0;
+    అక్షరం దొంతర_బఫరు [దొంతర_బఫరు_సామర్థ్యం];
+    అక్షరం* తాత్కాలిక_Buf = దొంతర_బఫరు;
+    int32_t తాత్కాలిక_Buf_సామర్థ్యం = దొంతర_బఫరు_సామర్థ్యం;
+    అక్షరం* తాత్కాలిక_Buf_హద్దు = దొంతర_బఫరు + తాత్కాలిక_Buf_సామర్థ్యం;
+    UConverter* conv = శూన్యసూచిక;
+    అక్షరం* saveBuf = తాత్కాలిక_Buf;
+    wchar_t* int_లక్ష్యం=శూన్యసూచిక;
+    int32_t int_లక్ష్యం_సామర్థ్యం=0;
+    పూర్ణాంకం count=0,retVal=0;
     
-    const char16_t *pSrcLimit =nullptr;
-    const char16_t *pSrc = src;
+    స్థిరరాశి char16_t *p_Src_హద్దు =శూన్యసూచిక;
+    స్థిరరాశి char16_t *pSrc = src;
 
-    conv = u_getDefaultConverter(pErrorCode);
+    conv = u_getDefaultConverter(p_Error_సంకేతం);
     
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)){
+        తిరిగి శూన్యసూచిక;
     }
     
-    if(srcLength == -1){
-        srcLength = u_strlen(pSrc);
+    ఒకవేళ(src_నిడివి == -1){
+        src_నిడివి = u_strlen(pSrc);
     }
     
-    pSrcLimit = pSrc + srcLength;
+    p_Src_హద్దు = pSrc + src_నిడివి;
 
-    for(;;) {
-        UErrorCode bufferStatus = U_ZERO_ERROR;
+    కొరకు(;;) {
+        UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
 
         /* convert to chars using default converter */
-        ucnv_fromUnicode(conv,&tempBuf,tempBufLimit,&pSrc,pSrcLimit,nullptr,(UBool)(pSrc==pSrcLimit),&bufferStatus);
-        count =(tempBuf - saveBuf);
+        ucnv_fromUnicode(conv,&తాత్కాలిక_Buf,తాత్కాలిక_Buf_హద్దు,&pSrc,p_Src_హద్దు,శూన్యసూచిక,(UBool)(pSrc==p_Src_హద్దు),&బఫరు_స్థితి);
+        count =(తాత్కాలిక_Buf - saveBuf);
         
         /* This should rarely occur */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
-            tempBuf = saveBuf;
+        ఒకవేళ(బఫరు_స్థితి==U_బఫరు_అధికప్రవాహం_ERROR){
+            తాత్కాలిక_Buf = saveBuf;
             
             /* we don't have enough room on the stack grow the buffer */
-            int32_t newCapacity = 2 * srcLength;
-            if(newCapacity <= tempBufCapacity) {
-                newCapacity = _BUFFER_CAPACITY_MULTIPLIER * tempBufCapacity;
+            int32_t new_సామర్థ్యం = 2 * src_నిడివి;
+            ఒకవేళ(new_సామర్థ్యం <= తాత్కాలిక_Buf_సామర్థ్యం) {
+                new_సామర్థ్యం = బఫరు_సామర్థ్యం_MULTIPLIER * తాత్కాలిక_Buf_సామర్థ్యం;
             }
-            if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity,
-                    newCapacity, count, 1)) {
-                goto cleanup;
+            ఒకవేళ(!u_grow_Any_బఫరు_From_Static(దొంతర_బఫరు,(శూన్య**) &తాత్కాలిక_Buf, &తాత్కాలిక_Buf_సామర్థ్యం,
+                    new_సామర్థ్యం, count, 1)) {
+                వెళ్ళు cleanup;
             }
           
-           saveBuf = tempBuf;
-           tempBufLimit = tempBuf + tempBufCapacity;
-           tempBuf = tempBuf + count;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
-                *pErrorCode = bufferStatus;
-                goto cleanup;
+           saveBuf = తాత్కాలిక_Buf;
+           తాత్కాలిక_Buf_హద్దు = తాత్కాలిక_Buf + తాత్కాలిక_Buf_సామర్థ్యం;
+           తాత్కాలిక_Buf = తాత్కాలిక_Buf + count;
+        } లేకపోతే {
+            ఒకవేళ (U_FAILURE(బఫరు_స్థితి)) {
+                *p_Error_సంకేతం = బఫరు_స్థితి;
+                వెళ్ళు cleanup;
             }
-            break;
+            ఆపు;
         }
     }
 
     /* done with conversion null terminate the char buffer */
-    if(count>=tempBufCapacity){
-        tempBuf = saveBuf;
+    ఒకవేళ(count>=తాత్కాలిక_Buf_సామర్థ్యం){
+        తాత్కాలిక_Buf = saveBuf;
         /* we don't have enough room on the stack grow the buffer */
-        if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity, 
+        ఒకవేళ(!u_grow_Any_బఫరు_From_Static(దొంతర_బఫరు,(శూన్య**) &తాత్కాలిక_Buf, &తాత్కాలిక_Buf_సామర్థ్యం, 
                 count+1, count, 1)) {
-            goto cleanup;
+            వెళ్ళు cleanup;
         }              
-       saveBuf = tempBuf;
+       saveBuf = తాత్కాలిక_Buf;
     }
     
     saveBuf[count]=0;
@@ -145,281 +145,281 @@ _strToWCS(wchar_t *dest,
      * here we assume that every char requires 
      * no more than 2 wchar_ts
      */
-    intTargetCapacity =  (count * _BUFFER_CAPACITY_MULTIPLIER + 1) /*for null termination */;
-    intTarget = (wchar_t*)uprv_malloc( intTargetCapacity * sizeof(wchar_t) );
+    int_లక్ష్యం_సామర్థ్యం =  (count * బఫరు_సామర్థ్యం_MULTIPLIER + 1) /*for null termination */;
+    int_లక్ష్యం = (wchar_t*)uprv_malloc( int_లక్ష్యం_సామర్థ్యం * పరిమాణం(wchar_t) );
 
-    if(intTarget){
+    ఒకవేళ(int_లక్ష్యం){
 
         int32_t nulLen = 0;
-        int32_t remaining = intTargetCapacity;
-        wchar_t* pIntTarget=intTarget;
-        tempBuf = saveBuf;
+        int32_t మిగిలిన = int_లక్ష్యం_సామర్థ్యం;
+        wchar_t* p_Int_లక్ష్యం=int_లక్ష్యం;
+        తాత్కాలిక_Buf = saveBuf;
         
         /* now convert the mbs to wcs */
-        for(;;){
+        కొరకు(;;){
             
             /* we can call the system API since we are sure that
              * there is atleast 1 null in the input
              */
-            retVal = uprv_mbstowcs(pIntTarget,(tempBuf+nulLen),remaining);
+            retVal = uprv_mbstowcs(p_Int_లక్ష్యం,(తాత్కాలిక_Buf+nulLen),మిగిలిన);
             
-            if(retVal==-1){
-                *pErrorCode = U_INVALID_CHAR_FOUND;
-                break;
-            }else if(retVal== remaining){/* should never occur */
-                int numWritten = (pIntTarget-intTarget);
-                u_growAnyBufferFromStatic(nullptr,(void**) &intTarget,
-                                          &intTargetCapacity,
-                                          intTargetCapacity * _BUFFER_CAPACITY_MULTIPLIER,
-                                          numWritten,
-                                          sizeof(wchar_t));
-                pIntTarget = intTarget;
-                remaining=intTargetCapacity;
+            ఒకవేళ(retVal==-1){
+                *p_Error_సంకేతం = U_INVALID_CHAR_దొరికింది;
+                ఆపు;
+            }లేకపోతే ఒకవేళ(retVal== మిగిలిన){/* should never occur */
+                పూర్ణాంకం అంకె_Written = (p_Int_లక్ష్యం-int_లక్ష్యం);
+                u_grow_Any_బఫరు_From_Static(శూన్యసూచిక,(శూన్య**) &int_లక్ష్యం,
+                                          &int_లక్ష్యం_సామర్థ్యం,
+                                          int_లక్ష్యం_సామర్థ్యం * బఫరు_సామర్థ్యం_MULTIPLIER,
+                                          అంకె_Written,
+                                          పరిమాణం(wchar_t));
+                p_Int_లక్ష్యం = int_లక్ష్యం;
+                మిగిలిన=int_లక్ష్యం_సామర్థ్యం;
 
-                if(nulLen!=count){ /*there are embedded nulls*/
-                    pIntTarget+=numWritten;
-                    remaining-=numWritten;
+                ఒకవేళ(nulLen!=count){ /*there are embedded nulls*/
+                    p_Int_లక్ష్యం+=అంకె_Written;
+                    మిగిలిన-=అంకె_Written;
                 }
 
-            }else{
+            }లేకపోతే{
                 int32_t nulVal;
                 /*scan for nulls */
                 /* we donot check for limit since tempBuf is null terminated */
-                while(tempBuf[nulLen++] != 0){
+                అయితే(తాత్కాలిక_Buf[nulLen++] != 0){
                 }
-                nulVal = (nulLen < srcLength) ? 1 : 0; 
-                pIntTarget = pIntTarget + retVal+nulVal;
-                remaining -=(retVal+nulVal);
+                nulVal = (nulLen < src_నిడివి) ? 1 : 0; 
+                p_Int_లక్ష్యం = p_Int_లక్ష్యం + retVal+nulVal;
+                మిగిలిన -=(retVal+nulVal);
             
                 /* check if we have reached the source limit*/
-                if(nulLen>=(count)){
-                    break;
+                ఒకవేళ(nulLen>=(count)){
+                    ఆపు;
                 }
             }
         }
-        count = (int32_t)(pIntTarget-intTarget);
+        count = (int32_t)(p_Int_లక్ష్యం-int_లక్ష్యం);
        
-        if(0 < count && count <= destCapacity){
-            uprv_memcpy(dest, intTarget, (size_t)count*sizeof(wchar_t));
+        ఒకవేళ(0 < count && count <= dest_సామర్థ్యం){
+            uprv_memcpy(dest, int_లక్ష్యం, (size_t)count*పరిమాణం(wchar_t));
         }  
 
-        if(pDestLength){
-            *pDestLength = count;
+        ఒకవేళ(p_Dest_నిడివి){
+            *p_Dest_నిడివి = count;
         }
 
         /* free the allocated memory */
-        uprv_free(intTarget);
+        uprv_free(int_లక్ష్యం);
 
-    }else{
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+    }లేకపోతే{
+        *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
 cleanup:
     /* are we still using stack buffer */
-    if(stackBuffer != saveBuf){
+    ఒకవేళ(దొంతర_బఫరు != saveBuf){
         uprv_free(saveBuf);
     }
-    u_terminateWChars(dest,destCapacity,count,pErrorCode);
+    u_terminateWChars(dest,dest_సామర్థ్యం,count,p_Error_సంకేతం);
 
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    తిరిగి dest;
 }
-#endif
+#అయితే_ముగింపు
 
 U_CAPI wchar_t* U_EXPORT2
-u_strToWCS(wchar_t* dest U_LIFETIME_BOUND,
-           int32_t destCapacity,
-           int32_t* pDestLength,
-           const char16_t* src,
-           int32_t srcLength,
-           UErrorCode* pErrorCode) {
+u_str_గమ్యం_WCS(wchar_t* dest U_LIFETIME_BOUND,
+           int32_t dest_సామర్థ్యం,
+           int32_t* p_Dest_నిడివి,
+           స్థిరరాశి char16_t* src,
+           int32_t src_నిడివి,
+           UError_సంకేతం* p_Error_సంకేతం) {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)){
+        తిరిగి శూన్యసూచిక;
     }
         
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (destCapacity<0) || (dest == nullptr && destCapacity > 0)
+    ఒకవేళ( (src==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి < -1 ||
+        (dest_సామర్థ్యం<0) || (dest == శూన్యసూచిక && dest_సామర్థ్యం > 0)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
     
-#ifdef U_WCHAR_IS_UTF16
+#నిర్వచితమైతే U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
-        srcLength = u_strlen(src);
+    ఒకవేళ(src_నిడివి == -1){
+        src_నిడివి = u_strlen(src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
-        u_memcpy((char16_t *)dest, src, srcLength);
+    ఒకవేళ(0 < src_నిడివి && src_నిడివి <= dest_సామర్థ్యం){
+        u_memcpy((char16_t *)dest, src, src_నిడివి);
     }
-    if(pDestLength){
-       *pDestLength = srcLength;
+    ఒకవేళ(p_Dest_నిడివి){
+       *p_Dest_నిడివి = src_నిడివి;
     }
 
-    u_terminateUChars((char16_t *)dest,destCapacity,srcLength,pErrorCode);
+    u_terminateUChars((char16_t *)dest,dest_సామర్థ్యం,src_నిడివి,p_Error_సంకేతం);
 
-    return dest;
+    తిరిగి dest;
 
-#elif defined U_WCHAR_IS_UTF32
+#లేదావేళ defined U_WCHAR_IS_UTF32
     
-    return (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, pDestLength,
-                                  src, srcLength, pErrorCode);
+    తిరిగి (wchar_t*)u_str_గమ్యం_UTF32((UChar32*)dest, dest_సామర్థ్యం, p_Dest_నిడివి,
+                                  src, src_నిడివి, p_Error_సంకేతం);
 
-#else
+#లేకపోతే
     
-    return _strToWCS(dest,destCapacity,pDestLength,src,srcLength, pErrorCode);
+    తిరిగి str_గమ్యం_WCS(dest,dest_సామర్థ్యం,p_Dest_నిడివి,src,src_నిడివి, p_Error_సంకేతం);
     
-#endif
+#అయితే_ముగింపు
 
 }
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#ఒకవేళ !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 /* helper function */
-static char16_t*
+స్థిర char16_t*
 _strFromWCS( char16_t   *dest,
-             int32_t destCapacity, 
-             int32_t *pDestLength,
-             const wchar_t *src,
-             int32_t srcLength,
-             UErrorCode *pErrorCode)
+             int32_t dest_సామర్థ్యం, 
+             int32_t *p_Dest_నిడివి,
+             స్థిరరాశి wchar_t *src,
+             int32_t src_నిడివి,
+             UError_సంకేతం *p_Error_సంకేతం)
 {
     int32_t retVal =0, count =0 ;
-    UConverter* conv = nullptr;
-    char16_t* pTarget = nullptr;
-    char16_t* pTargetLimit = nullptr;
-    char16_t* target = nullptr;
+    UConverter* conv = శూన్యసూచిక;
+    char16_t* p_లక్ష్యం = శూన్యసూచిక;
+    char16_t* p_లక్ష్యం_హద్దు = శూన్యసూచిక;
+    char16_t* లక్ష్యం = శూన్యసూచిక;
     
-    char16_t uStack [_STACK_BUFFER_CAPACITY];
+    char16_t u_దొంతర [దొంతర_బఫరు_సామర్థ్యం];
 
-    wchar_t wStack[_STACK_BUFFER_CAPACITY];
-    wchar_t* pWStack = wStack;
+    wchar_t w_దొంతర[దొంతర_బఫరు_సామర్థ్యం];
+    wchar_t* pWStack = w_దొంతర;
 
 
-    char cStack[_STACK_BUFFER_CAPACITY];
-    int32_t cStackCap = _STACK_BUFFER_CAPACITY;
-    char* pCSrc=cStack;
-    char* pCSave=pCSrc;
-    char* pCSrcLimit=nullptr;
+    అక్షరం c_దొంతర[దొంతర_బఫరు_సామర్థ్యం];
+    int32_t c_దొంతర_Cap = దొంతర_బఫరు_సామర్థ్యం;
+    అక్షరం* pCSrc=c_దొంతర;
+    అక్షరం* pCSave=pCSrc;
+    అక్షరం* p_CSrc_హద్దు=శూన్యసూచిక;
 
-    const wchar_t* pSrc = src;
-    const wchar_t* pSrcLimit = nullptr;
+    స్థిరరాశి wchar_t* pSrc = src;
+    స్థిరరాశి wchar_t* p_Src_హద్దు = శూన్యసూచిక;
 
-    if(srcLength ==-1){
+    ఒకవేళ(src_నిడివి ==-1){
         /* if the wchar_t source is null terminated we can safely
          * assume that there are no embedded nulls, this is a fast
          * path for null terminated strings.
          */
-        for(;;){
+        కొరకు(;;){
             /* convert wchars  to chars */
-            retVal = uprv_wcstombs(pCSrc,src, cStackCap);
+            retVal = uprv_wcstombs(pCSrc,src, c_దొంతర_Cap);
     
-            if(retVal == -1){
-                *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                goto cleanup;
-            }else if(retVal >= (cStackCap-1)){
+            ఒకవేళ(retVal == -1){
+                *p_Error_సంకేతం = U_ILLEGAL_CHAR_దొరికింది;
+                వెళ్ళు cleanup;
+            }లేకపోతే ఒకవేళ(retVal >= (c_దొంతర_Cap-1)){
                 /* Should rarely occur */
-                u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                    cStackCap * _BUFFER_CAPACITY_MULTIPLIER, 0, sizeof(char));
+                u_grow_Any_బఫరు_From_Static(c_దొంతర,(శూన్య**)&pCSrc,&c_దొంతర_Cap,
+                    c_దొంతర_Cap * బఫరు_సామర్థ్యం_MULTIPLIER, 0, పరిమాణం(అక్షరం));
                 pCSave = pCSrc;
-            }else{
+            }లేకపోతే{
                 /* converted every thing */
                 pCSrc = pCSrc+retVal;
-                break;
+                ఆపు;
             }
         }
         
-    }else{
+    }లేకపోతే{
         /* here the source is not null terminated 
          * so it may have nulls embedded and we need to
          * do some extra processing 
          */
-        int32_t remaining =cStackCap;
+        int32_t మిగిలిన =c_దొంతర_Cap;
         
-        pSrcLimit = src + srcLength;
+        p_Src_హద్దు = src + src_నిడివి;
 
-        for(;;){
+        కొరకు(;;){
             int32_t nulLen = 0;
 
             /* find nulls in the string */
-            while(nulLen<srcLength && pSrc[nulLen++]!=0){
+            అయితే(nulLen<src_నిడివి && pSrc[nulLen++]!=0){
             }
 
-            if((pSrc+nulLen) < pSrcLimit){
+            ఒకవేళ((pSrc+nulLen) < p_Src_హద్దు){
                 /* check if we have enough room in pCSrc */
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                ఒకవేళ(మిగిలిన < (nulLen * MB_CUR_MAX)){
                     /* should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           _BUFFER_CAPACITY_MULTIPLIER*cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_grow_Any_బఫరు_From_Static(c_దొంతర,(శూన్య**)&pCSrc,&c_దొంతర_Cap,
+                           బఫరు_సామర్థ్యం_MULTIPLIER*c_దొంతర_Cap+(nulLen*MB_CUR_MAX),len,పరిమాణం(అక్షరం));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    మిగిలిన = c_దొంతర_Cap-(pCSrc - pCSave);
                 }
 
                 /* we have found a null  so convert the 
                  * chunk from beginning of non-null char to null
                  */
-                retVal = uprv_wcstombs(pCSrc,pSrc,remaining);
+                retVal = uprv_wcstombs(pCSrc,pSrc,మిగిలిన);
 
-                if(retVal==-1){
+                ఒకవేళ(retVal==-1){
                     /* an error occurred bail out */
-                    *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                    goto cleanup;
+                    *p_Error_సంకేతం = U_ILLEGAL_CHAR_దొరికింది;
+                    వెళ్ళు cleanup;
                 }
 
                 pCSrc += retVal+1 /* already null terminated */;
 
                 pSrc += nulLen; /* skip past the null */
-                srcLength-=nulLen; /* decrement the srcLength */
-                remaining -= (pCSrc-pCSave);
+                src_నిడివి-=nulLen; /* decrement the srcLength */
+                మిగిలిన -= (pCSrc-pCSave);
 
 
-            }else{
+            }లేకపోతే{
                 /* the source is not null terminated and we are 
                  * end of source so we copy the source to a temp buffer
                  * null terminate it and convert wchar_ts to chars
                  */
-                if(nulLen >= _STACK_BUFFER_CAPACITY){
+                ఒకవేళ(nulLen >= దొంతర_బఫరు_సామర్థ్యం){
                     /* Should rarely occur */
                     /* allocate new buffer buffer */
-                    pWStack =(wchar_t*) uprv_malloc(sizeof(wchar_t) * (nulLen + 1));
-                    if(pWStack==nullptr){
-                        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                        goto cleanup;
+                    pWStack =(wchar_t*) uprv_malloc(పరిమాణం(wchar_t) * (nulLen + 1));
+                    ఒకవేళ(pWStack==శూన్యసూచిక){
+                        *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                        వెళ్ళు cleanup;
                     }
                 }
-                if(nulLen>0){
+                ఒకవేళ(nulLen>0){
                     /* copy the contents to tempStack */
-                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*sizeof(wchar_t));
+                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*పరిమాణం(wchar_t));
                 }
             
                 /* null terminate the tempBuffer */
                 pWStack[nulLen] =0 ;
             
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                ఒకవేళ(మిగిలిన < (nulLen * MB_CUR_MAX)){
                     /* Should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_grow_Any_బఫరు_From_Static(c_దొంతర,(శూన్య**)&pCSrc,&c_దొంతర_Cap,
+                           c_దొంతర_Cap+(nulLen*MB_CUR_MAX),len,పరిమాణం(అక్షరం));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    మిగిలిన = c_దొంతర_Cap-(pCSrc - pCSave);
                 }
                 /* convert to chars */
-                retVal = uprv_wcstombs(pCSrc,pWStack,remaining);
+                retVal = uprv_wcstombs(pCSrc,pWStack,మిగిలిన);
             
                 pCSrc += retVal;
                 pSrc  += nulLen;
-                srcLength-=nulLen; /* decrement the srcLength */
-                break;
+                src_నిడివి-=nulLen; /* decrement the srcLength */
+                ఆపు;
             }
         }
     }
@@ -427,109 +427,109 @@ _strFromWCS( char16_t   *dest,
     /* OK..now we have converted from wchar_ts to chars now 
      * convert chars to UChars 
      */
-    pCSrcLimit = pCSrc;
+    p_CSrc_హద్దు = pCSrc;
     pCSrc = pCSave;
-    pTarget = target= dest;
-    pTargetLimit = dest + destCapacity;    
+    p_లక్ష్యం = లక్ష్యం= dest;
+    p_లక్ష్యం_హద్దు = dest + dest_సామర్థ్యం;    
     
-    conv= u_getDefaultConverter(pErrorCode);
+    conv= u_getDefaultConverter(p_Error_సంకేతం);
     
-    if(U_FAILURE(*pErrorCode)|| conv==nullptr){
-        goto cleanup;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)|| conv==శూన్యసూచిక){
+        వెళ్ళు cleanup;
     }
     
-    for(;;) {
-        UErrorCode bufferStatus = U_ZERO_ERROR;
+    కొరకు(;;) {
+        UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
 
         /* convert to stack buffer*/
-        ucnv_toUnicode(conv,&pTarget,pTargetLimit,(const char**)&pCSrc,pCSrcLimit,nullptr,(UBool)(pCSrc==pCSrcLimit),&bufferStatus);
+        ucnv_గమ్యం_Unicode(conv,&p_లక్ష్యం,p_లక్ష్యం_హద్దు,(స్థిరరాశి అక్షరం**)&pCSrc,p_CSrc_హద్దు,శూన్యసూచిక,(UBool)(pCSrc==p_CSrc_హద్దు),&బఫరు_స్థితి);
 
         /* increment count to number written to stack */
-        count+= pTarget - target;
+        count+= p_లక్ష్యం - లక్ష్యం;
 
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
-            target = uStack;
-            pTarget = uStack;
-            pTargetLimit = uStack + _STACK_BUFFER_CAPACITY;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
-                *pErrorCode = bufferStatus;
+        ఒకవేళ(బఫరు_స్థితి==U_బఫరు_అధికప్రవాహం_ERROR){
+            లక్ష్యం = u_దొంతర;
+            p_లక్ష్యం = u_దొంతర;
+            p_లక్ష్యం_హద్దు = u_దొంతర + దొంతర_బఫరు_సామర్థ్యం;
+        } లేకపోతే {
+            ఒకవేళ (U_FAILURE(బఫరు_స్థితి)) {
+                *p_Error_సంకేతం = బఫరు_స్థితి;
             }
-            break;
+            ఆపు;
         }
         
     }
     
-    if(pDestLength){
-        *pDestLength =count;
+    ఒకవేళ(p_Dest_నిడివి){
+        *p_Dest_నిడివి =count;
     }
 
-    u_terminateUChars(dest,destCapacity,count,pErrorCode);
+    u_terminateUChars(dest,dest_సామర్థ్యం,count,p_Error_సంకేతం);
     
 cleanup:
  
-    if(cStack != pCSave){
+    ఒకవేళ(c_దొంతర != pCSave){
         uprv_free(pCSave);
     }
 
-    if(wStack != pWStack){
+    ఒకవేళ(w_దొంతర != pWStack){
         uprv_free(pWStack);
     }
     
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    తిరిగి dest;
 }
-#endif
+#అయితే_ముగింపు
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromWCS(char16_t* dest U_LIFETIME_BOUND,
-             int32_t destCapacity,
-             int32_t* pDestLength,
-             const wchar_t* src,
-             int32_t srcLength,
-             UErrorCode* pErrorCode)
+             int32_t dest_సామర్థ్యం,
+             int32_t* p_Dest_నిడివి,
+             స్థిరరాశి wchar_t* src,
+             int32_t src_నిడివి,
+             UError_సంకేతం* p_Error_సంకేతం)
 {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)){
+        తిరిగి శూన్యసూచిక;
     }
 
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (destCapacity<0) || (dest == nullptr && destCapacity > 0)
+    ఒకవేళ( (src==శూన్యసూచిక && src_నిడివి!=0) || src_నిడివి < -1 ||
+        (dest_సామర్థ్యం<0) || (dest == శూన్యసూచిక && dest_సామర్థ్యం > 0)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
-#ifdef U_WCHAR_IS_UTF16
+#నిర్వచితమైతే U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
-        srcLength = u_strlen((const char16_t *)src);
+    ఒకవేళ(src_నిడివి == -1){
+        src_నిడివి = u_strlen((స్థిరరాశి char16_t *)src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
-        u_memcpy(dest, (const char16_t *)src, srcLength);
+    ఒకవేళ(0 < src_నిడివి && src_నిడివి <= dest_సామర్థ్యం){
+        u_memcpy(dest, (స్థిరరాశి char16_t *)src, src_నిడివి);
     }
-    if(pDestLength){
-       *pDestLength = srcLength;
+    ఒకవేళ(p_Dest_నిడివి){
+       *p_Dest_నిడివి = src_నిడివి;
     }
 
-    u_terminateUChars(dest,destCapacity,srcLength,pErrorCode);
+    u_terminateUChars(dest,dest_సామర్థ్యం,src_నిడివి,p_Error_సంకేతం);
 
-    return dest;
+    తిరిగి dest;
 
-#elif defined U_WCHAR_IS_UTF32
+#లేదావేళ defined U_WCHAR_IS_UTF32
     
-    return u_strFromUTF32(dest, destCapacity, pDestLength,
-                          (UChar32*)src, srcLength, pErrorCode);
+    తిరిగి u_strFromUTF32(dest, dest_సామర్థ్యం, p_Dest_నిడివి,
+                          (UChar32*)src, src_నిడివి, p_Error_సంకేతం);
 
-#else
+#లేకపోతే
 
-    return _strFromWCS(dest,destCapacity,pDestLength,src,srcLength,pErrorCode);  
+    తిరిగి _strFromWCS(dest,dest_సామర్థ్యం,p_Dest_నిడివి,src,src_నిడివి,p_Error_సంకేతం);  
 
-#endif
+#అయితే_ముగింపు
 
 }
 
-#endif /* #if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32) && !UCONFIG_NO_CONVERSION */
+#అయితే_ముగింపు /* #if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32) && !UCONFIG_NO_CONVERSION */

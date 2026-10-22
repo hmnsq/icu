@@ -10,11 +10,11 @@
 * Since: ICU 2.4
 **********************************************************************
 */
-#ifndef _USTRENUM_H_
-#define _USTRENUM_H_
+#నిర్వచితం_కాకపోతే _USTRENUM_H_
+#నిర్వచించు _USTRENUM_H_
 
-#include "unicode/uenum.h"
-#include "unicode/strenum.h"
+#అన్తర్భావ "unicode/uenum.h"
+#అన్తర్భావ "unicode/strenum.h"
 
 //----------------------------------------------------------------------
 U_NAMESPACE_BEGIN
@@ -23,9 +23,9 @@ U_NAMESPACE_BEGIN
  * A wrapper to make a UEnumeration into a StringEnumeration.  The
  * wrapper adopts the UEnumeration is wraps.
  */
-class U_COMMON_API UStringEnumeration : public StringEnumeration {
+class U_COMMON_API UStringEnumeration : బహిరంగ StringEnumeration {
 
-public:
+బహిరంగ:
     /**
      * Constructor.  This constructor adopts its UEnumeration
      * argument.
@@ -40,16 +40,16 @@ public:
      * Destructor.  This closes the UEnumeration passed in to the
      * constructor.
      */
-    virtual ~UStringEnumeration();
+    మాయా ~UStringEnumeration();
 
     /**
      * Return the number of elements that the iterator traverses.
      * @param status the error code.
      * @return number of elements in the iterator.
      */
-    virtual int32_t count(UErrorCode& status) const override;
+    మాయా int32_t లెక్క(UError_సంకేతం& స్థితి_2) స్థిరరాశి override;
 
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override;
+    మాయా స్థిరరాశి అక్షరం* తదుపరి(int32_t* ఫలితం_నిడివి, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND override;
 
     /**
      * Returns the next element a UnicodeString*.  If there are no
@@ -57,31 +57,31 @@ public:
      * @param status the error code.
      * @return a pointer to the string, or nullptr.
      */
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override;
+    మాయా స్థిరరాశి UnicodeString* snext(UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND override;
 
     /**
      * Resets the iterator.
      * @param status the error code.
      */
-    virtual void reset(UErrorCode& status) override;
+    మాయా శూన్య reset(UError_సంకేతం& స్థితి_2) override;
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for the actual ICU class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    మాయా UClassID getDynamicClassID() స్థిరరాశి override;
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for this ICU class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    స్థిర UClassID U_EXPORT2 getStaticClassID();
 
-    static UStringEnumeration * U_EXPORT2 fromUEnumeration(
-            UEnumeration *enumToAdopt, UErrorCode &status);
-private:
+    స్థిర UStringEnumeration * U_EXPORT2 fromUEnumeration(
+            UEnumeration *enum_గమ్యం_Adopt, UError_సంకేతం &స్థితి_2);
+అంతరంగ:
     UEnumeration *uenum; // owned
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 

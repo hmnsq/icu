@@ -16,31 +16,31 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uchar.h"
-#include "unicode/udata.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "uassert.h"
-#include "ustr_imp.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "ucln_cmn.h"
-#include "udataswp.h"
-#include "uprops.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/utf.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "udataswp.h"
+#అన్తర్భావ "uprops.h"
 
 U_NAMESPACE_BEGIN
 
 /* prototypes ------------------------------------------------------------- */
 
-static const char DATA_NAME[] = "unames";
-static const char DATA_TYPE[] = "icu";
+స్థిర స్థిరరాశి అక్షరం దత్తాంశం_NAME[] = "unames";
+స్థిర స్థిరరాశి అక్షరం దత్తాంశం_TYPE[] = "icu";
 
-#define GROUP_SHIFT 5
-#define LINES_PER_GROUP (1L<<GROUP_SHIFT)
-#define GROUP_MASK (LINES_PER_GROUP-1)
+#నిర్వచించు సమూహం_జరుపు 5
+#నిర్వచించు పంక్తులు_చొప్పున_సమూహం (1L<<సమూహం_జరుపు)
+#నిర్వచించు సమూహం_ముసుగు (పంక్తులు_చొప్పున_సమూహం-1)
 
 /*
  * This struct was replaced by explicitly accessing equivalent
@@ -58,11 +58,11 @@ typedef struct {
              offsetHigh, offsetLow; / * avoid padding * /
 } Group;
  */
-enum {
-    GROUP_MSB,
-    GROUP_OFFSET_HIGH,
-    GROUP_OFFSET_LOW,
-    GROUP_LENGTH
+గణన {
+    సమూహం_MSB,
+    సమూహం_స్థానభ్రంశం_ఎగువ,
+    సమూహం_స్థానభ్రంశం_దిగువ,
+    సమూహం_నిడివి
 };
 
 /*
@@ -70,22 +70,22 @@ enum {
  * @param group (const uint16_t *) pointer to a Group triple of uint16_t
  * @return group offset (int32_t)
  */
-#define GET_GROUP_OFFSET(group) ((int32_t)(group)[GROUP_OFFSET_HIGH]<<16|(group)[GROUP_OFFSET_LOW])
+#నిర్వచించు GET_సమూహం_స్థానభ్రంశం(సమూహం) ((int32_t)(సమూహం)[సమూహం_స్థానభ్రంశం_ఎగువ]<<16|(సమూహం)[సమూహం_స్థానభ్రంశం_దిగువ])
 
-#define NEXT_GROUP(group) ((group)+GROUP_LENGTH)
-#define PREV_GROUP(group) ((group)-GROUP_LENGTH)
+#నిర్వచించు తదుపరి_సమూహం(సమూహం) ((సమూహం)+సమూహం_నిడివి)
+#నిర్వచించు PREV_సమూహం(సమూహం) ((సమూహం)-సమూహం_నిడివి)
 
-typedef struct {
-    uint32_t start, end;
+రకనిర్వచనం నిర్మాణం {
+    uint32_t ప్రారంభం, చివర;
     uint8_t type, variant;
     uint16_t size;
 } AlgorithmicRange;
 
-typedef struct {
-    uint32_t tokenStringOffset, groupsOffset, groupStringOffset, algNamesOffset;
-} UCharNames;
+రకనిర్వచనం నిర్మాణం {
+    uint32_t token_String_స్థానభ్రంశం, groups_స్థానభ్రంశం, సమూహం_String_స్థానభ్రంశం, alg_పేర్లు_స్థానభ్రంశం;
+} UChar_పేర్లు;
 
-namespace {
+నామాకాశ {
 // For a character name `name`, a query string `query` matches `name` under UAX44-LM2 if and only if
 // the following returns true:
 //     auto matcher = CharacterNameQuery(query).matcher();
@@ -100,41 +100,41 @@ namespace {
 // class will match name="ZANABAZAR SQUARE LETTER -A" with query="Zanabazar-square_letter_-A".
 // `Matcher::consistentWith` is not retryable: once it returns false, the `Matcher` should not be
 // used again.
-class CharacterNameQuery {
-  public:
-    class Matcher {
-      public:
+తరగతి CharacterNameQuery {
+  బహిరంగ:
+    తరగతి Matcher {
+      బహిరంగ:
         // `query` must outlive the constructed object.
-        Matcher(const CharacterNameQuery& query)
+        Matcher(స్థిరరాశి CharacterNameQuery& query)
             : query(query), skeletonIterator(query.skeleton.begin()) {}
 
-        bool consistentWith(char c) {
+        తార్కిక consistentWith(అక్షరం c) {
             // Instead of constructing a skeleton from the name as in the constructor of
             // CharacterNameQuery, we check character-by-character if the skeleton we would
             // construct from the name would be consistent with `query->skeleton`.
             // We require that this be called with characters from an actual character name, so we
             // need not worry about case or underscores here.
 
-            if (skeletonIterator == query.skeleton.end()) {
-                return false;
+            ఒకవేళ (skeletonIterator == query.skeleton.చివర()) {
+                తిరిగి అబద్ధం;
             }
-            if (c == ' ') {
+            ఒకవేళ (c == ' ') {
                 // The last hyphen was word-final; check that there is a corresponding significant
                 // hyphen in the skeleton.  A hyphen in a character name cannot be both word-final
                 // and word-initial by rule R3 in
                 // https://unicode.org/versions/Unicode17.0.0/core-spec/chapter-4/#G135165, so we do
                 // not have to worry about checking the skeleton for the same significant hyphen
                 // twice.
-                if (lastChar == '-') {
-                    if (*skeletonIterator++ != lastChar) {
-                        return false;
+                ఒకవేళ (చివరి_Char == '-') {
+                    ఒకవేళ (*skeletonIterator++ != చివరి_Char) {
+                        తిరిగి అబద్ధం;
                     }
                 }
-                lastChar = c;
-                return true;
-            } else if (c == '-') {
-                if (lastChar == ' ' ||
-                    (query.is1180 && skeletonIterator == query.skeleton.end() - 2)) {
+                చివరి_Char = c;
+                తిరిగి నిజం;
+            } లేకపోతే ఒకవేళ (c == '-') {
+                ఒకవేళ (చివరి_Char == ' ' ||
+                    (query.is1180 && skeletonIterator == query.skeleton.చివర() - 2)) {
                     // If lastChar == ' ', this is a word-initial hyphen, so we know it is
                     // significant.  Check that we are expecting it.
                     // If we are looking for U+1180 and we matched everything but the trailing -E,
@@ -148,48 +148,48 @@ class CharacterNameQuery {
                     // comparison would fail on - vs. U.
                     // Here, while feeding HANGUL JUNGSEONG O-U character-by-character, we assume
                     // its skeleton would be HANGULJUNGSEONGO-, and fail on E vs. U.
-                    if (*skeletonIterator++ != c) {
-                        return false;
+                    ఒకవేళ (*skeletonIterator++ != c) {
+                        తిరిగి అబద్ధం;
                     }
                 }
                 // If lastChar is not ' ', we do not know whether this hyphen is word-final, so we
                 // cannot check against the skeleton.
-                lastChar = c;
-                return true;
-            } else {
-                if (*skeletonIterator++ != c) {
-                    return false;
+                చివరి_Char = c;
+                తిరిగి నిజం;
+            } లేకపోతే {
+                ఒకవేళ (*skeletonIterator++ != c) {
+                    తిరిగి అబద్ధం;
                 }
-                lastChar = c;
-                return true;
+                చివరి_Char = c;
+                తిరిగి నిజం;
             }
         }
 
-        bool consistentWith(const std::string_view substring) {
-            for (const char c : substring) {
-                if (!consistentWith(c)) {
-                    return false;
+        తార్కిక consistentWith(స్థిరరాశి std::string_view substring) {
+            కొరకు (స్థిరరాశి అక్షరం c : substring) {
+                ఒకవేళ (!consistentWith(c)) {
+                    తిరిగి అబద్ధం;
                 }
             }
-            return true;
+            తిరిగి నిజం;
         }
 
-        bool matches() {
+        తార్కిక matches() {
             // If a character name could end with a HYPHEN-MINUS, that HYPHEN-MINUS would be
             // significant: we would need to check that if lastChar == '-',
             // *skeletonIterator == '-', and then advance skeletonIterator.
             // However, this is disallowed by rule R3 in
             // https://unicode.org/versions/Unicode17.0.0/core-spec/chapter-4/#G135165.
-            U_ASSERT(lastChar != '-');
-            return skeletonIterator == query.skeleton.end();
+            U_ASSERT(చివరి_Char != '-');
+            తిరిగి skeletonIterator == query.skeleton.చివర();
         }
 
-        std::string_view remainingSignificantCharacters() const {
-            return query.skeleton.substr(skeletonIterator - query.skeleton.begin());
+        std::string_view మిగిలిన_Significant_Characters() స్థిరరాశి {
+            తిరిగి query.skeleton.substr(skeletonIterator - query.skeleton.begin());
         }
 
-      private:
-        const CharacterNameQuery& query;
+      అంతరంగ:
+        స్థిరరాశి CharacterNameQuery& query;
         std::string_view::const_iterator skeletonIterator;
         // Initialized to ' ' so that a leading hyphen is treated like a hyphen that follows a
         // space (non-medial and thus not ignorable).  There are in fact no leading hyphens in
@@ -198,79 +198,79 @@ class CharacterNameQuery {
         // we do not read the value of this variable before writing to it because the first call to
         // consistentWith never has c=' ' either by R4, but it seems cleanest to initialize lastChar
         // nonetheless.
-        char lastChar = ' ';
+        అక్షరం చివరి_Char = ' ';
     };
 
-    explicit CharacterNameQuery(std::string_view query) {
+    స్పష్టమైన CharacterNameQuery(std::string_view query) {
         // Construct a skeleton obtained by
         // 1. removing medial hyphens (except the one in the name of U+1180);
         // 2. removing spaces and underscores;
         // 3. uppercasing,
         // as described in https://www.unicode.org/reports/tr44/#UAX44-LM2.
         // We do all three in a single pass.
-        char *skeletonLimit = skeletonData;
-        for (std::size_t i = 0; i < query.length(); ++i) {
-            U_ASSERT(skeletonLimit < skeletonData + sizeof(skeletonData));
-            if (skeletonLimit >= skeletonData + sizeof(skeletonData)) {
+        అక్షరం *skeleton_హద్దు = skeleton_దత్తాంశం;
+        కొరకు (std::size_t i = 0; i < query.length(); ++i) {
+            U_ASSERT(skeleton_హద్దు < skeleton_దత్తాంశం + పరిమాణం(skeleton_దత్తాంశం));
+            ఒకవేళ (skeleton_హద్దు >= skeleton_దత్తాంశం + పరిమాణం(skeleton_దత్తాంశం)) {
                 // The caller should limit the query length appropriately; if they do not, assert,
                 // and if assertions are disabled, query for the empty string (which will quickly
                 // find nothing).
-                skeletonLimit = skeletonData;
-                break;
+                skeleton_హద్దు = skeleton_దత్తాంశం;
+                ఆపు;
             }
-            if (query[i] == ' ' || query[i] == '_') {
-                continue;
+            ఒకవేళ (query[i] == ' ' || query[i] == '_') {
+                కొనసాగు;
             }
-            if (query[i] == '-') {
-                bool isMedial;
-                bool is1180MedialHyphen = false;
-                if (i == 0 || i == query.length() - 1) {
-                    isMedial = false;
-                } else {
+            ఒకవేళ (query[i] == '-') {
+                తార్కిక isMedial;
+                తార్కిక is1180MedialHyphen = అబద్ధం;
+                ఒకవేళ (i == 0 || i == query.length() - 1) {
+                    isMedial = అబద్ధం;
+                } లేకపోతే {
                     isMedial = isASCIILetterOrDigit(query[i - 1]) && isASCIILetterOrDigit(query[i + 1]);
                 }
                 // A medial hyphen is the hyphen in the name of U+1180 HANGUL JUNGSEONG O-E if what
                 // comes before skeletonizes to HANGULJUNGSEONGO and what comes after skeletonizes
                 // to E.
-                if (isMedial && uprv_toupper(query[i + 1]) == 'E' &&
-                    std::string_view(skeletonData, skeletonLimit - skeletonData) == "HANGULJUNGSEONGO") {
-                    is1180MedialHyphen = true;
+                ఒకవేళ (isMedial && uprv_toupper(query[i + 1]) == 'E' &&
+                    std::string_view(skeleton_దత్తాంశం, skeleton_హద్దు - skeleton_దత్తాంశం) == "HANGULJUNGSEONGO") {
+                    is1180MedialHyphen = నిజం;
                     // If there is anything significant after the E, the part of the name after the
                     // hyphen does not skeletonize to E, and thus this is not U+1180.
                     // There can be no hyphens there: if there is one, it is either non-medial, or
                     // there is another letter beyond the E.  The insignificant characters are thus
                     // only spaces and underscores.
-                    for (std::size_t j = i + 2; j < query.length(); ++j) {
-                        if (query[j] != ' ' && query[j] != '_') {
-                            is1180MedialHyphen = false;
+                    కొరకు (std::size_t j = i + 2; j < query.length(); ++j) {
+                        ఒకవేళ (query[j] != ' ' && query[j] != '_') {
+                            is1180MedialHyphen = అబద్ధం;
                         }
                     }
                 }
-                if (!isMedial || is1180MedialHyphen) {
-                    *skeletonLimit++ = query[i];
+                ఒకవేళ (!isMedial || is1180MedialHyphen) {
+                    *skeleton_హద్దు++ = query[i];
                 }
-            } else {
-                *skeletonLimit++ = uprv_toupper(query[i]);
+            } లేకపోతే {
+                *skeleton_హద్దు++ = uprv_toupper(query[i]);
             }
         }
-        skeleton = std::string_view(skeletonData, skeletonLimit - skeletonData);
+        skeleton = std::string_view(skeleton_దత్తాంశం, skeleton_హద్దు - skeleton_దత్తాంశం);
         // This can be true even if we never went through the is1180MedialHyphen path, e.g., if the
         // query was "HANGUL JUNGSEONG O -E".
         is1180 = skeleton == "HANGULJUNGSEONGO-E";
     }
 
-    Matcher matcher() const {
-        return Matcher(*this);
+    Matcher matcher() స్థిరరాశి {
+        తిరిగి Matcher(*ఇది);
     }
 
-private:
-    static bool isASCIILetterOrDigit(const char c) {
-        return uprv_isASCIILetter(c) || (c >= '0' && c <= '9');
+అంతరంగ:
+    స్థిర తార్కిక isASCIILetterOrDigit(స్థిరరాశి అక్షరం c) {
+        తిరిగి uprv_isASCIILetter(c) || (c >= '0' && c <= '9');
     }
 
-    char skeletonData[120];
+    అక్షరం skeleton_దత్తాంశం[120];
     std::string_view skeleton;
-    bool is1180;
+    తార్కిక is1180;
 };
 } // namespace
 
@@ -283,37 +283,37 @@ private:
  * @param names (const UCharNames *) pointer to the UCharNames indexes
  * @return (const uint16_t *) pointer to the groups table
  */
-#define GET_GROUPS(names) (const uint16_t *)((const char *)names+names->groupsOffset)
+#నిర్వచించు GET_GROUPS(పేర్లు) (స్థిరరాశి uint16_t *)((స్థిరరాశి అక్షరం *)పేర్లు+పేర్లు->groups_స్థానభ్రంశం)
 
-typedef struct {
-    const CharacterNameQuery *otherName;
-    UChar32 code;
-} FindName;
+రకనిర్వచనం నిర్మాణం {
+    స్థిరరాశి CharacterNameQuery *otherName;
+    UChar32 సంకేతం_2;
+} కనుగొను_Name;
 
-#define DO_FIND_NAME nullptr
+#నిర్వచించు DO_కనుగొను_NAME శూన్యసూచిక
 
-static UDataMemory *uCharNamesData=nullptr;
-static UCharNames *uCharNames=nullptr;
-static icu::UInitOnce gCharNamesInitOnce {};
+స్థిర UData_జ్ఞాపకం *u_Char_పేర్లు_దత్తాంశం=శూన్యసూచిక;
+స్థిర UChar_పేర్లు *u_Char_పేర్లు=శూన్యసూచిక;
+స్థిర icu::UInitOnce g_Char_పేర్లు_Init_Once {};
 
 /*
  * Maximum length of character names (regular & 1.0).
  */
-static int32_t gMaxNameLength=0;
+స్థిర int32_t g_Max_Name_నిడివి=0;
 
 /*
  * Set of chars used in character names (regular & 1.0).
  * Chars are platform-dependent (can be EBCDIC).
  */
-static uint32_t gNameSet[8]={ 0 };
+స్థిర uint32_t g_Name_సమితి[8]={ 0 };
 
-#define U_NONCHARACTER_CODE_POINT U_CHAR_CATEGORY_COUNT
-#define U_LEAD_SURROGATE U_CHAR_CATEGORY_COUNT + 1
-#define U_TRAIL_SURROGATE U_CHAR_CATEGORY_COUNT + 2
+#నిర్వచించు U_NONCHARACTER_సంకేతం_బిందువు U_CHAR_CATEGORY_లెక్క
+#నిర్వచించు U_LEAD_SURROGATE U_CHAR_CATEGORY_లెక్క + 1
+#నిర్వచించు U_TRAIL_SURROGATE U_CHAR_CATEGORY_లెక్క + 2
 
-#define U_CHAR_EXTENDED_CATEGORY_COUNT (U_CHAR_CATEGORY_COUNT + 3)
+#నిర్వచించు U_CHAR_EXTENDED_CATEGORY_లెక్క (U_CHAR_CATEGORY_లెక్క + 3)
 
-static const char * const charCatNames[U_CHAR_EXTENDED_CATEGORY_COUNT] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి char_Cat_పేర్లు[U_CHAR_EXTENDED_CATEGORY_లెక్క] = {
     "unassigned",
     "uppercase letter",
     "lowercase letter",
@@ -351,65 +351,65 @@ static const char * const charCatNames[U_CHAR_EXTENDED_CATEGORY_COUNT] = {
 
 /* implementation ----------------------------------------------------------- */
 
-static UBool U_CALLCONV unames_cleanup()
+స్థిర UBool U_CALLCONV unames_cleanup()
 {
-    if(uCharNamesData) {
-        udata_close(uCharNamesData);
-        uCharNamesData = nullptr;
+    ఒకవేళ(u_Char_పేర్లు_దత్తాంశం) {
+        udata_close(u_Char_పేర్లు_దత్తాంశం);
+        u_Char_పేర్లు_దత్తాంశం = శూన్యసూచిక;
     }
-    if(uCharNames) {
-        uCharNames = nullptr;
+    ఒకవేళ(u_Char_పేర్లు) {
+        u_Char_పేర్లు = శూన్యసూచిక;
     }
-    gCharNamesInitOnce.reset();
-    gMaxNameLength=0;
-    return true;
+    g_Char_పేర్లు_Init_Once.reset();
+    g_Max_Name_నిడివి=0;
+    తిరిగి నిజం;
 }
 
-static UBool U_CALLCONV
-isAcceptable(void * /*context*/,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
-    return
+స్థిర UBool U_CALLCONV
+isAcceptable(శూన్య * /*context*/,
+             స్థిరరాశి అక్షరం * /*type*/, స్థిరరాశి అక్షరం * /*name*/,
+             స్థిరరాశి UDataInfo *pInfo) {
+    తిరిగి
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
-        pInfo->dataFormat[0]==0x75 &&   /* dataFormat="unam" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x61 &&
-        pInfo->dataFormat[3]==0x6d &&
-        pInfo->formatVersion[0]==1;
+        pInfo->దత్తాంశం_Format[0]==0x75 &&   /* dataFormat="unam" */
+        pInfo->దత్తాంశం_Format[1]==0x6e &&
+        pInfo->దత్తాంశం_Format[2]==0x61 &&
+        pInfo->దత్తాంశం_Format[3]==0x6d &&
+        pInfo->format_సంస్కరణ[0]==1;
 }
 
-static void U_CALLCONV
-loadCharNames(UErrorCode &status) {
-    U_ASSERT(uCharNamesData == nullptr);
-    U_ASSERT(uCharNames == nullptr);
+స్థిర శూన్య U_CALLCONV
+ఎక్కించు_Char_పేర్లు(UError_సంకేతం &స్థితి_2) {
+    U_ASSERT(u_Char_పేర్లు_దత్తాంశం == శూన్యసూచిక);
+    U_ASSERT(u_Char_పేర్లు == శూన్యసూచిక);
 
-    uCharNamesData = udata_openChoice(nullptr, DATA_TYPE, DATA_NAME, isAcceptable, nullptr, &status);
-    if(U_FAILURE(status)) {
-        uCharNamesData = nullptr;
-    } else {
-        uCharNames = (UCharNames *)udata_getMemory(uCharNamesData);
+    u_Char_పేర్లు_దత్తాంశం = udata_openChoice(శూన్యసూచిక, దత్తాంశం_TYPE, దత్తాంశం_NAME, isAcceptable, శూన్యసూచిక, &స్థితి_2);
+    ఒకవేళ(U_FAILURE(స్థితి_2)) {
+        u_Char_పేర్లు_దత్తాంశం = శూన్యసూచిక;
+    } లేకపోతే {
+        u_Char_పేర్లు = (UChar_పేర్లు *)udata_get_జ్ఞాపకం(u_Char_పేర్లు_దత్తాంశం);
     }
-    ucln_common_registerCleanup(UCLN_COMMON_UNAMES, unames_cleanup);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_UNAMES, unames_cleanup);
 }
 
 
-static UBool
-isDataLoaded(UErrorCode *pErrorCode) {
-    umtx_initOnce(gCharNamesInitOnce, &loadCharNames, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+స్థిర UBool
+is_దత్తాంశం_Loaded(UError_సంకేతం *p_Error_సంకేతం) {
+    umtx_initOnce(g_Char_పేర్లు_Init_Once, &ఎక్కించు_Char_పేర్లు, *p_Error_సంకేతం);
+    తిరిగి U_SUCCESS(*p_Error_సంకేతం);
 }
 
-#define WRITE_CHAR(buffer, bufferLength, bufferPos, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((bufferLength)>0) { \
-        *(buffer)++=c; \
-        --(bufferLength); \
+#నిర్వచించు WRITE_CHAR(బఫరు, బఫరు_నిడివి, బఫరు_Pos, c) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ((బఫరు_నిడివి)>0) { \
+        *(బఫరు)++=c; \
+        --(బఫరు_నిడివి); \
     } \
-    ++(bufferPos); \
-} UPRV_BLOCK_MACRO_END
+    ++(బఫరు_Pos); \
+} UPRV_ఖండం_MACRO_చివర
 
-#define U_ISO_COMMENT U_CHAR_NAME_CHOICE_COUNT
+#నిర్వచించు U_ISO_COMMENT U_CHAR_NAME_CHOICE_లెక్క
 
 /*
  * Important: expandName() and compareName() are almost the same -
@@ -423,84 +423,84 @@ isDataLoaded(UErrorCode *pErrorCode) {
  * So, it will be token[';']==-1 if we store U1.0 names/ISO comments/aliases
  * although we know that it will never be part of a name.
  */
-static uint16_t
-expandName(UCharNames *names,
-           const uint8_t *name, uint16_t nameLength, UCharNameChoice nameChoice,
-           char *buffer, uint16_t bufferLength) {
-    uint16_t* tokens = reinterpret_cast<uint16_t*>(names) + 8;
-    uint16_t token, tokenCount=*tokens++, bufferPos=0;
-    uint8_t* tokenStrings = reinterpret_cast<uint8_t*>(names) + names->tokenStringOffset;
+స్థిర uint16_t
+expandName(UChar_పేర్లు *పేర్లు,
+           స్థిరరాశి uint8_t *name, uint16_t name_నిడివి, UCharNameChoice nameChoice,
+           అక్షరం *బఫరు, uint16_t బఫరు_నిడివి) {
+    uint16_t* టోకెన్లు = reinterpret_cast<uint16_t*>(పేర్లు) + 8;
+    uint16_t token, token_లెక్క=*టోకెన్లు++, బఫరు_Pos=0;
+    uint8_t* token_అక్షరశ్రేణులు = reinterpret_cast<uint8_t*>(పేర్లు) + పేర్లు->token_String_స్థానభ్రంశం;
     uint8_t c;
 
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+    ఒకవేళ(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
         /*
          * skip the modern name if it is not requested _and_
          * if the semicolon byte value is a character, not a token number
          */
-        if (static_cast<uint8_t>(';') >= tokenCount || tokens[static_cast<uint8_t>(';')] == static_cast<uint16_t>(-1)) {
-            int fieldIndex= nameChoice==U_ISO_COMMENT ? 2 : nameChoice;
-            do {
-                while(nameLength>0) {
-                    --nameLength;
-                    if(*name++==';') {
-                        break;
+        ఒకవేళ (static_cast<uint8_t>(';') >= token_లెక్క || టోకెన్లు[static_cast<uint8_t>(';')] == static_cast<uint16_t>(-1)) {
+            పూర్ణాంకం క్షేత్రం_సూచీ= nameChoice==U_ISO_COMMENT ? 2 : nameChoice;
+            చేయి {
+                అయితే(name_నిడివి>0) {
+                    --name_నిడివి;
+                    ఒకవేళ(*name++==';') {
+                        ఆపు;
                     }
                 }
-            } while(--fieldIndex>0);
-        } else {
+            } అయితే(--క్షేత్రం_సూచీ>0);
+        } లేకపోతే {
             /*
              * the semicolon byte value is a token number, therefore
              * only modern names are stored in unames.dat and there is no
              * such requested alternate name here
              */
-            nameLength=0;
+            name_నిడివి=0;
         }
     }
 
     /* write each letter directly, and write a token word per token */
-    while(nameLength>0) {
-        --nameLength;
+    అయితే(name_నిడివి>0) {
+        --name_నిడివి;
         c=*name++;
 
-        if(c>=tokenCount) {
-            if(c!=';') {
+        ఒకవేళ(c>=token_లెక్క) {
+            ఒకవేళ(c!=';') {
                 /* implicit letter */
-                WRITE_CHAR(buffer, bufferLength, bufferPos, c);
-            } else {
-                /* finished */
-                break;
+                WRITE_CHAR(బఫరు, బఫరు_నిడివి, బఫరు_Pos, c);
+            } లేకపోతే {
+                /*ముగిసిన*/
+                ఆపు;
             }
-        } else {
-            token=tokens[c];
-            if (token == static_cast<uint16_t>(-2)) {
+        } లేకపోతే {
+            token=టోకెన్లు[c];
+            ఒకవేళ (token == static_cast<uint16_t>(-2)) {
                 /* this is a lead byte for a double-byte token */
-                token=tokens[c<<8|*name++];
-                --nameLength;
+                token=టోకెన్లు[c<<8|*name++];
+                --name_నిడివి;
             }
-            if (token == static_cast<uint16_t>(-1)) {
-                if(c!=';') {
+            ఒకవేళ (token == static_cast<uint16_t>(-1)) {
+                ఒకవేళ(c!=';') {
                     /* explicit letter */
-                    WRITE_CHAR(buffer, bufferLength, bufferPos, c);
-                } else {
-                    /* finished */
-                    break;
+                    WRITE_CHAR(బఫరు, బఫరు_నిడివి, బఫరు_Pos, c);
+                } లేకపోతే {
+                    /*ముగిసిన*/
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 /* write token word */
-                uint8_t *tokenString=tokenStrings+token;
-                while((c=*tokenString++)!=0) {
-                    WRITE_CHAR(buffer, bufferLength, bufferPos, c);
+                uint8_t *tokenString=token_అక్షరశ్రేణులు+token;
+                అయితే((c=*tokenString++)!=0) {
+                    WRITE_CHAR(బఫరు, బఫరు_నిడివి, బఫరు_Pos, c);
                 }
             }
         }
     }
 
     /* zero-terminate */
-    if(bufferLength>0) {
-        *buffer=0;
+    ఒకవేళ(బఫరు_నిడివి>0) {
+        *బఫరు=0;
     }
 
-    return bufferPos;
+    తిరిగి బఫరు_Pos;
 }
 
 /*
@@ -508,138 +508,138 @@ expandName(UCharNames *names,
  * the currently expanded name to an input name.
  * It returns the match/no match result as soon as possible.
  */
-static UBool
-compareName(UCharNames *names,
-            const uint8_t *name, uint16_t nameLength, UCharNameChoice nameChoice,
-            const CharacterNameQuery& otherName) {
-    uint16_t* tokens = reinterpret_cast<uint16_t*>(names) + 8;
-    uint16_t token, tokenCount=*tokens++;
-    uint8_t* tokenStrings = reinterpret_cast<uint8_t*>(names) + names->tokenStringOffset;
+స్థిర UBool
+compareName(UChar_పేర్లు *పేర్లు,
+            స్థిరరాశి uint8_t *name, uint16_t name_నిడివి, UCharNameChoice nameChoice,
+            స్థిరరాశి CharacterNameQuery& otherName) {
+    uint16_t* టోకెన్లు = reinterpret_cast<uint16_t*>(పేర్లు) + 8;
+    uint16_t token, token_లెక్క=*టోకెన్లు++;
+    uint8_t* token_అక్షరశ్రేణులు = reinterpret_cast<uint8_t*>(పేర్లు) + పేర్లు->token_String_స్థానభ్రంశం;
     uint8_t c;
-    auto matcher = otherName.matcher();
+    స్వయంచాలక matcher = otherName.matcher();
 
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+    ఒకవేళ(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
         /*
          * skip the modern name if it is not requested _and_
          * if the semicolon byte value is a character, not a token number
          */
-        if (static_cast<uint8_t>(';') >= tokenCount || tokens[static_cast<uint8_t>(';')] == static_cast<uint16_t>(-1)) {
-            int fieldIndex= nameChoice==U_ISO_COMMENT ? 2 : nameChoice;
-            do {
-                while(nameLength>0) {
-                    --nameLength;
-                    if(*name++==';') {
-                        break;
+        ఒకవేళ (static_cast<uint8_t>(';') >= token_లెక్క || టోకెన్లు[static_cast<uint8_t>(';')] == static_cast<uint16_t>(-1)) {
+            పూర్ణాంకం క్షేత్రం_సూచీ= nameChoice==U_ISO_COMMENT ? 2 : nameChoice;
+            చేయి {
+                అయితే(name_నిడివి>0) {
+                    --name_నిడివి;
+                    ఒకవేళ(*name++==';') {
+                        ఆపు;
                     }
                 }
-            } while(--fieldIndex>0);
-        } else {
+            } అయితే(--క్షేత్రం_సూచీ>0);
+        } లేకపోతే {
             /*
              * the semicolon byte value is a token number, therefore
              * only modern names are stored in unames.dat and there is no
              * such requested alternate name here
              */
-            nameLength=0;
+            name_నిడివి=0;
         }
     }
 
     /* compare each letter directly, and compare a token word per token */
-    while(nameLength>0) {
-        --nameLength;
+    అయితే(name_నిడివి>0) {
+        --name_నిడివి;
         c=*name++;
 
-        if(c>=tokenCount) {
-            if(c!=';') {
+        ఒకవేళ(c>=token_లెక్క) {
+            ఒకవేళ(c!=';') {
                 /* implicit letter */
-                if (!matcher.consistentWith(c)) {
-                    return false;
+                ఒకవేళ (!matcher.consistentWith(c)) {
+                    తిరిగి అబద్ధం;
                 }
-            } else {
-                /* finished */
-                break;
+            } లేకపోతే {
+                /*ముగిసిన*/
+                ఆపు;
             }
-        } else {
-            token=tokens[c];
-            if (token == static_cast<uint16_t>(-2)) {
+        } లేకపోతే {
+            token=టోకెన్లు[c];
+            ఒకవేళ (token == static_cast<uint16_t>(-2)) {
                 /* this is a lead byte for a double-byte token */
-                token=tokens[c<<8|*name++];
-                --nameLength;
+                token=టోకెన్లు[c<<8|*name++];
+                --name_నిడివి;
             }
-            if (token == static_cast<uint16_t>(-1)) {
-                if(c!=';') {
+            ఒకవేళ (token == static_cast<uint16_t>(-1)) {
+                ఒకవేళ(c!=';') {
                     /* explicit letter */
-                    if (!matcher.consistentWith(c)) {
-                        return false;
+                    ఒకవేళ (!matcher.consistentWith(c)) {
+                        తిరిగి అబద్ధం;
                     }
-                } else {
-                    /* finished */
-                    break;
+                } లేకపోతే {
+                    /*ముగిసిన*/
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 /* write token word */
-                if (!matcher.consistentWith(reinterpret_cast<const char *>(tokenStrings + token))) {
-                    return false;
+                ఒకవేళ (!matcher.consistentWith(reinterpret_cast<స్థిరరాశి అక్షరం *>(token_అక్షరశ్రేణులు + token))) {
+                    తిరిగి అబద్ధం;
                 }
             }
         }
     }
 
     /* complete match? */
-    return matcher.matches();
+    తిరిగి matcher.matches();
 }
 
-static uint8_t getCharCat(UChar32 cp) {
+స్థిర uint8_t getCharCat(UChar32 cp) {
     uint8_t cat;
 
-    if (U_IS_UNICODE_NONCHAR(cp)) {
-        return U_NONCHARACTER_CODE_POINT;
+    ఒకవేళ (U_IS_UNICODE_NONCHAR(cp)) {
+        తిరిగి U_NONCHARACTER_సంకేతం_బిందువు;
     }
 
-    if ((cat = u_charType(cp)) == U_SURROGATE) {
+    ఒకవేళ ((cat = u_charType(cp)) == U_SURROGATE) {
         cat = U_IS_LEAD(cp) ? U_LEAD_SURROGATE : U_TRAIL_SURROGATE;
     }
 
-    return cat;
+    తిరిగి cat;
 }
 
-static const char *getCharCatName(UChar32 cp) {
+స్థిర స్థిరరాశి అక్షరం *getCharCatName(UChar32 cp) {
     uint8_t cat = getCharCat(cp);
 
     /* Return unknown if the table of names above is not up to
        date. */
 
-    if (cat >= UPRV_LENGTHOF(charCatNames)) {
-        return "unknown";
-    } else {
-        return charCatNames[cat];
+    ఒకవేళ (cat >= UPRV_LENGTHOF(char_Cat_పేర్లు)) {
+        తిరిగి "unknown";
+    } లేకపోతే {
+        తిరిగి char_Cat_పేర్లు[cat];
     }
 }
 
-static uint16_t getExtName(uint32_t code, char *buffer, uint16_t bufferLength) {
-    const char *catname = getCharCatName(code);
+స్థిర uint16_t getExtName(uint32_t సంకేతం_2, అక్షరం *బఫరు, uint16_t బఫరు_నిడివి) {
+    స్థిరరాశి అక్షరం *catname = getCharCatName(సంకేతం_2);
     uint16_t length = 0;
 
     UChar32 cp;
-    int ndigits, i;
+    పూర్ణాంకం ndigits, i;
     
-    WRITE_CHAR(buffer, bufferLength, length, '<');
-    while (catname[length - 1]) {
-        WRITE_CHAR(buffer, bufferLength, length, catname[length - 1]);
+    WRITE_CHAR(బఫరు, బఫరు_నిడివి, length, '<');
+    అయితే (catname[length - 1]) {
+        WRITE_CHAR(బఫరు, బఫరు_నిడివి, length, catname[length - 1]);
     }
-    WRITE_CHAR(buffer, bufferLength, length, '-');
-    for (cp = code, ndigits = 0; cp; ++ndigits, cp >>= 4)
+    WRITE_CHAR(బఫరు, బఫరు_నిడివి, length, '-');
+    కొరకు (cp = సంకేతం_2, ndigits = 0; cp; ++ndigits, cp >>= 4)
         ;
-    if (ndigits < 4)
+    ఒకవేళ (ndigits < 4)
         ndigits = 4;
-    for (cp = code, i = ndigits; (cp || i > 0) && bufferLength; cp >>= 4, bufferLength--) {
+    కొరకు (cp = సంకేతం_2, i = ndigits; (cp || i > 0) && బఫరు_నిడివి; cp >>= 4, బఫరు_నిడివి--) {
         uint8_t v = static_cast<uint8_t>(cp & 0xf);
-        buffer[--i] = (v < 10 ? '0' + v : 'A' + v - 10);
+        బఫరు[--i] = (v < 10 ? '0' + v : 'A' + v - 10);
     }
-    buffer += ndigits;
+    బఫరు += ndigits;
     length += static_cast<uint16_t>(ndigits);
-    WRITE_CHAR(buffer, bufferLength, length, '>');
+    WRITE_CHAR(బఫరు, బఫరు_నిడివి, length, '>');
 
-    return length;
+    తిరిగి length;
 }
 
 /*
@@ -649,26 +649,26 @@ static uint16_t getExtName(uint32_t code, char *buffer, uint16_t bufferLength) {
  * or else is the highest group before "code".
  * If the lowest group is after "code", then that one is returned.
  */
-static const uint16_t *
-getGroup(UCharNames *names, uint32_t code) {
-    const uint16_t *groups=GET_GROUPS(names);
-    uint16_t groupMSB = static_cast<uint16_t>(code >> GROUP_SHIFT),
-             start=0,
-             limit=*groups++,
+స్థిర స్థిరరాశి uint16_t *
+get_సమూహం(UChar_పేర్లు *పేర్లు, uint32_t సంకేతం_2) {
+    స్థిరరాశి uint16_t *groups=GET_GROUPS(పేర్లు);
+    uint16_t సమూహం_MSB_2 = static_cast<uint16_t>(సంకేతం_2 >> సమూహం_జరుపు),
+             ప్రారంభం=0,
+             హద్దు=*groups++,
              number;
 
     /* binary search for the group of names that contains the one for code */
-    while(start<limit-1) {
-        number = static_cast<uint16_t>((start + limit) / 2);
-        if(groupMSB<groups[number*GROUP_LENGTH+GROUP_MSB]) {
-            limit=number;
-        } else {
-            start=number;
+    అయితే(ప్రారంభం<హద్దు-1) {
+        number = static_cast<uint16_t>((ప్రారంభం + హద్దు) / 2);
+        ఒకవేళ(సమూహం_MSB_2<groups[number*సమూహం_నిడివి+సమూహం_MSB]) {
+            హద్దు=number;
+        } లేకపోతే {
+            ప్రారంభం=number;
         }
     }
 
     /* return this regardless of whether it is an exact match */
-    return groups+start*GROUP_LENGTH;
+    తిరిగి groups+ప్రారంభం*సమూహం_నిడివి;
 }
 
 /*
@@ -681,83 +681,83 @@ getGroup(UCharNames *names, uint32_t code) {
  * The offsets and lengths arrays must be at least 33 (one more) long because
  * there is no check here at the end if the last nibble is still used.
  */
-static const uint8_t *
-expandGroupLengths(const uint8_t *s,
-                   uint16_t offsets[LINES_PER_GROUP+1], uint16_t lengths[LINES_PER_GROUP+1]) {
+స్థిర స్థిరరాశి uint8_t *
+expand_సమూహం_Lengths(స్థిరరాశి uint8_t *s,
+                   uint16_t offsets[పంక్తులు_చొప్పున_సమూహం+1], uint16_t lengths[పంక్తులు_చొప్పున_సమూహం+1]) {
     /* read the lengths of the 32 strings in this group and get each string's offset */
-    uint16_t i=0, offset=0, length=0;
-    uint8_t lengthByte;
+    uint16_t i=0, స్థానభ్రంశం=0, length=0;
+    uint8_t నిడివి_Byte;
 
     /* all 32 lengths must be read to get the offset of the first group string */
-    while(i<LINES_PER_GROUP) {
-        lengthByte=*s++;
+    అయితే(i<పంక్తులు_చొప్పున_సమూహం) {
+        నిడివి_Byte=*s++;
 
         /* read even nibble - MSBs of lengthByte */
-        if(length>=12) {
+        ఒకవేళ(length>=12) {
             /* double-nibble length spread across two bytes */
-            length = static_cast<uint16_t>(((length & 0x3) << 4 | lengthByte >> 4) + 12);
-            lengthByte&=0xf;
-        } else if((lengthByte /* &0xf0 */)>=0xc0) {
+            length = static_cast<uint16_t>(((length & 0x3) << 4 | నిడివి_Byte >> 4) + 12);
+            నిడివి_Byte&=0xf;
+        } లేకపోతే ఒకవేళ((నిడివి_Byte /* &0xf0 */)>=0xc0) {
             /* double-nibble length spread across this one byte */
-            length = static_cast<uint16_t>((lengthByte & 0x3f) + 12);
-        } else {
+            length = static_cast<uint16_t>((నిడివి_Byte & 0x3f) + 12);
+        } లేకపోతే {
             /* single-nibble length in MSBs */
-            length = static_cast<uint16_t>(lengthByte >> 4);
-            lengthByte&=0xf;
+            length = static_cast<uint16_t>(నిడివి_Byte >> 4);
+            నిడివి_Byte&=0xf;
         }
 
-        *offsets++=offset;
+        *offsets++=స్థానభ్రంశం;
         *lengths++=length;
 
-        offset+=length;
+        స్థానభ్రంశం+=length;
         ++i;
 
         /* read odd nibble - LSBs of lengthByte */
-        if((lengthByte&0xf0)==0) {
+        ఒకవేళ((నిడివి_Byte&0xf0)==0) {
             /* this nibble was not consumed for a double-nibble length above */
-            length=lengthByte;
-            if(length<12) {
+            length=నిడివి_Byte;
+            ఒకవేళ(length<12) {
                 /* single-nibble length in LSBs */
-                *offsets++=offset;
+                *offsets++=స్థానభ్రంశం;
                 *lengths++=length;
 
-                offset+=length;
+                స్థానభ్రంశం+=length;
                 ++i;
             }
-        } else {
+        } లేకపోతే {
             length=0;   /* prevent double-nibble detection in the next iteration */
         }
     }
 
     /* now, s is at the first group string */
-    return s;
+    తిరిగి s;
 }
 
-static uint16_t
-expandGroupName(UCharNames *names, const uint16_t *group,
-                uint16_t lineNumber, UCharNameChoice nameChoice,
-                char *buffer, uint16_t bufferLength) {
-    uint16_t offsets[LINES_PER_GROUP+2], lengths[LINES_PER_GROUP+2];
-    const uint8_t* s = reinterpret_cast<uint8_t*>(names) + names->groupStringOffset + GET_GROUP_OFFSET(group);
-    s=expandGroupLengths(s, offsets, lengths);
-    return expandName(names, s+offsets[lineNumber], lengths[lineNumber], nameChoice,
-                      buffer, bufferLength);
+స్థిర uint16_t
+expand_సమూహం_Name(UChar_పేర్లు *పేర్లు, స్థిరరాశి uint16_t *సమూహం,
+                uint16_t పంక్తి_సంఖ్య, UCharNameChoice nameChoice,
+                అక్షరం *బఫరు, uint16_t బఫరు_నిడివి) {
+    uint16_t offsets[పంక్తులు_చొప్పున_సమూహం+2], lengths[పంక్తులు_చొప్పున_సమూహం+2];
+    స్థిరరాశి uint8_t* s = reinterpret_cast<uint8_t*>(పేర్లు) + పేర్లు->సమూహం_String_స్థానభ్రంశం + GET_సమూహం_స్థానభ్రంశం(సమూహం);
+    s=expand_సమూహం_Lengths(s, offsets, lengths);
+    తిరిగి expandName(పేర్లు, s+offsets[పంక్తి_సంఖ్య], lengths[పంక్తి_సంఖ్య], nameChoice,
+                      బఫరు, బఫరు_నిడివి);
 }
 
-static uint16_t
-getName(UCharNames *names, uint32_t code, UCharNameChoice nameChoice,
-        char *buffer, uint16_t bufferLength) {
-    const uint16_t *group=getGroup(names, code);
-    if (static_cast<uint16_t>(code >> GROUP_SHIFT) == group[GROUP_MSB]) {
-        return expandGroupName(names, group, static_cast<uint16_t>(code & GROUP_MASK), nameChoice,
-                               buffer, bufferLength);
-    } else {
+స్థిర uint16_t
+getName(UChar_పేర్లు *పేర్లు, uint32_t సంకేతం_2, UCharNameChoice nameChoice,
+        అక్షరం *బఫరు, uint16_t బఫరు_నిడివి) {
+    స్థిరరాశి uint16_t *సమూహం=get_సమూహం(పేర్లు, సంకేతం_2);
+    ఒకవేళ (static_cast<uint16_t>(సంకేతం_2 >> సమూహం_జరుపు) == సమూహం[సమూహం_MSB]) {
+        తిరిగి expand_సమూహం_Name(పేర్లు, సమూహం, static_cast<uint16_t>(సంకేతం_2 & సమూహం_ముసుగు), nameChoice,
+                               బఫరు, బఫరు_నిడివి);
+    } లేకపోతే {
         /* group not found */
         /* zero-terminate */
-        if(bufferLength>0) {
-            *buffer=0;
+        ఒకవేళ(బఫరు_నిడివి>0) {
+            *బఫరు=0;
         }
-        return 0;
+        తిరిగి 0;
     }
 }
 
@@ -765,43 +765,43 @@ getName(UCharNames *names, uint32_t code, UCharNameChoice nameChoice,
  * enumGroupNames() enumerates all the names in a 32-group
  * and either calls the enumerator function or finds a given input name.
  */
-static UBool
-enumGroupNames(UCharNames *names, const uint16_t *group,
-               UChar32 start, UChar32 end,
-               UEnumCharNamesFn *fn, void *context,
+స్థిర UBool
+enum_సమూహం_పేర్లు(UChar_పేర్లు *పేర్లు, స్థిరరాశి uint16_t *సమూహం,
+               UChar32 ప్రారంభం, UChar32 చివర,
+               UEnum_Char_పేర్లు_Fn *fn, శూన్య *context,
                UCharNameChoice nameChoice) {
-    uint16_t offsets[LINES_PER_GROUP+2], lengths[LINES_PER_GROUP+2];
-    const uint8_t* s = reinterpret_cast<uint8_t*>(names) + names->groupStringOffset + GET_GROUP_OFFSET(group);
+    uint16_t offsets[పంక్తులు_చొప్పున_సమూహం+2], lengths[పంక్తులు_చొప్పున_సమూహం+2];
+    స్థిరరాశి uint8_t* s = reinterpret_cast<uint8_t*>(పేర్లు) + పేర్లు->సమూహం_String_స్థానభ్రంశం + GET_సమూహం_స్థానభ్రంశం(సమూహం);
 
-    s=expandGroupLengths(s, offsets, lengths);
-    if(fn!=DO_FIND_NAME) {
-        char buffer[200];
+    s=expand_సమూహం_Lengths(s, offsets, lengths);
+    ఒకవేళ(fn!=DO_కనుగొను_NAME) {
+        అక్షరం బఫరు[200];
         uint16_t length;
 
-        while(start<=end) {
-            length=expandName(names, s+offsets[start&GROUP_MASK], lengths[start&GROUP_MASK], nameChoice, buffer, sizeof(buffer));
-            if (!length && nameChoice == U_EXTENDED_CHAR_NAME) {
-                buffer[length = getExtName(start, buffer, sizeof(buffer))] = 0;
+        అయితే(ప్రారంభం<=చివర) {
+            length=expandName(పేర్లు, s+offsets[ప్రారంభం&సమూహం_ముసుగు], lengths[ప్రారంభం&సమూహం_ముసుగు], nameChoice, బఫరు, పరిమాణం(బఫరు));
+            ఒకవేళ (!length && nameChoice == U_EXTENDED_CHAR_NAME) {
+                బఫరు[length = getExtName(ప్రారంభం, బఫరు, పరిమాణం(బఫరు))] = 0;
             }
             /* here, we assume that the buffer is large enough */
-            if(length>0) {
-                if(!fn(context, start, nameChoice, buffer, length)) {
-                    return false;
+            ఒకవేళ(length>0) {
+                ఒకవేళ(!fn(context, ప్రారంభం, nameChoice, బఫరు, length)) {
+                    తిరిగి అబద్ధం;
                 }
             }
-            ++start;
+            ++ప్రారంభం;
         }
-    } else {
-        const CharacterNameQuery& otherName = *static_cast<FindName*>(context)->otherName;
-        while(start<=end) {
-            if(compareName(names, s+offsets[start&GROUP_MASK], lengths[start&GROUP_MASK], nameChoice, otherName)) {
-                static_cast<FindName*>(context)->code = start;
-                return false;
+    } లేకపోతే {
+        స్థిరరాశి CharacterNameQuery& otherName = *static_cast<కనుగొను_Name*>(context)->otherName;
+        అయితే(ప్రారంభం<=చివర) {
+            ఒకవేళ(compareName(పేర్లు, s+offsets[ప్రారంభం&సమూహం_ముసుగు], lengths[ప్రారంభం&సమూహం_ముసుగు], nameChoice, otherName)) {
+                static_cast<కనుగొను_Name*>(context)->సంకేతం_2 = ప్రారంభం;
+                తిరిగి అబద్ధం;
             }
-            ++start;
+            ++ప్రారంభం;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 /*
@@ -810,144 +810,144 @@ enumGroupNames(UCharNames *names, const uint16_t *group,
  * with the dummy DO_FIND_NAME, because u_charFromName() does a check
  * for extended names by itself.
  */ 
-static UBool
-enumExtNames(UChar32 start, UChar32 end,
-             UEnumCharNamesFn *fn, void *context)
+స్థిర UBool
+enum_Ext_పేర్లు(UChar32 ప్రారంభం, UChar32 చివర,
+             UEnum_Char_పేర్లు_Fn *fn, శూన్య *context)
 {
-    if(fn!=DO_FIND_NAME) {
-        char buffer[200];
+    ఒకవేళ(fn!=DO_కనుగొను_NAME) {
+        అక్షరం బఫరు[200];
         uint16_t length;
         
-        while(start<=end) {
-            buffer[length = getExtName(start, buffer, sizeof(buffer))] = 0;
+        అయితే(ప్రారంభం<=చివర) {
+            బఫరు[length = getExtName(ప్రారంభం, బఫరు, పరిమాణం(బఫరు))] = 0;
             /* here, we assume that the buffer is large enough */
-            if(length>0) {
-                if(!fn(context, start, U_EXTENDED_CHAR_NAME, buffer, length)) {
-                    return false;
+            ఒకవేళ(length>0) {
+                ఒకవేళ(!fn(context, ప్రారంభం, U_EXTENDED_CHAR_NAME, బఫరు, length)) {
+                    తిరిగి అబద్ధం;
                 }
             }
-            ++start;
+            ++ప్రారంభం;
         }
     }
 
-    return true;
+    తిరిగి నిజం;
 }
 
-static UBool
-enumNames(UCharNames *names,
-          UChar32 start, UChar32 limit,
-          UEnumCharNamesFn *fn, void *context,
+స్థిర UBool
+enum_పేర్లు(UChar_పేర్లు *పేర్లు,
+          UChar32 ప్రారంభం, UChar32 హద్దు,
+          UEnum_Char_పేర్లు_Fn *fn, శూన్య *context,
           UCharNameChoice nameChoice) {
-    uint16_t startGroupMSB, endGroupMSB, groupCount;
-    const uint16_t *group, *groupLimit;
+    uint16_t ప్రారంభం_సమూహం_MSB, చివర_సమూహం_MSB, సమూహం_లెక్క;
+    స్థిరరాశి uint16_t *సమూహం, *సమూహం_హద్దు;
 
-    startGroupMSB = static_cast<uint16_t>(start >> GROUP_SHIFT);
-    endGroupMSB = static_cast<uint16_t>((limit - 1) >> GROUP_SHIFT);
+    ప్రారంభం_సమూహం_MSB = static_cast<uint16_t>(ప్రారంభం >> సమూహం_జరుపు);
+    చివర_సమూహం_MSB = static_cast<uint16_t>((హద్దు - 1) >> సమూహం_జరుపు);
 
     /* find the group that contains start, or the highest before it */
-    group=getGroup(names, start);
+    సమూహం=get_సమూహం(పేర్లు, ప్రారంభం);
 
-    if(startGroupMSB<group[GROUP_MSB] && nameChoice==U_EXTENDED_CHAR_NAME) {
+    ఒకవేళ(ప్రారంభం_సమూహం_MSB<సమూహం[సమూహం_MSB] && nameChoice==U_EXTENDED_CHAR_NAME) {
         /* enumerate synthetic names between start and the group start */
-        UChar32 extLimit = static_cast<UChar32>(group[GROUP_MSB]) << GROUP_SHIFT;
-        if(extLimit>limit) {
-            extLimit=limit;
+        UChar32 ext_హద్దు = static_cast<UChar32>(సమూహం[సమూహం_MSB]) << సమూహం_జరుపు;
+        ఒకవేళ(ext_హద్దు>హద్దు) {
+            ext_హద్దు=హద్దు;
         }
-        if(!enumExtNames(start, extLimit-1, fn, context)) {
-            return false;
+        ఒకవేళ(!enum_Ext_పేర్లు(ప్రారంభం, ext_హద్దు-1, fn, context)) {
+            తిరిగి అబద్ధం;
         }
-        start=extLimit;
+        ప్రారంభం=ext_హద్దు;
     }
 
-    if(startGroupMSB==endGroupMSB) {
-        if(startGroupMSB==group[GROUP_MSB]) {
+    ఒకవేళ(ప్రారంభం_సమూహం_MSB==చివర_సమూహం_MSB) {
+        ఒకవేళ(ప్రారంభం_సమూహం_MSB==సమూహం[సమూహం_MSB]) {
             /* if start and limit-1 are in the same group, then enumerate only in that one */
-            return enumGroupNames(names, group, start, limit-1, fn, context, nameChoice);
+            తిరిగి enum_సమూహం_పేర్లు(పేర్లు, సమూహం, ప్రారంభం, హద్దు-1, fn, context, nameChoice);
         }
-    } else {
-        const uint16_t *groups=GET_GROUPS(names);
-        groupCount=*groups++;
-        groupLimit=groups+groupCount*GROUP_LENGTH;
+    } లేకపోతే {
+        స్థిరరాశి uint16_t *groups=GET_GROUPS(పేర్లు);
+        సమూహం_లెక్క=*groups++;
+        సమూహం_హద్దు=groups+సమూహం_లెక్క*సమూహం_నిడివి;
 
-        if(startGroupMSB==group[GROUP_MSB]) {
+        ఒకవేళ(ప్రారంభం_సమూహం_MSB==సమూహం[సమూహం_MSB]) {
             /* enumerate characters in the partial start group */
-            if((start&GROUP_MASK)!=0) {
-                if(!enumGroupNames(names, group,
-                                   start, (static_cast<UChar32>(startGroupMSB) << GROUP_SHIFT) + LINES_PER_GROUP - 1,
+            ఒకవేళ((ప్రారంభం&సమూహం_ముసుగు)!=0) {
+                ఒకవేళ(!enum_సమూహం_పేర్లు(పేర్లు, సమూహం,
+                                   ప్రారంభం, (static_cast<UChar32>(ప్రారంభం_సమూహం_MSB) << సమూహం_జరుపు) + పంక్తులు_చొప్పున_సమూహం - 1,
                                    fn, context, nameChoice)) {
-                    return false;
+                    తిరిగి అబద్ధం;
                 }
-                group=NEXT_GROUP(group); /* continue with the next group */
+                సమూహం=తదుపరి_సమూహం(సమూహం); /* continue with the next group */
             }
-        } else if(startGroupMSB>group[GROUP_MSB]) {
+        } లేకపోతే ఒకవేళ(ప్రారంభం_సమూహం_MSB>సమూహం[సమూహం_MSB]) {
             /* make sure that we start enumerating with the first group after start */
-            const uint16_t *nextGroup=NEXT_GROUP(group);
-            if (nextGroup < groupLimit && nextGroup[GROUP_MSB] > startGroupMSB && nameChoice == U_EXTENDED_CHAR_NAME) {
-                UChar32 end = nextGroup[GROUP_MSB] << GROUP_SHIFT;
-                if (end > limit) {
-                    end = limit;
+            స్థిరరాశి uint16_t *తదుపరి_సమూహం_2=తదుపరి_సమూహం(సమూహం);
+            ఒకవేళ (తదుపరి_సమూహం_2 < సమూహం_హద్దు && తదుపరి_సమూహం_2[సమూహం_MSB] > ప్రారంభం_సమూహం_MSB && nameChoice == U_EXTENDED_CHAR_NAME) {
+                UChar32 చివర = తదుపరి_సమూహం_2[సమూహం_MSB] << సమూహం_జరుపు;
+                ఒకవేళ (చివర > హద్దు) {
+                    చివర = హద్దు;
                 }
-                if (!enumExtNames(start, end - 1, fn, context)) {
-                    return false;
+                ఒకవేళ (!enum_Ext_పేర్లు(ప్రారంభం, చివర - 1, fn, context)) {
+                    తిరిగి అబద్ధం;
                 }
             }
-            group=nextGroup;
+            సమూహం=తదుపరి_సమూహం_2;
         }
 
         /* enumerate entire groups between the start- and end-groups */
-        while(group<groupLimit && group[GROUP_MSB]<endGroupMSB) {
-            const uint16_t *nextGroup;
-            start = static_cast<UChar32>(group[GROUP_MSB]) << GROUP_SHIFT;
-            if(!enumGroupNames(names, group, start, start+LINES_PER_GROUP-1, fn, context, nameChoice)) {
-                return false;
+        అయితే(సమూహం<సమూహం_హద్దు && సమూహం[సమూహం_MSB]<చివర_సమూహం_MSB) {
+            స్థిరరాశి uint16_t *తదుపరి_సమూహం_2;
+            ప్రారంభం = static_cast<UChar32>(సమూహం[సమూహం_MSB]) << సమూహం_జరుపు;
+            ఒకవేళ(!enum_సమూహం_పేర్లు(పేర్లు, సమూహం, ప్రారంభం, ప్రారంభం+పంక్తులు_చొప్పున_సమూహం-1, fn, context, nameChoice)) {
+                తిరిగి అబద్ధం;
             }
-            nextGroup=NEXT_GROUP(group);
-            if (nextGroup < groupLimit && nextGroup[GROUP_MSB] > group[GROUP_MSB] + 1 && nameChoice == U_EXTENDED_CHAR_NAME) {
-                UChar32 end = nextGroup[GROUP_MSB] << GROUP_SHIFT;
-                if (end > limit) {
-                    end = limit;
+            తదుపరి_సమూహం_2=తదుపరి_సమూహం(సమూహం);
+            ఒకవేళ (తదుపరి_సమూహం_2 < సమూహం_హద్దు && తదుపరి_సమూహం_2[సమూహం_MSB] > సమూహం[సమూహం_MSB] + 1 && nameChoice == U_EXTENDED_CHAR_NAME) {
+                UChar32 చివర = తదుపరి_సమూహం_2[సమూహం_MSB] << సమూహం_జరుపు;
+                ఒకవేళ (చివర > హద్దు) {
+                    చివర = హద్దు;
                 }
-                if (!enumExtNames((group[GROUP_MSB] + 1) << GROUP_SHIFT, end - 1, fn, context)) {
-                    return false;
+                ఒకవేళ (!enum_Ext_పేర్లు((సమూహం[సమూహం_MSB] + 1) << సమూహం_జరుపు, చివర - 1, fn, context)) {
+                    తిరిగి అబద్ధం;
                 }
             }
-            group=nextGroup;
+            సమూహం=తదుపరి_సమూహం_2;
         }
 
         /* enumerate within the end group (group[GROUP_MSB]==endGroupMSB) */
-        if(group<groupLimit && group[GROUP_MSB]==endGroupMSB) {
-            return enumGroupNames(names, group, (limit-1)&~GROUP_MASK, limit-1, fn, context, nameChoice);
-        } else if (nameChoice == U_EXTENDED_CHAR_NAME && group == groupLimit) {
-            UChar32 next = (PREV_GROUP(group)[GROUP_MSB] + 1) << GROUP_SHIFT;
-            if (next > start) {
-                start = next;
+        ఒకవేళ(సమూహం<సమూహం_హద్దు && సమూహం[సమూహం_MSB]==చివర_సమూహం_MSB) {
+            తిరిగి enum_సమూహం_పేర్లు(పేర్లు, సమూహం, (హద్దు-1)&~సమూహం_ముసుగు, హద్దు-1, fn, context, nameChoice);
+        } లేకపోతే ఒకవేళ (nameChoice == U_EXTENDED_CHAR_NAME && సమూహం == సమూహం_హద్దు) {
+            UChar32 next = (PREV_సమూహం(సమూహం)[సమూహం_MSB] + 1) << సమూహం_జరుపు;
+            ఒకవేళ (next > ప్రారంభం) {
+                ప్రారంభం = next;
             }
-        } else {
-            return true;
+        } లేకపోతే {
+            తిరిగి నిజం;
         }
     }
 
     /* we have not found a group, which means everything is made of
        extended names. */
-    if (nameChoice == U_EXTENDED_CHAR_NAME) {
-        if (limit > UCHAR_MAX_VALUE + 1) {
-            limit = UCHAR_MAX_VALUE + 1;
+    ఒకవేళ (nameChoice == U_EXTENDED_CHAR_NAME) {
+        ఒకవేళ (హద్దు > UCHAR_MAX_విలువ + 1) {
+            హద్దు = UCHAR_MAX_విలువ + 1;
         }
-        return enumExtNames(start, limit - 1, fn, context);
+        తిరిగి enum_Ext_పేర్లు(ప్రారంభం, హద్దు - 1, fn, context);
     }
     
-    return true;
+    తిరిగి నిజం;
 }
 
-static uint16_t
-writeFactorSuffix(const uint16_t *factors, uint16_t count,
-                  const char *s, /* suffix elements */
-                  uint32_t code,
+స్థిర uint16_t
+write_గుణకం_Suffix(స్థిరరాశి uint16_t *factors, uint16_t count,
+                  స్థిరరాశి అక్షరం *s, /* suffix elements */
+                  uint32_t సంకేతం_2,
                   uint16_t indexes[8], /* output fields from here */
-                  const char *elementBases[8], const char *elements[8],
-                  char *buffer, uint16_t bufferLength) {
-    uint16_t i, factor, bufferPos=0;
-    char c;
+                  స్థిరరాశి అక్షరం *elementBases[8], స్థిరరాశి అక్షరం *elements[8],
+                  అక్షరం *బఫరు, uint16_t బఫరు_నిడివి) {
+    uint16_t i, గుణకం, బఫరు_Pos=0;
+    అక్షరం c;
 
     /* write elements according to the factors */
 
@@ -958,59 +958,59 @@ writeFactorSuffix(const uint16_t *factors, uint16_t count,
      * note that for fewer operations, count is decremented here
      */
     --count;
-    for(i=count; i>0; --i) {
-        factor=factors[i];
-        indexes[i] = static_cast<uint16_t>(code % factor);
-        code/=factor;
+    కొరకు(i=count; i>0; --i) {
+        గుణకం=factors[i];
+        indexes[i] = static_cast<uint16_t>(సంకేతం_2 % గుణకం);
+        సంకేతం_2/=గుణకం;
     }
     /*
      * we don't need to calculate the last modulus because start<=code<=end
      * guarantees here that code<=factors[0]
      */
-    indexes[0] = static_cast<uint16_t>(code);
+    indexes[0] = static_cast<uint16_t>(సంకేతం_2);
 
     /* write each element */
-    for(;;) {
-        if(elementBases!=nullptr) {
+    కొరకు(;;) {
+        ఒకవేళ(elementBases!=శూన్యసూచిక) {
             *elementBases++=s;
         }
 
         /* skip indexes[i] strings */
-        factor=indexes[i];
-        while(factor>0) {
-            while(*s++!=0) {}
-            --factor;
+        గుణకం=indexes[i];
+        అయితే(గుణకం>0) {
+            అయితే(*s++!=0) {}
+            --గుణకం;
         }
-        if(elements!=nullptr) {
+        ఒకవేళ(elements!=శూన్యసూచిక) {
             *elements++=s;
         }
 
         /* write element */
-        while((c=*s++)!=0) {
-            WRITE_CHAR(buffer, bufferLength, bufferPos, c);
+        అయితే((c=*s++)!=0) {
+            WRITE_CHAR(బఫరు, బఫరు_నిడివి, బఫరు_Pos, c);
         }
 
         /* we do not need to perform the rest of this loop for i==count - break here */
-        if(i>=count) {
-            break;
+        ఒకవేళ(i>=count) {
+            ఆపు;
         }
 
         /* skip the rest of the strings for this factors[i] */
-        factor = static_cast<uint16_t>(factors[i] - indexes[i] - 1);
-        while(factor>0) {
-            while(*s++!=0) {}
-            --factor;
+        గుణకం = static_cast<uint16_t>(factors[i] - indexes[i] - 1);
+        అయితే(గుణకం>0) {
+            అయితే(*s++!=0) {}
+            --గుణకం;
         }
 
         ++i;
     }
 
     /* zero-terminate */
-    if(bufferLength>0) {
-        *buffer=0;
+    ఒకవేళ(బఫరు_నిడివి>0) {
+        *బఫరు=0;
     }
 
-    return bufferPos;
+    తిరిగి బఫరు_Pos;
 }
 
 /*
@@ -1018,194 +1018,194 @@ writeFactorSuffix(const uint16_t *factors, uint16_t count,
  * Parts of findAlgName() are almost the same as some of getAlgName().
  * Fixes must be applied to both.
  */
-static uint16_t
-getAlgName(AlgorithmicRange *range, uint32_t code, UCharNameChoice nameChoice,
-        char *buffer, uint16_t bufferLength) {
-    uint16_t bufferPos=0;
+స్థిర uint16_t
+getAlgName(AlgorithmicRange *range, uint32_t సంకేతం_2, UCharNameChoice nameChoice,
+        అక్షరం *బఫరు, uint16_t బఫరు_నిడివి) {
+    uint16_t బఫరు_Pos=0;
 
     /* Only the normative character name can be algorithmic. */
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+    ఒకవేళ(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
         /* zero-terminate */
-        if(bufferLength>0) {
-            *buffer=0;
+        ఒకవేళ(బఫరు_నిడివి>0) {
+            *బఫరు=0;
         }
-        return 0;
+        తిరిగి 0;
     }
 
-    switch(range->type) {
-    case 0: {
+    ఎంపిక(range->type) {
+    స్థితి 0: {
         /* name = prefix hex-digits */
-        const char* s = reinterpret_cast<const char*>(range + 1);
-        char c;
+        స్థిరరాశి అక్షరం* s = reinterpret_cast<స్థిరరాశి అక్షరం*>(range + 1);
+        అక్షరం c;
 
         uint16_t i, count;
 
         /* copy prefix */
-        while((c=*s++)!=0) {
-            WRITE_CHAR(buffer, bufferLength, bufferPos, c);
+        అయితే((c=*s++)!=0) {
+            WRITE_CHAR(బఫరు, బఫరు_నిడివి, బఫరు_Pos, c);
         }
 
         /* write hexadecimal code point value */
         count=range->variant;
 
         /* zero-terminate */
-        if(count<bufferLength) {
-            buffer[count]=0;
+        ఒకవేళ(count<బఫరు_నిడివి) {
+            బఫరు[count]=0;
         }
 
-        for(i=count; i>0;) {
-            if(--i<bufferLength) {
-                c = static_cast<char>(code & 0xf);
-                if(c<10) {
+        కొరకు(i=count; i>0;) {
+            ఒకవేళ(--i<బఫరు_నిడివి) {
+                c = static_cast<అక్షరం>(సంకేతం_2 & 0xf);
+                ఒకవేళ(c<10) {
                     c+='0';
-                } else {
+                } లేకపోతే {
                     c+='A'-10;
                 }
-                buffer[i]=c;
+                బఫరు[i]=c;
             }
-            code>>=4;
+            సంకేతం_2>>=4;
         }
 
-        bufferPos+=count;
-        break;
+        బఫరు_Pos+=count;
+        ఆపు;
     }
-    case 1: {
+    స్థితి 1: {
         /* name = prefix factorized-elements */
         uint16_t indexes[8];
-        const uint16_t* factors = reinterpret_cast<const uint16_t*>(range + 1);
+        స్థిరరాశి uint16_t* factors = reinterpret_cast<స్థిరరాశి uint16_t*>(range + 1);
         uint16_t count=range->variant;
-        const char* s = reinterpret_cast<const char*>(factors + count);
-        char c;
+        స్థిరరాశి అక్షరం* s = reinterpret_cast<స్థిరరాశి అక్షరం*>(factors + count);
+        అక్షరం c;
 
         /* copy prefix */
-        while((c=*s++)!=0) {
-            WRITE_CHAR(buffer, bufferLength, bufferPos, c);
+        అయితే((c=*s++)!=0) {
+            WRITE_CHAR(బఫరు, బఫరు_నిడివి, బఫరు_Pos, c);
         }
 
-        bufferPos+=writeFactorSuffix(factors, count,
-                                     s, code-range->start, indexes, nullptr, nullptr, buffer, bufferLength);
-        break;
+        బఫరు_Pos+=write_గుణకం_Suffix(factors, count,
+                                     s, సంకేతం_2-range->ప్రారంభం, indexes, శూన్యసూచిక, శూన్యసూచిక, బఫరు, బఫరు_నిడివి);
+        ఆపు;
     }
-    default:
+    అప్రమేయ:
         /* undefined type */
         /* zero-terminate */
-        if(bufferLength>0) {
-            *buffer=0;
+        ఒకవేళ(బఫరు_నిడివి>0) {
+            *బఫరు=0;
         }
-        break;
+        ఆపు;
     }
 
-    return bufferPos;
+    తిరిగి బఫరు_Pos;
 }
 
 /*
  * Important: enumAlgNames() and findAlgName() are almost the same.
  * Any fix must be applied to both.
  */
-static UBool
-enumAlgNames(AlgorithmicRange *range,
-             UChar32 start, UChar32 limit,
-             UEnumCharNamesFn *fn, void *context,
+స్థిర UBool
+enum_Alg_పేర్లు(AlgorithmicRange *range,
+             UChar32 ప్రారంభం, UChar32 హద్దు,
+             UEnum_Char_పేర్లు_Fn *fn, శూన్య *context,
              UCharNameChoice nameChoice) {
-    char buffer[200];
+    అక్షరం బఫరు[200];
     uint16_t length;
 
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
-        return true;
+    ఒకవేళ(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+        తిరిగి నిజం;
     }
 
-    switch(range->type) {
-    case 0: {
-        char *s, *end;
-        char c;
+    ఎంపిక(range->type) {
+    స్థితి 0: {
+        అక్షరం *s, *చివర;
+        అక్షరం c;
 
         /* get the full name of the start character */
-        length = getAlgName(range, static_cast<uint32_t>(start), nameChoice, buffer, sizeof(buffer));
-        if(length<=0) {
-            return true;
+        length = getAlgName(range, static_cast<uint32_t>(ప్రారంభం), nameChoice, బఫరు, పరిమాణం(బఫరు));
+        ఒకవేళ(length<=0) {
+            తిరిగి నిజం;
         }
 
         /* call the enumerator function with this first character */
-        if(!fn(context, start, nameChoice, buffer, length)) {
-            return false;
+        ఒకవేళ(!fn(context, ప్రారంభం, nameChoice, బఫరు, length)) {
+            తిరిగి అబద్ధం;
         }
 
         /* go to the end of the name; all these names have the same length */
-        end=buffer;
-        while(*end!=0) {
-            ++end;
+        చివర=బఫరు;
+        అయితే(*చివర!=0) {
+            ++చివర;
         }
 
         /* enumerate the rest of the names */
-        while(++start<limit) {
+        అయితే(++ప్రారంభం<హద్దు) {
             /* increment the hexadecimal number on a character-basis */
-            s=end;
-            for (;;) {
+            s=చివర;
+            కొరకు (;;) {
                 c=*--s;
-                if(('0'<=c && c<'9') || ('A'<=c && c<'F')) {
-                    *s = static_cast<char>(c + 1);
-                    break;
-                } else if(c=='9') {
+                ఒకవేళ(('0'<=c && c<'9') || ('A'<=c && c<'F')) {
+                    *s = static_cast<అక్షరం>(c + 1);
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(c=='9') {
                     *s='A';
-                    break;
-                } else if(c=='F') {
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(c=='F') {
                     *s='0';
                 }
             }
 
-            if(!fn(context, start, nameChoice, buffer, length)) {
-                return false;
+            ఒకవేళ(!fn(context, ప్రారంభం, nameChoice, బఫరు, length)) {
+                తిరిగి అబద్ధం;
             }
         }
-        break;
+        ఆపు;
     }
-    case 1: {
+    స్థితి 1: {
         uint16_t indexes[8];
-        const char *elementBases[8], *elements[8];
-        const uint16_t* factors = reinterpret_cast<const uint16_t*>(range + 1);
+        స్థిరరాశి అక్షరం *elementBases[8], *elements[8];
+        స్థిరరాశి uint16_t* factors = reinterpret_cast<స్థిరరాశి uint16_t*>(range + 1);
         uint16_t count=range->variant;
-        const char* s = reinterpret_cast<const char*>(factors + count);
-        char *suffix, *t;
-        uint16_t prefixLength, i, idx;
+        స్థిరరాశి అక్షరం* s = reinterpret_cast<స్థిరరాశి అక్షరం*>(factors + count);
+        అక్షరం *suffix, *t;
+        uint16_t ఉపసర్గ_నిడివి, i, idx;
 
-        char c;
+        అక్షరం c;
 
         /* name = prefix factorized-elements */
 
         /* copy prefix */
-        suffix=buffer;
-        prefixLength=0;
-        while((c=*s++)!=0) {
+        suffix=బఫరు;
+        ఉపసర్గ_నిడివి=0;
+        అయితే((c=*s++)!=0) {
             *suffix++=c;
-            ++prefixLength;
+            ++ఉపసర్గ_నిడివి;
         }
 
         /* append the suffix of the start character */
-        length = static_cast<uint16_t>(prefixLength + writeFactorSuffix(factors, count,
-                                              s, static_cast<uint32_t>(start) - range->start,
+        length = static_cast<uint16_t>(ఉపసర్గ_నిడివి + write_గుణకం_Suffix(factors, count,
+                                              s, static_cast<uint32_t>(ప్రారంభం) - range->ప్రారంభం,
                                               indexes, elementBases, elements,
-                                              suffix, static_cast<uint16_t>(sizeof(buffer) - prefixLength)));
+                                              suffix, static_cast<uint16_t>(పరిమాణం(బఫరు) - ఉపసర్గ_నిడివి)));
 
         /* call the enumerator function with this first character */
-        if(!fn(context, start, nameChoice, buffer, length)) {
-            return false;
+        ఒకవేళ(!fn(context, ప్రారంభం, nameChoice, బఫరు, length)) {
+            తిరిగి అబద్ధం;
         }
 
         /* enumerate the rest of the names */
-        while(++start<limit) {
+        అయితే(++ప్రారంభం<హద్దు) {
             /* increment the indexes in lexical order bound by the factors */
             i=count;
-            for (;;) {
+            కొరకు (;;) {
                 idx = static_cast<uint16_t>(indexes[--i] + 1);
-                if(idx<factors[i]) {
+                ఒకవేళ(idx<factors[i]) {
                     /* skip one index and its element string */
                     indexes[i]=idx;
                     s=elements[i];
-                    while(*s++!=0) {
+                    అయితే(*s++!=0) {
                     }
                     elements[i]=s;
-                    break;
-                } else {
+                    ఆపు;
+                } లేకపోతే {
                     /* reset this index to 0 and its element string to the first one */
                     indexes[i]=0;
                     elements[i]=elementBases[i];
@@ -1214,10 +1214,10 @@ enumAlgNames(AlgorithmicRange *range,
 
             /* to make matters a little easier, just append all elements to the suffix */
             t=suffix;
-            length=prefixLength;
-            for(i=0; i<count; ++i) {
+            length=ఉపసర్గ_నిడివి;
+            కొరకు(i=0; i<count; ++i) {
                 s=elements[i];
-                while((c=*s++)!=0) {
+                అయితే((c=*s++)!=0) {
                     *t++=c;
                     ++length;
                 }
@@ -1225,18 +1225,18 @@ enumAlgNames(AlgorithmicRange *range,
             /* zero-terminate */
             *t=0;
 
-            if(!fn(context, start, nameChoice, buffer, length)) {
-                return false;
+            ఒకవేళ(!fn(context, ప్రారంభం, nameChoice, బఫరు, length)) {
+                తిరిగి అబద్ధం;
             }
         }
-        break;
+        ఆపు;
     }
-    default:
+    అప్రమేయ:
         /* undefined type */
-        break;
+        ఆపు;
     }
 
-    return true;
+    తిరిగి నిజం;
 }
 
 /*
@@ -1244,92 +1244,92 @@ enumAlgNames(AlgorithmicRange *range,
  * returns the code point for a name if it fits into the range.
  * It returns 0xffff otherwise.
  */
-static UChar32
-findAlgName(AlgorithmicRange *range, UCharNameChoice nameChoice, CharacterNameQuery& query) {
-    UChar32 code;
-    auto matcher = query.matcher();
+స్థిర UChar32
+కనుగొను_Alg_Name(AlgorithmicRange *range, UCharNameChoice nameChoice, CharacterNameQuery& query) {
+    UChar32 సంకేతం_2;
+    స్వయంచాలక matcher = query.matcher();
 
-    if(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
-        return 0xffff;
+    ఒకవేళ(nameChoice!=U_UNICODE_CHAR_NAME && nameChoice!=U_EXTENDED_CHAR_NAME) {
+        తిరిగి 0xffff;
     }
 
-    switch(range->type) {
-    case 0: {
+    ఎంపిక(range->type) {
+    స్థితి 0: {
         /* name = prefix hex-digits */
-        const char* s = reinterpret_cast<const char*>(range + 1);
+        స్థిరరాశి అక్షరం* s = reinterpret_cast<స్థిరరాశి అక్షరం*>(range + 1);
 
         /* compare prefix */
-        if (!matcher.consistentWith(s)) {
-            return 0xffff;
+        ఒకవేళ (!matcher.consistentWith(s)) {
+            తిరిగి 0xffff;
         }
 
         /* read hexadecimal code point value */
-        code=0;
-        for(char c : matcher.remainingSignificantCharacters()) {
-            if('0'<=c && c<='9') {
-                code=(code<<4)|(c-'0');
-            } else if('A'<=c && c<='F') {
-                code=(code<<4)|(c-'A'+10);
-            } else {
-                return 0xffff;
+        సంకేతం_2=0;
+        కొరకు(అక్షరం c : matcher.మిగిలిన_Significant_Characters()) {
+            ఒకవేళ('0'<=c && c<='9') {
+                సంకేతం_2=(సంకేతం_2<<4)|(c-'0');
+            } లేకపోతే ఒకవేళ('A'<=c && c<='F') {
+                సంకేతం_2=(సంకేతం_2<<4)|(c-'A'+10);
+            } లేకపోతే {
+                తిరిగి 0xffff;
             }
         }
 
         /* does it fit into the range? */
-        if (range->start <= static_cast<uint32_t>(code) && static_cast<uint32_t>(code) <= range->end) {
-            return code;
+        ఒకవేళ (range->ప్రారంభం <= static_cast<uint32_t>(సంకేతం_2) && static_cast<uint32_t>(సంకేతం_2) <= range->చివర) {
+            తిరిగి సంకేతం_2;
         }
-        break;
+        ఆపు;
     }
-    case 1: {
-        char buffer[64];
+    స్థితి 1: {
+        అక్షరం బఫరు[64];
         uint16_t indexes[8];
-        const char *elementBases[8], *elements[8];
-        const uint16_t* factors = reinterpret_cast<const uint16_t*>(range + 1);
+        స్థిరరాశి అక్షరం *elementBases[8], *elements[8];
+        స్థిరరాశి uint16_t* factors = reinterpret_cast<స్థిరరాశి uint16_t*>(range + 1);
         uint16_t count=range->variant;
-        const char *s = reinterpret_cast<const char*>(factors + count);
-        UChar32 start, limit;
+        స్థిరరాశి అక్షరం *s = reinterpret_cast<స్థిరరాశి అక్షరం*>(factors + count);
+        UChar32 ప్రారంభం, హద్దు;
         uint16_t i, idx;
 
         /* name = prefix factorized-elements */
 
         /* compare prefix */
-        std::string_view prefix = s;
-        if (!matcher.consistentWith(prefix)) {
-            return 0xffff;
+        std::string_view ఉపసర్గ = s;
+        ఒకవేళ (!matcher.consistentWith(ఉపసర్గ)) {
+            తిరిగి 0xffff;
         }
 
-        s += prefix.length() + 1;
+        s += ఉపసర్గ.length() + 1;
 
-        start = static_cast<UChar32>(range->start);
-        limit = static_cast<UChar32>(range->end + 1);
+        ప్రారంభం = static_cast<UChar32>(range->ప్రారంభం);
+        హద్దు = static_cast<UChar32>(range->చివర + 1);
         
         // This implementation assumes that the suffix does not contain SPACEs nor HYPHEN-MINUSes,
         // which is the case in practice for the names of Hangul syllables.
-        std::string_view querySuffix = matcher.remainingSignificantCharacters();
+        std::string_view querySuffix = matcher.మిగిలిన_Significant_Characters();
         /* initialize the suffix elements for enumeration; indexes should all be set to 0 */
-        writeFactorSuffix(factors, count, s, 0,
-                          indexes, elementBases, elements, buffer, sizeof(buffer));
+        write_గుణకం_Suffix(factors, count, s, 0,
+                          indexes, elementBases, elements, బఫరు, పరిమాణం(బఫరు));
 
         /* compare the first suffix */
-        if(querySuffix == buffer) {
-            return start;
+        ఒకవేళ(querySuffix == బఫరు) {
+            తిరిగి ప్రారంభం;
         }
 
         /* enumerate and compare the rest of the suffixes */
-        while(++start<limit) {
+        అయితే(++ప్రారంభం<హద్దు) {
             /* increment the indexes in lexical order bound by the factors */
             i=count;
-            for (;;) {
+            కొరకు (;;) {
                 idx = static_cast<uint16_t>(indexes[--i] + 1);
-                if(idx<factors[i]) {
+                ఒకవేళ(idx<factors[i]) {
                     /* skip one index and its element string */
                     indexes[i]=idx;
                     s=elements[i];
-                    while(*s++!=0) {}
+                    అయితే(*s++!=0) {}
                     elements[i]=s;
-                    break;
-                } else {
+                    ఆపు;
+                } లేకపోతే {
                     /* reset this index to 0 and its element string to the first one */
                     indexes[i]=0;
                     elements[i]=elementBases[i];
@@ -1337,114 +1337,114 @@ findAlgName(AlgorithmicRange *range, UCharNameChoice nameChoice, CharacterNameQu
             }
 
             /* to make matters a little easier, just compare all elements of the suffix */
-            auto it = querySuffix.begin();
-            for(i=0; i<count; ++i) {
+            స్వయంచాలక it = querySuffix.begin();
+            కొరకు(i=0; i<count; ++i) {
                 s=elements[i];
-                char c;
-                while((c=*s++)!=0) {
-                    if(it == querySuffix.end() || c!=*it++) {
+                అక్షరం c;
+                అయితే((c=*s++)!=0) {
+                    ఒకవేళ(it == querySuffix.చివర() || c!=*it++) {
                         s=""; /* does not match */
                         i=99;
                     }
                 }
             }
-            if(i<99 && it == querySuffix.end()) {
-                return start;
+            ఒకవేళ(i<99 && it == querySuffix.చివర()) {
+                తిరిగి ప్రారంభం;
             }
         }
-        break;
+        ఆపు;
     }
-    default:
+    అప్రమేయ:
         /* undefined type */
-        break;
+        ఆపు;
     }
 
-    return 0xffff;
+    తిరిగి 0xffff;
 }
 
 /* sets of name characters, maximum name lengths ---------------------------- */
 
-#define SET_ADD(set, c) ((set)[(uint8_t)c>>5]|=((uint32_t)1<<((uint8_t)c&0x1f)))
-#define SET_CONTAINS(set, c) (((set)[(uint8_t)c>>5]&((uint32_t)1<<((uint8_t)c&0x1f)))!=0)
+#నిర్వచించు సమితి_కూడు_3(సమితి, c) ((సమితి)[(uint8_t)c>>5]|=((uint32_t)1<<((uint8_t)c&0x1f)))
+#నిర్వచించు సమితి_కలిగియుంది(సమితి, c) (((సమితి)[(uint8_t)c>>5]&((uint32_t)1<<((uint8_t)c&0x1f)))!=0)
 
-static int32_t
-calcStringSetLength(uint32_t set[8], const char *s) {
+స్థిర int32_t
+calc_String_సమితి_నిడివి(uint32_t సమితి[8], స్థిరరాశి అక్షరం *s) {
     int32_t length=0;
-    char c;
+    అక్షరం c;
 
-    while((c=*s++)!=0) {
-        SET_ADD(set, c);
+    అయితే((c=*s++)!=0) {
+        సమితి_కూడు_3(సమితి, c);
         ++length;
     }
-    return length;
+    తిరిగి length;
 }
 
-static int32_t
-calcAlgNameSetsLengths(int32_t maxNameLength) {
+స్థిర int32_t
+calcAlgNameSetsLengths(int32_t max_Name_నిడివి) {
     AlgorithmicRange *range;
     uint32_t *p;
-    uint32_t rangeCount;
+    uint32_t range_లెక్క;
     int32_t length;
 
     /* enumerate algorithmic ranges */
-    p = reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(uCharNames) + uCharNames->algNamesOffset);
-    rangeCount=*p;
+    p = reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(u_Char_పేర్లు) + u_Char_పేర్లు->alg_పేర్లు_స్థానభ్రంశం);
+    range_లెక్క=*p;
     range = reinterpret_cast<AlgorithmicRange*>(p + 1);
-    while(rangeCount>0) {
-        switch(range->type) {
-        case 0:
+    అయితే(range_లెక్క>0) {
+        ఎంపిక(range->type) {
+        స్థితి 0:
             /* name = prefix + (range->variant times) hex-digits */
-            /* prefix */
-            length = calcStringSetLength(gNameSet, reinterpret_cast<const char*>(range + 1)) + range->variant;
-            if(length>maxNameLength) {
-                maxNameLength=length;
+            /*ఉపసర్గ*/
+            length = calc_String_సమితి_నిడివి(g_Name_సమితి, reinterpret_cast<స్థిరరాశి అక్షరం*>(range + 1)) + range->variant;
+            ఒకవేళ(length>max_Name_నిడివి) {
+                max_Name_నిడివి=length;
             }
-            break;
-        case 1: {
+            ఆపు;
+        స్థితి 1: {
             /* name = prefix factorized-elements */
-            const uint16_t* factors = reinterpret_cast<const uint16_t*>(range + 1);
-            const char *s;
-            int32_t i, count=range->variant, factor, factorLength, maxFactorLength;
+            స్థిరరాశి uint16_t* factors = reinterpret_cast<స్థిరరాశి uint16_t*>(range + 1);
+            స్థిరరాశి అక్షరం *s;
+            int32_t i, count=range->variant, గుణకం, గుణకం_నిడివి, max_గుణకం_నిడివి;
 
             /* prefix length */
-            s = reinterpret_cast<const char*>(factors + count);
-            length=calcStringSetLength(gNameSet, s);
+            s = reinterpret_cast<స్థిరరాశి అక్షరం*>(factors + count);
+            length=calc_String_సమితి_నిడివి(g_Name_సమితి, s);
             s+=length+1; /* start of factor suffixes */
 
             /* get the set and maximum factor suffix length for each factor */
-            for(i=0; i<count; ++i) {
-                maxFactorLength=0;
-                for(factor=factors[i]; factor>0; --factor) {
-                    factorLength=calcStringSetLength(gNameSet, s);
-                    s+=factorLength+1;
-                    if(factorLength>maxFactorLength) {
-                        maxFactorLength=factorLength;
+            కొరకు(i=0; i<count; ++i) {
+                max_గుణకం_నిడివి=0;
+                కొరకు(గుణకం=factors[i]; గుణకం>0; --గుణకం) {
+                    గుణకం_నిడివి=calc_String_సమితి_నిడివి(g_Name_సమితి, s);
+                    s+=గుణకం_నిడివి+1;
+                    ఒకవేళ(గుణకం_నిడివి>max_గుణకం_నిడివి) {
+                        max_గుణకం_నిడివి=గుణకం_నిడివి;
                     }
                 }
-                length+=maxFactorLength;
+                length+=max_గుణకం_నిడివి;
             }
 
-            if(length>maxNameLength) {
-                maxNameLength=length;
+            ఒకవేళ(length>max_Name_నిడివి) {
+                max_Name_నిడివి=length;
             }
-            break;
+            ఆపు;
         }
-        default:
+        అప్రమేయ:
             /* unknown type */
-            break;
+            ఆపు;
         }
 
         range = reinterpret_cast<AlgorithmicRange*>(reinterpret_cast<uint8_t*>(range) + range->size);
-        --rangeCount;
+        --range_లెక్క;
     }
-    return maxNameLength;
+    తిరిగి max_Name_నిడివి;
 }
 
-static int32_t
-calcExtNameSetsLengths(int32_t maxNameLength) {
+స్థిర int32_t
+calcExtNameSetsLengths(int32_t max_Name_నిడివి) {
     int32_t i, length;
 
-    for(i=0; i<UPRV_LENGTHOF(charCatNames); ++i) {
+    కొరకు(i=0; i<UPRV_LENGTHOF(char_Cat_పేర్లు); ++i) {
         /*
          * for each category, count the length of the category name
          * plus 9=
@@ -1452,275 +1452,275 @@ calcExtNameSetsLengths(int32_t maxNameLength) {
          * 1 for -
          * 6 for most hex digits per code point
          */
-        length=9+calcStringSetLength(gNameSet, charCatNames[i]);
-        if(length>maxNameLength) {
-            maxNameLength=length;
+        length=9+calc_String_సమితి_నిడివి(g_Name_సమితి, char_Cat_పేర్లు[i]);
+        ఒకవేళ(length>max_Name_నిడివి) {
+            max_Name_నిడివి=length;
         }
     }
-    return maxNameLength;
+    తిరిగి max_Name_నిడివి;
 }
 
-static int32_t
-calcNameSetLength(const uint16_t *tokens, uint16_t tokenCount, const uint8_t *tokenStrings, int8_t *tokenLengths,
-                  uint32_t set[8],
-                  const uint8_t **pLine, const uint8_t *lineLimit) {
-    const uint8_t *line=*pLine;
-    int32_t length=0, tokenLength;
+స్థిర int32_t
+calc_Name_సమితి_నిడివి(స్థిరరాశి uint16_t *టోకెన్లు, uint16_t token_లెక్క, స్థిరరాశి uint8_t *token_అక్షరశ్రేణులు, int8_t *tokenLengths,
+                  uint32_t సమితి[8],
+                  స్థిరరాశి uint8_t **p_పంక్తి, స్థిరరాశి uint8_t *పంక్తి_హద్దు) {
+    స్థిరరాశి uint8_t *పంక్తి=*p_పంక్తి;
+    int32_t length=0, token_నిడివి;
     uint16_t c, token;
 
-    while (line != lineLimit && (c = *line++) != static_cast<uint8_t>(';')) {
-        if(c>=tokenCount) {
+    అయితే (పంక్తి != పంక్తి_హద్దు && (c = *పంక్తి++) != static_cast<uint8_t>(';')) {
+        ఒకవేళ(c>=token_లెక్క) {
             /* implicit letter */
-            SET_ADD(set, c);
+            సమితి_కూడు_3(సమితి, c);
             ++length;
-        } else {
-            token=tokens[c];
-            if (token == static_cast<uint16_t>(-2)) {
+        } లేకపోతే {
+            token=టోకెన్లు[c];
+            ఒకవేళ (token == static_cast<uint16_t>(-2)) {
                 /* this is a lead byte for a double-byte token */
-                c=c<<8|*line++;
-                token=tokens[c];
+                c=c<<8|*పంక్తి++;
+                token=టోకెన్లు[c];
             }
-            if (token == static_cast<uint16_t>(-1)) {
+            ఒకవేళ (token == static_cast<uint16_t>(-1)) {
                 /* explicit letter */
-                SET_ADD(set, c);
+                సమితి_కూడు_3(సమితి, c);
                 ++length;
-            } else {
+            } లేకపోతే {
                 /* count token word */
-                if(tokenLengths!=nullptr) {
+                ఒకవేళ(tokenLengths!=శూన్యసూచిక) {
                     /* use cached token length */
-                    tokenLength=tokenLengths[c];
-                    if(tokenLength==0) {
-                        tokenLength = calcStringSetLength(set, reinterpret_cast<const char*>(tokenStrings) + token);
-                        tokenLengths[c] = static_cast<int8_t>(tokenLength);
+                    token_నిడివి=tokenLengths[c];
+                    ఒకవేళ(token_నిడివి==0) {
+                        token_నిడివి = calc_String_సమితి_నిడివి(సమితి, reinterpret_cast<స్థిరరాశి అక్షరం*>(token_అక్షరశ్రేణులు) + token);
+                        tokenLengths[c] = static_cast<int8_t>(token_నిడివి);
                     }
-                } else {
-                    tokenLength = calcStringSetLength(set, reinterpret_cast<const char*>(tokenStrings) + token);
+                } లేకపోతే {
+                    token_నిడివి = calc_String_సమితి_నిడివి(సమితి, reinterpret_cast<స్థిరరాశి అక్షరం*>(token_అక్షరశ్రేణులు) + token);
                 }
-                length+=tokenLength;
+                length+=token_నిడివి;
             }
         }
     }
 
-    *pLine=line;
-    return length;
+    *p_పంక్తి=పంక్తి;
+    తిరిగి length;
 }
 
-static void
-calcGroupNameSetsLengths(int32_t maxNameLength) {
-    uint16_t offsets[LINES_PER_GROUP+2], lengths[LINES_PER_GROUP+2];
+స్థిర శూన్య
+calc_సమూహం_Name_Sets_Lengths(int32_t max_Name_నిడివి) {
+    uint16_t offsets[పంక్తులు_చొప్పున_సమూహం+2], lengths[పంక్తులు_చొప్పున_సమూహం+2];
 
-    uint16_t* tokens = reinterpret_cast<uint16_t*>(uCharNames) + 8;
-    uint16_t tokenCount=*tokens++;
-    uint8_t* tokenStrings = reinterpret_cast<uint8_t*>(uCharNames) + uCharNames->tokenStringOffset;
+    uint16_t* టోకెన్లు = reinterpret_cast<uint16_t*>(u_Char_పేర్లు) + 8;
+    uint16_t token_లెక్క=*టోకెన్లు++;
+    uint8_t* token_అక్షరశ్రేణులు = reinterpret_cast<uint8_t*>(u_Char_పేర్లు) + u_Char_పేర్లు->token_String_స్థానభ్రంశం;
 
     int8_t *tokenLengths;
 
-    const uint16_t *group;
-    const uint8_t *s, *line, *lineLimit;
+    స్థిరరాశి uint16_t *సమూహం;
+    స్థిరరాశి uint8_t *s, *పంక్తి, *పంక్తి_హద్దు;
 
-    int32_t groupCount, lineNumber, length;
+    int32_t సమూహం_లెక్క, పంక్తి_సంఖ్య, length;
 
-    tokenLengths = static_cast<int8_t*>(uprv_malloc(tokenCount));
-    if(tokenLengths!=nullptr) {
-        uprv_memset(tokenLengths, 0, tokenCount);
+    tokenLengths = static_cast<int8_t*>(uprv_malloc(token_లెక్క));
+    ఒకవేళ(tokenLengths!=శూన్యసూచిక) {
+        uprv_memset(tokenLengths, 0, token_లెక్క);
     }
 
-    group=GET_GROUPS(uCharNames);
-    groupCount=*group++;
+    సమూహం=GET_GROUPS(u_Char_పేర్లు);
+    సమూహం_లెక్క=*సమూహం++;
 
     /* enumerate all groups */
-    while(groupCount>0) {
-        s = reinterpret_cast<uint8_t*>(uCharNames) + uCharNames->groupStringOffset + GET_GROUP_OFFSET(group);
-        s=expandGroupLengths(s, offsets, lengths);
+    అయితే(సమూహం_లెక్క>0) {
+        s = reinterpret_cast<uint8_t*>(u_Char_పేర్లు) + u_Char_పేర్లు->సమూహం_String_స్థానభ్రంశం + GET_సమూహం_స్థానభ్రంశం(సమూహం);
+        s=expand_సమూహం_Lengths(s, offsets, lengths);
 
         /* enumerate all lines in each group */
-        for(lineNumber=0; lineNumber<LINES_PER_GROUP; ++lineNumber) {
-            line=s+offsets[lineNumber];
-            length=lengths[lineNumber];
-            if(length==0) {
-                continue;
+        కొరకు(పంక్తి_సంఖ్య=0; పంక్తి_సంఖ్య<పంక్తులు_చొప్పున_సమూహం; ++పంక్తి_సంఖ్య) {
+            పంక్తి=s+offsets[పంక్తి_సంఖ్య];
+            length=lengths[పంక్తి_సంఖ్య];
+            ఒకవేళ(length==0) {
+                కొనసాగు;
             }
 
-            lineLimit=line+length;
+            పంక్తి_హద్దు=పంక్తి+length;
 
             /* read regular name */
-            length=calcNameSetLength(tokens, tokenCount, tokenStrings, tokenLengths, gNameSet, &line, lineLimit);
-            if(length>maxNameLength) {
-                maxNameLength=length;
+            length=calc_Name_సమితి_నిడివి(టోకెన్లు, token_లెక్క, token_అక్షరశ్రేణులు, tokenLengths, g_Name_సమితి, &పంక్తి, పంక్తి_హద్దు);
+            ఒకవేళ(length>max_Name_నిడివి) {
+                max_Name_నిడివి=length;
             }
-            if(line==lineLimit) {
-                continue;
+            ఒకవేళ(పంక్తి==పంక్తి_హద్దు) {
+                కొనసాగు;
             }
 
             /* read Unicode 1.0 name */
-            length=calcNameSetLength(tokens, tokenCount, tokenStrings, tokenLengths, gNameSet, &line, lineLimit);
-            if(length>maxNameLength) {
-                maxNameLength=length;
+            length=calc_Name_సమితి_నిడివి(టోకెన్లు, token_లెక్క, token_అక్షరశ్రేణులు, tokenLengths, g_Name_సమితి, &పంక్తి, పంక్తి_హద్దు);
+            ఒకవేళ(length>max_Name_నిడివి) {
+                max_Name_నిడివి=length;
             }
-            if(line==lineLimit) {
-                continue;
+            ఒకవేళ(పంక్తి==పంక్తి_హద్దు) {
+                కొనసాగు;
             }
 
             /* read ISO comment */
             /*length=calcNameSetLength(tokens, tokenCount, tokenStrings, tokenLengths, gISOCommentSet, &line, lineLimit);*/
         }
 
-        group=NEXT_GROUP(group);
-        --groupCount;
+        సమూహం=తదుపరి_సమూహం(సమూహం);
+        --సమూహం_లెక్క;
     }
 
-    if(tokenLengths!=nullptr) {
+    ఒకవేళ(tokenLengths!=శూన్యసూచిక) {
         uprv_free(tokenLengths);
     }
 
     /* set gMax... - name length last for threading */
-    gMaxNameLength=maxNameLength;
+    g_Max_Name_నిడివి=max_Name_నిడివి;
 }
 
-static UBool
-calcNameSetsLengths(UErrorCode *pErrorCode) {
-    static const char extChars[]="0123456789ABCDEF<>-";
-    int32_t i, maxNameLength;
+స్థిర UBool
+calcNameSetsLengths(UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిర స్థిరరాశి అక్షరం extChars[]="0123456789ABCDEF<>-";
+    int32_t i, max_Name_నిడివి;
 
-    if(gMaxNameLength!=0) {
-        return true;
+    ఒకవేళ(g_Max_Name_నిడివి!=0) {
+        తిరిగి నిజం;
     }
 
-    if(!isDataLoaded(pErrorCode)) {
-        return false;
+    ఒకవేళ(!is_దత్తాంశం_Loaded(p_Error_సంకేతం)) {
+        తిరిగి అబద్ధం;
     }
 
     /* set hex digits, used in various names, and <>-, used in extended names */
-    for (i = 0; i < static_cast<int32_t>(sizeof(extChars)) - 1; ++i) {
-        SET_ADD(gNameSet, extChars[i]);
+    కొరకు (i = 0; i < static_cast<int32_t>(పరిమాణం(extChars)) - 1; ++i) {
+        సమితి_కూడు_3(g_Name_సమితి, extChars[i]);
     }
 
     /* set sets and lengths from algorithmic names */
-    maxNameLength=calcAlgNameSetsLengths(0);
+    max_Name_నిడివి=calcAlgNameSetsLengths(0);
 
     /* set sets and lengths from extended names */
-    maxNameLength=calcExtNameSetsLengths(maxNameLength);
+    max_Name_నిడివి=calcExtNameSetsLengths(max_Name_నిడివి);
 
     /* set sets and lengths from group names, set global maximum values */
-    calcGroupNameSetsLengths(maxNameLength);
+    calc_సమూహం_Name_Sets_Lengths(max_Name_నిడివి);
 
-    return true;
+    తిరిగి నిజం;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* public API --------------------------------------------------------------- */
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-u_charName(UChar32 code, UCharNameChoice nameChoice,
-           char *buffer, int32_t bufferLength,
-           UErrorCode *pErrorCode) {
+u_charName(UChar32 సంకేతం_2, UCharNameChoice nameChoice,
+           అక్షరం *బఫరు, int32_t బఫరు_నిడివి,
+           UError_సంకేతం *p_Error_సంకేతం) {
      AlgorithmicRange *algRange;
     uint32_t *p;
     uint32_t i;
     int32_t length;
 
     /* check the argument values */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
-    } else if(nameChoice>=U_CHAR_NAME_CHOICE_COUNT ||
-              bufferLength<0 || (bufferLength>0 && buffer==nullptr)
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
+    } లేకపోతే ఒకవేళ(nameChoice>=U_CHAR_NAME_CHOICE_లెక్క ||
+              బఫరు_నిడివి<0 || (బఫరు_నిడివి>0 && బఫరు==శూన్యసూచిక)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    if((uint32_t)code>UCHAR_MAX_VALUE || !isDataLoaded(pErrorCode)) {
-        return u_terminateChars(buffer, bufferLength, 0, pErrorCode);
+    ఒకవేళ((uint32_t)సంకేతం_2>UCHAR_MAX_విలువ || !is_దత్తాంశం_Loaded(p_Error_సంకేతం)) {
+        తిరిగి u_terminateChars(బఫరు, బఫరు_నిడివి, 0, p_Error_సంకేతం);
     }
 
     length=0;
 
     /* try algorithmic names first */
-    p=(uint32_t *)((uint8_t *)uCharNames+uCharNames->algNamesOffset);
+    p=(uint32_t *)((uint8_t *)u_Char_పేర్లు+u_Char_పేర్లు->alg_పేర్లు_స్థానభ్రంశం);
     i=*p;
     algRange=(AlgorithmicRange *)(p+1);
-    while(i>0) {
-        if(algRange->start<=(uint32_t)code && (uint32_t)code<=algRange->end) {
-            length=getAlgName(algRange, (uint32_t)code, nameChoice, buffer, (uint16_t)bufferLength);
-            break;
+    అయితే(i>0) {
+        ఒకవేళ(algRange->ప్రారంభం<=(uint32_t)సంకేతం_2 && (uint32_t)సంకేతం_2<=algRange->చివర) {
+            length=getAlgName(algRange, (uint32_t)సంకేతం_2, nameChoice, బఫరు, (uint16_t)బఫరు_నిడివి);
+            ఆపు;
         }
         algRange=(AlgorithmicRange *)((uint8_t *)algRange+algRange->size);
         --i;
     }
 
-    if(i==0) {
-        if (nameChoice == U_EXTENDED_CHAR_NAME) {
-            length = getName(uCharNames, (uint32_t )code, U_EXTENDED_CHAR_NAME, buffer, (uint16_t) bufferLength);
-            if (!length) {
+    ఒకవేళ(i==0) {
+        ఒకవేళ (nameChoice == U_EXTENDED_CHAR_NAME) {
+            length = getName(u_Char_పేర్లు, (uint32_t )సంకేతం_2, U_EXTENDED_CHAR_NAME, బఫరు, (uint16_t) బఫరు_నిడివి);
+            ఒకవేళ (!length) {
                 /* extended character name */
-                length = getExtName((uint32_t) code, buffer, (uint16_t) bufferLength);
+                length = getExtName((uint32_t) సంకేతం_2, బఫరు, (uint16_t) బఫరు_నిడివి);
             }
-        } else {
+        } లేకపోతే {
             /* normal character name */
-            length=getName(uCharNames, (uint32_t)code, nameChoice, buffer, (uint16_t)bufferLength);
+            length=getName(u_Char_పేర్లు, (uint32_t)సంకేతం_2, nameChoice, బఫరు, (uint16_t)బఫరు_నిడివి);
         }
     }
 
-    return u_terminateChars(buffer, bufferLength, length, pErrorCode);
+    తిరిగి u_terminateChars(బఫరు, బఫరు_నిడివి, length, p_Error_సంకేతం);
 }
 
 U_CAPI int32_t U_EXPORT2
 u_getISOComment(UChar32 /*c*/,
-                char *dest, int32_t destCapacity,
-                UErrorCode *pErrorCode) {
+                అక్షరం *dest, int32_t dest_సామర్థ్యం,
+                UError_సంకేతం *p_Error_సంకేతం) {
     /* check the argument values */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
-    } else if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
+    } లేకపోతే ఒకవేళ(dest_సామర్థ్యం<0 || (dest_సామర్థ్యం>0 && dest==శూన్యసూచిక)) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    return u_terminateChars(dest, destCapacity, 0, pErrorCode);
+    తిరిగి u_terminateChars(dest, dest_సామర్థ్యం, 0, p_Error_సంకేతం);
 }
 
 U_CAPI UChar32 U_EXPORT2
 u_charFromName(UCharNameChoice nameChoice,
-               const char *const name,
-               UErrorCode *pErrorCode) {
-    char lower[120] = {0};
-    FindName findName;
+               స్థిరరాశి అక్షరం *స్థిరరాశి name,
+               UError_సంకేతం *p_Error_సంకేతం) {
+    అక్షరం క్రింది[120] = {0};
+    కనుగొను_Name కనుగొను_Name_2;
     AlgorithmicRange *algRange;
     uint32_t *p;
     uint32_t i;
     UChar32 cp = 0;
-    char c0;
-    static constexpr UChar32 error = 0xffff;     /* Undefined, but use this for backwards compatibility. */
+    అక్షరం c0;
+    స్థిర constexpr UChar32 error = 0xffff;     /* Undefined, but use this for backwards compatibility. */
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return error;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి error;
     }
 
-    if(nameChoice>=U_CHAR_NAME_CHOICE_COUNT || name==nullptr || *name==0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return error;
+    ఒకవేళ(nameChoice>=U_CHAR_NAME_CHOICE_లెక్క || name==శూన్యసూచిక || *name==0) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి error;
     }
 
-    if(!isDataLoaded(pErrorCode)) {
-        return error;
+    ఒకవేళ(!is_దత్తాంశం_Loaded(p_Error_సంకేతం)) {
+        తిరిగి error;
     }
 
     /* construct the lowercase of the name first */
-    const char* nameChar = name;
-    for(i=0; i<sizeof(lower); ++i) {
-        if((c0=*nameChar++)!=0) {
-            lower[i]=uprv_tolower(c0);
-        } else {
-            break;
+    స్థిరరాశి అక్షరం* nameChar = name;
+    కొరకు(i=0; i<పరిమాణం(క్రింది); ++i) {
+        ఒకవేళ((c0=*nameChar++)!=0) {
+            క్రింది[i]=uprv_tolower(c0);
+        } లేకపోతే {
+            ఆపు;
         }
     }
-    if(i==sizeof(lower)) {
+    ఒకవేళ(i==పరిమాణం(క్రింది)) {
         /* name too long, there is no such character */
-        *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-        return error;
+        *p_Error_సంకేతం = U_ILLEGAL_CHAR_దొరికింది;
+        తిరిగి error;
     }
     // i==strlen(name)==strlen(lower)
 
@@ -1728,32 +1728,32 @@ u_charFromName(UCharNameChoice nameChoice,
     // The ICU extended names are not consistent with the UAX44 code point labels, e.g.,
     // "unassigned" vs. UAX44 "reserved", "private use area" vs. UAX44 "private-use", so we do not
     // apply UAX44-LM2 matching to them.
-    if (lower[0] == '<') {
-        if (nameChoice == U_EXTENDED_CHAR_NAME && lower[--i] == '>') {
+    ఒకవేళ (క్రింది[0] == '<') {
+        ఒకవేళ (nameChoice == U_EXTENDED_CHAR_NAME && క్రింది[--i] == '>') {
             // Parse a string like "<category-HHHH>" where HHHH is a hex code point.
-            uint32_t limit = i;
-            while (i >= 3 && lower[--i] != '-') {}
+            uint32_t హద్దు = i;
+            అయితే (i >= 3 && క్రింది[--i] != '-') {}
 
             // There should be 1 to 8 hex digits.
-            int32_t hexLength = limit - (i + 1);
-            if (i >= 2 && lower[i] == '-' && 1 <= hexLength && hexLength <= 8) {
+            int32_t hex_నిడివి = హద్దు - (i + 1);
+            ఒకవేళ (i >= 2 && క్రింది[i] == '-' && 1 <= hex_నిడివి && hex_నిడివి <= 8) {
                 uint32_t cIdx;
 
-                lower[i] = 0;
+                క్రింది[i] = 0;
 
-                for (++i; i < limit; ++i) {
-                    if (lower[i] >= '0' && lower[i] <= '9') {
-                        cp = (cp << 4) + lower[i] - '0';
-                    } else if (lower[i] >= 'a' && lower[i] <= 'f') {
-                        cp = (cp << 4) + lower[i] - 'a' + 10;
-                    } else {
-                        *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                        return error;
+                కొరకు (++i; i < హద్దు; ++i) {
+                    ఒకవేళ (క్రింది[i] >= '0' && క్రింది[i] <= '9') {
+                        cp = (cp << 4) + క్రింది[i] - '0';
+                    } లేకపోతే ఒకవేళ (క్రింది[i] >= 'a' && క్రింది[i] <= 'f') {
+                        cp = (cp << 4) + క్రింది[i] - 'a' + 10;
+                    } లేకపోతే {
+                        *p_Error_సంకేతం = U_ILLEGAL_CHAR_దొరికింది;
+                        తిరిగి error;
                     }
                     // Prevent signed-integer overflow and out-of-range code points.
-                    if (cp > UCHAR_MAX_VALUE) {
-                        *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                        return error;
+                    ఒకవేళ (cp > UCHAR_MAX_విలువ) {
+                        *p_Error_సంకేతం = U_ILLEGAL_CHAR_దొరికింది;
+                        తిరిగి error;
                     }
                 }
 
@@ -1761,122 +1761,122 @@ u_charFromName(UCharNameChoice nameChoice,
                    We could use a binary search, or a trie, if
                    we really wanted to. */
                 uint8_t cat = getCharCat(cp);
-                for (lower[i] = 0, cIdx = 0; cIdx < UPRV_LENGTHOF(charCatNames); ++cIdx) {
+                కొరకు (క్రింది[i] = 0, cIdx = 0; cIdx < UPRV_LENGTHOF(char_Cat_పేర్లు); ++cIdx) {
 
-                    if (!uprv_strcmp(lower + 1, charCatNames[cIdx])) {
-                        if (cat == cIdx) {
-                            return cp;
+                    ఒకవేళ (!uprv_strcmp(క్రింది + 1, char_Cat_పేర్లు[cIdx])) {
+                        ఒకవేళ (cat == cIdx) {
+                            తిరిగి cp;
                         }
-                        break;
+                        ఆపు;
                     }
                 }
             }
         }
 
-        *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-        return error;
+        *p_Error_సంకేతం = U_ILLEGAL_CHAR_దొరికింది;
+        తిరిగి error;
     }
 
     // From now on we do UAX44 matching.
     CharacterNameQuery query(name);
 
     /* try algorithmic names now */
-    p=(uint32_t *)((uint8_t *)uCharNames+uCharNames->algNamesOffset);
+    p=(uint32_t *)((uint8_t *)u_Char_పేర్లు+u_Char_పేర్లు->alg_పేర్లు_స్థానభ్రంశం);
     i=*p;
     algRange=(AlgorithmicRange *)(p+1);
-    while(i>0) {
-        if((cp=findAlgName(algRange, nameChoice, query))!=0xffff) {
-            return cp;
+    అయితే(i>0) {
+        ఒకవేళ((cp=కనుగొను_Alg_Name(algRange, nameChoice, query))!=0xffff) {
+            తిరిగి cp;
         }
         algRange=(AlgorithmicRange *)((uint8_t *)algRange+algRange->size);
         --i;
     }
 
     /* normal character name */
-    findName.otherName=&query;
-    findName.code=error;
-    enumNames(uCharNames, 0, UCHAR_MAX_VALUE + 1, DO_FIND_NAME, &findName, nameChoice);
-    if (findName.code == error) {
-         *pErrorCode = U_ILLEGAL_CHAR_FOUND;
+    కనుగొను_Name_2.otherName=&query;
+    కనుగొను_Name_2.సంకేతం_2=error;
+    enum_పేర్లు(u_Char_పేర్లు, 0, UCHAR_MAX_విలువ + 1, DO_కనుగొను_NAME, &కనుగొను_Name_2, nameChoice);
+    ఒకవేళ (కనుగొను_Name_2.సంకేతం_2 == error) {
+         *p_Error_సంకేతం = U_ILLEGAL_CHAR_దొరికింది;
     }
-    return findName.code;
+    తిరిగి కనుగొను_Name_2.సంకేతం_2;
 }
 
-U_CAPI void U_EXPORT2
-u_enumCharNames(UChar32 start, UChar32 limit,
-                UEnumCharNamesFn *fn,
-                void *context,
+U_CAPI శూన్య U_EXPORT2
+u_enum_Char_పేర్లు(UChar32 ప్రారంభం, UChar32 హద్దు,
+                UEnum_Char_పేర్లు_Fn *fn,
+                శూన్య *context,
                 UCharNameChoice nameChoice,
-                UErrorCode *pErrorCode) {
+                UError_సంకేతం *p_Error_సంకేతం) {
     AlgorithmicRange *algRange;
     uint32_t *p;
     uint32_t i;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
 
-    if(nameChoice>=U_CHAR_NAME_CHOICE_COUNT || fn==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ(nameChoice>=U_CHAR_NAME_CHOICE_లెక్క || fn==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    if((uint32_t) limit > UCHAR_MAX_VALUE + 1) {
-        limit = UCHAR_MAX_VALUE + 1;
+    ఒకవేళ((uint32_t) హద్దు > UCHAR_MAX_విలువ + 1) {
+        హద్దు = UCHAR_MAX_విలువ + 1;
     }
-    if((uint32_t)start>=(uint32_t)limit) {
-        return;
+    ఒకవేళ((uint32_t)ప్రారంభం>=(uint32_t)హద్దు) {
+        తిరిగి;
     }
 
-    if(!isDataLoaded(pErrorCode)) {
-        return;
+    ఒకవేళ(!is_దత్తాంశం_Loaded(p_Error_సంకేతం)) {
+        తిరిగి;
     }
 
     /* interleave the data-driven ones with the algorithmic ones */
     /* iterate over all algorithmic ranges; assume that they are in ascending order */
-    p=(uint32_t *)((uint8_t *)uCharNames+uCharNames->algNamesOffset);
+    p=(uint32_t *)((uint8_t *)u_Char_పేర్లు+u_Char_పేర్లు->alg_పేర్లు_స్థానభ్రంశం);
     i=*p;
     algRange=(AlgorithmicRange *)(p+1);
-    while(i>0) {
+    అయితే(i>0) {
         /* enumerate the character names before the current algorithmic range */
         /* here: start<limit */
-        if((uint32_t)start<algRange->start) {
-            if((uint32_t)limit<=algRange->start) {
-                enumNames(uCharNames, start, limit, fn, context, nameChoice);
-                return;
+        ఒకవేళ((uint32_t)ప్రారంభం<algRange->ప్రారంభం) {
+            ఒకవేళ((uint32_t)హద్దు<=algRange->ప్రారంభం) {
+                enum_పేర్లు(u_Char_పేర్లు, ప్రారంభం, హద్దు, fn, context, nameChoice);
+                తిరిగి;
             }
-            if(!enumNames(uCharNames, start, (UChar32)algRange->start, fn, context, nameChoice)) {
-                return;
+            ఒకవేళ(!enum_పేర్లు(u_Char_పేర్లు, ప్రారంభం, (UChar32)algRange->ప్రారంభం, fn, context, nameChoice)) {
+                తిరిగి;
             }
-            start=(UChar32)algRange->start;
+            ప్రారంభం=(UChar32)algRange->ప్రారంభం;
         }
         /* enumerate the character names in the current algorithmic range */
         /* here: algRange->start<=start<limit */
-        if((uint32_t)start<=algRange->end) {
-            if((uint32_t)limit<=(algRange->end+1)) {
-                enumAlgNames(algRange, start, limit, fn, context, nameChoice);
-                return;
+        ఒకవేళ((uint32_t)ప్రారంభం<=algRange->చివర) {
+            ఒకవేళ((uint32_t)హద్దు<=(algRange->చివర+1)) {
+                enum_Alg_పేర్లు(algRange, ప్రారంభం, హద్దు, fn, context, nameChoice);
+                తిరిగి;
             }
-            if(!enumAlgNames(algRange, start, (UChar32)algRange->end+1, fn, context, nameChoice)) {
-                return;
+            ఒకవేళ(!enum_Alg_పేర్లు(algRange, ప్రారంభం, (UChar32)algRange->చివర+1, fn, context, nameChoice)) {
+                తిరిగి;
             }
-            start=(UChar32)algRange->end+1;
+            ప్రారంభం=(UChar32)algRange->చివర+1;
         }
         /* continue to the next algorithmic range (here: start<limit) */
         algRange=(AlgorithmicRange *)((uint8_t *)algRange+algRange->size);
         --i;
     }
     /* enumerate the character names after the last algorithmic range */
-    enumNames(uCharNames, start, limit, fn, context, nameChoice);
+    enum_పేర్లు(u_Char_పేర్లు, ప్రారంభం, హద్దు, fn, context, nameChoice);
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_getMaxCharNameLength() {
-    UErrorCode errorCode=U_ZERO_ERROR;
-    if(calcNameSetsLengths(&errorCode)) {
-        return gMaxNameLength;
-    } else {
-        return 0;
+uprv_get_Max_Char_Name_నిడివి() {
+    UError_సంకేతం error_సంకేతం=U_ZERO_ERROR;
+    ఒకవేళ(calcNameSetsLengths(&error_సంకేతం)) {
+        తిరిగి g_Max_Name_నిడివి;
+    } లేకపోతే {
+        తిరిగి 0;
     }
 }
 
@@ -1885,35 +1885,35 @@ uprv_getMaxCharNameLength() {
  * @param cset Set of 256 bit flags corresponding to a set of chars.
  * @param uset USet to receive characters. Existing contents are deleted.
  */
-static void
-charSetToUSet(uint32_t cset[8], const USetAdder *sa) {
+స్థిర శూన్య
+char_సమితి_గమ్యం_USet(uint32_t cset[8], స్థిరరాశి USetAdder *sa) {
     char16_t us[256];
-    char cs[256];
+    అక్షరం cs[256];
 
     int32_t i, length;
-    UErrorCode errorCode;
+    UError_సంకేతం error_సంకేతం;
 
-    errorCode=U_ZERO_ERROR;
+    error_సంకేతం=U_ZERO_ERROR;
 
-    if(!calcNameSetsLengths(&errorCode)) {
-        return;
+    ఒకవేళ(!calcNameSetsLengths(&error_సంకేతం)) {
+        తిరిగి;
     }
 
     /* build a char string with all chars that are used in character names */
     length=0;
-    for(i=0; i<256; ++i) {
-        if(SET_CONTAINS(cset, i)) {
-            cs[length++] = static_cast<char>(i);
+    కొరకు(i=0; i<256; ++i) {
+        ఒకవేళ(సమితి_కలిగియుంది(cset, i)) {
+            cs[length++] = static_cast<అక్షరం>(i);
         }
     }
 
     /* convert the char string to a char16_t string */
-    u_charsToUChars(cs, us, length);
+    u_chars_గమ్యం_UChars(cs, us, length);
 
     /* add each char16_t to the USet */
-    for(i=0; i<length; ++i) {
-        if(us[i]!=0 || cs[i]==0) { /* non-invariant chars become (char16_t)0 */
-            sa->add(sa->set, us[i]);
+    కొరకు(i=0; i<length; ++i) {
+        ఒకవేళ(us[i]!=0 || cs[i]==0) { /* non-invariant chars become (char16_t)0 */
+            sa->కూడు(sa->సమితి, us[i]);
         }
     }
 }
@@ -1922,9 +1922,9 @@ charSetToUSet(uint32_t cset[8], const USetAdder *sa) {
  * Fills set with characters that are used in Unicode character names.
  * @param set USet to receive characters.
  */
-U_CAPI void U_EXPORT2
-uprv_getCharNameCharacters(const USetAdder *sa) {
-    charSetToUSet(gNameSet, sa);
+U_CAPI శూన్య U_EXPORT2
+uprv_getCharNameCharacters(స్థిరరాశి USetAdder *sa) {
+    char_సమితి_గమ్యం_USet(g_Name_సమితి, sa);
 }
 
 /* data swapping ------------------------------------------------------------ */
@@ -1940,56 +1940,56 @@ uprv_getCharNameCharacters(const USetAdder *sa) {
  * Use it once for single-/lead-byte tokens and once more for all trail byte
  * tokens. (';' is an unused trail byte marked with -1.)
  */
-static void
-makeTokenMap(const UDataSwapper *ds,
-             int16_t tokens[], uint16_t tokenCount,
+స్థిర శూన్య
+makeTokenMap(స్థిరరాశి UDataSwapper *ds,
+             int16_t టోకెన్లు[], uint16_t token_లెక్క,
              uint8_t map[256],
-             UErrorCode *pErrorCode) {
-    UBool usedOutChar[256];
+             UError_సంకేతం *p_Error_సంకేతం) {
+    UBool వాడిన_బహిర్గతం_Char[256];
     uint16_t i, j;
     uint8_t c1, c2;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
 
-    if(ds->inCharset==ds->outCharset) {
+    ఒకవేళ(ds->లోపల_Charset==ds->బహిర్గతం_Charset) {
         /* Same charset family: identity permutation */
-        for(i=0; i<256; ++i) {
+        కొరకు(i=0; i<256; ++i) {
             map[i] = static_cast<uint8_t>(i);
         }
-    } else {
+    } లేకపోతే {
         uprv_memset(map, 0, 256);
-        uprv_memset(usedOutChar, 0, 256);
+        uprv_memset(వాడిన_బహిర్గతం_Char, 0, 256);
 
-        if(tokenCount>256) {
-            tokenCount=256;
+        ఒకవేళ(token_లెక్క>256) {
+            token_లెక్క=256;
         }
 
         /* set the direct bytes (byte 0 always maps to itself) */
-        for(i=1; i<tokenCount; ++i) {
-            if(tokens[i]==-1) {
+        కొరకు(i=1; i<token_లెక్క; ++i) {
+            ఒకవేళ(టోకెన్లు[i]==-1) {
                 /* convert the direct byte character */
                 c1 = static_cast<uint8_t>(i);
-                ds->swapInvChars(ds, &c1, 1, &c2, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                ds->మార్పిడి_Inv_Chars(ds, &c1, 1, &c2, p_Error_సంకేతం);
+                ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                     udata_printError(ds, "unames/makeTokenMap() finds variant character 0x%02x used (input charset family %d)\n",
-                                     i, ds->inCharset);
-                    return;
+                                     i, ds->లోపల_Charset);
+                    తిరిగి;
                 }
 
                 /* enter the converted character into the map and mark it used */
                 map[c1]=c2;
-                usedOutChar[c2]=true;
+                వాడిన_బహిర్గతం_Char[c2]=నిజం;
             }
         }
 
         /* set the mappings for the rest of the permutation */
-        for(i=j=1; i<tokenCount; ++i) {
+        కొరకు(i=j=1; i<token_లెక్క; ++i) {
             /* set mappings that were not set for direct bytes */
-            if(map[i]==0) {
+            ఒకవేళ(map[i]==0) {
                 /* set an output byte value that was not used as an output byte above */
-                while(usedOutChar[j]) {
+                అయితే(వాడిన_బహిర్గతం_Char[j]) {
                     ++j;
                 }
                 map[i] = static_cast<uint8_t>(j++);
@@ -2004,202 +2004,202 @@ makeTokenMap(const UDataSwapper *ds,
 }
 
 U_CAPI int32_t U_EXPORT2
-uchar_swapNames(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
-                UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+uchar_మార్పిడి_పేర్లు(స్థిరరాశి UDataSwapper *ds,
+                స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+                UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి UDataInfo *pInfo;
+    int32_t శీర్షిక_కొలత;
 
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+    స్థిరరాశి uint8_t *లోపల_బైట్లు;
+    uint8_t *బహిర్గతం_బైట్లు;
 
-    uint32_t tokenStringOffset, groupsOffset, groupStringOffset, algNamesOffset,
-             offset, i, count, stringsCount;
+    uint32_t token_String_స్థానభ్రంశం, groups_స్థానభ్రంశం, సమూహం_String_స్థానభ్రంశం, alg_పేర్లు_స్థానభ్రంశం,
+             స్థానభ్రంశం, i, count, అక్షరశ్రేణులు_లెక్క;
 
-    const AlgorithmicRange *inRange;
-    AlgorithmicRange *outRange;
+    స్థిరరాశి AlgorithmicRange *లోపల_Range;
+    AlgorithmicRange *బహిర్గతం_Range;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    శీర్షిక_కొలత=udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x75 &&   /* dataFormat="unam" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x61 &&
-        pInfo->dataFormat[3]==0x6d &&
-        pInfo->formatVersion[0]==1
+    pInfo=(స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+4);
+    ఒకవేళ(!(
+        pInfo->దత్తాంశం_Format[0]==0x75 &&   /* dataFormat="unam" */
+        pInfo->దత్తాంశం_Format[1]==0x6e &&
+        pInfo->దత్తాంశం_Format[2]==0x61 &&
+        pInfo->దత్తాంశం_Format[3]==0x6d &&
+        pInfo->format_సంస్కరణ[0]==1
     )) {
         udata_printError(ds, "uchar_swapNames(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as unames.icu\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->దత్తాంశం_Format[0], pInfo->దత్తాంశం_Format[1],
+                         pInfo->దత్తాంశం_Format[2], pInfo->దత్తాంశం_Format[3],
+                         pInfo->format_సంస్కరణ[0]);
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes=(outData == nullptr) ? nullptr : (uint8_t *)outData+headerSize;
-    if(length<0) {
-        algNamesOffset=ds->readUInt32(((const uint32_t *)inBytes)[3]);
-    } else {
-        length-=headerSize;
-        if( length<20 ||
-            (uint32_t)length<(algNamesOffset=ds->readUInt32(((const uint32_t *)inBytes)[3]))
+    లోపల_బైట్లు=(స్థిరరాశి uint8_t *)లోపల_దత్తాంశం+శీర్షిక_కొలత;
+    బహిర్గతం_బైట్లు=(బహిర్గతం_దత్తాంశం == శూన్యసూచిక) ? శూన్యసూచిక : (uint8_t *)బహిర్గతం_దత్తాంశం+శీర్షిక_కొలత;
+    ఒకవేళ(length<0) {
+        alg_పేర్లు_స్థానభ్రంశం=ds->readUInt32(((స్థిరరాశి uint32_t *)లోపల_బైట్లు)[3]);
+    } లేకపోతే {
+        length-=శీర్షిక_కొలత;
+        ఒకవేళ( length<20 ||
+            (uint32_t)length<(alg_పేర్లు_స్థానభ్రంశం=ds->readUInt32(((స్థిరరాశి uint32_t *)లోపల_బైట్లు)[3]))
         ) {
             udata_printError(ds, "uchar_swapNames(): too few bytes (%d after header) for unames.icu\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి 0;
         }
     }
 
-    if(length<0) {
+    ఒకవేళ(length<0) {
         /* preflighting: iterate through algorithmic ranges */
-        offset=algNamesOffset;
-        count=ds->readUInt32(*((const uint32_t *)(inBytes+offset)));
-        offset+=4;
+        స్థానభ్రంశం=alg_పేర్లు_స్థానభ్రంశం;
+        count=ds->readUInt32(*((స్థిరరాశి uint32_t *)(లోపల_బైట్లు+స్థానభ్రంశం)));
+        స్థానభ్రంశం+=4;
 
-        for(i=0; i<count; ++i) {
-            inRange=(const AlgorithmicRange *)(inBytes+offset);
-            offset+=ds->readUInt16(inRange->size);
+        కొరకు(i=0; i<count; ++i) {
+            లోపల_Range=(స్థిరరాశి AlgorithmicRange *)(లోపల_బైట్లు+స్థానభ్రంశం);
+            స్థానభ్రంశం+=ds->readUInt16(లోపల_Range->size);
         }
-    } else {
+    } లేకపోతే {
         /* swap data */
-        const uint16_t *p;
-        uint16_t *q, *temp;
+        స్థిరరాశి uint16_t *p;
+        uint16_t *q, *తాత్కాలిక;
 
-        int16_t tokens[512];
-        uint16_t tokenCount;
+        int16_t టోకెన్లు[512];
+        uint16_t token_లెక్క;
 
         uint8_t map[256], trailMap[256];
 
         /* copy the data for inaccessible bytes */
-        if(inBytes!=outBytes) {
-            uprv_memcpy(outBytes, inBytes, length);
+        ఒకవేళ(లోపల_బైట్లు!=బహిర్గతం_బైట్లు) {
+            uprv_memcpy(బహిర్గతం_బైట్లు, లోపల_బైట్లు, length);
         }
 
         /* the initial 4 offsets first */
-        tokenStringOffset=ds->readUInt32(((const uint32_t *)inBytes)[0]);
-        groupsOffset=ds->readUInt32(((const uint32_t *)inBytes)[1]);
-        groupStringOffset=ds->readUInt32(((const uint32_t *)inBytes)[2]);
-        ds->swapArray32(ds, inBytes, 16, outBytes, pErrorCode);
+        token_String_స్థానభ్రంశం=ds->readUInt32(((స్థిరరాశి uint32_t *)లోపల_బైట్లు)[0]);
+        groups_స్థానభ్రంశం=ds->readUInt32(((స్థిరరాశి uint32_t *)లోపల_బైట్లు)[1]);
+        సమూహం_String_స్థానభ్రంశం=ds->readUInt32(((స్థిరరాశి uint32_t *)లోపల_బైట్లు)[2]);
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు, 16, బహిర్గతం_బైట్లు, p_Error_సంకేతం);
 
         /*
          * now the tokens table
          * it needs to be permutated along with the compressed name strings
          */
-        p=(const uint16_t *)(inBytes+16);
-        q=(uint16_t *)(outBytes+16);
+        p=(స్థిరరాశి uint16_t *)(లోపల_బైట్లు+16);
+        q=(uint16_t *)(బహిర్గతం_బైట్లు+16);
 
         /* read and swap the tokenCount */
-        tokenCount=ds->readUInt16(*p);
-        ds->swapArray16(ds, p, 2, q, pErrorCode);
+        token_లెక్క=ds->readUInt16(*p);
+        ds->మార్పిడి_Array16(ds, p, 2, q, p_Error_సంకేతం);
         ++p;
         ++q;
 
         /* read the first 512 tokens and make the token maps */
-        if(tokenCount<=512) {
-            count=tokenCount;
-        } else {
+        ఒకవేళ(token_లెక్క<=512) {
+            count=token_లెక్క;
+        } లేకపోతే {
             count=512;
         }
-        for(i=0; i<count; ++i) {
-            tokens[i]=udata_readInt16(ds, p[i]);
+        కొరకు(i=0; i<count; ++i) {
+            టోకెన్లు[i]=udata_readInt16(ds, p[i]);
         }
-        for(; i<512; ++i) {
-            tokens[i]=0; /* fill the rest of the tokens array if tokenCount<512 */
+        కొరకు(; i<512; ++i) {
+            టోకెన్లు[i]=0; /* fill the rest of the tokens array if tokenCount<512 */
         }
-        makeTokenMap(ds, tokens, tokenCount, map, pErrorCode);
-        makeTokenMap(ds, tokens+256, (uint16_t)(tokenCount>256 ? tokenCount-256 : 0), trailMap, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+        makeTokenMap(ds, టోకెన్లు, token_లెక్క, map, p_Error_సంకేతం);
+        makeTokenMap(ds, టోకెన్లు+256, (uint16_t)(token_లెక్క>256 ? token_లెక్క-256 : 0), trailMap, p_Error_సంకేతం);
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+            తిరిగి 0;
         }
 
         /*
          * swap and permutate the tokens
          * go through a temporary array to support in-place swapping
          */
-        temp=(uint16_t *)uprv_malloc(tokenCount*2);
-        if(temp==nullptr) {
+        తాత్కాలిక=(uint16_t *)uprv_malloc(token_లెక్క*2);
+        ఒకవేళ(తాత్కాలిక==శూన్యసూచిక) {
             udata_printError(ds, "out of memory swapping %u unames.icu tokens\n",
-                             tokenCount);
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+                             token_లెక్క);
+            *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి 0;
         }
 
         /* swap and permutate single-/lead-byte tokens */
-        for(i=0; i<tokenCount && i<256; ++i) {
-            ds->swapArray16(ds, p+i, 2, temp+map[i], pErrorCode);
+        కొరకు(i=0; i<token_లెక్క && i<256; ++i) {
+            ds->మార్పిడి_Array16(ds, p+i, 2, తాత్కాలిక+map[i], p_Error_సంకేతం);
         }
 
         /* swap and permutate trail-byte tokens */
-        for(; i<tokenCount; ++i) {
-            ds->swapArray16(ds, p+i, 2, temp+(i&0xffffff00)+trailMap[i&0xff], pErrorCode);
+        కొరకు(; i<token_లెక్క; ++i) {
+            ds->మార్పిడి_Array16(ds, p+i, 2, తాత్కాలిక+(i&0xffffff00)+trailMap[i&0xff], p_Error_సంకేతం);
         }
 
         /* copy the result into the output and free the temporary array */
-        uprv_memcpy(q, temp, tokenCount*2);
-        uprv_free(temp);
+        uprv_memcpy(q, తాత్కాలిక, token_లెక్క*2);
+        uprv_free(తాత్కాలిక);
 
         /*
          * swap the token strings but not a possible padding byte after
          * the terminating NUL of the last string
          */
-        udata_swapInvStringBlock(ds, inBytes+tokenStringOffset, (int32_t)(groupsOffset-tokenStringOffset),
-                                    outBytes+tokenStringOffset, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        udata_మార్పిడి_Inv_String_ఖండం(ds, లోపల_బైట్లు+token_String_స్థానభ్రంశం, (int32_t)(groups_స్థానభ్రంశం-token_String_స్థానభ్రంశం),
+                                    బహిర్గతం_బైట్లు+token_String_స్థానభ్రంశం, p_Error_సంకేతం);
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
             udata_printError(ds, "uchar_swapNames(token strings) failed\n");
-            return 0;
+            తిరిగి 0;
         }
 
         /* swap the group table */
-        count=ds->readUInt16(*((const uint16_t *)(inBytes+groupsOffset)));
-        ds->swapArray16(ds, inBytes+groupsOffset, (int32_t)((1+count*3)*2),
-                           outBytes+groupsOffset, pErrorCode);
+        count=ds->readUInt16(*((స్థిరరాశి uint16_t *)(లోపల_బైట్లు+groups_స్థానభ్రంశం)));
+        ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+groups_స్థానభ్రంశం, (int32_t)((1+count*3)*2),
+                           బహిర్గతం_బైట్లు+groups_స్థానభ్రంశం, p_Error_సంకేతం);
 
         /*
          * swap the group strings
          * swap the string bytes but not the nibble-encoded string lengths
          */
-        if(ds->inCharset!=ds->outCharset) {
-            uint16_t offsets[LINES_PER_GROUP+1], lengths[LINES_PER_GROUP+1];
+        ఒకవేళ(ds->లోపల_Charset!=ds->బహిర్గతం_Charset) {
+            uint16_t offsets[పంక్తులు_చొప్పున_సమూహం+1], lengths[పంక్తులు_చొప్పున_సమూహం+1];
 
-            const uint8_t *inStrings, *nextInStrings;
-            uint8_t *outStrings;
+            స్థిరరాశి uint8_t *లోపల_అక్షరశ్రేణులు, *తదుపరి_లోపల_అక్షరశ్రేణులు;
+            uint8_t *బహిర్గతం_అక్షరశ్రేణులు;
 
             uint8_t c;
 
-            inStrings=inBytes+groupStringOffset;
-            outStrings=outBytes+groupStringOffset;
+            లోపల_అక్షరశ్రేణులు=లోపల_బైట్లు+సమూహం_String_స్థానభ్రంశం;
+            బహిర్గతం_అక్షరశ్రేణులు=బహిర్గతం_బైట్లు+సమూహం_String_స్థానభ్రంశం;
 
-            stringsCount=algNamesOffset-groupStringOffset;
+            అక్షరశ్రేణులు_లెక్క=alg_పేర్లు_స్థానభ్రంశం-సమూహం_String_స్థానభ్రంశం;
 
             /* iterate through string groups until only a few padding bytes are left */
-            while(stringsCount>32) {
-                nextInStrings=expandGroupLengths(inStrings, offsets, lengths);
+            అయితే(అక్షరశ్రేణులు_లెక్క>32) {
+                తదుపరి_లోపల_అక్షరశ్రేణులు=expand_సమూహం_Lengths(లోపల_అక్షరశ్రేణులు, offsets, lengths);
 
                 /* move past the length bytes */
-                stringsCount-=(uint32_t)(nextInStrings-inStrings);
-                outStrings+=nextInStrings-inStrings;
-                inStrings=nextInStrings;
+                అక్షరశ్రేణులు_లెక్క-=(uint32_t)(తదుపరి_లోపల_అక్షరశ్రేణులు-లోపల_అక్షరశ్రేణులు);
+                బహిర్గతం_అక్షరశ్రేణులు+=తదుపరి_లోపల_అక్షరశ్రేణులు-లోపల_అక్షరశ్రేణులు;
+                లోపల_అక్షరశ్రేణులు=తదుపరి_లోపల_అక్షరశ్రేణులు;
 
                 count=offsets[31]+lengths[31]; /* total number of string bytes in this group */
-                stringsCount-=count;
+                అక్షరశ్రేణులు_లెక్క-=count;
 
                 /* swap the string bytes using map[] and trailMap[] */
-                while(count>0) {
-                    c=*inStrings++;
-                    *outStrings++=map[c];
-                    if(tokens[c]!=-2) {
+                అయితే(count>0) {
+                    c=*లోపల_అక్షరశ్రేణులు++;
+                    *బహిర్గతం_అక్షరశ్రేణులు++=map[c];
+                    ఒకవేళ(టోకెన్లు[c]!=-2) {
                         --count;
-                    } else {
+                    } లేకపోతే {
                         /* token lead byte: swap the trail byte, too */
-                        *outStrings++=trailMap[*inStrings++];
+                        *బహిర్గతం_అక్షరశ్రేణులు++=trailMap[*లోపల_అక్షరశ్రేణులు++];
                         count-=2;
                     }
                 }
@@ -2207,66 +2207,66 @@ uchar_swapNames(const UDataSwapper *ds,
         }
 
         /* swap the algorithmic ranges */
-        offset=algNamesOffset;
-        count=ds->readUInt32(*((const uint32_t *)(inBytes+offset)));
-        ds->swapArray32(ds, inBytes+offset, 4, outBytes+offset, pErrorCode);
-        offset+=4;
+        స్థానభ్రంశం=alg_పేర్లు_స్థానభ్రంశం;
+        count=ds->readUInt32(*((స్థిరరాశి uint32_t *)(లోపల_బైట్లు+స్థానభ్రంశం)));
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు+స్థానభ్రంశం, 4, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
+        స్థానభ్రంశం+=4;
 
-        for(i=0; i<count; ++i) {
-            if(offset>(uint32_t)length) {
+        కొరకు(i=0; i<count; ++i) {
+            ఒకవేళ(స్థానభ్రంశం>(uint32_t)length) {
                 udata_printError(ds, "uchar_swapNames(): too few bytes (%d after header) for unames.icu algorithmic range %u\n",
                                  length, i);
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+                తిరిగి 0;
             }
 
-            inRange=(const AlgorithmicRange *)(inBytes+offset);
-            outRange=(AlgorithmicRange *)(outBytes+offset);
-            offset+=ds->readUInt16(inRange->size);
+            లోపల_Range=(స్థిరరాశి AlgorithmicRange *)(లోపల_బైట్లు+స్థానభ్రంశం);
+            బహిర్గతం_Range=(AlgorithmicRange *)(బహిర్గతం_బైట్లు+స్థానభ్రంశం);
+            స్థానభ్రంశం+=ds->readUInt16(లోపల_Range->size);
 
-            ds->swapArray32(ds, inRange, 8, outRange, pErrorCode);
-            ds->swapArray16(ds, &inRange->size, 2, &outRange->size, pErrorCode);
-            switch(inRange->type) {
-            case 0:
+            ds->మార్పిడి_Array32(ds, లోపల_Range, 8, బహిర్గతం_Range, p_Error_సంకేతం);
+            ds->మార్పిడి_Array16(ds, &లోపల_Range->size, 2, &బహిర్గతం_Range->size, p_Error_సంకేతం);
+            ఎంపిక(లోపల_Range->type) {
+            స్థితి 0:
                 /* swap prefix string */
-                ds->swapInvChars(ds, inRange+1, (int32_t)uprv_strlen((const char *)(inRange+1)),
-                                    outRange+1, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                ds->మార్పిడి_Inv_Chars(ds, లోపల_Range+1, (int32_t)uprv_strlen((స్థిరరాశి అక్షరం *)(లోపల_Range+1)),
+                                    బహిర్గతం_Range+1, p_Error_సంకేతం);
+                ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
                     udata_printError(ds, "uchar_swapNames(prefix string of algorithmic range %u) failed\n",
                                      i);
-                    return 0;
+                    తిరిగి 0;
                 }
-                break;
-            case 1:
+                ఆపు;
+            స్థితి 1:
                 {
                     /* swap factors and the prefix and factor strings */
-                    uint32_t factorsCount;
+                    uint32_t factors_లెక్క;
 
-                    factorsCount=inRange->variant;
-                    p=(const uint16_t *)(inRange+1);
-                    q=(uint16_t *)(outRange+1);
-                    ds->swapArray16(ds, p, (int32_t)(factorsCount*2), q, pErrorCode);
+                    factors_లెక్క=లోపల_Range->variant;
+                    p=(స్థిరరాశి uint16_t *)(లోపల_Range+1);
+                    q=(uint16_t *)(బహిర్గతం_Range+1);
+                    ds->మార్పిడి_Array16(ds, p, (int32_t)(factors_లెక్క*2), q, p_Error_సంకేతం);
 
                     /* swap the strings, up to the last terminating NUL */
-                    p+=factorsCount;
-                    q+=factorsCount;
-                    stringsCount=(uint32_t)((inBytes+offset)-(const uint8_t *)p);
-                    while(stringsCount>0 && ((const uint8_t *)p)[stringsCount-1]!=0) {
-                        --stringsCount;
+                    p+=factors_లెక్క;
+                    q+=factors_లెక్క;
+                    అక్షరశ్రేణులు_లెక్క=(uint32_t)((లోపల_బైట్లు+స్థానభ్రంశం)-(స్థిరరాశి uint8_t *)p);
+                    అయితే(అక్షరశ్రేణులు_లెక్క>0 && ((స్థిరరాశి uint8_t *)p)[అక్షరశ్రేణులు_లెక్క-1]!=0) {
+                        --అక్షరశ్రేణులు_లెక్క;
                     }
-                    ds->swapInvChars(ds, p, (int32_t)stringsCount, q, pErrorCode);
+                    ds->మార్పిడి_Inv_Chars(ds, p, (int32_t)అక్షరశ్రేణులు_లెక్క, q, p_Error_సంకేతం);
                 }
-                break;
-            default:
+                ఆపు;
+            అప్రమేయ:
                 udata_printError(ds, "uchar_swapNames(): unknown type %u of algorithmic range %u\n",
-                                 inRange->type, i);
-                *pErrorCode=U_UNSUPPORTED_ERROR;
-                return 0;
+                                 లోపల_Range->type, i);
+                *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+                తిరిగి 0;
             }
         }
     }
 
-    return headerSize+(int32_t)offset;
+    తిరిగి శీర్షిక_కొలత+(int32_t)స్థానభ్రంశం;
 }
 
 /*

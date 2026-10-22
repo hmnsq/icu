@@ -30,39 +30,39 @@
      l = lang, C = ctry, M = charmap, V = variant
 */
 
-#include <algorithm>
-#include <optional>
-#include <string_view>
+#అన్తర్భావ <algorithm>
+#అన్తర్భావ <optional>
+#అన్తర్భావ <string_view>
 
-#include "unicode/bytestream.h"
-#include "unicode/errorcode.h"
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uloc.h"
+#అన్తర్భావ "unicode/bytestream.h"
+#అన్తర్భావ "unicode/errorcode.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/uloc.h"
 
-#include "bytesinkutil.h"
-#include "putilimp.h"
-#include "ustr_imp.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "locmap.h"
-#include "uarrsort.h"
-#include "uenumimp.h"
-#include "uassert.h"
-#include "charstr.h"
+#అన్తర్భావ "bytesinkutil.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "ulocimp.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "locmap.h"
+#అన్తర్భావ "uarrsort.h"
+#అన్తర్భావ "uenumimp.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "charstr.h"
 
 U_NAMESPACE_USE
 
 /* ### Declarations **************************************************/
 
 /* Locale stuff from locid.cpp */
-U_CFUNC void locale_set_default(const char *id);
-U_CFUNC const char *locale_get_default();
+U_CFUNC శూన్య locale_సమితి_default(స్థిరరాశి అక్షరం *id);
+U_CFUNC స్థిరరాశి అక్షరం *locale_get_default();
 
-namespace {
+నామాకాశ {
 
 /* ### Data tables **************************************************/
 
@@ -100,7 +100,7 @@ namespace {
 /* Generated using org.unicode.cldr.icu.GenerateISO639LanguageTables */
 /* ISO639 table version is 20150505 */
 /* Subsequent hand addition of selected languages */
-constexpr const char* LANGUAGES[] = {
+constexpr స్థిరరాశి అక్షరం* LANGUAGES[] = {
     "aa", "ab", "ace", "ach", "ada", "ady", "ae", "aeb", "af", "afh", "agq", "ain", "ak", "akk",
     "akz", "ale", "aln", "alt", "am", "an", "ang", "anp", "ar", "arc", "arn", "aro", "arp",
     "arq", "ars", "arw", "ary", "arz", "as", "asa", "ase", "ast", "av", "avk", "awa", "ay",
@@ -150,16 +150,16 @@ constexpr const char* LANGUAGES[] = {
     "wo", "wuu", "xal", "xh", "xmf", "xnr", "xog", "yao", "yap", "yav", "ybb", "yi", "yo",
     "ypk", "yrl", "yue", "za", "zap", "zbl", "zea", "zen", "zgh", "zh", "znd", "zu", "zun",
     "zxx", "zza",
-nullptr,
+శూన్యసూచిక,
     "in",  "iw",  "ji",  "jw",  "mo",  "sh",  "swc", "tl",  /* obsolete language codes */
-nullptr
+శూన్యసూచిక
 };
 
-constexpr const char* DEPRECATED_LANGUAGES[]={
-    "in", "iw", "ji", "jw", "mo", nullptr, nullptr
+constexpr స్థిరరాశి అక్షరం* DEPRECATED_LANGUAGES[]={
+    "in", "iw", "ji", "jw", "mo", శూన్యసూచిక, శూన్యసూచిక
 };
-constexpr const char* REPLACEMENT_LANGUAGES[]={
-    "id", "he", "yi", "jv", "ro", nullptr, nullptr
+constexpr స్థిరరాశి అక్షరం* REPLACEMENT_LANGUAGES[]={
+    "id", "he", "yi", "jv", "ro", శూన్యసూచిక, శూన్యసూచిక
 };
 
 /**
@@ -181,7 +181,7 @@ constexpr const char* REPLACEMENT_LANGUAGES[]={
 /* Generated using org.unicode.cldr.icu.GenerateISO639LanguageTables */
 /* ISO639 table version is 20150505 */
 /* Subsequent hand addition of selected languages */
-constexpr const char* LANGUAGES_3[] = {
+constexpr స్థిరరాశి అక్షరం* LANGUAGES_3[] = {
     "aar", "abk", "ace", "ach", "ada", "ady", "ave", "aeb", "afr", "afh", "agq", "ain", "aka",
     "akk", "akz", "ale", "aln", "alt", "amh", "arg", "ang", "anp", "ara", "arc", "arn", "aro",
     "arp", "arq", "ars", "arw", "ary", "arz", "asm", "asa", "ase", "ast", "ava", "avk", "awa",
@@ -232,10 +232,10 @@ constexpr const char* LANGUAGES_3[] = {
     "wak", "wal", "war", "was", "wbp", "wen", "wol", "wuu", "xal", "xho", "xmf", "xnr", "xog",
     "yao", "yap", "yav", "ybb", "yid", "yor", "ypk", "yrl", "yue", "zha", "zap", "zbl", "zea",
     "zen", "zgh", "zho", "znd", "zul", "zun", "zxx", "zza",
-nullptr,
+శూన్యసూచిక,
 /*  "in",  "iw",  "ji",  "jw",  "mo",  "sh",  "swc", "tl",  */
     "ind", "heb", "yid", "jaw", "mol", "srp", "swc", "tgl",
-nullptr
+శూన్యసూచిక
 };
 
 /**
@@ -262,7 +262,7 @@ nullptr
  * RO(ROM) is now RO(ROU) according to
  * http://www.iso.org/iso/en/prods-services/iso3166ma/03updates-on-iso-3166/nlv3e-rou.html
  */
-constexpr const char* COUNTRIES[] = {
+constexpr స్థిరరాశి అక్షరం* COUNTRIES[] = {
     "AD",  "AE",  "AF",  "AG",  "AI",  "AL",  "AM",
     "AO",  "AQ",  "AR",  "AS",  "AT",  "AU",  "AW",  "AX",  "AZ",
     "BA",  "BB",  "BD",  "BE",  "BF",  "BG",  "BH",  "BI",
@@ -293,17 +293,17 @@ constexpr const char* COUNTRIES[] = {
     "TW",  "TZ",  "UA",  "UG",  "UM",  "US",  "UY",  "UZ",
     "VA",  "VC",  "VE",  "VG",  "VI",  "VN",  "VU",  "WF",
     "WS",  "XK",  "YE",  "YT",  "ZA",  "ZM",  "ZW",
-nullptr,
+శూన్యసూచిక,
     "AN",  "BU", "CS", "FX", "RO", "SU", "TP", "YD", "YU", "ZR",   /* obsolete country codes */
-nullptr
+శూన్యసూచిక
 };
 
-constexpr const char* DEPRECATED_COUNTRIES[] = {
-    "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR", nullptr, nullptr /* deprecated country list */
+constexpr స్థిరరాశి అక్షరం* DEPRECATED_COUNTRIES[] = {
+    "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR", శూన్యసూచిక, శూన్యసూచిక /* deprecated country list */
 };
-constexpr const char* REPLACEMENT_COUNTRIES[] = {
+constexpr స్థిరరాశి అక్షరం* REPLACEMENT_COUNTRIES[] = {
 /*  "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR" */
-    "CW", "MM", "RS", "DE", "BJ", "FR", "BF", "VU", "ZW", "RU", "TL", "GB", "VN", "YE", "RS", "CD", nullptr, nullptr  /* replacement country codes */
+    "CW", "MM", "RS", "DE", "BJ", "FR", "BF", "VU", "ZW", "RU", "TL", "GB", "VN", "YE", "RS", "CD", శూన్యసూచిక, శూన్యసూచిక  /* replacement country codes */
 };
 
 /**
@@ -319,7 +319,7 @@ constexpr const char* REPLACEMENT_COUNTRIES[] = {
  * second list, and another nullptr entry.  The two lists correspond to
  * the two lists in COUNTRIES.
  */
-constexpr const char* COUNTRIES_3[] = {
+constexpr స్థిరరాశి అక్షరం* COUNTRIES_3[] = {
 /*  "AD",  "AE",  "AF",  "AG",  "AI",  "AL",  "AM",      */
     "AND", "ARE", "AFG", "ATG", "AIA", "ALB", "ARM",
 /*  "AO",  "AQ",  "AR",  "AS",  "AT",  "AU",  "AW",  "AX",  "AZ",     */
@@ -380,15 +380,15 @@ constexpr const char* COUNTRIES_3[] = {
     "VAT", "VCT", "VEN", "VGB", "VIR", "VNM", "VUT", "WLF",
 /*  "WS",  "XK",  "YE",  "YT",  "ZA",  "ZM",  "ZW",          */
     "WSM", "XKK", "YEM", "MYT", "ZAF", "ZMB", "ZWE",
-nullptr,
+శూన్యసూచిక,
 /*  "AN",  "BU",  "CS",  "FX",  "RO", "SU",  "TP",  "YD",  "YU",  "ZR" */
     "ANT", "BUR", "SCG", "FXX", "ROM", "SUN", "TMP", "YMD", "YUG", "ZAR",
-nullptr
+శూన్యసూచిక
 };
 
-typedef struct CanonicalizationMap {
-    const char *id;          /* input ID */
-    const char *canonicalID; /* canonicalized output ID */
+రకనిర్వచనం నిర్మాణం CanonicalizationMap {
+    స్థిరరాశి అక్షరం *id;          /* input ID */
+    స్థిరరాశి అక్షరం *canonicalID; /* canonicalized output ID */
 } CanonicalizationMap;
 
 /**
@@ -411,243 +411,243 @@ constexpr CanonicalizationMap CANONICALIZE_MAP[] = {
 
 /* ### BCP47 Conversion *******************************************/
 /* Gets the size of the shortest subtag in the given localeID. */
-int32_t getShortestSubtagLength(std::string_view localeID) {
+int32_t get_అతితక్కువ_Subtag_నిడివి(std::string_view localeID) {
     int32_t localeIDLength = static_cast<int32_t>(localeID.length());
     int32_t length = localeIDLength;
-    int32_t tmpLength = 0;
+    int32_t tmp_నిడివి = 0;
     int32_t i;
-    bool reset = true;
+    తార్కిక reset = నిజం;
 
-    for (i = 0; i < localeIDLength; i++) {
-        if (localeID[i] != '_' && localeID[i] != '-') {
-            if (reset) {
-                tmpLength = 0;
-                reset = false;
+    కొరకు (i = 0; i < localeIDLength; i++) {
+        ఒకవేళ (localeID[i] != '_' && localeID[i] != '-') {
+            ఒకవేళ (reset) {
+                tmp_నిడివి = 0;
+                reset = అబద్ధం;
             }
-            tmpLength++;
-        } else {
-            if (tmpLength != 0 && tmpLength < length) {
-                length = tmpLength;
+            tmp_నిడివి++;
+        } లేకపోతే {
+            ఒకవేళ (tmp_నిడివి != 0 && tmp_నిడివి < length) {
+                length = tmp_నిడివి;
             }
-            reset = true;
+            reset = నిజం;
         }
     }
 
-    return length;
+    తిరిగి length;
 }
 /* Test if the locale id has BCP47 u extension and does not have '@' */
-inline bool _hasBCP47Extension(std::string_view id) {
-    return id.find('@') == std::string_view::npos && getShortestSubtagLength(id) == 1;
+అంతఃవరుస తార్కిక _hasBCP47Extension(std::string_view id) {
+    తిరిగి id.find('@') == std::string_view::npos && get_అతితక్కువ_Subtag_నిడివి(id) == 1;
 }
 
 /* ### Keywords **************************************************/
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+అంతఃవరుస తార్కిక UPRV_ISDIGIT(అక్షరం c) { తిరిగి c >= '0' && c <= '9'; }
+అంతఃవరుస తార్కిక UPRV_ISALPHANUM(అక్షరం c) { తిరిగి uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 /* Punctuation/symbols allowed in legacy key values */
-inline bool UPRV_OK_VALUE_PUNCTUATION(char c) { return c == '_' || c == '-' || c == '+' || c == '/'; }
+అంతఃవరుస తార్కిక UPRV_OK_విలువ_PUNCTUATION(అక్షరం c) { తిరిగి c == '_' || c == '-' || c == '+' || c == '/'; }
 
 }  // namespace
 
-#define ULOC_KEYWORD_BUFFER_LEN 25
-#define ULOC_MAX_NO_KEYWORDS 25
+#నిర్వచించు ULOC_KEYWORD_బఫరు_LEN 25
+#నిర్వచించు ULOC_MAX_NO_KEYWORDS 25
 
-U_CAPI const char* U_EXPORT2
-locale_getKeywordsStart(std::string_view localeID U_LIFETIME_BOUND) {
-    if (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
-        return localeID.data() + pos;
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+locale_get_Keywords_ప్రారంభం(std::string_view localeID U_LIFETIME_BOUND) {
+    ఒకవేళ (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
+        తిరిగి localeID.దత్తాంశం() + pos;
     }
-#if (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
-    else {
+#ఒకవేళ (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
+    లేకపోతే {
         /* We do this because the @ sign is variant, and the @ sign used on one
         EBCDIC machine won't be compiled the same way on other EBCDIC based
         machines. */
-        static const uint8_t ebcdicSigns[] = { 0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
-        const uint8_t *charToFind = ebcdicSigns;
-        while(*charToFind) {
-            if (size_t pos = localeID.find(*charToFind); pos != std::string_view::npos) {
-                return localeID.data() + pos;
+        స్థిర స్థిరరాశి uint8_t ebcdicSigns[] = { 0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
+        స్థిరరాశి uint8_t *char_గమ్యం_కనుగొను = ebcdicSigns;
+        అయితే(*char_గమ్యం_కనుగొను) {
+            ఒకవేళ (size_t pos = localeID.find(*char_గమ్యం_కనుగొను); pos != std::string_view::npos) {
+                తిరిగి localeID.దత్తాంశం() + pos;
             }
-            charToFind++;
+            char_గమ్యం_కనుగొను++;
         }
     }
-#endif
-    return nullptr;
+#అయితే_ముగింపు
+    తిరిగి శూన్యసూచిక;
 }
 
-namespace {
+నామాకాశ {
 
 /**
  * @param keywordName incoming name to be canonicalized
  * @param status return status (keyword too long)
  * @return the keyword name
  */
-CharString locale_canonKeywordName(std::string_view keywordName, UErrorCode& status)
+CharString locale_canonKeywordName(std::string_view keywordName, UError_సంకేతం& స్థితి_2)
 {
-  if (U_FAILURE(status)) { return {}; }
-  CharString result;
+  ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి {}; }
+  CharString ఫలితం;
 
-  for (char c : keywordName) {
-    if (!UPRV_ISALPHANUM(c)) {
-      status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-      return {};
+  కొరకు (అక్షరం c : keywordName) {
+    ఒకవేళ (!UPRV_ISALPHANUM(c)) {
+      స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* malformed keyword name */
+      తిరిగి {};
     }
-    result.append(uprv_tolower(c), status);
+    ఫలితం.append(uprv_tolower(c), స్థితి_2);
   }
-  if (result.isEmpty()) {
-    status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name */
-    return {};
+  ఒకవేళ (ఫలితం.is_ఖాళీలు()) {
+    స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* empty keyword name */
+    తిరిగి {};
   }
 
-  return result;
+  తిరిగి ఫలితం;
 }
 
-typedef struct {
-    char keyword[ULOC_KEYWORD_BUFFER_LEN];
+రకనిర్వచనం నిర్మాణం {
+    అక్షరం keyword[ULOC_KEYWORD_బఫరు_LEN];
     int32_t keywordLen;
-    const char *valueStart;
-    int32_t valueLen;
+    స్థిరరాశి అక్షరం *విలువ_ప్రారంభం;
+    int32_t విలువ_Len;
 } KeywordStruct;
 
 int32_t U_CALLCONV
-compareKeywordStructs(const void * /*context*/, const void *left, const void *right) {
-    const char* leftString = static_cast<const KeywordStruct*>(left)->keyword;
-    const char* rightString = static_cast<const KeywordStruct*>(right)->keyword;
-    return uprv_strcmp(leftString, rightString);
+compareKeywordStructs(స్థిరరాశి శూన్య * /*context*/, స్థిరరాశి శూన్య *ఎడమ, స్థిరరాశి శూన్య *కుడి) {
+    స్థిరరాశి అక్షరం* ఎడమ_String = static_cast<స్థిరరాశి KeywordStruct*>(ఎడమ)->keyword;
+    స్థిరరాశి అక్షరం* కుడి_String = static_cast<స్థిరరాశి KeywordStruct*>(కుడి)->keyword;
+    తిరిగి uprv_strcmp(ఎడమ_String, కుడి_String);
 }
 
 }  // namespace
 
 U_EXPORT CharString
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
-                    bool valuesToo,
-                    UErrorCode& status)
+                    అక్షరం prev,
+                    తార్కిక విలువలు_Too,
+                    UError_సంకేతం& స్థితి_2)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             ulocimp_getKeywords(localeID,
                                 prev,
                                 sink,
-                                valuesToo,
-                                status);
+                                విలువలు_Too,
+                                స్థితి_2);
         },
-        status);
+        స్థితి_2);
 }
 
-U_EXPORT void
+U_EXPORT శూన్య
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
+                    అక్షరం prev,
                     ByteSink& sink,
-                    bool valuesToo,
-                    UErrorCode& status)
+                    తార్కిక విలువలు_Too,
+                    UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) { return; }
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
 
     KeywordStruct keywordList[ULOC_MAX_NO_KEYWORDS];
 
     int32_t maxKeywords = ULOC_MAX_NO_KEYWORDS;
-    int32_t numKeywords = 0;
+    int32_t అంకె_Keywords = 0;
     size_t equalSign = std::string_view::npos;
     size_t semicolon = std::string_view::npos;
     int32_t i = 0, j, n;
 
-    if(prev == '@') { /* start of keyword definition */
+    ఒకవేళ(prev == '@') { /* start of keyword definition */
         /* we will grab pairs, trim spaces, lowercase keywords, sort and return */
-        do {
-            bool duplicate = false;
+        చేయి {
+            తార్కిక duplicate = అబద్ధం;
             /* skip leading spaces */
-            while (!localeID.empty() && localeID.front() == ' ') {
-                localeID.remove_prefix(1);
+            అయితే (!localeID.empty() && localeID.front() == ' ') {
+                localeID.remove_ఉపసర్గ(1);
             }
-            if (localeID.empty()) { /* handle trailing "; " */
-                break;
+            ఒకవేళ (localeID.empty()) { /* handle trailing "; " */
+                ఆపు;
             }
-            if(numKeywords == maxKeywords) {
-                status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+            ఒకవేళ(అంకె_Keywords == maxKeywords) {
+                స్థితి_2 = U_అంతర్గత_కార్యక్రమం_ERROR;
+                తిరిగి;
             }
             equalSign = localeID.find('=');
             semicolon = localeID.find(';');
             /* lack of '=' [foo@currency] is illegal */
             /* ';' before '=' [foo@currency;collation=pinyin] is illegal */
-            if (equalSign == std::string_view::npos ||
+            ఒకవేళ (equalSign == std::string_view::npos ||
                 (semicolon != std::string_view::npos && semicolon < equalSign)) {
-                status = U_INVALID_FORMAT_ERROR;
-                return;
+                స్థితి_2 = U_INVALID_FORMAT_ERROR;
+                తిరిగి;
             }
             /* zero-length keyword is an error. */
-            if (equalSign == 0) {
-                status = U_INVALID_FORMAT_ERROR;
-                return;
+            ఒకవేళ (equalSign == 0) {
+                స్థితి_2 = U_INVALID_FORMAT_ERROR;
+                తిరిగి;
             }
             /* need to normalize both keyword and keyword name */
-            if (equalSign >= ULOC_KEYWORD_BUFFER_LEN) {
+            ఒకవేళ (equalSign >= ULOC_KEYWORD_బఫరు_LEN) {
                 /* keyword name too long for internal buffer */
-                status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+                స్థితి_2 = U_అంతర్గత_కార్యక్రమం_ERROR;
+                తిరిగి;
             }
-            for (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
-                if (localeID[i] != ' ') {
-                    keywordList[numKeywords].keyword[n++] = uprv_tolower(localeID[i]);
+            కొరకు (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
+                ఒకవేళ (localeID[i] != ' ') {
+                    keywordList[అంకె_Keywords].keyword[n++] = uprv_tolower(localeID[i]);
                 }
             }
 
-            keywordList[numKeywords].keyword[n] = 0;
-            keywordList[numKeywords].keywordLen = n;
+            keywordList[అంకె_Keywords].keyword[n] = 0;
+            keywordList[అంకె_Keywords].keywordLen = n;
             /* now grab the value part. First we skip the '=' */
             equalSign++;
             /* then we leading spaces */
-            while (equalSign < localeID.length() && localeID[equalSign] == ' ') {
+            అయితే (equalSign < localeID.length() && localeID[equalSign] == ' ') {
                 equalSign++;
             }
 
             /* Premature end or zero-length value */
-            if (equalSign == localeID.length() || equalSign == semicolon) {
-                status = U_INVALID_FORMAT_ERROR;
-                return;
+            ఒకవేళ (equalSign == localeID.length() || equalSign == semicolon) {
+                స్థితి_2 = U_INVALID_FORMAT_ERROR;
+                తిరిగి;
             }
 
-            keywordList[numKeywords].valueStart = localeID.data() + equalSign;
+            keywordList[అంకె_Keywords].విలువ_ప్రారంభం = localeID.దత్తాంశం() + equalSign;
 
             std::string_view value = localeID;
-            if (semicolon != std::string_view::npos) {
+            ఒకవేళ (semicolon != std::string_view::npos) {
                 value.remove_suffix(value.length() - semicolon);
-                localeID.remove_prefix(semicolon + 1);
-            } else {
+                localeID.remove_ఉపసర్గ(semicolon + 1);
+            } లేకపోతే {
                 localeID = {};
             }
-            value.remove_prefix(equalSign);
-            if (size_t last = value.find_last_not_of(' '); last != std::string_view::npos) {
-                value.remove_suffix(value.length() - last - 1);
+            value.remove_ఉపసర్గ(equalSign);
+            ఒకవేళ (size_t చివరి = value.find_last_not_of(' '); చివరి != std::string_view::npos) {
+                value.remove_suffix(value.length() - చివరి - 1);
             }
-            keywordList[numKeywords].valueLen = static_cast<int32_t>(value.length());
+            keywordList[అంకె_Keywords].విలువ_Len = static_cast<int32_t>(value.length());
 
             /* If this is a duplicate keyword, then ignore it */
-            for (j=0; j<numKeywords; ++j) {
-                if (uprv_strcmp(keywordList[j].keyword, keywordList[numKeywords].keyword) == 0) {
-                    duplicate = true;
-                    break;
+            కొరకు (j=0; j<అంకె_Keywords; ++j) {
+                ఒకవేళ (uprv_strcmp(keywordList[j].keyword, keywordList[అంకె_Keywords].keyword) == 0) {
+                    duplicate = నిజం;
+                    ఆపు;
                 }
             }
-            if (!duplicate) {
-                ++numKeywords;
+            ఒకవేళ (!duplicate) {
+                ++అంకె_Keywords;
             }
-        } while (!localeID.empty());
+        } అయితే (!localeID.empty());
 
         /* now we have a list of keywords */
         /* we need to sort it */
-        uprv_sortArray(keywordList, numKeywords, sizeof(KeywordStruct), compareKeywordStructs, nullptr, false, &status);
+        uprv_క్రమీకరించు_Array(keywordList, అంకె_Keywords, పరిమాణం(KeywordStruct), compareKeywordStructs, శూన్యసూచిక, అబద్ధం, &స్థితి_2);
 
         /* Now construct the keyword part */
-        for(i = 0; i < numKeywords; i++) {
+        కొరకు(i = 0; i < అంకె_Keywords; i++) {
             sink.Append(keywordList[i].keyword, keywordList[i].keywordLen);
-            if(valuesToo) {
+            ఒకవేళ(విలువలు_Too) {
                 sink.Append("=", 1);
-                sink.Append(keywordList[i].valueStart, keywordList[i].valueLen);
-                if(i < numKeywords - 1) {
+                sink.Append(keywordList[i].విలువ_ప్రారంభం, keywordList[i].విలువ_Len);
+                ఒకవేళ(i < అంకె_Keywords - 1) {
                     sink.Append(";", 1);
                 }
-            } else {
+            } లేకపోతే {
                 sink.Append("\0", 1);
             }
         }
@@ -655,180 +655,180 @@ ulocimp_getKeywords(std::string_view localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getKeywordValue(const char* localeID,
-                     const char* keywordName,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status)
+uloc_get_Keyword_విలువ(స్థిరరాశి అక్షరం* localeID,
+                     స్థిరరాశి అక్షరం* keywordName,
+                     అక్షరం* బఫరు, int32_t బఫరు_సామర్థ్యం,
+                     UError_సంకేతం* స్థితి_2)
 {
-    if (U_FAILURE(*status)) { return 0; }
-    if (keywordName == nullptr || *keywordName == '\0') {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) { తిరిగి 0; }
+    ఒకవేళ (keywordName == శూన్యసూచిక || *keywordName == '\0') {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        buffer, bufferCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        బఫరు, బఫరు_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_get_Keyword_విలువ(localeID, keywordName, sink, స్థితి_2);
         },
-        *status);
+        *స్థితి_2);
 }
 
 U_EXPORT CharString
-ulocimp_getKeywordValue(const char* localeID,
+ulocimp_get_Keyword_విలువ(స్థిరరాశి అక్షరం* localeID,
                         std::string_view keywordName,
-                        UErrorCode& status)
+                        UError_సంకేతం& స్థితి_2)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_get_Keyword_విలువ(localeID, keywordName, sink, స్థితి_2);
         },
-        status);
+        స్థితి_2);
 }
 
-U_EXPORT void
-ulocimp_getKeywordValue(const char* localeID,
+U_EXPORT శూన్య
+ulocimp_get_Keyword_విలువ(స్థిరరాశి అక్షరం* localeID,
                         std::string_view keywordName,
                         icu::ByteSink& sink,
-                        UErrorCode& status)
+                        UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) { return; }
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
 
-    if (localeID == nullptr || keywordName.empty()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (localeID == శూన్యసూచిక || keywordName.empty()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    const char* startSearchHere = nullptr;
-    const char* nextSeparator = nullptr;
+    స్థిరరాశి అక్షరం* ప్రారంభం_శోధన_ఇక్కడ = శూన్యసూచిక;
+    స్థిరరాశి అక్షరం* తదుపరి_Separator = శూన్యసూచిక;
 
-    CharString tempBuffer;
-    const char* tmpLocaleID;
+    CharString తాత్కాలిక_బఫరు;
+    స్థిరరాశి అక్షరం* tmpLocaleID;
 
-    CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-      return;
+    CharString canonKeywordName = locale_canonKeywordName(keywordName, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+      తిరిగి;
     }
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
-        tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, status);
-        tmpLocaleID = U_SUCCESS(status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
+    ఒకవేళ (localeID != శూన్యసూచిక && _hasBCP47Extension(localeID)) {
+        తాత్కాలిక_బఫరు = ulocimp_for_Language_ట్యాగ్(localeID, -1, శూన్యసూచిక, స్థితి_2);
+        tmpLocaleID = U_SUCCESS(స్థితి_2) && !తాత్కాలిక_బఫరు.is_ఖాళీలు() ? తాత్కాలిక_బఫరు.దత్తాంశం() : localeID;
+    } లేకపోతే {
         tmpLocaleID=localeID;
     }
 
-    startSearchHere = locale_getKeywordsStart(tmpLocaleID);
-    if(startSearchHere == nullptr) {
+    ప్రారంభం_శోధన_ఇక్కడ = locale_get_Keywords_ప్రారంభం(tmpLocaleID);
+    ఒకవేళ(ప్రారంభం_శోధన_ఇక్కడ == శూన్యసూచిక) {
         /* no keywords, return at once */
-        return;
+        తిరిగి;
     }
 
     /* find the first keyword */
-    while(startSearchHere) {
-        const char* keyValueTail;
+    అయితే(ప్రారంభం_శోధన_ఇక్కడ) {
+        స్థిరరాశి అక్షరం* కీలకం_విలువ_తోక;
 
-        startSearchHere++; /* skip @ or ; */
-        nextSeparator = uprv_strchr(startSearchHere, '=');
-        if(!nextSeparator) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return;
+        ప్రారంభం_శోధన_ఇక్కడ++; /* skip @ or ; */
+        తదుపరి_Separator = uprv_strchr(ప్రారంభం_శోధన_ఇక్కడ, '=');
+        ఒకవేళ(!తదుపరి_Separator) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* key must have =value */
+            తిరిగి;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while(*startSearchHere == ' ') {
-            startSearchHere++;
+        అయితే(*ప్రారంభం_శోధన_ఇక్కడ == ' ') {
+            ప్రారంభం_శోధన_ఇక్కడ++;
         }
-        keyValueTail = nextSeparator;
-        while (keyValueTail > startSearchHere && *(keyValueTail-1) == ' ') {
-            keyValueTail--;
+        కీలకం_విలువ_తోక = తదుపరి_Separator;
+        అయితే (కీలకం_విలువ_తోక > ప్రారంభం_శోధన_ఇక్కడ && *(కీలకం_విలువ_తోక-1) == ' ') {
+            కీలకం_విలువ_తోక--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (startSearchHere == keyValueTail) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return;
+        ఒకవేళ (ప్రారంభం_శోధన_ఇక్కడ == కీలకం_విలువ_తోక) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* empty keyword name in passed-in locale */
+            తిరిగి;
         }
         CharString localeKeywordName;
-        while (startSearchHere < keyValueTail) {
-          if (!UPRV_ISALPHANUM(*startSearchHere)) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-            return;
+        అయితే (ప్రారంభం_శోధన_ఇక్కడ < కీలకం_విలువ_తోక) {
+          ఒకవేళ (!UPRV_ISALPHANUM(*ప్రారంభం_శోధన_ఇక్కడ)) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* malformed keyword name */
+            తిరిగి;
           }
-          localeKeywordName.append(uprv_tolower(*startSearchHere++), status);
+          localeKeywordName.append(uprv_tolower(*ప్రారంభం_శోధన_ఇక్కడ++), స్థితి_2);
         }
-        if (U_FAILURE(status)) {
-            return;
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి;
         }
 
-        startSearchHere = uprv_strchr(nextSeparator, ';');
+        ప్రారంభం_శోధన_ఇక్కడ = uprv_strchr(తదుపరి_Separator, ';');
 
-        if (canonKeywordName == localeKeywordName) {
+        ఒకవేళ (canonKeywordName == localeKeywordName) {
              /* current entry matches the keyword. */
-           nextSeparator++; /* skip '=' */
+           తదుపరి_Separator++; /* skip '=' */
             /* First strip leading & trailing spaces (TC decided to tolerate these) */
-            while(*nextSeparator == ' ') {
-              nextSeparator++;
+            అయితే(*తదుపరి_Separator == ' ') {
+              తదుపరి_Separator++;
             }
-            keyValueTail = (startSearchHere)? startSearchHere: nextSeparator + uprv_strlen(nextSeparator);
-            while(keyValueTail > nextSeparator && *(keyValueTail-1) == ' ') {
-              keyValueTail--;
+            కీలకం_విలువ_తోక = (ప్రారంభం_శోధన_ఇక్కడ)? ప్రారంభం_శోధన_ఇక్కడ: తదుపరి_Separator + uprv_strlen(తదుపరి_Separator);
+            అయితే(కీలకం_విలువ_తోక > తదుపరి_Separator && *(కీలకం_విలువ_తోక-1) == ' ') {
+              కీలకం_విలువ_తోక--;
             }
             /* Now copy the value, but check well-formedness */
-            if (nextSeparator == keyValueTail) {
-              status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value name in passed-in locale */
-              return;
+            ఒకవేళ (తదుపరి_Separator == కీలకం_విలువ_తోక) {
+              స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* empty key value name in passed-in locale */
+              తిరిగి;
             }
-            while (nextSeparator < keyValueTail) {
-              if (!UPRV_ISALPHANUM(*nextSeparator) && !UPRV_OK_VALUE_PUNCTUATION(*nextSeparator)) {
-                status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-                return;
+            అయితే (తదుపరి_Separator < కీలకం_విలువ_తోక) {
+              ఒకవేళ (!UPRV_ISALPHANUM(*తదుపరి_Separator) && !UPRV_OK_విలువ_PUNCTUATION(*తదుపరి_Separator)) {
+                స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* malformed key value */
+                తిరిగి;
               }
               /* Should we lowercase value to return here? Tests expect as-is. */
-              sink.Append(nextSeparator++, 1);
+              sink.Append(తదుపరి_Separator++, 1);
             }
-            return;
+            తిరిగి;
         }
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_setKeywordValue(const char* keywordName,
-                     const char* keywordValue,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status)
+uloc_సమితి_Keyword_విలువ(స్థిరరాశి అక్షరం* keywordName,
+                     స్థిరరాశి అక్షరం* keyword_విలువ,
+                     అక్షరం* బఫరు, int32_t బఫరు_సామర్థ్యం,
+                     UError_సంకేతం* స్థితి_2)
 {
-    if (U_FAILURE(*status)) { return 0; }
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) { తిరిగి 0; }
 
-    if (keywordName == nullptr || *keywordName == 0) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ (keywordName == శూన్యసూచిక || *keywordName == 0) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    if (bufferCapacity <= 1) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ (బఫరు_సామర్థ్యం <= 1) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    int32_t bufLen = (int32_t)uprv_strlen(buffer);
-    if(bufferCapacity<bufLen) {
+    int32_t bufLen = (int32_t)uprv_strlen(బఫరు);
+    ఒకవేళ(బఫరు_సామర్థ్యం<bufLen) {
         /* The capacity is less than the length?! Is this NUL terminated? */
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    char* keywords = const_cast<char*>(
-        locale_getKeywordsStart({buffer, static_cast<std::string_view::size_type>(bufLen)}));
-    int32_t baseLen = keywords == nullptr ? bufLen : keywords - buffer;
+    అక్షరం* keywords = const_cast<అక్షరం*>(
+        locale_get_Keywords_ప్రారంభం({బఫరు, static_cast<std::string_view::size_type>(bufLen)}));
+    int32_t పునాది_Len = keywords == శూన్యసూచిక ? bufLen : keywords - బఫరు;
     // Remove -1 from the capacity so that this function can guarantee NUL termination.
-    CheckedArrayByteSink sink(keywords == nullptr ? buffer + bufLen : keywords,
-                              bufferCapacity - baseLen - 1);
-    int32_t reslen = ulocimp_setKeywordValue(
-        keywords == nullptr ? std::string_view() : keywords,
+    CheckedArrayByteSink sink(keywords == శూన్యసూచిక ? బఫరు + bufLen : keywords,
+                              బఫరు_సామర్థ్యం - పునాది_Len - 1);
+    int32_t reslen = ulocimp_సమితి_Keyword_విలువ(
+        keywords == శూన్యసూచిక ? std::string_view() : keywords,
         keywordName,
-        keywordValue == nullptr ? std::string_view() : keywordValue,
+        keyword_విలువ == శూన్యసూచిక ? std::string_view() : keyword_విలువ,
         sink,
-        *status);
+        *స్థితి_2);
 
-    if (U_FAILURE(*status)) {
-        return *status == U_BUFFER_OVERFLOW_ERROR ? reslen + baseLen : 0;
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి *స్థితి_2 == U_బఫరు_అధికప్రవాహం_ERROR ? reslen + పునాది_Len : 0;
     }
 
     // See the documentation for this function, it's guaranteed to never
@@ -836,187 +836,187 @@ uloc_setKeywordValue(const char* keywordName,
     // In this case, nothing has been written to the sink, so it cannot have Overflowed().
     U_ASSERT(!sink.Overflowed());
     U_ASSERT(reslen >= 0);
-    return u_terminateChars(buffer, bufferCapacity, reslen + baseLen, status);
+    తిరిగి u_terminateChars(బఫరు, బఫరు_సామర్థ్యం, reslen + పునాది_Len, స్థితి_2);
 }
 
-U_EXPORT void
-ulocimp_setKeywordValue(std::string_view keywordName,
-                        std::string_view keywordValue,
+U_EXPORT శూన్య
+ulocimp_సమితి_Keyword_విలువ(std::string_view keywordName,
+                        std::string_view keyword_విలువ,
                         CharString& localeID,
-                        UErrorCode& status)
+                        UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) { return; }
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
     std::string_view keywords;
-    if (const char* start = locale_getKeywordsStart(localeID.toStringPiece()); start != nullptr) {
+    ఒకవేళ (స్థిరరాశి అక్షరం* ప్రారంభం = locale_get_Keywords_ప్రారంభం(localeID.గమ్యం_String_Piece()); ప్రారంభం != శూన్యసూచిక) {
         // This is safe because CharString::truncate() doesn't actually erase any
         // data, but simply sets the position for where new data will be written.
-        int32_t size = start - localeID.data();
-        keywords = localeID.toStringPiece();
-        keywords.remove_prefix(size);
+        int32_t size = ప్రారంభం - localeID.దత్తాంశం();
+        keywords = localeID.గమ్యం_String_Piece();
+        keywords.remove_ఉపసర్గ(size);
         localeID.truncate(size);
     }
     CharStringByteSink sink(&localeID);
-    ulocimp_setKeywordValue(keywords, keywordName, keywordValue, sink, status);
+    ulocimp_సమితి_Keyword_విలువ(keywords, keywordName, keyword_విలువ, sink, స్థితి_2);
 }
 
 U_EXPORT int32_t
-ulocimp_setKeywordValue(std::string_view keywords,
+ulocimp_సమితి_Keyword_విలువ(std::string_view keywords,
                         std::string_view keywordName,
-                        std::string_view keywordValue,
+                        std::string_view keyword_విలువ,
                         ByteSink& sink,
-                        UErrorCode& status)
+                        UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) { return 0; }
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి 0; }
 
     /* TODO: sorting. removal. */
     int32_t needLen = 0;
     int32_t rc;
-    CharString updatedKeysAndValues;
-    bool handledInputKeyAndValue = false;
-    char keyValuePrefix = '@';
+    CharString updated_కీలకాలు_And_విలువలు;
+    తార్కిక handled_ఆదానం_కీలకం_And_విలువ = అబద్ధం;
+    అక్షరం కీలకం_విలువ_ఉపసర్గ = '@';
 
-    if (status == U_STRING_NOT_TERMINATED_WARNING) {
-        status = U_ZERO_ERROR;
+    ఒకవేళ (స్థితి_2 == U_STRING_NOT_TERMINATED_WARNING) {
+        స్థితి_2 = U_ZERO_ERROR;
     }
-    if (keywordName.empty()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ (keywordName.empty()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    CharString canonKeywordName = locale_canonKeywordName(keywordName, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి 0;
     }
 
-    CharString canonKeywordValue;
-    for (char c : keywordValue) {
-        if (!UPRV_ISALPHANUM(c) && !UPRV_OK_VALUE_PUNCTUATION(c)) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-            return 0;
+    CharString canon_Keyword_విలువ;
+    కొరకు (అక్షరం c : keyword_విలువ) {
+        ఒకవేళ (!UPRV_ISALPHANUM(c) && !UPRV_OK_విలువ_PUNCTUATION(c)) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* malformed key value */
+            తిరిగి 0;
         }
         /* Should we force lowercase in value to set? */
-        canonKeywordValue.append(c, status);
+        canon_Keyword_విలువ.append(c, స్థితి_2);
     }
-    if (U_FAILURE(status)) {
-        return 0;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి 0;
     }
 
-    if (keywords.size() <= 1) {
-        if (canonKeywordValue.isEmpty()) { /* no keywords = nothing to remove */
-            U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-            return 0;
+    ఒకవేళ (keywords.size() <= 1) {
+        ఒకవేళ (canon_Keyword_విలువ.is_ఖాళీలు()) { /* no keywords = nothing to remove */
+            U_ASSERT(స్థితి_2 != U_STRING_NOT_TERMINATED_WARNING);
+            తిరిగి 0;
         }
 
-        needLen = 1 + canonKeywordName.length() + 1 + canonKeywordValue.length();
+        needLen = 1 + canonKeywordName.length() + 1 + canon_Keyword_విలువ.length();
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
-                needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
-            status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen; /* no change */
+        అక్షరం* బఫరు = sink.Get_Append_బఫరు(
+                needLen, needLen, శూన్యసూచిక, needLen, &capacity);
+        ఒకవేళ (capacity < needLen || బఫరు == శూన్యసూచిక) {
+            స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+            తిరిగి needLen; /* no change */
         }
-        char* it = buffer;
+        అక్షరం* it = బఫరు;
 
         *it++ = '@';
-        uprv_memcpy(it, canonKeywordName.data(), canonKeywordName.length());
+        uprv_memcpy(it, canonKeywordName.దత్తాంశం(), canonKeywordName.length());
         it += canonKeywordName.length();
         *it++ = '=';
-        uprv_memcpy(it, canonKeywordValue.data(), canonKeywordValue.length());
-        sink.Append(buffer, needLen);
-        U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-        return needLen;
+        uprv_memcpy(it, canon_Keyword_విలువ.దత్తాంశం(), canon_Keyword_విలువ.length());
+        sink.Append(బఫరు, needLen);
+        U_ASSERT(స్థితి_2 != U_STRING_NOT_TERMINATED_WARNING);
+        తిరిగి needLen;
     } /* end shortcut - no @ */
 
     /* search for keyword */
-    for (size_t keywordStart = 0; keywordStart != std::string_view::npos;) {
-        keywordStart++; /* skip @ or ; */
-        size_t nextEqualsign = keywords.find('=', keywordStart);
-        if (nextEqualsign == std::string_view::npos) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return 0;
+    కొరకు (size_t keyword_ప్రారంభం = 0; keyword_ప్రారంభం != std::string_view::npos;) {
+        keyword_ప్రారంభం++; /* skip @ or ; */
+        size_t తదుపరి_Equalsign = keywords.find('=', keyword_ప్రారంభం);
+        ఒకవేళ (తదుపరి_Equalsign == std::string_view::npos) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* key must have =value */
+            తిరిగి 0;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while (keywordStart < keywords.size() && keywords[keywordStart] == ' ') {
-            keywordStart++;
+        అయితే (keyword_ప్రారంభం < keywords.size() && keywords[keyword_ప్రారంభం] == ' ') {
+            keyword_ప్రారంభం++;
         }
-        size_t keyValueTail = nextEqualsign;
-        while (keyValueTail > keywordStart && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        size_t కీలకం_విలువ_తోక = తదుపరి_Equalsign;
+        అయితే (కీలకం_విలువ_తోక > keyword_ప్రారంభం && keywords[కీలకం_విలువ_తోక - 1] == ' ') {
+            కీలకం_విలువ_తోక--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (keywordStart == keyValueTail) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return 0;
+        ఒకవేళ (keyword_ప్రారంభం == కీలకం_విలువ_తోక) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* empty keyword name in passed-in locale */
+            తిరిగి 0;
         }
         CharString localeKeywordName;
-        while (keywordStart < keyValueTail) {
-            if (!UPRV_ISALPHANUM(keywords[keywordStart])) {
-                status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-                return 0;
+        అయితే (keyword_ప్రారంభం < కీలకం_విలువ_తోక) {
+            ఒకవేళ (!UPRV_ISALPHANUM(keywords[keyword_ప్రారంభం])) {
+                స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* malformed keyword name */
+                తిరిగి 0;
             }
-            localeKeywordName.append(uprv_tolower(keywords[keywordStart++]), status);
+            localeKeywordName.append(uprv_tolower(keywords[keyword_ప్రారంభం++]), స్థితి_2);
         }
-        if (U_FAILURE(status)) {
-            return 0;
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి 0;
         }
 
-        size_t nextSeparator = keywords.find(';', nextEqualsign);
+        size_t తదుపరి_Separator = keywords.find(';', తదుపరి_Equalsign);
 
         /* start processing the value part */
-        nextEqualsign++; /* skip '=' */
+        తదుపరి_Equalsign++; /* skip '=' */
         /* First strip leading & trailing spaces (TC decided to tolerate these) */
-        while (nextEqualsign < keywords.size() && keywords[nextEqualsign] == ' ') {
-            nextEqualsign++;
+        అయితే (తదుపరి_Equalsign < keywords.size() && keywords[తదుపరి_Equalsign] == ' ') {
+            తదుపరి_Equalsign++;
         }
-        keyValueTail = nextSeparator == std::string_view::npos ? keywords.size() : nextSeparator;
-        while (keyValueTail > nextEqualsign && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        కీలకం_విలువ_తోక = తదుపరి_Separator == std::string_view::npos ? keywords.size() : తదుపరి_Separator;
+        అయితే (కీలకం_విలువ_తోక > తదుపరి_Equalsign && keywords[కీలకం_విలువ_తోక - 1] == ' ') {
+            కీలకం_విలువ_తోక--;
         }
-        if (nextEqualsign == keyValueTail) {
-            status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value in passed-in locale */
-            return 0;
+        ఒకవేళ (తదుపరి_Equalsign == కీలకం_విలువ_తోక) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR; /* empty key value in passed-in locale */
+            తిరిగి 0;
         }
 
-        rc = uprv_strcmp(canonKeywordName.data(), localeKeywordName.data());
-        if(rc == 0) {
+        rc = uprv_strcmp(canonKeywordName.దత్తాంశం(), localeKeywordName.దత్తాంశం());
+        ఒకవేళ(rc == 0) {
             /* Current entry matches the input keyword. Update the entry */
-            if (!canonKeywordValue.isEmpty()) { /* updating a value */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
+            ఒకవేళ (!canon_Keyword_విలువ.is_ఖాళీలు()) { /* updating a value */
+                updated_కీలకాలు_And_విలువలు.append(కీలకం_విలువ_ఉపసర్గ, స్థితి_2);
+                కీలకం_విలువ_ఉపసర్గ = ';'; /* for any subsequent key-value pair */
+                updated_కీలకాలు_And_విలువలు.append(canonKeywordName, స్థితి_2);
+                updated_కీలకాలు_And_విలువలు.append('=', స్థితి_2);
+                updated_కీలకాలు_And_విలువలు.append(canon_Keyword_విలువ, స్థితి_2);
             } /* else removing this entry, don't emit anything */
-            handledInputKeyAndValue = true;
-        } else {
+            handled_ఆదానం_కీలకం_And_విలువ = నిజం;
+        } లేకపోతే {
            /* input keyword sorts earlier than current entry, add before current entry */
-            if (rc < 0 && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+            ఒకవేళ (rc < 0 && !canon_Keyword_విలువ.is_ఖాళీలు() && !handled_ఆదానం_కీలకం_And_విలువ) {
                 /* insert new entry at this location */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
-                handledInputKeyAndValue = true;
+                updated_కీలకాలు_And_విలువలు.append(కీలకం_విలువ_ఉపసర్గ, స్థితి_2);
+                కీలకం_విలువ_ఉపసర్గ = ';'; /* for any subsequent key-value pair */
+                updated_కీలకాలు_And_విలువలు.append(canonKeywordName, స్థితి_2);
+                updated_కీలకాలు_And_విలువలు.append('=', స్థితి_2);
+                updated_కీలకాలు_And_విలువలు.append(canon_Keyword_విలువ, స్థితి_2);
+                handled_ఆదానం_కీలకం_And_విలువ = నిజం;
             }
             /* copy the current entry */
-            updatedKeysAndValues.append(keyValuePrefix, status);
-            keyValuePrefix = ';'; /* for any subsequent key-value pair */
-            updatedKeysAndValues.append(localeKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(keywords.data() + nextEqualsign,
-                                        static_cast<int32_t>(keyValueTail - nextEqualsign), status);
+            updated_కీలకాలు_And_విలువలు.append(కీలకం_విలువ_ఉపసర్గ, స్థితి_2);
+            కీలకం_విలువ_ఉపసర్గ = ';'; /* for any subsequent key-value pair */
+            updated_కీలకాలు_And_విలువలు.append(localeKeywordName, స్థితి_2);
+            updated_కీలకాలు_And_విలువలు.append('=', స్థితి_2);
+            updated_కీలకాలు_And_విలువలు.append(keywords.దత్తాంశం() + తదుపరి_Equalsign,
+                                        static_cast<int32_t>(కీలకం_విలువ_తోక - తదుపరి_Equalsign), స్థితి_2);
         }
-        if (nextSeparator == std::string_view::npos && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+        ఒకవేళ (తదుపరి_Separator == std::string_view::npos && !canon_Keyword_విలువ.is_ఖాళీలు() && !handled_ఆదానం_కీలకం_And_విలువ) {
             /* append new entry at the end, it sorts later than existing entries */
-            updatedKeysAndValues.append(keyValuePrefix, status);
+            updated_కీలకాలు_And_విలువలు.append(కీలకం_విలువ_ఉపసర్గ, స్థితి_2);
             /* skip keyValuePrefix update, no subsequent key-value pair */
-            updatedKeysAndValues.append(canonKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(canonKeywordValue, status);
-            handledInputKeyAndValue = true;
+            updated_కీలకాలు_And_విలువలు.append(canonKeywordName, స్థితి_2);
+            updated_కీలకాలు_And_విలువలు.append('=', స్థితి_2);
+            updated_కీలకాలు_And_విలువలు.append(canon_Keyword_విలువ, స్థితి_2);
+            handled_ఆదానం_కీలకం_And_విలువ = నిజం;
         }
-        keywordStart = nextSeparator;
+        keyword_ప్రారంభం = తదుపరి_Separator;
     } /* end loop searching */
 
     /* Any error from updatedKeysAndValues.append above would be internal and not due to
@@ -1027,68 +1027,68 @@ ulocimp_setKeywordValue(std::string_view keywords,
      * error return but the passed-in locale is unmodified and the original bufLen is
      * returned.
      */
-    if (!handledInputKeyAndValue || U_FAILURE(status)) {
+    ఒకవేళ (!handled_ఆదానం_కీలకం_And_విలువ || U_FAILURE(స్థితి_2)) {
         /* if input key/value specified removal of a keyword not present in locale, or
          * there was an error in CharString.append, leave original locale alone. */
-        U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
+        U_ASSERT(స్థితి_2 != U_STRING_NOT_TERMINATED_WARNING);
         // The sink is expected to be a buffer which already contains the full
         // locale string, so when it isn't going to be modified there's no need
         // to actually write any data to it, as the data is already there. Only
         // the first character needs to be overwritten (changing '\0' to '@').
         needLen = static_cast<int32_t>(keywords.size());
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
-                needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
-            status = U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            *buffer = '@';
-            sink.Append(buffer, needLen);
+        అక్షరం* బఫరు = sink.Get_Append_బఫరు(
+                needLen, needLen, శూన్యసూచిక, needLen, &capacity);
+        ఒకవేళ (capacity < needLen || బఫరు == శూన్యసూచిక) {
+            స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+        } లేకపోతే {
+            *బఫరు = '@';
+            sink.Append(బఫరు, needLen);
         }
-        return needLen;
+        తిరిగి needLen;
     }
 
-    needLen = updatedKeysAndValues.length();
+    needLen = updated_కీలకాలు_And_విలువలు.length();
     // Check to see can we fit the updatedKeysAndValues, if not, return
     // U_BUFFER_OVERFLOW_ERROR without copy updatedKeysAndValues into it.
     // We do this because this API function does not behave like most others:
     // It promises never to set a U_STRING_NOT_TERMINATED_WARNING.
     // When the contents fits but without the terminating NUL, in this case we need to not change
     // the buffer contents and return with a buffer overflow error.
-    if (needLen > 0) {
+    ఒకవేళ (needLen > 0) {
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
-                needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
-            status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen;
+        అక్షరం* బఫరు = sink.Get_Append_బఫరు(
+                needLen, needLen, శూన్యసూచిక, needLen, &capacity);
+        ఒకవేళ (capacity < needLen || బఫరు == శూన్యసూచిక) {
+            స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+            తిరిగి needLen;
         }
-        uprv_memcpy(buffer, updatedKeysAndValues.data(), needLen);
-        sink.Append(buffer, needLen);
+        uprv_memcpy(బఫరు, updated_కీలకాలు_And_విలువలు.దత్తాంశం(), needLen);
+        sink.Append(బఫరు, needLen);
     }
-    U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-    return needLen;
+    U_ASSERT(స్థితి_2 != U_STRING_NOT_TERMINATED_WARNING);
+    తిరిగి needLen;
 }
 
 /* ### ID parsing implementation **************************************************/
 
-namespace {
+నామాకాశ {
 
-inline bool _isPrefixLetter(char a) { return a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
+అంతఃవరుస తార్కిక is_ఉపసర్గ_Letter(అక్షరం a) { తిరిగి a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
 
 /*returns true if one of the special prefixes is here (s=string)
   'x-' or 'i-' */
-inline bool _isIDPrefix(std::string_view s) {
-    return s.size() >= 2 && _isPrefixLetter(s[0]) && _isIDSeparator(s[1]);
+అంతఃవరుస తార్కిక _isIDPrefix(std::string_view s) {
+    తిరిగి s.size() >= 2 && is_ఉపసర్గ_Letter(s[0]) && _isIDSeparator(s[1]);
 }
 
 /* Dot terminates it because of POSIX form  where dot precedes the codepage
  * except for variant
  */
-inline bool _isTerminator(char a) { return a == '.' || a == '@'; }
+అంతఃవరుస తార్కిక _isTerminator(అక్షరం a) { తిరిగి a == '.' || a == '@'; }
 
-inline bool _isBCP47Extension(std::string_view p) {
-    return p.size() >= 3 &&
+అంతఃవరుస తార్కిక _isBCP47Extension(std::string_view p) {
+    తిరిగి p.size() >= 3 &&
            p[0] == '-' &&
            (p[1] == 't' || p[1] == 'T' ||
             p[1] == 'u' || p[1] == 'U' ||
@@ -1103,38 +1103,38 @@ inline bool _isBCP47Extension(std::string_view p) {
  * The 'list' param should be LANGUAGES, LANGUAGES_3, COUNTRIES, or
  * COUNTRIES_3.
  */
-std::optional<int16_t> _findIndex(const char* const* list, const char* key)
+std::optional<int16_t> కనుగొను_సూచీ_2(స్థిరరాశి అక్షరం* స్థిరరాశి* list, స్థిరరాశి అక్షరం* కీలకం)
 {
-    const char* const* anchor = list;
+    స్థిరరాశి అక్షరం* స్థిరరాశి* anchor = list;
     int32_t pass = 0;
 
     /* Make two passes through two nullptr-terminated arrays at 'list' */
-    while (pass++ < 2) {
-        while (*list) {
-            if (uprv_strcmp(key, *list) == 0) {
-                return static_cast<int16_t>(list - anchor);
+    అయితే (pass++ < 2) {
+        అయితే (*list) {
+            ఒకవేళ (uprv_strcmp(కీలకం, *list) == 0) {
+                తిరిగి static_cast<int16_t>(list - anchor);
             }
             list++;
         }
         ++list;     /* skip final nullptr *CWB*/
     }
-    return std::nullopt;
+    తిరిగి std::nullopt;
 }
 
 }  // namespace
 
-U_CFUNC const char*
-uloc_getCurrentCountryID(const char* oldID U_LIFETIME_BOUND) {
-    std::optional<int16_t> offset = _findIndex(DEPRECATED_COUNTRIES, oldID);
-    return offset.has_value() ? REPLACEMENT_COUNTRIES[*offset] : oldID;
+U_CFUNC స్థిరరాశి అక్షరం*
+uloc_getCurrentCountryID(స్థిరరాశి అక్షరం* oldID U_LIFETIME_BOUND) {
+    std::optional<int16_t> స్థానభ్రంశం = కనుగొను_సూచీ_2(DEPRECATED_COUNTRIES, oldID);
+    తిరిగి స్థానభ్రంశం.has_value() ? REPLACEMENT_COUNTRIES[*స్థానభ్రంశం] : oldID;
 }
-U_CFUNC const char*
-uloc_getCurrentLanguageID(const char* oldID U_LIFETIME_BOUND) {
-    std::optional<int16_t> offset = _findIndex(DEPRECATED_LANGUAGES, oldID);
-    return offset.has_value() ? REPLACEMENT_LANGUAGES[*offset] : oldID;
+U_CFUNC స్థిరరాశి అక్షరం*
+uloc_getCurrentLanguageID(స్థిరరాశి అక్షరం* oldID U_LIFETIME_BOUND) {
+    std::optional<int16_t> స్థానభ్రంశం = కనుగొను_సూచీ_2(DEPRECATED_LANGUAGES, oldID);
+    తిరిగి స్థానభ్రంశం.has_value() ? REPLACEMENT_LANGUAGES[*స్థానభ్రంశం] : oldID;
 }
 
-namespace {
+నామాకాశ {
 
 /*
  * the internal functions _getLanguage(), _getScript(), _getRegion(), _getVariant()
@@ -1145,130 +1145,130 @@ namespace {
  * TODO try to use this in Locale
  */
 
-size_t _getLanguage(std::string_view localeID, ByteSink* sink, UErrorCode& status) {
+size_t _getLanguage(std::string_view localeID, ByteSink* sink, UError_సంకేతం& స్థితి_2) {
     size_t skip = 0;
-    if (localeID.size() == 4 && uprv_strnicmp(localeID.data(), "root", 4) == 0) {
+    ఒకవేళ (localeID.size() == 4 && uprv_strnicmp(localeID.దత్తాంశం(), "root", 4) == 0) {
         skip = 4;
-        localeID.remove_prefix(skip);
-    } else if (localeID.size() >= 3 && uprv_strnicmp(localeID.data(), "und", 3) == 0 &&
+        localeID.remove_ఉపసర్గ(skip);
+    } లేకపోతే ఒకవేళ (localeID.size() >= 3 && uprv_strnicmp(localeID.దత్తాంశం(), "und", 3) == 0 &&
                (localeID.size() == 3 ||
                 localeID[3] == '-' ||
                 localeID[3] == '_' ||
                 localeID[3] == '@')) {
         skip = 3;
-        localeID.remove_prefix(skip);
+        localeID.remove_ఉపసర్గ(skip);
     }
 
-    constexpr int32_t MAXLEN = ULOC_LANG_CAPACITY - 1;  // Minus NUL.
+    constexpr int32_t MAXLEN = ULOC_LANG_సామర్థ్యం - 1;  // Minus NUL.
 
     /* if it starts with i- or x- then copy that prefix */
     size_t len = _isIDPrefix(localeID) ? 2 : 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+    అయితే (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        ఒకవేళ (len == MAXLEN) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి 0;
         }
         len++;
     }
 
-    if (sink == nullptr || len == 0) { return skip + len; }
+    ఒకవేళ (sink == శూన్యసూచిక || len == 0) { తిరిగి skip + len; }
 
-    int32_t minCapacity = uprv_max(static_cast<int32_t>(len), 4);  // Minimum 3 letters plus NUL.
-    char scratch[MAXLEN];
+    int32_t min_సామర్థ్యం = uprv_max(static_cast<int32_t>(len), 4);  // Minimum 3 letters plus NUL.
+    అక్షరం scratch[MAXLEN];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
-            minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
+    అక్షరం* బఫరు = sink->Get_Append_బఫరు(
+            min_సామర్థ్యం, min_సామర్థ్యం, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
-        buffer[i] = uprv_tolower(localeID[i]);
+    కొరకు (size_t i = 0; i < len; ++i) {
+        బఫరు[i] = uprv_tolower(localeID[i]);
     }
-    if (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
-        buffer[1] = '-';
+    ఒకవేళ (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
+        బఫరు[1] = '-';
     }
 
-    if (len == 3) {
+    ఒకవేళ (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
-        buffer[3] = '\0';
-        std::optional<int16_t> offset = _findIndex(LANGUAGES_3, buffer);
-        if (offset.has_value()) {
-            const char* const alias = LANGUAGES[*offset];
+        బఫరు[3] = '\0';
+        std::optional<int16_t> స్థానభ్రంశం = కనుగొను_సూచీ_2(LANGUAGES_3, బఫరు);
+        ఒకవేళ (స్థానభ్రంశం.has_value()) {
+            స్థిరరాశి అక్షరం* స్థిరరాశి alias = LANGUAGES[*స్థానభ్రంశం];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return skip + len;
+            తిరిగి skip + len;
         }
     }
 
-    sink->Append(buffer, static_cast<int32_t>(len));
-    return skip + len;
+    sink->Append(బఫరు, static_cast<int32_t>(len));
+    తిరిగి skip + len;
 }
 
 size_t _getScript(std::string_view localeID, ByteSink* sink) {
-    constexpr int32_t LENGTH = 4;
+    constexpr int32_t నిడివి_3 = 4;
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
+    అయితే (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
             uprv_isASCIILetter(localeID[len])) {
-        if (len == LENGTH) { return 0; }
+        ఒకవేళ (len == నిడివి_3) { తిరిగి 0; }
         len++;
     }
-    if (len != LENGTH) { return 0; }
+    ఒకవేళ (len != నిడివి_3) { తిరిగి 0; }
 
-    if (sink == nullptr) { return len; }
+    ఒకవేళ (sink == శూన్యసూచిక) { తిరిగి len; }
 
-    char scratch[LENGTH];
+    అక్షరం scratch[నిడివి_3];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
-            LENGTH, LENGTH, scratch, UPRV_LENGTHOF(scratch), &capacity);
+    అక్షరం* బఫరు = sink->Get_Append_బఫరు(
+            నిడివి_3, నిడివి_3, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-    buffer[0] = uprv_toupper(localeID[0]);
-    for (int32_t i = 1; i < LENGTH; ++i) {
-        buffer[i] = uprv_tolower(localeID[i]);
+    బఫరు[0] = uprv_toupper(localeID[0]);
+    కొరకు (int32_t i = 1; i < నిడివి_3; ++i) {
+        బఫరు[i] = uprv_tolower(localeID[i]);
     }
 
-    sink->Append(buffer, LENGTH);
-    return len;
+    sink->Append(బఫరు, నిడివి_3);
+    తిరిగి len;
 }
 
 size_t _getRegion(std::string_view localeID, ByteSink* sink) {
     constexpr int32_t MINLEN = 2;
-    constexpr int32_t MAXLEN = ULOC_COUNTRY_CAPACITY - 1;  // Minus NUL.
+    constexpr int32_t MAXLEN = ULOC_COUNTRY_సామర్థ్యం - 1;  // Minus NUL.
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) { return 0; }
+    అయితే (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        ఒకవేళ (len == MAXLEN) { తిరిగి 0; }
         len++;
     }
-    if (len < MINLEN) { return 0; }
+    ఒకవేళ (len < MINLEN) { తిరిగి 0; }
 
-    if (sink == nullptr) { return len; }
+    ఒకవేళ (sink == శూన్యసూచిక) { తిరిగి len; }
 
-    char scratch[ULOC_COUNTRY_CAPACITY];
+    అక్షరం scratch[ULOC_COUNTRY_సామర్థ్యం];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
-            ULOC_COUNTRY_CAPACITY,
-            ULOC_COUNTRY_CAPACITY,
+    అక్షరం* బఫరు = sink->Get_Append_బఫరు(
+            ULOC_COUNTRY_సామర్థ్యం,
+            ULOC_COUNTRY_సామర్థ్యం,
             scratch,
             UPRV_LENGTHOF(scratch),
             &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
-        buffer[i] = uprv_toupper(localeID[i]);
+    కొరకు (size_t i = 0; i < len; ++i) {
+        బఫరు[i] = uprv_toupper(localeID[i]);
     }
 
-    if (len == 3) {
+    ఒకవేళ (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
-        buffer[3] = '\0';
-        std::optional<int16_t> offset = _findIndex(COUNTRIES_3, buffer);
-        if (offset.has_value()) {
-            const char* const alias = COUNTRIES[*offset];
+        బఫరు[3] = '\0';
+        std::optional<int16_t> స్థానభ్రంశం = కనుగొను_సూచీ_2(COUNTRIES_3, బఫరు);
+        ఒకవేళ (స్థానభ్రంశం.has_value()) {
+            స్థిరరాశి అక్షరం* స్థిరరాశి alias = COUNTRIES[*స్థానభ్రంశం];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return len;
+            తిరిగి len;
         }
     }
 
-    sink->Append(buffer, static_cast<int32_t>(len));
-    return len;
+    sink->Append(బఫరు, static_cast<int32_t>(len));
+    తిరిగి len;
 }
 
 /**
@@ -1277,11 +1277,11 @@ size_t _getRegion(std::string_view localeID, ByteSink* sink) {
  */
 size_t
 _getVariant(std::string_view localeID,
-            char prev,
+            అక్షరం prev,
             ByteSink* sink,
-            bool needSeparator,
-            UErrorCode& status) {
-    if (U_FAILURE(status) || localeID.empty()) return 0;
+            తార్కిక needSeparator,
+            UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2) || localeID.empty()) తిరిగి 0;
 
     // Reasonable upper limit for variants
     // There are no strict limitation of the syntax of variant in the legacy
@@ -1291,396 +1291,396 @@ _getVariant(std::string_view localeID,
     // 179 would allow 20 unicode_variant_subtag with sep in the
     // unicode_locale_id
     // 8*20 + 1*(20-1) = 179
-    constexpr int32_t MAX_VARIANTS_LENGTH = 179;
+    constexpr int32_t MAX_VARIANTS_నిడివి = 179;
 
     /* get one or more variant tags and separate them with '_' */
-    size_t index = 0;
-    if (_isIDSeparator(prev)) {
+    size_t సూచీ = 0;
+    ఒకవేళ (_isIDSeparator(prev)) {
         /* get a variant string after a '-' or '_' */
-        for (std::string_view sub = localeID;;) {
+        కొరకు (std::string_view sub = localeID;;) {
             size_t next = sub.find_first_of(".@_-");
             // For historical reasons, a trailing separator is included in the variant.
-            bool finished = next == std::string_view::npos || next + 1 == sub.length();
-            size_t limit = finished ? sub.length() : next;
-            index += limit;
-            if (index > MAX_VARIANTS_LENGTH) {
-                status = U_ILLEGAL_ARGUMENT_ERROR;
-                return 0;
+            తార్కిక ముగిసిన = next == std::string_view::npos || next + 1 == sub.length();
+            size_t హద్దు = ముగిసిన ? sub.length() : next;
+            సూచీ += హద్దు;
+            ఒకవేళ (సూచీ > MAX_VARIANTS_నిడివి) {
+                స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+                తిరిగి 0;
             }
 
-            if (sink != nullptr) {
-                if (needSeparator) {
+            ఒకవేళ (sink != శూన్యసూచిక) {
+                ఒకవేళ (needSeparator) {
                     sink->Append("_", 1);
-                } else {
-                    needSeparator = true;
+                } లేకపోతే {
+                    needSeparator = నిజం;
                 }
 
-                int32_t length = static_cast<int32_t>(limit);
-                int32_t minCapacity = uprv_min(length, MAX_VARIANTS_LENGTH);
-                char scratch[MAX_VARIANTS_LENGTH];
+                int32_t length = static_cast<int32_t>(హద్దు);
+                int32_t min_సామర్థ్యం = uprv_min(length, MAX_VARIANTS_నిడివి);
+                అక్షరం scratch[MAX_VARIANTS_నిడివి];
                 int32_t capacity = 0;
-                char* buffer = sink->GetAppendBuffer(
-                        minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
+                అక్షరం* బఫరు = sink->Get_Append_బఫరు(
+                        min_సామర్థ్యం, min_సామర్థ్యం, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-                for (size_t i = 0; i < limit; ++i) {
-                    buffer[i] = uprv_toupper(sub[i]);
+                కొరకు (size_t i = 0; i < హద్దు; ++i) {
+                    బఫరు[i] = uprv_toupper(sub[i]);
                 }
-                sink->Append(buffer, length);
+                sink->Append(బఫరు, length);
             }
 
-            if (finished) { return index; }
-            sub.remove_prefix(next);
-            if (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { return index; }
-            sub.remove_prefix(1);
-            index++;
+            ఒకవేళ (ముగిసిన) { తిరిగి సూచీ; }
+            sub.remove_ఉపసర్గ(next);
+            ఒకవేళ (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { తిరిగి సూచీ; }
+            sub.remove_ఉపసర్గ(1);
+            సూచీ++;
         }
     }
 
     size_t skip = 0;
     /* if there is no variant tag after a '-' or '_' then look for '@' */
-    if (prev == '@') {
+    ఒకవేళ (prev == '@') {
         /* keep localeID */
-    } else if (const char* p = locale_getKeywordsStart(localeID); p != nullptr) {
-        skip = 1 + p - localeID.data(); /* point after the '@' */
-        localeID.remove_prefix(skip);
-    } else {
-        return 0;
+    } లేకపోతే ఒకవేళ (స్థిరరాశి అక్షరం* p = locale_get_Keywords_ప్రారంభం(localeID); p != శూన్యసూచిక) {
+        skip = 1 + p - localeID.దత్తాంశం(); /* point after the '@' */
+        localeID.remove_ఉపసర్గ(skip);
+    } లేకపోతే {
+        తిరిగి 0;
     }
-    for (; index < localeID.size() && !_isTerminator(localeID[index]); index++) {
-        if (index >= MAX_VARIANTS_LENGTH) { // same as length > MAX_VARIANTS_LENGTH
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+    కొరకు (; సూచీ < localeID.size() && !_isTerminator(localeID[సూచీ]); సూచీ++) {
+        ఒకవేళ (సూచీ >= MAX_VARIANTS_నిడివి) { // same as length > MAX_VARIANTS_LENGTH
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి 0;
         }
-        if (needSeparator) {
-            if (sink != nullptr) {
+        ఒకవేళ (needSeparator) {
+            ఒకవేళ (sink != శూన్యసూచిక) {
                 sink->Append("_", 1);
             }
-            needSeparator = false;
+            needSeparator = అబద్ధం;
         }
-        if (sink != nullptr) {
-            char c = uprv_toupper(localeID[index]);
-            if (c == '-' || c == ',') c = '_';
+        ఒకవేళ (sink != శూన్యసూచిక) {
+            అక్షరం c = uprv_toupper(localeID[సూచీ]);
+            ఒకవేళ (c == '-' || c == ',') c = '_';
             sink->Append(&c, 1);
         }
     }
-    return skip + index;
+    తిరిగి skip + సూచీ;
 }
 
 }  // namespace
 
 U_EXPORT CharString
-ulocimp_getLanguage(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getLanguage(std::string_view localeID, UError_సంకేతం& స్థితి_2) {
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             ulocimp_getSubtags(
                     localeID,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    స్థితి_2);
         },
-        status);
+        స్థితి_2);
 }
 
 U_EXPORT CharString
-ulocimp_getScript(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getScript(std::string_view localeID, UError_సంకేతం& స్థితి_2) {
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
+                    శూన్యసూచిక,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    స్థితి_2);
         },
-        status);
+        స్థితి_2);
 }
 
 U_EXPORT CharString
-ulocimp_getRegion(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getRegion(std::string_view localeID, UError_సంకేతం& స్థితి_2) {
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    status);
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    స్థితి_2);
         },
-        status);
+        స్థితి_2);
 }
 
 U_EXPORT CharString
-ulocimp_getVariant(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
+ulocimp_getVariant(std::string_view localeID, UError_సంకేతం& స్థితి_2) {
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
-                    nullptr,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
                     &sink,
-                    nullptr,
-                    status);
+                    శూన్యసూచిక,
+                    స్థితి_2);
         },
-        status);
+        స్థితి_2);
 }
 
-U_EXPORT void
+U_EXPORT శూన్య
 ulocimp_getSubtags(
         std::string_view localeID,
         CharString* language,
         CharString* script,
         CharString* region,
         CharString* variant,
-        const char** pEnd,
-        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+        స్థిరరాశి అక్షరం** p_చివర,
+        UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
 
     std::optional<CharStringByteSink> languageSink;
     std::optional<CharStringByteSink> scriptSink;
     std::optional<CharStringByteSink> regionSink;
     std::optional<CharStringByteSink> variantSink;
 
-    if (language != nullptr) { languageSink.emplace(language); }
-    if (script != nullptr) { scriptSink.emplace(script); }
-    if (region != nullptr) { regionSink.emplace(region); }
-    if (variant != nullptr) { variantSink.emplace(variant); }
+    ఒకవేళ (language != శూన్యసూచిక) { languageSink.emplace(language); }
+    ఒకవేళ (script != శూన్యసూచిక) { scriptSink.emplace(script); }
+    ఒకవేళ (region != శూన్యసూచిక) { regionSink.emplace(region); }
+    ఒకవేళ (variant != శూన్యసూచిక) { variantSink.emplace(variant); }
 
     ulocimp_getSubtags(
             localeID,
-            languageSink.has_value() ? &*languageSink : nullptr,
-            scriptSink.has_value() ? &*scriptSink : nullptr,
-            regionSink.has_value() ? &*regionSink : nullptr,
-            variantSink.has_value() ? &*variantSink : nullptr,
-            pEnd,
-            status);
+            languageSink.has_value() ? &*languageSink : శూన్యసూచిక,
+            scriptSink.has_value() ? &*scriptSink : శూన్యసూచిక,
+            regionSink.has_value() ? &*regionSink : శూన్యసూచిక,
+            variantSink.has_value() ? &*variantSink : శూన్యసూచిక,
+            p_చివర,
+            స్థితి_2);
 }
 
-U_EXPORT void
+U_EXPORT శూన్య
 ulocimp_getSubtags(
         std::string_view localeID,
         ByteSink* language,
         ByteSink* script,
         ByteSink* region,
         ByteSink* variant,
-        const char** pEnd,
-        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+        స్థిరరాశి అక్షరం** p_చివర,
+        UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
 
-    if (pEnd != nullptr) {
-        *pEnd = localeID.data();
-    } else if (language == nullptr &&
-               script == nullptr &&
-               region == nullptr &&
-               variant == nullptr) {
-        return;
+    ఒకవేళ (p_చివర != శూన్యసూచిక) {
+        *p_చివర = localeID.దత్తాంశం();
+    } లేకపోతే ఒకవేళ (language == శూన్యసూచిక &&
+               script == శూన్యసూచిక &&
+               region == శూన్యసూచిక &&
+               variant == శూన్యసూచిక) {
+        తిరిగి;
     }
 
-    if (localeID.empty()) { return; }
+    ఒకవేళ (localeID.empty()) { తిరిగి; }
 
-    bool hasRegion = false;
+    తార్కిక hasRegion = అబద్ధం;
 
     {
-        size_t len = _getLanguage(localeID, language, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
-            localeID.remove_prefix(len);
+        size_t len = _getLanguage(localeID, language, స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+        ఒకవేళ (len > 0) {
+            localeID.remove_ఉపసర్గ(len);
         }
     }
 
-    if (pEnd != nullptr) {
-        *pEnd = localeID.data();
-    } else if (script == nullptr &&
-               region == nullptr &&
-               variant == nullptr) {
-        return;
+    ఒకవేళ (p_చివర != శూన్యసూచిక) {
+        *p_చివర = localeID.దత్తాంశం();
+    } లేకపోతే ఒకవేళ (script == శూన్యసూచిక &&
+               region == శూన్యసూచిక &&
+               variant == శూన్యసూచిక) {
+        తిరిగి;
     }
 
-    if (localeID.empty()) { return; }
+    ఒకవేళ (localeID.empty()) { తిరిగి; }
 
-    if (_isIDSeparator(localeID.front())) {
+    ఒకవేళ (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
-        sub.remove_prefix(1);
+        sub.remove_ఉపసర్గ(1);
         size_t len = _getScript(sub, script);
-        if (len > 0) {
-            localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+        ఒకవేళ (len > 0) {
+            localeID.remove_ఉపసర్గ(len + 1);
+            ఒకవేళ (p_చివర != శూన్యసూచిక) { *p_చివర = localeID.దత్తాంశం(); }
         }
     }
 
-    if ((region == nullptr && variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    ఒకవేళ ((region == శూన్యసూచిక && variant == శూన్యసూచిక && p_చివర == శూన్యసూచిక) || localeID.empty()) { తిరిగి; }
 
-    if (_isIDSeparator(localeID.front())) {
+    ఒకవేళ (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
-        sub.remove_prefix(1);
+        sub.remove_ఉపసర్గ(1);
         size_t len = _getRegion(sub, region);
-        if (len > 0) {
-            hasRegion = true;
-            localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+        ఒకవేళ (len > 0) {
+            hasRegion = నిజం;
+            localeID.remove_ఉపసర్గ(len + 1);
+            ఒకవేళ (p_చివర != శూన్యసూచిక) { *p_చివర = localeID.దత్తాంశం(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    ఒకవేళ ((variant == శూన్యసూచిక && p_చివర == శూన్యసూచిక) || localeID.empty()) { తిరిగి; }
 
-    bool hasVariant = false;
+    తార్కిక hasVariant = అబద్ధం;
 
-    if (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
+    ఒకవేళ (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
         std::string_view sub = localeID;
         /* If there was no country ID, skip a possible extra IDSeparator */
         size_t skip = !hasRegion && localeID.size() > 1 && _isIDSeparator(localeID[1]) ? 2 : 1;
-        sub.remove_prefix(skip);
-        size_t len = _getVariant(sub, localeID[0], variant, false, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
-            hasVariant = true;
-            localeID.remove_prefix(skip + len);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+        sub.remove_ఉపసర్గ(skip);
+        size_t len = _getVariant(sub, localeID[0], variant, అబద్ధం, స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+        ఒకవేళ (len > 0) {
+            hasVariant = నిజం;
+            localeID.remove_ఉపసర్గ(skip + len);
+            ఒకవేళ (p_చివర != శూన్యసూచిక) { *p_చివర = localeID.దత్తాంశం(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    ఒకవేళ ((variant == శూన్యసూచిక && p_చివర == శూన్యసూచిక) || localeID.empty()) { తిరిగి; }
 
-    if (_isBCP47Extension(localeID)) {
-        localeID.remove_prefix(2);
-        constexpr char vaposix[] = "-va-posix";
-        constexpr size_t length = sizeof vaposix - 1;
-        for (size_t next;; localeID.remove_prefix(next)) {
+    ఒకవేళ (_isBCP47Extension(localeID)) {
+        localeID.remove_ఉపసర్గ(2);
+        constexpr అక్షరం vaposix[] = "-va-posix";
+        constexpr size_t length = పరిమాణం vaposix - 1;
+        కొరకు (size_t next;; localeID.remove_ఉపసర్గ(next)) {
             next = localeID.find('-', 1);
-            if (next == std::string_view::npos) { break; }
+            ఒకవేళ (next == std::string_view::npos) { ఆపు; }
             next = localeID.find('-', next + 1);
-            bool finished = next == std::string_view::npos;
+            తార్కిక ముగిసిన = next == std::string_view::npos;
             std::string_view sub = localeID;
-            if (!finished) { sub.remove_suffix(sub.length() - next); }
+            ఒకవేళ (!ముగిసిన) { sub.remove_suffix(sub.length() - next); }
 
-            if (sub.length() == length && uprv_strnicmp(sub.data(), vaposix, length) == 0) {
-                if (variant != nullptr) {
-                    if (hasVariant) { variant->Append("_", 1); }
-                    constexpr char posix[] = "POSIX";
-                    variant->Append(posix, sizeof posix - 1);
+            ఒకవేళ (sub.length() == length && uprv_strnicmp(sub.దత్తాంశం(), vaposix, length) == 0) {
+                ఒకవేళ (variant != శూన్యసూచిక) {
+                    ఒకవేళ (hasVariant) { variant->Append("_", 1); }
+                    constexpr అక్షరం posix[] = "POSIX";
+                    variant->Append(posix, పరిమాణం posix - 1);
                 }
-                if (pEnd != nullptr) { *pEnd = localeID.data() + length; }
+                ఒకవేళ (p_చివర != శూన్యసూచిక) { *p_చివర = localeID.దత్తాంశం() + length; }
             }
 
-            if (finished) { break; }
+            ఒకవేళ (ముగిసిన) { ఆపు; }
         }
     }
 }
 
 /* Keyword enumeration */
 
-typedef struct UKeywordsContext {
-    char* keywords;
-    char* current;
+రకనిర్వచనం నిర్మాణం UKeywordsContext {
+    అక్షరం* keywords;
+    అక్షరం* current;
 } UKeywordsContext;
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 uloc_kw_closeKeywords(UEnumeration *enumerator) {
     uprv_free(((UKeywordsContext *)enumerator->context)->keywords);
     uprv_free(enumerator->context);
     uprv_free(enumerator);
 }
 
-static int32_t U_CALLCONV
-uloc_kw_countKeywords(UEnumeration *en, UErrorCode * /*status*/) {
-    char *kw = ((UKeywordsContext *)en->context)->keywords;
-    int32_t result = 0;
-    while(*kw) {
-        result++;
+స్థిర int32_t U_CALLCONV
+uloc_kw_లెక్క_Keywords(UEnumeration *en, UError_సంకేతం * /*స్థితి*/) {
+    అక్షరం *kw = ((UKeywordsContext *)en->context)->keywords;
+    int32_t ఫలితం = 0;
+    అయితే(*kw) {
+        ఫలితం++;
         kw += uprv_strlen(kw)+1;
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-static const char * U_CALLCONV
-uloc_kw_nextKeyword(UEnumeration* en,
-                    int32_t* resultLength,
-                    UErrorCode* /*status*/) {
-    const char* result = ((UKeywordsContext *)en->context)->current;
+స్థిర స్థిరరాశి అక్షరం * U_CALLCONV
+uloc_kw_తదుపరి_Keyword(UEnumeration* en,
+                    int32_t* ఫలితం_నిడివి,
+                    UError_సంకేతం* /*స్థితి*/) {
+    స్థిరరాశి అక్షరం* ఫలితం = ((UKeywordsContext *)en->context)->current;
     int32_t len = 0;
-    if(*result) {
+    ఒకవేళ(*ఫలితం) {
         len = (int32_t)uprv_strlen(((UKeywordsContext *)en->context)->current);
         ((UKeywordsContext *)en->context)->current += len+1;
-    } else {
-        result = nullptr;
+    } లేకపోతే {
+        ఫలితం = శూన్యసూచిక;
     }
-    if (resultLength) {
-        *resultLength = len;
+    ఒకవేళ (ఫలితం_నిడివి) {
+        *ఫలితం_నిడివి = len;
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 uloc_kw_resetKeywords(UEnumeration* en,
-                      UErrorCode* /*status*/) {
+                      UError_సంకేతం* /*స్థితి*/) {
     ((UKeywordsContext *)en->context)->current = ((UKeywordsContext *)en->context)->keywords;
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
 
-static const UEnumeration gKeywordsEnum = {
-    nullptr,
-    nullptr,
+స్థిర స్థిరరాశి UEnumeration gKeywordsEnum = {
+    శూన్యసూచిక,
+    శూన్యసూచిక,
     uloc_kw_closeKeywords,
-    uloc_kw_countKeywords,
+    uloc_kw_లెక్క_Keywords,
     uenum_unextDefault,
-    uloc_kw_nextKeyword,
+    uloc_kw_తదుపరి_Keyword,
     uloc_kw_resetKeywords
 };
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywordList(const char *keywordList, int32_t keywordListSize, UErrorCode* status)
+uloc_openKeywordList(స్థిరరాశి అక్షరం *keywordList, int32_t keyword_List_కొలత, UError_సంకేతం* స్థితి_2)
 {
-    if (U_FAILURE(*status)) { return nullptr; }
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) { తిరిగి శూన్యసూచిక; }
 
-    LocalMemory<UKeywordsContext> myContext;
-    LocalMemory<UEnumeration> result;
+    Local_జ్ఞాపకం<UKeywordsContext> myContext;
+    Local_జ్ఞాపకం<UEnumeration> ఫలితం;
 
-    myContext.adoptInstead(static_cast<UKeywordsContext *>(uprv_malloc(sizeof(UKeywordsContext))));
-    result.adoptInstead(static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration))));
-    if (myContext.isNull() || result.isNull()) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    myContext.adoptInstead(static_cast<UKeywordsContext *>(uprv_malloc(పరిమాణం(UKeywordsContext))));
+    ఫలితం.adoptInstead(static_cast<UEnumeration *>(uprv_malloc(పరిమాణం(UEnumeration))));
+    ఒకవేళ (myContext.isNull() || ఫలితం.isNull()) {
+        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    uprv_memcpy(result.getAlias(), &gKeywordsEnum, sizeof(UEnumeration));
-    myContext->keywords = static_cast<char *>(uprv_malloc(keywordListSize+1));
-    if (myContext->keywords == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    uprv_memcpy(ఫలితం.getAlias(), &gKeywordsEnum, పరిమాణం(UEnumeration));
+    myContext->keywords = static_cast<అక్షరం *>(uprv_malloc(keyword_List_కొలత+1));
+    ఒకవేళ (myContext->keywords == శూన్యసూచిక) {
+        *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    uprv_memcpy(myContext->keywords, keywordList, keywordListSize);
-    myContext->keywords[keywordListSize] = 0;
+    uprv_memcpy(myContext->keywords, keywordList, keyword_List_కొలత);
+    myContext->keywords[keyword_List_కొలత] = 0;
     myContext->current = myContext->keywords;
-    result->context = myContext.orphan();
-    return result.orphan();
+    ఫలితం->context = myContext.orphan();
+    తిరిగి ఫలితం.orphan();
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywords(const char* localeID,
-                        UErrorCode* status)
+uloc_openKeywords(స్థిరరాశి అక్షరం* localeID,
+                        UError_సంకేతం* స్థితి_2)
 {
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ఒకవేళ(స్థితి_2==శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    CharString tempBuffer;
-    const char* tmpLocaleID;
+    CharString తాత్కాలిక_బఫరు;
+    స్థిరరాశి అక్షరం* tmpLocaleID;
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
-        tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, *status);
-        tmpLocaleID = U_SUCCESS(*status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
-        if (localeID==nullptr) {
+    ఒకవేళ (localeID != శూన్యసూచిక && _hasBCP47Extension(localeID)) {
+        తాత్కాలిక_బఫరు = ulocimp_for_Language_ట్యాగ్(localeID, -1, శూన్యసూచిక, *స్థితి_2);
+        tmpLocaleID = U_SUCCESS(*స్థితి_2) && !తాత్కాలిక_బఫరు.is_ఖాళీలు() ? తాత్కాలిక_బఫరు.దత్తాంశం() : localeID;
+    } లేకపోతే {
+        ఒకవేళ (localeID==శూన్యసూచిక) {
             localeID=uloc_getDefault();
         }
         tmpLocaleID=localeID;
@@ -1688,38 +1688,38 @@ uloc_openKeywords(const char* localeID,
 
     ulocimp_getSubtags(
             tmpLocaleID,
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
+            శూన్యసూచిక,
             &tmpLocaleID,
-            *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+            *స్థితి_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     /* keywords are located after '@' */
-    if((tmpLocaleID = locale_getKeywordsStart(tmpLocaleID)) != nullptr) {
-        CharString keywords = ulocimp_getKeywords(tmpLocaleID + 1, '@', false, *status);
-        if (U_FAILURE(*status)) {
-            return nullptr;
+    ఒకవేళ((tmpLocaleID = locale_get_Keywords_ప్రారంభం(tmpLocaleID)) != శూన్యసూచిక) {
+        CharString keywords = ulocimp_getKeywords(tmpLocaleID + 1, '@', అబద్ధం, *స్థితి_2);
+        ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+            తిరిగి శూన్యసూచిక;
         }
-        return uloc_openKeywordList(keywords.data(), keywords.length(), status);
+        తిరిగి uloc_openKeywordList(keywords.దత్తాంశం(), keywords.length(), స్థితి_2);
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 
 /* bit-flags for 'options' parameter of _canonicalize */
-#define _ULOC_STRIP_KEYWORDS 0x2
-#define _ULOC_CANONICALIZE   0x1
+#నిర్వచించు _ULOC_STRIP_KEYWORDS 0x2
+#నిర్వచించు _ULOC_CANONICALIZE   0x1
 
-namespace {
+నామాకాశ {
 
-inline bool OPTION_SET(uint32_t options, uint32_t mask) { return (options & mask) != 0; }
+అంతఃవరుస తార్కిక OPTION_సమితి(uint32_t options, uint32_t mask) { తిరిగి (options & mask) != 0; }
 
-constexpr char i_default[] = {'i', '-', 'd', 'e', 'f', 'a', 'u', 'l', 't'};
-constexpr int32_t I_DEFAULT_LENGTH = UPRV_LENGTHOF(i_default);
+constexpr అక్షరం i_default[] = {'i', '-', 'd', 'e', 'f', 'a', 'u', 'l', 't'};
+constexpr int32_t I_DEFAULT_నిడివి = UPRV_LENGTHOF(i_default);
 
 /**
  * Canonicalize the given localeID, to level 1 or to level 2,
@@ -1728,102 +1728,102 @@ constexpr int32_t I_DEFAULT_LENGTH = UPRV_LENGTHOF(i_default);
  *
  * This is the code underlying uloc_getName and uloc_canonicalize.
  */
-void
+శూన్య
 _canonicalize(std::string_view localeID,
               ByteSink& sink,
               uint32_t options,
-              UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+              UError_సంకేతం& err) {
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
 
-    int32_t j, fieldCount=0;
-    CharString tempBuffer;  // if localeID has a BCP47 extension, tmpLocaleID points to this
+    int32_t j, క్షేత్రం_లెక్క=0;
+    CharString తాత్కాలిక_బఫరు;  // if localeID has a BCP47 extension, tmpLocaleID points to this
     CharString localeIDWithHyphens;  // if localeID has a BPC47 extension and have _, tmpLocaleID points to this
     std::string_view origLocaleID;
     std::string_view tmpLocaleID;
-    size_t keywordAssign = std::string_view::npos;
+    size_t keyword_కేటాయించు = std::string_view::npos;
     size_t separatorIndicator = std::string_view::npos;
 
-    if (_hasBCP47Extension(localeID)) {
+    ఒకవేళ (_hasBCP47Extension(localeID)) {
         std::string_view localeIDPtr = localeID;
 
         // convert all underbars to hyphens, unless the "BCP47 extension" comes at the beginning of the string
-        if (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
+        ఒకవేళ (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
             localeIDWithHyphens.append(localeID, err);
-            if (U_SUCCESS(err)) {
-                for (char* p = localeIDWithHyphens.data(); *p != '\0'; ++p) {
-                    if (*p == '_') {
+            ఒకవేళ (U_SUCCESS(err)) {
+                కొరకు (అక్షరం* p = localeIDWithHyphens.దత్తాంశం(); *p != '\0'; ++p) {
+                    ఒకవేళ (*p == '_') {
                         *p = '-';
                     }
                 }
-                localeIDPtr = localeIDWithHyphens.toStringPiece();
+                localeIDPtr = localeIDWithHyphens.గమ్యం_String_Piece();
             }
         }
 
-        tempBuffer = ulocimp_forLanguageTag(localeIDPtr.data(), static_cast<int32_t>(localeIDPtr.size()), nullptr, err);
-        tmpLocaleID = U_SUCCESS(err) && !tempBuffer.isEmpty() ? static_cast<std::string_view>(tempBuffer.toStringPiece()) : localeIDPtr;
-    } else {
+        తాత్కాలిక_బఫరు = ulocimp_for_Language_ట్యాగ్(localeIDPtr.దత్తాంశం(), static_cast<int32_t>(localeIDPtr.size()), శూన్యసూచిక, err);
+        tmpLocaleID = U_SUCCESS(err) && !తాత్కాలిక_బఫరు.is_ఖాళీలు() ? static_cast<std::string_view>(తాత్కాలిక_బఫరు.గమ్యం_String_Piece()) : localeIDPtr;
+    } లేకపోతే {
         tmpLocaleID=localeID;
     }
 
     origLocaleID=tmpLocaleID;
 
     /* get all pieces, one after another, and separate with '_' */
-    CharString tag;
+    CharString ట్యాగ్;
     CharString script;
     CharString country;
     CharString variant;
-    const char* end = nullptr;
+    స్థిరరాశి అక్షరం* చివర = శూన్యసూచిక;
     ulocimp_getSubtags(
             tmpLocaleID,
-            &tag,
+            &ట్యాగ్,
             &script,
             &country,
             &variant,
-            &end,
+            &చివర,
             err);
-    if (U_FAILURE(err)) {
-        return;
+    ఒకవేళ (U_FAILURE(err)) {
+        తిరిగి;
     }
-    U_ASSERT(end != nullptr);
-    if (end > tmpLocaleID.data()) {
-        tmpLocaleID.remove_prefix(end - tmpLocaleID.data());
+    U_ASSERT(చివర != శూన్యసూచిక);
+    ఒకవేళ (చివర > tmpLocaleID.దత్తాంశం()) {
+        tmpLocaleID.remove_ఉపసర్గ(చివర - tmpLocaleID.దత్తాంశం());
     }
 
-    if (tag.length() == I_DEFAULT_LENGTH && origLocaleID.length() >= I_DEFAULT_LENGTH &&
-            uprv_strncmp(origLocaleID.data(), i_default, I_DEFAULT_LENGTH) == 0) {
-        tag.clear();
-        tag.append(uloc_getDefault(), err);
-    } else {
-        if (!script.isEmpty()) {
-            ++fieldCount;
-            tag.append('_', err);
-            tag.append(script, err);
+    ఒకవేళ (ట్యాగ్.length() == I_DEFAULT_నిడివి && origLocaleID.length() >= I_DEFAULT_నిడివి &&
+            uprv_strncmp(origLocaleID.దత్తాంశం(), i_default, I_DEFAULT_నిడివి) == 0) {
+        ట్యాగ్.clear();
+        ట్యాగ్.append(uloc_getDefault(), err);
+    } లేకపోతే {
+        ఒకవేళ (!script.is_ఖాళీలు()) {
+            ++క్షేత్రం_లెక్క;
+            ట్యాగ్.append('_', err);
+            ట్యాగ్.append(script, err);
         }
-        if (!country.isEmpty()) {
-            ++fieldCount;
-            tag.append('_', err);
-            tag.append(country, err);
+        ఒకవేళ (!country.is_ఖాళీలు()) {
+            ++క్షేత్రం_లెక్క;
+            ట్యాగ్.append('_', err);
+            ట్యాగ్.append(country, err);
         }
-        if (!variant.isEmpty()) {
-            ++fieldCount;
-            if (country.isEmpty()) {
-                tag.append('_', err);
+        ఒకవేళ (!variant.is_ఖాళీలు()) {
+            ++క్షేత్రం_లెక్క;
+            ఒకవేళ (country.is_ఖాళీలు()) {
+                ట్యాగ్.append('_', err);
             }
-            tag.append('_', err);
-            tag.append(variant, err);
+            ట్యాగ్.append('_', err);
+            ట్యాగ్.append(variant, err);
         }
     }
 
     /* Copy POSIX-style charset specifier, if any [mr.utf8] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
-        tag.append('.', err);
-        tmpLocaleID.remove_prefix(1);
+    ఒకవేళ (!OPTION_సమితి(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
+        ట్యాగ్.append('.', err);
+        tmpLocaleID.remove_ఉపసర్గ(1);
         size_t length;
-        if (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
+        ఒకవేళ (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
             length = atPos;
-        } else {
+        } లేకపోతే {
             length = tmpLocaleID.length();
         }
         // The longest charset name we found in IANA charset registry
@@ -1831,77 +1831,77 @@ _canonicalize(std::string_view localeID,
         // "Extended_UNIX_Code_Packed_Format_for_Japanese" in length 45.
         // we therefore restrict the length here to be 64 which is a power of 2
         // number that is longer than 45.
-        constexpr size_t kMaxCharsetLength = 64;
-        if (length > kMaxCharsetLength) {
-           err = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-           return;
+        constexpr size_t k_Max_Charset_నిడివి = 64;
+        ఒకవేళ (length > k_Max_Charset_నిడివి) {
+           err = U_ILLEGAL_వాదం_ERROR; /* malformed keyword name */
+           తిరిగి;
         }
-        if (length > 0) {
-            tag.append(tmpLocaleID.data(), static_cast<int32_t>(length), err);
-            tmpLocaleID.remove_prefix(length);
+        ఒకవేళ (length > 0) {
+            ట్యాగ్.append(tmpLocaleID.దత్తాంశం(), static_cast<int32_t>(length), err);
+            tmpLocaleID.remove_ఉపసర్గ(length);
         }
     }
 
     /* Scan ahead to next '@' and determine if it is followed by '=' and/or ';'
        After this, tmpLocaleID either starts at '@' or is empty. */
-    if (const char* start = locale_getKeywordsStart(tmpLocaleID); start != nullptr) {
-        if (start > tmpLocaleID.data()) {
-            tmpLocaleID.remove_prefix(start - tmpLocaleID.data());
+    ఒకవేళ (స్థిరరాశి అక్షరం* ప్రారంభం = locale_get_Keywords_ప్రారంభం(tmpLocaleID); ప్రారంభం != శూన్యసూచిక) {
+        ఒకవేళ (ప్రారంభం > tmpLocaleID.దత్తాంశం()) {
+            tmpLocaleID.remove_ఉపసర్గ(ప్రారంభం - tmpLocaleID.దత్తాంశం());
         }
-        keywordAssign = tmpLocaleID.find('=');
+        keyword_కేటాయించు = tmpLocaleID.find('=');
         separatorIndicator = tmpLocaleID.find(';');
-    } else {
+    } లేకపోతే {
         tmpLocaleID = {};
     }
 
     /* Copy POSIX-style variant, if any [mr@FOO] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) &&
-        !tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
-        tag.append(tmpLocaleID, err);
+    ఒకవేళ (!OPTION_సమితి(options, _ULOC_CANONICALIZE) &&
+        !tmpLocaleID.empty() && keyword_కేటాయించు == std::string_view::npos) {
+        ట్యాగ్.append(tmpLocaleID, err);
         tmpLocaleID = {};
     }
 
-    if (OPTION_SET(options, _ULOC_CANONICALIZE)) {
+    ఒకవేళ (OPTION_సమితి(options, _ULOC_CANONICALIZE)) {
         /* Handle @FOO variant if @ is present and not followed by = */
-        if (!tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
+        ఒకవేళ (!tmpLocaleID.empty() && keyword_కేటాయించు == std::string_view::npos) {
             /* Add missing '_' if needed */
-            if (fieldCount < 2 || (fieldCount < 3 && !script.isEmpty())) {
-                do {
-                    tag.append('_', err);
-                    ++fieldCount;
-                } while(fieldCount<2);
+            ఒకవేళ (క్షేత్రం_లెక్క < 2 || (క్షేత్రం_లెక్క < 3 && !script.is_ఖాళీలు())) {
+                చేయి {
+                    ట్యాగ్.append('_', err);
+                    ++క్షేత్రం_లెక్క;
+                } అయితే(క్షేత్రం_లెక్క<2);
             }
 
-            CharStringByteSink s(&tag);
+            CharStringByteSink s(&ట్యాగ్);
             std::string_view sub = tmpLocaleID;
-            sub.remove_prefix(1);
-            _getVariant(sub, '@', &s, !variant.isEmpty(), err);
-            if (U_FAILURE(err)) { return; }
+            sub.remove_ఉపసర్గ(1);
+            _getVariant(sub, '@', &s, !variant.is_ఖాళీలు(), err);
+            ఒకవేళ (U_FAILURE(err)) { తిరిగి; }
         }
 
         /* Look up the ID in the canonicalization map */
-        for (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
+        కొరకు (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
             StringPiece id(CANONICALIZE_MAP[j].id);
-            if (tag == id) {
-                if (id.empty() && !tmpLocaleID.empty()) {
-                    break; /* Don't remap "" if keywords present */
+            ఒకవేళ (ట్యాగ్ == id) {
+                ఒకవేళ (id.empty() && !tmpLocaleID.empty()) {
+                    ఆపు; /* Don't remap "" if keywords present */
                 }
-                tag.clear();
-                tag.append(CANONICALIZE_MAP[j].canonicalID, err);
-                break;
+                ట్యాగ్.clear();
+                ట్యాగ్.append(CANONICALIZE_MAP[j].canonicalID, err);
+                ఆపు;
             }
         }
     }
 
-    sink.Append(tag.data(), tag.length());
+    sink.Append(ట్యాగ్.దత్తాంశం(), ట్యాగ్.length());
 
-    if (!OPTION_SET(options, _ULOC_STRIP_KEYWORDS)) {
-        if (!tmpLocaleID.empty() && keywordAssign != std::string_view::npos &&
-            (separatorIndicator == std::string_view::npos || separatorIndicator > keywordAssign)) {
+    ఒకవేళ (!OPTION_సమితి(options, _ULOC_STRIP_KEYWORDS)) {
+        ఒకవేళ (!tmpLocaleID.empty() && keyword_కేటాయించు != std::string_view::npos &&
+            (separatorIndicator == std::string_view::npos || separatorIndicator > keyword_కేటాయించు)) {
             sink.Append("@", 1);
-            ++fieldCount;
-            tmpLocaleID.remove_prefix(1);
-            ulocimp_getKeywords(tmpLocaleID, '@', sink, true, err);
+            ++క్షేత్రం_లెక్క;
+            tmpLocaleID.remove_ఉపసర్గ(1);
+            ulocimp_getKeywords(tmpLocaleID, '@', sink, నిజం, err);
         }
     }
 }
@@ -1911,52 +1911,52 @@ _canonicalize(std::string_view localeID,
 /* ### ID parsing API **************************************************/
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getParent(const char*    localeID,
-               char* parent,
-               int32_t parentCapacity,
-               UErrorCode* err)
+uloc_get_మాతృ(స్థిరరాశి అక్షరం*    localeID,
+               అక్షరం* మాతృ,
+               int32_t మాతృ_సామర్థ్యం,
+               UError_సంకేతం* err)
 {
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        parent, parentCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getParent(localeID, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        మాతృ, మాతృ_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_get_మాతృ(localeID, sink, స్థితి_2);
         },
         *err);
 }
 
 U_EXPORT CharString
-ulocimp_getParent(const char* localeID,
-                  UErrorCode& err)
+ulocimp_get_మాతృ(స్థిరరాశి అక్షరం* localeID,
+                  UError_సంకేతం& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getParent(localeID, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_get_మాతృ(localeID, sink, స్థితి_2);
         },
         err);
 }
 
-U_EXPORT void
-ulocimp_getParent(const char* localeID,
+U_EXPORT శూన్య
+ulocimp_get_మాతృ(స్థిరరాశి అక్షరం* localeID,
                   icu::ByteSink& sink,
-                  UErrorCode& err)
+                  UError_సంకేతం& err)
 {
-    if (U_FAILURE(err)) { return; }
+    ఒకవేళ (U_FAILURE(err)) { తిరిగి; }
 
-    const char *lastUnderscore;
+    స్థిరరాశి అక్షరం *చివరి_Underscore;
     int32_t i;
 
-    if (localeID == nullptr)
+    ఒకవేళ (localeID == శూన్యసూచిక)
         localeID = uloc_getDefault();
 
-    lastUnderscore=uprv_strrchr(localeID, '_');
-    if(lastUnderscore!=nullptr) {
-        i = static_cast<int32_t>(lastUnderscore - localeID);
-    } else {
+    చివరి_Underscore=uprv_strrchr(localeID, '_');
+    ఒకవేళ(చివరి_Underscore!=శూన్యసూచిక) {
+        i = static_cast<int32_t>(చివరి_Underscore - localeID);
+    } లేకపోతే {
         i=0;
     }
 
-    if (i > 0) {
-        if (uprv_strnicmp(localeID, "und_", 4) == 0) {
+    ఒకవేళ (i > 0) {
+        ఒకవేళ (uprv_strnicmp(localeID, "und_", 4) == 0) {
             localeID += 3;
             i -= 3;
         }
@@ -1965,317 +1965,317 @@ ulocimp_getParent(const char* localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getLanguage(const char*    localeID,
-         char* language,
-         int32_t languageCapacity,
-         UErrorCode* err)
+uloc_getLanguage(స్థిరరాశి అక్షరం*    localeID,
+         అక్షరం* language,
+         int32_t language_సామర్థ్యం,
+         UError_సంకేతం* err)
 {
-    if (localeID == nullptr) {
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
     }
 
     /* uloc_getLanguage will return a 2 character iso-639 code if one exists. *CWB*/
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        language, languageCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        language, language_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             ulocimp_getSubtags(
                     localeID,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    స్థితి_2);
         },
         *err);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getScript(const char*    localeID,
-         char* script,
-         int32_t scriptCapacity,
-         UErrorCode* err)
+uloc_getScript(స్థిరరాశి అక్షరం*    localeID,
+         అక్షరం* script,
+         int32_t script_సామర్థ్యం,
+         UError_సంకేతం* err)
 {
-    if (localeID == nullptr) {
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        script, scriptCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        script, script_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
+                    శూన్యసూచిక,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    nullptr,
-                    status);
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    స్థితి_2);
         },
         *err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getCountry(const char* localeID,
-            char* country,
-            int32_t countryCapacity,
-            UErrorCode* err)
+uloc_getCountry(స్థిరరాశి అక్షరం* localeID,
+            అక్షరం* country,
+            int32_t country_సామర్థ్యం,
+            UError_సంకేతం* err)
 {
-    if (localeID == nullptr) {
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        country, countryCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        country, country_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
                     &sink,
-                    nullptr,
-                    nullptr,
-                    status);
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    స్థితి_2);
         },
         *err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getVariant(const char* localeID,
-                char* variant,
-                int32_t variantCapacity,
-                UErrorCode* err)
+uloc_getVariant(స్థిరరాశి అక్షరం* localeID,
+                అక్షరం* variant,
+                int32_t variant_సామర్థ్యం,
+                UError_సంకేతం* err)
 {
-    if (localeID == nullptr) {
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        variant, variantCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        variant, variant_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
             ulocimp_getSubtags(
                     localeID,
-                    nullptr,
-                    nullptr,
-                    nullptr,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
+                    శూన్యసూచిక,
                     &sink,
-                    nullptr,
-                    status);
+                    శూన్యసూచిక,
+                    స్థితి_2);
         },
         *err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getName(const char* localeID,
-             char* name,
-             int32_t nameCapacity,
-             UErrorCode* err)
+uloc_getName(స్థిరరాశి అక్షరం* localeID,
+             అక్షరం* name,
+             int32_t name_సామర్థ్యం,
+             UError_సంకేతం* err)
 {
-    if (localeID == nullptr) {
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        name, nameCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getName(localeID, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        name, name_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_getName(localeID, sink, స్థితి_2);
         },
         *err);
 }
 
 U_EXPORT CharString
 ulocimp_getName(std::string_view localeID,
-                UErrorCode& err)
+                UError_సంకేతం& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getName(localeID, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_getName(localeID, sink, స్థితి_2);
         },
         err);
 }
 
-U_EXPORT void
+U_EXPORT శూన్య
 ulocimp_getName(std::string_view localeID,
                 ByteSink& sink,
-                UErrorCode& err)
+                UError_సంకేతం& err)
 {
     _canonicalize(localeID, sink, 0, err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getBaseName(const char* localeID,
-                 char* name,
-                 int32_t nameCapacity,
-                 UErrorCode* err)
+uloc_get_పునాది_Name(స్థిరరాశి అక్షరం* localeID,
+                 అక్షరం* name,
+                 int32_t name_సామర్థ్యం,
+                 UError_సంకేతం* err)
 {
-    if (localeID == nullptr) {
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        name, nameCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getBaseName(localeID, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        name, name_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_get_పునాది_Name(localeID, sink, స్థితి_2);
         },
         *err);
 }
 
 U_EXPORT CharString
-ulocimp_getBaseName(std::string_view localeID,
-                    UErrorCode& err)
+ulocimp_get_పునాది_Name(std::string_view localeID,
+                    UError_సంకేతం& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getBaseName(localeID, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_get_పునాది_Name(localeID, sink, స్థితి_2);
         },
         err);
 }
 
-U_EXPORT void
-ulocimp_getBaseName(std::string_view localeID,
+U_EXPORT శూన్య
+ulocimp_get_పునాది_Name(std::string_view localeID,
                     ByteSink& sink,
-                    UErrorCode& err)
+                    UError_సంకేతం& err)
 {
     _canonicalize(localeID, sink, _ULOC_STRIP_KEYWORDS, err);
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_canonicalize(const char* localeID,
-                  char* name,
-                  int32_t nameCapacity,
-                  UErrorCode* err)
+uloc_canonicalize(స్థిరరాశి అక్షరం* localeID,
+                  అక్షరం* name,
+                  int32_t name_సామర్థ్యం,
+                  UError_సంకేతం* err)
 {
-    if (localeID == nullptr) {
+    ఒకవేళ (localeID == శూన్యసూచిక) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
-        name, nameCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_canonicalize(localeID, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+        name, name_సామర్థ్యం,
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_canonicalize(localeID, sink, స్థితి_2);
         },
         *err);
 }
 
 U_EXPORT CharString
 ulocimp_canonicalize(std::string_view localeID,
-                     UErrorCode& err)
+                     UError_సంకేతం& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
-        [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_canonicalize(localeID, sink, status);
+    తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Char_String(
+        [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+            ulocimp_canonicalize(localeID, sink, స్థితి_2);
         },
         err);
 }
 
-U_EXPORT void
+U_EXPORT శూన్య
 ulocimp_canonicalize(std::string_view localeID,
                      ByteSink& sink,
-                     UErrorCode& err)
+                     UError_సంకేతం& err)
 {
     _canonicalize(localeID, sink, _ULOC_CANONICALIZE, err);
 }
 
-U_CAPI const char*  U_EXPORT2
-uloc_getISO3Language(const char* localeID)
+U_CAPI స్థిరరాశి అక్షరం*  U_EXPORT2
+uloc_getISO3Language(స్థిరరాశి అక్షరం* localeID)
 {
-    UErrorCode err = U_ZERO_ERROR;
+    UError_సంకేతం err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    ఒకవేళ (localeID == శూన్యసూచిక)
     {
         localeID = uloc_getDefault();
     }
     CharString lang = ulocimp_getLanguage(localeID, err);
-    if (U_FAILURE(err))
-        return "";
-    std::optional<int16_t> offset = _findIndex(LANGUAGES, lang.data());
-    return offset.has_value() ? LANGUAGES_3[*offset] : "";
+    ఒకవేళ (U_FAILURE(err))
+        తిరిగి "";
+    std::optional<int16_t> స్థానభ్రంశం = కనుగొను_సూచీ_2(LANGUAGES, lang.దత్తాంశం());
+    తిరిగి స్థానభ్రంశం.has_value() ? LANGUAGES_3[*స్థానభ్రంశం] : "";
 }
 
-U_CAPI const char*  U_EXPORT2
-uloc_getISO3Country(const char* localeID)
+U_CAPI స్థిరరాశి అక్షరం*  U_EXPORT2
+uloc_getISO3Country(స్థిరరాశి అక్షరం* localeID)
 {
-    UErrorCode err = U_ZERO_ERROR;
+    UError_సంకేతం err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    ఒకవేళ (localeID == శూన్యసూచిక)
     {
         localeID = uloc_getDefault();
     }
     CharString cntry = ulocimp_getRegion(localeID, err);
-    if (U_FAILURE(err))
-        return "";
-    std::optional<int16_t> offset = _findIndex(COUNTRIES, cntry.data());
-    return offset.has_value() ? COUNTRIES_3[*offset] : "";
+    ఒకవేళ (U_FAILURE(err))
+        తిరిగి "";
+    std::optional<int16_t> స్థానభ్రంశం = కనుగొను_సూచీ_2(COUNTRIES, cntry.దత్తాంశం());
+    తిరిగి స్థానభ్రంశం.has_value() ? COUNTRIES_3[*స్థానభ్రంశం] : "";
 }
 
 U_CAPI uint32_t  U_EXPORT2
-uloc_getLCID(const char* localeID)
+uloc_getLCID(స్థిరరాశి అక్షరం* localeID)
 {
-    UErrorCode status = U_ZERO_ERROR;
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
     uint32_t   lcid = 0;
 
     /* Check for incomplete id. */
-    if (!localeID || uprv_strlen(localeID) < 2) {
-        return 0;
+    ఒకవేళ (!localeID || uprv_strlen(localeID) < 2) {
+        తిరిగి 0;
     }
 
     // First, attempt Windows platform lookup if available, but fall
     // through to catch any special cases (ICU vs Windows name differences).
-    lcid = uprv_convertToLCIDPlatform(localeID, &status);
-    if (U_FAILURE(status)) {
-        return 0;
+    lcid = uprv_convert_గమ్యం_LCIDPlatform(localeID, &స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి 0;
     }
-    if (lcid > 0) {
+    ఒకవేళ (lcid > 0) {
         // Windows found an LCID, return that
-        return lcid;
+        తిరిగి lcid;
     }
 
-    CharString langID = ulocimp_getLanguage(localeID, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    CharString langID = ulocimp_getLanguage(localeID, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి 0;
     }
 
-    if (uprv_strchr(localeID, '@')) {
+    ఒకవేళ (uprv_strchr(localeID, '@')) {
         // uprv_convertToLCID does not support keywords other than collation.
         // Remove all keywords except collation.
-        CharString collVal = ulocimp_getKeywordValue(localeID, "collation", status);
-        if (U_SUCCESS(status) && !collVal.isEmpty()) {
-            CharString tmpLocaleID = ulocimp_getBaseName(localeID, status);
-            ulocimp_setKeywordValue("collation", collVal.toStringPiece(), tmpLocaleID, status);
-            if (U_SUCCESS(status)) {
-                return uprv_convertToLCID(langID.data(), tmpLocaleID.data(), &status);
+        CharString collVal = ulocimp_get_Keyword_విలువ(localeID, "collation", స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2) && !collVal.is_ఖాళీలు()) {
+            CharString tmpLocaleID = ulocimp_get_పునాది_Name(localeID, స్థితి_2);
+            ulocimp_సమితి_Keyword_విలువ("collation", collVal.గమ్యం_String_Piece(), tmpLocaleID, స్థితి_2);
+            ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+                తిరిగి uprv_convert_గమ్యం_LCID(langID.దత్తాంశం(), tmpLocaleID.దత్తాంశం(), &స్థితి_2);
             }
         }
 
         // fall through - all keywords are simply ignored
-        status = U_ZERO_ERROR;
+        స్థితి_2 = U_ZERO_ERROR;
     }
 
-    return uprv_convertToLCID(langID.data(), localeID, &status);
+    తిరిగి uprv_convert_గమ్యం_LCID(langID.దత్తాంశం(), localeID, &స్థితి_2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getLocaleForLCID(uint32_t hostid, char *locale, int32_t localeCapacity,
-                UErrorCode *status)
+uloc_getLocaleForLCID(uint32_t hostid, అక్షరం *locale, int32_t locale_సామర్థ్యం,
+                UError_సంకేతం *స్థితి_2)
 {
-    return uprv_convertToPosix(hostid, locale, localeCapacity, status);
+    తిరిగి uprv_convert_గమ్యం_Posix(hostid, locale, locale_సామర్థ్యం, స్థితి_2);
 }
 
 /* ### Default locale **************************************************/
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI స్థిరరాశి అక్షరం*  U_EXPORT2
 uloc_getDefault()
 {
-    return locale_get_default();
+    తిరిగి locale_get_default();
 }
 
-U_CAPI void  U_EXPORT2
-uloc_setDefault(const char*   newDefaultLocale,
-             UErrorCode* err)
+U_CAPI శూన్య  U_EXPORT2
+uloc_సమితి_Default(స్థిరరాశి అక్షరం*   newDefaultLocale,
+             UError_సంకేతం* err)
 {
-    if (U_FAILURE(*err))
-        return;
+    ఒకవేళ (U_FAILURE(*err))
+        తిరిగి;
     /* the error code isn't currently used for anything by this function*/
 
     /* propagate change to C++ */
-    locale_set_default(newDefaultLocale);
+    locale_సమితి_default(newDefaultLocale);
 }
 
 /**
@@ -2284,10 +2284,10 @@ uloc_setDefault(const char*   newDefaultLocale,
  * by ICU-- do not delete them, and do not write through them.  The array is
  * terminated with a null pointer.
  */
-U_CAPI const char* const*  U_EXPORT2
+U_CAPI స్థిరరాశి అక్షరం* స్థిరరాశి*  U_EXPORT2
 uloc_getISOLanguages()
 {
-    return LANGUAGES;
+    తిరిగి LANGUAGES;
 }
 
 /**
@@ -2296,95 +2296,95 @@ uloc_getISOLanguages()
  * owned by ICU-- do not delete them, and do not write through them.  The array is
  * terminated with a null pointer.
  */
-U_CAPI const char* const*  U_EXPORT2
+U_CAPI స్థిరరాశి అక్షరం* స్థిరరాశి*  U_EXPORT2
 uloc_getISOCountries()
 {
-    return COUNTRIES;
+    తిరిగి COUNTRIES;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uloc_గమ్యం_Unicode_Locale_కీలకం(స్థిరరాశి అక్షరం* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toBcpKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    ఒకవేళ (keyword == శూన్యసూచిక || *keyword == '\0') { తిరిగి శూన్యసూచిక; }
+    std::optional<std::string_view> ఫలితం = ulocimp_గమ్యం_Bcp_కీలకం_With_Fallback(keyword);
+    తిరిగి ఫలితం.has_value() ? ఫలితం->దత్తాంశం() : శూన్యసూచిక;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_గమ్యం_Bcp_కీలకం_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> bcpKey = ulocimp_toBcpKey(keyword);
-    if (!bcpKey.has_value() &&
-        ultag_isUnicodeLocaleKey(keyword.data(), static_cast<int32_t>(keyword.size()))) {
+    std::optional<std::string_view> bcp_కీలకం = ulocimp_గమ్యం_Bcp_కీలకం(keyword);
+    ఒకవేళ (!bcp_కీలకం.has_value() &&
+        ultag_is_Unicode_Locale_కీలకం(keyword.దత్తాంశం(), static_cast<int32_t>(keyword.size()))) {
         // unknown keyword, but syntax is fine..
-        return keyword;
+        తిరిగి keyword;
     }
-    return bcpKey;
+    తిరిగి bcp_కీలకం;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uloc_గమ్యం_Unicode_Locale_Type(స్థిరరాశి అక్షరం* keyword, స్థిరరాశి అక్షరం* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toBcpTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    ఒకవేళ (keyword == శూన్యసూచిక || *keyword == '\0' ||
+        value == శూన్యసూచిక || *value == '\0') { తిరిగి శూన్యసూచిక; }
+    std::optional<std::string_view> ఫలితం = ulocimp_గమ్యం_Bcp_Type_With_Fallback(keyword, value);
+    తిరిగి ఫలితం.has_value() ? ఫలితం->దత్తాంశం() : శూన్యసూచిక;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
+ulocimp_గమ్యం_Bcp_Type_With_Fallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> bcpType = ulocimp_toBcpType(keyword, value);
-    if (!bcpType.has_value() &&
-        ultag_isUnicodeLocaleType(value.data(), static_cast<int32_t>(value.size()))) {
+    std::optional<std::string_view> bcpType = ulocimp_గమ్యం_Bcp_Type(keyword, value);
+    ఒకవేళ (!bcpType.has_value() &&
+        ultag_isUnicodeLocaleType(value.దత్తాంశం(), static_cast<int32_t>(value.size()))) {
         // unknown keyword, but syntax is fine..
-        return value;
+        తిరిగి value;
     }
-    return bcpType;
+    తిరిగి bcpType;
 }
 
-namespace {
+నామాకాశ {
 
-bool
-isWellFormedLegacyKey(std::string_view key)
+తార్కిక
+is_Well_Formed_Legacy_కీలకం(std::string_view కీలకం)
 {
-    return std::all_of(key.begin(), key.end(), UPRV_ISALPHANUM);
+    తిరిగి std::all_of(కీలకం.begin(), కీలకం.చివర(), UPRV_ISALPHANUM);
 }
 
-bool
+తార్కిక
 isWellFormedLegacyType(std::string_view legacyType)
 {
-    int32_t alphaNumLen = 0;
-    for (char c : legacyType) {
-        if (c == '_' || c == '/' || c == '-') {
-            if (alphaNumLen == 0) {
-                return false;
+    int32_t alpha_అంకె_Len = 0;
+    కొరకు (అక్షరం c : legacyType) {
+        ఒకవేళ (c == '_' || c == '/' || c == '-') {
+            ఒకవేళ (alpha_అంకె_Len == 0) {
+                తిరిగి అబద్ధం;
             }
-            alphaNumLen = 0;
-        } else if (UPRV_ISALPHANUM(c)) {
-            alphaNumLen++;
-        } else {
-            return false;
+            alpha_అంకె_Len = 0;
+        } లేకపోతే ఒకవేళ (UPRV_ISALPHANUM(c)) {
+            alpha_అంకె_Len++;
+        } లేకపోతే {
+            తిరిగి అబద్ధం;
         }
     }
-    return alphaNumLen != 0;
+    తిరిగి alpha_అంకె_Len != 0;
 }
 
 }  // namespace
 
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uloc_గమ్యం_Legacy_కీలకం(స్థిరరాశి అక్షరం* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toLegacyKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    ఒకవేళ (keyword == శూన్యసూచిక || *keyword == '\0') { తిరిగి శూన్యసూచిక; }
+    std::optional<std::string_view> ఫలితం = ulocimp_గమ్యం_Legacy_కీలకం_With_Fallback(keyword);
+    తిరిగి ఫలితం.has_value() ? ఫలితం->దత్తాంశం() : శూన్యసూచిక;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_గమ్యం_Legacy_కీలకం_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> legacyKey = ulocimp_toLegacyKey(keyword);
-    if (!legacyKey.has_value() && isWellFormedLegacyKey(keyword)) {
+    std::optional<std::string_view> legacy_కీలకం_2 = ulocimp_గమ్యం_Legacy_కీలకం(keyword);
+    ఒకవేళ (!legacy_కీలకం_2.has_value() && is_Well_Formed_Legacy_కీలకం(keyword)) {
         // Checks if the specified locale key is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2392,25 +2392,25 @@ ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
         //  * http://www.unicode.org/reports/tr35/#Unicode_locale_identifier and
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Keys can only consist of [0-9a-zA-Z].
-        return keyword;
+        తిరిగి keyword;
     }
-    return legacyKey;
+    తిరిగి legacy_కీలకం_2;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyType(const char* keyword, const char* value U_LIFETIME_BOUND)
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uloc_గమ్యం_Legacy_Type(స్థిరరాశి అక్షరం* keyword, స్థిరరాశి అక్షరం* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toLegacyTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    ఒకవేళ (keyword == శూన్యసూచిక || *keyword == '\0' ||
+        value == శూన్యసూచిక || *value == '\0') { తిరిగి శూన్యసూచిక; }
+    std::optional<std::string_view> ఫలితం = ulocimp_గమ్యం_Legacy_Type_With_Fallback(keyword, value);
+    తిరిగి ఫలితం.has_value() ? ఫలితం->దత్తాంశం() : శూన్యసూచిక;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
+ulocimp_గమ్యం_Legacy_Type_With_Fallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> legacyType = ulocimp_toLegacyType(keyword, value);
-    if (!legacyType.has_value() && isWellFormedLegacyType(value)) {
+    std::optional<std::string_view> legacyType = ulocimp_గమ్యం_Legacy_Type(keyword, value);
+    ఒకవేళ (!legacyType.has_value() && isWellFormedLegacyType(value)) {
         // Checks if the specified locale type is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2419,9 +2419,9 @@ ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view valu
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Values (types) can only consist of [0-9a-zA-Z], plus for legacy values
         //  we allow [/_-+] in the middle (e.g. "Etc/GMT+1", "Asia/Tel_Aviv")
-        return value;
+        తిరిగి value;
     }
-    return legacyType;
+    తిరిగి legacyType;
 }
 
 /*eof*/

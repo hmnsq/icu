@@ -18,351 +18,351 @@
 *   Store bits (Unicode character properties) in bit set vectors.
 */
 
-#include <stdlib.h>
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "utrie.h"
-#include "utrie2.h"
-#include "uarrsort.h"
-#include "propsvec.h"
-#include "uassert.h"
+#అన్తర్భావ <stdlib.h>
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "utrie.h"
+#అన్తర్భావ "utrie2.h"
+#అన్తర్భావ "uarrsort.h"
+#అన్తర్భావ "propsvec.h"
+#అన్తర్భావ "uassert.h"
 
-struct UPropsVectors {
+నిర్మాణం UPropsVectors {
     uint32_t *v;
     int32_t columns;  /* number of columns, plus two for start & limit values */
-    int32_t maxRows;
-    int32_t rows;
-    int32_t prevRow;  /* search optimization: remember last row seen */
+    int32_t max_అడ్డువరుసలు;
+    int32_t అడ్డువరుసలు;
+    int32_t prev_అడ్డువరుస;  /* search optimization: remember last row seen */
     UBool isCompacted;
 };
 
-#define UPVEC_INITIAL_ROWS (1<<12)
-#define UPVEC_MEDIUM_ROWS ((int32_t)1<<16)
-#define UPVEC_MAX_ROWS (UPVEC_MAX_CP+1)
+#నిర్వచించు UPVEC_INITIAL_అడ్డువరుసలు (1<<12)
+#నిర్వచించు UPVEC_MEDIUM_అడ్డువరుసలు ((int32_t)1<<16)
+#నిర్వచించు UPVEC_MAX_అడ్డువరుసలు (UPVEC_MAX_CP+1)
 
 U_CAPI UPropsVectors * U_EXPORT2
-upvec_open(int32_t columns, UErrorCode *pErrorCode) {
+upvec_open(int32_t columns, UError_సంకేతం *p_Error_సంకేతం) {
     UPropsVectors *pv;
-    uint32_t *v, *row;
+    uint32_t *v, *అడ్డువరుస;
     uint32_t cp;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(columns<1) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ(columns<1) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
     columns+=2; /* count range start and limit columns */
 
-    pv=(UPropsVectors *)uprv_malloc(sizeof(UPropsVectors));
-    v=(uint32_t *)uprv_malloc(UPVEC_INITIAL_ROWS*columns*4);
-    if(pv==nullptr || v==nullptr) {
+    pv=(UPropsVectors *)uprv_malloc(పరిమాణం(UPropsVectors));
+    v=(uint32_t *)uprv_malloc(UPVEC_INITIAL_అడ్డువరుసలు*columns*4);
+    ఒకవేళ(pv==శూన్యసూచిక || v==శూన్యసూచిక) {
         uprv_free(pv);
         uprv_free(v);
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    uprv_memset(pv, 0, sizeof(UPropsVectors));
+    uprv_memset(pv, 0, పరిమాణం(UPropsVectors));
     pv->v=v;
     pv->columns=columns;
-    pv->maxRows=UPVEC_INITIAL_ROWS;
-    pv->rows=2+(UPVEC_MAX_CP-UPVEC_FIRST_SPECIAL_CP);
+    pv->max_అడ్డువరుసలు=UPVEC_INITIAL_అడ్డువరుసలు;
+    pv->అడ్డువరుసలు=2+(UPVEC_MAX_CP-UPVEC_మొదటి_SPECIAL_CP);
 
     /* set the all-Unicode row and the special-value rows */
-    row=pv->v;
-    uprv_memset(row, 0, pv->rows*columns*4);
-    row[0]=0;
-    row[1]=0x110000;
-    row+=columns;
-    for(cp=UPVEC_FIRST_SPECIAL_CP; cp<=UPVEC_MAX_CP; ++cp) {
-        row[0]=cp;
-        row[1]=cp+1;
-        row+=columns;
+    అడ్డువరుస=pv->v;
+    uprv_memset(అడ్డువరుస, 0, pv->అడ్డువరుసలు*columns*4);
+    అడ్డువరుస[0]=0;
+    అడ్డువరుస[1]=0x110000;
+    అడ్డువరుస+=columns;
+    కొరకు(cp=UPVEC_మొదటి_SPECIAL_CP; cp<=UPVEC_MAX_CP; ++cp) {
+        అడ్డువరుస[0]=cp;
+        అడ్డువరుస[1]=cp+1;
+        అడ్డువరుస+=columns;
     }
-    return pv;
+    తిరిగి pv;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 upvec_close(UPropsVectors *pv) {
-    if(pv!=nullptr) {
+    ఒకవేళ(pv!=శూన్యసూచిక) {
         uprv_free(pv->v);
         uprv_free(pv);
     }
 }
 
-static uint32_t *
-_findRow(UPropsVectors *pv, UChar32 rangeStart) {
-    uint32_t *row;
-    int32_t columns, i, start, limit, prevRow;
+స్థిర uint32_t *
+కనుగొను_అడ్డువరుస(UPropsVectors *pv, UChar32 range_ప్రారంభం) {
+    uint32_t *అడ్డువరుస;
+    int32_t columns, i, ప్రారంభం, హద్దు, prev_అడ్డువరుస;
 
     columns=pv->columns;
-    limit=pv->rows;
-    prevRow=pv->prevRow;
+    హద్దు=pv->అడ్డువరుసలు;
+    prev_అడ్డువరుస=pv->prev_అడ్డువరుస;
 
     /* check the vicinity of the last-seen row (start searching with an unrolled loop) */
-    row=pv->v+prevRow*columns;
-    if (rangeStart >= static_cast<UChar32>(row[0])) {
-        if (rangeStart < static_cast<UChar32>(row[1])) {
+    అడ్డువరుస=pv->v+prev_అడ్డువరుస*columns;
+    ఒకవేళ (range_ప్రారంభం >= static_cast<UChar32>(అడ్డువరుస[0])) {
+        ఒకవేళ (range_ప్రారంభం < static_cast<UChar32>(అడ్డువరుస[1])) {
             /* same row as last seen */
-            return row;
-        } else if (rangeStart < static_cast<UChar32>((row += columns)[1])) {
+            తిరిగి అడ్డువరుస;
+        } లేకపోతే ఒకవేళ (range_ప్రారంభం < static_cast<UChar32>((అడ్డువరుస += columns)[1])) {
             /* next row after the last one */
-            pv->prevRow=prevRow+1;
-            return row;
-        } else if (rangeStart < static_cast<UChar32>((row += columns)[1])) {
+            pv->prev_అడ్డువరుస=prev_అడ్డువరుస+1;
+            తిరిగి అడ్డువరుస;
+        } లేకపోతే ఒకవేళ (range_ప్రారంభం < static_cast<UChar32>((అడ్డువరుస += columns)[1])) {
             /* second row after the last one */
-            pv->prevRow=prevRow+2;
-            return row;
-        } else if ((rangeStart - static_cast<UChar32>(row[1])) < 10) {
+            pv->prev_అడ్డువరుస=prev_అడ్డువరుస+2;
+            తిరిగి అడ్డువరుస;
+        } లేకపోతే ఒకవేళ ((range_ప్రారంభం - static_cast<UChar32>(అడ్డువరుస[1])) < 10) {
             /* we are close, continue looping */
-            prevRow+=2;
-            do {
-                ++prevRow;
-                row+=columns;
-            } while (rangeStart >= static_cast<UChar32>(row[1]));
-            pv->prevRow=prevRow;
-            return row;
+            prev_అడ్డువరుస+=2;
+            చేయి {
+                ++prev_అడ్డువరుస;
+                అడ్డువరుస+=columns;
+            } అయితే (range_ప్రారంభం >= static_cast<UChar32>(అడ్డువరుస[1]));
+            pv->prev_అడ్డువరుస=prev_అడ్డువరుస;
+            తిరిగి అడ్డువరుస;
         }
-    } else if (rangeStart < static_cast<UChar32>(pv->v[1])) {
+    } లేకపోతే ఒకవేళ (range_ప్రారంభం < static_cast<UChar32>(pv->v[1])) {
         /* the very first row */
-        pv->prevRow=0;
-        return pv->v;
+        pv->prev_అడ్డువరుస=0;
+        తిరిగి pv->v;
     }
 
     /* do a binary search for the start of the range */
-    start=0;
-    while(start<limit-1) {
-        i=(start+limit)/2;
-        row=pv->v+i*columns;
-        if (rangeStart < static_cast<UChar32>(row[0])) {
-            limit=i;
-        } else if (rangeStart < static_cast<UChar32>(row[1])) {
-            pv->prevRow=i;
-            return row;
-        } else {
-            start=i;
+    ప్రారంభం=0;
+    అయితే(ప్రారంభం<హద్దు-1) {
+        i=(ప్రారంభం+హద్దు)/2;
+        అడ్డువరుస=pv->v+i*columns;
+        ఒకవేళ (range_ప్రారంభం < static_cast<UChar32>(అడ్డువరుస[0])) {
+            హద్దు=i;
+        } లేకపోతే ఒకవేళ (range_ప్రారంభం < static_cast<UChar32>(అడ్డువరుస[1])) {
+            pv->prev_అడ్డువరుస=i;
+            తిరిగి అడ్డువరుస;
+        } లేకపోతే {
+            ప్రారంభం=i;
         }
     }
 
     /* must be found because all ranges together always cover all of Unicode */
-    pv->prevRow=start;
-    return pv->v+start*columns;
+    pv->prev_అడ్డువరుస=ప్రారంభం;
+    తిరిగి pv->v+ప్రారంభం*columns;
 }
 
-U_CAPI void U_EXPORT2
-upvec_setValue(UPropsVectors *pv,
-               UChar32 start, UChar32 end,
-               int32_t column,
+U_CAPI శూన్య U_EXPORT2
+upvec_సమితి_విలువ(UPropsVectors *pv,
+               UChar32 ప్రారంభం, UChar32 చివర,
+               int32_t స్తంభం,
                uint32_t value, uint32_t mask,
-               UErrorCode *pErrorCode) {
-    uint32_t *firstRow, *lastRow;
+               UError_సంకేతం *p_Error_సంకేతం) {
+    uint32_t *మొదటి_అడ్డువరుస, *చివరి_అడ్డువరుస;
     int32_t columns;
-    UChar32 limit;
-    UBool splitFirstRow, splitLastRow;
+    UChar32 హద్దు;
+    UBool విభజించు_మొదటి_అడ్డువరుస, విభజించు_చివరి_అడ్డువరుస;
 
     /* argument checking */
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
-    if( pv==nullptr ||
-        start<0 || start>end || end>UPVEC_MAX_CP ||
-        column<0 || column>=(pv->columns-2)
+    ఒకవేళ( pv==శూన్యసూచిక ||
+        ప్రారంభం<0 || ప్రారంభం>చివర || చివర>UPVEC_MAX_CP ||
+        స్తంభం<0 || స్తంభం>=(pv->columns-2)
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    if(pv->isCompacted) {
-        *pErrorCode=U_NO_WRITE_PERMISSION;
-        return;
+    ఒకవేళ(pv->isCompacted) {
+        *p_Error_సంకేతం=U_NO_WRITE_PERMISSION;
+        తిరిగి;
     }
-    limit=end+1;
+    హద్దు=చివర+1;
 
     /* initialize */
     columns=pv->columns;
-    column+=2; /* skip range start and limit columns */
+    స్తంభం+=2; /* skip range start and limit columns */
     value&=mask;
 
     /* find the rows whose ranges overlap with the input range */
 
     /* find the first and last rows, always successful */
-    firstRow=_findRow(pv, start);
-    lastRow=_findRow(pv, end);
+    మొదటి_అడ్డువరుస=కనుగొను_అడ్డువరుస(pv, ప్రారంభం);
+    చివరి_అడ్డువరుస=కనుగొను_అడ్డువరుస(pv, చివర);
 
     /*
      * Rows need to be split if they partially overlap with the
      * input range (only possible for the first and last rows)
      * and if their value differs from the input value.
      */
-    splitFirstRow = start != static_cast<UChar32>(firstRow[0]) && value != (firstRow[column] & mask);
-    splitLastRow = limit != static_cast<UChar32>(lastRow[1]) && value != (lastRow[column] & mask);
+    విభజించు_మొదటి_అడ్డువరుస = ప్రారంభం != static_cast<UChar32>(మొదటి_అడ్డువరుస[0]) && value != (మొదటి_అడ్డువరుస[స్తంభం] & mask);
+    విభజించు_చివరి_అడ్డువరుస = హద్దు != static_cast<UChar32>(చివరి_అడ్డువరుస[1]) && value != (చివరి_అడ్డువరుస[స్తంభం] & mask);
 
     /* split first/last rows if necessary */
-    if(splitFirstRow || splitLastRow) {
-        int32_t count, rows;
+    ఒకవేళ(విభజించు_మొదటి_అడ్డువరుస || విభజించు_చివరి_అడ్డువరుస) {
+        int32_t count, అడ్డువరుసలు;
 
-        rows=pv->rows;
-        if((rows+splitFirstRow+splitLastRow)>pv->maxRows) {
+        అడ్డువరుసలు=pv->అడ్డువరుసలు;
+        ఒకవేళ((అడ్డువరుసలు+విభజించు_మొదటి_అడ్డువరుస+విభజించు_చివరి_అడ్డువరుస)>pv->max_అడ్డువరుసలు) {
             uint32_t *newVectors;
-            int32_t newMaxRows;
+            int32_t new_Max_అడ్డువరుసలు;
 
-            if(pv->maxRows<UPVEC_MEDIUM_ROWS) {
-                newMaxRows=UPVEC_MEDIUM_ROWS;
-            } else if(pv->maxRows<UPVEC_MAX_ROWS) {
-                newMaxRows=UPVEC_MAX_ROWS;
-            } else {
+            ఒకవేళ(pv->max_అడ్డువరుసలు<UPVEC_MEDIUM_అడ్డువరుసలు) {
+                new_Max_అడ్డువరుసలు=UPVEC_MEDIUM_అడ్డువరుసలు;
+            } లేకపోతే ఒకవేళ(pv->max_అడ్డువరుసలు<UPVEC_MAX_అడ్డువరుసలు) {
+                new_Max_అడ్డువరుసలు=UPVEC_MAX_అడ్డువరుసలు;
+            } లేకపోతే {
                 /* Implementation bug, or UPVEC_MAX_ROWS too low. */
-                *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-                return;
+                *p_Error_సంకేతం=U_అంతర్గత_కార్యక్రమం_ERROR;
+                తిరిగి;
             }
-            newVectors=(uint32_t *)uprv_malloc(newMaxRows*columns*4);
-            if(newVectors==nullptr) {
-                *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return;
+            newVectors=(uint32_t *)uprv_malloc(new_Max_అడ్డువరుసలు*columns*4);
+            ఒకవేళ(newVectors==శూన్యసూచిక) {
+                *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి;
             }
-            uprv_memcpy(newVectors, pv->v, (size_t)rows*columns*4);
-            firstRow=newVectors+(firstRow-pv->v);
-            lastRow=newVectors+(lastRow-pv->v);
+            uprv_memcpy(newVectors, pv->v, (size_t)అడ్డువరుసలు*columns*4);
+            మొదటి_అడ్డువరుస=newVectors+(మొదటి_అడ్డువరుస-pv->v);
+            చివరి_అడ్డువరుస=newVectors+(చివరి_అడ్డువరుస-pv->v);
             uprv_free(pv->v);
             pv->v=newVectors;
-            pv->maxRows=newMaxRows;
+            pv->max_అడ్డువరుసలు=new_Max_అడ్డువరుసలు;
         }
 
         /* count the number of row cells to move after the last row, and move them */
-        count = (int32_t)((pv->v+rows*columns)-(lastRow+columns));
-        if(count>0) {
+        count = (int32_t)((pv->v+అడ్డువరుసలు*columns)-(చివరి_అడ్డువరుస+columns));
+        ఒకవేళ(count>0) {
             uprv_memmove(
-                lastRow+(1+splitFirstRow+splitLastRow)*columns,
-                lastRow+columns,
+                చివరి_అడ్డువరుస+(1+విభజించు_మొదటి_అడ్డువరుస+విభజించు_చివరి_అడ్డువరుస)*columns,
+                చివరి_అడ్డువరుస+columns,
                 count*4);
         }
-        pv->rows=rows+splitFirstRow+splitLastRow;
+        pv->అడ్డువరుసలు=అడ్డువరుసలు+విభజించు_మొదటి_అడ్డువరుస+విభజించు_చివరి_అడ్డువరుస;
 
         /* split the first row, and move the firstRow pointer to the second part */
-        if(splitFirstRow) {
+        ఒకవేళ(విభజించు_మొదటి_అడ్డువరుస) {
             /* copy all affected rows up one and move the lastRow pointer */
-            count = (int32_t)((lastRow-firstRow)+columns);
-            uprv_memmove(firstRow+columns, firstRow, (size_t)count*4);
-            lastRow+=columns;
+            count = (int32_t)((చివరి_అడ్డువరుస-మొదటి_అడ్డువరుస)+columns);
+            uprv_memmove(మొదటి_అడ్డువరుస+columns, మొదటి_అడ్డువరుస, (size_t)count*4);
+            చివరి_అడ్డువరుస+=columns;
 
             /* split the range and move the firstRow pointer */
-            firstRow[1]=firstRow[columns]=(uint32_t)start;
-            firstRow+=columns;
+            మొదటి_అడ్డువరుస[1]=మొదటి_అడ్డువరుస[columns]=(uint32_t)ప్రారంభం;
+            మొదటి_అడ్డువరుస+=columns;
         }
 
         /* split the last row */
-        if(splitLastRow) {
+        ఒకవేళ(విభజించు_చివరి_అడ్డువరుస) {
             /* copy the last row data */
-            uprv_memcpy(lastRow+columns, lastRow, (size_t)columns*4);
+            uprv_memcpy(చివరి_అడ్డువరుస+columns, చివరి_అడ్డువరుస, (size_t)columns*4);
 
             /* split the range and move the firstRow pointer */
-            lastRow[1]=lastRow[columns]=(uint32_t)limit;
+            చివరి_అడ్డువరుస[1]=చివరి_అడ్డువరుస[columns]=(uint32_t)హద్దు;
         }
     }
 
     /* set the "row last seen" to the last row for the range */
-    pv->prevRow=(int32_t)((lastRow-(pv->v))/columns);
+    pv->prev_అడ్డువరుస=(int32_t)((చివరి_అడ్డువరుస-(pv->v))/columns);
 
     /* set the input value in all remaining rows */
-    firstRow+=column;
-    lastRow+=column;
+    మొదటి_అడ్డువరుస+=స్తంభం;
+    చివరి_అడ్డువరుస+=స్తంభం;
     mask=~mask;
-    for(;;) {
-        *firstRow=(*firstRow&mask)|value;
-        if(firstRow==lastRow) {
-            break;
+    కొరకు(;;) {
+        *మొదటి_అడ్డువరుస=(*మొదటి_అడ్డువరుస&mask)|value;
+        ఒకవేళ(మొదటి_అడ్డువరుస==చివరి_అడ్డువరుస) {
+            ఆపు;
         }
-        firstRow+=columns;
+        మొదటి_అడ్డువరుస+=columns;
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
-upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column) {
-    uint32_t *row;
+upvec_get_విలువ(స్థిరరాశి UPropsVectors *pv, UChar32 c, int32_t స్తంభం) {
+    uint32_t *అడ్డువరుస;
     UPropsVectors *ncpv;
 
-    if(pv->isCompacted || c<0 || c>UPVEC_MAX_CP || column<0 || column>=(pv->columns-2)) {
-        return 0;
+    ఒకవేళ(pv->isCompacted || c<0 || c>UPVEC_MAX_CP || స్తంభం<0 || స్తంభం>=(pv->columns-2)) {
+        తిరిగి 0;
     }
     ncpv=(UPropsVectors *)pv;
-    row=_findRow(ncpv, c);
-    return row[2+column];
+    అడ్డువరుస=కనుగొను_అడ్డువరుస(ncpv, c);
+    తిరిగి అడ్డువరుస[2+స్తంభం];
 }
 
 U_CAPI uint32_t * U_EXPORT2
-upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
-             UChar32 *pRangeStart, UChar32 *pRangeEnd) {
-    uint32_t *row;
+upvec_get_అడ్డువరుస(స్థిరరాశి UPropsVectors *pv, int32_t అడ్డువరుస_సూచీ,
+             UChar32 *p_Range_ప్రారంభం, UChar32 *p_Range_చివర) {
+    uint32_t *అడ్డువరుస;
     int32_t columns;
 
-    if(pv->isCompacted || rowIndex<0 || rowIndex>=pv->rows) {
-        return nullptr;
+    ఒకవేళ(pv->isCompacted || అడ్డువరుస_సూచీ<0 || అడ్డువరుస_సూచీ>=pv->అడ్డువరుసలు) {
+        తిరిగి శూన్యసూచిక;
     }
 
     columns=pv->columns;
-    row=pv->v+rowIndex*columns;
-    if(pRangeStart!=nullptr) {
-        *pRangeStart=(UChar32)row[0];
+    అడ్డువరుస=pv->v+అడ్డువరుస_సూచీ*columns;
+    ఒకవేళ(p_Range_ప్రారంభం!=శూన్యసూచిక) {
+        *p_Range_ప్రారంభం=(UChar32)అడ్డువరుస[0];
     }
-    if(pRangeEnd!=nullptr) {
-        *pRangeEnd=(UChar32)row[1]-1;
+    ఒకవేళ(p_Range_చివర!=శూన్యసూచిక) {
+        *p_Range_చివర=(UChar32)అడ్డువరుస[1]-1;
     }
-    return row+2;
+    తిరిగి అడ్డువరుస+2;
 }
 
-static int32_t U_CALLCONV
-upvec_compareRows(const void *context, const void *l, const void *r) {
-    const uint32_t* left = static_cast<const uint32_t*>(l), *right = static_cast<const uint32_t*>(r);
-    const UPropsVectors* pv = static_cast<const UPropsVectors*>(context);
+స్థిర int32_t U_CALLCONV
+upvec_compare_అడ్డువరుసలు(స్థిరరాశి శూన్య *context, స్థిరరాశి శూన్య *l, స్థిరరాశి శూన్య *r) {
+    స్థిరరాశి uint32_t* ఎడమ = static_cast<స్థిరరాశి uint32_t*>(l), *కుడి = static_cast<స్థిరరాశి uint32_t*>(r);
+    స్థిరరాశి UPropsVectors* pv = static_cast<స్థిరరాశి UPropsVectors*>(context);
     int32_t i, count, columns;
 
     count=columns=pv->columns; /* includes start/limit columns */
 
     /* start comparing after start/limit but wrap around to them */
     i=2;
-    do {
-        if(left[i]!=right[i]) {
-            return left[i]<right[i] ? -1 : 1;
+    చేయి {
+        ఒకవేళ(ఎడమ[i]!=కుడి[i]) {
+            తిరిగి ఎడమ[i]<కుడి[i] ? -1 : 1;
         }
-        if(++i==columns) {
+        ఒకవేళ(++i==columns) {
             i=0;
         }
-    } while(--count>0);
+    } అయితే(--count>0);
 
-    return 0;
+    తిరిగి 0;
 }
 
-U_CAPI void U_EXPORT2
-upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UErrorCode *pErrorCode) {
-    uint32_t *row;
-    int32_t i, columns, valueColumns, rows, count;
-    UChar32 start, limit;
+U_CAPI శూన్య U_EXPORT2
+upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, శూన్య *context, UError_సంకేతం *p_Error_సంకేతం) {
+    uint32_t *అడ్డువరుస;
+    int32_t i, columns, విలువ_Columns, అడ్డువరుసలు, count;
+    UChar32 ప్రారంభం, హద్దు;
 
     /* argument checking */
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
-    if(handler==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ(handler==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    if(pv->isCompacted) {
-        return;
+    ఒకవేళ(pv->isCompacted) {
+        తిరిగి;
     }
 
     /* Set the flag now: Sorting and compacting destroys the builder data structure. */
-    pv->isCompacted=true;
+    pv->isCompacted=నిజం;
 
-    rows=pv->rows;
+    అడ్డువరుసలు=pv->అడ్డువరుసలు;
     columns=pv->columns;
     U_ASSERT(columns>=3); /* upvec_open asserts this */
-    valueColumns=columns-2; /* not counting start & limit */
+    విలువ_Columns=columns-2; /* not counting start & limit */
 
     /* sort the properties vectors to find unique vector values */
-    uprv_sortArray(pv->v, rows, columns*4,
-                   upvec_compareRows, pv, false, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    uprv_క్రమీకరించు_Array(pv->v, అడ్డువరుసలు, columns*4,
+                   upvec_compare_అడ్డువరుసలు, pv, అబద్ధం, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
 
     /*
@@ -370,34 +370,34 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
      * This has to do almost the same work as the compaction below,
      * to find the indexes where the special-value rows will move.
      */
-    row=pv->v;
-    count=-valueColumns;
-    for(i=0; i<rows; ++i) {
-        start=(UChar32)row[0];
+    అడ్డువరుస=pv->v;
+    count=-విలువ_Columns;
+    కొరకు(i=0; i<అడ్డువరుసలు; ++i) {
+        ప్రారంభం=(UChar32)అడ్డువరుస[0];
 
         /* count a new values vector if it is different from the current one */
-        if(count<0 || 0!=uprv_memcmp(row+2, row-valueColumns, valueColumns*4)) {
-            count+=valueColumns;
+        ఒకవేళ(count<0 || 0!=uprv_memcmp(అడ్డువరుస+2, అడ్డువరుస-విలువ_Columns, విలువ_Columns*4)) {
+            count+=విలువ_Columns;
         }
 
-        if(start>=UPVEC_FIRST_SPECIAL_CP) {
-            handler(context, start, start, count, row+2, valueColumns, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+        ఒకవేళ(ప్రారంభం>=UPVEC_మొదటి_SPECIAL_CP) {
+            handler(context, ప్రారంభం, ప్రారంభం, count, అడ్డువరుస+2, విలువ_Columns, p_Error_సంకేతం);
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+                తిరిగి;
             }
         }
 
-        row+=columns;
+        అడ్డువరుస+=columns;
     }
 
     /* count is at the beginning of the last vector, add valueColumns to include that last vector */
-    count+=valueColumns;
+    count+=విలువ_Columns;
 
     /* Call the handler once more to signal the start of delivering real values. */
-    handler(context, UPVEC_START_REAL_VALUES_CP, UPVEC_START_REAL_VALUES_CP,
-            count, row-valueColumns, valueColumns, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    handler(context, UPVEC_ప్రారంభం_REAL_విలువలు_CP, UPVEC_ప్రారంభం_REAL_విలువలు_CP,
+            count, అడ్డువరుస-విలువ_Columns, విలువ_Columns, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
 
     /*
@@ -407,86 +407,86 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
      * This destroys the Properties Vector structure and replaces it
      * with an array of just vector values.
      */
-    row=pv->v;
-    count=-valueColumns;
-    for(i=0; i<rows; ++i) {
+    అడ్డువరుస=pv->v;
+    count=-విలువ_Columns;
+    కొరకు(i=0; i<అడ్డువరుసలు; ++i) {
         /* fetch these first before memmove() may overwrite them */
-        start=(UChar32)row[0];
-        limit=(UChar32)row[1];
+        ప్రారంభం=(UChar32)అడ్డువరుస[0];
+        హద్దు=(UChar32)అడ్డువరుస[1];
 
         /* add a new values vector if it is different from the current one */
-        if(count<0 || 0!=uprv_memcmp(row+2, pv->v+count, valueColumns*4)) {
-            count+=valueColumns;
-            uprv_memmove(pv->v+count, row+2, (size_t)valueColumns*4);
+        ఒకవేళ(count<0 || 0!=uprv_memcmp(అడ్డువరుస+2, pv->v+count, విలువ_Columns*4)) {
+            count+=విలువ_Columns;
+            uprv_memmove(pv->v+count, అడ్డువరుస+2, (size_t)విలువ_Columns*4);
         }
 
-        if(start<UPVEC_FIRST_SPECIAL_CP) {
-            handler(context, start, limit-1, count, pv->v+count, valueColumns, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+        ఒకవేళ(ప్రారంభం<UPVEC_మొదటి_SPECIAL_CP) {
+            handler(context, ప్రారంభం, హద్దు-1, count, pv->v+count, విలువ_Columns, p_Error_సంకేతం);
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+                తిరిగి;
             }
         }
 
-        row+=columns;
+        అడ్డువరుస+=columns;
     }
 
     /* count is at the beginning of the last vector, add one to include that last vector */
-    pv->rows=count/valueColumns+1;
+    pv->అడ్డువరుసలు=count/విలువ_Columns+1;
 }
 
-U_CAPI const uint32_t * U_EXPORT2
-upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns) {
-    if(!pv->isCompacted) {
-        return nullptr;
+U_CAPI స్థిరరాశి uint32_t * U_EXPORT2
+upvec_getArray(స్థిరరాశి UPropsVectors *pv, int32_t *p_అడ్డువరుసలు, int32_t *pColumns) {
+    ఒకవేళ(!pv->isCompacted) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(pRows!=nullptr) {
-        *pRows=pv->rows;
+    ఒకవేళ(p_అడ్డువరుసలు!=శూన్యసూచిక) {
+        *p_అడ్డువరుసలు=pv->అడ్డువరుసలు;
     }
-    if(pColumns!=nullptr) {
+    ఒకవేళ(pColumns!=శూన్యసూచిక) {
         *pColumns=pv->columns-2;
     }
-    return pv->v;
+    తిరిగి pv->v;
 }
 
 U_CAPI uint32_t * U_EXPORT2
-upvec_cloneArray(const UPropsVectors *pv,
-                 int32_t *pRows, int32_t *pColumns, UErrorCode *pErrorCode) {
+upvec_cloneArray(స్థిరరాశి UPropsVectors *pv,
+                 int32_t *p_అడ్డువరుసలు, int32_t *pColumns, UError_సంకేతం *p_Error_సంకేతం) {
     uint32_t *clonedArray;
-    int32_t byteLength;
+    int32_t byte_నిడివి;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(!pv->isCompacted) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ(!pv->isCompacted) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    byteLength=pv->rows*(pv->columns-2)*4;
-    clonedArray=(uint32_t *)uprv_malloc(byteLength);
-    if(clonedArray==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    byte_నిడివి=pv->అడ్డువరుసలు*(pv->columns-2)*4;
+    clonedArray=(uint32_t *)uprv_malloc(byte_నిడివి);
+    ఒకవేళ(clonedArray==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    uprv_memcpy(clonedArray, pv->v, byteLength);
-    if(pRows!=nullptr) {
-        *pRows=pv->rows;
+    uprv_memcpy(clonedArray, pv->v, byte_నిడివి);
+    ఒకవేళ(p_అడ్డువరుసలు!=శూన్యసూచిక) {
+        *p_అడ్డువరుసలు=pv->అడ్డువరుసలు;
     }
-    if(pColumns!=nullptr) {
+    ఒకవేళ(pColumns!=శూన్యసూచిక) {
         *pColumns=pv->columns-2;
     }
-    return clonedArray;
+    తిరిగి clonedArray;
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode) {
-    UPVecToUTrie2Context toUTrie2={ nullptr, 0, 0, 0 };
-    upvec_compact(pv, upvec_compactToUTrie2Handler, &toUTrie2, pErrorCode);
-    utrie2_freeze(toUTrie2.trie, UTRIE2_16_VALUE_BITS, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        utrie2_close(toUTrie2.trie);
-        toUTrie2.trie=nullptr;
+upvec_compact_గమ్యం_UTrie2_With_అడ్డువరుస_Indexes(UPropsVectors *pv, UError_సంకేతం *p_Error_సంకేతం) {
+    UPVec_గమ్యం_UTrie2_Context గమ్యం_UTrie2={ శూన్యసూచిక, 0, 0, 0 };
+    upvec_compact(pv, upvec_compact_గమ్యం_UTrie2_Handler, &గమ్యం_UTrie2, p_Error_సంకేతం);
+    utrie2_freeze(గమ్యం_UTrie2.trie, UTRIE2_16_విలువ_బిట్లు, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        utrie2_close(గమ్యం_UTrie2.trie);
+        గమ్యం_UTrie2.trie=శూన్యసూచిక;
     }
-    return toUTrie2.trie;
+    తిరిగి గమ్యం_UTrie2.trie;
 }
 
 /*
@@ -494,36 +494,36 @@ upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode) {
  * some 16-bit field and builds and returns a UTrie2.
  */
 
-U_CAPI void U_CALLCONV
-upvec_compactToUTrie2Handler(void *context,
-                             UChar32 start, UChar32 end,
-                             int32_t rowIndex, uint32_t *row, int32_t columns,
-                             UErrorCode *pErrorCode) {
-    (void)row;
-    (void)columns;
-    UPVecToUTrie2Context *toUTrie2=(UPVecToUTrie2Context *)context;
-    if(start<UPVEC_FIRST_SPECIAL_CP) {
-        utrie2_setRange32(toUTrie2->trie, start, end, (uint32_t)rowIndex, true, pErrorCode);
-    } else {
-        switch(start) {
-        case UPVEC_INITIAL_VALUE_CP:
-            toUTrie2->initialValue=rowIndex;
-            break;
-        case UPVEC_ERROR_VALUE_CP:
-            toUTrie2->errorValue=rowIndex;
-            break;
-        case UPVEC_START_REAL_VALUES_CP:
-            toUTrie2->maxValue=rowIndex;
-            if(rowIndex>0xffff) {
+U_CAPI శూన్య U_CALLCONV
+upvec_compact_గమ్యం_UTrie2_Handler(శూన్య *context,
+                             UChar32 ప్రారంభం, UChar32 చివర,
+                             int32_t అడ్డువరుస_సూచీ, uint32_t *అడ్డువరుస, int32_t columns,
+                             UError_సంకేతం *p_Error_సంకేతం) {
+    (శూన్య)అడ్డువరుస;
+    (శూన్య)columns;
+    UPVec_గమ్యం_UTrie2_Context *గమ్యం_UTrie2=(UPVec_గమ్యం_UTrie2_Context *)context;
+    ఒకవేళ(ప్రారంభం<UPVEC_మొదటి_SPECIAL_CP) {
+        utrie2_సమితి_Range32(గమ్యం_UTrie2->trie, ప్రారంభం, చివర, (uint32_t)అడ్డువరుస_సూచీ, నిజం, p_Error_సంకేతం);
+    } లేకపోతే {
+        ఎంపిక(ప్రారంభం) {
+        స్థితి UPVEC_INITIAL_విలువ_CP:
+            గమ్యం_UTrie2->initial_విలువ=అడ్డువరుస_సూచీ;
+            ఆపు;
+        స్థితి UPVEC_ERROR_విలువ_CP:
+            గమ్యం_UTrie2->error_విలువ=అడ్డువరుస_సూచీ;
+            ఆపు;
+        స్థితి UPVEC_ప్రారంభం_REAL_విలువలు_CP:
+            గమ్యం_UTrie2->max_విలువ=అడ్డువరుస_సూచీ;
+            ఒకవేళ(అడ్డువరుస_సూచీ>0xffff) {
                 /* too many rows for a 16-bit trie */
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            } else {
-                toUTrie2->trie=utrie2_open(toUTrie2->initialValue,
-                                           toUTrie2->errorValue, pErrorCode);
+                *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+            } లేకపోతే {
+                గమ్యం_UTrie2->trie=utrie2_open(గమ్యం_UTrie2->initial_విలువ,
+                                           గమ్యం_UTrie2->error_విలువ, p_Error_సంకేతం);
             }
-            break;
-        default:
-            break;
+            ఆపు;
+        అప్రమేయ:
+            ఆపు;
         }
     }
 }

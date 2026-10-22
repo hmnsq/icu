@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __ERRORCODE_H__
-#define __ERRORCODE_H__
+#నిర్వచితం_కాకపోతే __ERRORCODE_H__
+#నిర్వచించు __ERRORCODE_H__
 
 /**
  * \file 
@@ -25,11 +25,11 @@
  *                 ICU C and C++ APIs from C++ user code.
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -81,29 +81,29 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 4.2
  */
-class U_COMMON_API ErrorCode: public UMemory {
-public:
+class U_COMMON_API Error_సంకేతం: బహిరంగ UMemory {
+బహిరంగ:
     /**
      * Default constructor. Initializes its UErrorCode to U_ZERO_ERROR.
      * @stable ICU 4.2
      */
-    ErrorCode() : errorCode(U_ZERO_ERROR) {}
+    Error_సంకేతం() : error_సంకేతం(U_ZERO_ERROR) {}
     /** Destructor, does nothing. See class documentation for details. @stable ICU 4.2 */
-    virtual ~ErrorCode();
+    మాయా ~Error_సంకేతం();
     /** Conversion operator, returns a reference. @stable ICU 4.2 */
-    operator UErrorCode&() U_LIFETIME_BOUND { return errorCode; }
+    క్రియాకారకం UError_సంకేతం&() U_LIFETIME_BOUND { తిరిగి error_సంకేతం; }
     /** Conversion operator, returns a pointer. @stable ICU 4.2 */
-    operator UErrorCode*() U_LIFETIME_BOUND { return &errorCode; }
+    క్రియాకారకం UError_సంకేతం*() U_LIFETIME_BOUND { తిరిగి &error_సంకేతం; }
     /** Tests for U_SUCCESS(). @stable ICU 4.2 */
-    UBool isSuccess() const { return U_SUCCESS(errorCode); }
+    UBool isSuccess() స్థిరరాశి { తిరిగి U_SUCCESS(error_సంకేతం); }
     /** Tests for U_FAILURE(). @stable ICU 4.2 */
-    UBool isFailure() const { return U_FAILURE(errorCode); }
+    UBool isFailure() స్థిరరాశి { తిరిగి U_FAILURE(error_సంకేతం); }
     /** Returns the UErrorCode value. @stable ICU 4.2 */
-    UErrorCode get() const { return errorCode; }
+    UError_సంకేతం get() స్థిరరాశి { తిరిగి error_సంకేతం; }
     /** Sets the UErrorCode value. @stable ICU 4.2 */
-    void set(UErrorCode value) { errorCode=value; }
+    శూన్య సమితి(UError_సంకేతం విలువ_2) { error_సంకేతం=విలువ_2; }
     /** Returns the UErrorCode value and resets it to U_ZERO_ERROR. @stable ICU 4.2 */
-    UErrorCode reset();
+    UError_సంకేతం reset();
     /**
      * Asserts isSuccess().
      * In other words, this method checks for a failure code,
@@ -113,32 +113,32 @@ public:
      * \endcode
      * @stable ICU 4.4
      */
-    void assertSuccess() const;
+    శూన్య assertSuccess() స్థిరరాశి;
     /**
      * Return a string for the UErrorCode value.
      * The string will be the same as the name of the error code constant
      * in the UErrorCode enum.
      * @stable ICU 4.4
      */
-    const char* errorName() const;
+    స్థిరరాశి అక్షరం* errorName() స్థిరరాశి;
 
-protected:
+రక్షిత:
     /**
      * Internal UErrorCode, accessible to subclasses.
      * @stable ICU 4.2
      */
-    UErrorCode errorCode;
+    UError_సంకేతం error_సంకేతం;
     /**
      * Called by assertSuccess() if isFailure() is true.
      * A subclass should override this function to deal with a failure code:
      * Throw an exception, log an error, terminate the program, or similar.
      * @stable ICU 4.2
      */
-    virtual void handleFailure() const {}
+    మాయా శూన్య handleFailure() స్థిరరాశి {}
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __ERRORCODE_H__
+#అయితే_ముగింపు  // __ERRORCODE_H__

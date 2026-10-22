@@ -12,13 +12,13 @@
 ******************************************************************************
 */
 
-#ifndef UHASH_H
-#define UHASH_H
+#నిర్వచితం_కాకపోతే UHASH_H
+#నిర్వచించు UHASH_H
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "uelement.h"
-#include "unicode/localpointer.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "uelement.h"
+#అన్తర్భావ "unicode/localpointer.h"
 
 /**
  * UHashtable stores key-value pairs and does moderately fast lookup
@@ -95,35 +95,35 @@ U_CDECL_BEGIN
  * The hashing and comparison functions take a pointer to a
  * UHashTok, but the deleter receives the void* pointer within it.
  */
-typedef UElement UHashTok;
+రకనిర్వచనం UElement UHashTok;
 
 /**
  * This is a single hash element.
  */
-struct UHashElement {
+నిర్మాణం UHashElement {
     /* Reorder these elements to pack nicely if necessary */
     int32_t  hashcode;
-    UHashTok value;
-    UHashTok key;
+    UHashTok విలువ_2;
+    UHashTok కీలకం;
 };
-typedef struct UHashElement UHashElement;
+రకనిర్వచనం నిర్మాణం UHashElement UHashElement;
 
 /**
  * A hashing function.
  * @param key A key stored in a hashtable
  * @return A NON-NEGATIVE hash code for parm.
  */
-typedef int32_t U_CALLCONV UHashFunction(const UHashTok key);
+రకనిర్వచనం int32_t U_CALLCONV UHashFunction(స్థిరరాశి UHashTok కీలకం);
 
 /**
  * A key equality (boolean) comparison function.
  */
-typedef UElementsAreEqual UKeyComparator;
+రకనిర్వచనం UElementsAreEqual UKeyComparator;
 
 /**
  * A value equality (boolean) comparison function.
  */
-typedef UElementsAreEqual UValueComparator;
+రకనిర్వచనం UElementsAreEqual UValueComparator;
 
 /* see cmemory.h for UObjectDeleter and uprv_deleteUObject() */
 
@@ -131,7 +131,7 @@ typedef UElementsAreEqual UValueComparator;
  * This specifies whether or not, and how, the hashtable resizes itself.
  * See uhash_setResizePolicy().
  */
-enum UHashResizePolicy {
+గణన UHashResizePolicy {
     U_GROW,            /* Grow on demand, do not shrink */
     U_GROW_AND_SHRINK, /* Grow and shrink on demand */
     U_FIXED            /* Never change size */
@@ -141,7 +141,7 @@ enum UHashResizePolicy {
  * The UHashtable struct.  Clients should treat this as an opaque data
  * type and manipulate it only through the uhash_... API.
  */
-struct UHashtable {
+నిర్మాణం UHashtable {
 
     /* Main key-value pair storage array */
 
@@ -149,39 +149,39 @@ struct UHashtable {
 
     /* Function pointers */
 
-    UHashFunction *keyHasher;      /* Computes hash from key.
+    UHashFunction *కీలకం_Hasher;      /* Computes hash from key.
                                    * Never null. */
-    UKeyComparator *keyComparator; /* Compares keys for equality.
+    UKeyComparator *కీలకం_Comparator; /* Compares keys for equality.
                                    * Never null. */
-    UValueComparator *valueComparator; /* Compares the values for equality */
+    UValueComparator *విలువ_Comparator; /* Compares the values for equality */
 
-    UObjectDeleter *keyDeleter;    /* Deletes keys when required.
+    UObjectDeleter *కీలకం_Deleter;    /* Deletes keys when required.
                                    * If NULL won't do anything */
-    UObjectDeleter *valueDeleter;  /* Deletes values when required.
+    UObjectDeleter *విలువ_Deleter;  /* Deletes values when required.
                                    * If NULL won't do anything */
 
     /* Size parameters */
 
-    int32_t     count;      /* The number of key-value pairs in this table.
+    int32_t     లెక్క;      /* The number of key-value pairs in this table.
                              * 0 <= count <= length.  In practice we
                              * never let count == length (see code). */
-    int32_t     length;     /* The physical size of the arrays hashes, keys
+    int32_t     నిడివి;     /* The physical size of the arrays hashes, keys
                              * and values.  Must be prime. */
 
     /* Rehashing thresholds */
 
-    int32_t     highWaterMark;  /* If count > highWaterMark, rehash */
-    int32_t     lowWaterMark;   /* If count < lowWaterMark, rehash */
-    float       highWaterRatio; /* 0..1; high water as a fraction of length */
-    float       lowWaterRatio;  /* 0..1; low water as a fraction of length */
+    int32_t     ఎగువ_Water_Mark;  /* If count > highWaterMark, rehash */
+    int32_t     దిగువ_Water_Mark;   /* If count < lowWaterMark, rehash */
+    దశాంశం       ఎగువ_Water_నిష్పత్తి; /* 0..1; high water as a fraction of length */
+    దశాంశం       దిగువ_Water_నిష్పత్తి;  /* 0..1; low water as a fraction of length */
 
-    int8_t      primeIndex;     /* Index into our prime table for length.
+    int8_t      ప్రధానసంఖ్య_సూచీ;     /* Index into our prime table for length.
                                  * length == PRIMES[primeIndex] */
     UBool       allocated; /* Was this UHashtable allocated? */
 };
-typedef struct UHashtable UHashtable;
+రకనిర్వచనం నిర్మాణం UHashtable UHashtable;
 
-U_CDECL_END
+U_CDECL_చివర
 
 /********************************************************************
  * API
@@ -198,10 +198,10 @@ U_CDECL_END
  * @see uhash_openSize
  */
 U_CAPI UHashtable* U_EXPORT2
-uhash_open(UHashFunction *keyHash,
-           UKeyComparator *keyComp,
-           UValueComparator *valueComp,
-           UErrorCode *status);
+uhash_open(UHashFunction *కీలకం_Hash,
+           UKeyComparator *కీలకం_Comp,
+           UValueComparator *విలువ_Comp,
+           UError_సంకేతం *స్థితి_2);
 
 /**
  * Initialize a new UHashtable with a given initial size.
@@ -215,11 +215,11 @@ uhash_open(UHashFunction *keyHash,
  * @see uhash_open
  */
 U_CAPI UHashtable* U_EXPORT2
-uhash_openSize(UHashFunction *keyHash,
-               UKeyComparator *keyComp,
-               UValueComparator *valueComp,
-               int32_t size,
-               UErrorCode *status);
+uhash_open_కొలత(UHashFunction *కీలకం_Hash,
+               UKeyComparator *కీలకం_Comp,
+               UValueComparator *విలువ_Comp,
+               int32_t కొలత_2,
+               UError_సంకేతం *స్థితి_2);
 
 /**
  * Initialize an existing UHashtable.
@@ -233,10 +233,10 @@ uhash_openSize(UHashFunction *keyHash,
  */
 U_CAPI UHashtable* U_EXPORT2
 uhash_init(UHashtable *hash,
-           UHashFunction *keyHash,
-           UKeyComparator *keyComp,
-           UValueComparator *valueComp,
-           UErrorCode *status);
+           UHashFunction *కీలకం_Hash,
+           UKeyComparator *కీలకం_Comp,
+           UValueComparator *విలువ_Comp,
+           UError_సంకేతం *స్థితి_2);
 
 /**
  * Initialize an existing UHashtable.
@@ -250,18 +250,18 @@ uhash_init(UHashtable *hash,
  * @see uhash_openSize
  */
 U_CAPI UHashtable* U_EXPORT2
-uhash_initSize(UHashtable *hash,
-               UHashFunction *keyHash,
-               UKeyComparator *keyComp,
-               UValueComparator *valueComp,
-               int32_t size,
-               UErrorCode *status);
+uhash_init_కొలత(UHashtable *hash,
+               UHashFunction *కీలకం_Hash,
+               UKeyComparator *కీలకం_Comp,
+               UValueComparator *విలువ_Comp,
+               int32_t కొలత_2,
+               UError_సంకేతం *స్థితి_2);
 
 /**
  * Close a UHashtable, releasing the memory used.
  * @param hash The UHashtable to close. If hash is NULL no operation is performed.
  */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 uhash_close(UHashtable *hash);
 
 
@@ -273,7 +273,7 @@ uhash_close(UHashtable *hash);
  * @return the previous key hasher; non-NULL
  */
 U_CAPI UHashFunction *U_EXPORT2
-uhash_setKeyHasher(UHashtable *hash, UHashFunction *fn);
+uhash_సమితి_కీలకం_Hasher(UHashtable *hash, UHashFunction *fn);
 
 /**
  * Set the function used to compare keys.  The default comparison is a
@@ -283,7 +283,7 @@ uhash_setKeyHasher(UHashtable *hash, UHashFunction *fn);
  * @return the previous key comparator; non-NULL
  */
 U_CAPI UKeyComparator *U_EXPORT2
-uhash_setKeyComparator(UHashtable *hash, UKeyComparator *fn);
+uhash_సమితి_కీలకం_Comparator(UHashtable *hash, UKeyComparator *fn);
 
 /**
  * Set the function used to compare values.  The default comparison is a
@@ -293,7 +293,7 @@ uhash_setKeyComparator(UHashtable *hash, UKeyComparator *fn);
  * @return the previous key comparator; non-NULL
  */
 U_CAPI UValueComparator *U_EXPORT2
-uhash_setValueComparator(UHashtable *hash, UValueComparator *fn);
+uhash_సమితి_విలువ_Comparator(UHashtable *hash, UValueComparator *fn);
 
 /**
  * Set the function used to delete keys.  If this function pointer is
@@ -306,7 +306,7 @@ uhash_setValueComparator(UHashtable *hash, UValueComparator *fn);
  * @return the previous key deleter; may be NULL
  */
 U_CAPI UObjectDeleter *U_EXPORT2
-uhash_setKeyDeleter(UHashtable *hash, UObjectDeleter *fn);
+uhash_సమితి_కీలకం_Deleter(UHashtable *hash, UObjectDeleter *fn);
 
 /**
  * Set the function used to delete values.  If this function pointer
@@ -319,7 +319,7 @@ uhash_setKeyDeleter(UHashtable *hash, UObjectDeleter *fn);
  * @return the previous value deleter; may be NULL
  */
 U_CAPI UObjectDeleter *U_EXPORT2
-uhash_setValueDeleter(UHashtable *hash, UObjectDeleter *fn);
+uhash_సమితి_విలువ_Deleter(UHashtable *hash, UObjectDeleter *fn);
 
 /**
  * Specify whether or not, and how, the hashtable resizes itself.
@@ -328,8 +328,8 @@ uhash_setValueDeleter(UHashtable *hash, UObjectDeleter *fn);
  * @param hash The UHashtable to set
  * @param policy The way the hashtable resizes itself, {U_GROW, U_GROW_AND_SHRINK, U_FIXED}
  */
-U_CAPI void U_EXPORT2
-uhash_setResizePolicy(UHashtable *hash, enum UHashResizePolicy policy);
+U_CAPI శూన్య U_EXPORT2
+uhash_సమితి_Resize_Policy(UHashtable *hash, గణన UHashResizePolicy policy);
 
 /**
  * Get the number of key-value pairs stored in a UHashtable.
@@ -337,7 +337,7 @@ uhash_setResizePolicy(UHashtable *hash, enum UHashResizePolicy policy);
  * @return The number of key-value pairs stored in hash.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_count(const UHashtable *hash);
+uhash_లెక్క(స్థిరరాశి UHashtable *hash);
 
 /**
  * Put a (key=pointer, value=pointer) item in a UHashtable.  If the
@@ -352,11 +352,11 @@ uhash_count(const UHashtable *hash);
  * @return The previous value, or NULL if none.
  * @see uhash_get
  */
-U_CAPI void* U_EXPORT2
+U_CAPI శూన్య* U_EXPORT2
 uhash_put(UHashtable *hash,
-          void *key,
-          void *value,
-          UErrorCode *status);
+          శూన్య *కీలకం,
+          శూన్య *విలువ_2,
+          UError_సంకేతం *స్థితి_2);
 
 /**
  * Put a (key=integer, value=pointer) item in a UHashtable.
@@ -370,11 +370,11 @@ uhash_put(UHashtable *hash,
  * @return The previous value, or NULL if none.
  * @see uhash_get
  */
-U_CAPI void* U_EXPORT2
+U_CAPI శూన్య* U_EXPORT2
 uhash_iput(UHashtable *hash,
-           int32_t key,
-           void* value,
-           UErrorCode *status);
+           int32_t కీలకం,
+           శూన్య* విలువ_2,
+           UError_సంకేతం *స్థితి_2);
 
 /**
  * Put a (key=pointer, value=integer) item in a UHashtable.  If the
@@ -390,9 +390,9 @@ uhash_iput(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_puti(UHashtable *hash,
-           void* key,
-           int32_t value,
-           UErrorCode *status);
+           శూన్య* కీలకం,
+           int32_t విలువ_2,
+           UError_సంకేతం *స్థితి_2);
 
 /**
  * Put a (key=integer, value=integer) item in a UHashtable.  If the
@@ -408,9 +408,9 @@ uhash_puti(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_iputi(UHashtable *hash,
-           int32_t key,
-           int32_t value,
-           UErrorCode *status);
+           int32_t కీలకం,
+           int32_t విలువ_2,
+           UError_సంకేతం *స్థితి_2);
 
 /**
  * Put a (key=pointer, value=integer) item in a UHashtable.  If the
@@ -427,9 +427,9 @@ uhash_iputi(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_putiAllowZero(UHashtable *hash,
-                    void *key,
-                    int32_t value,
-                    UErrorCode *status);
+                    శూన్య *కీలకం,
+                    int32_t విలువ_2,
+                    UError_సంకేతం *స్థితి_2);
 
 /**
  * Put a (key=integer, value=integer) item in a UHashtable.  If the
@@ -446,9 +446,9 @@ uhash_putiAllowZero(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_iputiAllowZero(UHashtable *hash,
-                     int32_t key,
-                     int32_t value,
-                     UErrorCode *status);
+                     int32_t కీలకం,
+                     int32_t విలువ_2,
+                     UError_సంకేతం *స్థితి_2);
 
 /**
  * Retrieve a pointer value from a UHashtable using a pointer key,
@@ -457,9 +457,9 @@ uhash_iputiAllowZero(UHashtable *hash,
  * @param key A pointer key stored in a hashtable
  * @return The requested item, or NULL if not found.
  */
-U_CAPI void* U_EXPORT2
-uhash_get(const UHashtable *hash,
-          const void *key);
+U_CAPI శూన్య* U_EXPORT2
+uhash_get(స్థిరరాశి UHashtable *hash,
+          స్థిరరాశి శూన్య *కీలకం);
 
 /**
  * Retrieve a pointer value from a UHashtable using a integer key,
@@ -468,9 +468,9 @@ uhash_get(const UHashtable *hash,
  * @param key An integer key stored in a hashtable
  * @return The requested item, or NULL if not found.
  */
-U_CAPI void* U_EXPORT2
-uhash_iget(const UHashtable *hash,
-           int32_t key);
+U_CAPI శూన్య* U_EXPORT2
+uhash_iget(స్థిరరాశి UHashtable *hash,
+           int32_t కీలకం);
 
 /**
  * Retrieve an integer value from a UHashtable using a pointer key,
@@ -480,8 +480,8 @@ uhash_iget(const UHashtable *hash,
  * @return The requested item, or 0 if not found.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_geti(const UHashtable *hash,
-           const void* key);
+uhash_geti(స్థిరరాశి UHashtable *hash,
+           స్థిరరాశి శూన్య* కీలకం);
 /**
  * Retrieve an integer value from a UHashtable using an integer key,
  * as previously stored by uhash_iputi().
@@ -490,8 +490,8 @@ uhash_geti(const UHashtable *hash,
  * @return The requested item, or 0 if not found.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_igeti(const UHashtable *hash,
-           int32_t key);
+uhash_igeti(స్థిరరాశి UHashtable *hash,
+           int32_t కీలకం);
 
 /**
  * Retrieves an integer value from a UHashtable using a pointer key,
@@ -503,9 +503,9 @@ uhash_igeti(const UHashtable *hash,
  * @return The requested item, or 0 if not found.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_getiAndFound(const UHashtable *hash,
-                   const void *key,
-                   UBool *found);
+uhash_geti_And_దొరికింది(స్థిరరాశి UHashtable *hash,
+                   స్థిరరాశి శూన్య *కీలకం,
+                   UBool *దొరికింది);
 
 /**
  * Retrieves an integer value from a UHashtable using an integer key,
@@ -517,9 +517,9 @@ uhash_getiAndFound(const UHashtable *hash,
  * @return The requested item, or 0 if not found.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_igetiAndFound(const UHashtable *hash,
-                    int32_t key,
-                    UBool *found);
+uhash_igeti_And_దొరికింది(స్థిరరాశి UHashtable *hash,
+                    int32_t కీలకం,
+                    UBool *దొరికింది);
 
 /**
  * Remove an item from a UHashtable stored by uhash_put().
@@ -527,9 +527,9 @@ uhash_igetiAndFound(const UHashtable *hash,
  * @param key A key stored in a hashtable
  * @return The item removed, or NULL if not found.
  */
-U_CAPI void* U_EXPORT2
+U_CAPI శూన్య* U_EXPORT2
 uhash_remove(UHashtable *hash,
-             const void *key);
+             స్థిరరాశి శూన్య *కీలకం);
 
 /**
  * Remove an item from a UHashtable stored by uhash_iput().
@@ -537,9 +537,9 @@ uhash_remove(UHashtable *hash,
  * @param key An integer key stored in a hashtable
  * @return The item removed, or NULL if not found.
  */
-U_CAPI void* U_EXPORT2
+U_CAPI శూన్య* U_EXPORT2
 uhash_iremove(UHashtable *hash,
-              int32_t key);
+              int32_t కీలకం);
 
 /**
  * Remove an item from a UHashtable stored by uhash_puti().
@@ -549,7 +549,7 @@ uhash_iremove(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_removei(UHashtable *hash,
-              const void* key);
+              స్థిరరాశి శూన్య* కీలకం);
 
 /**
  * Remove an item from a UHashtable stored by uhash_iputi().
@@ -559,13 +559,13 @@ uhash_removei(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_iremovei(UHashtable *hash,
-               int32_t key);
+               int32_t కీలకం);
 
 /**
  * Remove all items from a UHashtable.
  * @param hash The target UHashtable.
  */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 uhash_removeAll(UHashtable *hash);
 
 /**
@@ -576,7 +576,7 @@ uhash_removeAll(UHashtable *hash);
  * @return true if the key is found.
  */
 U_CAPI UBool U_EXPORT2
-uhash_containsKey(const UHashtable *hash, const void *key);
+uhash_కలిగియుంది_కీలకం(స్థిరరాశి UHashtable *hash, స్థిరరాశి శూన్య *కీలకం);
 
 /**
  * Returns true if the UHashtable contains an item with this integer key.
@@ -586,7 +586,7 @@ uhash_containsKey(const UHashtable *hash, const void *key);
  * @return true if the key is found.
  */
 U_CAPI UBool U_EXPORT2
-uhash_icontainsKey(const UHashtable *hash, int32_t key);
+uhash_icontains_కీలకం(స్థిరరాశి UHashtable *hash, int32_t కీలకం);
 
 /**
  * Locate an element of a UHashtable.  The caller must not modify the
@@ -599,15 +599,15 @@ uhash_icontainsKey(const UHashtable *hash, int32_t key);
  * @param key A key stored in a hashtable
  * @return a hash element, or NULL if the key is not found.
  */
-U_CAPI const UHashElement* U_EXPORT2
-uhash_find(const UHashtable *hash, const void* key);
+U_CAPI స్థిరరాశి UHashElement* U_EXPORT2
+uhash_కనుగొను(స్థిరరాశి UHashtable *hash, స్థిరరాశి శూన్య* కీలకం);
 
 /**
  * \def UHASH_FIRST
  * Constant for use with uhash_nextElement
  * @see uhash_nextElement
  */
-#define UHASH_FIRST (-1)
+#నిర్వచించు UHASH_మొదటి (-1)
 
 /**
  * Iterate through the elements of a UHashtable.  The caller must not
@@ -622,8 +622,8 @@ uhash_find(const UHashtable *hash, const void* key);
  * @return a hash element, or NULL if no further key-value pairs
  * exist in the table.
  */
-U_CAPI const UHashElement* U_EXPORT2
-uhash_nextElement(const UHashtable *hash,
+U_CAPI స్థిరరాశి UHashElement* U_EXPORT2
+uhash_తదుపరి_Element(స్థిరరాశి UHashtable *hash,
                   int32_t *pos);
 
 /**
@@ -637,8 +637,8 @@ uhash_nextElement(const UHashtable *hash,
  * modified.
  * @return the value that was removed.
  */
-U_CAPI void* U_EXPORT2
-uhash_removeElement(UHashtable *hash, const UHashElement* e);
+U_CAPI శూన్య* U_EXPORT2
+uhash_removeElement(UHashtable *hash, స్థిరరాశి UHashElement* e);
 
 /********************************************************************
  * UHashTok convenience
@@ -672,7 +672,7 @@ uhash_tokp(void* p);*/
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashUChars(const UHashTok key);
+uhash_hashUChars(స్థిరరాశి UHashTok కీలకం);
 
 /**
  * Generate a hash code for a null-terminated char* string.  If the
@@ -682,7 +682,7 @@ uhash_hashUChars(const UHashTok key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashChars(const UHashTok key);
+uhash_hashChars(స్థిరరాశి UHashTok కీలకం);
 
 /**
  * Generate a case-insensitive hash code for a null-terminated char*
@@ -692,7 +692,7 @@ uhash_hashChars(const UHashTok key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashIChars(const UHashTok key);
+uhash_hashIChars(స్థిరరాశి UHashTok కీలకం);
 
 /**
  * Generate a case-insensitive hash code for a std::string_view.
@@ -701,7 +701,7 @@ uhash_hashIChars(const UHashTok key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashIStringView(const UHashTok key);
+uhash_hashIStringView(స్థిరరాశి UHashTok కీలకం);
 
 /**
  * Comparator for null-terminated UChar* strings.  Use together with
@@ -711,7 +711,7 @@ uhash_hashIStringView(const UHashTok key);
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareUChars(const UHashTok key1, const UHashTok key2);
+uhash_compareUChars(స్థిరరాశి UHashTok key1, స్థిరరాశి UHashTok key2);
 
 /**
  * Comparator for null-terminated char* strings.  Use together with
@@ -721,7 +721,7 @@ uhash_compareUChars(const UHashTok key1, const UHashTok key2);
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareChars(const UHashTok key1, const UHashTok key2);
+uhash_compareChars(స్థిరరాశి UHashTok key1, స్థిరరాశి UHashTok key2);
 
 /**
  * Case-insensitive comparator for null-terminated char* strings.  Use
@@ -731,7 +731,7 @@ uhash_compareChars(const UHashTok key1, const UHashTok key2);
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareIChars(const UHashTok key1, const UHashTok key2);
+uhash_compareIChars(స్థిరరాశి UHashTok key1, స్థిరరాశి UHashTok key2);
 
 /**
  * Case-insensitive comparator for std::string_view.
@@ -741,7 +741,7 @@ uhash_compareIChars(const UHashTok key1, const UHashTok key2);
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareIStringView(const UHashTok key1, const UHashTok key2);
+uhash_compareIStringView(స్థిరరాశి UHashTok key1, స్థిరరాశి UHashTok key2);
 
 /********************************************************************
  * UnicodeString Support Functions
@@ -753,7 +753,7 @@ uhash_compareIStringView(const UHashTok key1, const UHashTok key2);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashUnicodeString(const UElement key);
+uhash_hashUnicodeString(స్థిరరాశి UElement కీలకం);
 
 /**
  * Hash function for UnicodeString* keys (case insensitive).
@@ -762,7 +762,7 @@ uhash_hashUnicodeString(const UElement key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashCaselessUnicodeString(const UElement key);
+uhash_hashCaselessUnicodeString(స్థిరరాశి UElement కీలకం);
 
 /********************************************************************
  * int32_t Support Functions
@@ -774,7 +774,7 @@ uhash_hashCaselessUnicodeString(const UElement key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashLong(const UHashTok key);
+uhash_hashLong(స్థిరరాశి UHashTok కీలకం);
 
 /**
  * Comparator function for 32-bit integer keys.
@@ -783,7 +783,7 @@ uhash_hashLong(const UHashTok key);
  * @return true if key1 and key2 are equal, return false otherwise
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareLong(const UHashTok key1, const UHashTok key2);
+uhash_compareLong(స్థిరరాశి UHashTok key1, స్థిరరాశి UHashTok key2);
 
 /********************************************************************
  * Other Support Functions
@@ -793,8 +793,8 @@ uhash_compareLong(const UHashTok key1, const UHashTok key2);
  * Deleter for Hashtable objects.
  * @param obj The object to be deleted
  */
-U_CAPI void U_EXPORT2
-uhash_deleteHashtable(void *obj);
+U_CAPI శూన్య U_EXPORT2
+uhash_deleteHashtable(శూన్య *obj);
 
 /* Use uprv_free() itself as a deleter for any key or value allocated using uprv_malloc. */
 
@@ -805,10 +805,10 @@ uhash_deleteHashtable(void *obj);
  * @return true if the hashtables are equal and false if not.
  */
 U_CAPI UBool U_EXPORT2
-uhash_equals(const UHashtable* hash1, const UHashtable* hash2);
+uhash_equals(స్థిరరాశి UHashtable* hash1, స్థిరరాశి UHashtable* hash2);
 
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -821,10 +821,10 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUHashtablePointer, UHashtable, uhash_close);
+U_DEFINE_LOCAL_OPEN_సూచిక(Local_UHashtable_సూచిక, UHashtable, uhash_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు

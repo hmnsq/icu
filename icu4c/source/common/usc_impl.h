@@ -15,10 +15,10 @@
 ******************************************************************************
 */
 
-#ifndef USC_IMPL_H
-#define USC_IMPL_H
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
+#నిర్వచితం_కాకపోతే USC_IMPL_H
+#నిర్వచించు USC_IMPL_H
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uscript.h"
 
 /**
  * <code>UScriptRun</code> is used to find runs of characters in
@@ -54,9 +54,9 @@
  *  }
  * </pre>
  */
-struct UScriptRun;
+నిర్మాణం UScript_నిరంతరం;
 
-typedef struct UScriptRun UScriptRun;
+రకనిర్వచనం నిర్మాణం UScript_నిరంతరం UScript_నిరంతరం;
 
 /**
  * Create a <code>UScriptRun</code> object for iterating over the given text. This object must
@@ -77,8 +77,8 @@ typedef struct UScriptRun UScriptRun;
  * @return the address of <code>UScriptRun</code> object which will iterate over the text,
  *         or <code>NULL</code> if the operation failed.
  */
-U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
+U_CAPI UScript_నిరంతరం * U_EXPORT2
+uscript_open_నిరంతరం(స్థిరరాశి UChar *src, int32_t నిడివి, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Frees the given <code>UScriptRun</code> object and any storage associated with it.
@@ -86,8 +86,8 @@ uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
  *
  * @param scriptRun is the <code>UScriptRun</code> object which will be freed.
  */
-U_CAPI void U_EXPORT2
-uscript_closeRun(UScriptRun *scriptRun);
+U_CAPI శూన్య U_EXPORT2
+uscript_close_నిరంతరం(UScript_నిరంతరం *script_నిరంతరం);
 
 /**
  * Reset the <code>UScriptRun</code> object so that it will start iterating from
@@ -95,8 +95,8 @@ uscript_closeRun(UScriptRun *scriptRun);
  *
  * @param scriptRun is the address of the <code>UScriptRun</code> object to be reset.
  */
-U_CAPI void U_EXPORT2
-uscript_resetRun(UScriptRun *scriptRun);
+U_CAPI శూన్య U_EXPORT2
+uscript_reset_నిరంతరం(UScript_నిరంతరం *script_నిరంతరం);
 
 /**
  * Change the text over which the given <code>UScriptRun</code> object iterates.
@@ -113,8 +113,8 @@ uscript_resetRun(UScriptRun *scriptRun);
  *        indicates a failure on entry, the function will immediately return.
  *        On exit the value will indicate the success of the operation.
  */
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const UChar *src, int32_t length, UErrorCode *pErrorCode);
+U_CAPI శూన్య U_EXPORT2
+uscript_సమితి_నిరంతరం_పాఠ్యం(UScript_నిరంతరం *script_నిరంతరం, స్థిరరాశి UChar *src, int32_t నిడివి, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Advance the <code>UScriptRun</code> object to the next script run, return the start and limit
@@ -134,6 +134,6 @@ uscript_setRunText(UScriptRun *scriptRun, const UChar *src, int32_t length, UErr
  * @return true if there was another script run.
  */
 U_CAPI UBool U_EXPORT2
-uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, UScriptCode *pRunScript);
+uscript_తదుపరి_నిరంతరం(UScript_నిరంతరం *script_నిరంతరం, int32_t *p_నిరంతరం_ప్రారంభం, int32_t *p_నిరంతరం_హద్దు, UScript_సంకేతం *p_నిరంతరం_Script);
 
-#endif
+#అయితే_ముగింపు

@@ -1,269 +1,269 @@
 // © 2022 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include "cmemory.h"
-#include "mlbe.h"
-#include "uassert.h"
-#include "ubrkimpl.h"
-#include "unicode/resbund.h"
-#include "unicode/udata.h"
-#include "unicode/utf16.h"
-#include "uresimp.h"
-#include "util.h"
-#include "uvectr32.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "mlbe.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ubrkimpl.h"
+#అన్తర్భావ "unicode/resbund.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "util.h"
+#అన్తర్భావ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-enum class ModelIndex { kUWStart = 0, kBWStart = 6, kTWStart = 9 };
+గణన తరగతి Model_సూచీ { kUWStart = 0, kBWStart = 6, kTWStart = 9 };
 
-MlBreakEngine::MlBreakEngine(const UnicodeSet &digitOrOpenPunctuationOrAlphabetSet,
-                             const UnicodeSet &closePunctuationSet, UErrorCode &status)
-    : fDigitOrOpenPunctuationOrAlphabetSet(digitOrOpenPunctuationOrAlphabetSet),
-      fClosePunctuationSet(closePunctuationSet),
-      fNegativeSum(0) {
-    if (U_FAILURE(status)) {
-        return;
+MlBreakEngine::MlBreakEngine(స్థిరరాశి Unicode_సమితి &digit_Or_Open_Punctuation_Or_Alphabet_సమితి,
+                             స్థిరరాశి Unicode_సమితి &close_Punctuation_సమితి, UError_సంకేతం &స్థితి_2)
+    : f_Digit_Or_Open_Punctuation_Or_Alphabet_సమితి(digit_Or_Open_Punctuation_Or_Alphabet_సమితి),
+      f_Close_Punctuation_సమితి(close_Punctuation_సమితి),
+      f_Negative_కూడిక(0) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    loadMLModel(status);
+    ఎక్కించు_MLModel(స్థితి_2);
 }
 
 MlBreakEngine::~MlBreakEngine() {}
 
-int32_t MlBreakEngine::divideUpRange(UText *inText, int32_t rangeStart, int32_t rangeEnd,
-                                     UVector32 &foundBreaks, const UnicodeString &inString,
-                                     const LocalPointer<UVector32> &inputMap,
-                                     UErrorCode &status) const {
-    if (U_FAILURE(status)) {
-        return 0;
+int32_t MlBreakEngine::divide_పైకి_Range(UText *లోపల_పాఠ్యం, int32_t range_ప్రారంభం, int32_t range_చివర,
+                                     UVector32 &దొరికింది_Breaks, స్థిరరాశి UnicodeString &లోపల_String,
+                                     స్థిరరాశి Local_సూచిక<UVector32> &ఆదానం_Map,
+                                     UError_సంకేతం &స్థితి_2) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి 0;
     }
-    if (rangeStart >= rangeEnd) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ (range_ప్రారంభం >= range_చివర) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    UVector32 boundary(inString.countChar32() + 1, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    UVector32 boundary(లోపల_String.లెక్క_Char32() + 1, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి 0;
     }
-    int32_t numBreaks = 0;
-    int32_t codePointLength = inString.countChar32();
+    int32_t అంకె_Breaks = 0;
+    int32_t సంకేతం_బిందువు_నిడివి = లోపల_String.లెక్క_Char32();
     // The ML algorithm groups six char and evaluates whether the 4th char is a breakpoint.
     // In each iteration, it evaluates the 4th char and then moves forward one char like a sliding
     // window. Initially, the first six values in the indexList are [-1, -1, 0, 1, 2, 3]. After
     // moving forward, finally the last six values in the indexList are
     // [length-4, length-3, length-2, length-1, -1, -1]. The "+4" here means four extra "-1".
-    int32_t indexSize = codePointLength + 4;
-    LocalMemory<int32_t> indexList(static_cast<int32_t*>(uprv_malloc(indexSize * sizeof(int32_t))));
-    if (indexList.isNull()) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+    int32_t సూచీ_కొలత = సంకేతం_బిందువు_నిడివి + 4;
+    Local_జ్ఞాపకం<int32_t> సూచీ_List(static_cast<int32_t*>(uprv_malloc(సూచీ_కొలత * పరిమాణం(int32_t))));
+    ఒకవేళ (సూచీ_List.isNull()) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి 0;
     }
-    int32_t numCodeUnits = initIndexList(inString, indexList.getAlias(), status);
+    int32_t అంకె_సంకేతం_Units = init_సూచీ_List(లోపల_String, సూచీ_List.getAlias(), స్థితి_2);
 
     // Add a break for the start.
-    boundary.addElement(0, status);
-    numBreaks++;
-    if (U_FAILURE(status)) return 0;
+    boundary.కూడు_Element(0, స్థితి_2);
+    అంకె_Breaks++;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి 0;
 
-    for (int32_t idx = 0; idx + 1 < codePointLength && U_SUCCESS(status); idx++) {
-        numBreaks =
-            evaluateBreakpoint(inString, indexList.getAlias(), idx, numCodeUnits, numBreaks, boundary, status);
-        if (idx + 4 < codePointLength) {
-            indexList[idx + 6] = numCodeUnits;
-            numCodeUnits += U16_LENGTH(inString.char32At(indexList[idx + 6]));
+    కొరకు (int32_t idx = 0; idx + 1 < సంకేతం_బిందువు_నిడివి && U_SUCCESS(స్థితి_2); idx++) {
+        అంకె_Breaks =
+            evaluateBreakpoint(లోపల_String, సూచీ_List.getAlias(), idx, అంకె_సంకేతం_Units, అంకె_Breaks, boundary, స్థితి_2);
+        ఒకవేళ (idx + 4 < సంకేతం_బిందువు_నిడివి) {
+            సూచీ_List[idx + 6] = అంకె_సంకేతం_Units;
+            అంకె_సంకేతం_Units += U16_నిడివి(లోపల_String.char32At(సూచీ_List[idx + 6]));
         }
     }
 
-    if (U_FAILURE(status)) return 0;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి 0;
 
     // Add a break for the end if there is not one there already.
-    if (boundary.lastElementi() != inString.countChar32()) {
-        boundary.addElement(inString.countChar32(), status);
-        numBreaks++;
+    ఒకవేళ (boundary.చివరి_Elementi() != లోపల_String.లెక్క_Char32()) {
+        boundary.కూడు_Element(లోపల_String.లెక్క_Char32(), స్థితి_2);
+        అంకె_Breaks++;
     }
 
     int32_t prevCPPos = -1;
     int32_t prevUTextPos = -1;
-    int32_t correctedNumBreaks = 0;
-    for (int32_t i = 0; i < numBreaks; i++) {
+    int32_t corrected_అంకె_Breaks = 0;
+    కొరకు (int32_t i = 0; i < అంకె_Breaks; i++) {
         int32_t cpPos = boundary.elementAti(i);
-        int32_t utextPos = inputMap.isValid() ? inputMap->elementAti(cpPos) : cpPos + rangeStart;
+        int32_t utextPos = ఆదానం_Map.isValid() ? ఆదానం_Map->elementAti(cpPos) : cpPos + range_ప్రారంభం;
         U_ASSERT(cpPos > prevCPPos);
         U_ASSERT(utextPos >= prevUTextPos);
 
-        if (utextPos > prevUTextPos) {
-            if (utextPos != rangeStart ||
+        ఒకవేళ (utextPos > prevUTextPos) {
+            ఒకవేళ (utextPos != range_ప్రారంభం ||
                 (utextPos > 0 &&
-                 fClosePunctuationSet.contains(utext_char32At(inText, utextPos - 1)))) {
-                foundBreaks.push(utextPos, status);
-                correctedNumBreaks++;
+                 f_Close_Punctuation_సమితి.కలిగియుంది(utext_char32At(లోపల_పాఠ్యం, utextPos - 1)))) {
+                దొరికింది_Breaks.push(utextPos, స్థితి_2);
+                corrected_అంకె_Breaks++;
             }
-        } else {
+        } లేకపోతే {
             // Normalization expanded the input text, the dictionary found a boundary
             // within the expansion, giving two boundaries with the same index in the
             // original text. Ignore the second. See ticket #12918.
-            --numBreaks;
+            --అంకె_Breaks;
         }
         prevCPPos = cpPos;
         prevUTextPos = utextPos;
     }
-    (void)prevCPPos;  // suppress compiler warnings about unused variable
+    (శూన్య)prevCPPos;  // suppress compiler warnings about unused variable
 
-    UChar32 nextChar = utext_char32At(inText, rangeEnd);
-    if (!foundBreaks.isEmpty() && foundBreaks.peeki() == rangeEnd) {
+    UChar32 తదుపరి_Char = utext_char32At(లోపల_పాఠ్యం, range_చివర);
+    ఒకవేళ (!దొరికింది_Breaks.is_ఖాళీలు() && దొరికింది_Breaks.peeki() == range_చివర) {
         // In phrase breaking, there has to be a breakpoint between Cj character and
         // the number/open punctuation.
         // E.g. る文字「そうだ、京都」->る▁文字▁「そうだ、▁京都」-> breakpoint between 字 and「
         // E.g. 乗車率９０％程度だろうか -> 乗車▁率▁９０％▁程度だろうか -> breakpoint between 率 and ９
         // E.g. しかもロゴがＵｎｉｃｏｄｅ！ -> しかも▁ロゴが▁Ｕｎｉｃｏｄｅ！-> breakpoint between が and Ｕ
-        if (!fDigitOrOpenPunctuationOrAlphabetSet.contains(nextChar)) {
-            foundBreaks.popi();
-            correctedNumBreaks--;
+        ఒకవేళ (!f_Digit_Or_Open_Punctuation_Or_Alphabet_సమితి.కలిగియుంది(తదుపరి_Char)) {
+            దొరికింది_Breaks.popi();
+            corrected_అంకె_Breaks--;
         }
     }
 
-    return correctedNumBreaks;
+    తిరిగి corrected_అంకె_Breaks;
 }
 
-int32_t MlBreakEngine::evaluateBreakpoint(const UnicodeString &inString, int32_t *indexList,
-                                          int32_t startIdx, int32_t numCodeUnits, int32_t numBreaks,
-                                          UVector32 &boundary, UErrorCode &status) const {
-    if (U_FAILURE(status)) {
-        return numBreaks;
+int32_t MlBreakEngine::evaluateBreakpoint(స్థిరరాశి UnicodeString &లోపల_String, int32_t *సూచీ_List,
+                                          int32_t ప్రారంభం_Idx, int32_t అంకె_సంకేతం_Units, int32_t అంకె_Breaks,
+                                          UVector32 &boundary, UError_సంకేతం &స్థితి_2) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అంకె_Breaks;
     }
-    int32_t start = 0, end = 0;
-    int32_t score = fNegativeSum;
+    int32_t ప్రారంభం = 0, చివర = 0;
+    int32_t score = f_Negative_కూడిక;
 
-    for (int i = 0; i < 6; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < 6; i++) {
         // UW1 ~ UW6
-        start = startIdx + i;
-        if (indexList[start] != -1) {
-            end = (indexList[start + 1] != -1) ? indexList[start + 1] : numCodeUnits;
-            score += fModel[static_cast<int32_t>(ModelIndex::kUWStart) + i].geti(
-                inString.tempSubString(indexList[start], end - indexList[start]));
+        ప్రారంభం = ప్రారంభం_Idx + i;
+        ఒకవేళ (సూచీ_List[ప్రారంభం] != -1) {
+            చివర = (సూచీ_List[ప్రారంభం + 1] != -1) ? సూచీ_List[ప్రారంభం + 1] : అంకె_సంకేతం_Units;
+            score += fModel[static_cast<int32_t>(Model_సూచీ::kUWStart) + i].geti(
+                లోపల_String.తాత్కాలిక_Sub_String(సూచీ_List[ప్రారంభం], చివర - సూచీ_List[ప్రారంభం]));
         }
     }
-    for (int i = 0; i < 3; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < 3; i++) {
         // BW1 ~ BW3
-        start = startIdx + i + 1;
-        if (indexList[start] != -1 && indexList[start + 1] != -1) {
-            end = (indexList[start + 2] != -1) ? indexList[start + 2] : numCodeUnits;
-            score += fModel[static_cast<int32_t>(ModelIndex::kBWStart) + i].geti(
-                inString.tempSubString(indexList[start], end - indexList[start]));
+        ప్రారంభం = ప్రారంభం_Idx + i + 1;
+        ఒకవేళ (సూచీ_List[ప్రారంభం] != -1 && సూచీ_List[ప్రారంభం + 1] != -1) {
+            చివర = (సూచీ_List[ప్రారంభం + 2] != -1) ? సూచీ_List[ప్రారంభం + 2] : అంకె_సంకేతం_Units;
+            score += fModel[static_cast<int32_t>(Model_సూచీ::kBWStart) + i].geti(
+                లోపల_String.తాత్కాలిక_Sub_String(సూచీ_List[ప్రారంభం], చివర - సూచీ_List[ప్రారంభం]));
         }
     }
-    for (int i = 0; i < 4; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < 4; i++) {
         // TW1 ~ TW4
-        start = startIdx + i;
-        if (indexList[start] != -1 && indexList[start + 1] != -1 && indexList[start + 2] != -1) {
-            end = (indexList[start + 3] != -1) ? indexList[start + 3] : numCodeUnits;
-            score += fModel[static_cast<int32_t>(ModelIndex::kTWStart) + i].geti(
-                inString.tempSubString(indexList[start], end - indexList[start]));
+        ప్రారంభం = ప్రారంభం_Idx + i;
+        ఒకవేళ (సూచీ_List[ప్రారంభం] != -1 && సూచీ_List[ప్రారంభం + 1] != -1 && సూచీ_List[ప్రారంభం + 2] != -1) {
+            చివర = (సూచీ_List[ప్రారంభం + 3] != -1) ? సూచీ_List[ప్రారంభం + 3] : అంకె_సంకేతం_Units;
+            score += fModel[static_cast<int32_t>(Model_సూచీ::kTWStart) + i].geti(
+                లోపల_String.తాత్కాలిక_Sub_String(సూచీ_List[ప్రారంభం], చివర - సూచీ_List[ప్రారంభం]));
         }
     }
 
-    if (score > 0) {
-        boundary.addElement(startIdx + 1, status);
-        numBreaks++;
+    ఒకవేళ (score > 0) {
+        boundary.కూడు_Element(ప్రారంభం_Idx + 1, స్థితి_2);
+        అంకె_Breaks++;
     }
-    return numBreaks;
+    తిరిగి అంకె_Breaks;
 }
 
-int32_t MlBreakEngine::initIndexList(const UnicodeString &inString, int32_t *indexList,
-                                     UErrorCode &status) const {
-    if (U_FAILURE(status)) {
-        return 0;
+int32_t MlBreakEngine::init_సూచీ_List(స్థిరరాశి UnicodeString &లోపల_String, int32_t *సూచీ_List,
+                                     UError_సంకేతం &స్థితి_2) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి 0;
     }
-    int32_t index = 0;
-    int32_t length = inString.countChar32();
+    int32_t సూచీ = 0;
+    int32_t length = లోపల_String.లెక్క_Char32();
     // Set all (lenght+4) items inside indexLength to -1 presuming -1 is 4 bytes of 0xff.
-    uprv_memset(indexList, 0xff, (length + 4) * sizeof(int32_t));
-    if (length > 0) {
-        indexList[2] = 0;
-        index = U16_LENGTH(inString.char32At(0));
-        if (length > 1) {
-            indexList[3] = index;
-            index += U16_LENGTH(inString.char32At(index));
-            if (length > 2) {
-                indexList[4] = index;
-                index += U16_LENGTH(inString.char32At(index));
-                if (length > 3) {
-                    indexList[5] = index;
-                    index += U16_LENGTH(inString.char32At(index));
+    uprv_memset(సూచీ_List, 0xff, (length + 4) * పరిమాణం(int32_t));
+    ఒకవేళ (length > 0) {
+        సూచీ_List[2] = 0;
+        సూచీ = U16_నిడివి(లోపల_String.char32At(0));
+        ఒకవేళ (length > 1) {
+            సూచీ_List[3] = సూచీ;
+            సూచీ += U16_నిడివి(లోపల_String.char32At(సూచీ));
+            ఒకవేళ (length > 2) {
+                సూచీ_List[4] = సూచీ;
+                సూచీ += U16_నిడివి(లోపల_String.char32At(సూచీ));
+                ఒకవేళ (length > 3) {
+                    సూచీ_List[5] = సూచీ;
+                    సూచీ += U16_నిడివి(లోపల_String.char32At(సూచీ));
                 }
             }
         }
     }
-    return index;
+    తిరిగి సూచీ;
 }
 
-void MlBreakEngine::loadMLModel(UErrorCode &error) {
+శూన్య MlBreakEngine::ఎక్కించు_MLModel(UError_సంకేతం &error) {
     // BudouX's model consists of thirteen categories, each of which is make up of pairs of the
     // feature and its score. As integrating it into jaml.txt, we define thirteen kinds of key and
     // value to represent the feature and the corresponding score respectively.
 
-    if (U_FAILURE(error)) return;
+    ఒకవేళ (U_FAILURE(error)) తిరిగి;
 
-    UnicodeString key;
-    StackUResourceBundle stackTempBundle;
-    ResourceDataValue modelKey;
+    UnicodeString కీలకం;
+    దొంతర_UResource_Bundle దొంతర_తాత్కాలిక_Bundle;
+    Resource_దత్తాంశం_విలువ model_కీలకం;
 
-    LocalUResourceBundlePointer rbp(ures_openDirect(U_ICUDATA_BRKITR, "jaml", &error));
+    Local_UResource_Bundle_సూచిక rbp(ures_open_ప్రత్యక్ష(U_ICUDATA_BRKITR, "jaml", &error));
     UResourceBundle *rb = rbp.getAlias();
-    if (U_FAILURE(error)) return;
+    ఒకవేళ (U_FAILURE(error)) తిరిగి;
 
-    int32_t index = 0;
-    initKeyValue(rb, "UW1Keys", "UW1Values", fModel[index++], error);
-    initKeyValue(rb, "UW2Keys", "UW2Values", fModel[index++], error);
-    initKeyValue(rb, "UW3Keys", "UW3Values", fModel[index++], error);
-    initKeyValue(rb, "UW4Keys", "UW4Values", fModel[index++], error);
-    initKeyValue(rb, "UW5Keys", "UW5Values", fModel[index++], error);
-    initKeyValue(rb, "UW6Keys", "UW6Values", fModel[index++], error);
-    initKeyValue(rb, "BW1Keys", "BW1Values", fModel[index++], error);
-    initKeyValue(rb, "BW2Keys", "BW2Values", fModel[index++], error);
-    initKeyValue(rb, "BW3Keys", "BW3Values", fModel[index++], error);
-    initKeyValue(rb, "TW1Keys", "TW1Values", fModel[index++], error);
-    initKeyValue(rb, "TW2Keys", "TW2Values", fModel[index++], error);
-    initKeyValue(rb, "TW3Keys", "TW3Values", fModel[index++], error);
-    initKeyValue(rb, "TW4Keys", "TW4Values", fModel[index++], error);
-    fNegativeSum /= 2;
+    int32_t సూచీ = 0;
+    init_కీలకం_విలువ(rb, "UW1Keys", "UW1Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "UW2Keys", "UW2Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "UW3Keys", "UW3Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "UW4Keys", "UW4Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "UW5Keys", "UW5Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "UW6Keys", "UW6Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "BW1Keys", "BW1Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "BW2Keys", "BW2Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "BW3Keys", "BW3Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "TW1Keys", "TW1Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "TW2Keys", "TW2Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "TW3Keys", "TW3Values", fModel[సూచీ++], error);
+    init_కీలకం_విలువ(rb, "TW4Keys", "TW4Values", fModel[సూచీ++], error);
+    f_Negative_కూడిక /= 2;
 }
 
-void MlBreakEngine::initKeyValue(UResourceBundle *rb, const char *keyName, const char *valueName,
-                                 Hashtable &model, UErrorCode &error) {
-    int32_t keySize = 0;
-    int32_t valueSize = 0;
-    int32_t stringLength = 0;
-    UnicodeString key;
-    StackUResourceBundle stackTempBundle;
-    ResourceDataValue modelKey;
+శూన్య MlBreakEngine::init_కీలకం_విలువ(UResourceBundle *rb, స్థిరరాశి అక్షరం *కీలకం_Name, స్థిరరాశి అక్షరం *విలువ_Name,
+                                 Hashtable &model, UError_సంకేతం &error) {
+    int32_t కీలకం_కొలత = 0;
+    int32_t విలువ_కొలత = 0;
+    int32_t string_నిడివి = 0;
+    UnicodeString కీలకం;
+    దొంతర_UResource_Bundle దొంతర_తాత్కాలిక_Bundle;
+    Resource_దత్తాంశం_విలువ model_కీలకం;
 
     // get modelValues
-    LocalUResourceBundlePointer modelValue(ures_getByKey(rb, valueName, nullptr, &error));
-    const int32_t *value = ures_getIntVector(modelValue.getAlias(), &valueSize, &error);
-    if (U_FAILURE(error)) return;
+    Local_UResource_Bundle_సూచిక model_విలువ(ures_get_By_కీలకం(rb, విలువ_Name, శూన్యసూచిక, &error));
+    స్థిరరాశి int32_t *value = ures_get_Int_సదిశ(model_విలువ.getAlias(), &విలువ_కొలత, &error);
+    ఒకవేళ (U_FAILURE(error)) తిరిగి;
 
     // get modelKeys
-    ures_getValueWithFallback(rb, keyName, stackTempBundle.getAlias(), modelKey, error);
-    ResourceArray stringArray = modelKey.getArray(error);
-    keySize = stringArray.getSize();
-    if (U_FAILURE(error)) return;
+    ures_get_విలువ_With_Fallback(rb, కీలకం_Name, దొంతర_తాత్కాలిక_Bundle.getAlias(), model_కీలకం, error);
+    ResourceArray stringArray = model_కీలకం.getArray(error);
+    కీలకం_కొలత = stringArray.get_కొలత();
+    ఒకవేళ (U_FAILURE(error)) తిరిగి;
 
-    for (int32_t idx = 0; idx < keySize; idx++) {
-        stringArray.getValue(idx, modelKey);
-        key = UnicodeString(modelKey.getString(stringLength, error));
-        if (U_SUCCESS(error)) {
-            U_ASSERT(idx < valueSize);
-            fNegativeSum -= value[idx];
-            model.puti(key, value[idx], error);
+    కొరకు (int32_t idx = 0; idx < కీలకం_కొలత; idx++) {
+        stringArray.get_విలువ(idx, model_కీలకం);
+        కీలకం = UnicodeString(model_కీలకం.getString(string_నిడివి, error));
+        ఒకవేళ (U_SUCCESS(error)) {
+            U_ASSERT(idx < విలువ_కొలత);
+            f_Negative_కూడిక -= value[idx];
+            model.puti(కీలకం, value[idx], error);
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_BREAK_ITERATION */

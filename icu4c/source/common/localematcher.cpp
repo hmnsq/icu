@@ -4,33 +4,33 @@
 // localematcher.cpp
 // created: 2019may08 Markus W. Scherer
 
-#include <optional>
+#అన్తర్భావ <optional>
 
-#include "unicode/utypes.h"
-#include "unicode/localebuilder.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uloc.h"
-#include "unicode/uobject.h"
-#include "cstring.h"
-#include "localeprioritylist.h"
-#include "loclikelysubtags.h"
-#include "locdistance.h"
-#include "lsr.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "ustr_imp.h"
-#include "uvector.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/localebuilder.h"
+#అన్తర్భావ "unicode/localematcher.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/uloc.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "localeprioritylist.h"
+#అన్తర్భావ "loclikelysubtags.h"
+#అన్తర్భావ "locdistance.h"
+#అన్తర్భావ "lsr.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "uvector.h"
 
-#define UND_LSR LSR("und", "", "", LSR::EXPLICIT_LSR)
+#నిర్వచించు UND_LSR LSR("und", "", "", LSR::EXPLICIT_LSR)
 
 /**
  * Indicator for the lifetime of desired-locale objects passed into the LocaleMatcher.
  *
  * @draft ICU 65
  */
-enum ULocMatchLifetime {
+గణన ULoc_సరిపోలిక_Lifetime {
     /**
      * Locale objects are temporary.
      * The matcher will make a copy of a locale that will be used beyond one function call.
@@ -47,72 +47,72 @@ enum ULocMatchLifetime {
      */
     ULOCMATCH_STORED_LOCALES  // TODO: permanent? cached? clone?
 };
-#ifndef U_IN_DOXYGEN
-typedef enum ULocMatchLifetime ULocMatchLifetime;
-#endif
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
+రకనిర్వచనం గణన ULoc_సరిపోలిక_Lifetime ULoc_సరిపోలిక_Lifetime;
+#అయితే_ముగింపు
 
 U_NAMESPACE_BEGIN
 
-LocaleMatcher::Result::Result(LocaleMatcher::Result &&src) noexcept :
+LocaleMatcher::ఫలితం_2::ఫలితం_2(LocaleMatcher::ఫలితం_2 &&src) noexcept :
         desiredLocale(src.desiredLocale),
         supportedLocale(src.supportedLocale),
-        desiredIndex(src.desiredIndex),
-        supportedIndex(src.supportedIndex),
+        desired_సూచీ(src.desired_సూచీ),
+        supported_సూచీ(src.supported_సూచీ),
         desiredIsOwned(src.desiredIsOwned) {
-    if (desiredIsOwned) {
-        src.desiredLocale = nullptr;
-        src.desiredIndex = -1;
-        src.desiredIsOwned = false;
+    ఒకవేళ (desiredIsOwned) {
+        src.desiredLocale = శూన్యసూచిక;
+        src.desired_సూచీ = -1;
+        src.desiredIsOwned = అబద్ధం;
     }
 }
 
-LocaleMatcher::Result::~Result() {
-    if (desiredIsOwned) {
-        delete desiredLocale;
+LocaleMatcher::ఫలితం_2::~ఫలితం_2() {
+    ఒకవేళ (desiredIsOwned) {
+        తొలగించు desiredLocale;
     }
 }
 
-LocaleMatcher::Result&
-LocaleMatcher::Result::operator=(LocaleMatcher::Result&& src) noexcept U_LIFETIME_BOUND {
-    this->~Result();
+LocaleMatcher::ఫలితం_2&
+LocaleMatcher::ఫలితం_2::క్రియాకారకం=(LocaleMatcher::ఫలితం_2&& src) noexcept U_LIFETIME_BOUND {
+    ఇది->~ఫలితం_2();
 
     desiredLocale = src.desiredLocale;
     supportedLocale = src.supportedLocale;
-    desiredIndex = src.desiredIndex;
-    supportedIndex = src.supportedIndex;
+    desired_సూచీ = src.desired_సూచీ;
+    supported_సూచీ = src.supported_సూచీ;
     desiredIsOwned = src.desiredIsOwned;
 
-    if (desiredIsOwned) {
-        src.desiredLocale = nullptr;
-        src.desiredIndex = -1;
-        src.desiredIsOwned = false;
+    ఒకవేళ (desiredIsOwned) {
+        src.desiredLocale = శూన్యసూచిక;
+        src.desired_సూచీ = -1;
+        src.desiredIsOwned = అబద్ధం;
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode) || supportedLocale == nullptr) {
-        return Locale::getRoot();
+Locale LocaleMatcher::ఫలితం_2::makeResolvedLocale(UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(error_సంకేతం) || supportedLocale == శూన్యసూచిక) {
+        తిరిగి Locale::get_మూలం();
     }
-    const Locale *bestDesired = getDesiredLocale();
-    if (bestDesired == nullptr || *supportedLocale == *bestDesired) {
-        return *supportedLocale;
+    స్థిరరాశి Locale *ఉత్తమ_Desired = getDesiredLocale();
+    ఒకవేళ (ఉత్తమ_Desired == శూన్యసూచిక || *supportedLocale == *ఉత్తమ_Desired) {
+        తిరిగి *supportedLocale;
     }
     LocaleBuilder b;
-    b.setLocale(*supportedLocale);
+    b.సమితి_Locale(*supportedLocale);
 
     // Copy the region from bestDesired, if there is one.
-    const char *region = bestDesired->getCountry();
-    if (*region != 0) {
-        b.setRegion(region);
+    స్థిరరాశి అక్షరం *region = ఉత్తమ_Desired->getCountry();
+    ఒకవేళ (*region != 0) {
+        b.సమితి_Region(region);
     }
 
     // Copy the variants from bestDesired, if there are any.
     // Note that this will override any supportedLocale variants.
     // For example, "sco-ulster-fonipa" + "...-fonupa" => "sco-fonupa" (replacing ulster).
-    const char *variants = bestDesired->getVariant();
-    if (*variants != 0) {
-        b.setVariant(variants);
+    స్థిరరాశి అక్షరం *variants = ఉత్తమ_Desired->getVariant();
+    ఒకవేళ (*variants != 0) {
+        b.సమితి_Variant(variants);
     }
 
     // Copy the extensions from bestDesired, if there are any.
@@ -121,162 +121,162 @@ Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
     // Note that this will override any supportedLocale extensions.
     // For example, "th-u-nu-latn-ca-buddhist" + "...-u-nu-native" => "th-u-nu-native"
     // (replacing calendar).
-    b.copyExtensionsFrom(*bestDesired, errorCode);
-    return b.build(errorCode);
+    b.copyExtensionsFrom(*ఉత్తమ_Desired, error_సంకేతం);
+    తిరిగి b.build(error_సంకేతం);
 }
 
 LocaleMatcher::Builder::Builder(LocaleMatcher::Builder &&src) noexcept :
-        errorCode_(src.errorCode_),
+        error_సంకేతం_2(src.error_సంకేతం_2),
         supportedLocales_(src.supportedLocales_),
-        thresholdDistance_(src.thresholdDistance_),
+        పరిమితి_దూరం(src.పరిమితి_దూరం),
         demotion_(src.demotion_),
         defaultLocale_(src.defaultLocale_),
         withDefault_(src.withDefault_),
         favor_(src.favor_),
         direction_(src.direction_) {
-    src.supportedLocales_ = nullptr;
-    src.defaultLocale_ = nullptr;
+    src.supportedLocales_ = శూన్యసూచిక;
+    src.defaultLocale_ = శూన్యసూచిక;
 }
 
 LocaleMatcher::Builder::~Builder() {
-    delete supportedLocales_;
-    delete defaultLocale_;
-    delete maxDistanceDesired_;
-    delete maxDistanceSupported_;
+    తొలగించు supportedLocales_;
+    తొలగించు defaultLocale_;
+    తొలగించు max_దూరం_Desired;
+    తొలగించు max_దూరం_Supported;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::operator=(LocaleMatcher::Builder&& src) noexcept U_LIFETIME_BOUND {
-    this->~Builder();
+LocaleMatcher::Builder::క్రియాకారకం=(LocaleMatcher::Builder&& src) noexcept U_LIFETIME_BOUND {
+    ఇది->~Builder();
 
-    errorCode_ = src.errorCode_;
+    error_సంకేతం_2 = src.error_సంకేతం_2;
     supportedLocales_ = src.supportedLocales_;
-    thresholdDistance_ = src.thresholdDistance_;
+    పరిమితి_దూరం = src.పరిమితి_దూరం;
     demotion_ = src.demotion_;
     defaultLocale_ = src.defaultLocale_;
     withDefault_ = src.withDefault_,
     favor_ = src.favor_;
     direction_ = src.direction_;
 
-    src.supportedLocales_ = nullptr;
-    src.defaultLocale_ = nullptr;
-    return *this;
+    src.supportedLocales_ = శూన్యసూచిక;
+    src.defaultLocale_ = శూన్యసూచిక;
+    తిరిగి *ఇది;
 }
 
-void LocaleMatcher::Builder::clearSupportedLocales() {
-    if (supportedLocales_ != nullptr) {
+శూన్య LocaleMatcher::Builder::clearSupportedLocales() {
+    ఒకవేళ (supportedLocales_ != శూన్యసూచిక) {
         supportedLocales_->removeAllElements();
     }
 }
 
-bool LocaleMatcher::Builder::ensureSupportedLocaleVector() {
-    if (U_FAILURE(errorCode_)) { return false; }
-    if (supportedLocales_ != nullptr) { return true; }
-    LocalPointer<UVector> lpSupportedLocales(new UVector(uprv_deleteUObject, nullptr, errorCode_), errorCode_);
-    if (U_FAILURE(errorCode_)) { return false; }
+తార్కిక LocaleMatcher::Builder::ensure_Supported_Locale_సదిశ() {
+    ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి అబద్ధం; }
+    ఒకవేళ (supportedLocales_ != శూన్యసూచిక) { తిరిగి నిజం; }
+    Local_సూచిక<UVector> lpSupportedLocales(కొత్త UVector(uprv_deleteUObject, శూన్యసూచిక, error_సంకేతం_2), error_సంకేతం_2);
+    ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి అబద్ధం; }
     supportedLocales_ = lpSupportedLocales.orphan();
-    return true;
+    తిరిగి నిజం;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setSupportedLocalesFromListString(StringPiece locales) U_LIFETIME_BOUND {
-    LocalePriorityList list(locales, errorCode_);
-    if (U_FAILURE(errorCode_)) { return *this; }
+LocaleMatcher::Builder::సమితి_Supported_Locales_From_List_String(StringPiece locales) U_LIFETIME_BOUND {
+    Locale_ప్రాధాన్యత_List list(locales, error_సంకేతం_2);
+    ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి *ఇది; }
     clearSupportedLocales();
-    if (!ensureSupportedLocaleVector()) { return *this; }
-    int32_t length = list.getLengthIncludingRemoved();
-    for (int32_t i = 0; i < length; ++i) {
+    ఒకవేళ (!ensure_Supported_Locale_సదిశ()) { తిరిగి *ఇది; }
+    int32_t length = list.get_నిడివి_Including_Removed();
+    కొరకు (int32_t i = 0; i < length; ++i) {
         Locale *locale = list.orphanLocaleAt(i);
-        if (locale == nullptr) { continue; }
-        supportedLocales_->adoptElement(locale, errorCode_);
-        if (U_FAILURE(errorCode_)) {
-            break;
+        ఒకవేళ (locale == శూన్యసూచిక) { కొనసాగు; }
+        supportedLocales_->adoptElement(locale, error_సంకేతం_2);
+        ఒకవేళ (U_FAILURE(error_సంకేతం_2)) {
+            ఆపు;
         }
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setSupportedLocales(Locale::Iterator& locales) U_LIFETIME_BOUND {
-    if (ensureSupportedLocaleVector()) {
+LocaleMatcher::Builder::సమితి_Supported_Locales(Locale::Iterator& locales) U_LIFETIME_BOUND {
+    ఒకవేళ (ensure_Supported_Locale_సదిశ()) {
         clearSupportedLocales();
-        while (locales.hasNext() && U_SUCCESS(errorCode_)) {
-            const Locale &locale = locales.next();
-            LocalPointer<Locale> clone (locale.clone(), errorCode_);
-            supportedLocales_->adoptElement(clone.orphan(), errorCode_);
+        అయితే (locales.has_తదుపరి() && U_SUCCESS(error_సంకేతం_2)) {
+            స్థిరరాశి Locale &locale = locales.next();
+            Local_సూచిక<Locale> clone (locale.clone(), error_సంకేతం_2);
+            supportedLocales_->adoptElement(clone.orphan(), error_సంకేతం_2);
         }
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::addSupportedLocale(const Locale& locale) U_LIFETIME_BOUND {
-    if (ensureSupportedLocaleVector()) {
-        LocalPointer<Locale> clone(locale.clone(), errorCode_);
-        supportedLocales_->adoptElement(clone.orphan(), errorCode_);
+LocaleMatcher::Builder::కూడు_Supported_Locale(స్థిరరాశి Locale& locale) U_LIFETIME_BOUND {
+    ఒకవేళ (ensure_Supported_Locale_సదిశ()) {
+        Local_సూచిక<Locale> clone(locale.clone(), error_సంకేతం_2);
+        supportedLocales_->adoptElement(clone.orphan(), error_సంకేతం_2);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-LocaleMatcher::Builder& LocaleMatcher::Builder::setNoDefaultLocale() U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
-    delete defaultLocale_;
-    defaultLocale_ = nullptr;
-    withDefault_ = false;
-    return *this;
+LocaleMatcher::Builder& LocaleMatcher::Builder::సమితి_No_Default_Locale() U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి *ఇది; }
+    తొలగించు defaultLocale_;
+    defaultLocale_ = శూన్యసూచిక;
+    withDefault_ = అబద్ధం;
+    తిరిగి *ఇది;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setDefaultLocale(const Locale* defaultLocale) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
-    Locale *clone = nullptr;
-    if (defaultLocale != nullptr) {
+LocaleMatcher::Builder::సమితి_Default_Locale(స్థిరరాశి Locale* defaultLocale) U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి *ఇది; }
+    Locale *clone = శూన్యసూచిక;
+    ఒకవేళ (defaultLocale != శూన్యసూచిక) {
         clone = defaultLocale->clone();
-        if (clone == nullptr) {
-            errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+        ఒకవేళ (clone == శూన్యసూచిక) {
+            error_సంకేతం_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి *ఇది;
         }
     }
-    delete defaultLocale_;
+    తొలగించు defaultLocale_;
     defaultLocale_ = clone;
-    withDefault_ = true;
-    return *this;
+    withDefault_ = నిజం;
+    తిరిగి *ఇది;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setFavorSubtag(ULocMatchFavorSubtag subtag) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+LocaleMatcher::Builder::సమితి_Favor_Subtag(ULoc_సరిపోలిక_Favor_Subtag subtag) U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి *ఇది; }
     favor_ = subtag;
-    return *this;
+    తిరిగి *ఇది;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setDemotionPerDesiredLocale(ULocMatchDemotion demotion) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+LocaleMatcher::Builder::సమితి_Demotion_చొప్పున_Desired_Locale(ULoc_సరిపోలిక_Demotion demotion) U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి *ఇది; }
     demotion_ = demotion;
-    return *this;
+    తిరిగి *ఇది;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setMaxDistance(const Locale& desired,
-                                       const Locale& supported) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+LocaleMatcher::Builder::సమితి_Max_దూరం(స్థిరరాశి Locale& desired,
+                                       స్థిరరాశి Locale& supported) U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి *ఇది; }
     Locale *desiredClone = desired.clone();
     Locale *supportedClone = supported.clone();
-    if (desiredClone == nullptr || supportedClone == nullptr) {
-        delete desiredClone;  // in case only one could not be allocated
-        delete supportedClone;
-        errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+    ఒకవేళ (desiredClone == శూన్యసూచిక || supportedClone == శూన్యసూచిక) {
+        తొలగించు desiredClone;  // in case only one could not be allocated
+        తొలగించు supportedClone;
+        error_సంకేతం_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి *ఇది;
     }
-    delete maxDistanceDesired_;
-    delete maxDistanceSupported_;
-    maxDistanceDesired_ = desiredClone;
-    maxDistanceSupported_ = supportedClone;
-    return *this;
+    తొలగించు max_దూరం_Desired;
+    తొలగించు max_దూరం_Supported;
+    max_దూరం_Desired = desiredClone;
+    max_దూరం_Supported = supportedClone;
+    తిరిగి *ఇది;
 }
 
-#if 0
+#ఒకవేళ 0
 /**
  * <i>Internal only!</i>
  *
@@ -286,122 +286,122 @@ LocaleMatcher::Builder::setMaxDistance(const Locale& desired,
  * @deprecated This API is ICU internal only.
  */
 @Deprecated
-LocaleMatcher::Builder &LocaleMatcher::Builder::internalSetThresholdDistance(int32_t thresholdDistance) {
-    if (U_FAILURE(errorCode_)) { return *this; }
-    if (thresholdDistance > 100) {
-        thresholdDistance = 100;
+LocaleMatcher::Builder &LocaleMatcher::Builder::అంతర్గత_సమితి_పరిమితి_దూరం(int32_t పరిమితి_దూరం_2) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం_2)) { తిరిగి *ఇది; }
+    ఒకవేళ (పరిమితి_దూరం_2 > 100) {
+        పరిమితి_దూరం_2 = 100;
     }
-    thresholdDistance_ = thresholdDistance;
-    return *this;
+    పరిమితి_దూరం = పరిమితి_దూరం_2;
+    తిరిగి *ఇది;
 }
-#endif
+#అయితే_ముగింపు
 
-UBool LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) { return true; }
-    if (U_SUCCESS(errorCode_)) { return false; }
-    outErrorCode = errorCode_;
-    return true;
+UBool LocaleMatcher::Builder::copy_Error_గమ్యం(UError_సంకేతం &బహిర్గతం_Error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(బహిర్గతం_Error_సంకేతం)) { తిరిగి నిజం; }
+    ఒకవేళ (U_SUCCESS(error_సంకేతం_2)) { తిరిగి అబద్ధం; }
+    బహిర్గతం_Error_సంకేతం = error_సంకేతం_2;
+    తిరిగి నిజం;
 }
 
-LocaleMatcher LocaleMatcher::Builder::build(UErrorCode &errorCode) const {
-    if (U_SUCCESS(errorCode) && U_FAILURE(errorCode_)) {
-        errorCode = errorCode_;
+LocaleMatcher LocaleMatcher::Builder::build(UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_SUCCESS(error_సంకేతం) && U_FAILURE(error_సంకేతం_2)) {
+        error_సంకేతం = error_సంకేతం_2;
     }
-    return LocaleMatcher(*this, errorCode);
+    తిరిగి LocaleMatcher(*ఇది, error_సంకేతం);
 }
 
-namespace {
+నామాకాశ {
 
-LSR getMaximalLsrOrUnd(const LikelySubtags &likelySubtags, const Locale &locale,
-                       UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode) || locale.isBogus() || *locale.getName() == 0 /* "und" */) {
-        return UND_LSR;
-    } else {
-        return likelySubtags.makeMaximizedLsrFrom(locale, false, errorCode);
+LSR getMaximalLsrOrUnd(స్థిరరాశి LikelySubtags &likelySubtags, స్థిరరాశి Locale &locale,
+                       UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం) || locale.isBogus() || *locale.getName() == 0 /* "und" */) {
+        తిరిగి UND_LSR;
+    } లేకపోతే {
+        తిరిగి likelySubtags.makeMaximizedLsrFrom(locale, అబద్ధం, error_సంకేతం);
     }
 }
 
-int32_t hashLSR(const UHashTok token) {
-    const LSR *lsr = static_cast<const LSR *>(token.pointer);
-    return lsr->hashCode;
+int32_t hashLSR(స్థిరరాశి UHashTok token) {
+    స్థిరరాశి LSR *lsr = static_cast<స్థిరరాశి LSR *>(token.సూచిక);
+    తిరిగి lsr->hash_సంకేతం;
 }
 
-UBool compareLSRs(const UHashTok t1, const UHashTok t2) {
-    const LSR *lsr1 = static_cast<const LSR *>(t1.pointer);
-    const LSR *lsr2 = static_cast<const LSR *>(t2.pointer);
-    return *lsr1 == *lsr2;
+UBool compareLSRs(స్థిరరాశి UHashTok t1, స్థిరరాశి UHashTok t2) {
+    స్థిరరాశి LSR *lsr1 = static_cast<స్థిరరాశి LSR *>(t1.సూచిక);
+    స్థిరరాశి LSR *lsr2 = static_cast<స్థిరరాశి LSR *>(t2.సూచిక);
+    తిరిగి *lsr1 == *lsr2;
 }
 
 }  // namespace
 
-int32_t LocaleMatcher::putIfAbsent(const LSR &lsr, int32_t i, int32_t suppLength,
-                                   UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return suppLength; }
-    if (!uhash_containsKey(supportedLsrToIndex, &lsr)) {
-        uhash_putiAllowZero(supportedLsrToIndex, const_cast<LSR *>(&lsr), i, &errorCode);
-        if (U_SUCCESS(errorCode)) {
-            supportedLSRs[suppLength] = &lsr;
-            supportedIndexes[suppLength++] = i;
+int32_t LocaleMatcher::putIfAbsent(స్థిరరాశి LSR &lsr, int32_t i, int32_t supp_నిడివి,
+                                   UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి supp_నిడివి; }
+    ఒకవేళ (!uhash_కలిగియుంది_కీలకం(supported_Lsr_గమ్యం_సూచీ, &lsr)) {
+        uhash_putiAllowZero(supported_Lsr_గమ్యం_సూచీ, const_cast<LSR *>(&lsr), i, &error_సంకేతం);
+        ఒకవేళ (U_SUCCESS(error_సంకేతం)) {
+            supportedLSRs[supp_నిడివి] = &lsr;
+            supportedIndexes[supp_నిడివి++] = i;
         }
     }
-    return suppLength;
+    తిరిగి supp_నిడివి;
 }
 
-LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
-        likelySubtags(*LikelySubtags::getSingleton(errorCode)),
-        localeDistance(*LocaleDistance::getSingleton(errorCode)),
-        thresholdDistance(builder.thresholdDistance_),
-        demotionPerDesiredLocale(0),
+LocaleMatcher::LocaleMatcher(స్థిరరాశి Builder &builder, UError_సంకేతం &error_సంకేతం) :
+        likelySubtags(*LikelySubtags::getSingleton(error_సంకేతం)),
+        locale_దూరం(*Locale_దూరం::getSingleton(error_సంకేతం)),
+        పరిమితి_దూరం_2(builder.పరిమితి_దూరం),
+        demotion_చొప్పున_Desired_Locale(0),
         favorSubtag(builder.favor_),
         direction(builder.direction_),
-        supportedLocales(nullptr), lsrs(nullptr), supportedLocalesLength(0),
-        supportedLsrToIndex(nullptr),
-        supportedLSRs(nullptr), supportedIndexes(nullptr), supportedLSRsLength(0),
-        ownedDefaultLocale(nullptr), defaultLocale(nullptr) {
-    if (U_FAILURE(errorCode)) { return; }
-    const Locale *def = builder.defaultLocale_;
+        supportedLocales(శూన్యసూచిక), lsrs(శూన్యసూచిక), supported_Locales_నిడివి(0),
+        supported_Lsr_గమ్యం_సూచీ(శూన్యసూచిక),
+        supportedLSRs(శూన్యసూచిక), supportedIndexes(శూన్యసూచిక), supported_LSRs_నిడివి(0),
+        ownedDefaultLocale(శూన్యసూచిక), defaultLocale(శూన్యసూచిక) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+    స్థిరరాశి Locale *def = builder.defaultLocale_;
     LSR builderDefaultLSR;
-    const LSR *defLSR = nullptr;
-    if (def != nullptr) {
+    స్థిరరాశి LSR *defLSR = శూన్యసూచిక;
+    ఒకవేళ (def != శూన్యసూచిక) {
         ownedDefaultLocale = def->clone();
-        if (ownedDefaultLocale == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+        ఒకవేళ (ownedDefaultLocale == శూన్యసూచిక) {
+            error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
         def = ownedDefaultLocale;
-        builderDefaultLSR = getMaximalLsrOrUnd(likelySubtags, *def, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        builderDefaultLSR = getMaximalLsrOrUnd(likelySubtags, *def, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
         defLSR = &builderDefaultLSR;
     }
-    supportedLocalesLength = builder.supportedLocales_ != nullptr ?
+    supported_Locales_నిడివి = builder.supportedLocales_ != శూన్యసూచిక ?
         builder.supportedLocales_->size() : 0;
-    if (supportedLocalesLength > 0) {
+    ఒకవేళ (supported_Locales_నిడివి > 0) {
         // Store the supported locales in input order,
         // so that when different types are used (e.g., language tag strings)
         // we can return those by parallel index.
-        supportedLocales = static_cast<const Locale **>(
-            uprv_malloc(supportedLocalesLength * sizeof(const Locale *)));
+        supportedLocales = static_cast<స్థిరరాశి Locale **>(
+            uprv_malloc(supported_Locales_నిడివి * పరిమాణం(స్థిరరాశి Locale *)));
         // Supported LRSs in input order.
         // In C++, we store these permanently to simplify ownership management
         // in the hash tables. Duplicate LSRs (if any) are unused overhead.
-        lsrs = new LSR[supportedLocalesLength];
-        if (supportedLocales == nullptr || lsrs == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+        lsrs = కొత్త LSR[supported_Locales_నిడివి];
+        ఒకవేళ (supportedLocales == శూన్యసూచిక || lsrs == శూన్యసూచిక) {
+            error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
         // If the constructor fails partway, we need null pointers for destructibility.
-        uprv_memset(supportedLocales, 0, supportedLocalesLength * sizeof(const Locale *));
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            const Locale &locale = *static_cast<Locale *>(builder.supportedLocales_->elementAt(i));
+        uprv_memset(supportedLocales, 0, supported_Locales_నిడివి * పరిమాణం(స్థిరరాశి Locale *));
+        కొరకు (int32_t i = 0; i < supported_Locales_నిడివి; ++i) {
+            స్థిరరాశి Locale &locale = *static_cast<Locale *>(builder.supportedLocales_->elementAt(i));
             supportedLocales[i] = locale.clone();
-            if (supportedLocales[i] == nullptr) {
-                errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ఒకవేళ (supportedLocales[i] == శూన్యసూచిక) {
+                error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి;
             }
-            const Locale &supportedLocale = *supportedLocales[i];
-            LSR &lsr = lsrs[i] = getMaximalLsrOrUnd(likelySubtags, supportedLocale, errorCode);
-            lsr.setHashCode();
-            if (U_FAILURE(errorCode)) { return; }
+            స్థిరరాశి Locale &supportedLocale = *supportedLocales[i];
+            LSR &lsr = lsrs[i] = getMaximalLsrOrUnd(likelySubtags, supportedLocale, error_సంకేతం);
+            lsr.సమితి_Hash_సంకేతం();
+            ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
         }
 
         // We need an unordered map from LSR to first supported locale with that LSR,
@@ -410,58 +410,58 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
         // 1. Default locale, if it is supported.
         // 2. Priority locales (aka "paradigm locales") in builder order.
         // 3. Remaining locales in builder order.
-        supportedLsrToIndex = uhash_openSize(hashLSR, compareLSRs, uhash_compareLong,
-                                             supportedLocalesLength, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        supportedLSRs = static_cast<const LSR **>(
-            uprv_malloc(supportedLocalesLength * sizeof(const LSR *)));
+        supported_Lsr_గమ్యం_సూచీ = uhash_open_కొలత(hashLSR, compareLSRs, uhash_compareLong,
+                                             supported_Locales_నిడివి, &error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+        supportedLSRs = static_cast<స్థిరరాశి LSR **>(
+            uprv_malloc(supported_Locales_నిడివి * పరిమాణం(స్థిరరాశి LSR *)));
         supportedIndexes = static_cast<int32_t *>(
-            uprv_malloc(supportedLocalesLength * sizeof(int32_t)));
-        if (supportedLSRs == nullptr || supportedIndexes == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            uprv_malloc(supported_Locales_నిడివి * పరిమాణం(int32_t)));
+        ఒకవేళ (supportedLSRs == శూన్యసూచిక || supportedIndexes == శూన్యసూచిక) {
+            error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
-        int32_t suppLength = 0;
+        int32_t supp_నిడివి = 0;
         // Determine insertion order.
         // Add locales immediately that are equivalent to the default.
-        MaybeStackArray<int8_t, 100> order(supportedLocalesLength, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        int32_t numParadigms = 0;
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            const Locale &locale = *supportedLocales[i];
-            const LSR &lsr = lsrs[i];
-            if (defLSR == nullptr && builder.withDefault_) {
+        Maybe_దొంతర_Array<int8_t, 100> క్రమం(supported_Locales_నిడివి, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+        int32_t అంకె_Paradigms = 0;
+        కొరకు (int32_t i = 0; i < supported_Locales_నిడివి; ++i) {
+            స్థిరరాశి Locale &locale = *supportedLocales[i];
+            స్థిరరాశి LSR &lsr = lsrs[i];
+            ఒకవేళ (defLSR == శూన్యసూచిక && builder.withDefault_) {
                 // Implicit default locale = first supported locale, if not turned off.
                 U_ASSERT(i == 0);
                 def = &locale;
                 defLSR = &lsr;
-                order[i] = 1;
-                suppLength = putIfAbsent(lsr, 0, suppLength, errorCode);
-            } else if (defLSR != nullptr && lsr.isEquivalentTo(*defLSR)) {
-                order[i] = 1;
-                suppLength = putIfAbsent(lsr, i, suppLength, errorCode);
-            } else if (localeDistance.isParadigmLSR(lsr)) {
-                order[i] = 2;
-                ++numParadigms;
-            } else {
-                order[i] = 3;
+                క్రమం[i] = 1;
+                supp_నిడివి = putIfAbsent(lsr, 0, supp_నిడివి, error_సంకేతం);
+            } లేకపోతే ఒకవేళ (defLSR != శూన్యసూచిక && lsr.is_Equivalent_గమ్యం(*defLSR)) {
+                క్రమం[i] = 1;
+                supp_నిడివి = putIfAbsent(lsr, i, supp_నిడివి, error_సంకేతం);
+            } లేకపోతే ఒకవేళ (locale_దూరం.isParadigmLSR(lsr)) {
+                క్రమం[i] = 2;
+                ++అంకె_Paradigms;
+            } లేకపోతే {
+                క్రమం[i] = 3;
             }
-            if (U_FAILURE(errorCode)) { return; }
+            ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
         }
         // Add supported paradigm locales.
-        int32_t paradigmLimit = suppLength + numParadigms;
-        for (int32_t i = 0; i < supportedLocalesLength && suppLength < paradigmLimit; ++i) {
-            if (order[i] == 2) {
-                suppLength = putIfAbsent(lsrs[i], i, suppLength, errorCode);
+        int32_t paradigm_హద్దు = supp_నిడివి + అంకె_Paradigms;
+        కొరకు (int32_t i = 0; i < supported_Locales_నిడివి && supp_నిడివి < paradigm_హద్దు; ++i) {
+            ఒకవేళ (క్రమం[i] == 2) {
+                supp_నిడివి = putIfAbsent(lsrs[i], i, supp_నిడివి, error_సంకేతం);
             }
         }
         // Add remaining supported locales.
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            if (order[i] == 3) {
-                suppLength = putIfAbsent(lsrs[i], i, suppLength, errorCode);
+        కొరకు (int32_t i = 0; i < supported_Locales_నిడివి; ++i) {
+            ఒకవేళ (క్రమం[i] == 3) {
+                supp_నిడివి = putIfAbsent(lsrs[i], i, supp_నిడివి, error_సంకేతం);
             }
         }
-        supportedLSRsLength = suppLength;
+        supported_LSRs_నిడివి = supp_నిడివి;
         // If supportedLSRsLength < supportedLocalesLength then
         // we waste as many array slots as there are duplicate supported LSRs,
         // but the amount of wasted space is small as long as there are few duplicates.
@@ -469,378 +469,378 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
 
     defaultLocale = def;
 
-    if (builder.demotion_ == ULOCMATCH_DEMOTION_REGION) {
-        demotionPerDesiredLocale = localeDistance.getDefaultDemotionPerDesiredLocale();
+    ఒకవేళ (builder.demotion_ == ULOCMATCH_DEMOTION_REGION) {
+        demotion_చొప్పున_Desired_Locale = locale_దూరం.get_Default_Demotion_చొప్పున_Desired_Locale();
     }
 
-    if (thresholdDistance >= 0) {
+    ఒకవేళ (పరిమితి_దూరం_2 >= 0) {
         // already copied
-    } else if (builder.maxDistanceDesired_ != nullptr) {
-        LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, *builder.maxDistanceSupported_, errorCode);
-        const LSR *pSuppLSR = &suppLSR;
-        int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
-                getMaximalLsrOrUnd(likelySubtags, *builder.maxDistanceDesired_, errorCode),
+    } లేకపోతే ఒకవేళ (builder.max_దూరం_Desired != శూన్యసూచిక) {
+        LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, *builder.max_దూరం_Supported, error_సంకేతం);
+        స్థిరరాశి LSR *pSuppLSR = &suppLSR;
+        int32_t సూచీ_And_దూరం = locale_దూరం.get_ఉత్తమ_సూచీ_And_దూరం(
+                getMaximalLsrOrUnd(likelySubtags, *builder.max_దూరం_Desired, error_సంకేతం),
                 &pSuppLSR, 1,
-                LocaleDistance::shiftDistance(100), favorSubtag, direction);
-        if (U_SUCCESS(errorCode)) {
+                Locale_దూరం::జరుపు_దూరం(100), favorSubtag, direction);
+        ఒకవేళ (U_SUCCESS(error_సంకేతం)) {
             // +1 for an exclusive threshold from an inclusive max.
-            thresholdDistance = LocaleDistance::getDistanceFloor(indexAndDistance) + 1;
-        } else {
-            thresholdDistance = 0;
+            పరిమితి_దూరం_2 = Locale_దూరం::get_దూరం_Floor(సూచీ_And_దూరం) + 1;
+        } లేకపోతే {
+            పరిమితి_దూరం_2 = 0;
         }
-    } else {
-        thresholdDistance = localeDistance.getDefaultScriptDistance();
+    } లేకపోతే {
+        పరిమితి_దూరం_2 = locale_దూరం.get_Default_Script_దూరం();
     }
 }
 
 LocaleMatcher::LocaleMatcher(LocaleMatcher &&src) noexcept :
         likelySubtags(src.likelySubtags),
-        localeDistance(src.localeDistance),
-        thresholdDistance(src.thresholdDistance),
-        demotionPerDesiredLocale(src.demotionPerDesiredLocale),
+        locale_దూరం(src.locale_దూరం),
+        పరిమితి_దూరం_2(src.పరిమితి_దూరం_2),
+        demotion_చొప్పున_Desired_Locale(src.demotion_చొప్పున_Desired_Locale),
         favorSubtag(src.favorSubtag),
         direction(src.direction),
         supportedLocales(src.supportedLocales), lsrs(src.lsrs),
-        supportedLocalesLength(src.supportedLocalesLength),
-        supportedLsrToIndex(src.supportedLsrToIndex),
+        supported_Locales_నిడివి(src.supported_Locales_నిడివి),
+        supported_Lsr_గమ్యం_సూచీ(src.supported_Lsr_గమ్యం_సూచీ),
         supportedLSRs(src.supportedLSRs),
         supportedIndexes(src.supportedIndexes),
-        supportedLSRsLength(src.supportedLSRsLength),
+        supported_LSRs_నిడివి(src.supported_LSRs_నిడివి),
         ownedDefaultLocale(src.ownedDefaultLocale), defaultLocale(src.defaultLocale) {
-    src.supportedLocales = nullptr;
-    src.lsrs = nullptr;
-    src.supportedLocalesLength = 0;
-    src.supportedLsrToIndex = nullptr;
-    src.supportedLSRs = nullptr;
-    src.supportedIndexes = nullptr;
-    src.supportedLSRsLength = 0;
-    src.ownedDefaultLocale = nullptr;
-    src.defaultLocale = nullptr;
+    src.supportedLocales = శూన్యసూచిక;
+    src.lsrs = శూన్యసూచిక;
+    src.supported_Locales_నిడివి = 0;
+    src.supported_Lsr_గమ్యం_సూచీ = శూన్యసూచిక;
+    src.supportedLSRs = శూన్యసూచిక;
+    src.supportedIndexes = శూన్యసూచిక;
+    src.supported_LSRs_నిడివి = 0;
+    src.ownedDefaultLocale = శూన్యసూచిక;
+    src.defaultLocale = శూన్యసూచిక;
 }
 
 LocaleMatcher::~LocaleMatcher() {
-    for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-        delete supportedLocales[i];
+    కొరకు (int32_t i = 0; i < supported_Locales_నిడివి; ++i) {
+        తొలగించు supportedLocales[i];
     }
     uprv_free(supportedLocales);
-    delete[] lsrs;
-    uhash_close(supportedLsrToIndex);
+    తొలగించు[] lsrs;
+    uhash_close(supported_Lsr_గమ్యం_సూచీ);
     uprv_free(supportedLSRs);
     uprv_free(supportedIndexes);
-    delete ownedDefaultLocale;
+    తొలగించు ownedDefaultLocale;
 }
 
-LocaleMatcher& LocaleMatcher::operator=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND {
-    this->~LocaleMatcher();
+LocaleMatcher& LocaleMatcher::క్రియాకారకం=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND {
+    ఇది->~LocaleMatcher();
 
-    thresholdDistance = src.thresholdDistance;
-    demotionPerDesiredLocale = src.demotionPerDesiredLocale;
+    పరిమితి_దూరం_2 = src.పరిమితి_దూరం_2;
+    demotion_చొప్పున_Desired_Locale = src.demotion_చొప్పున_Desired_Locale;
     favorSubtag = src.favorSubtag;
     direction = src.direction;
     supportedLocales = src.supportedLocales;
     lsrs = src.lsrs;
-    supportedLocalesLength = src.supportedLocalesLength;
-    supportedLsrToIndex = src.supportedLsrToIndex;
+    supported_Locales_నిడివి = src.supported_Locales_నిడివి;
+    supported_Lsr_గమ్యం_సూచీ = src.supported_Lsr_గమ్యం_సూచీ;
     supportedLSRs = src.supportedLSRs;
     supportedIndexes = src.supportedIndexes;
-    supportedLSRsLength = src.supportedLSRsLength;
+    supported_LSRs_నిడివి = src.supported_LSRs_నిడివి;
     ownedDefaultLocale = src.ownedDefaultLocale;
     defaultLocale = src.defaultLocale;
 
-    src.supportedLocales = nullptr;
-    src.lsrs = nullptr;
-    src.supportedLocalesLength = 0;
-    src.supportedLsrToIndex = nullptr;
-    src.supportedLSRs = nullptr;
-    src.supportedIndexes = nullptr;
-    src.supportedLSRsLength = 0;
-    src.ownedDefaultLocale = nullptr;
-    src.defaultLocale = nullptr;
-    return *this;
+    src.supportedLocales = శూన్యసూచిక;
+    src.lsrs = శూన్యసూచిక;
+    src.supported_Locales_నిడివి = 0;
+    src.supported_Lsr_గమ్యం_సూచీ = శూన్యసూచిక;
+    src.supportedLSRs = శూన్యసూచిక;
+    src.supportedIndexes = శూన్యసూచిక;
+    src.supported_LSRs_నిడివి = 0;
+    src.ownedDefaultLocale = శూన్యసూచిక;
+    src.defaultLocale = శూన్యసూచిక;
+    తిరిగి *ఇది;
 }
 
-class LocaleLsrIterator {
-public:
-    LocaleLsrIterator(const LikelySubtags &likelySubtags, Locale::Iterator &locales,
-                      ULocMatchLifetime lifetime) :
+తరగతి LocaleLsrIterator {
+బహిరంగ:
+    LocaleLsrIterator(స్థిరరాశి LikelySubtags &likelySubtags, Locale::Iterator &locales,
+                      ULoc_సరిపోలిక_Lifetime lifetime) :
             likelySubtags(likelySubtags), locales(locales), lifetime(lifetime) {}
 
     ~LocaleLsrIterator() {
-        if (lifetime == ULOCMATCH_TEMPORARY_LOCALES) {
-            delete remembered;
+        ఒకవేళ (lifetime == ULOCMATCH_TEMPORARY_LOCALES) {
+            తొలగించు remembered;
         }
     }
 
-    bool hasNext() const {
-        return locales.hasNext();
+    తార్కిక has_తదుపరి() స్థిరరాశి {
+        తిరిగి locales.has_తదుపరి();
     }
 
-    LSR next(UErrorCode &errorCode) {
+    LSR next(UError_సంకేతం &error_సంకేతం) {
         current = &locales.next();
-        return getMaximalLsrOrUnd(likelySubtags, *current, errorCode);
+        తిరిగి getMaximalLsrOrUnd(likelySubtags, *current, error_సంకేతం);
     }
 
-    void rememberCurrent(int32_t desiredIndex, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return; }
-        bestDesiredIndex = desiredIndex;
-        if (lifetime == ULOCMATCH_STORED_LOCALES) {
+    శూన్య rememberCurrent(int32_t desired_సూచీ, UError_సంకేతం &error_సంకేతం) {
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+        ఉత్తమ_Desired_సూచీ = desired_సూచీ;
+        ఒకవేళ (lifetime == ULOCMATCH_STORED_LOCALES) {
             remembered = current;
-        } else {
+        } లేకపోతే {
             // ULOCMATCH_TEMPORARY_LOCALES
-            delete remembered;
-            remembered = new Locale(*current);
-            if (remembered == nullptr) {
-                errorCode = U_MEMORY_ALLOCATION_ERROR;
+            తొలగించు remembered;
+            remembered = కొత్త Locale(*current);
+            ఒకవేళ (remembered == శూన్యసూచిక) {
+                error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
             }
         }
     }
 
-    const Locale *orphanRemembered() {
-        const Locale *rem = remembered;
-        remembered = nullptr;
-        return rem;
+    స్థిరరాశి Locale *orphanRemembered() {
+        స్థిరరాశి Locale *rem = remembered;
+        remembered = శూన్యసూచిక;
+        తిరిగి rem;
     }
 
-    int32_t getBestDesiredIndex() const {
-        return bestDesiredIndex;
+    int32_t get_ఉత్తమ_Desired_సూచీ() స్థిరరాశి {
+        తిరిగి ఉత్తమ_Desired_సూచీ;
     }
 
-private:
-    const LikelySubtags &likelySubtags;
+అంతరంగ:
+    స్థిరరాశి LikelySubtags &likelySubtags;
     Locale::Iterator &locales;
-    ULocMatchLifetime lifetime;
-    const Locale *current = nullptr, *remembered = nullptr;
-    int32_t bestDesiredIndex = -1;
+    ULoc_సరిపోలిక_Lifetime lifetime;
+    స్థిరరాశి Locale *current = శూన్యసూచిక, *remembered = శూన్యసూచిక;
+    int32_t ఉత్తమ_Desired_సూచీ = -1;
 };
 
-const Locale* LocaleMatcher::getBestMatch(const Locale& desiredLocale,
-                                          UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    std::optional<int32_t> suppIndex = getBestSuppIndex(
-        getMaximalLsrOrUnd(likelySubtags, desiredLocale, errorCode),
-        nullptr, errorCode);
-    return U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
+స్థిరరాశి Locale* LocaleMatcher::get_ఉత్తమ_సరిపోలిక(స్థిరరాశి Locale& desiredLocale,
+                                          UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    std::optional<int32_t> supp_సూచీ = get_ఉత్తమ_Supp_సూచీ(
+        getMaximalLsrOrUnd(likelySubtags, desiredLocale, error_సంకేతం),
+        శూన్యసూచిక, error_సంకేతం);
+    తిరిగి U_SUCCESS(error_సంకేతం) && supp_సూచీ.has_value() ? supportedLocales[*supp_సూచీ]
                                                          : defaultLocale;
 }
 
-const Locale* LocaleMatcher::getBestMatch(Locale::Iterator& desiredLocales,
-                                          UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (!desiredLocales.hasNext()) {
-        return defaultLocale;
+స్థిరరాశి Locale* LocaleMatcher::get_ఉత్తమ_సరిపోలిక(Locale::Iterator& desiredLocales,
+                                          UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    ఒకవేళ (!desiredLocales.has_తదుపరి()) {
+        తిరిగి defaultLocale;
     }
     LocaleLsrIterator lsrIter(likelySubtags, desiredLocales, ULOCMATCH_TEMPORARY_LOCALES);
-    std::optional<int32_t> suppIndex = getBestSuppIndex(lsrIter.next(errorCode), &lsrIter, errorCode);
-    return U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
+    std::optional<int32_t> supp_సూచీ = get_ఉత్తమ_Supp_సూచీ(lsrIter.next(error_సంకేతం), &lsrIter, error_సంకేతం);
+    తిరిగి U_SUCCESS(error_సంకేతం) && supp_సూచీ.has_value() ? supportedLocales[*supp_సూచీ]
                                                          : defaultLocale;
 }
 
-const Locale*
-LocaleMatcher::getBestMatchForListString(StringPiece desiredLocaleList,
-                                         UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    LocalePriorityList list(desiredLocaleList, errorCode);
-    LocalePriorityList::Iterator iter = list.iterator();
-    return getBestMatch(iter, errorCode);
+స్థిరరాశి Locale*
+LocaleMatcher::get_ఉత్తమ_సరిపోలిక_For_List_String(StringPiece desiredLocaleList,
+                                         UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    Locale_ప్రాధాన్యత_List list(desiredLocaleList, error_సంకేతం);
+    Locale_ప్రాధాన్యత_List::Iterator iter = list.iterator();
+    తిరిగి get_ఉత్తమ_సరిపోలిక(iter, error_సంకేతం);
 }
 
-LocaleMatcher::Result
-LocaleMatcher::getBestMatchResult(const Locale& desiredLocale U_LIFETIME_BOUND,
-                                  UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
+LocaleMatcher::ఫలితం_2
+LocaleMatcher::get_ఉత్తమ_సరిపోలిక_ఫలితం(స్థిరరాశి Locale& desiredLocale U_LIFETIME_BOUND,
+                                  UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి ఫలితం_2(శూన్యసూచిక, defaultLocale, -1, -1, అబద్ధం);
     }
-    std::optional<int32_t> suppIndex = getBestSuppIndex(
-        getMaximalLsrOrUnd(likelySubtags, desiredLocale, errorCode),
-        nullptr, errorCode);
-    if (U_FAILURE(errorCode) || !suppIndex.has_value()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
-    } else {
-        return Result(&desiredLocale, supportedLocales[*suppIndex], 0, *suppIndex, false);
+    std::optional<int32_t> supp_సూచీ = get_ఉత్తమ_Supp_సూచీ(
+        getMaximalLsrOrUnd(likelySubtags, desiredLocale, error_సంకేతం),
+        శూన్యసూచిక, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం) || !supp_సూచీ.has_value()) {
+        తిరిగి ఫలితం_2(శూన్యసూచిక, defaultLocale, -1, -1, అబద్ధం);
+    } లేకపోతే {
+        తిరిగి ఫలితం_2(&desiredLocale, supportedLocales[*supp_సూచీ], 0, *supp_సూచీ, అబద్ధం);
     }
 }
 
-LocaleMatcher::Result
-LocaleMatcher::getBestMatchResult(Locale::Iterator& desiredLocales,
-                                  UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode) || !desiredLocales.hasNext()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
+LocaleMatcher::ఫలితం_2
+LocaleMatcher::get_ఉత్తమ_సరిపోలిక_ఫలితం(Locale::Iterator& desiredLocales,
+                                  UError_సంకేతం& error_సంకేతం) స్థిరరాశి U_LIFETIME_BOUND {
+    ఒకవేళ (U_FAILURE(error_సంకేతం) || !desiredLocales.has_తదుపరి()) {
+        తిరిగి ఫలితం_2(శూన్యసూచిక, defaultLocale, -1, -1, అబద్ధం);
     }
     LocaleLsrIterator lsrIter(likelySubtags, desiredLocales, ULOCMATCH_TEMPORARY_LOCALES);
-    std::optional<int32_t> suppIndex = getBestSuppIndex(lsrIter.next(errorCode), &lsrIter, errorCode);
-    if (U_FAILURE(errorCode) || !suppIndex.has_value()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
-    } else {
-        return Result(lsrIter.orphanRemembered(), supportedLocales[*suppIndex],
-                      lsrIter.getBestDesiredIndex(), *suppIndex, true);
+    std::optional<int32_t> supp_సూచీ = get_ఉత్తమ_Supp_సూచీ(lsrIter.next(error_సంకేతం), &lsrIter, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం) || !supp_సూచీ.has_value()) {
+        తిరిగి ఫలితం_2(శూన్యసూచిక, defaultLocale, -1, -1, అబద్ధం);
+    } లేకపోతే {
+        తిరిగి ఫలితం_2(lsrIter.orphanRemembered(), supportedLocales[*supp_సూచీ],
+                      lsrIter.get_ఉత్తమ_Desired_సూచీ(), *supp_సూచీ, నిజం);
     }
 }
 
-std::optional<int32_t> LocaleMatcher::getBestSuppIndex(LSR desiredLSR,
-                                                       LocaleLsrIterator *remainingIter,
-                                                       UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return std::nullopt; }
-    int32_t desiredIndex = 0;
-    int32_t bestSupportedLsrIndex = -1;
-    for (int32_t bestShiftedDistance = LocaleDistance::shiftDistance(thresholdDistance);;) {
+std::optional<int32_t> LocaleMatcher::get_ఉత్తమ_Supp_సూచీ(LSR desiredLSR,
+                                                       LocaleLsrIterator *మిగిలిన_Iter,
+                                                       UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి std::nullopt; }
+    int32_t desired_సూచీ = 0;
+    int32_t ఉత్తమ_Supported_Lsr_సూచీ = -1;
+    కొరకు (int32_t ఉత్తమ_Shifted_దూరం = Locale_దూరం::జరుపు_దూరం(పరిమితి_దూరం_2);;) {
         // Quick check for exact maximized LSR.
-        if (supportedLsrToIndex != nullptr) {
-            desiredLSR.setHashCode();
-            UBool found = false;
-            int32_t suppIndex = uhash_getiAndFound(supportedLsrToIndex, &desiredLSR, &found);
-            if (found) {
-                if (remainingIter != nullptr) {
-                    remainingIter->rememberCurrent(desiredIndex, errorCode);
+        ఒకవేళ (supported_Lsr_గమ్యం_సూచీ != శూన్యసూచిక) {
+            desiredLSR.సమితి_Hash_సంకేతం();
+            UBool దొరికింది = అబద్ధం;
+            int32_t supp_సూచీ = uhash_geti_And_దొరికింది(supported_Lsr_గమ్యం_సూచీ, &desiredLSR, &దొరికింది);
+            ఒకవేళ (దొరికింది) {
+                ఒకవేళ (మిగిలిన_Iter != శూన్యసూచిక) {
+                    మిగిలిన_Iter->rememberCurrent(desired_సూచీ, error_సంకేతం);
                 }
-                return suppIndex;
+                తిరిగి supp_సూచీ;
             }
         }
-        int32_t bestIndexAndDistance = localeDistance.getBestIndexAndDistance(
-                desiredLSR, supportedLSRs, supportedLSRsLength,
-                bestShiftedDistance, favorSubtag, direction);
-        if (bestIndexAndDistance >= 0) {
-            bestShiftedDistance = LocaleDistance::getShiftedDistance(bestIndexAndDistance);
-            if (remainingIter != nullptr) {
-                remainingIter->rememberCurrent(desiredIndex, errorCode);
-                if (U_FAILURE(errorCode)) { return std::nullopt; }
+        int32_t ఉత్తమ_సూచీ_And_దూరం = locale_దూరం.get_ఉత్తమ_సూచీ_And_దూరం(
+                desiredLSR, supportedLSRs, supported_LSRs_నిడివి,
+                ఉత్తమ_Shifted_దూరం, favorSubtag, direction);
+        ఒకవేళ (ఉత్తమ_సూచీ_And_దూరం >= 0) {
+            ఉత్తమ_Shifted_దూరం = Locale_దూరం::get_Shifted_దూరం(ఉత్తమ_సూచీ_And_దూరం);
+            ఒకవేళ (మిగిలిన_Iter != శూన్యసూచిక) {
+                మిగిలిన_Iter->rememberCurrent(desired_సూచీ, error_సంకేతం);
+                ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి std::nullopt; }
             }
-            bestSupportedLsrIndex = LocaleDistance::getIndex(bestIndexAndDistance);
+            ఉత్తమ_Supported_Lsr_సూచీ = Locale_దూరం::get_సూచీ(ఉత్తమ_సూచీ_And_దూరం);
         }
-        if ((bestShiftedDistance -= LocaleDistance::shiftDistance(demotionPerDesiredLocale)) <= 0) {
-            break;
+        ఒకవేళ ((ఉత్తమ_Shifted_దూరం -= Locale_దూరం::జరుపు_దూరం(demotion_చొప్పున_Desired_Locale)) <= 0) {
+            ఆపు;
         }
-        if (remainingIter == nullptr || !remainingIter->hasNext()) {
-            break;
+        ఒకవేళ (మిగిలిన_Iter == శూన్యసూచిక || !మిగిలిన_Iter->has_తదుపరి()) {
+            ఆపు;
         }
-        desiredLSR = remainingIter->next(errorCode);
-        if (U_FAILURE(errorCode)) { return std::nullopt; }
-        ++desiredIndex;
+        desiredLSR = మిగిలిన_Iter->next(error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి std::nullopt; }
+        ++desired_సూచీ;
     }
-    if (bestSupportedLsrIndex < 0) {
+    ఒకవేళ (ఉత్తమ_Supported_Lsr_సూచీ < 0) {
         // no good match
-        return std::nullopt;
+        తిరిగి std::nullopt;
     }
-    return supportedIndexes[bestSupportedLsrIndex];
+    తిరిగి supportedIndexes[ఉత్తమ_Supported_Lsr_సూచీ];
 }
 
-UBool LocaleMatcher::isMatch(const Locale &desired, const Locale &supported,
-                             UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return false; }
-    LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
-    const LSR *pSuppLSR = &suppLSR;
-    int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
-            getMaximalLsrOrUnd(likelySubtags, desired, errorCode),
+UBool LocaleMatcher::is_సరిపోలిక(స్థిరరాశి Locale &desired, స్థిరరాశి Locale &supported,
+                             UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి అబద్ధం; }
+    LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి అబద్ధం; }
+    స్థిరరాశి LSR *pSuppLSR = &suppLSR;
+    int32_t సూచీ_And_దూరం = locale_దూరం.get_ఉత్తమ_సూచీ_And_దూరం(
+            getMaximalLsrOrUnd(likelySubtags, desired, error_సంకేతం),
             &pSuppLSR, 1,
-            LocaleDistance::shiftDistance(thresholdDistance), favorSubtag, direction);
-    return indexAndDistance >= 0;
+            Locale_దూరం::జరుపు_దూరం(పరిమితి_దూరం_2), favorSubtag, direction);
+    తిరిగి సూచీ_And_దూరం >= 0;
 }
 
-double LocaleMatcher::internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return 0.; }
+ద్విగుణ LocaleMatcher::అంతర్గత_సరిపోలిక(స్థిరరాశి Locale &desired, స్థిరరాశి Locale &supported, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి 0.; }
     // Returns the inverse of the distance: That is, 1-distance(desired, supported).
-    LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, errorCode);
-    if (U_FAILURE(errorCode)) { return 0.; }
-    const LSR *pSuppLSR = &suppLSR;
-    int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
-            getMaximalLsrOrUnd(likelySubtags, desired, errorCode),
+    LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి 0.; }
+    స్థిరరాశి LSR *pSuppLSR = &suppLSR;
+    int32_t సూచీ_And_దూరం = locale_దూరం.get_ఉత్తమ_సూచీ_And_దూరం(
+            getMaximalLsrOrUnd(likelySubtags, desired, error_సంకేతం),
             &pSuppLSR, 1,
-            LocaleDistance::shiftDistance(thresholdDistance), favorSubtag, direction);
-    double distance = LocaleDistance::getDistanceDouble(indexAndDistance);
-    return (100.0 - distance) / 100.0;
+            Locale_దూరం::జరుపు_దూరం(పరిమితి_దూరం_2), favorSubtag, direction);
+    ద్విగుణ దూరం = Locale_దూరం::get_దూరం_Double(సూచీ_And_దూరం);
+    తిరిగి (100.0 - దూరం) / 100.0;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 // uloc_acceptLanguage() --------------------------------------------------- ***
 
 U_NAMESPACE_USE
 
-namespace {
+నామాకాశ {
 
-class LocaleFromTag {
-public:
-    LocaleFromTag() : locale(Locale::getRoot()) {}
-    const Locale& operator()(const char* tag) U_LIFETIME_BOUND { return locale = Locale(tag); }
+తరగతి Locale_From_ట్యాగ్ {
+బహిరంగ:
+    Locale_From_ట్యాగ్() : locale(Locale::get_మూలం()) {}
+    స్థిరరాశి Locale& క్రియాకారకం()(స్థిరరాశి అక్షరం* ట్యాగ్) U_LIFETIME_BOUND { తిరిగి locale = Locale(ట్యాగ్); }
 
-private:
+అంతరంగ:
     // Store the locale in the converter, rather than return a reference to a temporary,
     // or a value which could go out of scope with the caller's reference to it.
     Locale locale;
 };
 
 int32_t acceptLanguage(UEnumeration &supportedLocales, Locale::Iterator &desiredLocales,
-                       char *dest, int32_t capacity, UAcceptResult *acceptResult,
-                       UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
+                       అక్షరం *dest, int32_t capacity, UAccept_ఫలితం *accept_ఫలితం,
+                       UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి 0; }
     LocaleMatcher::Builder builder;
-    const char *locString;
-    while ((locString = uenum_next(&supportedLocales, nullptr, &errorCode)) != nullptr) {
+    స్థిరరాశి అక్షరం *locString;
+    అయితే ((locString = uenum_తదుపరి(&supportedLocales, శూన్యసూచిక, &error_సంకేతం)) != శూన్యసూచిక) {
         Locale loc(locString);
-        if (loc.isBogus()) {
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+        ఒకవేళ (loc.isBogus()) {
+            error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి 0;
         }
-        builder.addSupportedLocale(loc);
+        builder.కూడు_Supported_Locale(loc);
     }
-    LocaleMatcher matcher = builder.build(errorCode);
-    LocaleMatcher::Result result = matcher.getBestMatchResult(desiredLocales, errorCode);
-    if (U_FAILURE(errorCode)) { return 0; }
-    if (result.getDesiredIndex() >= 0) {
-        if (acceptResult != nullptr) {
-            *acceptResult = *result.getDesiredLocale() == *result.getSupportedLocale() ?
+    LocaleMatcher matcher = builder.build(error_సంకేతం);
+    LocaleMatcher::ఫలితం_2 ఫలితం = matcher.get_ఉత్తమ_సరిపోలిక_ఫలితం(desiredLocales, error_సంకేతం);
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి 0; }
+    ఒకవేళ (ఫలితం.get_Desired_సూచీ() >= 0) {
+        ఒకవేళ (accept_ఫలితం != శూన్యసూచిక) {
+            *accept_ఫలితం = *ఫలితం.getDesiredLocale() == *ఫలితం.getSupportedLocale() ?
                 ULOC_ACCEPT_VALID : ULOC_ACCEPT_FALLBACK;
         }
-        const char *bestStr = result.getSupportedLocale()->getName();
-        int32_t bestLength = static_cast<int32_t>(uprv_strlen(bestStr));
-        if (bestLength <= capacity) {
-            uprv_memcpy(dest, bestStr, bestLength);
+        స్థిరరాశి అక్షరం *ఉత్తమ_Str = ఫలితం.getSupportedLocale()->getName();
+        int32_t ఉత్తమ_నిడివి = static_cast<int32_t>(uprv_strlen(ఉత్తమ_Str));
+        ఒకవేళ (ఉత్తమ_నిడివి <= capacity) {
+            uprv_memcpy(dest, ఉత్తమ_Str, ఉత్తమ_నిడివి);
         }
-        return u_terminateChars(dest, capacity, bestLength, &errorCode);
-    } else {
-        if (acceptResult != nullptr) {
-            *acceptResult = ULOC_ACCEPT_FAILED;
+        తిరిగి u_terminateChars(dest, capacity, ఉత్తమ_నిడివి, &error_సంకేతం);
+    } లేకపోతే {
+        ఒకవేళ (accept_ఫలితం != శూన్యసూచిక) {
+            *accept_ఫలితం = ULOC_ACCEPT_FAILED;
         }
-        return u_terminateChars(dest, capacity, 0, &errorCode);
+        తిరిగి u_terminateChars(dest, capacity, 0, &error_సంకేతం);
     }
 }
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguage(char *result, int32_t resultAvailable,
-                    UAcceptResult *outResult,
-                    const char **acceptList, int32_t acceptListCount,
-                    UEnumeration *availableLocales,
-                    UErrorCode *status) {
-    if (U_FAILURE(*status)) { return 0; }
-    if ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
-            (acceptList == nullptr ? acceptListCount != 0 : acceptListCount < 0) ||
-            availableLocales == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+uloc_acceptLanguage(అక్షరం *ఫలితం, int32_t ఫలితం_అందుబాటు,
+                    UAccept_ఫలితం *బహిర్గతం_ఫలితం,
+                    స్థిరరాశి అక్షరం **acceptList, int32_t accept_List_లెక్క,
+                    UEnumeration *అందుబాటు_Locales,
+                    UError_సంకేతం *స్థితి_2) {
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) { తిరిగి 0; }
+    ఒకవేళ ((ఫలితం == శూన్యసూచిక ? ఫలితం_అందుబాటు != 0 : ఫలితం_అందుబాటు < 0) ||
+            (acceptList == శూన్యసూచిక ? accept_List_లెక్క != 0 : accept_List_లెక్క < 0) ||
+            అందుబాటు_Locales == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    LocaleFromTag converter;
-    Locale::ConvertingIterator<const char **, LocaleFromTag> desiredLocales(
-        acceptList, acceptList + acceptListCount, converter);
-    return acceptLanguage(*availableLocales, desiredLocales,
-                          result, resultAvailable, outResult, *status);
+    Locale_From_ట్యాగ్ converter;
+    Locale::ConvertingIterator<స్థిరరాశి అక్షరం **, Locale_From_ట్యాగ్> desiredLocales(
+        acceptList, acceptList + accept_List_లెక్క, converter);
+    తిరిగి acceptLanguage(*అందుబాటు_Locales, desiredLocales,
+                          ఫలితం, ఫలితం_అందుబాటు, బహిర్గతం_ఫలితం, *స్థితి_2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
-                            UAcceptResult *outResult,
-                            const char *httpAcceptLanguage,
-                            UEnumeration *availableLocales,
-                            UErrorCode *status) {
-    if (U_FAILURE(*status)) { return 0; }
-    if ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
-            httpAcceptLanguage == nullptr || availableLocales == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+uloc_acceptLanguageFromHTTP(అక్షరం *ఫలితం, int32_t ఫలితం_అందుబాటు,
+                            UAccept_ఫలితం *బహిర్గతం_ఫలితం,
+                            స్థిరరాశి అక్షరం *httpAcceptLanguage,
+                            UEnumeration *అందుబాటు_Locales,
+                            UError_సంకేతం *స్థితి_2) {
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) { తిరిగి 0; }
+    ఒకవేళ ((ఫలితం == శూన్యసూచిక ? ఫలితం_అందుబాటు != 0 : ఫలితం_అందుబాటు < 0) ||
+            httpAcceptLanguage == శూన్యసూచిక || అందుబాటు_Locales == శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    LocalePriorityList list(httpAcceptLanguage, *status);
-    LocalePriorityList::Iterator desiredLocales = list.iterator();
-    return acceptLanguage(*availableLocales, desiredLocales,
-                          result, resultAvailable, outResult, *status);
+    Locale_ప్రాధాన్యత_List list(httpAcceptLanguage, *స్థితి_2);
+    Locale_ప్రాధాన్యత_List::Iterator desiredLocales = list.iterator();
+    తిరిగి acceptLanguage(*అందుబాటు_Locales, desiredLocales,
+                          ఫలితం, ఫలితం_అందుబాటు, బహిర్గతం_ఫలితం, *స్థితి_2);
 }

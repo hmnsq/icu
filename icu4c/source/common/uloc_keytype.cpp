@@ -6,253 +6,253 @@
 *   Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#include <algorithm>
-#include <optional>
-#include <string_view>
+#అన్తర్భావ <algorithm>
+#అన్తర్భావ <optional>
+#అన్తర్భావ <string_view>
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/uobject.h"
 
-#include "cmemory.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "uresimp.h"
-#include "uvector.h"
-#include "udataswp.h" /* for InvChar functions */
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "fixedstring.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "ulocimp.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "uvector.h"
+#అన్తర్భావ "udataswp.h" /* for InvChar functions */
 
-static UHashtable* gLocExtKeyMap = nullptr;
-static icu::UInitOnce gLocExtKeyMapInitOnce {};
+స్థిర UHashtable* g_Loc_Ext_కీలకం_Map = శూన్యసూచిక;
+స్థిర icu::UInitOnce g_Loc_Ext_కీలకం_Map_Init_Once {};
 
 // bit flags for special types
-typedef enum {
+రకనిర్వచనం గణన {
     SPECIALTYPE_NONE = 0,
     SPECIALTYPE_CODEPOINTS = 1,
-    SPECIALTYPE_REORDER_CODE = 2,
-    SPECIALTYPE_RG_KEY_VALUE = 4
+    SPECIALTYPE_REORDER_సంకేతం = 2,
+    SPECIALTYPE_RG_కీలకం_విలువ = 4
 } SpecialType;
 
-struct LocExtKeyData : public icu::UMemory {
+నిర్మాణం Loc_Ext_కీలకం_దత్తాంశం : బహిరంగ icu::UMemory {
     std::string_view legacyId;
     std::string_view bcpId;
-    icu::LocalUHashtablePointer typeMap;
+    icu::Local_UHashtable_సూచిక typeMap;
     uint32_t        specialTypes;
 };
 
-struct LocExtType : public icu::UMemory {
+నిర్మాణం LocExtType : బహిరంగ icu::UMemory {
     std::string_view legacyId;
     std::string_view bcpId;
 };
 
-struct TypeAlias : public icu::UMemory {
+నిర్మాణం TypeAlias : బహిరంగ icu::UMemory {
     std::string_view from;
 };
 
-static icu::MemoryPool<icu::FixedString>* gKeyTypeStringPool = nullptr;
-static icu::MemoryPool<LocExtKeyData>* gLocExtKeyDataEntries = nullptr;
-static icu::MemoryPool<LocExtType>* gLocExtTypeEntries = nullptr;
-static icu::MemoryPool<TypeAlias>* gTypeAliasEntries = nullptr;
+స్థిర icu::జ్ఞాపకం_Pool<icu::FixedString>* g_కీలకం_Type_String_Pool = శూన్యసూచిక;
+స్థిర icu::జ్ఞాపకం_Pool<Loc_Ext_కీలకం_దత్తాంశం>* g_Loc_Ext_కీలకం_దత్తాంశం_Entries = శూన్యసూచిక;
+స్థిర icu::జ్ఞాపకం_Pool<LocExtType>* gLocExtTypeEntries = శూన్యసూచిక;
+స్థిర icu::జ్ఞాపకం_Pool<TypeAlias>* gTypeAliasEntries = శూన్యసూచిక;
 
 U_CDECL_BEGIN
 
-static UBool U_CALLCONV
-uloc_key_type_cleanup() {
-    if (gLocExtKeyMap != nullptr) {
-        uhash_close(gLocExtKeyMap);
-        gLocExtKeyMap = nullptr;
+స్థిర UBool U_CALLCONV
+uloc_కీలకం_type_cleanup() {
+    ఒకవేళ (g_Loc_Ext_కీలకం_Map != శూన్యసూచిక) {
+        uhash_close(g_Loc_Ext_కీలకం_Map);
+        g_Loc_Ext_కీలకం_Map = శూన్యసూచిక;
     }
 
-    delete gLocExtKeyDataEntries;
-    gLocExtKeyDataEntries = nullptr;
+    తొలగించు g_Loc_Ext_కీలకం_దత్తాంశం_Entries;
+    g_Loc_Ext_కీలకం_దత్తాంశం_Entries = శూన్యసూచిక;
 
-    delete gLocExtTypeEntries;
-    gLocExtTypeEntries = nullptr;
+    తొలగించు gLocExtTypeEntries;
+    gLocExtTypeEntries = శూన్యసూచిక;
 
-    delete gTypeAliasEntries;
-    gTypeAliasEntries = nullptr;
+    తొలగించు gTypeAliasEntries;
+    gTypeAliasEntries = శూన్యసూచిక;
 
-    delete gKeyTypeStringPool;
-    gKeyTypeStringPool = nullptr;
+    తొలగించు g_కీలకం_Type_String_Pool;
+    g_కీలకం_Type_String_Pool = శూన్యసూచిక;
 
-    gLocExtKeyMapInitOnce.reset();
-    return true;
+    g_Loc_Ext_కీలకం_Map_Init_Once.reset();
+    తిరిగి నిజం;
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
-namespace {
+నామాకాశ {
 
-void U_CALLCONV
-initFromResourceBundle(UErrorCode& sts) {
+శూన్య U_CALLCONV
+initFromResourceBundle(UError_సంకేతం& sts) {
     U_NAMESPACE_USE
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_KEY_TYPE, uloc_key_type_cleanup);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_LOCALE_కీలకం_TYPE, uloc_కీలకం_type_cleanup);
 
-    gLocExtKeyMap = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
+    g_Loc_Ext_కీలకం_Map = uhash_open(uhash_hashIStringView, uhash_compareIStringView, శూన్యసూచిక, &sts);
 
-    LocalUResourceBundlePointer keyTypeDataRes(ures_openDirect(nullptr, "keyTypeData", &sts));
-    LocalUResourceBundlePointer keyMapRes(ures_getByKey(keyTypeDataRes.getAlias(), "keyMap", nullptr, &sts));
-    LocalUResourceBundlePointer typeMapRes(ures_getByKey(keyTypeDataRes.getAlias(), "typeMap", nullptr, &sts));
+    Local_UResource_Bundle_సూచిక కీలకం_Type_దత్తాంశం_Res(ures_open_ప్రత్యక్ష(శూన్యసూచిక, "keyTypeData", &sts));
+    Local_UResource_Bundle_సూచిక కీలకం_Map_Res(ures_get_By_కీలకం(కీలకం_Type_దత్తాంశం_Res.getAlias(), "keyMap", శూన్యసూచిక, &sts));
+    Local_UResource_Bundle_సూచిక typeMapRes(ures_get_By_కీలకం(కీలకం_Type_దత్తాంశం_Res.getAlias(), "typeMap", శూన్యసూచిక, &sts));
 
-    if (U_FAILURE(sts)) {
-        return;
+    ఒకవేళ (U_FAILURE(sts)) {
+        తిరిగి;
     }
 
-    UErrorCode tmpSts = U_ZERO_ERROR;
-    LocalUResourceBundlePointer typeAliasRes(ures_getByKey(keyTypeDataRes.getAlias(), "typeAlias", nullptr, &tmpSts));
+    UError_సంకేతం tmpSts = U_ZERO_ERROR;
+    Local_UResource_Bundle_సూచిక typeAliasRes(ures_get_By_కీలకం(కీలకం_Type_దత్తాంశం_Res.getAlias(), "typeAlias", శూన్యసూచిక, &tmpSts));
     tmpSts = U_ZERO_ERROR;
-    LocalUResourceBundlePointer bcpTypeAliasRes(ures_getByKey(keyTypeDataRes.getAlias(), "bcpTypeAlias", nullptr, &tmpSts));
+    Local_UResource_Bundle_సూచిక bcpTypeAliasRes(ures_get_By_కీలకం(కీలకం_Type_దత్తాంశం_Res.getAlias(), "bcpTypeAlias", శూన్యసూచిక, &tmpSts));
 
     // initialize pools storing dynamically allocated objects
-    gKeyTypeStringPool = new icu::MemoryPool<icu::FixedString>;
-    if (gKeyTypeStringPool == nullptr) {
-        sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    g_కీలకం_Type_String_Pool = కొత్త icu::జ్ఞాపకం_Pool<icu::FixedString>;
+    ఒకవేళ (g_కీలకం_Type_String_Pool == శూన్యసూచిక) {
+        sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    gLocExtKeyDataEntries = new icu::MemoryPool<LocExtKeyData>;
-    if (gLocExtKeyDataEntries == nullptr) {
-        sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    g_Loc_Ext_కీలకం_దత్తాంశం_Entries = కొత్త icu::జ్ఞాపకం_Pool<Loc_Ext_కీలకం_దత్తాంశం>;
+    ఒకవేళ (g_Loc_Ext_కీలకం_దత్తాంశం_Entries == శూన్యసూచిక) {
+        sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    gLocExtTypeEntries = new icu::MemoryPool<LocExtType>;
-    if (gLocExtTypeEntries == nullptr) {
-        sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    gLocExtTypeEntries = కొత్త icu::జ్ఞాపకం_Pool<LocExtType>;
+    ఒకవేళ (gLocExtTypeEntries == శూన్యసూచిక) {
+        sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    gTypeAliasEntries = new icu::MemoryPool<TypeAlias>;
-    if (gTypeAliasEntries == nullptr) {
-        sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    gTypeAliasEntries = కొత్త icu::జ్ఞాపకం_Pool<TypeAlias>;
+    ఒకవేళ (gTypeAliasEntries == శూన్యసూచిక) {
+        sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
 
     // iterate through keyMap resource
-    LocalUResourceBundlePointer keyMapEntry;
+    Local_UResource_Bundle_సూచిక కీలకం_Map_నమోదు;
 
-    while (ures_hasNext(keyMapRes.getAlias())) {
-        keyMapEntry.adoptInstead(ures_getNextResource(keyMapRes.getAlias(), keyMapEntry.orphan(), &sts));
-        if (U_FAILURE(sts)) {
-            break;
+    అయితే (ures_has_తదుపరి(కీలకం_Map_Res.getAlias())) {
+        కీలకం_Map_నమోదు.adoptInstead(ures_get_తదుపరి_Resource(కీలకం_Map_Res.getAlias(), కీలకం_Map_నమోదు.orphan(), &sts));
+        ఒకవేళ (U_FAILURE(sts)) {
+            ఆపు;
         }
-        const char* legacyKeyId = ures_getKey(keyMapEntry.getAlias());
-        UnicodeString uBcpKeyId = ures_getUnicodeString(keyMapEntry.getAlias(), &sts);
-        if (U_FAILURE(sts)) {
-            break;
+        స్థిరరాశి అక్షరం* legacy_కీలకం_Id = ures_get_కీలకం(కీలకం_Map_నమోదు.getAlias());
+        UnicodeString u_Bcp_కీలకం_Id = ures_getUnicodeString(కీలకం_Map_నమోదు.getAlias(), &sts);
+        ఒకవేళ (U_FAILURE(sts)) {
+            ఆపు;
         }
 
         // empty value indicates that BCP key is same with the legacy key.
-        const char* bcpKeyId = legacyKeyId;
-        if (!uBcpKeyId.isEmpty()) {
-            icu::FixedString* bcpKeyIdBuf = gKeyTypeStringPool->create();
-            if (bcpKeyIdBuf == nullptr) {
-                sts = U_MEMORY_ALLOCATION_ERROR;
-                break;
+        స్థిరరాశి అక్షరం* bcp_కీలకం_Id = legacy_కీలకం_Id;
+        ఒకవేళ (!u_Bcp_కీలకం_Id.is_ఖాళీలు()) {
+            icu::FixedString* bcp_కీలకం_Id_Buf = g_కీలకం_Type_String_Pool->create();
+            ఒకవేళ (bcp_కీలకం_Id_Buf == శూన్యసూచిక) {
+                sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                ఆపు;
             }
-            copyInvariantChars(uBcpKeyId, *bcpKeyIdBuf, sts);
-            if (U_FAILURE(sts)) {
-                break;
+            copyInvariantChars(u_Bcp_కీలకం_Id, *bcp_కీలకం_Id_Buf, sts);
+            ఒకవేళ (U_FAILURE(sts)) {
+                ఆపు;
             }
-            bcpKeyId = bcpKeyIdBuf->data();
+            bcp_కీలకం_Id = bcp_కీలకం_Id_Buf->దత్తాంశం();
         }
 
-        bool isTZ = uprv_strcmp(legacyKeyId, "timezone") == 0;
+        తార్కిక isTZ = uprv_strcmp(legacy_కీలకం_Id, "timezone") == 0;
 
-        UHashtable* typeDataMap = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
-        if (U_FAILURE(sts)) {
-            break;
+        UHashtable* type_దత్తాంశం_Map = uhash_open(uhash_hashIStringView, uhash_compareIStringView, శూన్యసూచిక, &sts);
+        ఒకవేళ (U_FAILURE(sts)) {
+            ఆపు;
         }
         uint32_t specialTypes = SPECIALTYPE_NONE;
 
-        LocalUResourceBundlePointer typeAliasResByKey;
-        LocalUResourceBundlePointer bcpTypeAliasResByKey;
+        Local_UResource_Bundle_సూచిక type_Alias_Res_By_కీలకం;
+        Local_UResource_Bundle_సూచిక bcp_Type_Alias_Res_By_కీలకం;
 
-        if (typeAliasRes.isValid()) {
+        ఒకవేళ (typeAliasRes.isValid()) {
             tmpSts = U_ZERO_ERROR;
-            typeAliasResByKey.adoptInstead(ures_getByKey(typeAliasRes.getAlias(), legacyKeyId, nullptr, &tmpSts));
-            if (U_FAILURE(tmpSts)) {
-                typeAliasResByKey.orphan();
+            type_Alias_Res_By_కీలకం.adoptInstead(ures_get_By_కీలకం(typeAliasRes.getAlias(), legacy_కీలకం_Id, శూన్యసూచిక, &tmpSts));
+            ఒకవేళ (U_FAILURE(tmpSts)) {
+                type_Alias_Res_By_కీలకం.orphan();
             }
         }
-        if (bcpTypeAliasRes.isValid()) {
+        ఒకవేళ (bcpTypeAliasRes.isValid()) {
             tmpSts = U_ZERO_ERROR;
-            bcpTypeAliasResByKey.adoptInstead(ures_getByKey(bcpTypeAliasRes.getAlias(), bcpKeyId, nullptr, &tmpSts));
-            if (U_FAILURE(tmpSts)) {
-                bcpTypeAliasResByKey.orphan();
+            bcp_Type_Alias_Res_By_కీలకం.adoptInstead(ures_get_By_కీలకం(bcpTypeAliasRes.getAlias(), bcp_కీలకం_Id, శూన్యసూచిక, &tmpSts));
+            ఒకవేళ (U_FAILURE(tmpSts)) {
+                bcp_Type_Alias_Res_By_కీలకం.orphan();
             }
         }
 
         // look up type map for the key, and walk through the mapping data
-        LocalUResourceBundlePointer typeMapResByKey(ures_getByKey(typeMapRes.getAlias(), legacyKeyId, nullptr, &sts));
-        if (U_FAILURE(sts)) {
+        Local_UResource_Bundle_సూచిక type_Map_Res_By_కీలకం(ures_get_By_కీలకం(typeMapRes.getAlias(), legacy_కీలకం_Id, శూన్యసూచిక, &sts));
+        ఒకవేళ (U_FAILURE(sts)) {
             // We fail here if typeMap does not have an entry corresponding to every entry in keyMap (should
             // not happen for valid keyTypeData), or if ures_getByKeyfails fails for some other reason
             // (e.g. data file cannot be loaded, using stubdata, over-aggressive data filtering has removed
             // something like timezoneTypes.res, etc.). Error code is already set. See ICU-21669.
             UPRV_UNREACHABLE_ASSERT;
-        } else {
-            LocalUResourceBundlePointer typeMapEntry;
+        } లేకపోతే {
+            Local_UResource_Bundle_సూచిక type_Map_నమోదు;
 
-            while (ures_hasNext(typeMapResByKey.getAlias())) {
-                typeMapEntry.adoptInstead(ures_getNextResource(typeMapResByKey.getAlias(), typeMapEntry.orphan(), &sts));
-                if (U_FAILURE(sts)) {
-                    break;
+            అయితే (ures_has_తదుపరి(type_Map_Res_By_కీలకం.getAlias())) {
+                type_Map_నమోదు.adoptInstead(ures_get_తదుపరి_Resource(type_Map_Res_By_కీలకం.getAlias(), type_Map_నమోదు.orphan(), &sts));
+                ఒకవేళ (U_FAILURE(sts)) {
+                    ఆపు;
                 }
-                const char* legacyTypeId = ures_getKey(typeMapEntry.getAlias());
+                స్థిరరాశి అక్షరం* legacyTypeId = ures_get_కీలకం(type_Map_నమోదు.getAlias());
 
                 // special types
-                if (uprv_strcmp(legacyTypeId, "CODEPOINTS") == 0) {
+                ఒకవేళ (uprv_strcmp(legacyTypeId, "CODEPOINTS") == 0) {
                     specialTypes |= SPECIALTYPE_CODEPOINTS;
-                    continue;
+                    కొనసాగు;
                 }
-                if (uprv_strcmp(legacyTypeId, "REORDER_CODE") == 0) {
-                    specialTypes |= SPECIALTYPE_REORDER_CODE;
-                    continue;
+                ఒకవేళ (uprv_strcmp(legacyTypeId, "REORDER_CODE") == 0) {
+                    specialTypes |= SPECIALTYPE_REORDER_సంకేతం;
+                    కొనసాగు;
                 }
-                if (uprv_strcmp(legacyTypeId, "RG_KEY_VALUE") == 0) {
-                    specialTypes |= SPECIALTYPE_RG_KEY_VALUE;
-                    continue;
+                ఒకవేళ (uprv_strcmp(legacyTypeId, "RG_KEY_VALUE") == 0) {
+                    specialTypes |= SPECIALTYPE_RG_కీలకం_విలువ;
+                    కొనసాగు;
                 }
 
-                if (isTZ) {
+                ఒకవేళ (isTZ) {
                     // a timezone key uses a colon instead of a slash in the resource.
                     // e.g. America:Los_Angeles
-                    if (uprv_strchr(legacyTypeId, ':') != nullptr) {
-                        U_ASSERT(legacyTypeId != nullptr && *legacyTypeId != '\0');
+                    ఒకవేళ (uprv_strchr(legacyTypeId, ':') != శూన్యసూచిక) {
+                        U_ASSERT(legacyTypeId != శూన్యసూచిక && *legacyTypeId != '\0');
                         std::string_view legacyTypeIdView = legacyTypeId;
-                        icu::FixedString* legacyTypeIdBuf = gKeyTypeStringPool->create(legacyTypeIdView);
-                        if (legacyTypeIdBuf == nullptr || legacyTypeIdBuf->isEmpty()) {
-                            sts = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                        icu::FixedString* legacyTypeIdBuf = g_కీలకం_Type_String_Pool->create(legacyTypeIdView);
+                        ఒకవేళ (legacyTypeIdBuf == శూన్యసూచిక || legacyTypeIdBuf->is_ఖాళీలు()) {
+                            sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                            ఆపు;
                         }
                         std::replace(
                                 legacyTypeIdBuf->getAlias(),
                                 legacyTypeIdBuf->getAlias() + legacyTypeIdView.length(),
                                 ':', '/');
-                        legacyTypeId = legacyTypeIdBuf->data();
+                        legacyTypeId = legacyTypeIdBuf->దత్తాంశం();
                     }
                 }
 
-                UnicodeString uBcpTypeId = ures_getUnicodeString(typeMapEntry.getAlias(), &sts);
-                if (U_FAILURE(sts)) {
-                    break;
+                UnicodeString uBcpTypeId = ures_getUnicodeString(type_Map_నమోదు.getAlias(), &sts);
+                ఒకవేళ (U_FAILURE(sts)) {
+                    ఆపు;
                 }
 
                 // empty value indicates that BCP type is same with the legacy type.
-                const char* bcpTypeId = legacyTypeId;
-                if (!uBcpTypeId.isEmpty()) {
-                    icu::FixedString* bcpTypeIdBuf = gKeyTypeStringPool->create();
-                    if (bcpTypeIdBuf == nullptr) {
-                        sts = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                స్థిరరాశి అక్షరం* bcpTypeId = legacyTypeId;
+                ఒకవేళ (!uBcpTypeId.is_ఖాళీలు()) {
+                    icu::FixedString* bcpTypeIdBuf = g_కీలకం_Type_String_Pool->create();
+                    ఒకవేళ (bcpTypeIdBuf == శూన్యసూచిక) {
+                        sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                        ఆపు;
                     }
                     copyInvariantChars(uBcpTypeId, *bcpTypeIdBuf, sts);
-                    if (U_FAILURE(sts)) {
-                        break;
+                    ఒకవేళ (U_FAILURE(sts)) {
+                        ఆపు;
                     }
-                    bcpTypeId = bcpTypeIdBuf->data();
+                    bcpTypeId = bcpTypeIdBuf->దత్తాంశం();
                 }
 
                 // Note: legacy type value should never be
@@ -260,275 +260,275 @@ initFromResourceBundle(UErrorCode& sts) {
                 // type under the same key. So we use a single
                 // map for lookup.
                 LocExtType* t = gLocExtTypeEntries->create();
-                if (t == nullptr) {
-                    sts = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                ఒకవేళ (t == శూన్యసూచిక) {
+                    sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    ఆపు;
                 }
                 t->bcpId = bcpTypeId;
                 t->legacyId = legacyTypeId;
 
-                uhash_put(typeDataMap, &t->legacyId, t, &sts);
-                if (bcpTypeId != legacyTypeId) {
+                uhash_put(type_దత్తాంశం_Map, &t->legacyId, t, &sts);
+                ఒకవేళ (bcpTypeId != legacyTypeId) {
                     // different type value
-                    uhash_put(typeDataMap, &t->bcpId, t, &sts);
+                    uhash_put(type_దత్తాంశం_Map, &t->bcpId, t, &sts);
                 }
-                if (U_FAILURE(sts)) {
-                    break;
+                ఒకవేళ (U_FAILURE(sts)) {
+                    ఆపు;
                 }
 
                 // also put aliases in the map
-                if (typeAliasResByKey.isValid()) {
-                    LocalUResourceBundlePointer typeAliasDataEntry;
+                ఒకవేళ (type_Alias_Res_By_కీలకం.isValid()) {
+                    Local_UResource_Bundle_సూచిక type_Alias_దత్తాంశం_నమోదు;
 
-                    ures_resetIterator(typeAliasResByKey.getAlias());
-                    while (ures_hasNext(typeAliasResByKey.getAlias()) && U_SUCCESS(sts)) {
-                        int32_t toLen;
-                        typeAliasDataEntry.adoptInstead(ures_getNextResource(typeAliasResByKey.getAlias(), typeAliasDataEntry.orphan(), &sts));
-                        const char16_t* to = ures_getString(typeAliasDataEntry.getAlias(), &toLen, &sts);
-                        if (U_FAILURE(sts)) {
-                            break;
+                    ures_resetIterator(type_Alias_Res_By_కీలకం.getAlias());
+                    అయితే (ures_has_తదుపరి(type_Alias_Res_By_కీలకం.getAlias()) && U_SUCCESS(sts)) {
+                        int32_t గమ్యం_Len;
+                        type_Alias_దత్తాంశం_నమోదు.adoptInstead(ures_get_తదుపరి_Resource(type_Alias_Res_By_కీలకం.getAlias(), type_Alias_దత్తాంశం_నమోదు.orphan(), &sts));
+                        స్థిరరాశి char16_t* గమ్యం = ures_getString(type_Alias_దత్తాంశం_నమోదు.getAlias(), &గమ్యం_Len, &sts);
+                        ఒకవేళ (U_FAILURE(sts)) {
+                            ఆపు;
                         }
                         // check if this is an alias of canonical legacy type
-                        if (uprv_compareInvWithUChar(
-                                nullptr,
-                                t->legacyId.data(),
+                        ఒకవేళ (uprv_compareInvWithUChar(
+                                శూన్యసూచిక,
+                                t->legacyId.దత్తాంశం(),
                                 static_cast<int32_t>(t->legacyId.size()),
-                                to,
-                                toLen) == 0) {
-                            const char* from = ures_getKey(typeAliasDataEntry.getAlias());
+                                గమ్యం,
+                                గమ్యం_Len) == 0) {
+                            స్థిరరాశి అక్షరం* from = ures_get_కీలకం(type_Alias_దత్తాంశం_నమోదు.getAlias());
                             TypeAlias* alias = gTypeAliasEntries->create(TypeAlias{{}, from});
-                            if (isTZ) {
+                            ఒకవేళ (isTZ) {
                                 // replace colon with slash if necessary
-                                if (uprv_strchr(from, ':') != nullptr) {
-                                    U_ASSERT(from != nullptr && *from != '\0');
+                                ఒకవేళ (uprv_strchr(from, ':') != శూన్యసూచిక) {
+                                    U_ASSERT(from != శూన్యసూచిక && *from != '\0');
                                     std::string_view fromView = from;
-                                    icu::FixedString* fromBuf = gKeyTypeStringPool->create(fromView);
-                                    if (fromBuf == nullptr || fromBuf->isEmpty()) {
-                                        sts = U_MEMORY_ALLOCATION_ERROR;
-                                        break;
+                                    icu::FixedString* fromBuf = g_కీలకం_Type_String_Pool->create(fromView);
+                                    ఒకవేళ (fromBuf == శూన్యసూచిక || fromBuf->is_ఖాళీలు()) {
+                                        sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                                        ఆపు;
                                     }
                                     std::replace(
                                             fromBuf->getAlias(),
                                             fromBuf->getAlias() + fromView.length(),
                                             ':', '/');
-                                    alias->from = {fromBuf->data(), fromView.length()};
+                                    alias->from = {fromBuf->దత్తాంశం(), fromView.length()};
                                 }
                             }
-                            uhash_put(typeDataMap, &alias->from, t, &sts);
+                            uhash_put(type_దత్తాంశం_Map, &alias->from, t, &sts);
                         }
                     }
-                    if (U_FAILURE(sts)) {
-                        break;
+                    ఒకవేళ (U_FAILURE(sts)) {
+                        ఆపు;
                     }
                 }
 
-                if (bcpTypeAliasResByKey.isValid()) {
-                    LocalUResourceBundlePointer bcpTypeAliasDataEntry;
+                ఒకవేళ (bcp_Type_Alias_Res_By_కీలకం.isValid()) {
+                    Local_UResource_Bundle_సూచిక bcp_Type_Alias_దత్తాంశం_నమోదు;
 
-                    ures_resetIterator(bcpTypeAliasResByKey.getAlias());
-                    while (ures_hasNext(bcpTypeAliasResByKey.getAlias()) && U_SUCCESS(sts)) {
-                        int32_t toLen;
-                        bcpTypeAliasDataEntry.adoptInstead(ures_getNextResource(bcpTypeAliasResByKey.getAlias(), bcpTypeAliasDataEntry.orphan(), &sts));
-                        const char16_t* to = ures_getString(bcpTypeAliasDataEntry.getAlias(), &toLen, &sts);
-                        if (U_FAILURE(sts)) {
-                            break;
+                    ures_resetIterator(bcp_Type_Alias_Res_By_కీలకం.getAlias());
+                    అయితే (ures_has_తదుపరి(bcp_Type_Alias_Res_By_కీలకం.getAlias()) && U_SUCCESS(sts)) {
+                        int32_t గమ్యం_Len;
+                        bcp_Type_Alias_దత్తాంశం_నమోదు.adoptInstead(ures_get_తదుపరి_Resource(bcp_Type_Alias_Res_By_కీలకం.getAlias(), bcp_Type_Alias_దత్తాంశం_నమోదు.orphan(), &sts));
+                        స్థిరరాశి char16_t* గమ్యం = ures_getString(bcp_Type_Alias_దత్తాంశం_నమోదు.getAlias(), &గమ్యం_Len, &sts);
+                        ఒకవేళ (U_FAILURE(sts)) {
+                            ఆపు;
                         }
                         // check if this is an alias of bcp type
-                        if (uprv_compareInvWithUChar(
-                                nullptr,
-                                t->bcpId.data(),
+                        ఒకవేళ (uprv_compareInvWithUChar(
+                                శూన్యసూచిక,
+                                t->bcpId.దత్తాంశం(),
                                 static_cast<int32_t>(t->bcpId.size()),
-                                to,
-                                toLen) == 0) {
-                            const char* from = ures_getKey(bcpTypeAliasDataEntry.getAlias());
+                                గమ్యం,
+                                గమ్యం_Len) == 0) {
+                            స్థిరరాశి అక్షరం* from = ures_get_కీలకం(bcp_Type_Alias_దత్తాంశం_నమోదు.getAlias());
                             TypeAlias* alias = gTypeAliasEntries->create(TypeAlias{{}, from});
-                            uhash_put(typeDataMap, &alias->from, t, &sts);
+                            uhash_put(type_దత్తాంశం_Map, &alias->from, t, &sts);
                         }
                     }
-                    if (U_FAILURE(sts)) {
-                        break;
+                    ఒకవేళ (U_FAILURE(sts)) {
+                        ఆపు;
                     }
                 }
             }
         }
-        if (U_FAILURE(sts)) {
-            break;
+        ఒకవేళ (U_FAILURE(sts)) {
+            ఆపు;
         }
 
-        LocExtKeyData* keyData = gLocExtKeyDataEntries->create();
-        if (keyData == nullptr) {
-            sts = U_MEMORY_ALLOCATION_ERROR;
-            break;
+        Loc_Ext_కీలకం_దత్తాంశం* కీలకం_దత్తాంశం = g_Loc_Ext_కీలకం_దత్తాంశం_Entries->create();
+        ఒకవేళ (కీలకం_దత్తాంశం == శూన్యసూచిక) {
+            sts = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            ఆపు;
         }
-        keyData->bcpId = bcpKeyId;
-        keyData->legacyId = legacyKeyId;
-        keyData->specialTypes = specialTypes;
-        keyData->typeMap.adoptInstead(typeDataMap);
+        కీలకం_దత్తాంశం->bcpId = bcp_కీలకం_Id;
+        కీలకం_దత్తాంశం->legacyId = legacy_కీలకం_Id;
+        కీలకం_దత్తాంశం->specialTypes = specialTypes;
+        కీలకం_దత్తాంశం->typeMap.adoptInstead(type_దత్తాంశం_Map);
 
-        uhash_put(gLocExtKeyMap, &keyData->legacyId, keyData, &sts);
-        if (legacyKeyId != bcpKeyId) {
+        uhash_put(g_Loc_Ext_కీలకం_Map, &కీలకం_దత్తాంశం->legacyId, కీలకం_దత్తాంశం, &sts);
+        ఒకవేళ (legacy_కీలకం_Id != bcp_కీలకం_Id) {
             // different key value
-            uhash_put(gLocExtKeyMap, &keyData->bcpId, keyData, &sts);
+            uhash_put(g_Loc_Ext_కీలకం_Map, &కీలకం_దత్తాంశం->bcpId, కీలకం_దత్తాంశం, &sts);
         }
-        if (U_FAILURE(sts)) {
-            break;
+        ఒకవేళ (U_FAILURE(sts)) {
+            ఆపు;
         }
     }
 }
 
-bool
+తార్కిక
 init() {
-    UErrorCode sts = U_ZERO_ERROR;
-    umtx_initOnce(gLocExtKeyMapInitOnce, &initFromResourceBundle, sts);
-    if (U_FAILURE(sts)) {
-        return false;
+    UError_సంకేతం sts = U_ZERO_ERROR;
+    umtx_initOnce(g_Loc_Ext_కీలకం_Map_Init_Once, &initFromResourceBundle, sts);
+    ఒకవేళ (U_FAILURE(sts)) {
+        తిరిగి అబద్ధం;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-bool
+తార్కిక
 isSpecialTypeCodepoints(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if (c == '-') {
-            if (subtagLen < 4 || subtagLen > 6) {
-                return false;
+    కొరకు (అక్షరం c : val) {
+        ఒకవేళ (c == '-') {
+            ఒకవేళ (subtagLen < 4 || subtagLen > 6) {
+                తిరిగి అబద్ధం;
             }
             subtagLen = 0;
-        } else if ((c >= '0' && c <= '9') ||
+        } లేకపోతే ఒకవేళ ((c >= '0' && c <= '9') ||
                     (c >= 'A' && c <= 'F') || // A-F/a-f are contiguous
                     (c >= 'a' && c <= 'f')) { // also in EBCDIC
             subtagLen++;
-        } else {
-            return false;
+        } లేకపోతే {
+            తిరిగి అబద్ధం;
         }
     }
-    return subtagLen >= 4 && subtagLen <= 6;
+    తిరిగి subtagLen >= 4 && subtagLen <= 6;
 }
 
-bool
-isSpecialTypeReorderCode(std::string_view val) {
+తార్కిక
+is_Special_Type_Reorder_సంకేతం(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if (c == '-') {
-            if (subtagLen < 3 || subtagLen > 8) {
-                return false;
+    కొరకు (అక్షరం c : val) {
+        ఒకవేళ (c == '-') {
+            ఒకవేళ (subtagLen < 3 || subtagLen > 8) {
+                తిరిగి అబద్ధం;
             }
             subtagLen = 0;
-        } else if (uprv_isASCIILetter(c)) {
+        } లేకపోతే ఒకవేళ (uprv_isASCIILetter(c)) {
             subtagLen++;
-        } else {
-            return false;
+        } లేకపోతే {
+            తిరిగి అబద్ధం;
         }
     }
-    return subtagLen >= 3 && subtagLen <= 8;
+    తిరిగి subtagLen >= 3 && subtagLen <= 8;
 }
 
-bool
-isSpecialTypeRgKeyValue(std::string_view val) {
+తార్కిక
+is_Special_Type_Rg_కీలకం_విలువ(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if ((subtagLen < 2 && uprv_isASCIILetter(c)) ||
+    కొరకు (అక్షరం c : val) {
+        ఒకవేళ ((subtagLen < 2 && uprv_isASCIILetter(c)) ||
             (subtagLen >= 2 && (c == 'Z' || c == 'z'))) {
             subtagLen++;
-        } else {
-            return false;
+        } లేకపోతే {
+            తిరిగి అబద్ధం;
         }
     }
-    return subtagLen == 6;
+    తిరిగి subtagLen == 6;
 }
 
 }  // namespace
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpKey(std::string_view key) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_గమ్యం_Bcp_కీలకం(std::string_view కీలకం) {
+    ఒకవేళ (!init()) {
+        తిరిగి std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        return keyData->bcpId;
+    Loc_Ext_కీలకం_దత్తాంశం* కీలకం_దత్తాంశం = static_cast<Loc_Ext_కీలకం_దత్తాంశం*>(uhash_get(g_Loc_Ext_కీలకం_Map, &కీలకం));
+    ఒకవేళ (కీలకం_దత్తాంశం != శూన్యసూచిక) {
+        తిరిగి కీలకం_దత్తాంశం->bcpId;
     }
 
-    return std::nullopt;
+    తిరిగి std::nullopt;
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyKey(std::string_view key) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_గమ్యం_Legacy_కీలకం(std::string_view కీలకం) {
+    ఒకవేళ (!init()) {
+        తిరిగి std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        return keyData->legacyId;
+    Loc_Ext_కీలకం_దత్తాంశం* కీలకం_దత్తాంశం = static_cast<Loc_Ext_కీలకం_దత్తాంశం*>(uhash_get(g_Loc_Ext_కీలకం_Map, &కీలకం));
+    ఒకవేళ (కీలకం_దత్తాంశం != శూన్యసూచిక) {
+        తిరిగి కీలకం_దత్తాంశం->legacyId;
     }
 
-    return std::nullopt;
+    తిరిగి std::nullopt;
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpType(std::string_view key, std::string_view type U_LIFETIME_BOUND) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_గమ్యం_Bcp_Type(std::string_view కీలకం, std::string_view type U_LIFETIME_BOUND) {
+    ఒకవేళ (!init()) {
+        తిరిగి std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        LocExtType* t = static_cast<LocExtType*>(uhash_get(keyData->typeMap.getAlias(), &type));
-        if (t != nullptr) {
-            return t->bcpId;
+    Loc_Ext_కీలకం_దత్తాంశం* కీలకం_దత్తాంశం = static_cast<Loc_Ext_కీలకం_దత్తాంశం*>(uhash_get(g_Loc_Ext_కీలకం_Map, &కీలకం));
+    ఒకవేళ (కీలకం_దత్తాంశం != శూన్యసూచిక) {
+        LocExtType* t = static_cast<LocExtType*>(uhash_get(కీలకం_దత్తాంశం->typeMap.getAlias(), &type));
+        ఒకవేళ (t != శూన్యసూచిక) {
+            తిరిగి t->bcpId;
         }
-        if (keyData->specialTypes != SPECIALTYPE_NONE) {
-            bool matched = false;
-            if (keyData->specialTypes & SPECIALTYPE_CODEPOINTS) {
+        ఒకవేళ (కీలకం_దత్తాంశం->specialTypes != SPECIALTYPE_NONE) {
+            తార్కిక matched = అబద్ధం;
+            ఒకవేళ (కీలకం_దత్తాంశం->specialTypes & SPECIALTYPE_CODEPOINTS) {
                 matched = isSpecialTypeCodepoints(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_REORDER_CODE) {
-                matched = isSpecialTypeReorderCode(type);
+            ఒకవేళ (!matched && కీలకం_దత్తాంశం->specialTypes & SPECIALTYPE_REORDER_సంకేతం) {
+                matched = is_Special_Type_Reorder_సంకేతం(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_RG_KEY_VALUE) {
-                matched = isSpecialTypeRgKeyValue(type);
+            ఒకవేళ (!matched && కీలకం_దత్తాంశం->specialTypes & SPECIALTYPE_RG_కీలకం_విలువ) {
+                matched = is_Special_Type_Rg_కీలకం_విలువ(type);
             }
-            if (matched) {
-                return type;
+            ఒకవేళ (matched) {
+                తిరిగి type;
             }
         }
     }
 
-    return std::nullopt;
+    తిరిగి std::nullopt;
 }
 
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyType(std::string_view key, std::string_view type U_LIFETIME_BOUND) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_గమ్యం_Legacy_Type(std::string_view కీలకం, std::string_view type U_LIFETIME_BOUND) {
+    ఒకవేళ (!init()) {
+        తిరిగి std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        LocExtType* t = static_cast<LocExtType*>(uhash_get(keyData->typeMap.getAlias(), &type));
-        if (t != nullptr) {
-            return t->legacyId;
+    Loc_Ext_కీలకం_దత్తాంశం* కీలకం_దత్తాంశం = static_cast<Loc_Ext_కీలకం_దత్తాంశం*>(uhash_get(g_Loc_Ext_కీలకం_Map, &కీలకం));
+    ఒకవేళ (కీలకం_దత్తాంశం != శూన్యసూచిక) {
+        LocExtType* t = static_cast<LocExtType*>(uhash_get(కీలకం_దత్తాంశం->typeMap.getAlias(), &type));
+        ఒకవేళ (t != శూన్యసూచిక) {
+            తిరిగి t->legacyId;
         }
-        if (keyData->specialTypes != SPECIALTYPE_NONE) {
-            bool matched = false;
-            if (keyData->specialTypes & SPECIALTYPE_CODEPOINTS) {
+        ఒకవేళ (కీలకం_దత్తాంశం->specialTypes != SPECIALTYPE_NONE) {
+            తార్కిక matched = అబద్ధం;
+            ఒకవేళ (కీలకం_దత్తాంశం->specialTypes & SPECIALTYPE_CODEPOINTS) {
                 matched = isSpecialTypeCodepoints(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_REORDER_CODE) {
-                matched = isSpecialTypeReorderCode(type);
+            ఒకవేళ (!matched && కీలకం_దత్తాంశం->specialTypes & SPECIALTYPE_REORDER_సంకేతం) {
+                matched = is_Special_Type_Reorder_సంకేతం(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_RG_KEY_VALUE) {
-                matched = isSpecialTypeRgKeyValue(type);
+            ఒకవేళ (!matched && కీలకం_దత్తాంశం->specialTypes & SPECIALTYPE_RG_కీలకం_విలువ) {
+                matched = is_Special_Type_Rg_కీలకం_విలువ(type);
             }
-            if (matched) {
-                return type;
+            ఒకవేళ (matched) {
+                తిరిగి type;
             }
         }
     }
 
-    return std::nullopt;
+    తిరిగి std::nullopt;
 }

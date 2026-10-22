@@ -11,29 +11,29 @@
 //
 
 
-#ifndef RBBIRB_H
-#define RBBIRB_H
+#నిర్వచితం_కాకపోతే RBBIRB_H
+#నిర్వచించు RBBIRB_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include <utility>
+#అన్తర్భావ <utility>
 
-#include "unicode/uobject.h"
-#include "unicode/rbbi.h"
-#include "unicode/uniset.h"
-#include "unicode/parseerr.h"
-#include "uhash.h"
-#include "uvector.h"
-#include "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/rbbi.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/parseerr.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "uvector.h"
+#అన్తర్భావ "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
                              //    looks up references to $variables within a set.
 
 
 U_NAMESPACE_BEGIN
 
 class               RBBIRuleScanner;
-struct              RBBIRuleTableEl;
+నిర్మాణం              RBBIRule_పట్టిక_El;
 class               RBBISetBuilder;
 class               RBBINode;
 class               RBBITableBuilder;
@@ -46,52 +46,52 @@ class               RBBITableBuilder;
 //                       UnicodeSet parser to resolve references to $variables.
 //
 //--------------------------------------------------------------------------------
-class RBBISymbolTableEntry : public UMemory { // The symbol table hash table contains one
-public:                                       //   of these structs for each entry.
-    RBBISymbolTableEntry();
-    UnicodeString          key;
+class RBBISymbol_పట్టిక_నమోదు : బహిరంగ UMemory { // The symbol table hash table contains one
+బహిరంగ:                                       //   of these structs for each entry.
+    RBBISymbol_పట్టిక_నమోదు();
+    UnicodeString          కీలకం;
     RBBINode               *val;
-    ~RBBISymbolTableEntry();
+    ~RBBISymbol_పట్టిక_నమోదు();
 
-private:
-    RBBISymbolTableEntry(const RBBISymbolTableEntry &other) = delete; // forbid copying of this class
-    RBBISymbolTableEntry &operator=(const RBBISymbolTableEntry &other) = delete; // forbid copying of this class
+అంతరంగ:
+    RBBISymbol_పట్టిక_నమోదు(స్థిరరాశి RBBISymbol_పట్టిక_నమోదు &other) = delete; // forbid copying of this class
+    RBBISymbol_పట్టిక_నమోదు &క్రియాకారకం=(స్థిరరాశి RBBISymbol_పట్టిక_నమోదు &other) = delete; // forbid copying of this class
 };
 
 
-class RBBISymbolTable : public UMemory, public SymbolTable {
-private:
-    const UnicodeString      &fRules;
-    UHashtable               *fHashTable;
-    RBBIRuleScanner          *fRuleScanner;
+class RBBISymbol_పట్టిక : బహిరంగ UMemory, బహిరంగ చిహ్నం_పట్టిక {
+అంతరంగ:
+    స్థిరరాశి UnicodeString      &f_నియమాలు;
+    UHashtable               *f_Hash_పట్టిక;
+    RBBIRuleScanner          *f_నియమం_Scanner;
 
-public:
+బహిరంగ:
     //  API inherited from class SymbolTable
-    virtual const UnicodeString*  lookup(const UnicodeString& s) const override;
-    virtual const UnicodeSet* lookupSet(const UnicodeString& s) const override;
-    virtual const UnicodeFunctor* lookupMatcher(UChar32 ch) const override;
-    virtual UnicodeString parseReference(const UnicodeString& text,
-                                         ParsePosition& pos, int32_t limit) const override;
+    మాయా స్థిరరాశి UnicodeString*  lookup(స్థిరరాశి UnicodeString& s) స్థిరరాశి override;
+    మాయా స్థిరరాశి Unicode_సమితి* lookup_సమితి(స్థిరరాశి UnicodeString& s) స్థిరరాశి override;
+    మాయా స్థిరరాశి UnicodeFunctor* lookupMatcher(UChar32 ch) స్థిరరాశి override;
+    మాయా UnicodeString parseReference(స్థిరరాశి UnicodeString& పాఠ్యం,
+                                         ParsePosition& pos, int32_t హద్దు) స్థిరరాశి override;
 
     //  Additional Functions
-    RBBISymbolTable(RBBIRuleScanner *, const UnicodeString &fRules, UErrorCode &status);
-    virtual ~RBBISymbolTable();
+    RBBISymbol_పట్టిక(RBBIRuleScanner *, స్థిరరాశి UnicodeString &f_నియమాలు, UError_సంకేతం &స్థితి_2);
+    మాయా ~RBBISymbol_పట్టిక();
 
-    virtual RBBINode *lookupNode(const UnicodeString &key) const;
-    virtual void      addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err);
+    మాయా RBBINode *lookup_కణుపు(స్థిరరాశి UnicodeString &కీలకం) స్థిరరాశి;
+    మాయా శూన్య      కూడు_నమోదు  (స్థిరరాశి UnicodeString &కీలకం, RBBINode *val, UError_సంకేతం &err);
 
-#ifdef RBBI_DEBUG
-    virtual void      rbbiSymtablePrint() const;
-#else
+#నిర్వచితమైతే RBBI_DEBUG
+    మాయా శూన్య      rbbiSymtablePrint() స్థిరరాశి;
+#లేకపోతే
     // A do-nothing inline function for non-debug builds.  Member funcs can't be empty
     //  or the call sites won't compile.
-    int32_t fFakeField;
-    #define rbbiSymtablePrint() fFakeField=0;
-#endif
+    int32_t f_Fake_క్షేత్రం;
+    #నిర్వచించు rbbiSymtablePrint() f_Fake_క్షేత్రం=0;
+#అయితే_ముగింపు
 
-private:
-    RBBISymbolTable(const RBBISymbolTable &other); // forbid copying of this class
-    RBBISymbolTable &operator=(const RBBISymbolTable &other); // forbid copying of this class
+అంతరంగ:
+    RBBISymbol_పట్టిక(స్థిరరాశి RBBISymbol_పట్టిక &other); // forbid copying of this class
+    RBBISymbol_పట్టిక &క్రియాకారకం=(స్థిరరాశి RBBISymbol_పట్టిక &other); // forbid copying of this class
 };
 
 
@@ -100,33 +100,33 @@ private:
 //  class RBBIRuleBuilder       The top-level class handling RBBI rule compiling.
 //
 //--------------------------------------------------------------------------------
-class RBBIRuleBuilder : public UMemory {
-public:
+class RBBIRuleBuilder : బహిరంగ UMemory {
+బహిరంగ:
 
     //  Create a rule based break iterator from a set of rules.
     //  This function is the main entry point into the rule builder.  The
     //   public ICU API for creating RBBIs uses this function to do the actual work.
     //
-    static BreakIterator * createRuleBasedBreakIterator( const UnicodeString    &rules,
+    స్థిర BreakIterator * create_నియమం_Based_Break_Iterator( స్థిరరాశి UnicodeString    &నియమాలు,
                                     UParseError      *parseError,
-                                    UErrorCode       &status);
+                                    UError_సంకేతం       &స్థితి_2);
 
-public:
+బహిరంగ:
     // The "public" functions and data members that appear below are accessed
     //  (and shared) by the various parts that make up the rule builder.  They
     //  are NOT intended to be accessed by anything outside of the
     //  rule builder implementation.
-    RBBIRuleBuilder(const UnicodeString  &rules,
+    RBBIRuleBuilder(స్థిరరాశి UnicodeString  &నియమాలు,
                     UParseError          *parseErr,
-                    UErrorCode           &status
+                    UError_సంకేతం           &స్థితి_2
     );
 
-    virtual    ~RBBIRuleBuilder();
+    మాయా    ~RBBIRuleBuilder();
 
     /**
      *  Build the state tables and char class Trie from the source rules.
      */
-    RBBIDataHeader  *build(UErrorCode &status);
+    RBBIData_శీర్షిక  *build(UError_సంకేతం &స్థితి_2);
 
 
     /**
@@ -134,43 +134,43 @@ public:
      * redundant states (table rows). Done after initial table generation,
      * before serializing the result.
      */
-    void optimizeTables();
+    శూన్య optimizeTables();
 
-    char                          *fDebugEnv;        // controls debug trace output
-    UErrorCode                    *fStatus;          // Error reporting.  Keeping status
+    అక్షరం                          *fDebugEnv;        // controls debug trace output
+    UError_సంకేతం                    *f_స్థితి;          // Error reporting.  Keeping status
     UParseError                   *fParseError;      //   here avoids passing it everywhere.
-    const UnicodeString           &fRules;           // The rule string that we are compiling
-    UnicodeString                 fStrippedRules;    // The rule string, with comments stripped.
+    స్థిరరాశి UnicodeString           &f_నియమాలు;           // The rule string that we are compiling
+    UnicodeString                 f_Stripped_నియమాలు;    // The rule string, with comments stripped.
 
     RBBIRuleScanner               *fScanner;         // The scanner.
-    RBBINode                      *fForwardTree;     // The parse trees, generated by the scanner,
-    RBBINode                      *fReverseTree;     //   then manipulated by subsequent steps.
-    RBBINode                      *fSafeFwdTree;
-    RBBINode                      *fSafeRevTree;
+    RBBINode                      *f_Forward_వృక్షం;     // The parse trees, generated by the scanner,
+    RBBINode                      *f_తిరగేయి_వృక్షం;     //   then manipulated by subsequent steps.
+    RBBINode                      *f_సురక్షిత_Fwd_వృక్షం;
+    RBBINode                      *f_సురక్షిత_Rev_వృక్షం;
 
-    RBBINode                      **fDefaultTree;    // For rules not qualified with a !
+    RBBINode                      **f_Default_వృక్షం;    // For rules not qualified with a !
                                                      //   the tree to which they belong to.
 
-    UBool                         fChainRules;       // True for chained Unicode TR style rules.
+    UBool                         f_Chain_నియమాలు;       // True for chained Unicode TR style rules.
                                                      // False for traditional regexp rules.
 
     UBool                         fLookAheadHardBreak;  // True:  Look ahead matches cause an
                                                      // immediate break, no continuing for the
                                                      // longest match.
 
-    RBBISetBuilder                *fSetBuilder;      // Set and Character Category builder.
+    RBBISetBuilder                *f_సమితి_Builder;      // Set and Character Category builder.
     UVector                       *fUSetNodes;       // Vector of all uset nodes.
 
-    RBBITableBuilder              *fForwardTable;    // State transition table, build time form.
+    RBBITableBuilder              *f_Forward_పట్టిక;    // State transition table, build time form.
 
-    UVector                       *fRuleStatusVals;  // The values that can be returned
+    UVector                       *f_నియమం_స్థితి_Vals;  // The values that can be returned
                                                      //   from getRuleStatus().
 
-    RBBIDataHeader                *flattenData();    // Create the flattened (runtime format)
+    RBBIData_శీర్షిక                *flatten_దత్తాంశం();    // Create the flattened (runtime format)
                                                      // data tables..
-private:
-    RBBIRuleBuilder(const RBBIRuleBuilder &other) = delete; // forbid copying of this class
-    RBBIRuleBuilder &operator=(const RBBIRuleBuilder &other) = delete; // forbid copying of this class
+అంతరంగ:
+    RBBIRuleBuilder(స్థిరరాశి RBBIRuleBuilder &other) = delete; // forbid copying of this class
+    RBBIRuleBuilder &క్రియాకారకం=(స్థిరరాశి RBBIRuleBuilder &other) = delete; // forbid copying of this class
 };
 
 
@@ -191,15 +191,15 @@ private:
 //                            the key strings.  It does NOT own the val nodes.
 //
 //----------------------------------------------------------------------------
-struct RBBISetTableEl {
-    UnicodeString *key;
+నిర్మాణం RBBISet_పట్టిక_El {
+    UnicodeString *కీలకం;
     RBBINode      *val;
 };
 
 /**
  *   A pair of ints, used to bundle pairs of states or pairs of character classes.
  */
-typedef std::pair<int32_t, int32_t> IntPair;
+రకనిర్వచనం std::pair<int32_t, int32_t> IntPair;
 
 
 //----------------------------------------------------------------------------
@@ -210,20 +210,20 @@ typedef std::pair<int32_t, int32_t> IntPair;
 //                      is unavailable.
 //
 //----------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-#include <stdio.h>
-#define RBBIDebugPrintf printf
-#define RBBIDebugPuts puts
-#else
-#undef RBBIDebugPrintf
-#define RBBIDebugPuts(arg)
-#endif
+#నిర్వచితమైతే RBBI_DEBUG
+#అన్తర్భావ <stdio.h>
+#నిర్వచించు RBBIDebugPrintf రాయి
+#నిర్వచించు RBBIDebugPuts puts
+#లేకపోతే
+#నిర్వచనం_రద్దు RBBIDebugPrintf
+#నిర్వచించు RBBIDebugPuts(arg)
+#అయితే_ముగింపు
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif
+#అయితే_ముగింపు
 
 
 

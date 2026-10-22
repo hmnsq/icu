@@ -14,34 +14,34 @@
 *   created by: George Rhoten
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "ucln.h"
-#include "ucln_cmn.h"
-#include "utracimp.h"
-#include "umutex.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uclean.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucln.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "utracimp.h"
+#అన్తర్భావ "umutex.h"
 
 /**  Auto-client for UCLN_COMMON **/
-#define UCLN_TYPE_IS_COMMON
-#include "ucln_imp.h"
+#నిర్వచించు UCLN_TYPE_IS_COMMON
+#అన్తర్భావ "ucln_imp.h"
 
-static cleanupFunc *gCommonCleanupFunctions[UCLN_COMMON_COUNT];
-static cleanupFunc *gLibCleanupFunctions[UCLN_COMMON];
+స్థిర cleanupFunc *gCommonCleanupFunctions[UCLN_COMMON_లెక్క];
+స్థిర cleanupFunc *gLibCleanupFunctions[UCLN_COMMON];
 
 
 /************************************************
  The cleanup order is important in this function.
  Please be sure that you have read ucln.h
  ************************************************/
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 u_cleanup()
 {
-    UTRACE_ENTRY_OC(UTRACE_U_CLEANUP);
-    icu::umtx_lock(nullptr);     /* Force a memory barrier, so that we are sure to see   */
-    icu::umtx_unlock(nullptr);   /*   all state left around by any other threads.        */
+    UTRACE_నమోదు_OC(UTRACE_U_CLEANUP);
+    icu::umtx_తాళం(శూన్యసూచిక);     /* Force a memory barrier, so that we are sure to see   */
+    icu::umtx_unlock(శూన్యసూచిక);   /*   all state left around by any other threads.        */
 
     ucln_lib_cleanup();
 
@@ -52,17 +52,17 @@ u_cleanup()
 /*#endif*/
 }
 
-U_CAPI void U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType libType) 
+U_CAPI శూన్య U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType libType) 
 {
-    if (gLibCleanupFunctions[libType])
+    ఒకవేళ (gLibCleanupFunctions[libType])
     {
         gLibCleanupFunctions[libType]();
-        gLibCleanupFunctions[libType] = nullptr;
+        gLibCleanupFunctions[libType] = శూన్యసూచిక;
     }
 }
 
-U_CFUNC void
-ucln_common_registerCleanup(ECleanupCommonType type,
+U_CFUNC శూన్య
+ucln_common_రిజిస్టరు_Cleanup(ECleanupCommonType type,
                             cleanupFunc *func)
 {
     // Thread safety messiness: From ticket 10295, calls to registerCleanup() may occur
@@ -75,50 +75,50 @@ ucln_common_registerCleanup(ECleanupCommonType type,
     //
     // No other point in ICU uses std::call_once().
 
-    U_ASSERT(UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT);
-    if (type == UCLN_COMMON_MUTEX) {
+    U_ASSERT(UCLN_COMMON_ప్రారంభం < type && type < UCLN_COMMON_లెక్క);
+    ఒకవేళ (type == UCLN_COMMON_MUTEX) {
         gCommonCleanupFunctions[type] = func;
-    } else if (UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT)  {
+    } లేకపోతే ఒకవేళ (UCLN_COMMON_ప్రారంభం < type && type < UCLN_COMMON_లెక్క)  {
         icu::Mutex m;     // See ticket 10295 for discussion.
         gCommonCleanupFunctions[type] = func;
     }
-#if !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
-    ucln_registerAutomaticCleanup();
-#endif
+#ఒకవేళ !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
+    ucln_రిజిస్టరు_Automatic_Cleanup();
+#అయితే_ముగింపు
 }
 
 // Note: ucln_registerCleanup() is called with the ICU global mutex locked.
 //       Be aware if adding anything to the function.
 //       See ticket 10295 for discussion.
 
-U_CAPI void U_EXPORT2
-ucln_registerCleanup(ECleanupLibraryType type,
+U_CAPI శూన్య U_EXPORT2
+ucln_రిజిస్టరు_Cleanup(ECleanupLibraryType type,
                      cleanupFunc *func)
 {
-    U_ASSERT(UCLN_START < type && type < UCLN_COMMON);
-    if (UCLN_START < type && type < UCLN_COMMON)
+    U_ASSERT(UCLN_ప్రారంభం < type && type < UCLN_COMMON);
+    ఒకవేళ (UCLN_ప్రారంభం < type && type < UCLN_COMMON)
     {
         gLibCleanupFunctions[type] = func;
     }
 }
 
 U_CFUNC UBool ucln_lib_cleanup() {
-    int32_t libType = UCLN_START;
-    int32_t commonFunc = UCLN_COMMON_START;
+    int32_t libType = UCLN_ప్రారంభం;
+    int32_t commonFunc = UCLN_COMMON_ప్రారంభం;
 
-    for (libType++; libType<UCLN_COMMON; libType++) {
+    కొరకు (libType++; libType<UCLN_COMMON; libType++) {
         ucln_cleanupOne(static_cast<ECleanupLibraryType>(libType));
     }
 
-    for (commonFunc++; commonFunc<UCLN_COMMON_COUNT; commonFunc++) {
-        if (gCommonCleanupFunctions[commonFunc])
+    కొరకు (commonFunc++; commonFunc<UCLN_COMMON_లెక్క; commonFunc++) {
+        ఒకవేళ (gCommonCleanupFunctions[commonFunc])
         {
             gCommonCleanupFunctions[commonFunc]();
-            gCommonCleanupFunctions[commonFunc] = nullptr;
+            gCommonCleanupFunctions[commonFunc] = శూన్యసూచిక;
         }
     }
-#if !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
-    ucln_unRegisterAutomaticCleanup();
-#endif
-    return true;
+#ఒకవేళ !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
+    ucln_un_రిజిస్టరు_Automatic_Cleanup();
+#అయితే_ముగింపు
+    తిరిగి నిజం;
 }

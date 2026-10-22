@@ -14,13 +14,13 @@
 *   created by: George Rhoten
 */
 
-#ifndef USTR_CNV_IMP_H
-#define USTR_CNV_IMP_H
+#నిర్వచితం_కాకపోతే USTR_CNV_IMP_H
+#నిర్వచించు USTR_CNV_IMP_H
 
-#include "unicode/utypes.h"
-#include "unicode/ucnv.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/ucnv.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
 /**
  * Get the default converter. This is a commonly used converter
@@ -29,23 +29,23 @@
  * @internal
  */
 U_CAPI UConverter* U_EXPORT2
-u_getDefaultConverter(UErrorCode *status);
+u_getDefaultConverter(UError_సంకేతం *స్థితి_2);
 
 
 /**
  * Release the default converter to the converter cache.
  * @internal
  */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 u_releaseDefaultConverter(UConverter *converter);
 
 /**
  * Flush the default converter, if cached. 
  * @internal
  */
-U_CAPI void U_EXPORT2
-u_flushDefaultConverter(void);
+U_CAPI శూన్య U_EXPORT2
+u_flushDefaultConverter(శూన్య);
 
-#endif
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు

@@ -14,28 +14,28 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __BYTESTRIE_H__
-#define __BYTESTRIE_H__
+#నిర్వచితం_కాకపోతే __BYTESTRIE_H__
+#నిర్వచించు __BYTESTRIE_H__
 
 /**
  * \file
  * \brief C++ API: Trie for mapping byte sequences to integer values.
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "unicode/ustringtrie.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/ustringtrie.h"
 
-class BytesTrieTest;
+class బైట్లు_Trie_Test;
 
 U_NAMESPACE_BEGIN
 
 class ByteSink;
-class BytesTrieBuilder;
+class బైట్లు_Trie_Builder;
 class CharString;
 class UVector32;
 
@@ -52,8 +52,8 @@ class UVector32;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API BytesTrie : public UMemory {
-public:
+class U_COMMON_API బైట్లు_Trie : బహిరంగ UMemory {
+బహిరంగ:
     /**
      * Constructs a BytesTrie reader instance.
      *
@@ -68,15 +68,15 @@ public:
      * @param trieBytes The byte array that contains the serialized trie.
      * @stable ICU 4.8
      */
-    BytesTrie(const void* trieBytes U_LIFETIME_BOUND)
-            : ownedArray_(nullptr), bytes_(static_cast<const uint8_t *>(trieBytes)),
-              pos_(bytes_), remainingMatchLength_(-1) {}
+    బైట్లు_Trie(స్థిరరాశి శూన్య* trie_బైట్లు U_LIFETIME_BOUND)
+            : ownedArray_(nullptr), బైట్లు_2(static_cast<స్థిరరాశి uint8_t *>(trie_బైట్లు)),
+              pos_(బైట్లు_2), మిగిలిన_సరిపోలిక_నిడివి(-1) {}
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    ~BytesTrie();
+    ~బైట్లు_Trie();
 
     /**
      * Copy constructor, copies the other trie reader object and its state,
@@ -84,19 +84,19 @@ public:
      * @param other Another BytesTrie object.
      * @stable ICU 4.8
      */
-    BytesTrie(const BytesTrie &other)
-            : ownedArray_(nullptr), bytes_(other.bytes_),
-              pos_(other.pos_), remainingMatchLength_(other.remainingMatchLength_) {}
+    బైట్లు_Trie(స్థిరరాశి బైట్లు_Trie &other)
+            : ownedArray_(nullptr), బైట్లు_2(other.బైట్లు_2),
+              pos_(other.pos_), మిగిలిన_సరిపోలిక_నిడివి(other.మిగిలిన_సరిపోలిక_నిడివి) {}
 
     /**
      * Resets this trie to its initial state.
      * @return *this
      * @stable ICU 4.8
      */
-    BytesTrie& reset() U_LIFETIME_BOUND {
-        pos_=bytes_;
-        remainingMatchLength_=-1;
-        return *this;
+    బైట్లు_Trie& reset() U_LIFETIME_BOUND {
+        pos_=బైట్లు_2;
+        మిగిలిన_సరిపోలిక_నిడివి=-1;
+        తిరిగి *this;
     }
 
     /**
@@ -107,9 +107,9 @@ public:
      * @see resetToState64
      * @stable ICU 65
      */
-    uint64_t getState64() const {
-        return (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
-            static_cast<uint64_t>(pos_ - bytes_);
+    uint64_t getState64() స్థిరరాశి {
+        తిరిగి (static_cast<uint64_t>(మిగిలిన_సరిపోలిక_నిడివి + 2) << k_State64_మిగిలిన_జరుపు) |
+            static_cast<uint64_t>(pos_ - బైట్లు_2);
     }
 
     /**
@@ -126,10 +126,10 @@ public:
      * @see reset
      * @stable ICU 65
      */
-    BytesTrie& resetToState64(uint64_t state) U_LIFETIME_BOUND {
-        remainingMatchLength_ = static_cast<int32_t>(state >> kState64RemainingShift) - 2;
-        pos_ = bytes_ + (state & kState64PosMask);
-        return *this;
+    బైట్లు_Trie& reset_గమ్యం_State64(uint64_t state) U_LIFETIME_BOUND {
+        మిగిలిన_సరిపోలిక_నిడివి = static_cast<int32_t>(state >> k_State64_మిగిలిన_జరుపు) - 2;
+        pos_ = బైట్లు_2 + (state & k_State64_Pos_ముసుగు);
+        తిరిగి *this;
     }
 
     /**
@@ -137,19 +137,19 @@ public:
      * and resetting the trie back to this state later.
      * @stable ICU 4.8
      */
-    class State : public UMemory {
-    public:
+    class State : బహిరంగ UMemory {
+    బహిరంగ:
         /**
          * Constructs an empty State.
          * @stable ICU 4.8
          */
-        State() { bytes=nullptr; }
-    private:
-        friend class BytesTrie;
+        State() { బైట్లు=nullptr; }
+    అంతరంగ:
+        మిత్ర class బైట్లు_Trie;
 
-        const uint8_t *bytes;
-        const uint8_t *pos;
-        int32_t remainingMatchLength;
+        స్థిరరాశి uint8_t *బైట్లు;
+        స్థిరరాశి uint8_t *pos;
+        int32_t మిగిలిన_సరిపోలిక_నిడివి_2;
     };
 
     /**
@@ -159,11 +159,11 @@ public:
      * @see resetToState
      * @stable ICU 4.8
      */
-    const BytesTrie& saveState(State& state) const U_LIFETIME_BOUND {
-        state.bytes=bytes_;
+    స్థిరరాశి బైట్లు_Trie& saveState(State& state) స్థిరరాశి U_LIFETIME_BOUND {
+        state.బైట్లు=బైట్లు_2;
         state.pos=pos_;
-        state.remainingMatchLength=remainingMatchLength_;
-        return *this;
+        state.మిగిలిన_సరిపోలిక_నిడివి_2=మిగిలిన_సరిపోలిక_నిడివి;
+        తిరిగి *this;
     }
 
     /**
@@ -176,12 +176,12 @@ public:
      * @see reset
      * @stable ICU 4.8
      */
-    BytesTrie& resetToState(const State& state) U_LIFETIME_BOUND {
-        if(bytes_==state.bytes && bytes_!=nullptr) {
+    బైట్లు_Trie& reset_గమ్యం_State(స్థిరరాశి State& state) U_LIFETIME_BOUND {
+        ఒకవేళ(బైట్లు_2==state.బైట్లు && బైట్లు_2!=nullptr) {
             pos_=state.pos;
-            remainingMatchLength_=state.remainingMatchLength;
+            మిగిలిన_సరిపోలిక_నిడివి=state.మిగిలిన_సరిపోలిక_నిడివి_2;
         }
-        return *this;
+        తిరిగి *this;
     }
 
     /**
@@ -190,7 +190,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult current() const;
+    UString_Trie_ఫలితం current() స్థిరరాశి;
 
     /**
      * Traverses the trie from the initial state for this input byte.
@@ -200,12 +200,12 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    inline UStringTrieResult first(int32_t inByte) {
-        remainingMatchLength_=-1;
-        if(inByte<0) {
-            inByte+=0x100;
+    అంతఃవరుస UString_Trie_ఫలితం మొదటి(int32_t లోపల_Byte) {
+        మిగిలిన_సరిపోలిక_నిడివి=-1;
+        ఒకవేళ(లోపల_Byte<0) {
+            లోపల_Byte+=0x100;
         }
-        return nextImpl(bytes_, inByte);
+        తిరిగి తదుపరి_Impl(బైట్లు_2, లోపల_Byte);
     }
 
     /**
@@ -215,7 +215,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult next(int32_t inByte);
+    UString_Trie_ఫలితం తదుపరి(int32_t లోపల_Byte);
 
     /**
      * Traverses the trie from the current state for this byte sequence.
@@ -232,7 +232,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult next(const char *s, int32_t length);
+    UString_Trie_ఫలితం తదుపరి(స్థిరరాశి అక్షరం *s, int32_t నిడివి);
 
     /**
      * Returns a matching byte sequence's value if called immediately after
@@ -243,11 +243,11 @@ public:
      * @return The value for the byte sequence so far.
      * @stable ICU 4.8
      */
-    inline int32_t getValue() const {
-        const uint8_t *pos=pos_;
+    అంతఃవరుస int32_t get_విలువ() స్థిరరాశి {
+        స్థిరరాశి uint8_t *pos=pos_;
         int32_t leadByte=*pos++;
         // U_ASSERT(leadByte>=kMinValueLead);
-        return readValue(pos, leadByte>>1);
+        తిరిగి read_విలువ(pos, leadByte>>1);
     }
 
     /**
@@ -259,10 +259,10 @@ public:
      *         map to the same value.
      * @stable ICU 4.8
      */
-    inline UBool hasUniqueValue(int32_t &uniqueValue) const {
-        const uint8_t *pos=pos_;
+    అంతఃవరుస UBool has_Unique_విలువ(int32_t &unique_విలువ) స్థిరరాశి {
+        స్థిరరాశి uint8_t *pos=pos_;
         // Skip the rest of a pending linear-match node.
-        return pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
+        తిరిగి pos!=nullptr && కనుగొను_Unique_విలువ(pos+మిగిలిన_సరిపోలిక_నిడివి+1, false, unique_విలువ);
     }
 
     /**
@@ -273,14 +273,14 @@ public:
      * @return the number of bytes which continue the byte sequence from here
      * @stable ICU 4.8
      */
-    int32_t getNextBytes(ByteSink &out) const;
+    int32_t get_తదుపరి_బైట్లు(ByteSink &బహిర్గతం) స్థిరరాశి;
 
     /**
      * Iterator for all of the (byte sequence, value) pairs in a BytesTrie.
      * @stable ICU 4.8
      */
-    class U_COMMON_API Iterator : public UMemory {
-    public:
+    class U_COMMON_API Iterator : బహిరంగ UMemory {
+    బహిరంగ:
         /**
          * Iterates from the root of a byte-serialized BytesTrie.
          * @param trieBytes The trie bytes.
@@ -292,9 +292,9 @@ public:
          *                  function chaining. (See User Guide for details.)
          * @stable ICU 4.8
          */
-        Iterator(const void* trieBytes U_LIFETIME_BOUND,
-                 int32_t maxStringLength,
-                 UErrorCode& errorCode);
+        Iterator(స్థిరరాశి శూన్య* trie_బైట్లు U_LIFETIME_BOUND,
+                 int32_t max_String_నిడివి,
+                 UError_సంకేతం& error_సంకేతం);
 
         /**
          * Iterates from the current state of the specified BytesTrie.
@@ -307,7 +307,7 @@ public:
          *                  function chaining. (See User Guide for details.)
          * @stable ICU 4.8
          */
-        Iterator(const BytesTrie &trie, int32_t maxStringLength, UErrorCode &errorCode);
+        Iterator(స్థిరరాశి బైట్లు_Trie &trie, int32_t max_String_నిడివి, UError_సంకేతం &error_సంకేతం);
 
         /**
          * Destructor.
@@ -326,7 +326,7 @@ public:
          * @return true if there are more elements.
          * @stable ICU 4.8
          */
-        UBool hasNext() const;
+        UBool has_తదుపరి() స్థిరరాశి;
 
         /**
          * Finds the next (byte sequence, value) pair if there is one.
@@ -342,35 +342,35 @@ public:
          * @return true if there is another element.
          * @stable ICU 4.8
          */
-        UBool next(UErrorCode &errorCode);
+        UBool తదుపరి(UError_సంకేతం &error_సంకేతం);
 
         /**
          * @return The NUL-terminated byte sequence for the last successful next().
          * @stable ICU 4.8
          */
-        StringPiece getString() const U_LIFETIME_BOUND;
+        StringPiece getString() స్థిరరాశి U_LIFETIME_BOUND;
         /**
          * @return The value for the last successful next().
          * @stable ICU 4.8
          */
-        int32_t getValue() const { return value_; }
+        int32_t get_విలువ() స్థిరరాశి { తిరిగి విలువ; }
 
-    private:
+    అంతరంగ:
         UBool truncateAndStop();
 
-        const uint8_t* branchNext(const uint8_t* pos U_LIFETIME_BOUND,
-                                  int32_t length,
-                                  UErrorCode& errorCode);
+        స్థిరరాశి uint8_t* branch_తదుపరి(స్థిరరాశి uint8_t* pos U_LIFETIME_BOUND,
+                                  int32_t నిడివి,
+                                  UError_సంకేతం& error_సంకేతం);
 
-        const uint8_t *bytes_;
-        const uint8_t *pos_;
-        const uint8_t *initialPos_;
-        int32_t remainingMatchLength_;
-        int32_t initialRemainingMatchLength_;
+        స్థిరరాశి uint8_t *బైట్లు_2;
+        స్థిరరాశి uint8_t *pos_;
+        స్థిరరాశి uint8_t *initialPos_;
+        int32_t మిగిలిన_సరిపోలిక_నిడివి;
+        int32_t initial_మిగిలిన_సరిపోలిక_నిడివి;
 
         CharString *str_;
-        int32_t maxLength_;
-        int32_t value_;
+        int32_t max_నిడివి;
+        int32_t విలువ;
 
         // The stack stores pairs of integers for backtracking to another
         // outbound edge of a branch node.
@@ -379,12 +379,12 @@ public:
         // and the remaining branch length in bits 24..16. (Bits 31..25 are unused.)
         // (We could store the remaining branch length minus 1 in bits 23..16 and not use bits 31..24,
         // but the code looks more confusing that way.)
-        UVector32 *stack_;
+        UVector32 *దొంతర;
     };
 
-private:
-    friend class BytesTrieBuilder;
-    friend class ::BytesTrieTest;
+అంతరంగ:
+    మిత్ర class బైట్లు_Trie_Builder;
+    మిత్ర class ::బైట్లు_Trie_Test;
 
     /**
      * Constructs a BytesTrie reader instance.
@@ -392,81 +392,81 @@ private:
      * this constructor adopts the builder's array.
      * This constructor is only called by the builder.
      */
-    BytesTrie(void *adoptBytes, const void *trieBytes)
-            : ownedArray_(static_cast<uint8_t *>(adoptBytes)),
-              bytes_(static_cast<const uint8_t *>(trieBytes)),
-              pos_(bytes_), remainingMatchLength_(-1) {}
+    బైట్లు_Trie(శూన్య *adopt_బైట్లు, స్థిరరాశి శూన్య *trie_బైట్లు)
+            : ownedArray_(static_cast<uint8_t *>(adopt_బైట్లు)),
+              బైట్లు_2(static_cast<స్థిరరాశి uint8_t *>(trie_బైట్లు)),
+              pos_(బైట్లు_2), మిగిలిన_సరిపోలిక_నిడివి(-1) {}
 
     // No assignment operator.
-    BytesTrie &operator=(const BytesTrie &other) = delete;
+    బైట్లు_Trie &క్రియాకారకం=(స్థిరరాశి బైట్లు_Trie &other) = delete;
 
-    inline void stop() {
+    అంతఃవరుస శూన్య stop() {
         pos_=nullptr;
     }
 
     // Reads a compact 32-bit integer.
     // pos is already after the leadByte, and the lead byte is already shifted right by 1.
-    static int32_t readValue(const uint8_t *pos, int32_t leadByte);
-    static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND, int32_t leadByte) {
+    స్థిర int32_t read_విలువ(స్థిరరాశి uint8_t *pos, int32_t leadByte);
+    స్థిర అంతఃవరుస స్థిరరాశి uint8_t* skip_విలువ(స్థిరరాశి uint8_t* pos U_LIFETIME_BOUND, int32_t leadByte) {
         // U_ASSERT(leadByte>=kMinValueLead);
-        if(leadByte>=(kMinTwoByteValueLead<<1)) {
-            if(leadByte<(kMinThreeByteValueLead<<1)) {
+        ఒకవేళ(leadByte>=(k_Min_Two_Byte_విలువ_Lead<<1)) {
+            ఒకవేళ(leadByte<(k_Min_Three_Byte_విలువ_Lead<<1)) {
                 ++pos;
-            } else if(leadByte<(kFourByteValueLead<<1)) {
+            } లేకపోతే ఒకవేళ(leadByte<(k_Four_Byte_విలువ_Lead<<1)) {
                 pos+=2;
-            } else {
+            } లేకపోతే {
                 pos+=3+((leadByte>>1)&1);
             }
         }
-        return pos;
+        తిరిగి pos;
     }
-    static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND) {
+    స్థిర అంతఃవరుస స్థిరరాశి uint8_t* skip_విలువ(స్థిరరాశి uint8_t* pos U_LIFETIME_BOUND) {
         int32_t leadByte=*pos++;
-        return skipValue(pos, leadByte);
+        తిరిగి skip_విలువ(pos, leadByte);
     }
 
     // Reads a jump delta and jumps.
-    static const uint8_t* jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND);
+    స్థిర స్థిరరాశి uint8_t* jumpByDelta(స్థిరరాశి uint8_t* pos U_LIFETIME_BOUND);
 
-    static inline const uint8_t* skipDelta(const uint8_t* pos U_LIFETIME_BOUND) {
+    స్థిర అంతఃవరుస స్థిరరాశి uint8_t* skipDelta(స్థిరరాశి uint8_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoByteDeltaLead) {
-            if(delta<kMinThreeByteDeltaLead) {
+        ఒకవేళ(delta>=kMinTwoByteDeltaLead) {
+            ఒకవేళ(delta<kMinThreeByteDeltaLead) {
                 ++pos;
-            } else if(delta<kFourByteDeltaLead) {
+            } లేకపోతే ఒకవేళ(delta<kFourByteDeltaLead) {
                 pos+=2;
-            } else {
+            } లేకపోతే {
                 pos+=3+(delta&1);
             }
         }
-        return pos;
+        తిరిగి pos;
     }
 
-    static inline UStringTrieResult valueResult(int32_t node) {
-        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node & kValueIsFinal));
+    స్థిర అంతఃవరుస UString_Trie_ఫలితం విలువ_ఫలితం(int32_t కణుపు) {
+        తిరిగి static_cast<UString_Trie_ఫలితం>(USTRINGTRIE_INTERMEDIATE_విలువ - (కణుపు & k_విలువ_Is_Final));
     }
 
     // Handles a branch node for both next(byte) and next(string).
-    UStringTrieResult branchNext(const uint8_t *pos, int32_t length, int32_t inByte);
+    UString_Trie_ఫలితం branch_తదుపరి(స్థిరరాశి uint8_t *pos, int32_t నిడివి, int32_t లోపల_Byte);
 
     // Requires remainingLength_<0.
-    UStringTrieResult nextImpl(const uint8_t *pos, int32_t inByte);
+    UString_Trie_ఫలితం తదుపరి_Impl(స్థిరరాశి uint8_t *pos, int32_t లోపల_Byte);
 
     // Helper functions for hasUniqueValue().
     // Recursively finds a unique value (or whether there is not a unique one)
     // from a branch.
-    static const uint8_t* findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
-                                                    int32_t length,
-                                                    UBool haveUniqueValue,
-                                                    int32_t& uniqueValue);
+    స్థిర స్థిరరాశి uint8_t* కనుగొను_Unique_విలువ_From_Branch(స్థిరరాశి uint8_t* pos U_LIFETIME_BOUND,
+                                                    int32_t నిడివి,
+                                                    UBool have_Unique_విలువ,
+                                                    int32_t& unique_విలువ);
     // Recursively finds a unique value (or whether there is not a unique one)
     // starting from a position on a node lead byte.
-    static UBool findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue);
+    స్థిర UBool కనుగొను_Unique_విలువ(స్థిరరాశి uint8_t *pos, UBool have_Unique_విలువ, int32_t &unique_విలువ);
 
     // Helper functions for getNextBytes().
     // getNextBytes() when pos is on a branch node.
-    static void getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out);
-    static void append(ByteSink &out, int c);
+    స్థిర శూన్య get_తదుపరి_Branch_బైట్లు(స్థిరరాశి uint8_t *pos, int32_t నిడివి, ByteSink &బహిర్గతం);
+    స్థిర శూన్య append(ByteSink &బహిర్గతం, పూర్ణాంకం c);
 
     // BytesTrie data structure
     //
@@ -507,68 +507,68 @@ private:
 
     // For a branch sub-node with at most this many entries, we drop down
     // to a linear search.
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    స్థిర స్థిరరాశి int32_t k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి=5;
 
     // 10..1f: Linear-match node, match 1..16 bytes and continue reading the next node.
-    static const int32_t kMinLinearMatch=0x10;
-    static const int32_t kMaxLinearMatchLength=0x10;
+    స్థిర స్థిరరాశి int32_t k_Min_రేఖీయ_సరిపోలిక=0x10;
+    స్థిర స్థిరరాశి int32_t k_Max_రేఖీయ_సరిపోలిక_నిడివి=0x10;
 
     // 20..ff: Variable-length value node.
     // If odd, the value is final. (Otherwise, intermediate value or jump delta.)
     // Then shift-right by 1 bit.
     // The remaining lead byte value indicates the number of following bytes (0..4)
     // and contains the value's top bits.
-    static const int32_t kMinValueLead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x20
+    స్థిర స్థిరరాశి int32_t k_Min_విలువ_Lead=k_Min_రేఖీయ_సరిపోలిక+k_Max_రేఖీయ_సరిపోలిక_నిడివి;  // 0x20
     // It is a final value if bit 0 is set.
-    static const int32_t kValueIsFinal=1;
+    స్థిర స్థిరరాశి int32_t k_విలువ_Is_Final=1;
 
     // Compact value: After testing bit 0, shift right by 1 and then use the following thresholds.
-    static const int32_t kMinOneByteValueLead=kMinValueLead/2;  // 0x10
-    static const int32_t kMaxOneByteValue=0x40;  // At least 6 bits in the first byte.
+    స్థిర స్థిరరాశి int32_t k_Min_One_Byte_విలువ_Lead=k_Min_విలువ_Lead/2;  // 0x10
+    స్థిర స్థిరరాశి int32_t k_Max_One_Byte_విలువ=0x40;  // At least 6 bits in the first byte.
 
-    static const int32_t kMinTwoByteValueLead=kMinOneByteValueLead+kMaxOneByteValue+1;  // 0x51
-    static const int32_t kMaxTwoByteValue=0x1aff;
+    స్థిర స్థిరరాశి int32_t k_Min_Two_Byte_విలువ_Lead=k_Min_One_Byte_విలువ_Lead+k_Max_One_Byte_విలువ+1;  // 0x51
+    స్థిర స్థిరరాశి int32_t k_Max_Two_Byte_విలువ=0x1aff;
 
-    static const int32_t kMinThreeByteValueLead=kMinTwoByteValueLead+(kMaxTwoByteValue>>8)+1;  // 0x6c
-    static const int32_t kFourByteValueLead=0x7e;
+    స్థిర స్థిరరాశి int32_t k_Min_Three_Byte_విలువ_Lead=k_Min_Two_Byte_విలువ_Lead+(k_Max_Two_Byte_విలువ>>8)+1;  // 0x6c
+    స్థిర స్థిరరాశి int32_t k_Four_Byte_విలువ_Lead=0x7e;
 
     // A little more than Unicode code points. (0x11ffff)
-    static const int32_t kMaxThreeByteValue=((kFourByteValueLead-kMinThreeByteValueLead)<<16)-1;
+    స్థిర స్థిరరాశి int32_t k_Max_Three_Byte_విలువ=((k_Four_Byte_విలువ_Lead-k_Min_Three_Byte_విలువ_Lead)<<16)-1;
 
-    static const int32_t kFiveByteValueLead=0x7f;
+    స్థిర స్థిరరాశి int32_t k_Five_Byte_విలువ_Lead=0x7f;
 
     // Compact delta integers.
-    static const int32_t kMaxOneByteDelta=0xbf;
-    static const int32_t kMinTwoByteDeltaLead=kMaxOneByteDelta+1;  // 0xc0
-    static const int32_t kMinThreeByteDeltaLead=0xf0;
-    static const int32_t kFourByteDeltaLead=0xfe;
-    static const int32_t kFiveByteDeltaLead=0xff;
+    స్థిర స్థిరరాశి int32_t kMaxOneByteDelta=0xbf;
+    స్థిర స్థిరరాశి int32_t kMinTwoByteDeltaLead=kMaxOneByteDelta+1;  // 0xc0
+    స్థిర స్థిరరాశి int32_t kMinThreeByteDeltaLead=0xf0;
+    స్థిర స్థిరరాశి int32_t kFourByteDeltaLead=0xfe;
+    స్థిర స్థిరరాశి int32_t kFiveByteDeltaLead=0xff;
 
-    static const int32_t kMaxTwoByteDelta=((kMinThreeByteDeltaLead-kMinTwoByteDeltaLead)<<8)-1;  // 0x2fff
-    static const int32_t kMaxThreeByteDelta=((kFourByteDeltaLead-kMinThreeByteDeltaLead)<<16)-1;  // 0xdffff
+    స్థిర స్థిరరాశి int32_t kMaxTwoByteDelta=((kMinThreeByteDeltaLead-kMinTwoByteDeltaLead)<<8)-1;  // 0x2fff
+    స్థిర స్థిరరాశి int32_t kMaxThreeByteDelta=((kFourByteDeltaLead-kMinThreeByteDeltaLead)<<16)-1;  // 0xdffff
 
     // For getState64():
     // The remainingMatchLength_ is -1..14=(kMaxLinearMatchLength=0x10)-2
     // so we need at least 5 bits for that.
     // We add 2 to store it as a positive value 1..16=kMaxLinearMatchLength.
-    static constexpr int32_t kState64RemainingShift = 59;
-    static constexpr uint64_t kState64PosMask = (UINT64_C(1) << kState64RemainingShift) - 1;
+    స్థిర constexpr int32_t k_State64_మిగిలిన_జరుపు = 59;
+    స్థిర constexpr uint64_t k_State64_Pos_ముసుగు = (UINT64_C(1) << k_State64_మిగిలిన_జరుపు) - 1;
 
     uint8_t *ownedArray_;
 
     // Fixed value referencing the BytesTrie bytes.
-    const uint8_t *bytes_;
+    స్థిరరాశి uint8_t *బైట్లు_2;
 
     // Iterator variables.
 
     // Pointer to next trie byte to read. nullptr if no more matches.
-    const uint8_t *pos_;
+    స్థిరరాశి uint8_t *pos_;
     // Remaining length of a linear-match node, minus 1. Negative if not in such a node.
-    int32_t remainingMatchLength_;
+    int32_t మిగిలిన_సరిపోలిక_నిడివి;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __BYTESTRIE_H__
+#అయితే_ముగింపు  // __BYTESTRIE_H__

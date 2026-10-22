@@ -20,63 +20,63 @@
 *   09/08/2004  grhoten     split from ucnv.c
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ustring.h"
-#include "unicode/ures.h"
-#include "unicode/ucnv.h"
-#include "cstring.h"
-#include "ustr_imp.h"
-#include "ucnv_imp.h"
-#include "putilimp.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "ucnv_imp.h"
+#అన్తర్భావ "putilimp.h"
 
 U_CAPI int32_t U_EXPORT2
-ucnv_getDisplayName(const UConverter *cnv,
-                    const char *displayLocale,
-                    char16_t *displayName, int32_t displayNameCapacity,
-                    UErrorCode *pErrorCode) {
+ucnv_getDisplayName(స్థిరరాశి UConverter *cnv,
+                    స్థిరరాశి అక్షరం *displayLocale,
+                    char16_t *displayName, int32_t display_Name_సామర్థ్యం,
+                    UError_సంకేతం *p_Error_సంకేతం) {
     UResourceBundle *rb;
-    const char16_t *name;
+    స్థిరరాశి char16_t *name;
     int32_t length;
-    UErrorCode localStatus = U_ZERO_ERROR;
+    UError_సంకేతం local_స్థితి = U_ZERO_ERROR;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
-    if(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(cnv==శూన్యసూచిక || display_Name_సామర్థ్యం<0 || (display_Name_సామర్థ్యం>0 && displayName==శూన్యసూచిక)) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
     /* open the resource bundle and get the display name string */
-    rb=ures_open(nullptr, displayLocale, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    rb=ures_open(శూన్యసూచిక, displayLocale, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
     /* use the internal name as the key */
-    name=ures_getStringByKey(rb, cnv->sharedData->staticData->name, &length, &localStatus);
+    name=ures_get_String_By_కీలకం(rb, cnv->shared_దత్తాంశం->static_దత్తాంశం->name, &length, &local_స్థితి);
     ures_close(rb);
 
-    if(U_SUCCESS(localStatus)) {
+    ఒకవేళ(U_SUCCESS(local_స్థితి)) {
         /* copy the string */
-        if (*pErrorCode == U_ZERO_ERROR) {
-            *pErrorCode = localStatus;
+        ఒకవేళ (*p_Error_సంకేతం == U_ZERO_ERROR) {
+            *p_Error_సంకేతం = local_స్థితి;
         }
-        u_memcpy(displayName, name, uprv_min(length, displayNameCapacity)*U_SIZEOF_UCHAR);
-    } else {
+        u_memcpy(displayName, name, uprv_min(length, display_Name_సామర్థ్యం)*U_SIZEOF_UCHAR);
+    } లేకపోతే {
         /* convert the internal name into a Unicode string */
-        length=(int32_t)uprv_strlen(cnv->sharedData->staticData->name);
-        u_charsToUChars(cnv->sharedData->staticData->name, displayName, uprv_min(length, displayNameCapacity));
+        length=(int32_t)uprv_strlen(cnv->shared_దత్తాంశం->static_దత్తాంశం->name);
+        u_chars_గమ్యం_UChars(cnv->shared_దత్తాంశం->static_దత్తాంశం->name, displayName, uprv_min(length, display_Name_సామర్థ్యం));
     }
-    return u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
+    తిరిగి u_terminateUChars(displayName, display_Name_సామర్థ్యం, length, p_Error_సంకేతం);
 }
 
-#endif
+#అయితే_ముగింపు
 
 /*
  * Hey, Emacs, please set the following:

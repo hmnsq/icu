@@ -4,13 +4,13 @@
 // uniquecharstr.h
 // created: 2020sep01 Frank Yung-Fong Tang
 
-#ifndef __UNIQUECHARSTR_H__
-#define __UNIQUECHARSTR_H__
+#నిర్వచితం_కాకపోతే __UNIQUECHARSTR_H__
+#నిర్వచించు __UNIQUECHARSTR_H__
 
-#include "charstr.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "cmemory.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -22,29 +22,29 @@ U_NAMESPACE_BEGIN
  * freeze the object, get a char * pointer for each string,
  * call orphanCharStrings() to capture the string storage, and let this object go out of scope.
  */
-class UniqueCharStrings {
-public:
-    UniqueCharStrings(UErrorCode &errorCode) : strings(nullptr) {
+class Unique_Char_అక్షరశ్రేణులు {
+బహిరంగ:
+    Unique_Char_అక్షరశ్రేణులు(UError_సంకేతం &error_సంకేతం) : అక్షరశ్రేణులు(nullptr) {
         // Note: We hash on string contents but store stable char16_t * pointers.
         // If the strings are stored in resource bundles which should be built with
         // duplicate elimination, then we should be able to hash on just the pointer values.
-        uhash_init(&map, uhash_hashUChars, uhash_compareUChars, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        strings = new CharString();
-        if (strings == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
+        uhash_init(&map, uhash_hashUChars, uhash_compareUChars, uhash_compareLong, &error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+        అక్షరశ్రేణులు = new CharString();
+        ఒకవేళ (అక్షరశ్రేణులు == nullptr) {
+            error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
         }
     }
-    ~UniqueCharStrings() {
+    ~Unique_Char_అక్షరశ్రేణులు() {
         uhash_close(&map);
-        delete strings;
+        delete అక్షరశ్రేణులు;
     }
 
     /** Returns/orphans the CharString that contains all strings. */
-    CharString *orphanCharStrings() {
-        CharString *result = strings;
-        strings = nullptr;
-        return result;
+    CharString *orphan_Char_అక్షరశ్రేణులు() {
+        CharString *ఫలితం = అక్షరశ్రేణులు;
+        అక్షరశ్రేణులు = nullptr;
+        తిరిగి ఫలితం;
     }
 
     /**
@@ -55,66 +55,66 @@ public:
      * Best used with string data in a stable storage, such as strings returned
      * by resource bundle functions.
      */
-    int32_t add(const char16_t*p, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
-            errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+    int32_t కూడు(స్థిరరాశి char16_t*p, UError_సంకేతం &error_సంకేతం) {
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి -1; }
+        ఒకవేళ (isFrozen) {
+            error_సంకేతం = U_NO_WRITE_PERMISSION;
+            తిరిగి -1;
         }
         // The string points into the resource bundle.
-        int32_t oldIndex = uhash_geti(&map, p);
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        int32_t old_సూచీ = uhash_geti(&map, p);
+        ఒకవేళ (old_సూచీ != 0) {  // found duplicate
+            తిరిగి old_సూచీ;
         }
         // Explicit NUL terminator for the previous string.
         // The strings object is also terminated with one implicit NUL.
-        strings->append(0, errorCode);
-        int32_t newIndex = strings->length();
-        strings->appendInvariantChars(p, u_strlen(p), errorCode);
-        uhash_puti(&map, const_cast<char16_t *>(p), newIndex, &errorCode);
-        return newIndex;
+        అక్షరశ్రేణులు->append(0, error_సంకేతం);
+        int32_t new_సూచీ = అక్షరశ్రేణులు->నిడివి();
+        అక్షరశ్రేణులు->appendInvariantChars(p, u_strlen(p), error_సంకేతం);
+        uhash_puti(&map, const_cast<char16_t *>(p), new_సూచీ, &error_సంకేతం);
+        తిరిగి new_సూచీ;
     }
 
     /**
      * Adds a unicode string by value and returns a unique number for it.
      */
-    int32_t addByValue(UnicodeString s, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
-            errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+    int32_t కూడు_By_విలువ(UnicodeString s, UError_సంకేతం &error_సంకేతం) {
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి -1; }
+        ఒకవేళ (isFrozen) {
+            error_సంకేతం = U_NO_WRITE_PERMISSION;
+            తిరిగి -1;
         }
-        int32_t oldIndex = uhash_geti(&map, s.getTerminatedBuffer());
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        int32_t old_సూచీ = uhash_geti(&map, s.get_Terminated_బఫరు());
+        ఒకవేళ (old_సూచీ != 0) {  // found duplicate
+            తిరిగి old_సూచీ;
         }
         // We need to store the string content of the UnicodeString.
-        UnicodeString *key = keyStore.create(s);
-        if (key == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return -1;
+        UnicodeString *కీలకం = కీలకం_Store.create(s);
+        ఒకవేళ (కీలకం == nullptr) {
+            error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి -1;
         }
-        return add(key->getTerminatedBuffer(), errorCode);
+        తిరిగి కూడు(కీలకం->get_Terminated_బఫరు(), error_సంకేతం);
     }
 
-    void freeze() { isFrozen = true; }
+    శూన్య freeze() { isFrozen = true; }
 
     /**
      * Returns a string pointer for its unique number, if this object is frozen.
      * Otherwise nullptr.
      */
-    const char *get(int32_t i) const {
+    స్థిరరాశి అక్షరం *get(int32_t i) స్థిరరాశి {
         U_ASSERT(isFrozen);
-        return isFrozen && i > 0 ? strings->data() + i : nullptr;
+        తిరిగి isFrozen && i > 0 ? అక్షరశ్రేణులు->దత్తాంశం() + i : nullptr;
     }
 
-private:
+అంతరంగ:
     UHashtable map;
-    CharString *strings;
-    MemoryPool<UnicodeString> keyStore;
+    CharString *అక్షరశ్రేణులు;
+    జ్ఞాపకం_Pool<UnicodeString> కీలకం_Store;
     bool isFrozen = false;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // __UNIQUECHARSTR_H__
+#అయితే_ముగింపు  // __UNIQUECHARSTR_H__

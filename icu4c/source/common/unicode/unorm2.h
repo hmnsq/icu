@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UNORM2_H__
-#define __UNORM2_H__
+#నిర్వచితం_కాకపోతే __UNORM2_H__
+#నిర్వచించు __UNORM2_H__
 
 /**
  * \file
@@ -30,13 +30,13 @@
  * For more details see the Normalizer2 C++ class.
  */
 
-#include "unicode/utypes.h"
-#include "unicode/stringoptions.h"
-#include "unicode/uset.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/stringoptions.h"
+#అన్తర్భావ "unicode/uset.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+#అన్తర్భావ "unicode/localpointer.h"
+#అయితే_ముగింపు   // U_SHOW_CPLUSPLUS_API
 
 /**
  * Constants for normalization modes.
@@ -45,7 +45,7 @@
  * see http://www.unicode.org/unicode/reports/tr15/
  * @stable ICU 4.4
  */
-typedef enum {
+రకనిర్వచనం గణన {
     /**
      * Decomposition followed by composition.
      * Same as standard NFC when using an "nfc" instance.
@@ -87,14 +87,14 @@ typedef enum {
      * @stable ICU 4.4
      */
     UNORM2_COMPOSE_CONTIGUOUS
-} UNormalization2Mode;
+} UNormalization2_బహుళకం;
 
 /**
  * Result values for normalization quick check functions.
  * For details see http://www.unicode.org/reports/tr15/#Detecting_Normalization_Forms
  * @stable ICU 2.0
  */
-typedef enum UNormalizationCheckResult {
+రకనిర్వచనం గణన UNormalization_Check_ఫలితం {
   /**
    * The input string is not in the normalization form.
    * @stable ICU 2.0
@@ -113,16 +113,16 @@ typedef enum UNormalizationCheckResult {
    * @stable ICU 2.0
    */
   UNORM_MAYBE
-} UNormalizationCheckResult;
+} UNormalization_Check_ఫలితం;
 
 /**
  * Opaque C service object type for the new normalization API.
  * @stable ICU 4.4
  */
-struct UNormalizer2;
-typedef struct UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer2. @stable ICU 4.4 */
+నిర్మాణం UNormalizer2;
+రకనిర్వచనం నిర్మాణం UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer2. @stable ICU 4.4 */
 
-#if !UCONFIG_NO_NORMALIZATION
+#ఒకవేళ !UCONFIG_NO_NORMALIZATION
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFC normalization.
@@ -135,8 +135,8 @@ typedef struct UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFCInstance(UErrorCode *pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFCInstance(UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFD normalization.
@@ -149,8 +149,8 @@ unorm2_getNFCInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFDInstance(UErrorCode *pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFDInstance(UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFKC normalization.
@@ -163,8 +163,8 @@ unorm2_getNFDInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCInstance(UErrorCode *pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFKCInstance(UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFKD normalization.
@@ -177,8 +177,8 @@ unorm2_getNFKCInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKDInstance(UErrorCode *pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFKDInstance(UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns a UNormalizer2 instance for Unicode toNFKC_Casefold() normalization
@@ -194,8 +194,8 @@ unorm2_getNFKDInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFKCCasefoldInstance(UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns a UNormalizer2 instance for a variant of Unicode toNFKC_Casefold() normalization
@@ -211,8 +211,8 @@ unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 74
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFKCSimpleCasefoldInstance(UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns a UNormalizer2 instance which uses the specified data file
@@ -235,11 +235,11 @@ unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode);
  * @return the requested UNormalizer2, if successful
  * @stable ICU 4.4
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getInstance(const char *packageName,
-                   const char *name,
-                   UNormalization2Mode mode,
-                   UErrorCode *pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getInstance(స్థిరరాశి అక్షరం *packageName,
+                   స్థిరరాశి అక్షరం *name,
+                   UNormalization2_బహుళకం బహుళకం,
+                   UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Constructs a filtered normalizer wrapping any UNormalizer2 instance
@@ -257,9 +257,9 @@ unorm2_getInstance(const char *packageName,
  * @stable ICU 4.4
  */
 U_CAPI UNormalizer2* U_EXPORT2
-unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
-                    const USet* filterSet U_LIFETIME_BOUND,
-                    UErrorCode* pErrorCode);
+unorm2_openFiltered(స్థిరరాశి UNormalizer2* norm2 U_LIFETIME_BOUND,
+                    స్థిరరాశి USet* filter_సమితి U_LIFETIME_BOUND,
+                    UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Closes a UNormalizer2 instance from unorm2_openFiltered().
@@ -267,10 +267,10 @@ unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
  * @param norm2 UNormalizer2 instance to be closed
  * @stable ICU 4.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 unorm2_close(UNormalizer2 *norm2);
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -283,11 +283,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUNormalizer2Pointer, UNormalizer2, unorm2_close);
+U_DEFINE_LOCAL_OPEN_సూచిక(Local_UNormalizer2_సూచిక, UNormalizer2, unorm2_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 
 /**
  * Writes the normalized form of the source string to the destination string
@@ -306,10 +306,10 @@ U_NAMESPACE_END
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_normalize(const UNormalizer2 *norm2,
-                 const UChar *src, int32_t length,
-                 UChar *dest, int32_t capacity,
-                 UErrorCode *pErrorCode);
+unorm2_normalize(స్థిరరాశి UNormalizer2 *norm2,
+                 స్థిరరాశి UChar *src, int32_t నిడివి,
+                 UChar *dest, int32_t సామర్థ్యం,
+                 UError_సంకేతం *p_Error_సంకేతం);
 /**
  * Appends the normalized form of the second string to the first string
  * (merging them at the boundary) and returns the length of the first string.
@@ -329,10 +329,10 @@ unorm2_normalize(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_normalizeSecondAndAppend(const UNormalizer2 *norm2,
-                                UChar *first, int32_t firstLength, int32_t firstCapacity,
-                                const UChar *second, int32_t secondLength,
-                                UErrorCode *pErrorCode);
+unorm2_normalize_రెండవ_And_Append(స్థిరరాశి UNormalizer2 *norm2,
+                                UChar *మొదటి, int32_t మొదటి_నిడివి, int32_t మొదటి_సామర్థ్యం,
+                                స్థిరరాశి UChar *రెండవ, int32_t రెండవ_నిడివి,
+                                UError_సంకేతం *p_Error_సంకేతం);
 /**
  * Appends the second string to the first string
  * (merging them at the boundary) and returns the length of the first string.
@@ -352,10 +352,10 @@ unorm2_normalizeSecondAndAppend(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_append(const UNormalizer2 *norm2,
-              UChar *first, int32_t firstLength, int32_t firstCapacity,
-              const UChar *second, int32_t secondLength,
-              UErrorCode *pErrorCode);
+unorm2_append(స్థిరరాశి UNormalizer2 *norm2,
+              UChar *మొదటి, int32_t మొదటి_నిడివి, int32_t మొదటి_సామర్థ్యం,
+              స్థిరరాశి UChar *రెండవ, int32_t రెండవ_నిడివి,
+              UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Gets the decomposition mapping of c.
@@ -377,9 +377,9 @@ unorm2_append(const UNormalizer2 *norm2,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_getDecomposition(const UNormalizer2 *norm2,
-                        UChar32 c, UChar *decomposition, int32_t capacity,
-                        UErrorCode *pErrorCode);
+unorm2_getDecomposition(స్థిరరాశి UNormalizer2 *norm2,
+                        UChar32 c, UChar *decomposition, int32_t సామర్థ్యం,
+                        UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Gets the raw decomposition mapping of c.
@@ -411,9 +411,9 @@ unorm2_getDecomposition(const UNormalizer2 *norm2,
  * @stable ICU 49
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_getRawDecomposition(const UNormalizer2 *norm2,
-                           UChar32 c, UChar *decomposition, int32_t capacity,
-                           UErrorCode *pErrorCode);
+unorm2_getRawDecomposition(స్థిరరాశి UNormalizer2 *norm2,
+                           UChar32 c, UChar *decomposition, int32_t సామర్థ్యం,
+                           UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Performs pairwise composition of a & b and returns the composite if there is one.
@@ -431,7 +431,7 @@ unorm2_getRawDecomposition(const UNormalizer2 *norm2,
  * @stable ICU 49
  */
 U_CAPI UChar32 U_EXPORT2
-unorm2_composePair(const UNormalizer2 *norm2, UChar32 a, UChar32 b);
+unorm2_composePair(స్థిరరాశి UNormalizer2 *norm2, UChar32 a, UChar32 b);
 
 /**
  * Gets the combining class of c.
@@ -443,7 +443,7 @@ unorm2_composePair(const UNormalizer2 *norm2, UChar32 a, UChar32 b);
  * @stable ICU 49
  */
 U_CAPI uint8_t U_EXPORT2
-unorm2_getCombiningClass(const UNormalizer2 *norm2, UChar32 c);
+unorm2_getCombiningClass(స్థిరరాశి UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Tests if the string is normalized.
@@ -462,9 +462,9 @@ unorm2_getCombiningClass(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_isNormalized(const UNormalizer2 *norm2,
-                    const UChar *s, int32_t length,
-                    UErrorCode *pErrorCode);
+unorm2_isNormalized(స్థిరరాశి UNormalizer2 *norm2,
+                    స్థిరరాశి UChar *s, int32_t నిడివి,
+                    UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Tests if the string is normalized.
@@ -483,10 +483,10 @@ unorm2_isNormalized(const UNormalizer2 *norm2,
  * @return UNormalizationCheckResult
  * @stable ICU 4.4
  */
-U_CAPI UNormalizationCheckResult U_EXPORT2
-unorm2_quickCheck(const UNormalizer2 *norm2,
-                  const UChar *s, int32_t length,
-                  UErrorCode *pErrorCode);
+U_CAPI UNormalization_Check_ఫలితం U_EXPORT2
+unorm2_శీఘ్ర_Check(స్థిరరాశి UNormalizer2 *norm2,
+                  స్థిరరాశి UChar *s, int32_t నిడివి,
+                  UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns the end of the normalized substring of the input string.
@@ -513,9 +513,9 @@ unorm2_quickCheck(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_spanQuickCheckYes(const UNormalizer2 *norm2,
-                         const UChar *s, int32_t length,
-                         UErrorCode *pErrorCode);
+unorm2_పరిధి_శీఘ్ర_Check_Yes(స్థిరరాశి UNormalizer2 *norm2,
+                         స్థిరరాశి UChar *s, int32_t నిడివి,
+                         UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Tests if the character always has a normalization boundary before it,
@@ -527,7 +527,7 @@ unorm2_spanQuickCheckYes(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_hasBoundaryBefore(const UNormalizer2 *norm2, UChar32 c);
+unorm2_hasBoundaryBefore(స్థిరరాశి UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Tests if the character always has a normalization boundary after it,
@@ -539,7 +539,7 @@ unorm2_hasBoundaryBefore(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_hasBoundaryAfter(const UNormalizer2 *norm2, UChar32 c);
+unorm2_hasBoundaryAfter(స్థిరరాశి UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Tests if the character is normalization-inert.
@@ -550,7 +550,7 @@ unorm2_hasBoundaryAfter(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_isInert(const UNormalizer2 *norm2, UChar32 c);
+unorm2_isInert(స్థిరరాశి UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Compares two strings for canonical equivalence.
@@ -619,10 +619,10 @@ unorm2_isInert(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-unorm_compare(const UChar *s1, int32_t length1,
-              const UChar *s2, int32_t length2,
+unorm_compare(స్థిరరాశి UChar *s1, int32_t length1,
+              స్థిరరాశి UChar *s2, int32_t length2,
               uint32_t options,
-              UErrorCode *pErrorCode);
+              UError_సంకేతం *p_Error_సంకేతం);
 
-#endif  /* !UCONFIG_NO_NORMALIZATION */
-#endif  /* __UNORM2_H__ */
+#అయితే_ముగింపు  /* !UCONFIG_NO_NORMALIZATION */
+#అయితే_ముగింపు  /* __UNORM2_H__ */

@@ -19,24 +19,24 @@
 // is in the ICU svn repository at icuhtml/trunk/design/strings/contrib
 // (see ICU ticket 6765, r25517).
 
-#ifndef __STRINGPIECE_H__
-#define __STRINGPIECE_H__
+#నిర్వచితం_కాకపోతే __STRINGPIECE_H__
+#నిర్వచించు __STRINGPIECE_H__
 
 /**
  * \file 
  * \brief C++ API: StringPiece: Read-only byte string wrapper class.
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include <cstddef>
-#include <string_view>
-#include <type_traits>
+#అన్తర్భావ <cstddef>
+#అన్తర్భావ <string_view>
+#అన్తర్భావ <type_traits>
 
-#include "unicode/uobject.h"
-#include "unicode/std_string.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/std_string.h"
 
 // Arghh!  I wish C++ literals were "string".
 
@@ -58,55 +58,55 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 4.2
  */
-class U_COMMON_API StringPiece : public UMemory {
- private:
-  const char*   ptr_;
-  int32_t       length_;
+class U_COMMON_API StringPiece : బహిరంగ UMemory {
+ అంతరంగ:
+  స్థిరరాశి అక్షరం*   ptr_;
+  int32_t       నిడివి_2;
 
- public:
+ బహిరంగ:
   /**
    * Default constructor, creates an empty StringPiece.
    * @stable ICU 4.2
    */
-  StringPiece() : ptr_(nullptr), length_(0) { }
+  StringPiece() : ptr_(nullptr), నిడివి_2(0) { }
 
   /**
    * Constructs from a NUL-terminated const char * pointer.
    * @param str a NUL-terminated const char * pointer
    * @stable ICU 4.2
    */
-  StringPiece(const char* str U_LIFETIME_BOUND);
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(స్థిరరాశి అక్షరం* str U_LIFETIME_BOUND);
+#ఒకవేళ defined(__cpp_char8_t) || defined(U_లోపల_DOXYGEN)
   /**
    * Constructs from a NUL-terminated const char8_t * pointer.
    * @param str a NUL-terminated const char8_t * pointer
    * @stable ICU 67
    */
-  StringPiece(const char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<const char*>(str)) {}
-#endif
+  StringPiece(స్థిరరాశి char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<స్థిరరాశి అక్షరం*>(str)) {}
+#అయితే_ముగింపు
   /**
    * Constructs an empty StringPiece.
    * Needed for type disambiguation from multiple other overloads.
    * @param p nullptr
    * @stable ICU 67
    */
-  StringPiece(std::nullptr_t p) : ptr_(p), length_(0) {}
+  StringPiece(std::nullptr_t p) : ptr_(p), నిడివి_2(0) {}
 
   /**
    * Constructs from a std::string.
    * @stable ICU 4.2
    */
-  StringPiece(const std::string& str U_LIFETIME_BOUND)
-    : ptr_(str.data()), length_(static_cast<int32_t>(str.size())) { }
-#if defined(__cpp_lib_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(స్థిరరాశి std::string& str U_LIFETIME_BOUND)
+    : ptr_(str.దత్తాంశం()), నిడివి_2(static_cast<int32_t>(str.కొలత_2())) { }
+#ఒకవేళ defined(__cpp_lib_char8_t) || defined(U_లోపల_DOXYGEN)
   /**
    * Constructs from a std::u8string.
    * @stable ICU 67
    */
-  StringPiece(const std::u8string& str U_LIFETIME_BOUND)
-    : ptr_(reinterpret_cast<const char*>(str.data())),
-      length_(static_cast<int32_t>(str.size())) { }
-#endif
+  StringPiece(స్థిరరాశి std::u8string& str U_LIFETIME_BOUND)
+    : ptr_(reinterpret_cast<స్థిరరాశి అక్షరం*>(str.దత్తాంశం())),
+      నిడివి_2(static_cast<int32_t>(str.కొలత_2())) { }
+#అయితే_ముగింపు
 
   /**
    * Constructs from some other implementation of a string piece class, from any
@@ -130,17 +130,17 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str the other string piece
    * @stable ICU 65
    */
-  template <typename T,
+  మూస <typename T,
             typename = std::enable_if_t<
-                (std::is_same_v<decltype(T().data()), const char*>
-#if defined(__cpp_char8_t)
-                    || std::is_same_v<decltype(T().data()), const char8_t*>
-#endif
+                (std::is_same_v<decltype(T().దత్తాంశం()), స్థిరరాశి అక్షరం*>
+#ఒకవేళ defined(__cpp_char8_t)
+                    || std::is_same_v<decltype(T().దత్తాంశం()), స్థిరరాశి char8_t*>
+#అయితే_ముగింపు
                 ) &&
-                std::is_same_v<decltype(T().size()), size_t>>>
+                std::is_same_v<decltype(T().కొలత_2()), size_t>>>
   StringPiece(T str U_LIFETIME_BOUND)
-      : ptr_(reinterpret_cast<const char*>(str.data())),
-        length_(static_cast<int32_t>(str.size())) {}
+      : ptr_(reinterpret_cast<స్థిరరాశి అక్షరం*>(str.దత్తాంశం())),
+        నిడివి_2(static_cast<int32_t>(str.కొలత_2())) {}
 
   /**
    * Constructs from a const char * pointer and a specified length.
@@ -148,17 +148,17 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the string; must be non-negative
    * @stable ICU 4.2
    */
-  StringPiece(const char* offset U_LIFETIME_BOUND, int32_t len) : ptr_(offset), length_(len) { }
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(స్థిరరాశి అక్షరం* స్థానభ్రంశం U_LIFETIME_BOUND, int32_t len) : ptr_(స్థానభ్రంశం), నిడివి_2(len) { }
+#ఒకవేళ defined(__cpp_char8_t) || defined(U_లోపల_DOXYGEN)
   /**
    * Constructs from a const char8_t * pointer and a specified length.
    * @param str a const char8_t * pointer (need not be terminated)
    * @param len the length of the string; must be non-negative
    * @stable ICU 67
    */
-  StringPiece(const char8_t* str U_LIFETIME_BOUND, int32_t len) :
-      StringPiece(reinterpret_cast<const char*>(str), len) {}
-#endif
+  StringPiece(స్థిరరాశి char8_t* str U_LIFETIME_BOUND, int32_t len) :
+      StringPiece(reinterpret_cast<స్థిరరాశి అక్షరం*>(str), len) {}
+#అయితే_ముగింపు
 
   /**
    * Substring of another StringPiece.
@@ -166,7 +166,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param pos start position in x; must be non-negative and <= x.length().
    * @stable ICU 4.2
    */
-  StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos);
+  StringPiece(స్థిరరాశి StringPiece& x U_LIFETIME_BOUND, int32_t pos);
   /**
    * Substring of another StringPiece.
    * @param x the other StringPiece
@@ -175,17 +175,17 @@ class U_COMMON_API StringPiece : public UMemory {
    *            must be non-negative and will be pinned to at most x.length() - pos.
    * @stable ICU 4.2
    */
-  StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len);
+  StringPiece(స్థిరరాశి StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len);
 
-#ifndef U_HIDE_INTERNAL_API
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
   /**
    * Converts to a std::string_view().
    * @internal
    */
-  inline operator std::string_view() const {
-    return {data(), static_cast<std::string_view::size_type>(size())};
+  అంతఃవరుస క్రియాకారకం std::string_view() స్థిరరాశి {
+    తిరిగి {దత్తాంశం(), static_cast<std::string_view::కొలత_type>(కొలత_2())};
   }
-#endif  // U_HIDE_INTERNAL_API
+#అయితే_ముగింపు  // U_HIDE_INTERNAL_API
 
   /**
    * Returns the string pointer. May be nullptr if it is empty.
@@ -197,31 +197,31 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return the string pointer
    * @stable ICU 4.2
    */
-  const char* data() const { return ptr_; }
+  స్థిరరాశి అక్షరం* దత్తాంశం() స్థిరరాశి { తిరిగి ptr_; }
   /**
    * Returns the string length. Same as length().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t size() const { return length_; }
+  int32_t కొలత_2() స్థిరరాశి { తిరిగి నిడివి_2; }
   /**
    * Returns the string length. Same as size().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t length() const { return length_; }
+  int32_t నిడివి() స్థిరరాశి { తిరిగి నిడివి_2; }
   /**
    * Returns whether the string is empty.
    * @return true if the string is empty
    * @stable ICU 4.2
    */
-  UBool empty() const { return length_ == 0; }
+  UBool ఖాళీలు() స్థిరరాశి { తిరిగి నిడివి_2 == 0; }
 
   /**
    * Sets to an empty string.
    * @stable ICU 4.2
    */
-  void clear() { ptr_ = nullptr; length_ = 0; }
+  శూన్య clear() { ptr_ = nullptr; నిడివి_2 = 0; }
 
   /**
    * Reset the stringpiece to refer to new data.
@@ -229,24 +229,24 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the new data
    * @stable ICU 4.8
    */
-  void set(const char* xdata, int32_t len) { ptr_ = xdata; length_ = len; }
+  శూన్య సమితి(స్థిరరాశి అక్షరం* xdata, int32_t len) { ptr_ = xdata; నిడివి_2 = len; }
 
   /**
    * Reset the stringpiece to refer to new data.
    * @param str a pointer to a NUL-terminated string. 
    * @stable ICU 4.8
    */
-  void set(const char* str);
+  శూన్య సమితి(స్థిరరాశి అక్షరం* str);
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#ఒకవేళ defined(__cpp_char8_t) || defined(U_లోపల_DOXYGEN)
   /**
    * Resets the stringpiece to refer to new data.
    * @param xdata pointer the new string data. Need not be NUL-terminated.
    * @param len the length of the new data
    * @stable ICU 67
    */
-  inline void set(const char8_t* xdata, int32_t len) {
-      set(reinterpret_cast<const char*>(xdata), len);
+  అంతఃవరుస శూన్య సమితి(స్థిరరాశి char8_t* xdata, int32_t len) {
+      సమితి(reinterpret_cast<స్థిరరాశి అక్షరం*>(xdata), len);
   }
 
   /**
@@ -254,23 +254,23 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str a pointer to a NUL-terminated string.
    * @stable ICU 67
    */
-  inline void set(const char8_t* str) {
-      set(reinterpret_cast<const char*>(str));
+  అంతఃవరుస శూన్య సమితి(స్థిరరాశి char8_t* str) {
+      సమితి(reinterpret_cast<స్థిరరాశి అక్షరం*>(str));
   }
-#endif
+#అయితే_ముగింపు
 
   /**
    * Removes the first n string units.
    * @param n prefix length, must be non-negative and <=length()
    * @stable ICU 4.2
    */
-  void remove_prefix(int32_t n) {
-    if (n >= 0) {
-      if (n > length_) {
-        n = length_;
+  శూన్య remove_ఉపసర్గ(int32_t n) {
+    ఒకవేళ (n >= 0) {
+      ఒకవేళ (n > నిడివి_2) {
+        n = నిడివి_2;
       }
       ptr_ += n;
-      length_ -= n;
+      నిడివి_2 -= n;
     }
   }
 
@@ -279,12 +279,12 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param n suffix length, must be non-negative and <=length()
    * @stable ICU 4.2
    */
-  void remove_suffix(int32_t n) {
-    if (n >= 0) {
-      if (n <= length_) {
-        length_ -= n;
-      } else {
-        length_ = 0;
+  శూన్య remove_suffix(int32_t n) {
+    ఒకవేళ (n >= 0) {
+      ఒకవేళ (n <= నిడివి_2) {
+        నిడివి_2 -= n;
+      } లేకపోతే {
+        నిడివి_2 = 0;
       }
     }
   }
@@ -296,7 +296,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return The offset of needle in haystack, or -1 if not found.
    * @stable ICU 67
    */
-  int32_t find(StringPiece needle, int32_t offset);
+  int32_t కనుగొను(StringPiece needle, int32_t స్థానభ్రంశం);
 
   /**
    * Compares this StringPiece with the other StringPiece, with semantics
@@ -311,7 +311,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * Maximum integer, used as a default value for substring methods.
    * @stable ICU 4.2
    */
-  static const int32_t npos; // = 0x7fffffff;
+  స్థిర స్థిరరాశి int32_t npos; // = 0x7fffffff;
 
   /**
    * Returns a substring of this StringPiece.
@@ -321,8 +321,8 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return the substring StringPiece
    * @stable ICU 4.2
    */
-  StringPiece substr(int32_t pos, int32_t len = npos) const {
-    return StringPiece(*this, pos, len);
+  StringPiece substr(int32_t pos, int32_t len = npos) స్థిరరాశి {
+    తిరిగి StringPiece(*this, pos, len);
   }
 };
 
@@ -334,7 +334,7 @@ class U_COMMON_API StringPiece : public UMemory {
  * @stable ICU 4.8
  */
 U_COMMON_API UBool U_EXPORT2 
-operator==(const StringPiece& x, const StringPiece& y);
+క్రియాకారకం==(స్థిరరాశి StringPiece& x, స్థిరరాశి StringPiece& y);
 
 /**
  * Global operator != for StringPiece
@@ -343,12 +343,12 @@ operator==(const StringPiece& x, const StringPiece& y);
  * @return true if the string data is not equal
  * @stable ICU 4.8
  */
-inline bool operator!=(const StringPiece& x, const StringPiece& y) {
-  return !(x == y);
+అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి StringPiece& x, స్థిరరాశి StringPiece& y) {
+  తిరిగి !(x == y);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __STRINGPIECE_H__
+#అయితే_ముగింపు  // __STRINGPIECE_H__

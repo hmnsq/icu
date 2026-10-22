@@ -14,11 +14,11 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __PATTERNPROPS_H__
-#define __PATTERNPROPS_H__
+#నిర్వచితం_కాకపోతే __PATTERNPROPS_H__
+#నిర్వచించు __PATTERNPROPS_H__
 
-#include "unicode/unistr.h"
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/utypes.h"
 
 U_NAMESPACE_BEGIN
 
@@ -41,58 +41,58 @@ U_NAMESPACE_BEGIN
  *    \u3001-\u3003\u3008-\u3020\u3030\uFD3E\uFD3F\uFE45\uFE46]
  * @author mscherer
  */
-class U_COMMON_API PatternProps {
-public:
+class U_COMMON_API నమూనా_Props {
+బహిరంగ:
     /**
      * @return true if c is a Pattern_Syntax code point.
      */
-    static UBool isSyntax(UChar32 c);
+    స్థిర UBool isSyntax(UChar32 c);
 
     /**
      * @return true if c is a Pattern_Syntax or Pattern_White_Space code point.
      */
-    static UBool isSyntaxOrWhiteSpace(UChar32 c);
+    స్థిర UBool isSyntaxOrWhiteSpace(UChar32 c);
 
     /**
      * @return true if c is a Pattern_White_Space character.
      */
-    static UBool isWhiteSpace(UChar32 c);
+    స్థిర UBool isWhiteSpace(UChar32 c);
 
     /**
      * Skips over Pattern_White_Space starting at s.
      * @return The smallest pointer at or after s with a non-white space character.
      */
-    static const char16_t *skipWhiteSpace(const char16_t *s, int32_t length);
+    స్థిర స్థిరరాశి char16_t *skipWhiteSpace(స్థిరరాశి char16_t *s, int32_t నిడివి);
 
     /**
      * Skips over Pattern_White_Space starting at index start in s.
      * @return The smallest index at or after start with a non-white space character.
      */
-    static int32_t skipWhiteSpace(const UnicodeString &s, int32_t start);
+    స్థిర int32_t skipWhiteSpace(స్థిరరాశి UnicodeString &s, int32_t ప్రారంభం);
 
     /**
      * @return s except with leading and trailing Pattern_White_Space removed and length adjusted.
      */
-    static const char16_t *trimWhiteSpace(const char16_t *s, int32_t &length);
+    స్థిర స్థిరరాశి char16_t *trimWhiteSpace(స్థిరరాశి char16_t *s, int32_t &నిడివి);
 
     /**
      * Tests whether the string contains a "pattern identifier", that is,
      * whether it contains only non-Pattern_White_Space, non-Pattern_Syntax characters.
      * @return true if there are no Pattern_White_Space or Pattern_Syntax characters in s.
      */
-    static UBool isIdentifier(const char16_t *s, int32_t length);
+    స్థిర UBool isIdentifier(స్థిరరాశి char16_t *s, int32_t నిడివి);
 
     /**
      * Skips over a "pattern identifier" starting at index s.
      * @return The smallest pointer at or after s with
      *         a Pattern_White_Space or Pattern_Syntax character.
      */
-    static const char16_t *skipIdentifier(const char16_t *s, int32_t length);
+    స్థిర స్థిరరాశి char16_t *skipIdentifier(స్థిరరాశి char16_t *s, int32_t నిడివి);
 
-private:
-    PatternProps() = delete;  // no constructor: all static methods
+అంతరంగ:
+    నమూనా_Props() = delete;  // no constructor: all static methods
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // __PATTERNPROPS_H__
+#అయితే_ముగింపు  // __PATTERNPROPS_H__

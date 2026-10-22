@@ -14,24 +14,24 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __IDNA_H__
-#define __IDNA_H__
+#నిర్వచితం_కాకపోతే __IDNA_H__
+#నిర్వచించు __IDNA_H__
 
 /**
  * \file
  * \brief C++ API: Internationalizing Domain Names in Applications (IDNA)
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_IDNA
+#ఒకవేళ !UCONFIG_NO_IDNA
 
-#include "unicode/bytestream.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uidna.h"
-#include "unicode/unistr.h"
+#అన్తర్భావ "unicode/bytestream.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/uidna.h"
+#అన్తర్భావ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 
@@ -49,8 +49,8 @@ class IDNAInfo;
  * and IDNA2003 (functions that do not use a service object).
  * @stable ICU 4.6
  */
-class U_COMMON_API IDNA : public UObject {
-public:
+class U_COMMON_API IDNA : బహిరంగ UObject {
+బహిరంగ:
     /**
      * Destructor.
      * @stable ICU 4.6
@@ -93,8 +93,8 @@ public:
      * @return the UTS #46 IDNA instance, if successful
      * @stable ICU 4.6
      */
-    static IDNA *
-    createUTS46Instance(uint32_t options, UErrorCode &errorCode);
+    స్థిర IDNA *
+    createUTS46Instance(uint32_t options, UError_సంకేతం &error_సంకేతం);
 
     /**
      * Converts a single domain name label into its ASCII form for DNS lookup.
@@ -116,11 +116,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    labelToASCII(const UnicodeString& label,
+    మాయా UnicodeString&
+    label_గమ్యం_ASCII(స్థిరరాశి UnicodeString& label,
                  UnicodeString& dest U_LIFETIME_BOUND,
                  IDNAInfo& info,
-                 UErrorCode& errorCode) const = 0;
+                 UError_సంకేతం& error_సంకేతం) స్థిరరాశి = 0;
 
     /**
      * Converts a single domain name label into its Unicode form for human-readable display.
@@ -140,11 +140,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    labelToUnicode(const UnicodeString& label,
+    మాయా UnicodeString&
+    label_గమ్యం_Unicode(స్థిరరాశి UnicodeString& label,
                    UnicodeString& dest U_LIFETIME_BOUND,
                    IDNAInfo& info,
-                   UErrorCode& errorCode) const = 0;
+                   UError_సంకేతం& error_సంకేతం) స్థిరరాశి = 0;
 
     /**
      * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -166,11 +166,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    nameToASCII(const UnicodeString& name,
+    మాయా UnicodeString&
+    name_గమ్యం_ASCII(స్థిరరాశి UnicodeString& name,
                 UnicodeString& dest U_LIFETIME_BOUND,
                 IDNAInfo& info,
-                UErrorCode& errorCode) const = 0;
+                UError_సంకేతం& error_సంకేతం) స్థిరరాశి = 0;
 
     /**
      * Converts a whole domain name into its Unicode form for human-readable display.
@@ -190,11 +190,11 @@ public:
      * @return dest
      * @stable ICU 4.6
      */
-    virtual UnicodeString&
-    nameToUnicode(const UnicodeString& name,
+    మాయా UnicodeString&
+    name_గమ్యం_Unicode(స్థిరరాశి UnicodeString& name,
                   UnicodeString& dest U_LIFETIME_BOUND,
                   IDNAInfo& info,
-                  UErrorCode& errorCode) const = 0;
+                  UError_సంకేతం& error_సంకేతం) స్థిరరాశి = 0;
 
     // UTF-8 versions of the processing methods ---------------------------- ***
 
@@ -211,9 +211,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
-    labelToASCII_UTF8(StringPiece label, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const;
+    మాయా శూన్య
+    label_గమ్యం_ASCII_UTF8(StringPiece label, ByteSink &dest,
+                      IDNAInfo &info, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
     /**
      * Converts a single domain name label into its Unicode form for human-readable display.
@@ -228,9 +228,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
-    labelToUnicodeUTF8(StringPiece label, ByteSink &dest,
-                       IDNAInfo &info, UErrorCode &errorCode) const;
+    మాయా శూన్య
+    label_గమ్యం_Unicode_UTF8(StringPiece label, ByteSink &dest,
+                       IDNAInfo &info, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
     /**
      * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -245,9 +245,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
-    nameToASCII_UTF8(StringPiece name, ByteSink &dest,
-                     IDNAInfo &info, UErrorCode &errorCode) const;
+    మాయా శూన్య
+    name_గమ్యం_ASCII_UTF8(StringPiece name, ByteSink &dest,
+                     IDNAInfo &info, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
     /**
      * Converts a whole domain name into its Unicode form for human-readable display.
@@ -262,9 +262,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 4.6
      */
-    virtual void
-    nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const;
+    మాయా శూన్య
+    name_గమ్యం_Unicode_UTF8(StringPiece name, ByteSink &dest,
+                      IDNAInfo &info, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 };
 
 class UTS46;
@@ -274,8 +274,8 @@ class UTS46;
  * The IDNAInfo class is not suitable for subclassing.
  * @stable ICU 4.6
  */
-class U_COMMON_API IDNAInfo : public UMemory {
-public:
+class U_COMMON_API IDNAInfo : బహిరంగ UMemory {
+బహిరంగ:
     /**
      * Constructor for stack allocation.
      * @stable ICU 4.6
@@ -286,14 +286,14 @@ public:
      * @return true if there were processing errors
      * @stable ICU 4.6
      */
-    UBool hasErrors() const { return errors!=0; }
+    UBool hasErrors() స్థిరరాశి { తిరిగి errors!=0; }
     /**
      * Returns a bit set indicating IDNA processing errors.
      * See UIDNA_ERROR_... constants in uidna.h.
      * @return bit set of processing errors
      * @stable ICU 4.6
      */
-    uint32_t getErrors() const { return errors; }
+    uint32_t getErrors() స్థిరరాశి { తిరిగి errors; }
     /**
      * Returns true if transitional and nontransitional processing produce different results.
      * This is the case when the input label or domain name contains
@@ -307,15 +307,15 @@ public:
      * @return true if transitional and nontransitional processing produce different results
      * @stable ICU 4.6
      */
-    UBool isTransitionalDifferent() const { return isTransDiff; }
+    UBool isTransitionalDifferent() స్థిరరాశి { తిరిగి isTransDiff; }
 
-private:
-    friend class UTS46;
+అంతరంగ:
+    మిత్ర class UTS46;
 
-    IDNAInfo(const IDNAInfo &other) = delete;  // no copying
-    IDNAInfo &operator=(const IDNAInfo &other) = delete;  // no copying
+    IDNAInfo(స్థిరరాశి IDNAInfo &other) = delete;  // no copying
+    IDNAInfo &క్రియాకారకం=(స్థిరరాశి IDNAInfo &other) = delete;  // no copying
 
-    void reset() {
+    శూన్య reset() {
         errors=labelErrors=0;
         isTransDiff=false;
         isBiDi=false;
@@ -328,10 +328,10 @@ private:
     UBool isOkBiDi;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // UCONFIG_NO_IDNA
+#అయితే_ముగింపు  // UCONFIG_NO_IDNA
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __IDNA_H__
+#అయితే_ముగింపు  // __IDNA_H__

@@ -16,105 +16,105 @@
  *   created by: Ram Viswanadha
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#ఒకవేళ !UCONFIG_NO_IDNA
 
-#include "unicode/uidna.h"
-#include "unicode/ustring.h"
-#include "unicode/usprep.h"
-#include "punycode.h"
-#include "ustr_imp.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "sprpimpl.h"
+#అన్తర్భావ "unicode/uidna.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/usprep.h"
+#అన్తర్భావ "punycode.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "sprpimpl.h"
 
 /* it is official IDNA ACE Prefix is "xn--" */
-static const char16_t ACE_PREFIX[] ={ 0x0078,0x006E,0x002d,0x002d } ;
-#define ACE_PREFIX_LENGTH 4
+స్థిర స్థిరరాశి char16_t ACE_ఉపసర్గ[] ={ 0x0078,0x006E,0x002d,0x002d } ;
+#నిర్వచించు ACE_ఉపసర్గ_నిడివి 4
 
-#define MAX_LABEL_LENGTH 63
+#నిర్వచించు MAX_LABEL_నిడివి 63
 /* The Max length of the labels should not be more than MAX_LABEL_LENGTH */
-#define MAX_LABEL_BUFFER_SIZE 100
+#నిర్వచించు MAX_LABEL_బఫరు_కొలత 100
 
-#define MAX_DOMAIN_NAME_LENGTH 255
+#నిర్వచించు MAX_DOMAIN_NAME_నిడివి 255
 /* The Max length of the domain names should not be more than MAX_DOMAIN_NAME_LENGTH */
-#define MAX_IDN_BUFFER_SIZE   MAX_DOMAIN_NAME_LENGTH+1
+#నిర్వచించు MAX_IDN_బఫరు_కొలత   MAX_DOMAIN_NAME_నిడివి+1
 
-#define LOWER_CASE_DELTA 0x0020
-#define HYPHEN           0x002D
-#define FULL_STOP        0x002E
-#define CAPITAL_A        0x0041
-#define CAPITAL_Z        0x005A
+#నిర్వచించు క్రింది_CASE_DELTA 0x0020
+#నిర్వచించు HYPHEN           0x002D
+#నిర్వచించు నిండిన_STOP        0x002E
+#నిర్వచించు CAPITAL_A        0x0041
+#నిర్వచించు CAPITAL_Z        0x005A
 
-inline static char16_t
-toASCIILower(char16_t ch){
-    if(CAPITAL_A <= ch && ch <= CAPITAL_Z){
-        return ch + LOWER_CASE_DELTA;
+అంతఃవరుస స్థిర char16_t
+గమ్యం_ASCIILower(char16_t ch){
+    ఒకవేళ(CAPITAL_A <= ch && ch <= CAPITAL_Z){
+        తిరిగి ch + క్రింది_CASE_DELTA;
     }
-    return ch;
+    తిరిగి ch;
 }
 
-inline static UBool 
-startsWithPrefix(const char16_t* src , int32_t srcLength){
-    if(srcLength < ACE_PREFIX_LENGTH){
-        return false;
+అంతఃవరుస స్థిర UBool 
+starts_With_ఉపసర్గ(స్థిరరాశి char16_t* src , int32_t src_నిడివి){
+    ఒకవేళ(src_నిడివి < ACE_ఉపసర్గ_నిడివి){
+        తిరిగి అబద్ధం;
     }
 
-    for(int8_t i=0; i< ACE_PREFIX_LENGTH; i++){
-        if(toASCIILower(src[i]) != ACE_PREFIX[i]){
-            return false;
+    కొరకు(int8_t i=0; i< ACE_ఉపసర్గ_నిడివి; i++){
+        ఒకవేళ(గమ్యం_ASCIILower(src[i]) != ACE_ఉపసర్గ[i]){
+            తిరిగి అబద్ధం;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 
-inline static int32_t
-compareCaseInsensitiveASCII(const char16_t* s1, int32_t s1Len,
-                            const char16_t* s2, int32_t s2Len){
+అంతఃవరుస స్థిర int32_t
+compareCaseInsensitiveASCII(స్థిరరాశి char16_t* s1, int32_t s1Len,
+                            స్థిరరాశి char16_t* s2, int32_t s2Len){
     
-    int32_t minLength;
-    int32_t lengthResult;
+    int32_t min_నిడివి;
+    int32_t నిడివి_ఫలితం;
 
     // are we comparing different lengths?
-    if(s1Len != s2Len) {
-        if(s1Len < s2Len) {
-            minLength = s1Len;
-            lengthResult = -1;
-        } else {
-            minLength = s2Len;
-            lengthResult = 1;
+    ఒకవేళ(s1Len != s2Len) {
+        ఒకవేళ(s1Len < s2Len) {
+            min_నిడివి = s1Len;
+            నిడివి_ఫలితం = -1;
+        } లేకపోతే {
+            min_నిడివి = s2Len;
+            నిడివి_ఫలితం = 1;
         }
-    } else {
+    } లేకపోతే {
         // ok the lengths are equal
-        minLength = s1Len;
-        lengthResult = 0;
+        min_నిడివి = s1Len;
+        నిడివి_ఫలితం = 0;
     }
 
     char16_t c1,c2;
     int32_t rc;
 
-    for(int32_t i =0;/* no condition */;i++) {
+    కొరకు(int32_t i =0;/* no condition */;i++) {
 
         /* If we reach the ends of both strings then they match */
-        if(i == minLength) {
-            return lengthResult;
+        ఒకవేళ(i == min_నిడివి) {
+            తిరిగి నిడివి_ఫలితం;
         }
         
         c1 = s1[i];
         c2 = s2[i];
         
         /* Case-insensitive comparison */
-        if(c1!=c2) {
-            rc = static_cast<int32_t>(toASCIILower(c1)) - static_cast<int32_t>(toASCIILower(c2));
-            if(rc!=0) {
-                lengthResult=rc;
-                break;
+        ఒకవేళ(c1!=c2) {
+            rc = static_cast<int32_t>(గమ్యం_ASCIILower(c1)) - static_cast<int32_t>(గమ్యం_ASCIILower(c2));
+            ఒకవేళ(rc!=0) {
+                నిడివి_ఫలితం=rc;
+                ఆపు;
             }
         }
     }
-    return lengthResult;
+    తిరిగి నిడివి_ఫలితం;
 }
 
 
@@ -126,209 +126,209 @@ compareCaseInsensitiveASCII(const char16_t* s1, int32_t s1Len,
  * @return true if the char is a label separator
  * @stable ICU 2.8
  */
-static inline UBool isLabelSeparator(char16_t ch){
-    switch(ch){
-        case 0x002e:
-        case 0x3002:
-        case 0xFF0E:
-        case 0xFF61:
-            return true;
-        default:
-            return false;           
+స్థిర అంతఃవరుస UBool isLabelSeparator(char16_t ch){
+    ఎంపిక(ch){
+        స్థితి 0x002e:
+        స్థితి 0x3002:
+        స్థితి 0xFF0E:
+        స్థితి 0xFF61:
+            తిరిగి నిజం;
+        అప్రమేయ:
+            తిరిగి అబద్ధం;           
     }
 }
 
 // returns the length of the label excluding the separator
 // if *limit == separator then the length returned does not include 
 // the separtor.
-static inline int32_t
-getNextSeparator(char16_t *src, int32_t srcLength,
-                 char16_t **limit, UBool *done){
-    if(srcLength == -1){
+స్థిర అంతఃవరుస int32_t
+get_తదుపరి_Separator(char16_t *src, int32_t src_నిడివి,
+                 char16_t **హద్దు, UBool *పూర్తి){
+    ఒకవేళ(src_నిడివి == -1){
         int32_t i;
-        for(i=0 ; ;i++){
-            if(src[i] == 0){
-                *limit = src + i; // point to null
-                *done = true;
-                return i;
+        కొరకు(i=0 ; ;i++){
+            ఒకవేళ(src[i] == 0){
+                *హద్దు = src + i; // point to null
+                *పూర్తి = నిజం;
+                తిరిగి i;
             }
-            if(isLabelSeparator(src[i])){
-                *limit = src + (i+1); // go past the delimiter
-                return i;
+            ఒకవేళ(isLabelSeparator(src[i])){
+                *హద్దు = src + (i+1); // go past the delimiter
+                తిరిగి i;
                 
             }
         }
-    }else{
+    }లేకపోతే{
         int32_t i;
-        for(i=0;i<srcLength;i++){
-            if(isLabelSeparator(src[i])){
-                *limit = src + (i+1); // go past the delimiter
-                return i;
+        కొరకు(i=0;i<src_నిడివి;i++){
+            ఒకవేళ(isLabelSeparator(src[i])){
+                *హద్దు = src + (i+1); // go past the delimiter
+                తిరిగి i;
             }
         }
         // we have not found the delimiter
         // if(i==srcLength)
-        *limit = src+srcLength;
-        *done = true;
+        *హద్దు = src+src_నిడివి;
+        *పూర్తి = నిజం;
 
-        return i;
+        తిరిగి i;
     }
 }
-static inline UBool isLDHChar(char16_t ch){
+స్థిర అంతఃవరుస UBool isLDHChar(char16_t ch){
     // high runner case
-    if(ch>0x007A){
-        return false;
+    ఒకవేళ(ch>0x007A){
+        తిరిగి అబద్ధం;
     }
     //[\\u002D \\u0030-\\u0039 \\u0041-\\u005A \\u0061-\\u007A]
-    if( (ch==0x002D) || 
+    ఒకవేళ( (ch==0x002D) || 
         (0x0030 <= ch && ch <= 0x0039) ||
         (0x0041 <= ch && ch <= 0x005A) ||
         (0x0061 <= ch && ch <= 0x007A)
       ){
-        return true;
+        తిరిగి నిజం;
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-static int32_t 
-_internal_toASCII(const char16_t* src, int32_t srcLength,
-                  char16_t* dest, int32_t destCapacity,
+స్థిర int32_t 
+అంతర్గత_గమ్యం_ASCII(స్థిరరాశి char16_t* src, int32_t src_నిడివి,
+                  char16_t* dest, int32_t dest_సామర్థ్యం,
                   int32_t options,
                   UStringPrepProfile* nameprep,
                   UParseError* parseError,
-                  UErrorCode* status)
+                  UError_సంకేతం* స్థితి_2)
 {
 
     // TODO Revisit buffer handling. The label should not be over 63 ASCII characters. ICU4J may need to be updated too.
-    char16_t b1Stack[MAX_LABEL_BUFFER_SIZE], b2Stack[MAX_LABEL_BUFFER_SIZE];
+    char16_t b1_దొంతర[MAX_LABEL_బఫరు_కొలత], b2_దొంతర[MAX_LABEL_బఫరు_కొలత];
     //initialize pointers to stack buffers
-    char16_t  *b1 = b1Stack, *b2 = b2Stack;
+    char16_t  *b1 = b1_దొంతర, *b2 = b2_దొంతర;
     int32_t b1Len=0, b2Len, 
-            b1Capacity = MAX_LABEL_BUFFER_SIZE, 
-            b2Capacity = MAX_LABEL_BUFFER_SIZE ,
-            reqLength=0;
+            b1_సామర్థ్యం = MAX_LABEL_బఫరు_కొలత, 
+            b2_సామర్థ్యం = MAX_LABEL_బఫరు_కొలత ,
+            req_నిడివి=0;
 
     int32_t namePrepOptions = ((options & UIDNA_ALLOW_UNASSIGNED) != 0) ? USPREP_ALLOW_UNASSIGNED: 0;
-    UBool* caseFlags = nullptr;
+    UBool* caseFlags = శూన్యసూచిక;
     
     // the source contains all ascii codepoints
-    UBool srcIsASCII  = true;
+    UBool srcIsASCII  = నిజం;
     // assume the source contains all LDH codepoints
-    UBool srcIsLDH = true; 
+    UBool srcIsLDH = నిజం; 
 
     int32_t j=0;
 
     //get the options
-    UBool useSTD3ASCIIRules = static_cast<UBool>((options & UIDNA_USE_STD3_RULES) != 0);
+    UBool useSTD3ASCIIRules = static_cast<UBool>((options & UIDNA_USE_STD3_నియమాలు) != 0);
 
     int32_t failPos = -1;
     
-    if(srcLength == -1){
-        srcLength = u_strlen(src);
+    ఒకవేళ(src_నిడివి == -1){
+        src_నిడివి = u_strlen(src);
     }
     
-    if(srcLength > b1Capacity){
-        b1 = static_cast<char16_t*>(uprv_malloc(srcLength * U_SIZEOF_UCHAR));
-        if(b1==nullptr){
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            goto CLEANUP;
+    ఒకవేళ(src_నిడివి > b1_సామర్థ్యం){
+        b1 = static_cast<char16_t*>(uprv_malloc(src_నిడివి * U_SIZEOF_UCHAR));
+        ఒకవేళ(b1==శూన్యసూచిక){
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            వెళ్ళు CLEANUP;
         }
-        b1Capacity = srcLength;
+        b1_సామర్థ్యం = src_నిడివి;
     }
 
     // step 1 
-    for( j=0;j<srcLength;j++){
-        if(src[j] > 0x7F){
-            srcIsASCII = false;
+    కొరకు( j=0;j<src_నిడివి;j++){
+        ఒకవేళ(src[j] > 0x7F){
+            srcIsASCII = అబద్ధం;
         }
         b1[b1Len++] = src[j];
     }
     
     // step 2 is performed only if the source contains non ASCII
-    if(srcIsASCII == false){
+    ఒకవేళ(srcIsASCII == అబద్ధం){
         
         // step 2    
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        b1Len = usprep_prepare(nameprep, src, srcLength, b1, b1Capacity, namePrepOptions, parseError, &bufferStatus);
+        UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
+        b1Len = usprep_prepare(nameprep, src, src_నిడివి, b1, b1_సామర్థ్యం, namePrepOptions, parseError, &బఫరు_స్థితి);
 
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+        ఒకవేళ(బఫరు_స్థితి == U_బఫరు_అధికప్రవాహం_ERROR){
             // redo processing of string
             // we do not have enough room so grow the buffer
-            if(b1 != b1Stack){
+            ఒకవేళ(b1 != b1_దొంతర){
                 uprv_free(b1);
             }
             b1 = static_cast<char16_t*>(uprv_malloc(b1Len * U_SIZEOF_UCHAR));
-            if(b1==nullptr){
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                goto CLEANUP;
+            ఒకవేళ(b1==శూన్యసూచిక){
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                వెళ్ళు CLEANUP;
             }
 
-            bufferStatus = U_ZERO_ERROR; // reset error
+            బఫరు_స్థితి = U_ZERO_ERROR; // reset error
 
-            b1Len = usprep_prepare(nameprep, src, srcLength, b1, b1Len, namePrepOptions, parseError, &bufferStatus);
+            b1Len = usprep_prepare(nameprep, src, src_నిడివి, b1, b1Len, namePrepOptions, parseError, &బఫరు_స్థితి);
         }
-        if (U_FAILURE(bufferStatus)) {
-            *status = bufferStatus;
+        ఒకవేళ (U_FAILURE(బఫరు_స్థితి)) {
+            *స్థితి_2 = బఫరు_స్థితి;
         }
     }
     // error bail out
-    if(U_FAILURE(*status)){
-        goto CLEANUP;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)){
+        వెళ్ళు CLEANUP;
     }
-    if(b1Len == 0){
-        *status = U_IDNA_ZERO_LENGTH_LABEL_ERROR;
-        goto CLEANUP;
+    ఒకవేళ(b1Len == 0){
+        *స్థితి_2 = U_IDNA_ZERO_నిడివి_LABEL_ERROR;
+        వెళ్ళు CLEANUP;
     }
 
     // for step 3 & 4
-    srcIsASCII = true;
-    for( j=0;j<b1Len;j++){
+    srcIsASCII = నిజం;
+    కొరకు( j=0;j<b1Len;j++){
         // check if output of usprep_prepare is all ASCII 
-        if(b1[j] > 0x7F){
-            srcIsASCII = false;
-        }else if(isLDHChar(b1[j])==false){  // if the char is in ASCII range verify that it is an LDH character
-            srcIsLDH = false;
+        ఒకవేళ(b1[j] > 0x7F){
+            srcIsASCII = అబద్ధం;
+        }లేకపోతే ఒకవేళ(isLDHChar(b1[j])==అబద్ధం){  // if the char is in ASCII range verify that it is an LDH character
+            srcIsLDH = అబద్ధం;
             failPos = j;
         }
     }
-    if(useSTD3ASCIIRules){
+    ఒకవేళ(useSTD3ASCIIRules){
         // verify 3a and 3b
         // 3(a) Verify the absence of non-LDH ASCII code points; that is, the
         //  absence of 0..2C, 2E..2F, 3A..40, 5B..60, and 7B..7F.
         // 3(b) Verify the absence of leading and trailing hyphen-minus; that
         //  is, the absence of U+002D at the beginning and end of the
         //  sequence.
-        if( srcIsLDH == false /* source at this point should not contain anyLDH characters */
+        ఒకవేళ( srcIsLDH == అబద్ధం /* source at this point should not contain anyLDH characters */
             || b1[0] ==  HYPHEN || b1[b1Len-1] == HYPHEN){
-            *status = U_IDNA_STD3_ASCII_RULES_ERROR;
+            *స్థితి_2 = U_IDNA_STD3_ASCII_నియమాలు_ERROR;
 
             /* populate the parseError struct */
-            if(srcIsLDH==false){
+            ఒకవేళ(srcIsLDH==అబద్ధం){
                 // failPos is always set the index of failure
                 uprv_syntaxError(b1,failPos, b1Len,parseError);
-            }else if(b1[0] == HYPHEN){
+            }లేకపోతే ఒకవేళ(b1[0] == HYPHEN){
                 // fail position is 0 
                 uprv_syntaxError(b1,0,b1Len,parseError);
-            }else{
+            }లేకపోతే{
                 // the last index in the source is always length-1
                 uprv_syntaxError(b1, (b1Len>0) ? b1Len-1 : b1Len, b1Len,parseError);
             }
 
-            goto CLEANUP;
+            వెళ్ళు CLEANUP;
         }
     }
     // Step 4: if the source is ASCII then proceed to step 8
-    if(srcIsASCII){
-        if(b1Len <= destCapacity){
+    ఒకవేళ(srcIsASCII){
+        ఒకవేళ(b1Len <= dest_సామర్థ్యం){
             u_memmove(dest, b1, b1Len);
-            reqLength = b1Len;
-        }else{
-            reqLength = b1Len;
-            goto CLEANUP;
+            req_నిడివి = b1Len;
+        }లేకపోతే{
+            req_నిడివి = b1Len;
+            వెళ్ళు CLEANUP;
         }
-    }else{
+    }లేకపోతే{
         // step 5 : verify the sequence does not begin with ACE prefix
-        if(!startsWithPrefix(b1,b1Len)){
+        ఒకవేళ(!starts_With_ఉపసర్గ(b1,b1Len)){
 
             //step 6: encode the sequence with punycode
 
@@ -337,72 +337,72 @@ _internal_toASCII(const char16_t* src, int32_t srcLength,
             // caseFlags = (UBool*) uprv_malloc(b1Len * sizeof(UBool));
             // uprv_memset(caseFlags,true,b1Len);
 
-            UErrorCode bufferStatus = U_ZERO_ERROR;
-            b2Len = u_strToPunycode(b1,b1Len,b2,b2Capacity,caseFlags,&bufferStatus);
+            UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
+            b2Len = u_str_గమ్యం_Punycode(b1,b1Len,b2,b2_సామర్థ్యం,caseFlags,&బఫరు_స్థితి);
 
-            if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+            ఒకవేళ(బఫరు_స్థితి == U_బఫరు_అధికప్రవాహం_ERROR){
                 // redo processing of string
                 /* we do not have enough room so grow the buffer*/
                 b2 = static_cast<char16_t*>(uprv_malloc(b2Len * U_SIZEOF_UCHAR));
-                if(b2 == nullptr){
-                    *status = U_MEMORY_ALLOCATION_ERROR;
-                    goto CLEANUP;
+                ఒకవేళ(b2 == శూన్యసూచిక){
+                    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    వెళ్ళు CLEANUP;
                 }
 
-                bufferStatus = U_ZERO_ERROR; // reset error
+                బఫరు_స్థితి = U_ZERO_ERROR; // reset error
 
-                b2Len = u_strToPunycode(b1,b1Len,b2,b2Len,caseFlags,&bufferStatus);
+                b2Len = u_str_గమ్యం_Punycode(b1,b1Len,b2,b2Len,caseFlags,&బఫరు_స్థితి);
             }
             //error bail out
-            if(U_FAILURE(bufferStatus)){
-                *status = bufferStatus;
-                goto CLEANUP;
+            ఒకవేళ(U_FAILURE(బఫరు_స్థితి)){
+                *స్థితి_2 = బఫరు_స్థితి;
+                వెళ్ళు CLEANUP;
             }
             // TODO : Reconsider while implementing the case preserve RFE
             // convert all codepoints to lower case ASCII
             // toASCIILower(b2,b2Len);
-            reqLength = b2Len+ACE_PREFIX_LENGTH;
+            req_నిడివి = b2Len+ACE_ఉపసర్గ_నిడివి;
 
-            if(reqLength > destCapacity){
-                *status = U_BUFFER_OVERFLOW_ERROR;
-                goto CLEANUP;
+            ఒకవేళ(req_నిడివి > dest_సామర్థ్యం){
+                *స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+                వెళ్ళు CLEANUP;
             }
             //Step 7: prepend the ACE prefix
-            u_memcpy(dest, ACE_PREFIX, ACE_PREFIX_LENGTH);
+            u_memcpy(dest, ACE_ఉపసర్గ, ACE_ఉపసర్గ_నిడివి);
             //Step 6: copy the contents in b2 into dest
-            u_memcpy(dest+ACE_PREFIX_LENGTH, b2, b2Len);
+            u_memcpy(dest+ACE_ఉపసర్గ_నిడివి, b2, b2Len);
 
-        }else{
-            *status = U_IDNA_ACE_PREFIX_ERROR; 
+        }లేకపోతే{
+            *స్థితి_2 = U_IDNA_ACE_ఉపసర్గ_ERROR; 
             //position of failure is 0
             uprv_syntaxError(b1,0,b1Len,parseError);
-            goto CLEANUP;
+            వెళ్ళు CLEANUP;
         }
     }
     // step 8: verify the length of label
-    if(reqLength > MAX_LABEL_LENGTH){
-        *status = U_IDNA_LABEL_TOO_LONG_ERROR;
+    ఒకవేళ(req_నిడివి > MAX_LABEL_నిడివి){
+        *స్థితి_2 = U_IDNA_LABEL_TOO_LONG_ERROR;
     }
 
 CLEANUP:
-    if(b1 != b1Stack){
+    ఒకవేళ(b1 != b1_దొంతర){
         uprv_free(b1);
     }
-    if(b2 != b2Stack){
+    ఒకవేళ(b2 != b2_దొంతర){
         uprv_free(b2);
     }
     uprv_free(caseFlags);
     
-    return u_terminateUChars(dest, destCapacity, reqLength, status);
+    తిరిగి u_terminateUChars(dest, dest_సామర్థ్యం, req_నిడివి, స్థితి_2);
 }
 
-static int32_t
-_internal_toUnicode(const char16_t* src, int32_t srcLength,
-                    char16_t* dest, int32_t destCapacity,
+స్థిర int32_t
+అంతర్గత_గమ్యం_Unicode(స్థిరరాశి char16_t* src, int32_t src_నిడివి,
+                    char16_t* dest, int32_t dest_సామర్థ్యం,
                     int32_t options,
                     UStringPrepProfile* nameprep,
                     UParseError* parseError,
-                    UErrorCode* status)
+                    UError_సంకేతం* స్థితి_2)
 {
 
     //get the options
@@ -410,28 +410,28 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
     int32_t namePrepOptions = ((options & UIDNA_ALLOW_UNASSIGNED) != 0) ? USPREP_ALLOW_UNASSIGNED: 0; 
 
     // TODO Revisit buffer handling. The label should not be over 63 ASCII characters. ICU4J may need to be updated too.
-    char16_t b1Stack[MAX_LABEL_BUFFER_SIZE], b2Stack[MAX_LABEL_BUFFER_SIZE], b3Stack[MAX_LABEL_BUFFER_SIZE];
+    char16_t b1_దొంతర[MAX_LABEL_బఫరు_కొలత], b2_దొంతర[MAX_LABEL_బఫరు_కొలత], b3_దొంతర[MAX_LABEL_బఫరు_కొలత];
 
     //initialize pointers to stack buffers
-    char16_t  *b1 = b1Stack, *b2 = b2Stack, *b1Prime=nullptr, *b3=b3Stack;
-    int32_t b1Len = 0, b2Len, b1PrimeLen, b3Len,
-            b1Capacity = MAX_LABEL_BUFFER_SIZE, 
-            b2Capacity = MAX_LABEL_BUFFER_SIZE,
-            b3Capacity = MAX_LABEL_BUFFER_SIZE,
-            reqLength=0;
+    char16_t  *b1 = b1_దొంతర, *b2 = b2_దొంతర, *b1_ప్రధానసంఖ్య=శూన్యసూచిక, *b3=b3_దొంతర;
+    int32_t b1Len = 0, b2Len, b1_ప్రధానసంఖ్య_Len, b3Len,
+            b1_సామర్థ్యం = MAX_LABEL_బఫరు_కొలత, 
+            b2_సామర్థ్యం = MAX_LABEL_బఫరు_కొలత,
+            b3_సామర్థ్యం = MAX_LABEL_బఫరు_కొలత,
+            req_నిడివి=0;
 
-    UBool* caseFlags = nullptr;
+    UBool* caseFlags = శూన్యసూచిక;
 
-    UBool srcIsASCII = true;
+    UBool srcIsASCII = నిజం;
     /*UBool srcIsLDH = true;
     int32_t failPos =0;*/
 
     // step 1: find out if all the codepoints in src are ASCII  
-    if(srcLength==-1){
-        srcLength = 0;
-        for(;src[srcLength]!=0;){
-            if(src[srcLength]> 0x7f){
-                srcIsASCII = false;
+    ఒకవేళ(src_నిడివి==-1){
+        src_నిడివి = 0;
+        కొరకు(;src[src_నిడివి]!=0;){
+            ఒకవేళ(src[src_నిడివి]> 0x7f){
+                srcIsASCII = అబద్ధం;
             }/*else if(isLDHChar(src[srcLength])==false){
                 // here we do not assemble surrogates
                 // since we know that LDH code points
@@ -439,13 +439,13 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
                 srcIsLDH = false;
                 failPos = srcLength;
             }*/
-            srcLength++;
+            src_నిడివి++;
         }
-    }else if(srcLength > 0){
-        for(int32_t j=0; j<srcLength; j++){
-            if(src[j]> 0x7f){
-                srcIsASCII = false;
-                break;
+    }లేకపోతే ఒకవేళ(src_నిడివి > 0){
+        కొరకు(int32_t j=0; j<src_నిడివి; j++){
+            ఒకవేళ(src[j]> 0x7f){
+                srcIsASCII = అబద్ధం;
+                ఆపు;
             }/*else if(isLDHChar(src[j])==false){
                 // here we do not assemble surrogates
                 // since we know that LDH code points
@@ -454,37 +454,37 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
                 failPos = j;
             }*/
         }
-    }else{
-        return 0;
+    }లేకపోతే{
+        తిరిగి 0;
     }
     
-    if(srcIsASCII == false){
+    ఒకవేళ(srcIsASCII == అబద్ధం){
         // step 2: process the string
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        b1Len = usprep_prepare(nameprep, src, srcLength, b1, b1Capacity, namePrepOptions, parseError, &bufferStatus);
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+        UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
+        b1Len = usprep_prepare(nameprep, src, src_నిడివి, b1, b1_సామర్థ్యం, namePrepOptions, parseError, &బఫరు_స్థితి);
+        ఒకవేళ(బఫరు_స్థితి == U_బఫరు_అధికప్రవాహం_ERROR){
             // redo processing of string
             /* we do not have enough room so grow the buffer*/
             b1 = static_cast<char16_t*>(uprv_malloc(b1Len * U_SIZEOF_UCHAR));
-            if(b1==nullptr){
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                goto CLEANUP;
+            ఒకవేళ(b1==శూన్యసూచిక){
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                వెళ్ళు CLEANUP;
             }
 
-            bufferStatus = U_ZERO_ERROR; // reset error
+            బఫరు_స్థితి = U_ZERO_ERROR; // reset error
 
-            b1Len = usprep_prepare(nameprep, src, srcLength, b1, b1Len, namePrepOptions, parseError, &bufferStatus);
+            b1Len = usprep_prepare(nameprep, src, src_నిడివి, b1, b1Len, namePrepOptions, parseError, &బఫరు_స్థితి);
         }
         //bail out on error
-        if(U_FAILURE(bufferStatus)){
-            *status = bufferStatus;
-            goto CLEANUP;
+        ఒకవేళ(U_FAILURE(బఫరు_స్థితి)){
+            *స్థితి_2 = బఫరు_స్థితి;
+            వెళ్ళు CLEANUP;
         }
-    }else{
+    }లేకపోతే{
 
         //just point src to b1
         b1 = const_cast<char16_t*>(src);
-        b1Len = srcLength;
+        b1Len = src_నిడివి;
     }
 
     // The RFC states that 
@@ -494,68 +494,68 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
     // </quote>
 
     //step 3: verify ACE Prefix
-    if(startsWithPrefix(b1,b1Len)){
+    ఒకవేళ(starts_With_ఉపసర్గ(b1,b1Len)){
 
         //step 4: Remove the ACE Prefix
-        b1Prime = b1 + ACE_PREFIX_LENGTH;
-        b1PrimeLen  = b1Len - ACE_PREFIX_LENGTH;
+        b1_ప్రధానసంఖ్య = b1 + ACE_ఉపసర్గ_నిడివి;
+        b1_ప్రధానసంఖ్య_Len  = b1Len - ACE_ఉపసర్గ_నిడివి;
 
         //step 5: Decode using punycode
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        b2Len = u_strFromPunycode(b1Prime, b1PrimeLen, b2, b2Capacity, caseFlags, &bufferStatus);
+        UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
+        b2Len = u_strFromPunycode(b1_ప్రధానసంఖ్య, b1_ప్రధానసంఖ్య_Len, b2, b2_సామర్థ్యం, caseFlags, &బఫరు_స్థితి);
 
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+        ఒకవేళ(బఫరు_స్థితి == U_బఫరు_అధికప్రవాహం_ERROR){
             // redo processing of string
             /* we do not have enough room so grow the buffer*/
             b2 = static_cast<char16_t*>(uprv_malloc(b2Len * U_SIZEOF_UCHAR));
-            if(b2==nullptr){
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                goto CLEANUP;
+            ఒకవేళ(b2==శూన్యసూచిక){
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                వెళ్ళు CLEANUP;
             }
 
-            bufferStatus = U_ZERO_ERROR; // reset error
+            బఫరు_స్థితి = U_ZERO_ERROR; // reset error
 
-            b2Len =  u_strFromPunycode(b1Prime, b1PrimeLen, b2, b2Len, caseFlags, &bufferStatus);
+            b2Len =  u_strFromPunycode(b1_ప్రధానసంఖ్య, b1_ప్రధానసంఖ్య_Len, b2, b2Len, caseFlags, &బఫరు_స్థితి);
         }
 
 
         //step 6:Apply toASCII
-        b3Len = uidna_toASCII(b2, b2Len, b3, b3Capacity, options, parseError, &bufferStatus);
+        b3Len = uidna_గమ్యం_ASCII(b2, b2Len, b3, b3_సామర్థ్యం, options, parseError, &బఫరు_స్థితి);
 
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+        ఒకవేళ(బఫరు_స్థితి == U_బఫరు_అధికప్రవాహం_ERROR){
             // redo processing of string
             /* we do not have enough room so grow the buffer*/
             b3 = static_cast<char16_t*>(uprv_malloc(b3Len * U_SIZEOF_UCHAR));
-            if(b3==nullptr){
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                goto CLEANUP;
+            ఒకవేళ(b3==శూన్యసూచిక){
+                *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                వెళ్ళు CLEANUP;
             }
 
-            bufferStatus = U_ZERO_ERROR; // reset error
+            బఫరు_స్థితి = U_ZERO_ERROR; // reset error
 
-            b3Len =  uidna_toASCII(b2,b2Len,b3,b3Len,options,parseError,&bufferStatus);
+            b3Len =  uidna_గమ్యం_ASCII(b2,b2Len,b3,b3Len,options,parseError,&బఫరు_స్థితి);
 
         }
         //bail out on error
-        if(U_FAILURE(bufferStatus)){
-            *status = bufferStatus;
-            goto CLEANUP;
+        ఒకవేళ(U_FAILURE(బఫరు_స్థితి)){
+            *స్థితి_2 = బఫరు_స్థితి;
+            వెళ్ళు CLEANUP;
         }
 
         //step 7: verify
-        if(compareCaseInsensitiveASCII(b1, b1Len, b3, b3Len) !=0){
+        ఒకవేళ(compareCaseInsensitiveASCII(b1, b1Len, b3, b3Len) !=0){
             // Cause the original to be returned.
-            *status = U_IDNA_VERIFICATION_ERROR;
-            goto CLEANUP;
+            *స్థితి_2 = U_IDNA_VERIFICATION_ERROR;
+            వెళ్ళు CLEANUP;
         }
 
         //step 8: return output of step 5
-        reqLength = b2Len;
-        if(b2Len <= destCapacity) {
+        req_నిడివి = b2Len;
+        ఒకవేళ(b2Len <= dest_సామర్థ్యం) {
             u_memmove(dest, b2, b2Len);
         }
     }
-    else{
+    లేకపోతే{
         // See the start of this if statement for why this is commented out.
         // verify that STD3 ASCII rules are satisfied
         /*if(useSTD3ASCIIRules == true){
@@ -580,22 +580,22 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
         }*/
         // just return the source
         //copy the source to destination
-        if(srcLength <= destCapacity){
-            u_memmove(dest, src, srcLength);
+        ఒకవేళ(src_నిడివి <= dest_సామర్థ్యం){
+            u_memmove(dest, src, src_నిడివి);
         }
-        reqLength = srcLength;
+        req_నిడివి = src_నిడివి;
     }
 
 
 CLEANUP:
 
-    if(b1 != b1Stack && b1!=src){
+    ఒకవేళ(b1 != b1_దొంతర && b1!=src){
         uprv_free(b1);
     }
-    if(b2 != b2Stack){
+    ఒకవేళ(b2 != b2_దొంతర){
         uprv_free(b2);
     }
-    if(b3 != b3Stack){
+    ఒకవేళ(b3 != b3_దొంతర){
         uprv_free(b3);
     }
     uprv_free(caseFlags);
@@ -606,203 +606,203 @@ CLEANUP:
     // is returned immediately in that step.
     // </quote>
     // So if any step fails lets copy source to destination
-    if(U_FAILURE(*status)){
+    ఒకవేళ(U_FAILURE(*స్థితి_2)){
         //copy the source to destination
-        if(dest && srcLength <= destCapacity){
+        ఒకవేళ(dest && src_నిడివి <= dest_సామర్థ్యం){
             // srcLength should have already been set earlier.
-            U_ASSERT(srcLength >= 0);
-            u_memmove(dest, src, srcLength);
+            U_ASSERT(src_నిడివి >= 0);
+            u_memmove(dest, src, src_నిడివి);
         }
-        reqLength = srcLength;
-        *status = U_ZERO_ERROR;
+        req_నిడివి = src_నిడివి;
+        *స్థితి_2 = U_ZERO_ERROR;
     }
 
-    return u_terminateUChars(dest, destCapacity, reqLength, status);
+    తిరిగి u_terminateUChars(dest, dest_సామర్థ్యం, req_నిడివి, స్థితి_2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_toASCII(const char16_t* src, int32_t srcLength,
-              char16_t* dest, int32_t destCapacity,
+uidna_గమ్యం_ASCII(స్థిరరాశి char16_t* src, int32_t src_నిడివి,
+              char16_t* dest, int32_t dest_సామర్థ్యం,
               int32_t options,
               UParseError* parseError,
-              UErrorCode* status){
+              UError_సంకేతం* స్థితి_2){
     
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి 0;
     }
-    if((src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ((src==శూన్యసూచిక) || (src_నిడివి < -1) || (dest_సామర్థ్యం<0) || (!dest && dest_సామర్థ్యం > 0)){
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, status);
+    UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, స్థితి_2);
     
-    if(U_FAILURE(*status)){
-        return -1;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)){
+        తిరిగి -1;
     }
     
-    int32_t retLen = _internal_toASCII(src, srcLength, dest, destCapacity, options, nameprep, parseError, status);
+    int32_t retLen = అంతర్గత_గమ్యం_ASCII(src, src_నిడివి, dest, dest_సామర్థ్యం, options, nameprep, parseError, స్థితి_2);
     
     /* close the profile*/
     usprep_close(nameprep);
     
-    return retLen;
+    తిరిగి retLen;
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_toUnicode(const char16_t* src, int32_t srcLength,
-                char16_t* dest, int32_t destCapacity,
+uidna_గమ్యం_Unicode(స్థిరరాశి char16_t* src, int32_t src_నిడివి,
+                char16_t* dest, int32_t dest_సామర్థ్యం,
                 int32_t options,
                 UParseError* parseError,
-                UErrorCode* status){
+                UError_సంకేతం* స్థితి_2){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి 0;
     }
-    if( (src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ( (src==శూన్యసూచిక) || (src_నిడివి < -1) || (dest_సామర్థ్యం<0) || (!dest && dest_సామర్థ్యం > 0)){
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }  
 
-    UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, status);
+    UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, స్థితి_2);
     
-    if(U_FAILURE(*status)){
-        return -1;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)){
+        తిరిగి -1;
     }
     
-    int32_t retLen = _internal_toUnicode(src, srcLength, dest, destCapacity, options, nameprep, parseError, status);
+    int32_t retLen = అంతర్గత_గమ్యం_Unicode(src, src_నిడివి, dest, dest_సామర్థ్యం, options, nameprep, parseError, స్థితి_2);
 
     usprep_close(nameprep);
     
-    return retLen;
+    తిరిగి retLen;
 }
 
 
 U_CAPI int32_t U_EXPORT2
-uidna_IDNToASCII(  const char16_t *src, int32_t srcLength,
-                   char16_t* dest, int32_t destCapacity,
+uidna_IDNToASCII(  స్థిరరాశి char16_t *src, int32_t src_నిడివి,
+                   char16_t* dest, int32_t dest_సామర్థ్యం,
                    int32_t options,
                    UParseError *parseError,
-                   UErrorCode *status){
+                   UError_సంకేతం *స్థితి_2){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి 0;
     }
-    if((src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ((src==శూన్యసూచిక) || (src_నిడివి < -1) || (dest_సామర్థ్యం<0) || (!dest && dest_సామర్థ్యం > 0)){
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    int32_t reqLength = 0;
+    int32_t req_నిడివి = 0;
 
-    UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, status);
+    UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, స్థితి_2);
     
-    if(U_FAILURE(*status)){
-        return 0;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)){
+        తిరిగి 0;
     }
 
     //initialize pointers 
     char16_t* delimiter = const_cast<char16_t*>(src);
-    char16_t* labelStart = const_cast<char16_t*>(src);
+    char16_t* label_ప్రారంభం = const_cast<char16_t*>(src);
     char16_t* currentDest = dest;
-    int32_t remainingLen = srcLength;
-    int32_t remainingDestCapacity = destCapacity;
-    int32_t labelLen = 0, labelReqLength = 0;
-    UBool done = false;
+    int32_t మిగిలిన_Len = src_నిడివి;
+    int32_t మిగిలిన_Dest_సామర్థ్యం = dest_సామర్థ్యం;
+    int32_t labelLen = 0, label_Req_నిడివి = 0;
+    UBool పూర్తి = అబద్ధం;
 
 
-    for(;;){
+    కొరకు(;;){
 
-        labelLen = getNextSeparator(labelStart,remainingLen, &delimiter,&done);
-        labelReqLength = 0;
-        if(!(labelLen==0 && done)){// make sure this is not a root label separator.
+        labelLen = get_తదుపరి_Separator(label_ప్రారంభం,మిగిలిన_Len, &delimiter,&పూర్తి);
+        label_Req_నిడివి = 0;
+        ఒకవేళ(!(labelLen==0 && పూర్తి)){// make sure this is not a root label separator.
 
-            UErrorCode bufferStatus = U_ZERO_ERROR;
-            labelReqLength = _internal_toASCII( labelStart, labelLen,
-                                                currentDest, remainingDestCapacity,
+            UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
+            label_Req_నిడివి = అంతర్గత_గమ్యం_ASCII( label_ప్రారంభం, labelLen,
+                                                currentDest, మిగిలిన_Dest_సామర్థ్యం,
                                                 options, nameprep,
-                                                parseError, &bufferStatus);
+                                                parseError, &బఫరు_స్థితి);
 
-            if (bufferStatus == U_BUFFER_OVERFLOW_ERROR) {
-                remainingDestCapacity = 0;
-            } else if (U_FAILURE(bufferStatus)) {
-                *status = bufferStatus;
-                break;
+            ఒకవేళ (బఫరు_స్థితి == U_బఫరు_అధికప్రవాహం_ERROR) {
+                మిగిలిన_Dest_సామర్థ్యం = 0;
+            } లేకపోతే ఒకవేళ (U_FAILURE(బఫరు_స్థితి)) {
+                *స్థితి_2 = బఫరు_స్థితి;
+                ఆపు;
             }
         }
 
-        reqLength +=labelReqLength;
+        req_నిడివి +=label_Req_నిడివి;
         // adjust the destination pointer
-        if(labelReqLength < remainingDestCapacity){
-            currentDest = currentDest + labelReqLength;
-            remainingDestCapacity -= labelReqLength;
-        }else{
+        ఒకవేళ(label_Req_నిడివి < మిగిలిన_Dest_సామర్థ్యం){
+            currentDest = currentDest + label_Req_నిడివి;
+            మిగిలిన_Dest_సామర్థ్యం -= label_Req_నిడివి;
+        }లేకపోతే{
             // should never occur
-            remainingDestCapacity = 0;
+            మిగిలిన_Dest_సామర్థ్యం = 0;
         }
 
-        if(done){
-            break;
+        ఒకవేళ(పూర్తి){
+            ఆపు;
         }
 
         // add the label separator
-        if(remainingDestCapacity > 0){
-            *currentDest++ = FULL_STOP;
-            remainingDestCapacity--;
+        ఒకవేళ(మిగిలిన_Dest_సామర్థ్యం > 0){
+            *currentDest++ = నిండిన_STOP;
+            మిగిలిన_Dest_సామర్థ్యం--;
         }
-        reqLength++;
+        req_నిడివి++;
 
-        labelStart = delimiter;
-        if(remainingLen >0 ){
-            remainingLen = (int32_t)(srcLength - (delimiter - src));
+        label_ప్రారంభం = delimiter;
+        ఒకవేళ(మిగిలిన_Len >0 ){
+            మిగిలిన_Len = (int32_t)(src_నిడివి - (delimiter - src));
         }
 
     }
 
-    if(reqLength > MAX_DOMAIN_NAME_LENGTH){
-        *status = U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR;
+    ఒకవేళ(req_నిడివి > MAX_DOMAIN_NAME_నిడివి){
+        *స్థితి_2 = U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR;
     }
 
     usprep_close(nameprep);
     
-    return u_terminateUChars(dest, destCapacity, reqLength, status);
+    తిరిగి u_terminateUChars(dest, dest_సామర్థ్యం, req_నిడివి, స్థితి_2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_IDNToUnicode(  const char16_t* src, int32_t srcLength,
-                     char16_t* dest, int32_t destCapacity,
+uidna_IDNToUnicode(  స్థిరరాశి char16_t* src, int32_t src_నిడివి,
+                     char16_t* dest, int32_t dest_సామర్థ్యం,
                      int32_t options,
                      UParseError* parseError,
-                     UErrorCode* status){
+                     UError_సంకేతం* స్థితి_2){
     
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి 0;
     }
-    if((src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ((src==శూన్యసూచిక) || (src_నిడివి < -1) || (dest_సామర్థ్యం<0) || (!dest && dest_సామర్థ్యం > 0)){
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    int32_t reqLength = 0;
+    int32_t req_నిడివి = 0;
 
-    UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, status);
+    UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, స్థితి_2);
     
-    if(U_FAILURE(*status)){
-        return 0;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)){
+        తిరిగి 0;
     }
 
     //initialize pointers
     char16_t* delimiter = const_cast<char16_t*>(src);
-    char16_t* labelStart = const_cast<char16_t*>(src);
+    char16_t* label_ప్రారంభం = const_cast<char16_t*>(src);
     char16_t* currentDest = dest;
-    int32_t remainingLen = srcLength;
-    int32_t remainingDestCapacity = destCapacity;
-    int32_t labelLen = 0, labelReqLength = 0;
-    UBool done = false;
+    int32_t మిగిలిన_Len = src_నిడివి;
+    int32_t మిగిలిన_Dest_సామర్థ్యం = dest_సామర్థ్యం;
+    int32_t labelLen = 0, label_Req_నిడివి = 0;
+    UBool పూర్తి = అబద్ధం;
 
-    for(;;){
+    కొరకు(;;){
 
-        labelLen = getNextSeparator(labelStart,remainingLen, &delimiter,&done);
+        labelLen = get_తదుపరి_Separator(label_ప్రారంభం,మిగిలిన_Len, &delimiter,&పూర్తి);
         
         // The RFC states that 
         // <quote>
@@ -815,122 +815,122 @@ uidna_IDNToUnicode(  const char16_t* src, int32_t srcLength,
             break;
         }*/
         
-        labelReqLength = _internal_toUnicode(labelStart, labelLen, 
-                                             currentDest, remainingDestCapacity, 
+        label_Req_నిడివి = అంతర్గత_గమ్యం_Unicode(label_ప్రారంభం, labelLen, 
+                                             currentDest, మిగిలిన_Dest_సామర్థ్యం, 
                                              options, nameprep, 
-                                             parseError, status);
+                                             parseError, స్థితి_2);
 
-        if(*status == U_BUFFER_OVERFLOW_ERROR){
-            *status = U_ZERO_ERROR; // reset error
-            remainingDestCapacity = 0;
+        ఒకవేళ(*స్థితి_2 == U_బఫరు_అధికప్రవాహం_ERROR){
+            *స్థితి_2 = U_ZERO_ERROR; // reset error
+            మిగిలిన_Dest_సామర్థ్యం = 0;
         }
 
-        if(U_FAILURE(*status)){
-            break;
+        ఒకవేళ(U_FAILURE(*స్థితి_2)){
+            ఆపు;
         }
         
-        reqLength +=labelReqLength;
+        req_నిడివి +=label_Req_నిడివి;
         // adjust the destination pointer
-        if(labelReqLength < remainingDestCapacity){
-            currentDest = currentDest + labelReqLength;
-            remainingDestCapacity -= labelReqLength;
-        }else{
+        ఒకవేళ(label_Req_నిడివి < మిగిలిన_Dest_సామర్థ్యం){
+            currentDest = currentDest + label_Req_నిడివి;
+            మిగిలిన_Dest_సామర్థ్యం -= label_Req_నిడివి;
+        }లేకపోతే{
             // should never occur
-            remainingDestCapacity = 0;
+            మిగిలిన_Dest_సామర్థ్యం = 0;
         }
 
-        if(done){
-            break;
+        ఒకవేళ(పూర్తి){
+            ఆపు;
         }
 
         // add the label separator
         // Unlike the ToASCII operation we don't normalize the label separators
-        if(remainingDestCapacity > 0){
-            *currentDest++ = *(labelStart + labelLen);
-            remainingDestCapacity--;
+        ఒకవేళ(మిగిలిన_Dest_సామర్థ్యం > 0){
+            *currentDest++ = *(label_ప్రారంభం + labelLen);
+            మిగిలిన_Dest_సామర్థ్యం--;
         }
-        reqLength++;
+        req_నిడివి++;
 
-        labelStart = delimiter;
-        if(remainingLen >0 ){
-            remainingLen = (int32_t)(srcLength - (delimiter - src));
+        label_ప్రారంభం = delimiter;
+        ఒకవేళ(మిగిలిన_Len >0 ){
+            మిగిలిన_Len = (int32_t)(src_నిడివి - (delimiter - src));
         }
 
     }
 
-    if(reqLength > MAX_DOMAIN_NAME_LENGTH){
-        *status = U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR;
+    ఒకవేళ(req_నిడివి > MAX_DOMAIN_NAME_నిడివి){
+        *స్థితి_2 = U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR;
     }
 
     usprep_close(nameprep);
     
-    return u_terminateUChars(dest, destCapacity, reqLength, status);
+    తిరిగి u_terminateUChars(dest, dest_సామర్థ్యం, req_నిడివి, స్థితి_2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_compare(  const char16_t *s1, int32_t length1,
-                const char16_t *s2, int32_t length2,
+uidna_compare(  స్థిరరాశి char16_t *s1, int32_t length1,
+                స్థిరరాశి char16_t *s2, int32_t length2,
                 int32_t options,
-                UErrorCode* status){
+                UError_సంకేతం* స్థితి_2){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    ఒకవేళ(స్థితి_2 == శూన్యసూచిక || U_FAILURE(*స్థితి_2)){
+        తిరిగి -1;
     }
 
-    char16_t b1Stack[MAX_IDN_BUFFER_SIZE], b2Stack[MAX_IDN_BUFFER_SIZE];
-    char16_t *b1 = b1Stack, *b2 = b2Stack;
-    int32_t b1Len, b2Len, b1Capacity = MAX_IDN_BUFFER_SIZE, b2Capacity = MAX_IDN_BUFFER_SIZE;
-    int32_t result=-1;
+    char16_t b1_దొంతర[MAX_IDN_బఫరు_కొలత], b2_దొంతర[MAX_IDN_బఫరు_కొలత];
+    char16_t *b1 = b1_దొంతర, *b2 = b2_దొంతర;
+    int32_t b1Len, b2Len, b1_సామర్థ్యం = MAX_IDN_బఫరు_కొలత, b2_సామర్థ్యం = MAX_IDN_బఫరు_కొలత;
+    int32_t ఫలితం=-1;
     
     UParseError parseError;
 
-    UErrorCode bufferStatus = U_ZERO_ERROR;
-    b1Len = uidna_IDNToASCII(s1, length1, b1, b1Capacity, options, &parseError, &bufferStatus);
-    if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+    UError_సంకేతం బఫరు_స్థితి = U_ZERO_ERROR;
+    b1Len = uidna_IDNToASCII(s1, length1, b1, b1_సామర్థ్యం, options, &parseError, &బఫరు_స్థితి);
+    ఒకవేళ(బఫరు_స్థితి == U_బఫరు_అధికప్రవాహం_ERROR){
         // redo processing of string
         b1 = (char16_t*) uprv_malloc(b1Len * U_SIZEOF_UCHAR);
-        if(b1==nullptr){
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            goto CLEANUP;
+        ఒకవేళ(b1==శూన్యసూచిక){
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            వెళ్ళు CLEANUP;
         }
 
-        bufferStatus = U_ZERO_ERROR; // reset error
+        బఫరు_స్థితి = U_ZERO_ERROR; // reset error
 
-        b1Len = uidna_IDNToASCII(s1,length1,b1,b1Len, options, &parseError, &bufferStatus);
+        b1Len = uidna_IDNToASCII(s1,length1,b1,b1Len, options, &parseError, &బఫరు_స్థితి);
     }
 
-    b2Len = uidna_IDNToASCII(s2,length2, b2,b2Capacity, options, &parseError, &bufferStatus);
-    if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+    b2Len = uidna_IDNToASCII(s2,length2, b2,b2_సామర్థ్యం, options, &parseError, &బఫరు_స్థితి);
+    ఒకవేళ(బఫరు_స్థితి == U_బఫరు_అధికప్రవాహం_ERROR){
         // redo processing of string
         b2 = (char16_t*) uprv_malloc(b2Len * U_SIZEOF_UCHAR);
-        if(b2==nullptr){
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            goto CLEANUP;
+        ఒకవేళ(b2==శూన్యసూచిక){
+            *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            వెళ్ళు CLEANUP;
         }
 
-        bufferStatus = U_ZERO_ERROR; // reset error
+        బఫరు_స్థితి = U_ZERO_ERROR; // reset error
 
-        b2Len = uidna_IDNToASCII(s2, length2, b2, b2Len, options, &parseError, &bufferStatus);
+        b2Len = uidna_IDNToASCII(s2, length2, b2, b2Len, options, &parseError, &బఫరు_స్థితి);
     }
 
-    if (U_FAILURE(bufferStatus)) {
-        *status = bufferStatus;
-        goto CLEANUP;
+    ఒకవేళ (U_FAILURE(బఫరు_స్థితి)) {
+        *స్థితి_2 = బఫరు_స్థితి;
+        వెళ్ళు CLEANUP;
     }
 
     // when toASCII is applied all label separators are replaced with FULL_STOP
-    result = compareCaseInsensitiveASCII(b1,b1Len,b2,b2Len);
+    ఫలితం = compareCaseInsensitiveASCII(b1,b1Len,b2,b2Len);
 
 CLEANUP:
-    if(b1 != b1Stack){
+    ఒకవేళ(b1 != b1_దొంతర){
         uprv_free(b1);
     }
 
-    if(b2 != b2Stack){
+    ఒకవేళ(b2 != b2_దొంతర){
         uprv_free(b2);
     }
 
-    return result;
+    తిరిగి ఫలితం;
 }
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_IDNA */

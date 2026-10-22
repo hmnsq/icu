@@ -8,60 +8,60 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ఒకవేళ !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/resbund.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "servloc.h"
+#అన్తర్భావ "ustrfmt.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#నిర్వచించు UNDERSCORE_CHAR ((char16_t)0x005f)
+#నిర్వచించు AT_SIGN_CHAR    ((char16_t)64)
+#నిర్వచించు PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
-                                       const UnicodeString* canonicalFallbackID,
-                                       UErrorCode& status)
+Locale_కీలకం*
+Locale_కీలకం::createWithCanonicalFallback(స్థిరరాశి UnicodeString* primaryID,
+                                       స్థిరరాశి UnicodeString* canonicalFallbackID,
+                                       UError_సంకేతం& స్థితి_2)
 {
-    return LocaleKey::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
+    తిరిగి Locale_కీలకం::createWithCanonicalFallback(primaryID, canonicalFallbackID, రకం_ANY, స్థితి_2);
 }
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
-                                       const UnicodeString* canonicalFallbackID,
-                                       int32_t kind,
-                                       UErrorCode& status)
+Locale_కీలకం*
+Locale_కీలకం::createWithCanonicalFallback(స్థిరరాశి UnicodeString* primaryID,
+                                       స్థిరరాశి UnicodeString* canonicalFallbackID,
+                                       int32_t రకం,
+                                       UError_సంకేతం& స్థితి_2)
 {
-    if (primaryID == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    ఒకవేళ (primaryID == శూన్యసూచిక || U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
     UnicodeString canonicalPrimaryID;
     LocaleUtility::canonicalLocaleString(primaryID, canonicalPrimaryID);
-    return new LocaleKey(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
+    తిరిగి కొత్త Locale_కీలకం(*primaryID, canonicalPrimaryID, canonicalFallbackID, రకం);
 }
 
-LocaleKey::LocaleKey(const UnicodeString& primaryID,
-                     const UnicodeString& canonicalPrimaryID,
-                     const UnicodeString* canonicalFallbackID,
-                     int32_t kind)
-  : ICUServiceKey(primaryID)
-  , _kind(kind)
+Locale_కీలకం::Locale_కీలకం(స్థిరరాశి UnicodeString& primaryID,
+                     స్థిరరాశి UnicodeString& canonicalPrimaryID,
+                     స్థిరరాశి UnicodeString* canonicalFallbackID,
+                     int32_t రకం)
+  : ICUService_కీలకం(primaryID)
+  , రకం_2(రకం)
   , _primaryID(canonicalPrimaryID)
   , _fallbackID()
   , _currentID()
 {
-    _fallbackID.setToBogus();
-    if (_primaryID.length() != 0) {
-        if (canonicalFallbackID != nullptr && _primaryID != *canonicalFallbackID) {
+    _fallbackID.సమితి_గమ్యం_Bogus();
+    ఒకవేళ (_primaryID.length() != 0) {
+        ఒకవేళ (canonicalFallbackID != శూన్యసూచిక && _primaryID != *canonicalFallbackID) {
             _fallbackID = *canonicalFallbackID;
         }
     }
@@ -69,120 +69,120 @@ LocaleKey::LocaleKey(const UnicodeString& primaryID,
     _currentID = _primaryID;
 }
 
-LocaleKey::~LocaleKey() {}
+Locale_కీలకం::~Locale_కీలకం() {}
 
 UnicodeString&
-LocaleKey::prefix(UnicodeString& result) const {
-    if (_kind != KIND_ANY) {
-        char16_t buffer[64];
-        uprv_itou(buffer, 64, _kind, 10, 0);
-        UnicodeString temp(buffer);
-        result.append(temp);
+Locale_కీలకం::ఉపసర్గ(UnicodeString& ఫలితం) స్థిరరాశి {
+    ఒకవేళ (రకం_2 != రకం_ANY) {
+        char16_t బఫరు[64];
+        uprv_itou(బఫరు, 64, రకం_2, 10, 0);
+        UnicodeString తాత్కాలిక(బఫరు);
+        ఫలితం.append(తాత్కాలిక);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 int32_t
-LocaleKey::kind() const {
-    return _kind;
+Locale_కీలకం::రకం() స్థిరరాశి {
+    తిరిగి రకం_2;
 }
 
 UnicodeString&
-LocaleKey::canonicalID(UnicodeString& result) const {
-    return result.append(_primaryID);
+Locale_కీలకం::canonicalID(UnicodeString& ఫలితం) స్థిరరాశి {
+    తిరిగి ఫలితం.append(_primaryID);
 }
 
 UnicodeString&
-LocaleKey::currentID(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
-        result.append(_currentID);
+Locale_కీలకం::currentID(UnicodeString& ఫలితం) స్థిరరాశి {
+    ఒకవేళ (!_currentID.isBogus()) {
+        ఫలితం.append(_currentID);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 UnicodeString&
-LocaleKey::currentDescriptor(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
-        prefix(result).append(PREFIX_DELIMITER).append(_currentID);
-    } else {
-        result.setToBogus();
+Locale_కీలకం::currentDescriptor(UnicodeString& ఫలితం) స్థిరరాశి {
+    ఒకవేళ (!_currentID.isBogus()) {
+        ఉపసర్గ(ఫలితం).append(ఉపసర్గ_DELIMITER).append(_currentID);
+    } లేకపోతే {
+        ఫలితం.సమితి_గమ్యం_Bogus();
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 Locale&
-LocaleKey::canonicalLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_primaryID, result);
+Locale_కీలకం::canonicalLocale(Locale& ఫలితం) స్థిరరాశి {
+    తిరిగి LocaleUtility::initLocaleFromName(_primaryID, ఫలితం);
 }
 
 Locale&
-LocaleKey::currentLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_currentID, result);
+Locale_కీలకం::currentLocale(Locale& ఫలితం) స్థిరరాశి {
+    తిరిగి LocaleUtility::initLocaleFromName(_currentID, ఫలితం);
 }
 
 UBool
-LocaleKey::fallback() {
-    if (!_currentID.isBogus()) {
-        int x = _currentID.lastIndexOf(UNDERSCORE_CHAR);
-        if (x != -1) {
+Locale_కీలకం::fallback() {
+    ఒకవేళ (!_currentID.isBogus()) {
+        పూర్ణాంకం x = _currentID.చివరి_సూచీ_యొక్క(UNDERSCORE_CHAR);
+        ఒకవేళ (x != -1) {
             _currentID.remove(x); // truncate current or fallback, whichever we're pointing to
-            return true;
+            తిరిగి నిజం;
         }
 
-        if (!_fallbackID.isBogus()) {
+        ఒకవేళ (!_fallbackID.isBogus()) {
             _currentID = _fallbackID;
-            _fallbackID.setToBogus();
-            return true;
+            _fallbackID.సమితి_గమ్యం_Bogus();
+            తిరిగి నిజం;
         }
 
-        if (_currentID.length() > 0) {
+        ఒకవేళ (_currentID.length() > 0) {
             _currentID.remove(0); // completely truncate
-            return true;
+            తిరిగి నిజం;
         }
 
-        _currentID.setToBogus();
+        _currentID.సమితి_గమ్యం_Bogus();
     }
 
-    return false;
+    తిరిగి అబద్ధం;
 }
 
 UBool
-LocaleKey::isFallbackOf(const UnicodeString& id) const {
-    UnicodeString temp(id);
-    parseSuffix(temp);
-    return temp.indexOf(_primaryID) == 0 &&
-        (temp.length() == _primaryID.length() ||
-        temp.charAt(_primaryID.length()) == UNDERSCORE_CHAR);
+Locale_కీలకం::is_Fallback_యొక్క(స్థిరరాశి UnicodeString& id) స్థిరరాశి {
+    UnicodeString తాత్కాలిక(id);
+    parseSuffix(తాత్కాలిక);
+    తిరిగి తాత్కాలిక.సూచీ_యొక్క(_primaryID) == 0 &&
+        (తాత్కాలిక.length() == _primaryID.length() ||
+        తాత్కాలిక.charAt(_primaryID.length()) == UNDERSCORE_CHAR);
 }
 
-#ifdef SERVICE_DEBUG
+#నిర్వచితమైతే SERVICE_DEBUG
 UnicodeString&
-LocaleKey::debug(UnicodeString& result) const
+Locale_కీలకం::debug(UnicodeString& ఫలితం) స్థిరరాశి
 {
-    ICUServiceKey::debug(result);
-    result.append((UnicodeString)" kind: ");
-    result.append(_kind);
-    result.append((UnicodeString)" primaryID: ");
-    result.append(_primaryID);
-    result.append((UnicodeString)" fallbackID: ");
-    result.append(_fallbackID);
-    result.append((UnicodeString)" currentID: ");
-    result.append(_currentID);
-    return result;
+    ICUService_కీలకం::debug(ఫలితం);
+    ఫలితం.append((UnicodeString)" kind: ");
+    ఫలితం.append(రకం_2);
+    ఫలితం.append((UnicodeString)" primaryID: ");
+    ఫలితం.append(_primaryID);
+    ఫలితం.append((UnicodeString)" fallbackID: ");
+    ఫలితం.append(_fallbackID);
+    ఫలితం.append((UnicodeString)" currentID: ");
+    ఫలితం.append(_currentID);
+    తిరిగి ఫలితం;
 }
 
 UnicodeString&
-LocaleKey::debugClass(UnicodeString& result) const
+Locale_కీలకం::debugClass(UnicodeString& ఫలితం) స్థిరరాశి
 {
-    return result.append((UnicodeString)"LocaleKey ");
+    తిరిగి ఫలితం.append((UnicodeString)"LocaleKey ");
 }
-#endif
+#అయితే_ముగింపు
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKey)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_కీలకం)
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#అయితే_ముగింపు
 
 

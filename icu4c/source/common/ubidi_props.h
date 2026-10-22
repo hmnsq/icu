@@ -18,26 +18,26 @@
 *   Low-level Unicode bidi/shaping properties access.
 */
 
-#ifndef __UBIDI_PROPS_H__
-#define __UBIDI_PROPS_H__
+#నిర్వచితం_కాకపోతే __UBIDI_PROPS_H__
+#నిర్వచించు __UBIDI_PROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "putilimp.h"
-#include "uset_imp.h"
-#include "udataswp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "uset_imp.h"
+#అన్తర్భావ "udataswp.h"
 
 U_CDECL_BEGIN
 
 /* library API -------------------------------------------------------------- */
 
-U_CFUNC void
-ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC శూన్య
+ubidi_కూడు_Property_Starts(స్థిరరాశి USetAdder *sa, UError_సంకేతం *p_Error_సంకేతం);
 
 /* property access functions */
 
 U_CFUNC int32_t
-ubidi_getMaxValue(UProperty which);
+ubidi_get_Max_విలువ(UProperty which);
 
 U_CAPI UCharDirection
 ubidi_getClass(UChar32 c);
@@ -57,8 +57,8 @@ ubidi_isJoinControl(UChar32 c);
 U_CFUNC UJoiningType
 ubidi_getJoiningType(UChar32 c);
 
-U_CFUNC UJoiningGroup
-ubidi_getJoiningGroup(UChar32 c);
+U_CFUNC UJoining_సమూహం
+ubidi_get_Joining_సమూహం(UChar32 c);
 
 U_CFUNC UBidiPairedBracketType
 ubidi_getPairedBracketType(UChar32 c);
@@ -68,64 +68,64 @@ ubidi_getPairedBracket(UChar32 c);
 
 /* file definitions --------------------------------------------------------- */
 
-#define UBIDI_DATA_NAME "ubidi"
-#define UBIDI_DATA_TYPE "icu"
+#నిర్వచించు UBIDI_దత్తాంశం_NAME "ubidi"
+#నిర్వచించు UBIDI_దత్తాంశం_TYPE "icu"
 
 /* format "BiDi" */
-#define UBIDI_FMT_0 0x42
-#define UBIDI_FMT_1 0x69
-#define UBIDI_FMT_2 0x44
-#define UBIDI_FMT_3 0x69
+#నిర్వచించు UBIDI_FMT_0 0x42
+#నిర్వచించు UBIDI_FMT_1 0x69
+#నిర్వచించు UBIDI_FMT_2 0x44
+#నిర్వచించు UBIDI_FMT_3 0x69
 
 /* indexes into indexes[] */
-enum {
-    UBIDI_IX_INDEX_TOP,
-    UBIDI_IX_LENGTH,
-    UBIDI_IX_TRIE_SIZE,
-    UBIDI_IX_MIRROR_LENGTH,
+గణన {
+    UBIDI_IX_సూచీ_శిఖరం,
+    UBIDI_IX_నిడివి,
+    UBIDI_IX_TRIE_కొలత,
+    UBIDI_IX_MIRROR_నిడివి,
 
-    UBIDI_IX_JG_START,
-    UBIDI_IX_JG_LIMIT,
+    UBIDI_IX_JG_ప్రారంభం,
+    UBIDI_IX_JG_హద్దు,
     UBIDI_IX_JG_START2,  /* new in format version 2.2, ICU 54 */
     UBIDI_IX_JG_LIMIT2,
 
-    UBIDI_MAX_VALUES_INDEX=15,
-    UBIDI_IX_TOP=16
+    UBIDI_MAX_విలువలు_సూచీ=15,
+    UBIDI_IX_శిఖరం=16
 };
 
 /* definitions for 16-bit bidi/shaping properties word ---------------------- */
 
-enum {
+గణన {
  /* UBIDI_CLASS_SHIFT=0, */     /* bidi class: 5 bits (4..0) */
-    UBIDI_JT_SHIFT=5,           /* joining type: 3 bits (7..5) */
+    UBIDI_JT_జరుపు=5,           /* joining type: 3 bits (7..5) */
 
-    UBIDI_BPT_SHIFT=8,          /* Bidi_Paired_Bracket_Type(bpt): 2 bits (9..8) */
+    UBIDI_BPT_జరుపు=8,          /* Bidi_Paired_Bracket_Type(bpt): 2 bits (9..8) */
 
-    UBIDI_JOIN_CONTROL_SHIFT=10,
-    UBIDI_BIDI_CONTROL_SHIFT=11,
+    UBIDI_JOIN_CONTROL_జరుపు=10,
+    UBIDI_BIDI_CONTROL_జరుపు=11,
 
-    UBIDI_IS_MIRRORED_SHIFT=12,         /* 'is mirrored' */
-    UBIDI_MIRROR_DELTA_SHIFT=13,        /* bidi mirroring delta: 3 bits (15..13) */
+    UBIDI_IS_MIRRORED_జరుపు=12,         /* 'is mirrored' */
+    UBIDI_MIRROR_DELTA_జరుపు=13,        /* bidi mirroring delta: 3 bits (15..13) */
 
-    UBIDI_MAX_JG_SHIFT=16               /* max JG value in indexes[UBIDI_MAX_VALUES_INDEX] bits 23..16 */
+    UBIDI_MAX_JG_జరుపు=16               /* max JG value in indexes[UBIDI_MAX_VALUES_INDEX] bits 23..16 */
 };
 
-#define UBIDI_CLASS_MASK        0x0000001f
-#define UBIDI_JT_MASK           0x000000e0
-#define UBIDI_BPT_MASK          0x00000300
+#నిర్వచించు UBIDI_CLASS_ముసుగు        0x0000001f
+#నిర్వచించు UBIDI_JT_ముసుగు           0x000000e0
+#నిర్వచించు UBIDI_BPT_ముసుగు          0x00000300
 
-#define UBIDI_MAX_JG_MASK       0x00ff0000
+#నిర్వచించు UBIDI_MAX_JG_ముసుగు       0x00ff0000
 
-#define UBIDI_GET_CLASS(props) ((props)&UBIDI_CLASS_MASK)
-#define UBIDI_GET_FLAG(props, shift) (((props)>>(shift))&1)
+#నిర్వచించు UBIDI_GET_CLASS(props) ((props)&UBIDI_CLASS_ముసుగు)
+#నిర్వచించు UBIDI_GET_FLAG(props, జరుపు) (((props)>>(జరుపు))&1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
-#   define UBIDI_GET_MIRROR_DELTA(props) ((int16_t)(props)>>UBIDI_MIRROR_DELTA_SHIFT)
-#else
-#   define UBIDI_GET_MIRROR_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UBIDI_MIRROR_DELTA_SHIFT)|0xe000) : ((props)>>UBIDI_MIRROR_DELTA_SHIFT))
-#endif
+#ఒకవేళ U_SIGNED_కుడి_జరుపు_IS_ARITHMETIC
+#   define UBIDI_GET_MIRROR_DELTA(props) ((int16_t)(props)>>UBIDI_MIRROR_DELTA_జరుపు)
+#లేకపోతే
+#   define UBIDI_GET_MIRROR_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UBIDI_MIRROR_DELTA_జరుపు)|0xe000) : ((props)>>UBIDI_MIRROR_DELTA_జరుపు))
+#అయితే_ముగింపు
 
-enum {
+గణన {
     UBIDI_ESC_MIRROR_DELTA=-4,
     UBIDI_MIN_MIRROR_DELTA=-3,
     UBIDI_MAX_MIRROR_DELTA=3
@@ -133,16 +133,16 @@ enum {
 
 /* definitions for 32-bit mirror table entry -------------------------------- */
 
-enum {
+గణన {
     /* the source Unicode code point takes 21 bits (20..0) */
-    UBIDI_MIRROR_INDEX_SHIFT=21,
-    UBIDI_MAX_MIRROR_INDEX=0x7ff
+    UBIDI_MIRROR_సూచీ_జరుపు=21,
+    UBIDI_MAX_MIRROR_సూచీ=0x7ff
 };
 
-#define UBIDI_GET_MIRROR_CODE_POINT(m) (UChar32)((m)&0x1fffff)
+#నిర్వచించు UBIDI_GET_MIRROR_సంకేతం_బిందువు(m) (UChar32)((m)&0x1fffff)
 
-#define UBIDI_GET_MIRROR_INDEX(m) ((m)>>UBIDI_MIRROR_INDEX_SHIFT)
+#నిర్వచించు UBIDI_GET_MIRROR_సూచీ(m) ((m)>>UBIDI_MIRROR_సూచీ_జరుపు)
 
-U_CDECL_END
+U_CDECL_చివర
 
-#endif
+#అయితే_ముగింపు

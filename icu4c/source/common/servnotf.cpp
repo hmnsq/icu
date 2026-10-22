@@ -7,95 +7,95 @@
  *******************************************************************************
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ఒకవేళ !UCONFIG_NO_SERVICE
 
-#include "servnotf.h"
-#ifdef NOTIFIER_DEBUG
-#include <stdio.h>
-#endif
+#అన్తర్భావ "servnotf.h"
+#నిర్వచితమైతే NOTIFIER_DEBUG
+#అన్తర్భావ <stdio.h>
+#అయితే_ముగింపు
 
 U_NAMESPACE_BEGIN
 
 EventListener::~EventListener() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(EventListener)
 
-static UMutex notifyLock;
+స్థిర UMutex notify_తాళం;
 
 ICUNotifier::ICUNotifier() 
-: listeners(nullptr) 
+: listeners(శూన్యసూచిక) 
 {
 }
 
 ICUNotifier::~ICUNotifier() {
     {
-        Mutex lmx(&notifyLock);
-        delete listeners;
-        listeners = nullptr;
+        Mutex lmx(&notify_తాళం);
+        తొలగించు listeners;
+        listeners = శూన్యసూచిక;
     }
 }
 
 
-void 
-ICUNotifier::addListener(const EventListener* l, UErrorCode& status) 
+శూన్య 
+ICUNotifier::కూడు_Listener(స్థిరరాశి EventListener* l, UError_సంకేతం& స్థితి_2) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        ఒకవేళ (l == శూన్యసూచిక) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
 
-        if (acceptsListener(*l)) {
-            Mutex lmx(&notifyLock);
-            if (listeners == nullptr) {
-                LocalPointer<UVector> lpListeners(new UVector(5, status), status);
-                if (U_FAILURE(status)) {
-                    return;
+        ఒకవేళ (స్వీకరించు_Listener(*l)) {
+            Mutex lmx(&notify_తాళం);
+            ఒకవేళ (listeners == శూన్యసూచిక) {
+                Local_సూచిక<UVector> lpListeners(కొత్త UVector(5, స్థితి_2), స్థితి_2);
+                ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                    తిరిగి;
                 }
                 listeners = lpListeners.orphan();
-            } else {
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
-                        return;
+            } లేకపోతే {
+                కొరకు (పూర్ణాంకం i = 0, e = listeners->size(); i < e; ++i) {
+                    స్థిరరాశి EventListener* el = static_cast<స్థిరరాశి EventListener*>(listeners->elementAt(i));
+                    ఒకవేళ (l == el) {
+                        తిరిగి;
                     }
                 }
             }
 
-            listeners->addElement((void*)l, status); // cast away const
+            listeners->కూడు_Element((శూన్య*)l, స్థితి_2); // cast away const
         }
-#ifdef NOTIFIER_DEBUG
-        else {
+#నిర్వచితమైతే NOTIFIER_DEBUG
+        లేకపోతే {
             fprintf(stderr, "Listener invalid for this notifier.");
-            exit(1);
+            నిష్క్రమించు(1);
         }
-#endif
+#అయితే_ముగింపు
     }
 }
 
-void 
-ICUNotifier::removeListener(const EventListener *l, UErrorCode& status) 
+శూన్య 
+ICUNotifier::removeListener(స్థిరరాశి EventListener *l, UError_సంకేతం& స్థితి_2) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        ఒకవేళ (l == శూన్యసూచిక) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
 
         {
-            Mutex lmx(&notifyLock);
-            if (listeners != nullptr) {
+            Mutex lmx(&notify_తాళం);
+            ఒకవేళ (listeners != శూన్యసూచిక) {
                 // identity equality check
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
+                కొరకు (పూర్ణాంకం i = 0, e = listeners->size(); i < e; ++i) {
+                    స్థిరరాశి EventListener* el = static_cast<స్థిరరాశి EventListener*>(listeners->elementAt(i));
+                    ఒకవేళ (l == el) {
                         listeners->removeElementAt(i);
-                        if (listeners->size() == 0) {
-                            delete listeners;
-                            listeners = nullptr;
+                        ఒకవేళ (listeners->size() == 0) {
+                            తొలగించు listeners;
+                            listeners = శూన్యసూచిక;
                         }
-                        return;
+                        తిరిగి;
                     }
                 }
             }
@@ -103,20 +103,20 @@ ICUNotifier::removeListener(const EventListener *l, UErrorCode& status)
     }
 }
 
-void 
-ICUNotifier::notifyChanged() 
+శూన్య 
+ICUNotifier::notify_మారింది() 
 {
-    Mutex lmx(&notifyLock);
-    if (listeners != nullptr) {
-        for (int i = 0, e = listeners->size(); i < e; ++i) {
+    Mutex lmx(&notify_తాళం);
+    ఒకవేళ (listeners != శూన్యసూచిక) {
+        కొరకు (పూర్ణాంకం i = 0, e = listeners->size(); i < e; ++i) {
             EventListener* el = static_cast<EventListener*>(listeners->elementAt(i));
             notifyListener(*el);
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* UCONFIG_NO_SERVICE */
-#endif
+#అయితే_ముగింపు
 

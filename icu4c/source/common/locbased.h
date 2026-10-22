@@ -10,11 +10,11 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#ifndef LOCBASED_H
-#define LOCBASED_H
+#నిర్వచితం_కాకపోతే LOCBASED_H
+#నిర్వచించు LOCBASED_H
 
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,9 +25,9 @@ U_NAMESPACE_BEGIN
  * services framework.
  * @since ICU 2.8
  */
-class U_COMMON_API LocaleBased : public UMemory {
+class U_COMMON_API LocaleBased : బహిరంగ UMemory {
 
- public:
+ బహిరంగ:
 
     /**
      * Return locale meta-data for the service object wrapped by this
@@ -39,11 +39,11 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale
      */
-    static const Locale& getLocale(
-        const Locale& valid U_LIFETIME_BOUND,
-        const Locale& actual U_LIFETIME_BOUND,
-        ULocDataLocaleType type,
-        UErrorCode& status);
+    స్థిర స్థిరరాశి Locale& getLocale(
+        స్థిరరాశి Locale& valid U_LIFETIME_BOUND,
+        స్థిరరాశి Locale& actual U_LIFETIME_BOUND,
+        ULoc_దత్తాంశం_Locale_Type type,
+        UError_సంకేతం& స్థితి_2);
 
     /**
      * Return the locale ID for the service object wrapped by this
@@ -55,12 +55,12 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale ID
      */
-    static const char* getLocaleID(
-        const Locale& valid, const Locale& actual,
-        ULocDataLocaleType type, UErrorCode& status);
+    స్థిర స్థిరరాశి అక్షరం* getLocaleID(
+        స్థిరరాశి Locale& valid, స్థిరరాశి Locale& actual,
+        ULoc_దత్తాంశం_Locale_Type type, UError_సంకేతం& స్థితి_2);
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు

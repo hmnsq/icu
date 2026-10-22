@@ -3,21 +3,21 @@
 
 // file: rbbi_cache.cpp
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/ubrk.h"
-#include "unicode/rbbi.h"
+#అన్తర్భావ "unicode/ubrk.h"
+#అన్తర్భావ "unicode/rbbi.h"
 
-#include "rbbi_cache.h"
+#అన్తర్భావ "rbbi_cache.h"
 
-#include "brkeng.h"
-#include "cmemory.h"
-#include "rbbidata.h"
-#include "rbbirb.h"
-#include "uassert.h"
-#include "uvectr32.h"
+#అన్తర్భావ "brkeng.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "rbbidata.h"
+#అన్తర్భావ "rbbirb.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,160 +25,160 @@ U_NAMESPACE_BEGIN
  * DictionaryCache implementation
  */
 
-RuleBasedBreakIterator::DictionaryCache::DictionaryCache(RuleBasedBreakIterator *bi, UErrorCode &status) :
-        fBI(bi), fBreaks(status), fPositionInCache(-1),
-        fStart(0), fLimit(0), fFirstRuleStatusIndex(0), fOtherRuleStatusIndex(0) {
+నియమం_Based_Break_Iterator::DictionaryCache::DictionaryCache(నియమం_Based_Break_Iterator *bi, UError_సంకేతం &స్థితి_2) :
+        fBI(bi), fBreaks(స్థితి_2), f_Position_లోపల_Cache(-1),
+        f_ప్రారంభం(0), f_హద్దు(0), f_మొదటి_నియమం_స్థితి_సూచీ(0), f_Other_నియమం_స్థితి_సూచీ(0) {
 }
 
-RuleBasedBreakIterator::DictionaryCache::~DictionaryCache() {
+నియమం_Based_Break_Iterator::DictionaryCache::~DictionaryCache() {
 }
 
-void RuleBasedBreakIterator::DictionaryCache::reset() {
-    fPositionInCache = -1;
-    fStart = 0;
-    fLimit = 0;
-    fFirstRuleStatusIndex = 0;
-    fOtherRuleStatusIndex = 0;
+శూన్య నియమం_Based_Break_Iterator::DictionaryCache::reset() {
+    f_Position_లోపల_Cache = -1;
+    f_ప్రారంభం = 0;
+    f_హద్దు = 0;
+    f_మొదటి_నియమం_స్థితి_సూచీ = 0;
+    f_Other_నియమం_స్థితి_సూచీ = 0;
     fBreaks.removeAllElements();
-    int32_t maxStatus = 0;
-    for (int32_t i = 0; i < fBI->fData->fStatusMaxIdx; ++i) {
-        maxStatus = std::max(maxStatus, fBI->fData->fRuleStatusTable[i]);
+    int32_t max_స్థితి = 0;
+    కొరకు (int32_t i = 0; i < fBI->f_దత్తాంశం->f_స్థితి_Max_Idx; ++i) {
+        max_స్థితి = std::max(max_స్థితి, fBI->f_దత్తాంశం->f_నియమం_స్థితి_పట్టిక[i]);
     }
-    isWordLike = maxStatus > 100;
+    is_మాట_Like = max_స్థితి > 100;
 }
 
-UBool RuleBasedBreakIterator::DictionaryCache::following(int32_t fromPos, int32_t *result, int32_t *statusIndex) {
-    if (fromPos >= fLimit || fromPos < fStart) {
-        fPositionInCache = -1;
-        return false;
+UBool నియమం_Based_Break_Iterator::DictionaryCache::following(int32_t fromPos, int32_t *ఫలితం, int32_t *స్థితి_సూచీ) {
+    ఒకవేళ (fromPos >= f_హద్దు || fromPos < f_ప్రారంభం) {
+        f_Position_లోపల_Cache = -1;
+        తిరిగి అబద్ధం;
     }
 
     // Sequential iteration, move from previous boundary to the following
 
     int32_t r = 0;
-    if (fPositionInCache >= 0 && fPositionInCache < fBreaks.size() && fBreaks.elementAti(fPositionInCache) == fromPos) {
-        ++fPositionInCache;
-        if (fPositionInCache >= fBreaks.size()) {
-            fPositionInCache = -1;
-            return false;
+    ఒకవేళ (f_Position_లోపల_Cache >= 0 && f_Position_లోపల_Cache < fBreaks.size() && fBreaks.elementAti(f_Position_లోపల_Cache) == fromPos) {
+        ++f_Position_లోపల_Cache;
+        ఒకవేళ (f_Position_లోపల_Cache >= fBreaks.size()) {
+            f_Position_లోపల_Cache = -1;
+            తిరిగి అబద్ధం;
         }
-        r = fBreaks.elementAti(fPositionInCache);
+        r = fBreaks.elementAti(f_Position_లోపల_Cache);
         U_ASSERT(r > fromPos);
-        *result = r;
-        *statusIndex = isWordLike || r == fLimit ? fOtherRuleStatusIndex : 0;
-        return true;
+        *ఫలితం = r;
+        *స్థితి_సూచీ = is_మాట_Like || r == f_హద్దు ? f_Other_నియమం_స్థితి_సూచీ : 0;
+        తిరిగి నిజం;
     }
 
     // Random indexing. Linear search for the boundary following the given position.
 
-    for (fPositionInCache = 0; fPositionInCache < fBreaks.size(); ++fPositionInCache) {
-        r= fBreaks.elementAti(fPositionInCache);
-        if (r > fromPos) {
-            *result = r;
-            *statusIndex = isWordLike || r == fLimit ? fOtherRuleStatusIndex : 0;
-            return true;
+    కొరకు (f_Position_లోపల_Cache = 0; f_Position_లోపల_Cache < fBreaks.size(); ++f_Position_లోపల_Cache) {
+        r= fBreaks.elementAti(f_Position_లోపల_Cache);
+        ఒకవేళ (r > fromPos) {
+            *ఫలితం = r;
+            *స్థితి_సూచీ = is_మాట_Like || r == f_హద్దు ? f_Other_నియమం_స్థితి_సూచీ : 0;
+            తిరిగి నిజం;
         }
     }
     UPRV_UNREACHABLE_EXIT;
 }
 
 
-UBool RuleBasedBreakIterator::DictionaryCache::preceding(int32_t fromPos, int32_t *result, int32_t *statusIndex) {
-    if (fromPos <= fStart || fromPos > fLimit) {
-        fPositionInCache = -1;
-        return false;
+UBool నియమం_Based_Break_Iterator::DictionaryCache::preceding(int32_t fromPos, int32_t *ఫలితం, int32_t *స్థితి_సూచీ) {
+    ఒకవేళ (fromPos <= f_ప్రారంభం || fromPos > f_హద్దు) {
+        f_Position_లోపల_Cache = -1;
+        తిరిగి అబద్ధం;
     }
 
-    if (fromPos == fLimit) {
-        fPositionInCache = fBreaks.size() - 1;
-        if (fPositionInCache >= 0) {
-            U_ASSERT(fBreaks.elementAti(fPositionInCache) == fromPos);
+    ఒకవేళ (fromPos == f_హద్దు) {
+        f_Position_లోపల_Cache = fBreaks.size() - 1;
+        ఒకవేళ (f_Position_లోపల_Cache >= 0) {
+            U_ASSERT(fBreaks.elementAti(f_Position_లోపల_Cache) == fromPos);
         }
     }
 
     int32_t r;
-    if (fPositionInCache > 0 && fPositionInCache < fBreaks.size() && fBreaks.elementAti(fPositionInCache) == fromPos) {
-        --fPositionInCache;
-        r = fBreaks.elementAti(fPositionInCache);
+    ఒకవేళ (f_Position_లోపల_Cache > 0 && f_Position_లోపల_Cache < fBreaks.size() && fBreaks.elementAti(f_Position_లోపల_Cache) == fromPos) {
+        --f_Position_లోపల_Cache;
+        r = fBreaks.elementAti(f_Position_లోపల_Cache);
         U_ASSERT(r < fromPos);
-        *result = r;
-        *statusIndex = (r == fStart) ? fFirstRuleStatusIndex
-                       : isWordLike  ? fOtherRuleStatusIndex
+        *ఫలితం = r;
+        *స్థితి_సూచీ = (r == f_ప్రారంభం) ? f_మొదటి_నియమం_స్థితి_సూచీ
+                       : is_మాట_Like  ? f_Other_నియమం_స్థితి_సూచీ
                                      : 0;
-        return true;
+        తిరిగి నిజం;
     }
 
-    if (fPositionInCache == 0) {
-        fPositionInCache = -1;
-        return false;
+    ఒకవేళ (f_Position_లోపల_Cache == 0) {
+        f_Position_లోపల_Cache = -1;
+        తిరిగి అబద్ధం;
     }
 
-    for (fPositionInCache = fBreaks.size()-1; fPositionInCache >= 0; --fPositionInCache) {
-        r = fBreaks.elementAti(fPositionInCache);
-        if (r < fromPos) {
-            *result = r;
-            *statusIndex = (r == fStart) ? fFirstRuleStatusIndex
-                           : isWordLike  ? fOtherRuleStatusIndex
+    కొరకు (f_Position_లోపల_Cache = fBreaks.size()-1; f_Position_లోపల_Cache >= 0; --f_Position_లోపల_Cache) {
+        r = fBreaks.elementAti(f_Position_లోపల_Cache);
+        ఒకవేళ (r < fromPos) {
+            *ఫలితం = r;
+            *స్థితి_సూచీ = (r == f_ప్రారంభం) ? f_మొదటి_నియమం_స్థితి_సూచీ
+                           : is_మాట_Like  ? f_Other_నియమం_స్థితి_సూచీ
                                          : 0;
-            return true;
+            తిరిగి నిజం;
         }
     }
     UPRV_UNREACHABLE_EXIT;
 }
 
-void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPos, int32_t endPos,
-                                       int32_t firstRuleStatus, int32_t otherRuleStatus) {
-    if ((endPos - startPos) <= 1) {
-        return;
+శూన్య నియమం_Based_Break_Iterator::DictionaryCache::populateDictionary(int32_t ప్రారంభం_Pos, int32_t చివర_Pos,
+                                       int32_t మొదటి_నియమం_స్థితి, int32_t other_నియమం_స్థితి) {
+    ఒకవేళ ((చివర_Pos - ప్రారంభం_Pos) <= 1) {
+        తిరిగి;
     }
 
     reset();
-    fFirstRuleStatusIndex = firstRuleStatus;
-    fOtherRuleStatusIndex = otherRuleStatus;
+    f_మొదటి_నియమం_స్థితి_సూచీ = మొదటి_నియమం_స్థితి;
+    f_Other_నియమం_స్థితి_సూచీ = other_నియమం_స్థితి;
 
-    int32_t rangeStart = startPos;
-    int32_t rangeEnd = endPos;
+    int32_t range_ప్రారంభం = ప్రారంభం_Pos;
+    int32_t range_చివర = చివర_Pos;
 
     uint16_t    category;
     int32_t     current;
-    UErrorCode  status = U_ZERO_ERROR;
-    int32_t     foundBreakCount = 0;
-    UText      *text = &fBI->fText;
+    UError_సంకేతం  స్థితి_2 = U_ZERO_ERROR;
+    int32_t     దొరికింది_Break_లెక్క = 0;
+    UText      *పాఠ్యం = &fBI->f_పాఠ్యం;
 
     // Loop through the text, looking for ranges of dictionary characters.
     // For each span, find the appropriate break engine, and ask it to find
     // any breaks within the span.
 
-    utext_setNativeIndex(text, rangeStart);
-    UChar32     c = utext_current32(text);
-    category = ucptrie_get(fBI->fData->fTrie, c);
-    uint32_t dictStart = fBI->fData->fForwardTable->fDictCategoriesStart;
+    utext_సమితి_Native_సూచీ(పాఠ్యం, range_ప్రారంభం);
+    UChar32     c = utext_current32(పాఠ్యం);
+    category = ucptrie_get(fBI->f_దత్తాంశం->fTrie, c);
+    uint32_t dict_ప్రారంభం = fBI->f_దత్తాంశం->f_Forward_పట్టిక->f_Dict_Categories_ప్రారంభం;
 
-    while(U_SUCCESS(status)) {
-        while ((current = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(text))) < rangeEnd
-                && (category < dictStart)) {
-            utext_next32(text);           // TODO: cleaner loop structure.
-            c = utext_current32(text);
-            category = ucptrie_get(fBI->fData->fTrie, c);
+    అయితే(U_SUCCESS(స్థితి_2)) {
+        అయితే ((current = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(పాఠ్యం))) < range_చివర
+                && (category < dict_ప్రారంభం)) {
+            utext_next32(పాఠ్యం);           // TODO: cleaner loop structure.
+            c = utext_current32(పాఠ్యం);
+            category = ucptrie_get(fBI->f_దత్తాంశం->fTrie, c);
         }
-        if (current >= rangeEnd) {
-            break;
+        ఒకవేళ (current >= range_చివర) {
+            ఆపు;
         }
 
         // We now have a dictionary character. Get the appropriate language object
         // to deal with it.
-        const LanguageBreakEngine *lbe = fBI->getLanguageBreakEngine(
-            c, fBI->getLocaleID(ULOC_REQUESTED_LOCALE, status));
+        స్థిరరాశి LanguageBreakEngine *lbe = fBI->getLanguageBreakEngine(
+            c, fBI->getLocaleID(ULOC_REQUESTED_LOCALE, స్థితి_2));
 
         // Ask the language object if there are any breaks. It will add them to the cache and
         // leave the text pointer on the other side of its range, ready to search for the next one.
-        if (lbe != nullptr) {
-            foundBreakCount += lbe->findBreaks(text, current, rangeEnd, fBreaks, fBI->fIsPhraseBreaking, status);
+        ఒకవేళ (lbe != శూన్యసూచిక) {
+            దొరికింది_Break_లెక్క += lbe->కనుగొను_Breaks(పాఠ్యం, current, range_చివర, fBreaks, fBI->fIsPhraseBreaking, స్థితి_2);
         }
 
         // Reload the loop variables for the next go-round
-        c = utext_current32(text);
-        category = ucptrie_get(fBI->fData->fTrie, c);
+        c = utext_current32(పాఠ్యం);
+        category = ucptrie_get(fBI->f_దత్తాంశం->fTrie, c);
     }
 
     // If we found breaks, ensure that the first and last entries are
@@ -186,23 +186,23 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
     // cache iteration position to the first entry.
 
     // printf("foundBreakCount = %d\n", foundBreakCount);
-    if (foundBreakCount > 0) {
-        U_ASSERT(foundBreakCount == fBreaks.size());
-        if (startPos < fBreaks.elementAti(0)) {
+    ఒకవేళ (దొరికింది_Break_లెక్క > 0) {
+        U_ASSERT(దొరికింది_Break_లెక్క == fBreaks.size());
+        ఒకవేళ (ప్రారంభం_Pos < fBreaks.elementAti(0)) {
             // The dictionary did not place a boundary at the start of the segment of text.
             // Add one now. This should not commonly happen, but it would be easy for interactions
             // of the rules for dictionary segments and the break engine implementations to
             // inadvertently cause it. Cover it here, just in case.
-            fBreaks.insertElementAt(startPos, 0, status);
+            fBreaks.చొప్పించు_Element_At(ప్రారంభం_Pos, 0, స్థితి_2);
         }
-        if (endPos > fBreaks.peeki()) {
-            fBreaks.push(endPos, status);
+        ఒకవేళ (చివర_Pos > fBreaks.peeki()) {
+            fBreaks.push(చివర_Pos, స్థితి_2);
         }
-        fPositionInCache = 0;
+        f_Position_లోపల_Cache = 0;
         // Note: Dictionary matching may extend beyond the original limit.
-        fStart = fBreaks.elementAti(0);
-        fLimit = fBreaks.peeki();
-    } else {
+        f_ప్రారంభం = fBreaks.elementAti(0);
+        f_హద్దు = fBreaks.peeki();
+    } లేకపోతే {
         // there were no language-based breaks, even though the segment contained
         // dictionary characters. Subsequent attempts to fetch boundaries from the dictionary cache
         // for this range will fail, and the calling code will fall back to the rule based boundaries.
@@ -214,62 +214,62 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
  *   BreakCache implementation
  */
 
-RuleBasedBreakIterator::BreakCache::BreakCache(RuleBasedBreakIterator *bi, UErrorCode &status) :
-        fBI(bi), fSideBuffer(status) {
+నియమం_Based_Break_Iterator::BreakCache::BreakCache(నియమం_Based_Break_Iterator *bi, UError_సంకేతం &స్థితి_2) :
+        fBI(bi), f_Side_బఫరు(స్థితి_2) {
     reset();
 }
 
 
-RuleBasedBreakIterator::BreakCache::~BreakCache() {
+నియమం_Based_Break_Iterator::BreakCache::~BreakCache() {
 }
 
 
-void RuleBasedBreakIterator::BreakCache::reset(int32_t pos, int32_t ruleStatus) {
-    fStartBufIdx = 0;
-    fEndBufIdx = 0;
-    fTextIdx = pos;
+శూన్య నియమం_Based_Break_Iterator::BreakCache::reset(int32_t pos, int32_t నియమం_స్థితి) {
+    f_ప్రారంభం_Buf_Idx = 0;
+    f_చివర_Buf_Idx = 0;
+    f_పాఠ్యం_Idx = pos;
     fBufIdx = 0;
     fBoundaries[0] = pos;
-    fStatuses[0] = static_cast<uint16_t>(ruleStatus);
+    fStatuses[0] = static_cast<uint16_t>(నియమం_స్థితి);
 }
 
 
-int32_t  RuleBasedBreakIterator::BreakCache::current() {
-    fBI->fPosition = fTextIdx;
-    fBI->fRuleStatusIndex = fStatuses[fBufIdx];
-    fBI->fDone = false;
-    return fTextIdx;
+int32_t  నియమం_Based_Break_Iterator::BreakCache::current() {
+    fBI->fPosition = f_పాఠ్యం_Idx;
+    fBI->f_నియమం_స్థితి_సూచీ = fStatuses[fBufIdx];
+    fBI->f_పూర్తి = అబద్ధం;
+    తిరిగి f_పాఠ్యం_Idx;
 }
 
 
-void RuleBasedBreakIterator::BreakCache::following(int32_t startPos, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య నియమం_Based_Break_Iterator::BreakCache::following(int32_t ప్రారంభం_Pos, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    if (startPos == fTextIdx || seek(startPos) || populateNear(startPos, status)) {
+    ఒకవేళ (ప్రారంభం_Pos == f_పాఠ్యం_Idx || seek(ప్రారంభం_Pos) || populateNear(ప్రారంభం_Pos, స్థితి_2)) {
         // startPos is in the cache. Do a next() from that position.
         // TODO: an awkward set of interactions with bi->fDone
         //       seek() does not clear it; it can't because of interactions with populateNear().
         //       next() does not clear it in the fast-path case, where everything matters. Maybe it should.
         //       So clear it here, for the case where seek() succeeded on an iterator that had previously run off the end.
-        fBI->fDone = false;
+        fBI->f_పూర్తి = అబద్ధం;
         next();
     }
 }
 
 
-void RuleBasedBreakIterator::BreakCache::preceding(int32_t startPos, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య నియమం_Based_Break_Iterator::BreakCache::preceding(int32_t ప్రారంభం_Pos, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    if (startPos == fTextIdx || seek(startPos) || populateNear(startPos, status)) {
-        if (startPos == fTextIdx) {
-            previous(status);
-        } else {
+    ఒకవేళ (ప్రారంభం_Pos == f_పాఠ్యం_Idx || seek(ప్రారంభం_Pos) || populateNear(ప్రారంభం_Pos, స్థితి_2)) {
+        ఒకవేళ (ప్రారంభం_Pos == f_పాఠ్యం_Idx) {
+            మునుపటి(స్థితి_2);
+        } లేకపోతే {
             // seek() leaves the BreakCache positioned at the preceding boundary
             //        if the requested position is between two boundaries.
             // current() pushes the BreakCache position out to the BreakIterator itself.
-            U_ASSERT(startPos > fTextIdx);
+            U_ASSERT(ప్రారంభం_Pos > f_పాఠ్యం_Idx);
             current();
         }
     }
@@ -280,72 +280,72 @@ void RuleBasedBreakIterator::BreakCache::preceding(int32_t startPos, UErrorCode 
  * Out-of-line code for BreakCache::next().
  * Cache does not already contain the boundary
  */
-void RuleBasedBreakIterator::BreakCache::nextOL() {
-    fBI->fDone = !populateFollowing();
-    fBI->fPosition = fTextIdx;
-    fBI->fRuleStatusIndex = fStatuses[fBufIdx];
+శూన్య నియమం_Based_Break_Iterator::BreakCache::తదుపరి_OL() {
+    fBI->f_పూర్తి = !populateFollowing();
+    fBI->fPosition = f_పాఠ్యం_Idx;
+    fBI->f_నియమం_స్థితి_సూచీ = fStatuses[fBufIdx];
 }
 
 
-void RuleBasedBreakIterator::BreakCache::previous(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య నియమం_Based_Break_Iterator::BreakCache::మునుపటి(UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
     int32_t initialBufIdx = fBufIdx;
-    if (fBufIdx == fStartBufIdx) {
+    ఒకవేళ (fBufIdx == f_ప్రారంభం_Buf_Idx) {
         // At start of cache. Prepend to it.
-        populatePreceding(status);
-    } else {
+        populatePreceding(స్థితి_2);
+    } లేకపోతే {
         // Cache already holds the next boundary
-        fBufIdx = modChunkSize(fBufIdx - 1);
-        fTextIdx = fBoundaries[fBufIdx];
+        fBufIdx = mod_Chunk_కొలత(fBufIdx - 1);
+        f_పాఠ్యం_Idx = fBoundaries[fBufIdx];
     }
-    fBI->fDone = (fBufIdx == initialBufIdx);
-    fBI->fPosition = fTextIdx;
-    fBI->fRuleStatusIndex = fStatuses[fBufIdx];
+    fBI->f_పూర్తి = (fBufIdx == initialBufIdx);
+    fBI->fPosition = f_పాఠ్యం_Idx;
+    fBI->f_నియమం_స్థితి_సూచీ = fStatuses[fBufIdx];
 }
 
 
-UBool RuleBasedBreakIterator::BreakCache::seek(int32_t pos) {
-    if (pos < fBoundaries[fStartBufIdx] || pos > fBoundaries[fEndBufIdx]) {
-        return false;
+UBool నియమం_Based_Break_Iterator::BreakCache::seek(int32_t pos) {
+    ఒకవేళ (pos < fBoundaries[f_ప్రారంభం_Buf_Idx] || pos > fBoundaries[f_చివర_Buf_Idx]) {
+        తిరిగి అబద్ధం;
     }
-    if (pos == fBoundaries[fStartBufIdx]) {
+    ఒకవేళ (pos == fBoundaries[f_ప్రారంభం_Buf_Idx]) {
         // Common case: seek(0), from BreakIterator::first()
-        fBufIdx = fStartBufIdx;
-        fTextIdx = fBoundaries[fBufIdx];
-        return true;
+        fBufIdx = f_ప్రారంభం_Buf_Idx;
+        f_పాఠ్యం_Idx = fBoundaries[fBufIdx];
+        తిరిగి నిజం;
     }
-    if (pos == fBoundaries[fEndBufIdx]) {
-        fBufIdx = fEndBufIdx;
-        fTextIdx = fBoundaries[fBufIdx];
-        return true;
+    ఒకవేళ (pos == fBoundaries[f_చివర_Buf_Idx]) {
+        fBufIdx = f_చివర_Buf_Idx;
+        f_పాఠ్యం_Idx = fBoundaries[fBufIdx];
+        తిరిగి నిజం;
     }
 
-    int32_t min = fStartBufIdx;
-    int32_t max = fEndBufIdx;
-    while (min != max) {
-        int32_t probe = (min + max + (min>max ? CACHE_SIZE : 0)) / 2;
-        probe = modChunkSize(probe);
-        if (fBoundaries[probe] > pos) {
+    int32_t min = f_ప్రారంభం_Buf_Idx;
+    int32_t max = f_చివర_Buf_Idx;
+    అయితే (min != max) {
+        int32_t probe = (min + max + (min>max ? CACHE_కొలత : 0)) / 2;
+        probe = mod_Chunk_కొలత(probe);
+        ఒకవేళ (fBoundaries[probe] > pos) {
             max = probe;
-        } else {
-            min = modChunkSize(probe + 1);
+        } లేకపోతే {
+            min = mod_Chunk_కొలత(probe + 1);
         }
     }
     U_ASSERT(fBoundaries[max] > pos);
-    fBufIdx = modChunkSize(max - 1);
-    fTextIdx = fBoundaries[fBufIdx];
-    U_ASSERT(fTextIdx <= pos);
-    return true;
+    fBufIdx = mod_Chunk_కొలత(max - 1);
+    f_పాఠ్యం_Idx = fBoundaries[fBufIdx];
+    U_ASSERT(f_పాఠ్యం_Idx <= pos);
+    తిరిగి నిజం;
 }
 
 
-UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool నియమం_Based_Break_Iterator::BreakCache::populateNear(int32_t position, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    U_ASSERT(position < fBoundaries[fStartBufIdx] || position > fBoundaries[fEndBufIdx]);
+    U_ASSERT(position < fBoundaries[f_ప్రారంభం_Buf_Idx] || position > fBoundaries[f_చివర_Buf_Idx]);
 
     // Add boundaries to the cache near the specified position.
     // The given position need not be a boundary itself.
@@ -365,38 +365,38 @@ UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorC
     // Threshold for a text position to be considered near to existing cache contents.
     // TODO: See issue ICU-22024 "perf tuning of Cache needed."
     //       This value is subject to change. See the ticket for more details.
-    static constexpr int32_t CACHE_NEAR = 15;
+    స్థిర constexpr int32_t CACHE_NEAR = 15;
 
     int32_t aBoundary = -1;
-    int32_t ruleStatusIndex = 0;
-    bool retainCache = false;
-    if ((position > fBoundaries[fStartBufIdx] - CACHE_NEAR) && position < (fBoundaries[fEndBufIdx] + CACHE_NEAR)) {
+    int32_t నియమం_స్థితి_సూచీ = 0;
+    తార్కిక retainCache = అబద్ధం;
+    ఒకవేళ ((position > fBoundaries[f_ప్రారంభం_Buf_Idx] - CACHE_NEAR) && position < (fBoundaries[f_చివర_Buf_Idx] + CACHE_NEAR)) {
         // Requested position is near the existing cache. Retain it.
-        retainCache = true;
-    } else if (position <= CACHE_NEAR) {
+        retainCache = నిజం;
+    } లేకపోతే ఒకవేళ (position <= CACHE_NEAR) {
         // Requested position is near the start of the text. Fill cache from start, skipping
         // the need to find a safe point.
-        retainCache = false;
+        retainCache = అబద్ధం;
         aBoundary = 0;
-    } else {
+    } లేకపోతే {
         // Requested position is not near the existing cache.
         // Find a safe point to refill the cache from.
-        int32_t backupPos = fBI->handleSafePrevious(position);
+        int32_t backupPos = fBI->handle_సురక్షిత_మునుపటి(position);
 
-        if (fBoundaries[fEndBufIdx] < position && fBoundaries[fEndBufIdx] >= (backupPos - CACHE_NEAR)) {
+        ఒకవేళ (fBoundaries[f_చివర_Buf_Idx] < position && fBoundaries[f_చివర_Buf_Idx] >= (backupPos - CACHE_NEAR)) {
             // The requested position is beyond the end of the existing cache, but the
             // reverse rules produced a position near or before the cached region.
             // Retain the existing cache, and fill from the end of it.
-            retainCache = true;
-        } else if (backupPos < CACHE_NEAR) {
+            retainCache = నిజం;
+        } లేకపోతే ఒకవేళ (backupPos < CACHE_NEAR) {
             // The safe reverse rules moved us to near the start of text.
             // Take that (index 0) as the backup boundary, avoiding the complication
             // (in the following block) of moving forward from the safe point to a known boundary.
             //
             // Retain the cache if it begins not too far from the requested position.
             aBoundary = 0;
-            retainCache = (fBoundaries[fStartBufIdx] <= (position + CACHE_NEAR));
-        } else {
+            retainCache = (fBoundaries[f_ప్రారంభం_Buf_Idx] <= (position + CACHE_NEAR));
+        } లేకపోతే {
             // The safe reverse rules produced a position that is neither near the existing
             // cache, nor near the start of text.
             // Advance to the boundary following.
@@ -404,101 +404,101 @@ UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorC
             // that are safe. If advancing from the safe point moves forwards by less than
             // two code points, we need to advance one more time to ensure that the boundary
             // is good, including a correct rules status value.
-            retainCache = false;
+            retainCache = అబద్ధం;
             fBI->fPosition = backupPos;
-            aBoundary = fBI->handleNext();
-            if (aBoundary != UBRK_DONE && aBoundary <= backupPos + 4) {
+            aBoundary = fBI->handle_తదుపరి();
+            ఒకవేళ (aBoundary != UBRK_పూర్తి && aBoundary <= backupPos + 4) {
                 // +4 is a quick test for possibly having advanced only one codepoint.
                 // Four being the length of the longest potential code point, a supplementary in UTF-8
-                utext_setNativeIndex(&fBI->fText, aBoundary);
-                if (backupPos == utext_getPreviousNativeIndex(&fBI->fText)) {
+                utext_సమితి_Native_సూచీ(&fBI->f_పాఠ్యం, aBoundary);
+                ఒకవేళ (backupPos == utext_get_మునుపటి_Native_సూచీ(&fBI->f_పాఠ్యం)) {
                     // The initial handleNext() only advanced by a single code point. Go again.
-                    aBoundary = fBI->handleNext();   // Safe rules identify safe pairs.
+                    aBoundary = fBI->handle_తదుపరి();   // Safe rules identify safe pairs.
                 }
             }
-            if (aBoundary == UBRK_DONE) {
+            ఒకవేళ (aBoundary == UBRK_పూర్తి) {
                 // Note (Andy Heninger): I don't think this condition can occur, but it's hard
                 // to prove that it can't. We ran off the end of the string looking a boundary
                 // following a safe point; choose the end of the string as that boundary.
-                aBoundary = utext_nativeLength(&fBI->fText);
+                aBoundary = utext_native_నిడివి(&fBI->f_పాఠ్యం);
             }
-            ruleStatusIndex = fBI->fRuleStatusIndex;
+            నియమం_స్థితి_సూచీ = fBI->f_నియమం_స్థితి_సూచీ;
         }
     }
 
-    if (!retainCache) {
+    ఒకవేళ (!retainCache) {
         U_ASSERT(aBoundary != -1);
-        reset(aBoundary, ruleStatusIndex);        // Reset cache to hold aBoundary as a single starting point.
+        reset(aBoundary, నియమం_స్థితి_సూచీ);        // Reset cache to hold aBoundary as a single starting point.
     }
 
     // Fill in boundaries between existing cache content and the new requested position.
 
-    if (fBoundaries[fEndBufIdx] < position) {
+    ఒకవేళ (fBoundaries[f_చివర_Buf_Idx] < position) {
         // The last position in the cache precedes the requested position.
         // Add following position(s) to the cache.
-        while (fBoundaries[fEndBufIdx] < position) {
-            if (!populateFollowing()) {
+        అయితే (fBoundaries[f_చివర_Buf_Idx] < position) {
+            ఒకవేళ (!populateFollowing()) {
                 UPRV_UNREACHABLE_EXIT;
             }
         }
-        fBufIdx = fEndBufIdx;                      // Set iterator position to the end of the buffer.
-        fTextIdx = fBoundaries[fBufIdx];           // Required because populateFollowing may add extra boundaries.
-        while (fTextIdx > position) {              // Move backwards to a position at or preceding the requested pos.
-            previous(status);
+        fBufIdx = f_చివర_Buf_Idx;                      // Set iterator position to the end of the buffer.
+        f_పాఠ్యం_Idx = fBoundaries[fBufIdx];           // Required because populateFollowing may add extra boundaries.
+        అయితే (f_పాఠ్యం_Idx > position) {              // Move backwards to a position at or preceding the requested pos.
+            మునుపటి(స్థితి_2);
         }
-        return true;
+        తిరిగి నిజం;
     }
 
-    if (fBoundaries[fStartBufIdx] > position) {
+    ఒకవేళ (fBoundaries[f_ప్రారంభం_Buf_Idx] > position) {
         // The first position in the cache is beyond the requested position.
         // back up more until we get a boundary <= the requested position.
-        while (fBoundaries[fStartBufIdx] > position) {
-            populatePreceding(status);
+        అయితే (fBoundaries[f_ప్రారంభం_Buf_Idx] > position) {
+            populatePreceding(స్థితి_2);
         }
-        fBufIdx = fStartBufIdx;                    // Set iterator position to the start of the buffer.
-        fTextIdx = fBoundaries[fBufIdx];           // Required because populatePreceding may add extra boundaries.
-        while (fTextIdx < position) {              // Move forwards to a position at or following the requested pos.
+        fBufIdx = f_ప్రారంభం_Buf_Idx;                    // Set iterator position to the start of the buffer.
+        f_పాఠ్యం_Idx = fBoundaries[fBufIdx];           // Required because populatePreceding may add extra boundaries.
+        అయితే (f_పాఠ్యం_Idx < position) {              // Move forwards to a position at or following the requested pos.
             next();
         }
-        if (fTextIdx > position) {
+        ఒకవేళ (f_పాఠ్యం_Idx > position) {
             // If position is not itself a boundary, the next() loop above will overshoot.
             // Back up one, leaving cache position at the boundary preceding the requested position.
-            previous(status);
+            మునుపటి(స్థితి_2);
         }
-        return true;
+        తిరిగి నిజం;
     }
 
-    U_ASSERT(fTextIdx == position);
-    return true;
+    U_ASSERT(f_పాఠ్యం_Idx == position);
+    తిరిగి నిజం;
 }
 
 
 
-UBool RuleBasedBreakIterator::BreakCache::populateFollowing() {
-    int32_t fromPosition = fBoundaries[fEndBufIdx];
-    int32_t fromRuleStatusIdx = fStatuses[fEndBufIdx];
+UBool నియమం_Based_Break_Iterator::BreakCache::populateFollowing() {
+    int32_t fromPosition = fBoundaries[f_చివర_Buf_Idx];
+    int32_t from_నియమం_స్థితి_Idx = fStatuses[f_చివర_Buf_Idx];
     int32_t pos = 0;
-    int32_t ruleStatusIdx = 0;
+    int32_t నియమం_స్థితి_Idx = 0;
 
-    if (fBI->fDictionaryCache->following(fromPosition, &pos, &ruleStatusIdx)) {
-        addFollowing(pos, ruleStatusIdx, UpdateCachePosition);
-        return true;
+    ఒకవేళ (fBI->fDictionaryCache->following(fromPosition, &pos, &నియమం_స్థితి_Idx)) {
+        కూడు_Following(pos, నియమం_స్థితి_Idx, UpdateCachePosition);
+        తిరిగి నిజం;
     }
 
     fBI->fPosition = fromPosition;
-    pos = fBI->handleNext();
-    if (pos == UBRK_DONE) {
-        return false;
+    pos = fBI->handle_తదుపరి();
+    ఒకవేళ (pos == UBRK_పూర్తి) {
+        తిరిగి అబద్ధం;
     }
 
-    ruleStatusIdx = fBI->fRuleStatusIndex;
-    if (fBI->fDictionaryCharCount > 0) {
+    నియమం_స్థితి_Idx = fBI->f_నియమం_స్థితి_సూచీ;
+    ఒకవేళ (fBI->f_Dictionary_Char_లెక్క > 0) {
         // The text segment obtained from the rules includes dictionary characters.
         // Subdivide it, with subdivided results going into the dictionary cache.
-        fBI->fDictionaryCache->populateDictionary(fromPosition, pos, fromRuleStatusIdx, ruleStatusIdx);
-        if (fBI->fDictionaryCache->following(fromPosition, &pos, &ruleStatusIdx)) {
-            addFollowing(pos, ruleStatusIdx, UpdateCachePosition);
-            return true;
+        fBI->fDictionaryCache->populateDictionary(fromPosition, pos, from_నియమం_స్థితి_Idx, నియమం_స్థితి_Idx);
+        ఒకవేళ (fBI->fDictionaryCache->following(fromPosition, &pos, &నియమం_స్థితి_Idx)) {
+            కూడు_Following(pos, నియమం_స్థితి_Idx, UpdateCachePosition);
+            తిరిగి నిజం;
             // TODO: may want to move a sizable chunk of dictionary cache to break cache at this point.
             //       But be careful with interactions with populateNear().
         }
@@ -508,55 +508,55 @@ UBool RuleBasedBreakIterator::BreakCache::populateFollowing() {
     // Or, it did contain dictionary chars, but the dictionary segmenter didn't handle them,
     //    meaning that we didn't take the return, above.
     // Add its end point to the cache.
-    addFollowing(pos, ruleStatusIdx, UpdateCachePosition);
+    కూడు_Following(pos, నియమం_స్థితి_Idx, UpdateCachePosition);
 
     // Add several non-dictionary boundaries at this point, to optimize straight forward iteration.
     //    (subsequent calls to BreakIterator::next() will take the fast path, getting cached results.
     //
-    for (int count=0; count<6; ++count) {
-        pos = fBI->handleNext();
-        if (pos == UBRK_DONE || fBI->fDictionaryCharCount > 0) {
-            break;
+    కొరకు (పూర్ణాంకం count=0; count<6; ++count) {
+        pos = fBI->handle_తదుపరి();
+        ఒకవేళ (pos == UBRK_పూర్తి || fBI->f_Dictionary_Char_లెక్క > 0) {
+            ఆపు;
         }
-        addFollowing(pos, fBI->fRuleStatusIndex, RetainCachePosition);
+        కూడు_Following(pos, fBI->f_నియమం_స్థితి_సూచీ, RetainCachePosition);
     }
 
-    return true;
+    తిరిగి నిజం;
 }
 
 
-UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+UBool నియమం_Based_Break_Iterator::BreakCache::populatePreceding(UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
 
-    int32_t fromPosition = fBoundaries[fStartBufIdx];
-    if (fromPosition == 0) {
-        return false;
+    int32_t fromPosition = fBoundaries[f_ప్రారంభం_Buf_Idx];
+    ఒకవేళ (fromPosition == 0) {
+        తిరిగి అబద్ధం;
     }
 
     int32_t position = 0;
-    int32_t positionStatusIdx = 0;
+    int32_t position_స్థితి_Idx = 0;
 
-    if (fBI->fDictionaryCache->preceding(fromPosition, &position, &positionStatusIdx)) {
-        addPreceding(position, positionStatusIdx, UpdateCachePosition);
-        return true;
+    ఒకవేళ (fBI->fDictionaryCache->preceding(fromPosition, &position, &position_స్థితి_Idx)) {
+        కూడు_Preceding(position, position_స్థితి_Idx, UpdateCachePosition);
+        తిరిగి నిజం;
     }
 
     int32_t backupPosition = fromPosition;
 
     // Find a boundary somewhere preceding the first already-cached boundary
-    do {
+    చేయి {
         backupPosition = backupPosition - 30;
-        if (backupPosition <= 0) {
+        ఒకవేళ (backupPosition <= 0) {
             backupPosition = 0;
-        } else {
-            backupPosition = fBI->handleSafePrevious(backupPosition);
+        } లేకపోతే {
+            backupPosition = fBI->handle_సురక్షిత_మునుపటి(backupPosition);
         }
-        if (backupPosition == UBRK_DONE || backupPosition == 0) {
+        ఒకవేళ (backupPosition == UBRK_పూర్తి || backupPosition == 0) {
             position = 0;
-            positionStatusIdx = 0;
-        } else {
+            position_స్థితి_Idx = 0;
+        } లేకపోతే {
             // Advance to the boundary following the backup position.
             // There is a complication: the safe reverse rules identify pairs of code points
             // that are safe. If advancing from the safe point moves forwards by less than
@@ -564,144 +564,144 @@ UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) 
             // is good, including a correct rules status value.
             //
             fBI->fPosition = backupPosition;
-            position = fBI->handleNext();
-            if (position <= backupPosition + 4) {
+            position = fBI->handle_తదుపరి();
+            ఒకవేళ (position <= backupPosition + 4) {
                 // +4 is a quick test for possibly having advanced only one codepoint.
                 // Four being the length of the longest potential code point, a supplementary in UTF-8
-                utext_setNativeIndex(&fBI->fText, position);
-                if (backupPosition == utext_getPreviousNativeIndex(&fBI->fText)) {
+                utext_సమితి_Native_సూచీ(&fBI->f_పాఠ్యం, position);
+                ఒకవేళ (backupPosition == utext_get_మునుపటి_Native_సూచీ(&fBI->f_పాఠ్యం)) {
                     // The initial handleNext() only advanced by a single code point. Go again.
-                    position = fBI->handleNext();   // Safe rules identify safe pairs.
+                    position = fBI->handle_తదుపరి();   // Safe rules identify safe pairs.
                 }
             }
-            positionStatusIdx = fBI->fRuleStatusIndex;
+            position_స్థితి_Idx = fBI->f_నియమం_స్థితి_సూచీ;
         }
-    } while (position >= fromPosition);
+    } అయితే (position >= fromPosition);
 
     // Find boundaries between the one we just located and the first already-cached boundary
     // Put them in a side buffer, because we don't yet know where they will fall in the circular cache buffer..
 
-    fSideBuffer.removeAllElements();
-    fSideBuffer.addElement(position, status);
-    fSideBuffer.addElement(positionStatusIdx, status);
+    f_Side_బఫరు.removeAllElements();
+    f_Side_బఫరు.కూడు_Element(position, స్థితి_2);
+    f_Side_బఫరు.కూడు_Element(position_స్థితి_Idx, స్థితి_2);
 
-    do {
+    చేయి {
         int32_t prevPosition = fBI->fPosition = position;
-        int32_t prevStatusIdx = positionStatusIdx;
-        position = fBI->handleNext();
-        positionStatusIdx = fBI->fRuleStatusIndex;
-        if (position == UBRK_DONE) {
-            break;
+        int32_t prev_స్థితి_Idx = position_స్థితి_Idx;
+        position = fBI->handle_తదుపరి();
+        position_స్థితి_Idx = fBI->f_నియమం_స్థితి_సూచీ;
+        ఒకవేళ (position == UBRK_పూర్తి) {
+            ఆపు;
         }
 
-        UBool segmentHandledByDictionary = false;
-        if (fBI->fDictionaryCharCount != 0) {
+        UBool segmentHandledByDictionary = అబద్ధం;
+        ఒకవేళ (fBI->f_Dictionary_Char_లెక్క != 0) {
             // Segment from the rules includes dictionary characters.
             // Subdivide it, with subdivided results going into the dictionary cache.
-            int32_t dictSegEndPosition = position;
-            fBI->fDictionaryCache->populateDictionary(prevPosition, dictSegEndPosition, prevStatusIdx, positionStatusIdx);
-            while (fBI->fDictionaryCache->following(prevPosition, &position, &positionStatusIdx)) {
-                segmentHandledByDictionary = true;
+            int32_t dict_Seg_చివర_Position = position;
+            fBI->fDictionaryCache->populateDictionary(prevPosition, dict_Seg_చివర_Position, prev_స్థితి_Idx, position_స్థితి_Idx);
+            అయితే (fBI->fDictionaryCache->following(prevPosition, &position, &position_స్థితి_Idx)) {
+                segmentHandledByDictionary = నిజం;
                 U_ASSERT(position > prevPosition);
-                if (position >= fromPosition) {
-                    break;
+                ఒకవేళ (position >= fromPosition) {
+                    ఆపు;
                 }
-                U_ASSERT(position <= dictSegEndPosition);
-                fSideBuffer.addElement(position, status);
-                fSideBuffer.addElement(positionStatusIdx, status);
+                U_ASSERT(position <= dict_Seg_చివర_Position);
+                f_Side_బఫరు.కూడు_Element(position, స్థితి_2);
+                f_Side_బఫరు.కూడు_Element(position_స్థితి_Idx, స్థితి_2);
                 prevPosition = position;
             }
-            U_ASSERT(position==dictSegEndPosition || position>=fromPosition);
+            U_ASSERT(position==dict_Seg_చివర_Position || position>=fromPosition);
         }
 
-        if (!segmentHandledByDictionary && position < fromPosition) {
-            fSideBuffer.addElement(position, status);
-            fSideBuffer.addElement(positionStatusIdx, status);
+        ఒకవేళ (!segmentHandledByDictionary && position < fromPosition) {
+            f_Side_బఫరు.కూడు_Element(position, స్థితి_2);
+            f_Side_బఫరు.కూడు_Element(position_స్థితి_Idx, స్థితి_2);
         }
-    } while (position < fromPosition);
+    } అయితే (position < fromPosition);
 
     // Move boundaries from the side buffer to the main circular buffer.
-    UBool success = false;
-    if (!fSideBuffer.isEmpty()) {
-        positionStatusIdx = fSideBuffer.popi();
-        position = fSideBuffer.popi();
-        addPreceding(position, positionStatusIdx, UpdateCachePosition);
-        success = true;
+    UBool success = అబద్ధం;
+    ఒకవేళ (!f_Side_బఫరు.is_ఖాళీలు()) {
+        position_స్థితి_Idx = f_Side_బఫరు.popi();
+        position = f_Side_బఫరు.popi();
+        కూడు_Preceding(position, position_స్థితి_Idx, UpdateCachePosition);
+        success = నిజం;
     }
 
-    while (!fSideBuffer.isEmpty()) {
-        positionStatusIdx = fSideBuffer.popi();
-        position = fSideBuffer.popi();
-        if (!addPreceding(position, positionStatusIdx, RetainCachePosition)) {
+    అయితే (!f_Side_బఫరు.is_ఖాళీలు()) {
+        position_స్థితి_Idx = f_Side_బఫరు.popi();
+        position = f_Side_బఫరు.popi();
+        ఒకవేళ (!కూడు_Preceding(position, position_స్థితి_Idx, RetainCachePosition)) {
             // No space in circular buffer to hold a new preceding result while
             // also retaining the current cache (iteration) position.
             // Bailing out is safe; the cache will refill again if needed.
-            break;
+            ఆపు;
         }
     }
 
-    return success;
+    తిరిగి success;
 }
 
 
-void RuleBasedBreakIterator::BreakCache::addFollowing(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update) {
-    U_ASSERT(position > fBoundaries[fEndBufIdx]);
-    U_ASSERT(ruleStatusIdx <= UINT16_MAX);
-    int32_t nextIdx = modChunkSize(fEndBufIdx + 1);
-    if (nextIdx == fStartBufIdx) {
-        fStartBufIdx = modChunkSize(fStartBufIdx + 6);    // TODO: experiment. Probably revert to 1.
+శూన్య నియమం_Based_Break_Iterator::BreakCache::కూడు_Following(int32_t position, int32_t నియమం_స్థితి_Idx, Update_Position_విలువలు update) {
+    U_ASSERT(position > fBoundaries[f_చివర_Buf_Idx]);
+    U_ASSERT(నియమం_స్థితి_Idx <= UINT16_MAX);
+    int32_t తదుపరి_Idx = mod_Chunk_కొలత(f_చివర_Buf_Idx + 1);
+    ఒకవేళ (తదుపరి_Idx == f_ప్రారంభం_Buf_Idx) {
+        f_ప్రారంభం_Buf_Idx = mod_Chunk_కొలత(f_ప్రారంభం_Buf_Idx + 6);    // TODO: experiment. Probably revert to 1.
     }
-    fBoundaries[nextIdx] = position;
-    fStatuses[nextIdx] = static_cast<uint16_t>(ruleStatusIdx);
-    fEndBufIdx = nextIdx;
-    if (update == UpdateCachePosition) {
+    fBoundaries[తదుపరి_Idx] = position;
+    fStatuses[తదుపరి_Idx] = static_cast<uint16_t>(నియమం_స్థితి_Idx);
+    f_చివర_Buf_Idx = తదుపరి_Idx;
+    ఒకవేళ (update == UpdateCachePosition) {
         // Set current position to the newly added boundary.
-        fBufIdx = nextIdx;
-        fTextIdx = position;
-    } else {
+        fBufIdx = తదుపరి_Idx;
+        f_పాఠ్యం_Idx = position;
+    } లేకపోతే {
         // Retaining the original cache position.
         // Check if the added boundary wraps around the buffer, and would over-write the original position.
         // It's the responsibility of callers of this function to not add too many.
-        U_ASSERT(nextIdx != fBufIdx);
+        U_ASSERT(తదుపరి_Idx != fBufIdx);
     }
 }
 
-bool RuleBasedBreakIterator::BreakCache::addPreceding(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update) {
-    U_ASSERT(position < fBoundaries[fStartBufIdx]);
-    U_ASSERT(ruleStatusIdx <= UINT16_MAX);
-    int32_t nextIdx = modChunkSize(fStartBufIdx - 1);
-    if (nextIdx == fEndBufIdx) {
-        if (fBufIdx == fEndBufIdx && update == RetainCachePosition) {
+తార్కిక నియమం_Based_Break_Iterator::BreakCache::కూడు_Preceding(int32_t position, int32_t నియమం_స్థితి_Idx, Update_Position_విలువలు update) {
+    U_ASSERT(position < fBoundaries[f_ప్రారంభం_Buf_Idx]);
+    U_ASSERT(నియమం_స్థితి_Idx <= UINT16_MAX);
+    int32_t తదుపరి_Idx = mod_Chunk_కొలత(f_ప్రారంభం_Buf_Idx - 1);
+    ఒకవేళ (తదుపరి_Idx == f_చివర_Buf_Idx) {
+        ఒకవేళ (fBufIdx == f_చివర_Buf_Idx && update == RetainCachePosition) {
             // Failure. The insertion of the new boundary would claim the buffer position that is the
             // current iteration position. And we also want to retain the current iteration position.
             // (The buffer is already completely full of entries that precede the iteration position.)
-            return false;
+            తిరిగి అబద్ధం;
         }
-        fEndBufIdx = modChunkSize(fEndBufIdx - 1);
+        f_చివర_Buf_Idx = mod_Chunk_కొలత(f_చివర_Buf_Idx - 1);
     }
-    fBoundaries[nextIdx] = position;
-    fStatuses[nextIdx] = static_cast<uint16_t>(ruleStatusIdx);
-    fStartBufIdx = nextIdx;
-    if (update == UpdateCachePosition) {
-        fBufIdx = nextIdx;
-        fTextIdx = position;
+    fBoundaries[తదుపరి_Idx] = position;
+    fStatuses[తదుపరి_Idx] = static_cast<uint16_t>(నియమం_స్థితి_Idx);
+    f_ప్రారంభం_Buf_Idx = తదుపరి_Idx;
+    ఒకవేళ (update == UpdateCachePosition) {
+        fBufIdx = తదుపరి_Idx;
+        f_పాఠ్యం_Idx = position;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 
-void RuleBasedBreakIterator::BreakCache::dumpCache() {
-#ifdef RBBI_DEBUG
-    RBBIDebugPrintf("fTextIdx:%d   fBufIdx:%d\n", fTextIdx, fBufIdx);
-    for (int32_t i=fStartBufIdx; ; i=modChunkSize(i+1)) {
+శూన్య నియమం_Based_Break_Iterator::BreakCache::dumpCache() {
+#నిర్వచితమైతే RBBI_DEBUG
+    RBBIDebugPrintf("fTextIdx:%d   fBufIdx:%d\n", f_పాఠ్యం_Idx, fBufIdx);
+    కొరకు (int32_t i=f_ప్రారంభం_Buf_Idx; ; i=mod_Chunk_కొలత(i+1)) {
         RBBIDebugPrintf("%d  %d\n", i, fBoundaries[i]);
-        if (i == fEndBufIdx) {
-            break;
+        ఒకవేళ (i == f_చివర_Buf_Idx) {
+            ఆపు;
         }
     }
-#endif
+#అయితే_ముగింపు
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif // #if !UCONFIG_NO_BREAK_ITERATION
+#అయితే_ముగింపు // #if !UCONFIG_NO_BREAK_ITERATION

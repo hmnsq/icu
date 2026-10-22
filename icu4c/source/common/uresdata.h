@@ -15,14 +15,14 @@
 *   06/24/02    weiv        Added support for resource sharing
 */
 
-#ifndef __RESDATA_H__
-#define __RESDATA_H__
+#నిర్వచితం_కాకపోతే __RESDATA_H__
+#నిర్వచించు __RESDATA_H__
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ures.h"
-#include "putilimp.h"
-#include "udataswp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "udataswp.h"
 
 /**
  * Numeric constants for internal-only types of resource items.
@@ -30,9 +30,9 @@
  * because they are used together.
  * Internal types are never returned by ures_getType().
  */
-typedef enum {
+రకనిర్వచనం గణన {
     /** Include a negative value so that the compiler uses the same int type as for UResType. */
-    URES_INTERNAL_NONE=-1,
+    URES_అంతర్గత_NONE=-1,
 
     /** Resource type constant for tables with 32-bit count, key offsets and values. */
     URES_TABLE32=4,
@@ -53,42 +53,42 @@ typedef enum {
     URES_ARRAY16=9
 
     /* Resource type 15 is not defined but effectively used by RES_BOGUS=0xffffffff. */
-} UResInternalType;
+} URes_అంతర్గత_Type;
 
 /*
  * A Resource is a 32-bit value that has 2 bit fields:
  * 31..28   4-bit type, see enum below
  * 27..0    28-bit four-byte-offset or value according to the type
  */
-typedef uint32_t Resource;
+రకనిర్వచనం uint32_t Resource;
 
-#define RES_BOGUS 0xffffffff
-#define RES_MAX_OFFSET 0x0fffffff
+#నిర్వచించు RES_BOGUS 0xffffffff
+#నిర్వచించు RES_MAX_స్థానభ్రంశం 0x0fffffff
 
-#define RES_GET_TYPE(res) ((int32_t)((res)>>28UL))
-#define RES_GET_OFFSET(res) ((res)&0x0fffffff)
-#define RES_GET_POINTER(pRoot, res) ((pRoot)+RES_GET_OFFSET(res))
+#నిర్వచించు RES_GET_TYPE(res) ((int32_t)((res)>>28UL))
+#నిర్వచించు RES_GET_స్థానభ్రంశం(res) ((res)&0x0fffffff)
+#నిర్వచించు RES_GET_సూచిక(p_మూలం, res) ((p_మూలం)+RES_GET_స్థానభ్రంశం(res))
 
 /* get signed and unsigned integer values directly from the Resource handle
  * NOTE: For proper logging, please use the res_getInt() constexpr
  */
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#ఒకవేళ U_SIGNED_కుడి_జరుపు_IS_ARITHMETIC
 #   define RES_GET_INT_NO_TRACE(res) (((int32_t)((res)<<4L))>>4L)
-#else
+#లేకపోతే
 #   define RES_GET_INT_NO_TRACE(res) (int32_t)(((res)&0x08000000) ? (res)|0xf0000000 : (res)&0x07ffffff)
-#endif
+#అయితే_ముగింపు
 
-#define RES_GET_UINT_NO_TRACE(res) ((res)&0x0fffffff)
+#నిర్వచించు RES_GET_UINT_NO_TRACE(res) ((res)&0x0fffffff)
 
-#define URES_IS_ARRAY(type) ((int32_t)(type)==URES_ARRAY || (int32_t)(type)==URES_ARRAY16)
-#define URES_IS_TABLE(type) ((int32_t)(type)==URES_TABLE || (int32_t)(type)==URES_TABLE16 || (int32_t)(type)==URES_TABLE32)
-#define URES_IS_CONTAINER(type) (URES_IS_TABLE(type) || URES_IS_ARRAY(type))
+#నిర్వచించు URES_IS_ARRAY(type) ((int32_t)(type)==URES_ARRAY || (int32_t)(type)==URES_ARRAY16)
+#నిర్వచించు URES_IS_పట్టిక(type) ((int32_t)(type)==URES_పట్టిక || (int32_t)(type)==URES_TABLE16 || (int32_t)(type)==URES_TABLE32)
+#నిర్వచించు URES_IS_CONTAINER(type) (URES_IS_పట్టిక(type) || URES_IS_ARRAY(type))
 
-#define URES_MAKE_RESOURCE(type, offset) (((Resource)(type)<<28)|(Resource)(offset))
-#define URES_MAKE_EMPTY_RESOURCE(type) ((Resource)(type)<<28)
+#నిర్వచించు URES_MAKE_RESOURCE(type, స్థానభ్రంశం) (((Resource)(type)<<28)|(Resource)(స్థానభ్రంశం))
+#నిర్వచించు URES_MAKE_ఖాళీలు_RESOURCE(type) ((Resource)(type)<<28)
 
 /* indexes[] value names; indexes are generally 32-bit (Resource) indexes */
-enum {
+గణన {
     /**
      * [0] contains the length of indexes[]
      * which is at most URES_INDEX_TOP of the latest format version
@@ -101,21 +101,21 @@ enum {
      * formatVersion>=3:
      *        bits 31..8 poolStringIndexLimit bits 23..0
      */
-    URES_INDEX_LENGTH,
+    URES_సూచీ_నిడివి,
     /**
      * [1] contains the top of the key strings,
      *     same as the bottom of resources or UTF-16 strings, rounded up
      */
-    URES_INDEX_KEYS_TOP,
+    URES_సూచీ_కీలకాలు_శిఖరం,
     /** [2] contains the top of all resources */
-    URES_INDEX_RESOURCES_TOP,
+    URES_సూచీ_RESOURCES_శిఖరం,
     /**
      * [3] contains the top of the bundle,
      *     in case it were ever different from [2]
      */
-    URES_INDEX_BUNDLE_TOP,
+    URES_సూచీ_BUNDLE_శిఖరం,
     /** [4] max. length of any table */
-    URES_INDEX_MAX_TABLE_LENGTH,
+    URES_సూచీ_MAX_పట్టిక_నిడివి,
     /**
      * [5] attributes bit set, see URES_ATT_* (new in formatVersion 1.2)
      *
@@ -123,15 +123,15 @@ enum {
      *   bits 31..16 poolStringIndex16Limit
      *   bits 15..12 poolStringIndexLimit bits 27..24
      */
-    URES_INDEX_ATTRIBUTES,
+    URES_సూచీ_లక్షణాలు,
     /**
      * [6] top of the 16-bit units (UTF-16 string v2 UChars, URES_TABLE16, URES_ARRAY16),
      *     rounded up (new in formatVersion 2.0, ICU 4.4)
      */
-    URES_INDEX_16BIT_TOP,
+    URES_సూచీ_16_బిట్టు_శిఖరం,
     /** [7] checksum of the pool bundle (new in formatVersion 2.0, ICU 4.4) */
-    URES_INDEX_POOL_CHECKSUM,
-    URES_INDEX_TOP
+    URES_సూచీ_POOL_CHECKSUM,
+    URES_సూచీ_శిఖరం
 };
 
 /*
@@ -145,7 +145,7 @@ enum {
  * reliably. Dependency checking should ignore such bundles, and loading should
  * use fallbacks.
  */
-#define URES_ATT_NO_FALLBACK 1
+#నిర్వచించు URES_ATT_NO_FALLBACK 1
 
 /*
  * Attributes for bundles that are, or use, a pool bundle.
@@ -153,8 +153,8 @@ enum {
  * to reduce their total size.
  * New in formatVersion 2 (ICU 4.4).
  */
-#define URES_ATT_IS_POOL_BUNDLE 2
-#define URES_ATT_USES_POOL_BUNDLE 4
+#నిర్వచించు URES_ATT_IS_POOL_BUNDLE 2
+#నిర్వచించు URES_ATT_ఉపయోగిస్తుంది_POOL_BUNDLE 4
 
 /*
  * File format for .res resource bundle files
@@ -383,49 +383,49 @@ enum {
 /*
  * Structure for a single, memory-mapped ResourceBundle.
  */
-typedef struct ResourceData {
-    UDataMemory *data;
-    const int32_t *pRoot;
-    const uint16_t *p16BitUnits;
-    const char *poolBundleKeys;
-    Resource rootRes;
-    int32_t localKeyLimit;
-    const uint16_t *poolBundleStrings;
-    int32_t poolStringIndexLimit;
-    int32_t poolStringIndex16Limit;
+రకనిర్వచనం నిర్మాణం Resource_దత్తాంశం {
+    UData_జ్ఞాపకం *దత్తాంశం;
+    స్థిరరాశి int32_t *p_మూలం;
+    స్థిరరాశి uint16_t *p16_బిట్టు_Units;
+    స్థిరరాశి అక్షరం *pool_Bundle_కీలకాలు;
+    Resource మూలం_Res;
+    int32_t local_కీలకం_హద్దు;
+    స్థిరరాశి uint16_t *pool_Bundle_అక్షరశ్రేణులు;
+    int32_t pool_String_సూచీ_హద్దు;
+    int32_t pool_String_Index16_హద్దు;
     UBool noFallback; /* see URES_ATT_NO_FALLBACK */
     UBool isPoolBundle;
-    UBool usesPoolBundle;
+    UBool ఉపయోగిస్తుంది_Pool_Bundle;
     UBool useNativeStrcmp;
-} ResourceData;
+} Resource_దత్తాంశం;
 
-struct UResourceDataEntry;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
+నిర్మాణం UResource_దత్తాంశం_నమోదు;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
 
 /*
  * Read a resource bundle from memory.
  */
-U_CAPI void U_EXPORT2
-res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
-         UErrorCode *errorCode);
+U_CAPI శూన్య U_EXPORT2
+res_read(Resource_దత్తాంశం *p_Res_దత్తాంశం,
+         స్థిరరాశి UDataInfo *pInfo, స్థిరరాశి శూన్య *లోపల_బైట్లు, int32_t నిడివి,
+         UError_సంకేతం *error_సంకేతం);
 
 /*
  * Load a resource bundle file.
  * The ResourceData structure must be allocated externally.
  */
-U_CFUNC void
-res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode);
+U_CFUNC శూన్య
+res_ఎక్కించు(Resource_దత్తాంశం *p_Res_దత్తాంశం,
+         స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *name, UError_సంకేతం *error_సంకేతం);
 
 /*
  * Release a resource bundle file.
  * This does not release the ResourceData structure itself.
  */
-U_CFUNC void
-res_unload(ResourceData *pResData);
+U_CFUNC శూన్య
+res_unload(Resource_దత్తాంశం *p_Res_దత్తాంశం);
 
 U_CAPI UResType U_EXPORT2
-res_getPublicType(Resource res);
+res_get_ప్రజా_Type(Resource res);
 
 ///////////////////////////////////////////////////////////////////////////
 // To enable tracing, use the inline versions of the res_get* functions. //
@@ -436,32 +436,32 @@ res_getPublicType(Resource res);
  * and set its length in *pLength.
  * Returns NULL if not found.
  */
-U_CAPI const UChar * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI స్థిరరాశి UChar * U_EXPORT2
+res_getStringNoTrace(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి);
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI స్థిరరాశి uint8_t * U_EXPORT2
+res_get_ద్విమాన_No_Trace(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి);
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI స్థిరరాశి int32_t * U_EXPORT2
+res_get_Int_సదిశ_No_Trace(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి);
 
-U_CAPI const UChar * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI స్థిరరాశి UChar * U_EXPORT2
+res_getAlias(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి);
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key);
+res_getResource(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, స్థిరరాశి అక్షరం *కీలకం);
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res);
+res_లెక్క_Array_వస్తువులు(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res);
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexS);
+res_get_Array_అంశం(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource array, int32_t సూచీ_S);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table, int32_t indexS, const char ** key);
+res_get_పట్టిక_అంశం_By_సూచీ(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource పట్టిక, int32_t సూచీ_S, స్థిరరాశి అక్షరం ** కీలకం);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *indexS, const char* * key);
+res_get_పట్టిక_అంశం_By_కీలకం(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource పట్టిక, int32_t *సూచీ_S, స్థిరరాశి అక్షరం* * కీలకం);
 
 /**
  * Iterates over the path and stops when a scalar resource is found.
@@ -472,103 +472,103 @@ res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *ind
  * @param path input: "CollationElements/Sequence" or "zoneStrings/3/2" etc.;
  *             output: points to the part that has not yet been processed
  */
-U_CFUNC Resource res_findResource(const ResourceData *pResData, Resource r,
-                                  char** path, const char** key);
+U_CFUNC Resource res_కనుగొను_Resource(స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource r,
+                                  అక్షరం** మార్గం, స్థిరరాశి అక్షరం** కీలకం);
 
-#ifdef __cplusplus
+#నిర్వచితమైతే __cplusplus
 
-#include "resource.h"
-#include "restrace.h"
+#అన్తర్భావ "resource.h"
+#అన్తర్భావ "restrace.h"
 
 U_NAMESPACE_BEGIN
 
-inline const char16_t* res_getString(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+అంతఃవరుస స్థిరరాశి char16_t* res_getString(స్థిరరాశి ResourceTracer& traceInfo,
+        స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి) {
     traceInfo.trace("string");
-    return res_getStringNoTrace(pResData, res, pLength);
+    తిరిగి res_getStringNoTrace(p_Res_దత్తాంశం, res, p_నిడివి);
 }
 
-inline const uint8_t* res_getBinary(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+అంతఃవరుస స్థిరరాశి uint8_t* res_get_ద్విమాన(స్థిరరాశి ResourceTracer& traceInfo,
+        స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి) {
     traceInfo.trace("binary");
-    return res_getBinaryNoTrace(pResData, res, pLength);
+    తిరిగి res_get_ద్విమాన_No_Trace(p_Res_దత్తాంశం, res, p_నిడివి);
 }
 
-inline const int32_t* res_getIntVector(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+అంతఃవరుస స్థిరరాశి int32_t* res_get_Int_సదిశ(స్థిరరాశి ResourceTracer& traceInfo,
+        స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం, Resource res, int32_t *p_నిడివి) {
     traceInfo.trace("intvector");
-    return res_getIntVectorNoTrace(pResData, res, pLength);
+    తిరిగి res_get_Int_సదిశ_No_Trace(p_Res_దత్తాంశం, res, p_నిడివి);
 }
 
-inline int32_t res_getInt(const ResourceTracer& traceInfo, Resource res) {
+అంతఃవరుస int32_t res_getInt(స్థిరరాశి ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("int");
-    return RES_GET_INT_NO_TRACE(res);
+    తిరిగి RES_GET_INT_NO_TRACE(res);
 }
 
-inline uint32_t res_getUInt(const ResourceTracer& traceInfo, Resource res) {
+అంతఃవరుస uint32_t res_getUInt(స్థిరరాశి ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("uint");
-    return RES_GET_UINT_NO_TRACE(res);
+    తిరిగి RES_GET_UINT_NO_TRACE(res);
 }
 
-class ResourceDataValue : public ResourceValue {
-public:
-    ResourceDataValue() :
-        pResData(nullptr),
-        validLocaleDataEntry(nullptr),
+class Resource_దత్తాంశం_విలువ : బహిరంగ Resource_విలువ {
+బహిరంగ:
+    Resource_దత్తాంశం_విలువ() :
+        p_Res_దత్తాంశం(nullptr),
+        valid_Locale_దత్తాంశం_నమోదు(nullptr),
         res(static_cast<Resource>(URES_NONE)),
         fTraceInfo() {}
-    virtual ~ResourceDataValue();
+    మాయా ~Resource_దత్తాంశం_విలువ();
 
-    void setData(const ResourceData &data) {
-        pResData = &data;
+    శూన్య సమితి_దత్తాంశం(స్థిరరాశి Resource_దత్తాంశం &దత్తాంశం) {
+        p_Res_దత్తాంశం = &దత్తాంశం;
     }
     
-    void setValidLocaleDataEntry(UResourceDataEntry *entry) {
-        validLocaleDataEntry = entry;
+    శూన్య సమితి_Valid_Locale_దత్తాంశం_నమోదు(UResource_దత్తాంశం_నమోదు *నమోదు_2) {
+        valid_Locale_దత్తాంశం_నమోదు = నమోదు_2;
     }
 
-    void setResource(Resource r, ResourceTracer&& traceInfo) {
+    శూన్య సమితి_Resource(Resource r, ResourceTracer&& traceInfo) {
         res = r;
         fTraceInfo = traceInfo;
     }
 
-    const ResourceData &getData() const { return *pResData; }
-    UResourceDataEntry *getValidLocaleDataEntry() const { return validLocaleDataEntry; }
-    Resource getResource() const { return res; }
-    virtual UResType getType() const override;
-    virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual int32_t getInt(UErrorCode &errorCode) const override;
-    virtual uint32_t getUInt(UErrorCode &errorCode) const override;
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const override;
-    virtual ResourceArray getArray(UErrorCode &errorCode) const override;
-    virtual ResourceTable getTable(UErrorCode &errorCode) const override;
-    virtual UBool isNoInheritanceMarker() const override;
-    virtual int32_t getStringArray(UnicodeString *dest, int32_t capacity,
-                                   UErrorCode &errorCode) const override;
-    virtual int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                  UErrorCode &errorCode) const override;
-    virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const override;
+    స్థిరరాశి Resource_దత్తాంశం &get_దత్తాంశం() స్థిరరాశి { తిరిగి *p_Res_దత్తాంశం; }
+    UResource_దత్తాంశం_నమోదు *get_Valid_Locale_దత్తాంశం_నమోదు() స్థిరరాశి { తిరిగి valid_Locale_దత్తాంశం_నమోదు; }
+    Resource getResource() స్థిరరాశి { తిరిగి res; }
+    మాయా UResType getType() స్థిరరాశి override;
+    మాయా స్థిరరాశి char16_t *getString(int32_t &నిడివి, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా స్థిరరాశి char16_t *getAliasString(int32_t &నిడివి, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా int32_t getInt(UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా uint32_t getUInt(UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా స్థిరరాశి int32_t *get_Int_సదిశ(int32_t &నిడివి, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా స్థిరరాశి uint8_t *get_ద్విమాన(int32_t &నిడివి, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా ResourceArray getArray(UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా Resource_పట్టిక get_పట్టిక(UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా UBool isNoInheritanceMarker() స్థిరరాశి override;
+    మాయా int32_t getStringArray(UnicodeString *dest, int32_t సామర్థ్యం,
+                                   UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t సామర్థ్యం,
+                                                  UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
+    మాయా UnicodeString get_String_Or_మొదటి_యొక్క_Array(UError_సంకేతం &error_సంకేతం) స్థిరరాశి override;
 
-private:
-    const ResourceData *pResData;
-    UResourceDataEntry *validLocaleDataEntry;
+అంతరంగ:
+    స్థిరరాశి Resource_దత్తాంశం *p_Res_దత్తాంశం;
+    UResource_దత్తాంశం_నమోదు *valid_Locale_దత్తాంశం_నమోదు;
     Resource res;
     ResourceTracer fTraceInfo;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  /* __cplusplus */
+#అయితే_ముగింపు  /* __cplusplus */
 
 /**
  * Swap an ICU resource bundle. See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode);
+ures_మార్పిడి(స్థిరరాశి UDataSwapper *ds,
+          స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం,
+          UError_సంకేతం *p_Error_సంకేతం);
 
-#endif
+#అయితే_ముగింపు

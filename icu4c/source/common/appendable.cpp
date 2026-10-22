@@ -14,62 +14,62 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/utf16.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/appendable.h"
+#అన్తర్భావ "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 
 Appendable::~Appendable() {}
 
 UBool
-Appendable::appendCodePoint(UChar32 c) {
-    if(c<=0xffff) {
-        return appendCodeUnit(static_cast<char16_t>(c));
-    } else {
-        return appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
+Appendable::append_సంకేతం_బిందువు(UChar32 c) {
+    ఒకవేళ(c<=0xffff) {
+        తిరిగి append_సంకేతం_Unit(static_cast<char16_t>(c));
+    } లేకపోతే {
+        తిరిగి append_సంకేతం_Unit(U16_LEAD(c)) && append_సంకేతం_Unit(U16_TRAIL(c));
     }
 }
 
 UBool
-Appendable::appendString(const char16_t *s, int32_t length) {
-    if(length<0) {
+Appendable::appendString(స్థిరరాశి char16_t *s, int32_t length) {
+    ఒకవేళ(length<0) {
         char16_t c;
-        while((c=*s++)!=0) {
-            if(!appendCodeUnit(c)) {
-                return false;
+        అయితే((c=*s++)!=0) {
+            ఒకవేళ(!append_సంకేతం_Unit(c)) {
+                తిరిగి అబద్ధం;
             }
         }
-    } else if(length>0) {
-        const char16_t *limit=s+length;
-        do {
-            if(!appendCodeUnit(*s++)) {
-                return false;
+    } లేకపోతే ఒకవేళ(length>0) {
+        స్థిరరాశి char16_t *హద్దు=s+length;
+        చేయి {
+            ఒకవేళ(!append_సంకేతం_Unit(*s++)) {
+                తిరిగి అబద్ధం;
             }
-        } while(s<limit);
+        } అయితే(s<హద్దు);
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 UBool
-Appendable::reserveAppendCapacity(int32_t /*appendCapacity*/) {
-    return true;
+Appendable::reserve_Append_సామర్థ్యం(int32_t /*appendCapacity*/) {
+    తిరిగి నిజం;
 }
 
 char16_t*
-Appendable::getAppendBuffer(int32_t minCapacity,
+Appendable::get_Append_బఫరు(int32_t min_సామర్థ్యం,
                             int32_t /*desiredCapacityHint*/,
                             char16_t* scratch U_LIFETIME_BOUND,
-                            int32_t scratchCapacity,
-                            int32_t* resultCapacity) U_LIFETIME_BOUND {
-    if(minCapacity<1 || scratchCapacity<minCapacity) {
-        *resultCapacity=0;
-        return nullptr;
+                            int32_t scratch_సామర్థ్యం,
+                            int32_t* ఫలితం_సామర్థ్యం) U_LIFETIME_BOUND {
+    ఒకవేళ(min_సామర్థ్యం<1 || scratch_సామర్థ్యం<min_సామర్థ్యం) {
+        *ఫలితం_సామర్థ్యం=0;
+        తిరిగి శూన్యసూచిక;
     }
-    *resultCapacity=scratchCapacity;
-    return scratch;
+    *ఫలితం_సామర్థ్యం=scratch_సామర్థ్యం;
+    తిరిగి scratch;
 }
 
 // UnicodeStringAppendable is implemented in unistr.cpp.
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

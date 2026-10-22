@@ -11,395 +11,395 @@
 * created by: Markus W. Scherer
 */
 
-#ifndef __NORM2ALLMODES_H__
-#define __NORM2ALLMODES_H__
+#నిర్వచితం_కాకపోతే __NORM2ALLMODES_H__
+#నిర్వచించు __NORM2ALLMODES_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ఒకవేళ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/edits.h"
-#include "unicode/normalizer2.h"
-#include "unicode/stringoptions.h"
-#include "unicode/unistr.h"
-#include "cpputils.h"
-#include "normalizer2impl.h"
+#అన్తర్భావ "unicode/edits.h"
+#అన్తర్భావ "unicode/normalizer2.h"
+#అన్తర్భావ "unicode/stringoptions.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "cpputils.h"
+#అన్తర్భావ "normalizer2impl.h"
 
 U_NAMESPACE_BEGIN
 
 // Intermediate class:
 // Has Normalizer2Impl and does boilerplate argument checking and setup.
-class Normalizer2WithImpl : public Normalizer2 {
-public:
-    Normalizer2WithImpl(const Normalizer2Impl &ni) : impl(ni) {}
-    virtual ~Normalizer2WithImpl();
+class Normalizer2WithImpl : బహిరంగ Normalizer2 {
+బహిరంగ:
+    Normalizer2WithImpl(స్థిరరాశి Normalizer2Impl &ni) : impl(ni) {}
+    మాయా ~Normalizer2WithImpl();
 
     // normalize
-    virtual UnicodeString&
-    normalize(const UnicodeString& src,
+    మాయా UnicodeString&
+    normalize(స్థిరరాశి UnicodeString& src,
               UnicodeString& dest U_LIFETIME_BOUND,
-              UErrorCode& errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            dest.setToBogus();
-            return dest;
+              UError_సంకేతం& error_సంకేతం) స్థిరరాశి override {
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            dest.సమితి_గమ్యం_Bogus();
+            తిరిగి dest;
         }
-        const char16_t *sArray=src.getBuffer();
-        if(&dest==&src || sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            dest.setToBogus();
-            return dest;
+        స్థిరరాశి char16_t *sArray=src.get_బఫరు();
+        ఒకవేళ(&dest==&src || sArray==nullptr) {
+            error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+            dest.సమితి_గమ్యం_Bogus();
+            తిరిగి dest;
         }
         dest.remove();
-        ReorderingBuffer buffer(impl, dest);
-        if(buffer.init(src.length(), errorCode)) {
-            normalize(sArray, sArray+src.length(), buffer, errorCode);
+        Reordering_బఫరు బఫరు(impl, dest);
+        ఒకవేళ(బఫరు.init(src.నిడివి(), error_సంకేతం)) {
+            normalize(sArray, sArray+src.నిడివి(), బఫరు, error_సంకేతం);
         }
-        return dest;
+        తిరిగి dest;
     }
-    virtual void
-    normalize(const char16_t *src, const char16_t *limit,
-              ReorderingBuffer &buffer, UErrorCode &errorCode) const = 0;
+    మాయా శూన్య
+    normalize(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
+              Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి = 0;
 
     // normalize and append
-    virtual UnicodeString&
-    normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
-                             UErrorCode& errorCode) const override {
-        return normalizeSecondAndAppend(first, second, true, errorCode);
+    మాయా UnicodeString&
+    normalize_రెండవ_And_Append(UnicodeString& మొదటి U_LIFETIME_BOUND,
+                             స్థిరరాశి UnicodeString& రెండవ,
+                             UError_సంకేతం& error_సంకేతం) స్థిరరాశి override {
+        తిరిగి normalize_రెండవ_And_Append(మొదటి, రెండవ, true, error_సంకేతం);
     }
-    virtual UnicodeString&
-    append(UnicodeString& first U_LIFETIME_BOUND,
-           const UnicodeString& second,
-           UErrorCode& errorCode) const override {
-        return normalizeSecondAndAppend(first, second, false, errorCode);
+    మాయా UnicodeString&
+    append(UnicodeString& మొదటి U_LIFETIME_BOUND,
+           స్థిరరాశి UnicodeString& రెండవ,
+           UError_సంకేతం& error_సంకేతం) స్థిరరాశి override {
+        తిరిగి normalize_రెండవ_And_Append(మొదటి, రెండవ, false, error_సంకేతం);
     }
     UnicodeString&
-    normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
+    normalize_రెండవ_And_Append(UnicodeString& మొదటి U_LIFETIME_BOUND,
+                             స్థిరరాశి UnicodeString& రెండవ,
                              UBool doNormalize,
-                             UErrorCode& errorCode) const {
-        uprv_checkCanGetBuffer(first, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return first;
+                             UError_సంకేతం& error_సంకేతం) స్థిరరాశి {
+        uprv_check_Can_Get_బఫరు(మొదటి, error_సంకేతం);
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి మొదటి;
         }
-        const char16_t *secondArray=second.getBuffer();
-        if(&first==&second || secondArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return first;
+        స్థిరరాశి char16_t *రెండవ_Array=రెండవ.get_బఫరు();
+        ఒకవేళ(&మొదటి==&రెండవ || రెండవ_Array==nullptr) {
+            error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి మొదటి;
         }
-        int32_t firstLength=first.length();
-        UnicodeString safeMiddle;
+        int32_t మొదటి_నిడివి=మొదటి.నిడివి();
+        UnicodeString సురక్షిత_మధ్య;
         {
-            ReorderingBuffer buffer(impl, first);
-            if(buffer.init(firstLength+second.length(), errorCode)) {
-                normalizeAndAppend(secondArray, secondArray+second.length(), doNormalize,
-                                   safeMiddle, buffer, errorCode);
+            Reordering_బఫరు బఫరు(impl, మొదటి);
+            ఒకవేళ(బఫరు.init(మొదటి_నిడివి+రెండవ.నిడివి(), error_సంకేతం)) {
+                normalizeAndAppend(రెండవ_Array, రెండవ_Array+రెండవ.నిడివి(), doNormalize,
+                                   సురక్షిత_మధ్య, బఫరు, error_సంకేతం);
             }
         }  // The ReorderingBuffer destructor finalizes the first string.
-        if(U_FAILURE(errorCode)) {
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
             // Restore the modified suffix of the first string.
-            first.replace(firstLength-safeMiddle.length(), 0x7fffffff, safeMiddle);
+            మొదటి.replace(మొదటి_నిడివి-సురక్షిత_మధ్య.నిడివి(), 0x7fffffff, సురక్షిత_మధ్య);
         }
-        return first;
+        తిరిగి మొదటి;
     }
-    virtual void
-    normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
-                       ReorderingBuffer &buffer, UErrorCode &errorCode) const = 0;
-    virtual UBool
-    getDecomposition(UChar32 c, UnicodeString &decomposition) const override {
-        char16_t buffer[4];
-        int32_t length;
-        const char16_t *d=impl.getDecomposition(c, buffer, length);
-        if(d==nullptr) {
-            return false;
+    మాయా శూన్య
+    normalizeAndAppend(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు, UBool doNormalize,
+                       UnicodeString &సురక్షిత_మధ్య,
+                       Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి = 0;
+    మాయా UBool
+    getDecomposition(UChar32 c, UnicodeString &decomposition) స్థిరరాశి override {
+        char16_t బఫరు[4];
+        int32_t నిడివి;
+        స్థిరరాశి char16_t *d=impl.getDecomposition(c, బఫరు, నిడివి);
+        ఒకవేళ(d==nullptr) {
+            తిరిగి false;
         }
-        if(d==buffer) {
-            decomposition.setTo(buffer, length);  // copy the string (Jamos from Hangul syllable c)
-        } else {
-            decomposition.setTo(false, d, length);  // read-only alias
+        ఒకవేళ(d==బఫరు) {
+            decomposition.సమితి_గమ్యం(బఫరు, నిడివి);  // copy the string (Jamos from Hangul syllable c)
+        } లేకపోతే {
+            decomposition.సమితి_గమ్యం(false, d, నిడివి);  // read-only alias
         }
-        return true;
+        తిరిగి true;
     }
-    virtual UBool
-    getRawDecomposition(UChar32 c, UnicodeString &decomposition) const override {
-        char16_t buffer[30];
-        int32_t length;
-        const char16_t *d=impl.getRawDecomposition(c, buffer, length);
-        if(d==nullptr) {
-            return false;
+    మాయా UBool
+    getRawDecomposition(UChar32 c, UnicodeString &decomposition) స్థిరరాశి override {
+        char16_t బఫరు[30];
+        int32_t నిడివి;
+        స్థిరరాశి char16_t *d=impl.getRawDecomposition(c, బఫరు, నిడివి);
+        ఒకవేళ(d==nullptr) {
+            తిరిగి false;
         }
-        if(d==buffer) {
-            decomposition.setTo(buffer, length);  // copy the string (algorithmic decomposition)
-        } else {
-            decomposition.setTo(false, d, length);  // read-only alias
+        ఒకవేళ(d==బఫరు) {
+            decomposition.సమితి_గమ్యం(బఫరు, నిడివి);  // copy the string (algorithmic decomposition)
+        } లేకపోతే {
+            decomposition.సమితి_గమ్యం(false, d, నిడివి);  // read-only alias
         }
-        return true;
+        తిరిగి true;
     }
-    virtual UChar32
-    composePair(UChar32 a, UChar32 b) const override {
-        return impl.composePair(a, b);
+    మాయా UChar32
+    composePair(UChar32 a, UChar32 b) స్థిరరాశి override {
+        తిరిగి impl.composePair(a, b);
     }
 
-    virtual uint8_t
-    getCombiningClass(UChar32 c) const override {
-        return impl.getCC(impl.getNorm16(c));
+    మాయా uint8_t
+    getCombiningClass(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.getCC(impl.getNorm16(c));
     }
 
     // quick checks
-    virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return false;
+    మాయా UBool
+    isNormalized(స్థిరరాశి UnicodeString &s, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి false;
         }
-        const char16_t *sArray=s.getBuffer();
-        if(sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return false;
+        స్థిరరాశి char16_t *sArray=s.get_బఫరు();
+        ఒకవేళ(sArray==nullptr) {
+            error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి false;
         }
-        const char16_t *sLimit=sArray+s.length();
-        return sLimit==spanQuickCheckYes(sArray, sLimit, errorCode);
+        స్థిరరాశి char16_t *s_హద్దు=sArray+s.నిడివి();
+        తిరిగి s_హద్దు==పరిధి_శీఘ్ర_Check_Yes(sArray, s_హద్దు, error_సంకేతం);
     }
-    virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const override {
-        return Normalizer2WithImpl::isNormalized(s, errorCode) ? UNORM_YES : UNORM_NO;
+    మాయా UNormalization_Check_ఫలితం
+    శీఘ్ర_Check(స్థిరరాశి UnicodeString &s, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        తిరిగి Normalizer2WithImpl::isNormalized(s, error_సంకేతం) ? UNORM_YES : UNORM_NO;
     }
-    virtual int32_t
-    spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return 0;
+    మాయా int32_t
+    పరిధి_శీఘ్ర_Check_Yes(స్థిరరాశి UnicodeString &s, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి 0;
         }
-        const char16_t *sArray=s.getBuffer();
-        if(sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+        స్థిరరాశి char16_t *sArray=s.get_బఫరు();
+        ఒకవేళ(sArray==nullptr) {
+            error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి 0;
         }
-        return static_cast<int32_t>(spanQuickCheckYes(sArray, sArray + s.length(), errorCode) - sArray);
+        తిరిగి static_cast<int32_t>(పరిధి_శీఘ్ర_Check_Yes(sArray, sArray + s.నిడివి(), error_సంకేతం) - sArray);
     }
-    virtual const char16_t*
-    spanQuickCheckYes(const char16_t* src U_LIFETIME_BOUND,
-                      const char16_t* limit,
-                      UErrorCode& errorCode) const = 0;
+    మాయా స్థిరరాశి char16_t*
+    పరిధి_శీఘ్ర_Check_Yes(స్థిరరాశి char16_t* src U_LIFETIME_BOUND,
+                      స్థిరరాశి char16_t* హద్దు,
+                      UError_సంకేతం& error_సంకేతం) స్థిరరాశి = 0;
 
-    virtual UNormalizationCheckResult getQuickCheck(UChar32) const {
-        return UNORM_YES;
+    మాయా UNormalization_Check_ఫలితం get_శీఘ్ర_Check(UChar32) స్థిరరాశి {
+        తిరిగి UNORM_YES;
     }
 
-    const Normalizer2Impl &impl;
+    స్థిరరాశి Normalizer2Impl &impl;
 };
 
-class DecomposeNormalizer2 : public Normalizer2WithImpl {
-public:
-    DecomposeNormalizer2(const Normalizer2Impl &ni) : Normalizer2WithImpl(ni) {}
-    virtual ~DecomposeNormalizer2();
+class DecomposeNormalizer2 : బహిరంగ Normalizer2WithImpl {
+బహిరంగ:
+    DecomposeNormalizer2(స్థిరరాశి Normalizer2Impl &ni) : Normalizer2WithImpl(ni) {}
+    మాయా ~DecomposeNormalizer2();
 
-private:
-    virtual void
-    normalize(const char16_t *src, const char16_t *limit,
-              ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.decompose(src, limit, &buffer, errorCode);
+అంతరంగ:
+    మాయా శూన్య
+    normalize(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
+              Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        impl.decompose(src, హద్దు, &బఫరు, error_సంకేతం);
     }
     using Normalizer2WithImpl::normalize;  // Avoid warning about hiding base class function.
-    virtual void
-    normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
-                       ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.decomposeAndAppend(src, limit, doNormalize, safeMiddle, buffer, errorCode);
+    మాయా శూన్య
+    normalizeAndAppend(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు, UBool doNormalize,
+                       UnicodeString &సురక్షిత_మధ్య,
+                       Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        impl.decomposeAndAppend(src, హద్దు, doNormalize, సురక్షిత_మధ్య, బఫరు, error_సంకేతం);
     }
 
-    void
+    శూన్య
     normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                  Edits *edits, UErrorCode &errorCode) const override {
-        if (U_FAILURE(errorCode)) {
-            return;
+                  Edits *edits, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            తిరిగి;
         }
-        if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+        ఒకవేళ (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
             edits->reset();
         }
-        const uint8_t *s = reinterpret_cast<const uint8_t *>(src.data());
-        impl.decomposeUTF8(options, s, s + src.length(), &sink, edits, errorCode);
+        స్థిరరాశి uint8_t *s = reinterpret_cast<స్థిరరాశి uint8_t *>(src.దత్తాంశం());
+        impl.decomposeUTF8(options, s, s + src.నిడివి(), &sink, edits, error_సంకేతం);
         sink.Flush();
     }
-    virtual UBool
-    isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return false;
+    మాయా UBool
+    isNormalizedUTF8(StringPiece sp, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి false;
         }
-        const uint8_t *s = reinterpret_cast<const uint8_t *>(sp.data());
-        const uint8_t *sLimit = s + sp.length();
-        return sLimit == impl.decomposeUTF8(0, s, sLimit, nullptr, nullptr, errorCode);
+        స్థిరరాశి uint8_t *s = reinterpret_cast<స్థిరరాశి uint8_t *>(sp.దత్తాంశం());
+        స్థిరరాశి uint8_t *s_హద్దు = s + sp.నిడివి();
+        తిరిగి s_హద్దు == impl.decomposeUTF8(0, s, s_హద్దు, nullptr, nullptr, error_సంకేతం);
     }
 
-    virtual const char16_t*
-    spanQuickCheckYes(const char16_t* src U_LIFETIME_BOUND,
-                      const char16_t* limit,
-                      UErrorCode& errorCode) const override {
-        return impl.decompose(src, limit, nullptr, errorCode);
+    మాయా స్థిరరాశి char16_t*
+    పరిధి_శీఘ్ర_Check_Yes(స్థిరరాశి char16_t* src U_LIFETIME_BOUND,
+                      స్థిరరాశి char16_t* హద్దు,
+                      UError_సంకేతం& error_సంకేతం) స్థిరరాశి override {
+        తిరిగి impl.decompose(src, హద్దు, nullptr, error_సంకేతం);
     }
-    using Normalizer2WithImpl::spanQuickCheckYes;  // Avoid warning about hiding base class function.
-    virtual UNormalizationCheckResult getQuickCheck(UChar32 c) const override {
-        return impl.isDecompYes(impl.getNorm16(c)) ? UNORM_YES : UNORM_NO;
+    using Normalizer2WithImpl::పరిధి_శీఘ్ర_Check_Yes;  // Avoid warning about hiding base class function.
+    మాయా UNormalization_Check_ఫలితం get_శీఘ్ర_Check(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.isDecompYes(impl.getNorm16(c)) ? UNORM_YES : UNORM_NO;
     }
-    virtual UBool hasBoundaryBefore(UChar32 c) const override {
-        return impl.hasDecompBoundaryBefore(c);
+    మాయా UBool hasBoundaryBefore(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.hasDecompBoundaryBefore(c);
     }
-    virtual UBool hasBoundaryAfter(UChar32 c) const override {
-        return impl.hasDecompBoundaryAfter(c);
+    మాయా UBool hasBoundaryAfter(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.hasDecompBoundaryAfter(c);
     }
-    virtual UBool isInert(UChar32 c) const override {
-        return impl.isDecompInert(c);
+    మాయా UBool isInert(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.isDecompInert(c);
     }
 };
 
-class ComposeNormalizer2 : public Normalizer2WithImpl {
-public:
-    ComposeNormalizer2(const Normalizer2Impl &ni, UBool fcc) :
+class ComposeNormalizer2 : బహిరంగ Normalizer2WithImpl {
+బహిరంగ:
+    ComposeNormalizer2(స్థిరరాశి Normalizer2Impl &ni, UBool fcc) :
         Normalizer2WithImpl(ni), onlyContiguous(fcc) {}
-    virtual ~ComposeNormalizer2();
+    మాయా ~ComposeNormalizer2();
 
-private:
-    virtual void
-    normalize(const char16_t *src, const char16_t *limit,
-              ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.compose(src, limit, onlyContiguous, true, buffer, errorCode);
+అంతరంగ:
+    మాయా శూన్య
+    normalize(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
+              Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        impl.compose(src, హద్దు, onlyContiguous, true, బఫరు, error_సంకేతం);
     }
     using Normalizer2WithImpl::normalize;  // Avoid warning about hiding base class function.
 
-    void
+    శూన్య
     normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                  Edits *edits, UErrorCode &errorCode) const override {
-        if (U_FAILURE(errorCode)) {
-            return;
+                  Edits *edits, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            తిరిగి;
         }
-        if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+        ఒకవేళ (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
             edits->reset();
         }
-        const uint8_t *s = reinterpret_cast<const uint8_t *>(src.data());
-        impl.composeUTF8(options, onlyContiguous, s, s + src.length(),
-                         &sink, edits, errorCode);
+        స్థిరరాశి uint8_t *s = reinterpret_cast<స్థిరరాశి uint8_t *>(src.దత్తాంశం());
+        impl.composeUTF8(options, onlyContiguous, s, s + src.నిడివి(),
+                         &sink, edits, error_సంకేతం);
         sink.Flush();
     }
 
-    virtual void
-    normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
-                       ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.composeAndAppend(src, limit, doNormalize, onlyContiguous, safeMiddle, buffer, errorCode);
+    మాయా శూన్య
+    normalizeAndAppend(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు, UBool doNormalize,
+                       UnicodeString &సురక్షిత_మధ్య,
+                       Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        impl.composeAndAppend(src, హద్దు, doNormalize, onlyContiguous, సురక్షిత_మధ్య, బఫరు, error_సంకేతం);
     }
 
-    virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return false;
+    మాయా UBool
+    isNormalized(స్థిరరాశి UnicodeString &s, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి false;
         }
-        const char16_t *sArray=s.getBuffer();
-        if(sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return false;
+        స్థిరరాశి char16_t *sArray=s.get_బఫరు();
+        ఒకవేళ(sArray==nullptr) {
+            error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి false;
         }
-        UnicodeString temp;
-        ReorderingBuffer buffer(impl, temp);
-        if(!buffer.init(5, errorCode)) {  // small destCapacity for substring normalization
-            return false;
+        UnicodeString తాత్కాలిక;
+        Reordering_బఫరు బఫరు(impl, తాత్కాలిక);
+        ఒకవేళ(!బఫరు.init(5, error_సంకేతం)) {  // small destCapacity for substring normalization
+            తిరిగి false;
         }
-        return impl.compose(sArray, sArray+s.length(), onlyContiguous, false, buffer, errorCode);
+        తిరిగి impl.compose(sArray, sArray+s.నిడివి(), onlyContiguous, false, బఫరు, error_సంకేతం);
     }
-    virtual UBool
-    isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return false;
+    మాయా UBool
+    isNormalizedUTF8(StringPiece sp, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి false;
         }
-        const uint8_t *s = reinterpret_cast<const uint8_t *>(sp.data());
-        return impl.composeUTF8(0, onlyContiguous, s, s + sp.length(), nullptr, nullptr, errorCode);
+        స్థిరరాశి uint8_t *s = reinterpret_cast<స్థిరరాశి uint8_t *>(sp.దత్తాంశం());
+        తిరిగి impl.composeUTF8(0, onlyContiguous, s, s + sp.నిడివి(), nullptr, nullptr, error_సంకేతం);
     }
-    virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const override {
-        if(U_FAILURE(errorCode)) {
-            return UNORM_MAYBE;
+    మాయా UNormalization_Check_ఫలితం
+    శీఘ్ర_Check(స్థిరరాశి UnicodeString &s, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి UNORM_MAYBE;
         }
-        const char16_t *sArray=s.getBuffer();
-        if(sArray==nullptr) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return UNORM_MAYBE;
+        స్థిరరాశి char16_t *sArray=s.get_బఫరు();
+        ఒకవేళ(sArray==nullptr) {
+            error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+            తిరిగి UNORM_MAYBE;
         }
-        UNormalizationCheckResult qcResult=UNORM_YES;
-        impl.composeQuickCheck(sArray, sArray+s.length(), onlyContiguous, &qcResult);
-        return qcResult;
+        UNormalization_Check_ఫలితం qc_ఫలితం=UNORM_YES;
+        impl.compose_శీఘ్ర_Check(sArray, sArray+s.నిడివి(), onlyContiguous, &qc_ఫలితం);
+        తిరిగి qc_ఫలితం;
     }
-    virtual const char16_t*
-    spanQuickCheckYes(const char16_t* src U_LIFETIME_BOUND,
-                      const char16_t* limit,
-                      UErrorCode&) const override {
-        return impl.composeQuickCheck(src, limit, onlyContiguous, nullptr);
+    మాయా స్థిరరాశి char16_t*
+    పరిధి_శీఘ్ర_Check_Yes(స్థిరరాశి char16_t* src U_LIFETIME_BOUND,
+                      స్థిరరాశి char16_t* హద్దు,
+                      UError_సంకేతం&) స్థిరరాశి override {
+        తిరిగి impl.compose_శీఘ్ర_Check(src, హద్దు, onlyContiguous, nullptr);
     }
-    using Normalizer2WithImpl::spanQuickCheckYes;  // Avoid warning about hiding base class function.
-    virtual UNormalizationCheckResult getQuickCheck(UChar32 c) const override {
-        return impl.getCompQuickCheck(impl.getNorm16(c));
+    using Normalizer2WithImpl::పరిధి_శీఘ్ర_Check_Yes;  // Avoid warning about hiding base class function.
+    మాయా UNormalization_Check_ఫలితం get_శీఘ్ర_Check(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.get_Comp_శీఘ్ర_Check(impl.getNorm16(c));
     }
-    virtual UBool hasBoundaryBefore(UChar32 c) const override {
-        return impl.hasCompBoundaryBefore(c);
+    మాయా UBool hasBoundaryBefore(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.hasCompBoundaryBefore(c);
     }
-    virtual UBool hasBoundaryAfter(UChar32 c) const override {
-        return impl.hasCompBoundaryAfter(c, onlyContiguous);
+    మాయా UBool hasBoundaryAfter(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.hasCompBoundaryAfter(c, onlyContiguous);
     }
-    virtual UBool isInert(UChar32 c) const override {
-        return impl.isCompInert(c, onlyContiguous);
+    మాయా UBool isInert(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.isCompInert(c, onlyContiguous);
     }
 
-    const UBool onlyContiguous;
+    స్థిరరాశి UBool onlyContiguous;
 };
 
-class FCDNormalizer2 : public Normalizer2WithImpl {
-public:
-    FCDNormalizer2(const Normalizer2Impl &ni) : Normalizer2WithImpl(ni) {}
-    virtual ~FCDNormalizer2();
+class FCDNormalizer2 : బహిరంగ Normalizer2WithImpl {
+బహిరంగ:
+    FCDNormalizer2(స్థిరరాశి Normalizer2Impl &ni) : Normalizer2WithImpl(ni) {}
+    మాయా ~FCDNormalizer2();
 
-private:
-    virtual void
-    normalize(const char16_t *src, const char16_t *limit,
-              ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.makeFCD(src, limit, &buffer, errorCode);
+అంతరంగ:
+    మాయా శూన్య
+    normalize(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
+              Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        impl.makeFCD(src, హద్దు, &బఫరు, error_సంకేతం);
     }
     using Normalizer2WithImpl::normalize;  // Avoid warning about hiding base class function.
-    virtual void
-    normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
-                       ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.makeFCDAndAppend(src, limit, doNormalize, safeMiddle, buffer, errorCode);
+    మాయా శూన్య
+    normalizeAndAppend(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు, UBool doNormalize,
+                       UnicodeString &సురక్షిత_మధ్య,
+                       Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి override {
+        impl.makeFCDAndAppend(src, హద్దు, doNormalize, సురక్షిత_మధ్య, బఫరు, error_సంకేతం);
     }
-    virtual const char16_t*
-    spanQuickCheckYes(const char16_t* src U_LIFETIME_BOUND,
-                      const char16_t* limit,
-                      UErrorCode& errorCode) const override {
-        return impl.makeFCD(src, limit, nullptr, errorCode);
+    మాయా స్థిరరాశి char16_t*
+    పరిధి_శీఘ్ర_Check_Yes(స్థిరరాశి char16_t* src U_LIFETIME_BOUND,
+                      స్థిరరాశి char16_t* హద్దు,
+                      UError_సంకేతం& error_సంకేతం) స్థిరరాశి override {
+        తిరిగి impl.makeFCD(src, హద్దు, nullptr, error_సంకేతం);
     }
-    using Normalizer2WithImpl::spanQuickCheckYes;  // Avoid warning about hiding base class function.
-    virtual UBool hasBoundaryBefore(UChar32 c) const override {
-        return impl.hasFCDBoundaryBefore(c);
+    using Normalizer2WithImpl::పరిధి_శీఘ్ర_Check_Yes;  // Avoid warning about hiding base class function.
+    మాయా UBool hasBoundaryBefore(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.hasFCDBoundaryBefore(c);
     }
-    virtual UBool hasBoundaryAfter(UChar32 c) const override {
-        return impl.hasFCDBoundaryAfter(c);
+    మాయా UBool hasBoundaryAfter(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.hasFCDBoundaryAfter(c);
     }
-    virtual UBool isInert(UChar32 c) const override {
-        return impl.isFCDInert(c);
+    మాయా UBool isInert(UChar32 c) స్థిరరాశి override {
+        తిరిగి impl.isFCDInert(c);
     }
 };
 
-struct Norm2AllModes : public UMemory {
+నిర్మాణం Norm2AllModes : బహిరంగ UMemory {
     Norm2AllModes(Normalizer2Impl *i)
             : impl(i), comp(*i, false), decomp(*i), fcd(*i), fcc(*i, true) {}
     ~Norm2AllModes();
 
-    static Norm2AllModes *createInstance(Normalizer2Impl *impl, UErrorCode &errorCode);
-    static Norm2AllModes *createNFCInstance(UErrorCode &errorCode);
-    static Norm2AllModes *createInstance(const char *packageName,
-                                         const char *name,
-                                         UErrorCode &errorCode);
+    స్థిర Norm2AllModes *createInstance(Normalizer2Impl *impl, UError_సంకేతం &error_సంకేతం);
+    స్థిర Norm2AllModes *createNFCInstance(UError_సంకేతం &error_సంకేతం);
+    స్థిర Norm2AllModes *createInstance(స్థిరరాశి అక్షరం *packageName,
+                                         స్థిరరాశి అక్షరం *name,
+                                         UError_సంకేతం &error_సంకేతం);
 
-    static const Norm2AllModes *getNFCInstance(UErrorCode &errorCode);
-    static const Norm2AllModes *getNFKCInstance(UErrorCode &errorCode);
-    static const Norm2AllModes *getNFKC_CFInstance(UErrorCode &errorCode);
-    static const Norm2AllModes *getNFKC_SCFInstance(UErrorCode &errorCode);
+    స్థిర స్థిరరాశి Norm2AllModes *getNFCInstance(UError_సంకేతం &error_సంకేతం);
+    స్థిర స్థిరరాశి Norm2AllModes *getNFKCInstance(UError_సంకేతం &error_సంకేతం);
+    స్థిర స్థిరరాశి Norm2AllModes *getNFKC_CFInstance(UError_సంకేతం &error_సంకేతం);
+    స్థిర స్థిరరాశి Norm2AllModes *getNFKC_SCFInstance(UError_సంకేతం &error_సంకేతం);
 
     Normalizer2Impl *impl;
     ComposeNormalizer2 comp;
@@ -408,7 +408,7 @@ struct Norm2AllModes : public UMemory {
     ComposeNormalizer2 fcc;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // !UCONFIG_NO_NORMALIZATION
-#endif  // __NORM2ALLMODES_H__
+#అయితే_ముగింపు  // !UCONFIG_NO_NORMALIZATION
+#అయితే_ముగింపు  // __NORM2ALLMODES_H__

@@ -17,18 +17,18 @@
 *
 */
 
-#include <limits>
+#అన్తర్భావ <limits>
 
-#include "cmemory.h"
-#include "unicode/unistr.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/ubidi.h"
-#include "unicode/utf16.h"
-#include "ubidi_props.h"
-#include "ubidiimp.h"
-#include "uassert.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/ubidi.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "ubidi_props.h"
+#అన్తర్భావ "ubidiimp.h"
+#అన్తర్భావ "uassert.h"
 
 /*
  * General implementation notes:
@@ -112,76 +112,76 @@
  */
 
 /* to avoid some conditional statements, use tiny constant arrays */
-static const Flags flagLR[2]={ DIRPROP_FLAG(L), DIRPROP_FLAG(R) };
-static const Flags flagE[2]={ DIRPROP_FLAG(LRE), DIRPROP_FLAG(RLE) };
-static const Flags flagO[2]={ DIRPROP_FLAG(LRO), DIRPROP_FLAG(RLO) };
+స్థిర స్థిరరాశి Flags flagLR[2]={ DIRPROP_FLAG(L), DIRPROP_FLAG(R) };
+స్థిర స్థిరరాశి Flags flagE[2]={ DIRPROP_FLAG(LRE), DIRPROP_FLAG(RLE) };
+స్థిర స్థిరరాశి Flags flagO[2]={ DIRPROP_FLAG(LRO), DIRPROP_FLAG(RLO) };
 
-#define DIRPROP_FLAG_LR(level) flagLR[(level)&1]
-#define DIRPROP_FLAG_E(level)  flagE[(level)&1]
-#define DIRPROP_FLAG_O(level)  flagO[(level)&1]
+#నిర్వచించు DIRPROP_FLAG_LR(level) flagLR[(level)&1]
+#నిర్వచించు DIRPROP_FLAG_E(level)  flagE[(level)&1]
+#నిర్వచించు DIRPROP_FLAG_O(level)  flagO[(level)&1]
 
-#define DIR_FROM_STRONG(strong) ((strong)==L ? L : R)
+#నిర్వచించు DIR_FROM_STRONG(strong) ((strong)==L ? L : R)
 
-#define NO_OVERRIDE(level)  ((level)&~UBIDI_LEVEL_OVERRIDE)
+#నిర్వచించు NO_OVERRIDE(level)  ((level)&~UBIDI_LEVEL_OVERRIDE)
 
 /* UBiDi object management -------------------------------------------------- */
 
 U_CAPI UBiDi * U_EXPORT2
 ubidi_open()
 {
-    UErrorCode errorCode=U_ZERO_ERROR;
-    return ubidi_openSized(0, 0, &errorCode);
+    UError_సంకేతం error_సంకేతం=U_ZERO_ERROR;
+    తిరిగి ubidi_openSized(0, 0, &error_సంకేతం);
 }
 
 U_CAPI UBiDi * U_EXPORT2
-ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode) {
+ubidi_openSized(int32_t max_నిడివి_2, int32_t max_నిరంతరం_లెక్క, UError_సంకేతం *p_Error_సంకేతం) {
     UBiDi *pBiDi;
 
     /* check the argument values */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(maxLength<0 || maxRunCount<0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;    /* invalid arguments */
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే ఒకవేళ(max_నిడివి_2<0 || max_నిరంతరం_లెక్క<0) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;    /* invalid arguments */
     }
 
     /* allocate memory for the object */
-    pBiDi=(UBiDi *)uprv_malloc(sizeof(UBiDi));
-    if(pBiDi==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    pBiDi=(UBiDi *)uprv_malloc(పరిమాణం(UBiDi));
+    ఒకవేళ(pBiDi==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 
     /* reset the object, all pointers nullptr, all flags false, all sizes 0 */
-    uprv_memset(pBiDi, 0, sizeof(UBiDi));
+    uprv_memset(pBiDi, 0, పరిమాణం(UBiDi));
 
     /* allocate memory for arrays as requested */
-    if(maxLength>0) {
-        if( !getInitialDirPropsMemory(pBiDi, maxLength) ||
-            !getInitialLevelsMemory(pBiDi, maxLength)
+    ఒకవేళ(max_నిడివి_2>0) {
+        ఒకవేళ( !get_Initial_Dir_Props_జ్ఞాపకం(pBiDi, max_నిడివి_2) ||
+            !get_Initial_స్థాయిలు_జ్ఞాపకం(pBiDi, max_నిడివి_2)
         ) {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
+            *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
         }
-    } else {
-        pBiDi->mayAllocateText=true;
+    } లేకపోతే {
+        pBiDi->may_Allocate_పాఠ్యం=నిజం;
     }
 
-    if(maxRunCount>0) {
-        if(maxRunCount==1) {
+    ఒకవేళ(max_నిరంతరం_లెక్క>0) {
+        ఒకవేళ(max_నిరంతరం_లెక్క==1) {
             /* use simpleRuns[] */
-            pBiDi->runsSize=sizeof(Run);
-        } else if(!getInitialRunsMemory(pBiDi, maxRunCount)) {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
+            pBiDi->runs_కొలత=పరిమాణం(నిరంతరం);
+        } లేకపోతే ఒకవేళ(!get_Initial_Runs_జ్ఞాపకం(pBiDi, max_నిరంతరం_లెక్క)) {
+            *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
         }
-    } else {
-        pBiDi->mayAllocateRuns=true;
+    } లేకపోతే {
+        pBiDi->mayAllocateRuns=నిజం;
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
-        return pBiDi;
-    } else {
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం)) {
+        తిరిగి pBiDi;
+    } లేకపోతే {
         ubidi_close(pBiDi);
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 }
 
@@ -199,74 +199,74 @@ ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode) 
  * is this the best way to do this??
  */
 U_CFUNC UBool
-ubidi_getMemory(BidiMemoryForAllocation *bidiMem, int32_t *pSize, UBool mayAllocate, size_t sizeNeeded) {
-    if (sizeNeeded > std::numeric_limits<int32_t>::max()) {
+ubidi_get_జ్ఞాపకం(Bidi_జ్ఞాపకం_For_కేటాయింపు *bidiMem, int32_t *p_కొలత, UBool mayAllocate, size_t కొలత_Needed) {
+    ఒకవేళ (కొలత_Needed > std::numeric_limits<int32_t>::max()) {
       // TODO(egg): Ugly guard for ICU-23397.  A cleaner fix would be to change the pSize to size_t*
       // and update callers throughout to use size_t for sizes (just like uprv_malloc already does).
       // Not that anyone should be running the UBA on text with that many runs…
-      return false;
+      తిరిగి అబద్ధం;
     }
-    void **pMemory = (void **)bidiMem;
+    శూన్య **p_జ్ఞాపకం = (శూన్య **)bidiMem;
     /* check for existing memory */
-    if(*pMemory==nullptr) {
+    ఒకవేళ(*p_జ్ఞాపకం==శూన్యసూచిక) {
         /* we need to allocate memory */
-        if(mayAllocate && (*pMemory=uprv_malloc(sizeNeeded))!=nullptr) {
-            *pSize=static_cast<int32_t>(sizeNeeded);
-            return true;
-        } else {
-            return false;
+        ఒకవేళ(mayAllocate && (*p_జ్ఞాపకం=uprv_malloc(కొలత_Needed))!=శూన్యసూచిక) {
+            *p_కొలత=static_cast<int32_t>(కొలత_Needed);
+            తిరిగి నిజం;
+        } లేకపోతే {
+            తిరిగి అబద్ధం;
         }
-    } else {
-        if(sizeNeeded<=static_cast<size_t>(*pSize)) {
+    } లేకపోతే {
+        ఒకవేళ(కొలత_Needed<=static_cast<size_t>(*p_కొలత)) {
             /* there is already enough memory */
-            return true;
+            తిరిగి నిజం;
         }
-        else if(!mayAllocate) {
+        లేకపోతే ఒకవేళ(!mayAllocate) {
             /* not enough memory, and we must not allocate */
-            return false;
-        } else {
+            తిరిగి అబద్ధం;
+        } లేకపోతే {
             /* we try to grow */
-            void *memory;
+            శూన్య *జ్ఞాపకం;
             /* in most cases, we do not need the copy-old-data part of
              * realloc, but it is needed when adding runs using getRunsMemory()
              * in setParaRunsOnly()
              */
-            if((memory=uprv_realloc(*pMemory, sizeNeeded))!=nullptr) {
-                *pMemory=memory;
-                *pSize=static_cast<int32_t>(sizeNeeded);
-                return true;
-            } else {
+            ఒకవేళ((జ్ఞాపకం=uprv_realloc(*p_జ్ఞాపకం, కొలత_Needed))!=శూన్యసూచిక) {
+                *p_జ్ఞాపకం=జ్ఞాపకం;
+                *p_కొలత=static_cast<int32_t>(కొలత_Needed);
+                తిరిగి నిజం;
+            } లేకపోతే {
                 /* we failed to grow */
-                return false;
+                తిరిగి అబద్ధం;
             }
         }
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ubidi_close(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        pBiDi->pParaBiDi=nullptr;          /* in case one tries to reuse this block */
-        if(pBiDi->dirPropsMemory!=nullptr) {
-            uprv_free(pBiDi->dirPropsMemory);
+    ఒకవేళ(pBiDi!=శూన్యసూచిక) {
+        pBiDi->pParaBiDi=శూన్యసూచిక;          /* in case one tries to reuse this block */
+        ఒకవేళ(pBiDi->dir_Props_జ్ఞాపకం!=శూన్యసూచిక) {
+            uprv_free(pBiDi->dir_Props_జ్ఞాపకం);
         }
-        if(pBiDi->levelsMemory!=nullptr) {
-            uprv_free(pBiDi->levelsMemory);
+        ఒకవేళ(pBiDi->స్థాయిలు_జ్ఞాపకం!=శూన్యసూచిక) {
+            uprv_free(pBiDi->స్థాయిలు_జ్ఞాపకం);
         }
-        if(pBiDi->openingsMemory!=nullptr) {
-            uprv_free(pBiDi->openingsMemory);
+        ఒకవేళ(pBiDi->openings_జ్ఞాపకం!=శూన్యసూచిక) {
+            uprv_free(pBiDi->openings_జ్ఞాపకం);
         }
-        if(pBiDi->parasMemory!=nullptr) {
-            uprv_free(pBiDi->parasMemory);
+        ఒకవేళ(pBiDi->paras_జ్ఞాపకం!=శూన్యసూచిక) {
+            uprv_free(pBiDi->paras_జ్ఞాపకం);
         }
-        if(pBiDi->runsMemory!=nullptr) {
-            uprv_free(pBiDi->runsMemory);
+        ఒకవేళ(pBiDi->runs_జ్ఞాపకం!=శూన్యసూచిక) {
+            uprv_free(pBiDi->runs_జ్ఞాపకం);
         }
-        if(pBiDi->isolatesMemory!=nullptr) {
-            uprv_free(pBiDi->isolatesMemory);
+        ఒకవేళ(pBiDi->isolates_జ్ఞాపకం!=శూన్యసూచిక) {
+            uprv_free(pBiDi->isolates_జ్ఞాపకం);
         }
-        if(pBiDi->insertPoints.points!=nullptr) {
-            uprv_free(pBiDi->insertPoints.points);
+        ఒకవేళ(pBiDi->చొప్పించు_Points.points!=శూన్యసూచిక) {
+            uprv_free(pBiDi->చొప్పించు_Points.points);
         }
 
         uprv_free(pBiDi);
@@ -275,21 +275,21 @@ ubidi_close(UBiDi *pBiDi) {
 
 /* set to approximate "inverse BiDi" ---------------------------------------- */
 
-U_CAPI void U_EXPORT2
-ubidi_setInverse(UBiDi *pBiDi, UBool isInverse) {
-    if(pBiDi!=nullptr) {
+U_CAPI శూన్య U_EXPORT2
+ubidi_సమితి_Inverse(UBiDi *pBiDi, UBool isInverse) {
+    ఒకవేళ(pBiDi!=శూన్యసూచిక) {
         pBiDi->isInverse=isInverse;
-        pBiDi->reorderingMode = isInverse ? UBIDI_REORDER_INVERSE_NUMBERS_AS_L
+        pBiDi->reordering_బహుళకం = isInverse ? UBIDI_REORDER_INVERSE_NUMBERS_AS_L
                                           : UBIDI_REORDER_DEFAULT;
     }
 }
 
 U_CAPI UBool U_EXPORT2
 ubidi_isInverse(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        return pBiDi->isInverse;
-    } else {
-        return false;
+    ఒకవేళ(pBiDi!=శూన్యసూచిక) {
+        తిరిగి pBiDi->isInverse;
+    } లేకపోతే {
+        తిరిగి అబద్ధం;
     }
 }
 
@@ -308,69 +308,69 @@ ubidi_isInverse(UBiDi *pBiDi) {
  * This would need to document which ones are supported and what are the
  * fallbacks for unsupported combinations.
  */
-U_CAPI void U_EXPORT2
-ubidi_setReorderingMode(UBiDi *pBiDi, UBiDiReorderingMode reorderingMode) UPRV_NO_SANITIZE_UNDEFINED {
-    if ((pBiDi!=nullptr) && (reorderingMode >= UBIDI_REORDER_DEFAULT)
-                        && (reorderingMode < UBIDI_REORDER_COUNT)) {
-        pBiDi->reorderingMode = reorderingMode;
-        pBiDi->isInverse = reorderingMode == UBIDI_REORDER_INVERSE_NUMBERS_AS_L;
+U_CAPI శూన్య U_EXPORT2
+ubidi_సమితి_Reordering_బహుళకం(UBiDi *pBiDi, UBi_Di_Reordering_బహుళకం reordering_బహుళకం) UPRV_NO_SANITIZE_UNDEFINED {
+    ఒకవేళ ((pBiDi!=శూన్యసూచిక) && (reordering_బహుళకం >= UBIDI_REORDER_DEFAULT)
+                        && (reordering_బహుళకం < UBIDI_REORDER_లెక్క)) {
+        pBiDi->reordering_బహుళకం = reordering_బహుళకం;
+        pBiDi->isInverse = reordering_బహుళకం == UBIDI_REORDER_INVERSE_NUMBERS_AS_L;
     }
 }
 
-U_CAPI UBiDiReorderingMode U_EXPORT2
-ubidi_getReorderingMode(UBiDi *pBiDi) {
-    if (pBiDi!=nullptr) {
-        return pBiDi->reorderingMode;
-    } else {
-        return UBIDI_REORDER_DEFAULT;
+U_CAPI UBi_Di_Reordering_బహుళకం U_EXPORT2
+ubidi_get_Reordering_బహుళకం(UBiDi *pBiDi) {
+    ఒకవేళ (pBiDi!=శూన్యసూచిక) {
+        తిరిగి pBiDi->reordering_బహుళకం;
+    } లేకపోతే {
+        తిరిగి UBIDI_REORDER_DEFAULT;
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_setReorderingOptions(UBiDi *pBiDi, uint32_t reorderingOptions) {
-    if (reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
-        reorderingOptions&=~UBIDI_OPTION_INSERT_MARKS;
+U_CAPI శూన్య U_EXPORT2
+ubidi_సమితి_Reordering_Options(UBiDi *pBiDi, uint32_t reorderingOptions) {
+    ఒకవేళ (reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+        reorderingOptions&=~UBIDI_OPTION_చొప్పించు_MARKS;
     }
-    if (pBiDi!=nullptr) {
+    ఒకవేళ (pBiDi!=శూన్యసూచిక) {
         pBiDi->reorderingOptions=reorderingOptions;
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
 ubidi_getReorderingOptions(UBiDi *pBiDi) {
-    if (pBiDi!=nullptr) {
-        return pBiDi->reorderingOptions;
-    } else {
-        return 0;
+    ఒకవేళ (pBiDi!=శూన్యసూచిక) {
+        తిరిగి pBiDi->reorderingOptions;
+    } లేకపోతే {
+        తిరిగి 0;
     }
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
-ubidi_getBaseDirection(const char16_t *text,
+ubidi_get_పునాది_Direction(స్థిరరాశి char16_t *పాఠ్యం,
 int32_t length){
 
     int32_t i;
     UChar32 uchar;
     UCharDirection dir;
 
-    if( text==nullptr || length<-1 ){
-        return UBIDI_NEUTRAL;
+    ఒకవేళ( పాఠ్యం==శూన్యసూచిక || length<-1 ){
+        తిరిగి UBIDI_NEUTRAL;
     }
 
-    if(length==-1) {
-        length=u_strlen(text);
+    ఒకవేళ(length==-1) {
+        length=u_strlen(పాఠ్యం);
     }
 
-    for( i = 0 ; i < length; ) {
+    కొరకు( i = 0 ; i < length; ) {
         /* i is incremented by U16_NEXT */
-        U16_NEXT(text, i, length, uchar);
+        U16_తదుపరి(పాఠ్యం, i, length, uchar);
         dir = u_charDirection(uchar);
-        if( dir == U_LEFT_TO_RIGHT )
-                return UBIDI_LTR;
-        if( dir == U_RIGHT_TO_LEFT || dir ==U_RIGHT_TO_LEFT_ARABIC )
-                return UBIDI_RTL;
+        ఒకవేళ( dir == U_ఎడమ_గమ్యం_కుడి )
+                తిరిగి UBIDI_LTR;
+        ఒకవేళ( dir == U_కుడి_గమ్యం_ఎడమ || dir ==U_కుడి_గమ్యం_ఎడమ_ARABIC )
+                తిరిగి UBIDI_RTL;
     }
-    return UBIDI_NEUTRAL;
+    తిరిగి UBIDI_NEUTRAL;
 }
 
 /* perform (P2)..(P3) ------------------------------------------------------- */
@@ -380,49 +380,49 @@ int32_t length){
  * after the last B in prologue, if any.
  * Requires prologue!=null.
  */
-static DirProp
-firstL_R_AL(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->prologue;
-    int32_t length=pBiDi->proLength;
+స్థిర DirProp
+మొదటి_L_R_AL(UBiDi *pBiDi) {
+    స్థిరరాశి char16_t *పాఠ్యం=pBiDi->prologue;
+    int32_t length=pBiDi->pro_నిడివి;
     int32_t i;
     UChar32 uchar;
-    DirProp dirProp, result=ON;
-    for(i=0; i<length; ) {
+    DirProp dirProp, ఫలితం=ON;
+    కొరకు(i=0; i<length; ) {
         /* i is incremented by U16_NEXT */
-        U16_NEXT(text, i, length, uchar);
+        U16_తదుపరి(పాఠ్యం, i, length, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(result==ON) {
-            if(dirProp==L || dirProp==R || dirProp==AL) {
-                result=dirProp;
+        ఒకవేళ(ఫలితం==ON) {
+            ఒకవేళ(dirProp==L || dirProp==R || dirProp==AL) {
+                ఫలితం=dirProp;
             }
-        } else {
-            if(dirProp==B) {
-                result=ON;
+        } లేకపోతే {
+            ఒకవేళ(dirProp==B) {
+                ఫలితం=ON;
             }
         }
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 /*
  * Check that there are enough entries in the array pointed to by pBiDi->paras
  */
-static UBool
-checkParaCount(UBiDi *pBiDi) {
-    int32_t count=pBiDi->paraCount;
-    if(pBiDi->paras==pBiDi->simpleParas) {
-        if(count<=SIMPLE_PARAS_COUNT)
-            return true;
-        if(!getInitialParasMemory(pBiDi, SIMPLE_PARAS_COUNT * 2))
-            return false;
-        pBiDi->paras=pBiDi->parasMemory;
-        uprv_memcpy(pBiDi->parasMemory, pBiDi->simpleParas, SIMPLE_PARAS_COUNT * sizeof(Para));
-        return true;
+స్థిర UBool
+check_Para_లెక్క(UBiDi *pBiDi) {
+    int32_t count=pBiDi->para_లెక్క;
+    ఒకవేళ(pBiDi->paras==pBiDi->simpleParas) {
+        ఒకవేళ(count<=SIMPLE_PARAS_లెక్క)
+            తిరిగి నిజం;
+        ఒకవేళ(!get_Initial_Paras_జ్ఞాపకం(pBiDi, SIMPLE_PARAS_లెక్క * 2))
+            తిరిగి అబద్ధం;
+        pBiDi->paras=pBiDi->paras_జ్ఞాపకం;
+        uprv_memcpy(pBiDi->paras_జ్ఞాపకం, pBiDi->simpleParas, SIMPLE_PARAS_లెక్క * పరిమాణం(Para));
+        తిరిగి నిజం;
     }
-    if(!getInitialParasMemory(pBiDi, count * 2))
-        return false;
-    pBiDi->paras=pBiDi->parasMemory;
-    return true;
+    ఒకవేళ(!get_Initial_Paras_జ్ఞాపకం(pBiDi, count * 2))
+        తిరిగి అబద్ధం;
+    pBiDi->paras=pBiDi->paras_జ్ఞాపకం;
+    తిరిగి నిజం;
 }
 
 /*
@@ -433,12 +433,12 @@ checkParaCount(UBiDi *pBiDi) {
  * default. Only if a strong R or AL is found within its scope will the LRI be
  * replaced by an RLI.
  */
-static UBool
+స్థిర UBool
 getDirProps(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->text;
-    DirProp *dirProps=pBiDi->dirPropsMemory;    /* pBiDi->dirProps is const */
+    స్థిరరాశి char16_t *పాఠ్యం=pBiDi->పాఠ్యం;
+    DirProp *dirProps=pBiDi->dir_Props_జ్ఞాపకం;    /* pBiDi->dirProps is const */
 
-    int32_t i=0, originalLength=pBiDi->originalLength;
+    int32_t i=0, original_నిడివి=pBiDi->original_నిడివి;
     Flags flags=0;      /* collect all directionalities in the text */
     UChar32 uchar;
     DirProp dirProp=0, defaultParaLevel=0;  /* initialize to avoid compiler warnings */
@@ -446,21 +446,21 @@ getDirProps(UBiDi *pBiDi) {
     /* for inverse BiDi, the default para level is set to RTL if there is a
        strong R or AL character at either end of the text                            */
     UBool isDefaultLevelInverse = isDefaultLevel && static_cast<UBool>(
-            pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_LIKE_DIRECT ||
-            pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL);
-    int32_t lastArabicPos=-1;
-    int32_t controlCount=0;
+            pBiDi->reordering_బహుళకం == UBIDI_REORDER_INVERSE_LIKE_ప్రత్యక్ష ||
+            pBiDi->reordering_బహుళకం == UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL);
+    int32_t చివరి_Arabic_Pos=-1;
+    int32_t control_లెక్క=0;
     UBool removeBiDiControls =
         static_cast<UBool>(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS);
 
-    enum State {
+    గణన State {
          NOT_SEEKING_STRONG,            /* 0: not contextual paraLevel, not after FSI */
          SEEKING_STRONG_FOR_PARA,       /* 1: looking for first strong char in para */
          SEEKING_STRONG_FOR_FSI,        /* 2: looking for first strong after FSI */
          LOOKING_FOR_PDI                /* 3: found strong after FSI, looking for PDI */
     };
     State state;
-    DirProp lastStrong=ON;              /* for default level & inverse BiDi */
+    DirProp చివరి_Strong=ON;              /* for default level & inverse BiDi */
     /* The following stacks are used to manage isolate sequences. Those
        sequences may be nested, but obviously never more deeply than the
        maximum explicit embedding level.
@@ -469,29 +469,29 @@ getDirProps(UBiDi *pBiDi) {
        lastStack is reset to -1 on paragraph boundaries. */
     /* The following stack contains the position of the initiator of
        each open isolate sequence */
-    int32_t isolateStartStack[UBIDI_MAX_EXPLICIT_LEVEL+1];
+    int32_t isolate_ప్రారంభం_దొంతర[UBIDI_MAX_EXPLICIT_LEVEL+1];
     /* The following stack contains the last known state before
        encountering the initiator of an isolate sequence */
-    State  previousStateStack[UBIDI_MAX_EXPLICIT_LEVEL+1];
-    int32_t stackLast=-1;
+    State  మునుపటి_State_దొంతర[UBIDI_MAX_EXPLICIT_LEVEL+1];
+    int32_t దొంతర_చివరి=-1;
 
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING)
+    ఒకవేళ(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING)
         pBiDi->length=0;
     defaultParaLevel=pBiDi->paraLevel&1;
-    if(isDefaultLevel) {
+    ఒకవేళ(isDefaultLevel) {
         pBiDi->paras[0].level=defaultParaLevel;
-        lastStrong=defaultParaLevel;
-        if(pBiDi->proLength>0 &&                    /* there is a prologue */
-           (dirProp=firstL_R_AL(pBiDi))!=ON) {  /* with a strong character */
-            if(dirProp==L)
+        చివరి_Strong=defaultParaLevel;
+        ఒకవేళ(pBiDi->pro_నిడివి>0 &&                    /* there is a prologue */
+           (dirProp=మొదటి_L_R_AL(pBiDi))!=ON) {  /* with a strong character */
+            ఒకవేళ(dirProp==L)
                 pBiDi->paras[0].level=0;    /* set the default para level */
-            else
+            లేకపోతే
                 pBiDi->paras[0].level=1;    /* set the default para level */
             state=NOT_SEEKING_STRONG;
-        } else {
+        } లేకపోతే {
             state=SEEKING_STRONG_FOR_PARA;
         }
-    } else {
+    } లేకపోతే {
         pBiDi->paras[0].level=pBiDi->paraLevel;
         state=NOT_SEEKING_STRONG;
     }
@@ -501,163 +501,163 @@ getDirProps(UBiDi *pBiDi) {
      * the UBIDI_DEFAULT_XXX values are designed so that
      * their bit 0 alone yields the intended default
      */
-    for( /* i=0 above */ ; i<originalLength; ) {
+    కొరకు( /* i=0 above */ ; i<original_నిడివి; ) {
         /* i is incremented by U16_NEXT */
-        U16_NEXT(text, i, originalLength, uchar);
+        U16_తదుపరి(పాఠ్యం, i, original_నిడివి, uchar);
         flags|=DIRPROP_FLAG(dirProp=(DirProp)ubidi_getCustomizedClass(pBiDi, uchar));
         dirProps[i-1]=dirProp;
-        if(uchar>0xffff) {  /* set the lead surrogate's property to BN */
+        ఒకవేళ(uchar>0xffff) {  /* set the lead surrogate's property to BN */
             flags|=DIRPROP_FLAG(BN);
             dirProps[i-2]=BN;
         }
-        if(removeBiDiControls && IS_BIDI_CONTROL_CHAR(uchar))
-            controlCount++;
-        if(dirProp==L) {
-            if(state==SEEKING_STRONG_FOR_PARA) {
-                pBiDi->paras[pBiDi->paraCount-1].level=0;
+        ఒకవేళ(removeBiDiControls && IS_BIDI_CONTROL_CHAR(uchar))
+            control_లెక్క++;
+        ఒకవేళ(dirProp==L) {
+            ఒకవేళ(state==SEEKING_STRONG_FOR_PARA) {
+                pBiDi->paras[pBiDi->para_లెక్క-1].level=0;
                 state=NOT_SEEKING_STRONG;
             }
-            else if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+            లేకపోతే ఒకవేళ(state==SEEKING_STRONG_FOR_FSI) {
+                ఒకవేళ(దొంతర_చివరి<=UBIDI_MAX_EXPLICIT_LEVEL) {
                     /* no need for next statement, already set by default */
                     /* dirProps[isolateStartStack[stackLast]]=LRI; */
                     flags|=DIRPROP_FLAG(LRI);
                 }
                 state=LOOKING_FOR_PDI;
             }
-            lastStrong=L;
-            continue;
+            చివరి_Strong=L;
+            కొనసాగు;
         }
-        if(dirProp==R || dirProp==AL) {
-            if(state==SEEKING_STRONG_FOR_PARA) {
-                pBiDi->paras[pBiDi->paraCount-1].level=1;
+        ఒకవేళ(dirProp==R || dirProp==AL) {
+            ఒకవేళ(state==SEEKING_STRONG_FOR_PARA) {
+                pBiDi->paras[pBiDi->para_లెక్క-1].level=1;
                 state=NOT_SEEKING_STRONG;
             }
-            else if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
-                    dirProps[isolateStartStack[stackLast]]=RLI;
+            లేకపోతే ఒకవేళ(state==SEEKING_STRONG_FOR_FSI) {
+                ఒకవేళ(దొంతర_చివరి<=UBIDI_MAX_EXPLICIT_LEVEL) {
+                    dirProps[isolate_ప్రారంభం_దొంతర[దొంతర_చివరి]]=RLI;
                     flags|=DIRPROP_FLAG(RLI);
                 }
                 state=LOOKING_FOR_PDI;
             }
-            lastStrong=R;
-            if(dirProp==AL)
-                lastArabicPos=i-1;
-            continue;
+            చివరి_Strong=R;
+            ఒకవేళ(dirProp==AL)
+                చివరి_Arabic_Pos=i-1;
+            కొనసాగు;
         }
-        if(dirProp>=FSI && dirProp<=RLI) {  /* FSI, LRI or RLI */
-            stackLast++;
-            if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
-                isolateStartStack[stackLast]=i-1;
-                previousStateStack[stackLast]=state;
+        ఒకవేళ(dirProp>=FSI && dirProp<=RLI) {  /* FSI, LRI or RLI */
+            దొంతర_చివరి++;
+            ఒకవేళ(దొంతర_చివరి<=UBIDI_MAX_EXPLICIT_LEVEL) {
+                isolate_ప్రారంభం_దొంతర[దొంతర_చివరి]=i-1;
+                మునుపటి_State_దొంతర[దొంతర_చివరి]=state;
             }
-            if(dirProp==FSI) {
+            ఒకవేళ(dirProp==FSI) {
                 dirProps[i-1]=LRI;      /* default if no strong char */
                 state=SEEKING_STRONG_FOR_FSI;
             }
-            else
+            లేకపోతే
                 state=LOOKING_FOR_PDI;
-            continue;
+            కొనసాగు;
         }
-        if(dirProp==PDI) {
-            if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+        ఒకవేళ(dirProp==PDI) {
+            ఒకవేళ(state==SEEKING_STRONG_FOR_FSI) {
+                ఒకవేళ(దొంతర_చివరి<=UBIDI_MAX_EXPLICIT_LEVEL) {
                     /* no need for next statement, already set by default */
                     /* dirProps[isolateStartStack[stackLast]]=LRI; */
                     flags|=DIRPROP_FLAG(LRI);
                 }
             }
-            if(stackLast>=0) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL)
-                    state=previousStateStack[stackLast];
-                stackLast--;
+            ఒకవేళ(దొంతర_చివరి>=0) {
+                ఒకవేళ(దొంతర_చివరి<=UBIDI_MAX_EXPLICIT_LEVEL)
+                    state=మునుపటి_State_దొంతర[దొంతర_చివరి];
+                దొంతర_చివరి--;
             }
-            continue;
+            కొనసాగు;
         }
-        if(dirProp==B) {
-            if(i<originalLength && uchar==CR && text[i]==LF) /* do nothing on the CR */
-                continue;
-            pBiDi->paras[pBiDi->paraCount-1].limit=i;
-            if(isDefaultLevelInverse && lastStrong==R)
-                pBiDi->paras[pBiDi->paraCount-1].level=1;
-            if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
+        ఒకవేళ(dirProp==B) {
+            ఒకవేళ(i<original_నిడివి && uchar==CR && పాఠ్యం[i]==LF) /* do nothing on the CR */
+                కొనసాగు;
+            pBiDi->paras[pBiDi->para_లెక్క-1].హద్దు=i;
+            ఒకవేళ(isDefaultLevelInverse && చివరి_Strong==R)
+                pBiDi->paras[pBiDi->para_లెక్క-1].level=1;
+            ఒకవేళ(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
                 /* When streaming, we only process whole paragraphs
                    thus some updates are only done on paragraph boundaries */
                 pBiDi->length=i;        /* i is index to next character */
-                pBiDi->controlCount=controlCount;
+                pBiDi->control_లెక్క=control_లెక్క;
             }
-            if(i<originalLength) {              /* B not last char in text */
-                pBiDi->paraCount++;
-                if(checkParaCount(pBiDi)==false)    /* not enough memory for a new para entry */
-                    return false;
-                if(isDefaultLevel) {
-                    pBiDi->paras[pBiDi->paraCount-1].level=defaultParaLevel;
+            ఒకవేళ(i<original_నిడివి) {              /* B not last char in text */
+                pBiDi->para_లెక్క++;
+                ఒకవేళ(check_Para_లెక్క(pBiDi)==అబద్ధం)    /* not enough memory for a new para entry */
+                    తిరిగి అబద్ధం;
+                ఒకవేళ(isDefaultLevel) {
+                    pBiDi->paras[pBiDi->para_లెక్క-1].level=defaultParaLevel;
                     state=SEEKING_STRONG_FOR_PARA;
-                    lastStrong=defaultParaLevel;
-                } else {
-                    pBiDi->paras[pBiDi->paraCount-1].level=pBiDi->paraLevel;
+                    చివరి_Strong=defaultParaLevel;
+                } లేకపోతే {
+                    pBiDi->paras[pBiDi->para_లెక్క-1].level=pBiDi->paraLevel;
                     state=NOT_SEEKING_STRONG;
                 }
-                stackLast=-1;
+                దొంతర_చివరి=-1;
             }
-            continue;
+            కొనసాగు;
         }
     }
     /* Ignore still open isolate sequences with overflow */
-    if(stackLast>UBIDI_MAX_EXPLICIT_LEVEL) {
-        stackLast=UBIDI_MAX_EXPLICIT_LEVEL;
+    ఒకవేళ(దొంతర_చివరి>UBIDI_MAX_EXPLICIT_LEVEL) {
+        దొంతర_చివరి=UBIDI_MAX_EXPLICIT_LEVEL;
         state=SEEKING_STRONG_FOR_FSI;   /* to be on the safe side */
     }
     /* Resolve direction of still unresolved open FSI sequences */
-    while(stackLast>=0) {
-        if(state==SEEKING_STRONG_FOR_FSI) {
+    అయితే(దొంతర_చివరి>=0) {
+        ఒకవేళ(state==SEEKING_STRONG_FOR_FSI) {
             /* no need for next statement, already set by default */
             /* dirProps[isolateStartStack[stackLast]]=LRI; */
             flags|=DIRPROP_FLAG(LRI);
-            break;
+            ఆపు;
         }
-        state=previousStateStack[stackLast];
-        stackLast--;
+        state=మునుపటి_State_దొంతర[దొంతర_చివరి];
+        దొంతర_చివరి--;
     }
     /* When streaming, ignore text after the last paragraph separator */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
-        if(pBiDi->length<originalLength)
-            pBiDi->paraCount--;
-    } else {
-        pBiDi->paras[pBiDi->paraCount-1].limit=originalLength;
-        pBiDi->controlCount=controlCount;
+    ఒకవేళ(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
+        ఒకవేళ(pBiDi->length<original_నిడివి)
+            pBiDi->para_లెక్క--;
+    } లేకపోతే {
+        pBiDi->paras[pBiDi->para_లెక్క-1].హద్దు=original_నిడివి;
+        pBiDi->control_లెక్క=control_లెక్క;
     }
     /* For inverse bidi, default para direction is RTL if there is
        a strong R or AL at either end of the paragraph */
-    if(isDefaultLevelInverse && lastStrong==R) {
-        pBiDi->paras[pBiDi->paraCount-1].level=1;
+    ఒకవేళ(isDefaultLevelInverse && చివరి_Strong==R) {
+        pBiDi->paras[pBiDi->para_లెక్క-1].level=1;
     }
-    if(isDefaultLevel) {
+    ఒకవేళ(isDefaultLevel) {
         pBiDi->paraLevel=static_cast<UBiDiLevel>(pBiDi->paras[0].level);
     }
     /* The following is needed to resolve the text direction for default level
        paragraphs containing no strong character */
-    for(i=0; i<pBiDi->paraCount; i++)
+    కొరకు(i=0; i<pBiDi->para_లెక్క; i++)
         flags|=DIRPROP_FLAG_LR(pBiDi->paras[i].level);
 
-    if(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B))) {
+    ఒకవేళ(pBiDi->క్రమం_Paragraphs_LTR && (flags&DIRPROP_FLAG(B))) {
         flags|=DIRPROP_FLAG(L);
     }
     pBiDi->flags=flags;
-    pBiDi->lastArabicPos=lastArabicPos;
-    return true;
+    pBiDi->చివరి_Arabic_Pos=చివరి_Arabic_Pos;
+    తిరిగి నిజం;
 }
 
 /* determine the paragraph level at position index */
 U_CFUNC UBiDiLevel
-ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t pindex) {
+ubidi_get_Para_Level_At_సూచీ(స్థిరరాశి UBiDi *pBiDi, int32_t pindex) {
     int32_t i;
-    for(i=0; i<pBiDi->paraCount; i++)
-        if(pindex<pBiDi->paras[i].limit)
-            break;
-    if(i>=pBiDi->paraCount)
-        i=pBiDi->paraCount-1;
-    return (UBiDiLevel)(pBiDi->paras[i].level);
+    కొరకు(i=0; i<pBiDi->para_లెక్క; i++)
+        ఒకవేళ(pindex<pBiDi->paras[i].హద్దు)
+            ఆపు;
+    ఒకవేళ(i>=pBiDi->para_లెక్క)
+        i=pBiDi->para_లెక్క-1;
+    తిరిగి (UBiDiLevel)(pBiDi->paras[i].level);
 }
 
 /* Functions for handling paired brackets ----------------------------------- */
@@ -676,144 +676,144 @@ ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t pindex) {
    encountered strong character, since these will be needed to resolve
    the level of paired brackets.  */
 
-static void
-bracketInit(UBiDi *pBiDi, BracketData *bd) {
+స్థిర శూన్య
+bracketInit(UBiDi *pBiDi, Bracket_దత్తాంశం *bd) {
     bd->pBiDi=pBiDi;
-    bd->isoRunLast=0;
-    bd->isoRuns[0].start=0;
-    bd->isoRuns[0].limit=0;
+    bd->iso_నిరంతరం_చివరి=0;
+    bd->isoRuns[0].ప్రారంభం=0;
+    bd->isoRuns[0].హద్దు=0;
     bd->isoRuns[0].level=GET_PARALEVEL(pBiDi, 0);
     UBiDiLevel t = GET_PARALEVEL(pBiDi, 0) & 1;
-    bd->isoRuns[0].lastStrong = bd->isoRuns[0].lastBase = t;
+    bd->isoRuns[0].చివరి_Strong = bd->isoRuns[0].చివరి_పునాది = t;
     bd->isoRuns[0].contextDir = static_cast<UBiDiDirection>(t);
     bd->isoRuns[0].contextPos=0;
-    if(pBiDi->openingsMemory) {
-        bd->openings=pBiDi->openingsMemory;
-        bd->openingsCount=pBiDi->openingsSize / sizeof(Opening);
-    } else {
+    ఒకవేళ(pBiDi->openings_జ్ఞాపకం) {
+        bd->openings=pBiDi->openings_జ్ఞాపకం;
+        bd->openings_లెక్క=pBiDi->openings_కొలత / పరిమాణం(Opening);
+    } లేకపోతే {
         bd->openings=bd->simpleOpenings;
-        bd->openingsCount=SIMPLE_OPENINGS_COUNT;
+        bd->openings_లెక్క=SIMPLE_OPENINGS_లెక్క;
     }
-    bd->isNumbersSpecial=bd->pBiDi->reorderingMode==UBIDI_REORDER_NUMBERS_SPECIAL ||
-                         bd->pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL;
+    bd->isNumbersSpecial=bd->pBiDi->reordering_బహుళకం==UBIDI_REORDER_NUMBERS_SPECIAL ||
+                         bd->pBiDi->reordering_బహుళకం==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL;
 }
 
 /* paragraph boundary */
-static void
-bracketProcessB(BracketData *bd, UBiDiLevel level) {
-    bd->isoRunLast=0;
-    bd->isoRuns[0].limit=0;
+స్థిర శూన్య
+bracketProcessB(Bracket_దత్తాంశం *bd, UBiDiLevel level) {
+    bd->iso_నిరంతరం_చివరి=0;
+    bd->isoRuns[0].హద్దు=0;
     bd->isoRuns[0].level=level;
-    bd->isoRuns[0].lastStrong=bd->isoRuns[0].lastBase=level&1;
+    bd->isoRuns[0].చివరి_Strong=bd->isoRuns[0].చివరి_పునాది=level&1;
     bd->isoRuns[0].contextDir = static_cast<UBiDiDirection>(level & 1);
     bd->isoRuns[0].contextPos=0;
 }
 
 /* LRE, LRO, RLE, RLO, PDF */
-static void
-bracketProcessBoundary(BracketData *bd, int32_t lastCcPos,
+స్థిర శూన్య
+bracketProcessBoundary(Bracket_దత్తాంశం *bd, int32_t చివరి_Cc_Pos,
                        UBiDiLevel contextLevel, UBiDiLevel embeddingLevel) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+    Iso_నిరంతరం *p_చివరి_Iso_నిరంతరం=&bd->isoRuns[bd->iso_నిరంతరం_చివరి];
     DirProp *dirProps=bd->pBiDi->dirProps;
-    if(DIRPROP_FLAG(dirProps[lastCcPos])&MASK_ISO)  /* after an isolate */
-        return;
-    if(NO_OVERRIDE(embeddingLevel)>NO_OVERRIDE(contextLevel))   /* not a PDF */
+    ఒకవేళ(DIRPROP_FLAG(dirProps[చివరి_Cc_Pos])&ముసుగు_ISO)  /* after an isolate */
+        తిరిగి;
+    ఒకవేళ(NO_OVERRIDE(embeddingLevel)>NO_OVERRIDE(contextLevel))   /* not a PDF */
         contextLevel=embeddingLevel;
-    pLastIsoRun->limit=pLastIsoRun->start;
-    pLastIsoRun->level=embeddingLevel;
-    pLastIsoRun->lastStrong=pLastIsoRun->lastBase=contextLevel&1;
-    pLastIsoRun->contextDir = static_cast<UBiDiDirection>(contextLevel & 1);
-    pLastIsoRun->contextPos = static_cast<UBiDiDirection>(lastCcPos);
+    p_చివరి_Iso_నిరంతరం->హద్దు=p_చివరి_Iso_నిరంతరం->ప్రారంభం;
+    p_చివరి_Iso_నిరంతరం->level=embeddingLevel;
+    p_చివరి_Iso_నిరంతరం->చివరి_Strong=p_చివరి_Iso_నిరంతరం->చివరి_పునాది=contextLevel&1;
+    p_చివరి_Iso_నిరంతరం->contextDir = static_cast<UBiDiDirection>(contextLevel & 1);
+    p_చివరి_Iso_నిరంతరం->contextPos = static_cast<UBiDiDirection>(చివరి_Cc_Pos);
 }
 
 /* LRI or RLI */
-static void
-bracketProcessLRI_RLI(BracketData *bd, UBiDiLevel level) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
-    int16_t lastLimit;
-    pLastIsoRun->lastBase=ON;
-    lastLimit=pLastIsoRun->limit;
-    bd->isoRunLast++;
-    pLastIsoRun++;
-    pLastIsoRun->start=pLastIsoRun->limit=lastLimit;
-    pLastIsoRun->level=level;
-    pLastIsoRun->lastStrong=pLastIsoRun->lastBase=level&1;
-    pLastIsoRun->contextDir = static_cast<UBiDiDirection>(level & 1);
-    pLastIsoRun->contextPos=0;
+స్థిర శూన్య
+bracketProcessLRI_RLI(Bracket_దత్తాంశం *bd, UBiDiLevel level) {
+    Iso_నిరంతరం *p_చివరి_Iso_నిరంతరం=&bd->isoRuns[bd->iso_నిరంతరం_చివరి];
+    int16_t చివరి_హద్దు;
+    p_చివరి_Iso_నిరంతరం->చివరి_పునాది=ON;
+    చివరి_హద్దు=p_చివరి_Iso_నిరంతరం->హద్దు;
+    bd->iso_నిరంతరం_చివరి++;
+    p_చివరి_Iso_నిరంతరం++;
+    p_చివరి_Iso_నిరంతరం->ప్రారంభం=p_చివరి_Iso_నిరంతరం->హద్దు=చివరి_హద్దు;
+    p_చివరి_Iso_నిరంతరం->level=level;
+    p_చివరి_Iso_నిరంతరం->చివరి_Strong=p_చివరి_Iso_నిరంతరం->చివరి_పునాది=level&1;
+    p_చివరి_Iso_నిరంతరం->contextDir = static_cast<UBiDiDirection>(level & 1);
+    p_చివరి_Iso_నిరంతరం->contextPos=0;
 }
 
 /* PDI */
-static void
-bracketProcessPDI(BracketData *bd) {
-    IsoRun *pLastIsoRun;
-    bd->isoRunLast--;
-    pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
-    pLastIsoRun->lastBase=ON;
+స్థిర శూన్య
+bracketProcessPDI(Bracket_దత్తాంశం *bd) {
+    Iso_నిరంతరం *p_చివరి_Iso_నిరంతరం;
+    bd->iso_నిరంతరం_చివరి--;
+    p_చివరి_Iso_నిరంతరం=&bd->isoRuns[bd->iso_నిరంతరం_చివరి];
+    p_చివరి_Iso_నిరంతరం->చివరి_పునాది=ON;
 }
 
 /* newly found opening bracket: create an openings entry */
-static UBool                            /* return true if success */
-bracketAddOpening(BracketData *bd, char16_t match, int32_t position) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+స్థిర UBool                            /* return true if success */
+bracket_కూడు_Opening(Bracket_దత్తాంశం *bd, char16_t సరిపోలిక, int32_t position) {
+    Iso_నిరంతరం *p_చివరి_Iso_నిరంతరం=&bd->isoRuns[bd->iso_నిరంతరం_చివరి];
     Opening *pOpening;
-    if(pLastIsoRun->limit>=bd->openingsCount) {  /* no available new entry */
+    ఒకవేళ(p_చివరి_Iso_నిరంతరం->హద్దు>=bd->openings_లెక్క) {  /* no available new entry */
         UBiDi *pBiDi=bd->pBiDi;
-        if(!getInitialOpeningsMemory(pBiDi, pLastIsoRun->limit * 2))
-            return false;
-        if(bd->openings==bd->simpleOpenings)
-            uprv_memcpy(pBiDi->openingsMemory, bd->simpleOpenings,
-                        SIMPLE_OPENINGS_COUNT * sizeof(Opening));
-        bd->openings=pBiDi->openingsMemory;     /* may have changed */
-        bd->openingsCount=pBiDi->openingsSize / sizeof(Opening);
+        ఒకవేళ(!get_Initial_Openings_జ్ఞాపకం(pBiDi, p_చివరి_Iso_నిరంతరం->హద్దు * 2))
+            తిరిగి అబద్ధం;
+        ఒకవేళ(bd->openings==bd->simpleOpenings)
+            uprv_memcpy(pBiDi->openings_జ్ఞాపకం, bd->simpleOpenings,
+                        SIMPLE_OPENINGS_లెక్క * పరిమాణం(Opening));
+        bd->openings=pBiDi->openings_జ్ఞాపకం;     /* may have changed */
+        bd->openings_లెక్క=pBiDi->openings_కొలత / పరిమాణం(Opening);
     }
-    pOpening=&bd->openings[pLastIsoRun->limit];
+    pOpening=&bd->openings[p_చివరి_Iso_నిరంతరం->హద్దు];
     pOpening->position=position;
-    pOpening->match=match;
-    pOpening->contextDir=pLastIsoRun->contextDir;
-    pOpening->contextPos=pLastIsoRun->contextPos;
+    pOpening->సరిపోలిక=సరిపోలిక;
+    pOpening->contextDir=p_చివరి_Iso_నిరంతరం->contextDir;
+    pOpening->contextPos=p_చివరి_Iso_నిరంతరం->contextPos;
     pOpening->flags=0;
-    pLastIsoRun->limit++;
-    return true;
+    p_చివరి_Iso_నిరంతరం->హద్దు++;
+    తిరిగి నిజం;
 }
 
 /* change N0c1 to N0c2 when a preceding bracket is assigned the embedding level */
-static void
-fixN0c(BracketData *bd, int32_t openingIndex, int32_t newPropPosition, DirProp newProp) {
+స్థిర శూన్య
+fixN0c(Bracket_దత్తాంశం *bd, int32_t opening_సూచీ, int32_t newPropPosition, DirProp newProp) {
     /* This function calls itself recursively */
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+    Iso_నిరంతరం *p_చివరి_Iso_నిరంతరం=&bd->isoRuns[bd->iso_నిరంతరం_చివరి];
     Opening *qOpening;
     DirProp *dirProps=bd->pBiDi->dirProps;
     int32_t k, openingPosition, closingPosition;
-    for(k=openingIndex+1, qOpening=&bd->openings[k]; k<pLastIsoRun->limit; k++, qOpening++) {
-        if(qOpening->match>=0)      /* not an N0c match */
-            continue;
-        if(newPropPosition<qOpening->contextPos)
-            break;
-        if(newPropPosition>=qOpening->position)
-            continue;
-        if(newProp==qOpening->contextDir)
-            break;
+    కొరకు(k=opening_సూచీ+1, qOpening=&bd->openings[k]; k<p_చివరి_Iso_నిరంతరం->హద్దు; k++, qOpening++) {
+        ఒకవేళ(qOpening->సరిపోలిక>=0)      /* not an N0c match */
+            కొనసాగు;
+        ఒకవేళ(newPropPosition<qOpening->contextPos)
+            ఆపు;
+        ఒకవేళ(newPropPosition>=qOpening->position)
+            కొనసాగు;
+        ఒకవేళ(newProp==qOpening->contextDir)
+            ఆపు;
         openingPosition=qOpening->position;
         dirProps[openingPosition]=newProp;
-        closingPosition=-(qOpening->match);
+        closingPosition=-(qOpening->సరిపోలిక);
         dirProps[closingPosition]=newProp;
-        qOpening->match=0;                      /* prevent further changes */
+        qOpening->సరిపోలిక=0;                      /* prevent further changes */
         fixN0c(bd, k, openingPosition, newProp);
         fixN0c(bd, k, closingPosition, newProp);
     }
 }
 
 /* process closing bracket */
-static DirProp              /* return L or R if N0b or N0c, ON if N0d */
-bracketProcessClosing(BracketData *bd, int32_t openIdx, int32_t position) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+స్థిర DirProp              /* return L or R if N0b or N0c, ON if N0d */
+bracketProcessClosing(Bracket_దత్తాంశం *bd, int32_t openIdx, int32_t position) {
+    Iso_నిరంతరం *p_చివరి_Iso_నిరంతరం=&bd->isoRuns[bd->iso_నిరంతరం_చివరి];
     Opening *pOpening, *qOpening;
     UBiDiDirection direction;
     UBool stable;
     DirProp newProp;
     pOpening=&bd->openings[openIdx];
-    direction = static_cast<UBiDiDirection>(pLastIsoRun->level & 1);
-    stable=true;            /* assume stable until proved otherwise */
+    direction = static_cast<UBiDiDirection>(p_చివరి_Iso_నిరంతరం->level & 1);
+    stable=నిజం;            /* assume stable until proved otherwise */
 
     /* The stable flag is set when brackets are paired and their
        level is resolved and cannot be changed by what will be
@@ -833,196 +833,196 @@ bracketProcessClosing(BracketData *bd, int32_t openIdx, int32_t position) {
        that N0c2 must be applied to the parentheses rather than
        N0c1. */
 
-    if((direction==0 && pOpening->flags&FOUND_L) ||
-       (direction==1 && pOpening->flags&FOUND_R)) {                         /* N0b */
+    ఒకవేళ((direction==0 && pOpening->flags&దొరికింది_L) ||
+       (direction==1 && pOpening->flags&దొరికింది_R)) {                         /* N0b */
         newProp=static_cast<DirProp>(direction);
     }
-    else if(pOpening->flags&(FOUND_L|FOUND_R)) {                            /* N0c */
+    లేకపోతే ఒకవేళ(pOpening->flags&(దొరికింది_L|దొరికింది_R)) {                            /* N0c */
         /* it is stable if there is no containing pair or in
            conditions too complicated and not worth checking */
-        stable=(openIdx==pLastIsoRun->start);
-        if(direction!=pOpening->contextDir)
+        stable=(openIdx==p_చివరి_Iso_నిరంతరం->ప్రారంభం);
+        ఒకవేళ(direction!=pOpening->contextDir)
             newProp= static_cast<DirProp>(pOpening->contextDir);           /* N0c1 */
-        else
+        లేకపోతే
             newProp= static_cast<DirProp>(direction);                      /* N0c2 */
-    } else {
+    } లేకపోతే {
         /* forget this and any brackets nested within this pair */
-        pLastIsoRun->limit= static_cast<uint16_t>(openIdx);
-        return ON;                                                          /* N0d */
+        p_చివరి_Iso_నిరంతరం->హద్దు= static_cast<uint16_t>(openIdx);
+        తిరిగి ON;                                                          /* N0d */
     }
     bd->pBiDi->dirProps[pOpening->position]=newProp;
     bd->pBiDi->dirProps[position]=newProp;
     /* Update nested N0c pairs that may be affected */
     fixN0c(bd, openIdx, pOpening->position, newProp);
-    if(stable) {
-        pLastIsoRun->limit= static_cast<uint16_t>(openIdx); /* forget any brackets nested within this pair */
+    ఒకవేళ(stable) {
+        p_చివరి_Iso_నిరంతరం->హద్దు= static_cast<uint16_t>(openIdx); /* forget any brackets nested within this pair */
         /* remove lower located synonyms if any */
-        while(pLastIsoRun->limit>pLastIsoRun->start &&
-              bd->openings[pLastIsoRun->limit-1].position==pOpening->position)
-            pLastIsoRun->limit--;
-    } else {
+        అయితే(p_చివరి_Iso_నిరంతరం->హద్దు>p_చివరి_Iso_నిరంతరం->ప్రారంభం &&
+              bd->openings[p_చివరి_Iso_నిరంతరం->హద్దు-1].position==pOpening->position)
+            p_చివరి_Iso_నిరంతరం->హద్దు--;
+    } లేకపోతే {
         int32_t k;
-        pOpening->match=-position;
+        pOpening->సరిపోలిక=-position;
         /* neutralize lower located synonyms if any */
         k=openIdx-1;
-        while(k>=pLastIsoRun->start &&
+        అయితే(k>=p_చివరి_Iso_నిరంతరం->ప్రారంభం &&
               bd->openings[k].position==pOpening->position)
-            bd->openings[k--].match=0;
+            bd->openings[k--].సరిపోలిక=0;
         /* neutralize any unmatched opening between the current pair;
            this will also neutralize higher located synonyms if any */
-        for(k=openIdx+1; k<pLastIsoRun->limit; k++) {
+        కొరకు(k=openIdx+1; k<p_చివరి_Iso_నిరంతరం->హద్దు; k++) {
             qOpening=&bd->openings[k];
-            if(qOpening->position>=position)
-                break;
-            if(qOpening->match>0)
-                qOpening->match=0;
+            ఒకవేళ(qOpening->position>=position)
+                ఆపు;
+            ఒకవేళ(qOpening->సరిపోలిక>0)
+                qOpening->సరిపోలిక=0;
         }
     }
-    return newProp;
+    తిరిగి newProp;
 }
 
 /* handle strong characters, digits and candidates for closing brackets */
-static UBool                            /* return true if success */
-bracketProcessChar(BracketData *bd, int32_t position) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+స్థిర UBool                            /* return true if success */
+bracketProcessChar(Bracket_దత్తాంశం *bd, int32_t position) {
+    Iso_నిరంతరం *p_చివరి_Iso_నిరంతరం=&bd->isoRuns[bd->iso_నిరంతరం_చివరి];
     DirProp *dirProps, dirProp, newProp;
     UBiDiLevel level;
     dirProps=bd->pBiDi->dirProps;
     dirProp=dirProps[position];
-    if(dirProp==ON) {
-        char16_t c, match;
+    ఒకవేళ(dirProp==ON) {
+        char16_t c, సరిపోలిక;
         int32_t idx;
         /* First see if it is a matching closing bracket. Hopefully, this is
            more efficient than checking if it is a closing bracket at all */
-        c=bd->pBiDi->text[position];
-        for(idx=pLastIsoRun->limit-1; idx>=pLastIsoRun->start; idx--) {
-            if(bd->openings[idx].match!=c)
-                continue;
+        c=bd->pBiDi->పాఠ్యం[position];
+        కొరకు(idx=p_చివరి_Iso_నిరంతరం->హద్దు-1; idx>=p_చివరి_Iso_నిరంతరం->ప్రారంభం; idx--) {
+            ఒకవేళ(bd->openings[idx].సరిపోలిక!=c)
+                కొనసాగు;
             /* We have a match */
             newProp=bracketProcessClosing(bd, idx, position);
-            if(newProp==ON) {           /* N0d */
+            ఒకవేళ(newProp==ON) {           /* N0d */
                 c=0;        /* prevent handling as an opening */
-                break;
+                ఆపు;
             }
-            pLastIsoRun->lastBase=ON;
-            pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
-            pLastIsoRun->contextPos=position;
-            level=bd->pBiDi->levels[position];
-            if(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
+            p_చివరి_Iso_నిరంతరం->చివరి_పునాది=ON;
+            p_చివరి_Iso_నిరంతరం->contextDir = static_cast<UBiDiDirection>(newProp);
+            p_చివరి_Iso_నిరంతరం->contextPos=position;
+            level=bd->pBiDi->స్థాయిలు[position];
+            ఒకవేళ(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
                 uint16_t flag;
                 int32_t i;
                 newProp=level&1;
-                pLastIsoRun->lastStrong=newProp;
+                p_చివరి_Iso_నిరంతరం->చివరి_Strong=newProp;
                 flag=DIRPROP_FLAG(newProp);
-                for(i=pLastIsoRun->start; i<idx; i++)
+                కొరకు(i=p_చివరి_Iso_నిరంతరం->ప్రారంభం; i<idx; i++)
                     bd->openings[i].flags|=flag;
                 /* matching brackets are not overridden by LRO/RLO */
-                bd->pBiDi->levels[position]&=~UBIDI_LEVEL_OVERRIDE;
+                bd->pBiDi->స్థాయిలు[position]&=~UBIDI_LEVEL_OVERRIDE;
             }
             /* matching brackets are not overridden by LRO/RLO */
-            bd->pBiDi->levels[bd->openings[idx].position]&=~UBIDI_LEVEL_OVERRIDE;
-            return true;
+            bd->pBiDi->స్థాయిలు[bd->openings[idx].position]&=~UBIDI_LEVEL_OVERRIDE;
+            తిరిగి నిజం;
         }
         /* We get here only if the ON character is not a matching closing
            bracket or it is a case of N0d */
         /* Now see if it is an opening bracket */
-        if(c)
-            match= static_cast<char16_t>(u_getBidiPairedBracket(c));    /* get the matching char */
-        else
-            match=0;
-        if(match!=c &&                  /* has a matching char */
+        ఒకవేళ(c)
+            సరిపోలిక= static_cast<char16_t>(u_getBidiPairedBracket(c));    /* get the matching char */
+        లేకపోతే
+            సరిపోలిక=0;
+        ఒకవేళ(సరిపోలిక!=c &&                  /* has a matching char */
            ubidi_getPairedBracketType(c)==U_BPT_OPEN) { /* opening bracket */
             /* special case: process synonyms
                create an opening entry for each synonym */
-            if(match==0x232A) {     /* RIGHT-POINTING ANGLE BRACKET */
-                if(!bracketAddOpening(bd, 0x3009, position))
-                    return false;
+            ఒకవేళ(సరిపోలిక==0x232A) {     /* RIGHT-POINTING ANGLE BRACKET */
+                ఒకవేళ(!bracket_కూడు_Opening(bd, 0x3009, position))
+                    తిరిగి అబద్ధం;
             }
-            else if(match==0x3009) {         /* RIGHT ANGLE BRACKET */
-                if(!bracketAddOpening(bd, 0x232A, position))
-                    return false;
+            లేకపోతే ఒకవేళ(సరిపోలిక==0x3009) {         /* RIGHT ANGLE BRACKET */
+                ఒకవేళ(!bracket_కూడు_Opening(bd, 0x232A, position))
+                    తిరిగి అబద్ధం;
             }
-            if(!bracketAddOpening(bd, match, position))
-                return false;
+            ఒకవేళ(!bracket_కూడు_Opening(bd, సరిపోలిక, position))
+                తిరిగి అబద్ధం;
         }
     }
-    level=bd->pBiDi->levels[position];
-    if(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
+    level=bd->pBiDi->స్థాయిలు[position];
+    ఒకవేళ(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
         newProp=level&1;
-        if(dirProp!=S && dirProp!=WS && dirProp!=ON)
+        ఒకవేళ(dirProp!=S && dirProp!=WS && dirProp!=ON)
             dirProps[position]=newProp;
-        pLastIsoRun->lastBase=newProp;
-        pLastIsoRun->lastStrong=newProp;
-        pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
-        pLastIsoRun->contextPos=position;
+        p_చివరి_Iso_నిరంతరం->చివరి_పునాది=newProp;
+        p_చివరి_Iso_నిరంతరం->చివరి_Strong=newProp;
+        p_చివరి_Iso_నిరంతరం->contextDir = static_cast<UBiDiDirection>(newProp);
+        p_చివరి_Iso_నిరంతరం->contextPos=position;
     }
-    else if(dirProp<=R || dirProp==AL) {
+    లేకపోతే ఒకవేళ(dirProp<=R || dirProp==AL) {
         newProp= static_cast<DirProp>(DIR_FROM_STRONG(dirProp));
-        pLastIsoRun->lastBase=dirProp;
-        pLastIsoRun->lastStrong=dirProp;
-        pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
-        pLastIsoRun->contextPos=position;
+        p_చివరి_Iso_నిరంతరం->చివరి_పునాది=dirProp;
+        p_చివరి_Iso_నిరంతరం->చివరి_Strong=dirProp;
+        p_చివరి_Iso_నిరంతరం->contextDir = static_cast<UBiDiDirection>(newProp);
+        p_చివరి_Iso_నిరంతరం->contextPos=position;
     }
-    else if(dirProp==EN) {
-        pLastIsoRun->lastBase=EN;
-        if(pLastIsoRun->lastStrong==L) {
+    లేకపోతే ఒకవేళ(dirProp==EN) {
+        p_చివరి_Iso_నిరంతరం->చివరి_పునాది=EN;
+        ఒకవేళ(p_చివరి_Iso_నిరంతరం->చివరి_Strong==L) {
             newProp=L;                  /* W7 */
-            if(!bd->isNumbersSpecial)
+            ఒకవేళ(!bd->isNumbersSpecial)
                 dirProps[position]=ENL;
-            pLastIsoRun->contextDir = static_cast<UBiDiDirection>(L);
-            pLastIsoRun->contextPos=position;
+            p_చివరి_Iso_నిరంతరం->contextDir = static_cast<UBiDiDirection>(L);
+            p_చివరి_Iso_నిరంతరం->contextPos=position;
         }
-        else {
+        లేకపోతే {
             newProp=R;                  /* N0 */
-            if(pLastIsoRun->lastStrong==AL)
+            ఒకవేళ(p_చివరి_Iso_నిరంతరం->చివరి_Strong==AL)
                 dirProps[position]=AN;  /* W2 */
-            else
+            లేకపోతే
                 dirProps[position]=ENR;
-            pLastIsoRun->contextDir = static_cast<UBiDiDirection>(R);
-            pLastIsoRun->contextPos=position;
+            p_చివరి_Iso_నిరంతరం->contextDir = static_cast<UBiDiDirection>(R);
+            p_చివరి_Iso_నిరంతరం->contextPos=position;
         }
     }
-    else if(dirProp==AN) {
+    లేకపోతే ఒకవేళ(dirProp==AN) {
         newProp=R;                      /* N0 */
-        pLastIsoRun->lastBase=AN;
-        pLastIsoRun->contextDir = static_cast<UBiDiDirection>(R);
-        pLastIsoRun->contextPos=position;
+        p_చివరి_Iso_నిరంతరం->చివరి_పునాది=AN;
+        p_చివరి_Iso_నిరంతరం->contextDir = static_cast<UBiDiDirection>(R);
+        p_చివరి_Iso_నిరంతరం->contextPos=position;
     }
-    else if(dirProp==NSM) {
+    లేకపోతే ఒకవేళ(dirProp==NSM) {
         /* if the last real char was ON, change NSM to ON so that it
            will stay ON even if the last real char is a bracket which
            may be changed to L or R */
-        newProp=pLastIsoRun->lastBase;
-        if(newProp==ON)
+        newProp=p_చివరి_Iso_నిరంతరం->చివరి_పునాది;
+        ఒకవేళ(newProp==ON)
             dirProps[position]=newProp;
     }
-    else {
+    లేకపోతే {
         newProp=dirProp;
-        pLastIsoRun->lastBase=dirProp;
+        p_చివరి_Iso_నిరంతరం->చివరి_పునాది=dirProp;
     }
-    if(newProp<=R || newProp==AL) {
+    ఒకవేళ(newProp<=R || newProp==AL) {
         int32_t i;
         uint16_t flag=DIRPROP_FLAG(DIR_FROM_STRONG(newProp));
-        for(i=pLastIsoRun->start; i<pLastIsoRun->limit; i++)
-            if(position>bd->openings[i].position)
+        కొరకు(i=p_చివరి_Iso_నిరంతరం->ప్రారంభం; i<p_చివరి_Iso_నిరంతరం->హద్దు; i++)
+            ఒకవేళ(position>bd->openings[i].position)
                 bd->openings[i].flags|=flag;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 /* perform (X1)..(X9) ------------------------------------------------------- */
 
 /* determine if the text is mixed-directional or single-directional */
-static UBiDiDirection
+స్థిర UBiDiDirection
 directionFromFlags(UBiDi *pBiDi) {
     Flags flags=pBiDi->flags;
     /* if the text contains AN and neutrals, then some neutrals may become RTL */
-    if(!(flags&MASK_RTL || ((flags&DIRPROP_FLAG(AN)) && (flags&MASK_POSSIBLE_N)))) {
-        return UBIDI_LTR;
-    } else if(!(flags&MASK_LTR)) {
-        return UBIDI_RTL;
-    } else {
-        return UBIDI_MIXED;
+    ఒకవేళ(!(flags&ముసుగు_RTL || ((flags&DIRPROP_FLAG(AN)) && (flags&ముసుగు_POSSIBLE_N)))) {
+        తిరిగి UBIDI_LTR;
+    } లేకపోతే ఒకవేళ(!(flags&ముసుగు_LTR)) {
+        తిరిగి UBIDI_RTL;
+    } లేకపోతే {
+        తిరిగి UBIDI_MIXED;
     }
 }
 
@@ -1077,78 +1077,78 @@ directionFromFlags(UBiDi *pBiDi) {
  * Returns normally the direction; -1 if there was a memory shortage
  *
  */
-static UBiDiDirection
-resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
+స్థిర UBiDiDirection
+resolve_Explicit_స్థాయిలు(UBiDi *pBiDi, UError_సంకేతం *p_Error_సంకేతం) {
     DirProp *dirProps=pBiDi->dirProps;
-    UBiDiLevel *levels=pBiDi->levels;
-    const char16_t *text=pBiDi->text;
+    UBiDiLevel *స్థాయిలు=pBiDi->స్థాయిలు;
+    స్థిరరాశి char16_t *పాఠ్యం=pBiDi->పాఠ్యం;
 
     int32_t i=0, length=pBiDi->length;
     Flags flags=pBiDi->flags;       /* collect all directionalities in the text */
     DirProp dirProp;
     UBiDiLevel level=GET_PARALEVEL(pBiDi, 0);
     UBiDiDirection direction;
-    pBiDi->isolateCount=0;
+    pBiDi->isolate_లెక్క=0;
 
-    if(U_FAILURE(*pErrorCode)) { return UBIDI_LTR; }
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) { తిరిగి UBIDI_LTR; }
 
     /* determine if the text is mixed-directional or single-directional */
     direction=directionFromFlags(pBiDi);
 
     /* we may not need to resolve any explicit levels */
-    if((direction!=UBIDI_MIXED)) {
+    ఒకవేళ((direction!=UBIDI_MIXED)) {
         /* not mixed directionality: levels don't matter - trailingWSStart will be 0 */
-        return direction;
+        తిరిగి direction;
     }
-    if(pBiDi->reorderingMode > UBIDI_REORDER_LAST_LOGICAL_TO_VISUAL) {
+    ఒకవేళ(pBiDi->reordering_బహుళకం > UBIDI_REORDER_చివరి_LOGICAL_గమ్యం_VISUAL) {
         /* inverse BiDi: mixed, but all characters are at the same embedding level */
         /* set all levels to the paragraph level */
-        int32_t paraIndex, start, limit;
-        for(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
-            if(paraIndex==0)
-                start=0;
-            else
-                start=pBiDi->paras[paraIndex-1].limit;
-            limit=pBiDi->paras[paraIndex].limit;
-            level= static_cast<UBiDiLevel>(pBiDi->paras[paraIndex].level);
-            for(i=start; i<limit; i++)
-                levels[i]=level;
+        int32_t para_సూచీ, ప్రారంభం, హద్దు;
+        కొరకు(para_సూచీ=0; para_సూచీ<pBiDi->para_లెక్క; para_సూచీ++) {
+            ఒకవేళ(para_సూచీ==0)
+                ప్రారంభం=0;
+            లేకపోతే
+                ప్రారంభం=pBiDi->paras[para_సూచీ-1].హద్దు;
+            హద్దు=pBiDi->paras[para_సూచీ].హద్దు;
+            level= static_cast<UBiDiLevel>(pBiDi->paras[para_సూచీ].level);
+            కొరకు(i=ప్రారంభం; i<హద్దు; i++)
+                స్థాయిలు[i]=level;
         }
-        return direction;   /* no bracket matching for inverse BiDi */
+        తిరిగి direction;   /* no bracket matching for inverse BiDi */
     }
-    if(!(flags&(MASK_EXPLICIT|MASK_ISO))) {
+    ఒకవేళ(!(flags&(ముసుగు_EXPLICIT|ముసుగు_ISO))) {
         /* no embeddings, set all levels to the paragraph level */
         /* we still have to perform bracket matching */
-        int32_t paraIndex, start, limit;
-        BracketData bracketData;
-        bracketInit(pBiDi, &bracketData);
-        for(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
-            if(paraIndex==0)
-                start=0;
-            else
-                start=pBiDi->paras[paraIndex-1].limit;
-            limit=pBiDi->paras[paraIndex].limit;
-            level= static_cast<UBiDiLevel>(pBiDi->paras[paraIndex].level);
-            for(i=start; i<limit; i++) {
-                levels[i]=level;
+        int32_t para_సూచీ, ప్రారంభం, హద్దు;
+        Bracket_దత్తాంశం bracket_దత్తాంశం;
+        bracketInit(pBiDi, &bracket_దత్తాంశం);
+        కొరకు(para_సూచీ=0; para_సూచీ<pBiDi->para_లెక్క; para_సూచీ++) {
+            ఒకవేళ(para_సూచీ==0)
+                ప్రారంభం=0;
+            లేకపోతే
+                ప్రారంభం=pBiDi->paras[para_సూచీ-1].హద్దు;
+            హద్దు=pBiDi->paras[para_సూచీ].హద్దు;
+            level= static_cast<UBiDiLevel>(pBiDi->paras[para_సూచీ].level);
+            కొరకు(i=ప్రారంభం; i<హద్దు; i++) {
+                స్థాయిలు[i]=level;
                 dirProp=dirProps[i];
-                if(dirProp==BN)
-                    continue;
-                if(dirProp==B) {
-                    if((i+1)<length) {
-                        if(text[i]==CR && text[i+1]==LF)
-                            continue;   /* skip CR when followed by LF */
-                        bracketProcessB(&bracketData, level);
+                ఒకవేళ(dirProp==BN)
+                    కొనసాగు;
+                ఒకవేళ(dirProp==B) {
+                    ఒకవేళ((i+1)<length) {
+                        ఒకవేళ(పాఠ్యం[i]==CR && పాఠ్యం[i+1]==LF)
+                            కొనసాగు;   /* skip CR when followed by LF */
+                        bracketProcessB(&bracket_దత్తాంశం, level);
                     }
-                    continue;
+                    కొనసాగు;
                 }
-                if(!bracketProcessChar(&bracketData, i)) {
-                    *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return UBIDI_LTR;
+                ఒకవేళ(!bracketProcessChar(&bracket_దత్తాంశం, i)) {
+                    *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    తిరిగి UBIDI_LTR;
                 }
             }
         }
-        return direction;
+        తిరిగి direction;
     }
     {
         /* continue to perform (Xn) */
@@ -1156,189 +1156,189 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
         /* (X1) level is set for all codes, embeddingLevel keeps track of the push/pop operations */
         /* both variables may carry the UBIDI_LEVEL_OVERRIDE flag to indicate the override status */
         UBiDiLevel embeddingLevel=level, newLevel;
-        UBiDiLevel previousLevel=level;     /* previous level for regular (not CC) characters */
-        int32_t lastCcPos=0;                /* index of last effective LRx,RLx, PDx */
+        UBiDiLevel మునుపటి_Level=level;     /* previous level for regular (not CC) characters */
+        int32_t చివరి_Cc_Pos=0;                /* index of last effective LRx,RLx, PDx */
 
         /* The following stack remembers the embedding level and the ISOLATE flag of level runs.
            stackLast points to its current entry. */
-        uint16_t stack[UBIDI_MAX_EXPLICIT_LEVEL+2];   /* we never push anything >=UBIDI_MAX_EXPLICIT_LEVEL
+        uint16_t దొంతర_2[UBIDI_MAX_EXPLICIT_LEVEL+2];   /* we never push anything >=UBIDI_MAX_EXPLICIT_LEVEL
                                                         but we need one more entry as base */
-        uint32_t stackLast=0;
-        int32_t overflowIsolateCount=0;
-        int32_t overflowEmbeddingCount=0;
-        int32_t validIsolateCount=0;
-        BracketData bracketData;
-        bracketInit(pBiDi, &bracketData);
-        stack[0]=level;     /* initialize base entry to para level, no override, no isolate */
+        uint32_t దొంతర_చివరి=0;
+        int32_t అధికప్రవాహం_Isolate_లెక్క=0;
+        int32_t అధికప్రవాహం_Embedding_లెక్క=0;
+        int32_t valid_Isolate_లెక్క=0;
+        Bracket_దత్తాంశం bracket_దత్తాంశం;
+        bracketInit(pBiDi, &bracket_దత్తాంశం);
+        దొంతర_2[0]=level;     /* initialize base entry to para level, no override, no isolate */
 
         /* recalculate the flags */
         flags=0;
 
-        for(i=0; i<length; ++i) {
+        కొరకు(i=0; i<length; ++i) {
             dirProp=dirProps[i];
-            switch(dirProp) {
-            case LRE:
-            case RLE:
-            case LRO:
-            case RLO:
+            ఎంపిక(dirProp) {
+            స్థితి LRE:
+            స్థితి RLE:
+            స్థితి LRO:
+            స్థితి RLO:
                 /* (X2, X3, X4, X5) */
                 flags|=DIRPROP_FLAG(BN);
-                levels[i]=previousLevel;
-                if (dirProp==LRE || dirProp==LRO)
+                స్థాయిలు[i]=మునుపటి_Level;
+                ఒకవేళ (dirProp==LRE || dirProp==LRO)
                     /* least greater even level */
                     newLevel = static_cast<UBiDiLevel>((embeddingLevel + 2) & ~(UBIDI_LEVEL_OVERRIDE | 1));
-                else
+                లేకపోతే
                     /* least greater odd level */
                     newLevel = static_cast<UBiDiLevel>((NO_OVERRIDE(embeddingLevel) + 1) | 1);
-                if(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
-                                                         overflowEmbeddingCount==0) {
-                    lastCcPos=i;
+                ఒకవేళ(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && అధికప్రవాహం_Isolate_లెక్క==0 &&
+                                                         అధికప్రవాహం_Embedding_లెక్క==0) {
+                    చివరి_Cc_Pos=i;
                     embeddingLevel=newLevel;
-                    if(dirProp==LRO || dirProp==RLO)
+                    ఒకవేళ(dirProp==LRO || dirProp==RLO)
                         embeddingLevel|=UBIDI_LEVEL_OVERRIDE;
-                    stackLast++;
-                    stack[stackLast]=embeddingLevel;
+                    దొంతర_చివరి++;
+                    దొంతర_2[దొంతర_చివరి]=embeddingLevel;
                     /* we don't need to set UBIDI_LEVEL_OVERRIDE off for LRE and RLE
                        since this has already been done for newLevel which is
                        the source for embeddingLevel.
                      */
-                } else {
-                    if(overflowIsolateCount==0)
-                        overflowEmbeddingCount++;
+                } లేకపోతే {
+                    ఒకవేళ(అధికప్రవాహం_Isolate_లెక్క==0)
+                        అధికప్రవాహం_Embedding_లెక్క++;
                 }
-                break;
-            case PDF:
+                ఆపు;
+            స్థితి PDF:
                 /* (X7) */
                 flags|=DIRPROP_FLAG(BN);
-                levels[i]=previousLevel;
+                స్థాయిలు[i]=మునుపటి_Level;
                 /* handle all the overflow cases first */
-                if(overflowIsolateCount) {
-                    break;
+                ఒకవేళ(అధికప్రవాహం_Isolate_లెక్క) {
+                    ఆపు;
                 }
-                if(overflowEmbeddingCount) {
-                    overflowEmbeddingCount--;
-                    break;
+                ఒకవేళ(అధికప్రవాహం_Embedding_లెక్క) {
+                    అధికప్రవాహం_Embedding_లెక్క--;
+                    ఆపు;
                 }
-                if(stackLast>0 && stack[stackLast]<ISOLATE) {   /* not an isolate entry */
-                    lastCcPos=i;
-                    stackLast--;
-                    embeddingLevel = static_cast<UBiDiLevel>(stack[stackLast]);
+                ఒకవేళ(దొంతర_చివరి>0 && దొంతర_2[దొంతర_చివరి]<ISOLATE) {   /* not an isolate entry */
+                    చివరి_Cc_Pos=i;
+                    దొంతర_చివరి--;
+                    embeddingLevel = static_cast<UBiDiLevel>(దొంతర_2[దొంతర_చివరి]);
                 }
-                break;
-            case LRI:
-            case RLI:
+                ఆపు;
+            స్థితి LRI:
+            స్థితి RLI:
                 flags|=(DIRPROP_FLAG(ON)|DIRPROP_FLAG_LR(embeddingLevel));
-                levels[i]=NO_OVERRIDE(embeddingLevel);
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
-                    bracketProcessBoundary(&bracketData, lastCcPos,
-                                           previousLevel, embeddingLevel);
+                స్థాయిలు[i]=NO_OVERRIDE(embeddingLevel);
+                ఒకవేళ(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(మునుపటి_Level)) {
+                    bracketProcessBoundary(&bracket_దత్తాంశం, చివరి_Cc_Pos,
+                                           మునుపటి_Level, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
                 }
-                previousLevel=embeddingLevel;
+                మునుపటి_Level=embeddingLevel;
                 /* (X5a, X5b) */
-                if(dirProp==LRI)
+                ఒకవేళ(dirProp==LRI)
                     /* least greater even level */
                     newLevel = static_cast<UBiDiLevel>((embeddingLevel + 2) & ~(UBIDI_LEVEL_OVERRIDE | 1));
-                else
+                లేకపోతే
                     /* least greater odd level */
                     newLevel = static_cast<UBiDiLevel>((NO_OVERRIDE(embeddingLevel) + 1) | 1);
-                if(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
-                                                         overflowEmbeddingCount==0) {
+                ఒకవేళ(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && అధికప్రవాహం_Isolate_లెక్క==0 &&
+                                                         అధికప్రవాహం_Embedding_లెక్క==0) {
                     flags|=DIRPROP_FLAG(dirProp);
-                    lastCcPos=i;
-                    validIsolateCount++;
-                    if(validIsolateCount>pBiDi->isolateCount)
-                        pBiDi->isolateCount=validIsolateCount;
+                    చివరి_Cc_Pos=i;
+                    valid_Isolate_లెక్క++;
+                    ఒకవేళ(valid_Isolate_లెక్క>pBiDi->isolate_లెక్క)
+                        pBiDi->isolate_లెక్క=valid_Isolate_లెక్క;
                     embeddingLevel=newLevel;
                     /* we can increment stackLast without checking because newLevel
                        will exceed UBIDI_MAX_EXPLICIT_LEVEL before stackLast overflows */
-                    stackLast++;
-                    stack[stackLast]=embeddingLevel+ISOLATE;
-                    bracketProcessLRI_RLI(&bracketData, embeddingLevel);
-                } else {
+                    దొంతర_చివరి++;
+                    దొంతర_2[దొంతర_చివరి]=embeddingLevel+ISOLATE;
+                    bracketProcessLRI_RLI(&bracket_దత్తాంశం, embeddingLevel);
+                } లేకపోతే {
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
-                    overflowIsolateCount++;
+                    అధికప్రవాహం_Isolate_లెక్క++;
                 }
-                break;
-            case PDI:
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
-                    bracketProcessBoundary(&bracketData, lastCcPos,
-                                           previousLevel, embeddingLevel);
+                ఆపు;
+            స్థితి PDI:
+                ఒకవేళ(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(మునుపటి_Level)) {
+                    bracketProcessBoundary(&bracket_దత్తాంశం, చివరి_Cc_Pos,
+                                           మునుపటి_Level, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
                 }
                 /* (X6a) */
-                if(overflowIsolateCount) {
-                    overflowIsolateCount--;
+                ఒకవేళ(అధికప్రవాహం_Isolate_లెక్క) {
+                    అధికప్రవాహం_Isolate_లెక్క--;
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
                 }
-                else if(validIsolateCount) {
+                లేకపోతే ఒకవేళ(valid_Isolate_లెక్క) {
                     flags|=DIRPROP_FLAG(PDI);
-                    lastCcPos=i;
-                    overflowEmbeddingCount=0;
-                    while(stack[stackLast]<ISOLATE) /* pop embedding entries */
-                        stackLast--;                /* until the last isolate entry */
-                    stackLast--;                    /* pop also the last isolate entry */
-                    validIsolateCount--;
-                    bracketProcessPDI(&bracketData);
-                } else
+                    చివరి_Cc_Pos=i;
+                    అధికప్రవాహం_Embedding_లెక్క=0;
+                    అయితే(దొంతర_2[దొంతర_చివరి]<ISOLATE) /* pop embedding entries */
+                        దొంతర_చివరి--;                /* until the last isolate entry */
+                    దొంతర_చివరి--;                    /* pop also the last isolate entry */
+                    valid_Isolate_లెక్క--;
+                    bracketProcessPDI(&bracket_దత్తాంశం);
+                } లేకపోతే
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
-                embeddingLevel = static_cast<UBiDiLevel>(stack[stackLast]) & ~ISOLATE;
+                embeddingLevel = static_cast<UBiDiLevel>(దొంతర_2[దొంతర_చివరి]) & ~ISOLATE;
                 flags|=(DIRPROP_FLAG(ON)|DIRPROP_FLAG_LR(embeddingLevel));
-                previousLevel=embeddingLevel;
-                levels[i]=NO_OVERRIDE(embeddingLevel);
-                break;
-            case B:
+                మునుపటి_Level=embeddingLevel;
+                స్థాయిలు[i]=NO_OVERRIDE(embeddingLevel);
+                ఆపు;
+            స్థితి B:
                 flags|=DIRPROP_FLAG(B);
-                levels[i]=GET_PARALEVEL(pBiDi, i);
-                if((i+1)<length) {
-                    if(text[i]==CR && text[i+1]==LF)
-                        break;          /* skip CR when followed by LF */
-                    overflowEmbeddingCount=overflowIsolateCount=0;
-                    validIsolateCount=0;
-                    stackLast=0;
-                    previousLevel=embeddingLevel=GET_PARALEVEL(pBiDi, i+1);
-                    stack[0]=embeddingLevel; /* initialize base entry to para level, no override, no isolate */
-                    bracketProcessB(&bracketData, embeddingLevel);
+                స్థాయిలు[i]=GET_PARALEVEL(pBiDi, i);
+                ఒకవేళ((i+1)<length) {
+                    ఒకవేళ(పాఠ్యం[i]==CR && పాఠ్యం[i+1]==LF)
+                        ఆపు;          /* skip CR when followed by LF */
+                    అధికప్రవాహం_Embedding_లెక్క=అధికప్రవాహం_Isolate_లెక్క=0;
+                    valid_Isolate_లెక్క=0;
+                    దొంతర_చివరి=0;
+                    మునుపటి_Level=embeddingLevel=GET_PARALEVEL(pBiDi, i+1);
+                    దొంతర_2[0]=embeddingLevel; /* initialize base entry to para level, no override, no isolate */
+                    bracketProcessB(&bracket_దత్తాంశం, embeddingLevel);
                 }
-                break;
-            case BN:
+                ఆపు;
+            స్థితి BN:
                 /* BN, LRE, RLE, and PDF are supposed to be removed (X9) */
                 /* they will get their levels set correctly in adjustWSLevels() */
-                levels[i]=previousLevel;
+                స్థాయిలు[i]=మునుపటి_Level;
                 flags|=DIRPROP_FLAG(BN);
-                break;
-            default:
+                ఆపు;
+            అప్రమేయ:
                 /* all other types are normal characters and get the "real" level */
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
-                    bracketProcessBoundary(&bracketData, lastCcPos,
-                                           previousLevel, embeddingLevel);
+                ఒకవేళ(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(మునుపటి_Level)) {
+                    bracketProcessBoundary(&bracket_దత్తాంశం, చివరి_Cc_Pos,
+                                           మునుపటి_Level, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
-                    if(embeddingLevel&UBIDI_LEVEL_OVERRIDE)
+                    ఒకవేళ(embeddingLevel&UBIDI_LEVEL_OVERRIDE)
                         flags|=DIRPROP_FLAG_O(embeddingLevel);
-                    else
+                    లేకపోతే
                         flags|=DIRPROP_FLAG_E(embeddingLevel);
                 }
-                previousLevel=embeddingLevel;
-                levels[i]=embeddingLevel;
-                if(!bracketProcessChar(&bracketData, i))
-                    return static_cast<UBiDiDirection>(-1);
+                మునుపటి_Level=embeddingLevel;
+                స్థాయిలు[i]=embeddingLevel;
+                ఒకవేళ(!bracketProcessChar(&bracket_దత్తాంశం, i))
+                    తిరిగి static_cast<UBiDiDirection>(-1);
                 /* the dirProp may have been changed in bracketProcessChar() */
                 flags|=DIRPROP_FLAG(dirProps[i]);
-                break;
+                ఆపు;
             }
         }
-        if(flags&MASK_EMBEDDING)
+        ఒకవేళ(flags&ముసుగు_EMBEDDING)
             flags|=DIRPROP_FLAG_LR(pBiDi->paraLevel);
-        if(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B)))
+        ఒకవేళ(pBiDi->క్రమం_Paragraphs_LTR && (flags&DIRPROP_FLAG(B)))
             flags|=DIRPROP_FLAG(L);
         /* again, determine if the text is mixed-directional or single-directional */
         pBiDi->flags=flags;
         direction=directionFromFlags(pBiDi);
     }
-    return direction;
+    తిరిగి direction;
 }
 
 /*
@@ -1351,73 +1351,73 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
  * Recalculate the flags to have them reflect the real properties
  * after taking the explicit embeddings into account.
  */
-static UBiDiDirection
-checkExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
+స్థిర UBiDiDirection
+check_Explicit_స్థాయిలు(UBiDi *pBiDi, UError_సంకేతం *p_Error_సంకేతం) {
     DirProp *dirProps=pBiDi->dirProps;
-    UBiDiLevel *levels=pBiDi->levels;
-    int32_t isolateCount=0;
+    UBiDiLevel *స్థాయిలు=pBiDi->స్థాయిలు;
+    int32_t isolate_లెక్క=0;
 
     int32_t length=pBiDi->length;
     Flags flags=0;  /* collect all directionalities in the text */
-    pBiDi->isolateCount=0;
+    pBiDi->isolate_లెక్క=0;
 
-    int32_t currentParaIndex = 0;
-    int32_t currentParaLimit = pBiDi->paras[0].limit;
+    int32_t current_Para_సూచీ = 0;
+    int32_t current_Para_హద్దు = pBiDi->paras[0].హద్దు;
     int32_t currentParaLevel = pBiDi->paraLevel;
 
-    for(int32_t i=0; i<length; ++i) {
-        UBiDiLevel level=levels[i];
+    కొరకు(int32_t i=0; i<length; ++i) {
+        UBiDiLevel level=స్థాయిలు[i];
         DirProp dirProp=dirProps[i];
-        if(dirProp==LRI || dirProp==RLI) {
-            isolateCount++;
-            if(isolateCount>pBiDi->isolateCount)
-                pBiDi->isolateCount=isolateCount;
+        ఒకవేళ(dirProp==LRI || dirProp==RLI) {
+            isolate_లెక్క++;
+            ఒకవేళ(isolate_లెక్క>pBiDi->isolate_లెక్క)
+                pBiDi->isolate_లెక్క=isolate_లెక్క;
         }
-        else if(dirProp==PDI)
-            isolateCount--;
-        else if(dirProp==B)
-            isolateCount=0;
+        లేకపోతే ఒకవేళ(dirProp==PDI)
+            isolate_లెక్క--;
+        లేకపోతే ఒకవేళ(dirProp==B)
+            isolate_లెక్క=0;
 
         // optimized version of  int32_t currentParaLevel = GET_PARALEVEL(pBiDi, i);
-        if (pBiDi->defaultParaLevel != 0 &&
-                i == currentParaLimit && (currentParaIndex + 1) < pBiDi->paraCount) {
-            currentParaLevel = pBiDi->paras[++currentParaIndex].level;
-            currentParaLimit = pBiDi->paras[currentParaIndex].limit;
+        ఒకవేళ (pBiDi->defaultParaLevel != 0 &&
+                i == current_Para_హద్దు && (current_Para_సూచీ + 1) < pBiDi->para_లెక్క) {
+            currentParaLevel = pBiDi->paras[++current_Para_సూచీ].level;
+            current_Para_హద్దు = pBiDi->paras[current_Para_సూచీ].హద్దు;
         }
 
         UBiDiLevel overrideFlag = level & UBIDI_LEVEL_OVERRIDE;
         level &= ~UBIDI_LEVEL_OVERRIDE;
-        if (level < currentParaLevel || UBIDI_MAX_EXPLICIT_LEVEL < level) {
-            if (level == 0) {
-                if (dirProp == B) {
+        ఒకవేళ (level < currentParaLevel || UBIDI_MAX_EXPLICIT_LEVEL < level) {
+            ఒకవేళ (level == 0) {
+                ఒకవేళ (dirProp == B) {
                     // Paragraph separators are ok with explicit level 0.
                     // Prevents reordering of paragraphs.
-                } else {
+                } లేకపోతే {
                     // Treat explicit level 0 as a wildcard for the paragraph level.
                     // Avoid making the caller guess what the paragraph level would be.
                     level = static_cast<UBiDiLevel>(currentParaLevel);
-                    levels[i] = level | overrideFlag;
+                    స్థాయిలు[i] = level | overrideFlag;
                 }
-            } else {
+            } లేకపోతే {
                 // 1 <= level < currentParaLevel or UBIDI_MAX_EXPLICIT_LEVEL < level
                 /* level out of bounds */
-                *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return UBIDI_LTR;
+                *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+                తిరిగి UBIDI_LTR;
             }
         }
-        if (overrideFlag != 0) {
+        ఒకవేళ (overrideFlag != 0) {
             /* keep the override flag in levels[i] but adjust the flags */
             flags|=DIRPROP_FLAG_O(level);
-        } else {
+        } లేకపోతే {
             /* set the flags */
             flags|=DIRPROP_FLAG_E(level)|DIRPROP_FLAG(dirProp);
         }
     }
-    if(flags&MASK_EMBEDDING)
+    ఒకవేళ(flags&ముసుగు_EMBEDDING)
         flags|=DIRPROP_FLAG_LR(pBiDi->paraLevel);
     /* determine if the text is mixed-directional or single-directional */
     pBiDi->flags=flags;
-    return directionFromFlags(pBiDi);
+    తిరిగి directionFromFlags(pBiDi);
 }
 
 /******************************************************************
@@ -1437,18 +1437,18 @@ checkExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
  Definitions and type for properties state table
 *******************************************************************
 */
-#define IMPTABPROPS_COLUMNS 16
-#define IMPTABPROPS_RES (IMPTABPROPS_COLUMNS - 1)
-#define GET_STATEPROPS(cell) ((cell)&0x1f)
-#define GET_ACTIONPROPS(cell) ((cell)>>5)
-#define s(action, newState) ((uint8_t)(newState+(action<<5)))
+#నిర్వచించు IMPTABPROPS_COLUMNS 16
+#నిర్వచించు IMPTABPROPS_RES (IMPTABPROPS_COLUMNS - 1)
+#నిర్వచించు GET_STATEPROPS(cell) ((cell)&0x1f)
+#నిర్వచించు GET_ACTIONPROPS(cell) ((cell)>>5)
+#నిర్వచించు s(action, newState) ((uint8_t)(newState+(action<<5)))
 
-static const uint8_t groupProp[] =          /* dirProp regrouped */
+స్థిర స్థిరరాశి uint8_t సమూహం_Prop[] =          /* dirProp regrouped */
 {
 /*  L   R   EN  ES  ET  AN  CS  B   S   WS  ON  LRE LRO AL  RLE RLO PDF NSM BN  FSI LRI RLI PDI ENL ENR */
     0,  1,  2,  7,  8,  3,  9,  6,  5,  4,  4,  10, 10, 12, 10, 10, 10, 11, 10, 4,  4,  4,  4,  13, 14
 };
-enum { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirProp_S=5, DirProp_B=6 }; /* reduced dirProp */
+గణన { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirProp_S=5, DirProp_B=6 }; /* reduced dirProp */
 
 /******************************************************************
 
@@ -1485,7 +1485,7 @@ enum { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirPr
 
 
 */
-static const uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
+స్థిర స్థిరరాశి uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
 {
 /*                        L ,     R ,    EN ,    AN ,    ON ,     S ,     B ,    ES ,    ET ,    CS ,    BN ,   NSM ,    AL ,   ENL ,   ENR , Res */
 /* 0 Init        */ {     1 ,     2 ,     4 ,     5 ,     7 ,    15 ,    17 ,     7 ,     9 ,     7 ,     0 ,     7 ,     3 ,    18 ,    21 , DirProp_ON },
@@ -1517,7 +1517,7 @@ static const uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
 /*  we must undef macro s because the levels tables have a different
  *  structure (4 bits for action and 4 bits for next state.
  */
-#undef s
+#నిర్వచనం_రద్దు s
 
 /******************************************************************
  The levels state machine tables
@@ -1538,21 +1538,21 @@ static const uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
  Definitions and type for levels state tables
 *******************************************************************
 */
-#define IMPTABLEVELS_COLUMNS (DirProp_B + 2)
-#define IMPTABLEVELS_RES (IMPTABLEVELS_COLUMNS - 1)
-#define GET_STATE(cell) ((cell)&0x0f)
-#define GET_ACTION(cell) ((cell)>>4)
-#define s(action, newState) ((uint8_t)(newState+(action<<4)))
+#నిర్వచించు IMPTABLEVELS_COLUMNS (DirProp_B + 2)
+#నిర్వచించు IMPTABLEVELS_RES (IMPTABLEVELS_COLUMNS - 1)
+#నిర్వచించు GET_STATE(cell) ((cell)&0x0f)
+#నిర్వచించు GET_ACTION(cell) ((cell)>>4)
+#నిర్వచించు s(action, newState) ((uint8_t)(newState+(action<<4)))
 
-typedef uint8_t ImpTab[][IMPTABLEVELS_COLUMNS];
-typedef uint8_t ImpAct[];
+రకనిర్వచనం uint8_t ImpTab[][IMPTABLEVELS_COLUMNS];
+రకనిర్వచనం uint8_t ImpAct[];
 
 /* FOOD FOR THOUGHT: each ImpTab should have its associated ImpAct,
  * instead of having a pair of ImpTab and a pair of ImpAct.
  */
-typedef struct ImpTabPair {
-    const void * pImpTab[2];
-    const void * pImpAct[2];
+రకనిర్వచనం నిర్మాణం ImpTabPair {
+    స్థిరరాశి శూన్య * pImpTab[2];
+    స్థిరరాశి శూన్య * pImpAct[2];
 } ImpTabPair;
 
 /******************************************************************
@@ -1592,7 +1592,7 @@ typedef struct ImpTabPair {
 
 */
 
-static const ImpTab impTabL_DEFAULT =   /* Even paragraph level */
+స్థిర స్థిరరాశి ImpTab impTabL_DEFAULT =   /* Even paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1605,7 +1605,7 @@ static const ImpTab impTabL_DEFAULT =   /* Even paragraph level */
 /* 4 : R+ON       */ {     0 , s(2,1), s(3,3), s(3,3),     4 ,     4 ,     0 ,  0 },
 /* 5 : AN+ON      */ {     0 , s(2,1),     0 , s(3,2),     5 ,     5 ,     0 ,  0 }
 };
-static const ImpTab impTabR_DEFAULT =   /* Odd  paragraph level */
+స్థిర స్థిరరాశి ImpTab impTabR_DEFAULT =   /* Odd  paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1618,12 +1618,12 @@ static const ImpTab impTabR_DEFAULT =   /* Odd  paragraph level */
 /* 4 : L+ON       */ { s(2,1),     0 , s(2,1),     3 ,     4 ,     4 ,     0 ,  0 },
 /* 5 : L+AN+ON    */ {     1 ,     0 ,     1 ,     3 ,     5 ,     5 ,     0 ,  0 }
 };
-static const ImpAct impAct0 = {0,1,2,3,4};
-static const ImpTabPair impTab_DEFAULT = {{&impTabL_DEFAULT,
+స్థిర స్థిరరాశి ImpAct impAct0 = {0,1,2,3,4};
+స్థిర స్థిరరాశి ImpTabPair impTab_DEFAULT = {{&impTabL_DEFAULT,
                                            &impTabR_DEFAULT},
                                           {&impAct0, &impAct0}};
 
-static const ImpTab impTabL_NUMBERS_SPECIAL =   /* Even paragraph level */
+స్థిర స్థిరరాశి ImpTab impTabL_NUMBERS_SPECIAL =   /* Even paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1635,11 +1635,11 @@ static const ImpTab impTabL_NUMBERS_SPECIAL =   /* Even paragraph level */
 /* 3 : R+ON       */ {     0 , s(2,2), s(3,4), s(3,4),     3 ,     3 ,     0 ,  0 },
 /* 4 : R+EN/AN    */ {     0 ,     2 ,     4 ,     4 , s(1,3), s(1,3),     0 ,  2 }
 };
-static const ImpTabPair impTab_NUMBERS_SPECIAL = {{&impTabL_NUMBERS_SPECIAL,
+స్థిర స్థిరరాశి ImpTabPair impTab_NUMBERS_SPECIAL = {{&impTabL_NUMBERS_SPECIAL,
                                                    &impTabR_DEFAULT},
                                                   {&impAct0, &impAct0}};
 
-static const ImpTab impTabL_GROUP_NUMBERS_WITH_R =
+స్థిర స్థిరరాశి ImpTab imp_Tab_L_సమూహం_NUMBERS_WITH_R =
 /*  In this table, EN/AN+ON sequences receive levels as if associated with R
     until proven that there is L or sor/eor on both sides. AN is handled like EN.
 */
@@ -1652,7 +1652,7 @@ static const ImpTab impTabL_GROUP_NUMBERS_WITH_R =
 /* 4 R+ON         */ { s(2,0),     3 ,     5 ,     5 ,     4 , s(2,0), s(2,0),  1 },
 /* 5 R+EN/AN      */ {     0 ,     3 ,     5 ,     5 , s(1,4),     0 ,     0 ,  2 }
 };
-static const ImpTab impTabR_GROUP_NUMBERS_WITH_R =
+స్థిర స్థిరరాశి ImpTab imp_Tab_R_సమూహం_NUMBERS_WITH_R =
 /*  In this table, EN/AN+ON sequences receive levels as if associated with R
     until proven that there is L on both sides. AN is handled like EN.
 */
@@ -1664,13 +1664,13 @@ static const ImpTab impTabR_GROUP_NUMBERS_WITH_R =
 /* 3 L+ON         */ { s(2,2),     0 ,     4 ,     4 ,     3 ,     0 ,     0 ,  0 },
 /* 4 L+EN/AN      */ { s(2,2),     0 ,     4 ,     4 ,     3 ,     0 ,     0 ,  1 }
 };
-static const ImpTabPair impTab_GROUP_NUMBERS_WITH_R = {
-                        {&impTabL_GROUP_NUMBERS_WITH_R,
-                         &impTabR_GROUP_NUMBERS_WITH_R},
+స్థిర స్థిరరాశి ImpTabPair imp_Tab_సమూహం_NUMBERS_WITH_R = {
+                        {&imp_Tab_L_సమూహం_NUMBERS_WITH_R,
+                         &imp_Tab_R_సమూహం_NUMBERS_WITH_R},
                         {&impAct0, &impAct0}};
 
 
-static const ImpTab impTabL_INVERSE_NUMBERS_AS_L =
+స్థిర స్థిరరాశి ImpTab impTabL_INVERSE_NUMBERS_AS_L =
 /*  This table is identical to the Default LTR table except that EN and AN are
     handled like L.
 */
@@ -1683,7 +1683,7 @@ static const ImpTab impTabL_INVERSE_NUMBERS_AS_L =
 /* 4 : R+ON       */ { s(2,0),     1 , s(2,0), s(2,0),     4 ,     4 , s(2,0),  1 },
 /* 5 : AN+ON      */ { s(2,0),     1 , s(2,0), s(2,0),     5 ,     5 , s(2,0),  1 }
 };
-static const ImpTab impTabR_INVERSE_NUMBERS_AS_L =
+స్థిర స్థిరరాశి ImpTab impTabR_INVERSE_NUMBERS_AS_L =
 /*  This table is identical to the Default RTL table except that EN and AN are
     handled like L.
 */
@@ -1696,12 +1696,12 @@ static const ImpTab impTabR_INVERSE_NUMBERS_AS_L =
 /* 4 : L+ON       */ { s(2,1),     0 , s(2,1), s(2,1),     4 ,     4 ,     0 ,  0 },
 /* 5 : L+AN+ON    */ {     1 ,     0 ,     1 ,     1 ,     5 ,     5 ,     0 ,  0 }
 };
-static const ImpTabPair impTab_INVERSE_NUMBERS_AS_L = {
+స్థిర స్థిరరాశి ImpTabPair impTab_INVERSE_NUMBERS_AS_L = {
                         {&impTabL_INVERSE_NUMBERS_AS_L,
                          &impTabR_INVERSE_NUMBERS_AS_L},
                         {&impAct0, &impAct0}};
 
-static const ImpTab impTabR_INVERSE_LIKE_DIRECT =   /* Odd  paragraph level */
+స్థిర స్థిరరాశి ImpTab imp_Tab_R_INVERSE_LIKE_ప్రత్యక్ష =   /* Odd  paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1715,15 +1715,15 @@ static const ImpTab impTabR_INVERSE_LIKE_DIRECT =   /* Odd  paragraph level */
 /* 5 : L+AN+ON    */ { s(2,1), s(3,0),     6 ,     4 ,     5 ,     5 , s(3,0),  2 },
 /* 6 : L+ON+EN    */ { s(2,1), s(3,0),     6 ,     4 ,     3 ,     3 , s(3,0),  1 }
 };
-static const ImpAct impAct1 = {0,1,13,14};
+స్థిర స్థిరరాశి ImpAct impAct1 = {0,1,13,14};
 /* FOOD FOR THOUGHT: in LTR table below, check case "JKL 123abc"
  */
-static const ImpTabPair impTab_INVERSE_LIKE_DIRECT = {
+స్థిర స్థిరరాశి ImpTabPair imp_Tab_INVERSE_LIKE_ప్రత్యక్ష = {
                         {&impTabL_DEFAULT,
-                         &impTabR_INVERSE_LIKE_DIRECT},
+                         &imp_Tab_R_INVERSE_LIKE_ప్రత్యక్ష},
                         {&impAct0, &impAct1}};
 
-static const ImpTab impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS =
+స్థిర స్థిరరాశి ImpTab imp_Tab_L_INVERSE_LIKE_ప్రత్యక్ష_WITH_MARKS =
 /*  The case handled in this table is (visually):  R EN L
 */
 {
@@ -1736,7 +1736,7 @@ static const ImpTab impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS =
 /* 5 : R+EN       */ { s(3,0), s(4,3),     5 , s(5,6), s(1,4), s(3,0), s(3,0),  4 },
 /* 6 : R+AN       */ { s(3,0), s(4,3), s(5,5),     6 , s(1,4), s(3,0), s(3,0),  4 }
 };
-static const ImpTab impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS =
+స్థిర స్థిరరాశి ImpTab imp_Tab_R_INVERSE_LIKE_ప్రత్యక్ష_WITH_MARKS =
 /*  The cases handled in this table are (visually):  R EN L
                                                      R L AN L
 */
@@ -1750,19 +1750,19 @@ static const ImpTab impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS =
 /* 5 : L+ON+EN    */ { s(5,3), s(4,0),     5 , s(3,6),     4 , s(4,0), s(4,0),  1 },
 /* 6 : L+AN       */ { s(5,3), s(4,0),     6 ,     6 ,     4 , s(4,0), s(4,0),  3 }
 };
-static const ImpAct impAct2 = {0,1,2,5,6,7,8};
-static const ImpAct impAct3 = {0,1,9,10,11,12};
-static const ImpTabPair impTab_INVERSE_LIKE_DIRECT_WITH_MARKS = {
-                        {&impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS,
-                         &impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS},
+స్థిర స్థిరరాశి ImpAct impAct2 = {0,1,2,5,6,7,8};
+స్థిర స్థిరరాశి ImpAct impAct3 = {0,1,9,10,11,12};
+స్థిర స్థిరరాశి ImpTabPair imp_Tab_INVERSE_LIKE_ప్రత్యక్ష_WITH_MARKS = {
+                        {&imp_Tab_L_INVERSE_LIKE_ప్రత్యక్ష_WITH_MARKS,
+                         &imp_Tab_R_INVERSE_LIKE_ప్రత్యక్ష_WITH_MARKS},
                         {&impAct2, &impAct3}};
 
-static const ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL = {
+స్థిర స్థిరరాశి ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL = {
                         {&impTabL_NUMBERS_SPECIAL,
-                         &impTabR_INVERSE_LIKE_DIRECT},
+                         &imp_Tab_R_INVERSE_LIKE_ప్రత్యక్ష},
                         {&impAct0, &impAct1}};
 
-static const ImpTab impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS =
+స్థిర స్థిరరాశి ImpTab impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS =
 /*  The case handled in this table is (visually):  R EN L
 */
 {
@@ -1773,80 +1773,80 @@ static const ImpTab impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS =
 /* 3 : R+ON       */ { s(3,0), s(4,2), s(5,4), s(5,4),     3 , s(3,0), s(3,0),  3 },
 /* 4 : R+EN/AN    */ { s(3,0), s(4,2),     4 ,     4 , s(1,3), s(3,0), s(3,0),  4 }
 };
-static const ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS = {
+స్థిర స్థిరరాశి ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS = {
                         {&impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS,
-                         &impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS},
+                         &imp_Tab_R_INVERSE_LIKE_ప్రత్యక్ష_WITH_MARKS},
                         {&impAct2, &impAct3}};
 
-#undef s
+#నిర్వచనం_రద్దు s
 
-typedef struct {
-    const ImpTab * pImpTab;             /* level table pointer          */
-    const ImpAct * pImpAct;             /* action map array             */
-    int32_t startON;                    /* start of ON sequence         */
-    int32_t startL2EN;                  /* start of level 2 sequence    */
-    int32_t lastStrongRTL;              /* index of last found R or AL  */
+రకనిర్వచనం నిర్మాణం {
+    స్థిరరాశి ImpTab * pImpTab;             /* level table pointer          */
+    స్థిరరాశి ImpAct * pImpAct;             /* action map array             */
+    int32_t ప్రారంభం_ON;                    /* start of ON sequence         */
+    int32_t ప్రారంభం_L2_EN;                  /* start of level 2 sequence    */
+    int32_t చివరి_Strong_RTL;              /* index of last found R or AL  */
     int32_t state;                      /* current state                */
-    int32_t runStart;                   /* start position of the run    */
-    UBiDiLevel runLevel;                /* run level before implicit solving */
+    int32_t నిరంతరం_ప్రారంభం;                   /* start position of the run    */
+    UBiDiLevel నిరంతరం_Level;                /* run level before implicit solving */
 } LevState;
 
 /*------------------------------------------------------------------------*/
 
-static void
-addPoint(UBiDi *pBiDi, int32_t pos, int32_t flag)
+స్థిర శూన్య
+కూడు_బిందువు(UBiDi *pBiDi, int32_t pos, int32_t flag)
   /* param pos:     position where to insert
      param flag:    one of LRM_BEFORE, LRM_AFTER, RLM_BEFORE, RLM_AFTER
   */
 {
-#define FIRSTALLOC  10
-    Point point;
-    InsertPoints * pInsertPoints=&(pBiDi->insertPoints);
+#నిర్వచించు FIRSTALLOC  10
+    బిందువు బిందువు_2;
+    చొప్పించు_Points_2 * p_చొప్పించు_Points=&(pBiDi->చొప్పించు_Points);
 
-    if (pInsertPoints->capacity == 0)
+    ఒకవేళ (p_చొప్పించు_Points->capacity == 0)
     {
-        pInsertPoints->points=static_cast<Point *>(uprv_malloc(sizeof(Point)*FIRSTALLOC));
-        if (pInsertPoints->points == nullptr)
+        p_చొప్పించు_Points->points=static_cast<బిందువు *>(uprv_malloc(పరిమాణం(బిందువు)*FIRSTALLOC));
+        ఒకవేళ (p_చొప్పించు_Points->points == శూన్యసూచిక)
         {
-            pInsertPoints->errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            p_చొప్పించు_Points->error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
-        pInsertPoints->capacity=FIRSTALLOC;
+        p_చొప్పించు_Points->capacity=FIRSTALLOC;
     }
-    if (pInsertPoints->size >= pInsertPoints->capacity) /* no room for new point */
+    ఒకవేళ (p_చొప్పించు_Points->size >= p_చొప్పించు_Points->capacity) /* no room for new point */
     {
-        Point * savePoints=pInsertPoints->points;
-        pInsertPoints->points=static_cast<Point *>(uprv_realloc(pInsertPoints->points,
-                                           pInsertPoints->capacity*2*sizeof(Point)));
-        if (pInsertPoints->points == nullptr)
+        బిందువు * savePoints=p_చొప్పించు_Points->points;
+        p_చొప్పించు_Points->points=static_cast<బిందువు *>(uprv_realloc(p_చొప్పించు_Points->points,
+                                           p_చొప్పించు_Points->capacity*2*పరిమాణం(బిందువు)));
+        ఒకవేళ (p_చొప్పించు_Points->points == శూన్యసూచిక)
         {
-            pInsertPoints->points=savePoints;
-            pInsertPoints->errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            p_చొప్పించు_Points->points=savePoints;
+            p_చొప్పించు_Points->error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
-        else  pInsertPoints->capacity*=2;
+        లేకపోతే  p_చొప్పించు_Points->capacity*=2;
     }
-    point.pos=pos;
-    point.flag=flag;
-    pInsertPoints->points[pInsertPoints->size]=point;
-    pInsertPoints->size++;
-#undef FIRSTALLOC
+    బిందువు_2.pos=pos;
+    బిందువు_2.flag=flag;
+    p_చొప్పించు_Points->points[p_చొప్పించు_Points->size]=బిందువు_2;
+    p_చొప్పించు_Points->size++;
+#నిర్వచనం_రద్దు FIRSTALLOC
 }
 
-static void
-setLevelsOutsideIsolates(UBiDi *pBiDi, int32_t start, int32_t limit, UBiDiLevel level)
+స్థిర శూన్య
+సమితి_స్థాయిలు_Outside_Isolates(UBiDi *pBiDi, int32_t ప్రారంభం, int32_t హద్దు, UBiDiLevel level)
 {
     DirProp *dirProps=pBiDi->dirProps, dirProp;
-    UBiDiLevel *levels=pBiDi->levels;
-    int32_t isolateCount=0, k;
-    for(k=start; k<limit; k++) {
+    UBiDiLevel *స్థాయిలు=pBiDi->స్థాయిలు;
+    int32_t isolate_లెక్క=0, k;
+    కొరకు(k=ప్రారంభం; k<హద్దు; k++) {
         dirProp=dirProps[k];
-        if(dirProp==PDI)
-            isolateCount--;
-        if(isolateCount==0)
-            levels[k]=level;
-        if(dirProp==LRI || dirProp==RLI)
-            isolateCount++;
+        ఒకవేళ(dirProp==PDI)
+            isolate_లెక్క--;
+        ఒకవేళ(isolate_లెక్క==0)
+            స్థాయిలు[k]=level;
+        ఒకవేళ(dirProp==LRI || dirProp==RLI)
+            isolate_లెక్క++;
     }
 }
 
@@ -1865,208 +1865,208 @@ setLevelsOutsideIsolates(UBiDi *pBiDi, int32_t start, int32_t limit, UBiDiLevel 
  * to actually store the intermediate directional properties in dirProps[].
  */
 
-static void
+స్థిర శూన్య
 processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
-                   int32_t start, int32_t limit) {
+                   int32_t ప్రారంభం, int32_t హద్దు) {
     uint8_t cell, oldStateSeq, actionSeq;
-    const ImpTab * pImpTab=pLevState->pImpTab;
-    const ImpAct * pImpAct=pLevState->pImpAct;
-    UBiDiLevel * levels=pBiDi->levels;
-    UBiDiLevel level, addLevel;
-    InsertPoints * pInsertPoints;
+    స్థిరరాశి ImpTab * pImpTab=pLevState->pImpTab;
+    స్థిరరాశి ImpAct * pImpAct=pLevState->pImpAct;
+    UBiDiLevel * స్థాయిలు=pBiDi->స్థాయిలు;
+    UBiDiLevel level, కూడు_Level;
+    చొప్పించు_Points_2 * p_చొప్పించు_Points;
     int32_t start0, k;
 
-    start0=start;                           /* save original start position */
+    start0=ప్రారంభం;                           /* save original start position */
     oldStateSeq = static_cast<uint8_t>(pLevState->state);
     cell=(*pImpTab)[oldStateSeq][_prop];
     pLevState->state=GET_STATE(cell);       /* isolate the new state */
     actionSeq=(*pImpAct)[GET_ACTION(cell)]; /* isolate the action */
-    addLevel=(*pImpTab)[pLevState->state][IMPTABLEVELS_RES];
+    కూడు_Level=(*pImpTab)[pLevState->state][IMPTABLEVELS_RES];
 
-    if(actionSeq) {
-        switch(actionSeq) {
-        case 1:                         /* init ON seq */
-            pLevState->startON=start0;
-            break;
+    ఒకవేళ(actionSeq) {
+        ఎంపిక(actionSeq) {
+        స్థితి 1:                         /* init ON seq */
+            pLevState->ప్రారంభం_ON=start0;
+            ఆపు;
 
-        case 2:                         /* prepend ON seq to current seq */
-            start=pLevState->startON;
-            break;
+        స్థితి 2:                         /* prepend ON seq to current seq */
+            ప్రారంభం=pLevState->ప్రారంభం_ON;
+            ఆపు;
 
-        case 3:                         /* EN/AN after R+ON */
-            level=pLevState->runLevel+1;
-            setLevelsOutsideIsolates(pBiDi, pLevState->startON, start0, level);
-            break;
+        స్థితి 3:                         /* EN/AN after R+ON */
+            level=pLevState->నిరంతరం_Level+1;
+            సమితి_స్థాయిలు_Outside_Isolates(pBiDi, pLevState->ప్రారంభం_ON, start0, level);
+            ఆపు;
 
-        case 4:                         /* EN/AN before R for NUMBERS_SPECIAL */
-            level=pLevState->runLevel+2;
-            setLevelsOutsideIsolates(pBiDi, pLevState->startON, start0, level);
-            break;
+        స్థితి 4:                         /* EN/AN before R for NUMBERS_SPECIAL */
+            level=pLevState->నిరంతరం_Level+2;
+            సమితి_స్థాయిలు_Outside_Isolates(pBiDi, pLevState->ప్రారంభం_ON, start0, level);
+            ఆపు;
 
-        case 5:                         /* L or S after possible relevant EN/AN */
+        స్థితి 5:                         /* L or S after possible relevant EN/AN */
             /* check if we had EN after R/AL */
-            if (pLevState->startL2EN >= 0) {
-                addPoint(pBiDi, pLevState->startL2EN, LRM_BEFORE);
+            ఒకవేళ (pLevState->ప్రారంభం_L2_EN >= 0) {
+                కూడు_బిందువు(pBiDi, pLevState->ప్రారంభం_L2_EN, LRM_BEFORE);
             }
-            pLevState->startL2EN=-1;  /* not within previous if since could also be -2 */
+            pLevState->ప్రారంభం_L2_EN=-1;  /* not within previous if since could also be -2 */
             /* check if we had any relevant EN/AN after R/AL */
-            pInsertPoints=&(pBiDi->insertPoints);
-            if ((pInsertPoints->capacity == 0) ||
-                (pInsertPoints->size <= pInsertPoints->confirmed))
+            p_చొప్పించు_Points=&(pBiDi->చొప్పించు_Points);
+            ఒకవేళ ((p_చొప్పించు_Points->capacity == 0) ||
+                (p_చొప్పించు_Points->size <= p_చొప్పించు_Points->confirmed))
             {
                 /* nothing, just clean up */
-                pLevState->lastStrongRTL=-1;
+                pLevState->చివరి_Strong_RTL=-1;
                 /* check if we have a pending conditional segment */
                 level=(*pImpTab)[oldStateSeq][IMPTABLEVELS_RES];
-                if ((level & 1) && (pLevState->startON > 0)) {  /* after ON */
-                    start=pLevState->startON;   /* reset to basic run level */
+                ఒకవేళ ((level & 1) && (pLevState->ప్రారంభం_ON > 0)) {  /* after ON */
+                    ప్రారంభం=pLevState->ప్రారంభం_ON;   /* reset to basic run level */
                 }
-                if (_prop == DirProp_S)                /* add LRM before S */
+                ఒకవేళ (_prop == DirProp_S)                /* add LRM before S */
                 {
-                    addPoint(pBiDi, start0, LRM_BEFORE);
-                    pInsertPoints->confirmed=pInsertPoints->size;
+                    కూడు_బిందువు(pBiDi, start0, LRM_BEFORE);
+                    p_చొప్పించు_Points->confirmed=p_చొప్పించు_Points->size;
                 }
-                break;
+                ఆపు;
             }
             /* reset previous RTL cont to level for LTR text */
-            for (k=pLevState->lastStrongRTL+1; k<start0; k++)
+            కొరకు (k=pLevState->చివరి_Strong_RTL+1; k<start0; k++)
             {
                 /* reset odd level, leave runLevel+2 as is */
-                levels[k]=(levels[k] - 2) & ~1;
+                స్థాయిలు[k]=(స్థాయిలు[k] - 2) & ~1;
             }
             /* mark insert points as confirmed */
-            pInsertPoints->confirmed=pInsertPoints->size;
-            pLevState->lastStrongRTL=-1;
-            if (_prop == DirProp_S)            /* add LRM before S */
+            p_చొప్పించు_Points->confirmed=p_చొప్పించు_Points->size;
+            pLevState->చివరి_Strong_RTL=-1;
+            ఒకవేళ (_prop == DirProp_S)            /* add LRM before S */
             {
-                addPoint(pBiDi, start0, LRM_BEFORE);
-                pInsertPoints->confirmed=pInsertPoints->size;
+                కూడు_బిందువు(pBiDi, start0, LRM_BEFORE);
+                p_చొప్పించు_Points->confirmed=p_చొప్పించు_Points->size;
             }
-            break;
+            ఆపు;
 
-        case 6:                         /* R/AL after possible relevant EN/AN */
+        స్థితి 6:                         /* R/AL after possible relevant EN/AN */
             /* just clean up */
-            pInsertPoints=&(pBiDi->insertPoints);
-            if (pInsertPoints->capacity > 0)
+            p_చొప్పించు_Points=&(pBiDi->చొప్పించు_Points);
+            ఒకవేళ (p_చొప్పించు_Points->capacity > 0)
                 /* remove all non confirmed insert points */
-                pInsertPoints->size=pInsertPoints->confirmed;
-            pLevState->startON=-1;
-            pLevState->startL2EN=-1;
-            pLevState->lastStrongRTL=limit - 1;
-            break;
+                p_చొప్పించు_Points->size=p_చొప్పించు_Points->confirmed;
+            pLevState->ప్రారంభం_ON=-1;
+            pLevState->ప్రారంభం_L2_EN=-1;
+            pLevState->చివరి_Strong_RTL=హద్దు - 1;
+            ఆపు;
 
-        case 7:                         /* EN/AN after R/AL + possible cont */
+        స్థితి 7:                         /* EN/AN after R/AL + possible cont */
             /* check for real AN */
-            if ((_prop == DirProp_AN) && (pBiDi->dirProps[start0] == AN) &&
-                (pBiDi->reorderingMode!=UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))
+            ఒకవేళ ((_prop == DirProp_AN) && (pBiDi->dirProps[start0] == AN) &&
+                (pBiDi->reordering_బహుళకం!=UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))
             {
                 /* real AN */
-                if (pLevState->startL2EN == -1) /* if no relevant EN already found */
+                ఒకవేళ (pLevState->ప్రారంభం_L2_EN == -1) /* if no relevant EN already found */
                 {
                     /* just note the righmost digit as a strong RTL */
-                    pLevState->lastStrongRTL=limit - 1;
-                    break;
+                    pLevState->చివరి_Strong_RTL=హద్దు - 1;
+                    ఆపు;
                 }
-                if (pLevState->startL2EN >= 0)  /* after EN, no AN */
+                ఒకవేళ (pLevState->ప్రారంభం_L2_EN >= 0)  /* after EN, no AN */
                 {
-                    addPoint(pBiDi, pLevState->startL2EN, LRM_BEFORE);
-                    pLevState->startL2EN=-2;
+                    కూడు_బిందువు(pBiDi, pLevState->ప్రారంభం_L2_EN, LRM_BEFORE);
+                    pLevState->ప్రారంభం_L2_EN=-2;
                 }
                 /* note AN */
-                addPoint(pBiDi, start0, LRM_BEFORE);
-                break;
+                కూడు_బిందువు(pBiDi, start0, LRM_BEFORE);
+                ఆపు;
             }
             /* if first EN/AN after R/AL */
-            if (pLevState->startL2EN == -1) {
-                pLevState->startL2EN=start0;
+            ఒకవేళ (pLevState->ప్రారంభం_L2_EN == -1) {
+                pLevState->ప్రారంభం_L2_EN=start0;
             }
-            break;
+            ఆపు;
 
-        case 8:                         /* note location of latest R/AL */
-            pLevState->lastStrongRTL=limit - 1;
-            pLevState->startON=-1;
-            break;
+        స్థితి 8:                         /* note location of latest R/AL */
+            pLevState->చివరి_Strong_RTL=హద్దు - 1;
+            pLevState->ప్రారంభం_ON=-1;
+            ఆపు;
 
-        case 9:                         /* L after R+ON/EN/AN */
+        స్థితి 9:                         /* L after R+ON/EN/AN */
             /* include possible adjacent number on the left */
-            for (k=start0-1; k>=0 && !(levels[k]&1); k--);
-            if(k>=0) {
-                addPoint(pBiDi, k, RLM_BEFORE);             /* add RLM before */
-                pInsertPoints=&(pBiDi->insertPoints);
-                pInsertPoints->confirmed=pInsertPoints->size;   /* confirm it */
+            కొరకు (k=start0-1; k>=0 && !(స్థాయిలు[k]&1); k--);
+            ఒకవేళ(k>=0) {
+                కూడు_బిందువు(pBiDi, k, RLM_BEFORE);             /* add RLM before */
+                p_చొప్పించు_Points=&(pBiDi->చొప్పించు_Points);
+                p_చొప్పించు_Points->confirmed=p_చొప్పించు_Points->size;   /* confirm it */
             }
-            pLevState->startON=start0;
-            break;
+            pLevState->ప్రారంభం_ON=start0;
+            ఆపు;
 
-        case 10:                        /* AN after L */
+        స్థితి 10:                        /* AN after L */
             /* AN numbers between L text on both sides may be trouble. */
             /* tentatively bracket with LRMs; will be confirmed if followed by L */
-            addPoint(pBiDi, start0, LRM_BEFORE);    /* add LRM before */
-            addPoint(pBiDi, start0, LRM_AFTER);     /* add LRM after  */
-            break;
+            కూడు_బిందువు(pBiDi, start0, LRM_BEFORE);    /* add LRM before */
+            కూడు_బిందువు(pBiDi, start0, LRM_AFTER);     /* add LRM after  */
+            ఆపు;
 
-        case 11:                        /* R after L+ON/EN/AN */
+        స్థితి 11:                        /* R after L+ON/EN/AN */
             /* false alert, infirm LRMs around previous AN */
-            pInsertPoints=&(pBiDi->insertPoints);
-            pInsertPoints->size=pInsertPoints->confirmed;
-            if (_prop == DirProp_S)            /* add RLM before S */
+            p_చొప్పించు_Points=&(pBiDi->చొప్పించు_Points);
+            p_చొప్పించు_Points->size=p_చొప్పించు_Points->confirmed;
+            ఒకవేళ (_prop == DirProp_S)            /* add RLM before S */
             {
-                addPoint(pBiDi, start0, RLM_BEFORE);
-                pInsertPoints->confirmed=pInsertPoints->size;
+                కూడు_బిందువు(pBiDi, start0, RLM_BEFORE);
+                p_చొప్పించు_Points->confirmed=p_చొప్పించు_Points->size;
             }
-            break;
+            ఆపు;
 
-        case 12:                        /* L after L+ON/AN */
-            level=pLevState->runLevel + addLevel;
-            for(k=pLevState->startON; k<start0; k++) {
-                if (levels[k]<level)
-                    levels[k]=level;
+        స్థితి 12:                        /* L after L+ON/AN */
+            level=pLevState->నిరంతరం_Level + కూడు_Level;
+            కొరకు(k=pLevState->ప్రారంభం_ON; k<start0; k++) {
+                ఒకవేళ (స్థాయిలు[k]<level)
+                    స్థాయిలు[k]=level;
             }
-            pInsertPoints=&(pBiDi->insertPoints);
-            pInsertPoints->confirmed=pInsertPoints->size;   /* confirm inserts */
-            pLevState->startON=start0;
-            break;
+            p_చొప్పించు_Points=&(pBiDi->చొప్పించు_Points);
+            p_చొప్పించు_Points->confirmed=p_చొప్పించు_Points->size;   /* confirm inserts */
+            pLevState->ప్రారంభం_ON=start0;
+            ఆపు;
 
-        case 13:                        /* L after L+ON+EN/AN/ON */
-            level=pLevState->runLevel;
-            for(k=start0-1; k>=pLevState->startON; k--) {
-                if(levels[k]==level+3) {
-                    while(levels[k]==level+3) {
-                        levels[k--]-=2;
+        స్థితి 13:                        /* L after L+ON+EN/AN/ON */
+            level=pLevState->నిరంతరం_Level;
+            కొరకు(k=start0-1; k>=pLevState->ప్రారంభం_ON; k--) {
+                ఒకవేళ(స్థాయిలు[k]==level+3) {
+                    అయితే(స్థాయిలు[k]==level+3) {
+                        స్థాయిలు[k--]-=2;
                     }
-                    while(levels[k]==level) {
+                    అయితే(స్థాయిలు[k]==level) {
                         k--;
                     }
                 }
-                if(levels[k]==level+2) {
-                    levels[k]=level;
-                    continue;
+                ఒకవేళ(స్థాయిలు[k]==level+2) {
+                    స్థాయిలు[k]=level;
+                    కొనసాగు;
                 }
-                levels[k]=level+1;
+                స్థాయిలు[k]=level+1;
             }
-            break;
+            ఆపు;
 
-        case 14:                        /* R after L+ON+EN/AN/ON */
-            level=pLevState->runLevel+1;
-            for(k=start0-1; k>=pLevState->startON; k--) {
-                if(levels[k]>level) {
-                    levels[k]-=2;
+        స్థితి 14:                        /* R after L+ON+EN/AN/ON */
+            level=pLevState->నిరంతరం_Level+1;
+            కొరకు(k=start0-1; k>=pLevState->ప్రారంభం_ON; k--) {
+                ఒకవేళ(స్థాయిలు[k]>level) {
+                    స్థాయిలు[k]-=2;
                 }
             }
-            break;
+            ఆపు;
 
-        default:                        /* we should never get here */
+        అప్రమేయ:                        /* we should never get here */
             UPRV_UNREACHABLE_EXIT;
         }
     }
-    if((addLevel) || (start < start0)) {
-        level=pLevState->runLevel + addLevel;
-        if(start>=pLevState->runStart) {
-            for(k=start; k<limit; k++) {
-                levels[k]=level;
+    ఒకవేళ((కూడు_Level) || (ప్రారంభం < start0)) {
+        level=pLevState->నిరంతరం_Level + కూడు_Level;
+        ఒకవేళ(ప్రారంభం>=pLevState->నిరంతరం_ప్రారంభం) {
+            కొరకు(k=ప్రారంభం; k<హద్దు; k++) {
+                స్థాయిలు[k]=level;
             }
-        } else {
-            setLevelsOutsideIsolates(pBiDi, start, limit, level);
+        } లేకపోతే {
+            సమితి_స్థాయిలు_Outside_Isolates(pBiDi, ప్రారంభం, హద్దు, level);
         }
     }
 }
@@ -2075,74 +2075,74 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
  * Returns the directionality of the last strong character at the end of the prologue, if any.
  * Requires prologue!=null.
  */
-static DirProp
-lastL_R_AL(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->prologue;
-    int32_t length=pBiDi->proLength;
+స్థిర DirProp
+చివరి_L_R_AL(UBiDi *pBiDi) {
+    స్థిరరాశి char16_t *పాఠ్యం=pBiDi->prologue;
+    int32_t length=pBiDi->pro_నిడివి;
     int32_t i;
     UChar32 uchar;
     DirProp dirProp;
-    for(i=length; i>0; ) {
+    కొరకు(i=length; i>0; ) {
         /* i is decremented by U16_PREV */
-        U16_PREV(text, 0, i, uchar);
+        U16_PREV(పాఠ్యం, 0, i, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(dirProp==L) {
-            return DirProp_L;
+        ఒకవేళ(dirProp==L) {
+            తిరిగి DirProp_L;
         }
-        if(dirProp==R || dirProp==AL) {
-            return DirProp_R;
+        ఒకవేళ(dirProp==R || dirProp==AL) {
+            తిరిగి DirProp_R;
         }
-        if(dirProp==B) {
-            return DirProp_ON;
+        ఒకవేళ(dirProp==B) {
+            తిరిగి DirProp_ON;
         }
     }
-    return DirProp_ON;
+    తిరిగి DirProp_ON;
 }
 
 /**
  * Returns the directionality of the first strong character, or digit, in the epilogue, if any.
  * Requires epilogue!=null.
  */
-static DirProp
-firstL_R_AL_EN_AN(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->epilogue;
-    int32_t length=pBiDi->epiLength;
+స్థిర DirProp
+మొదటి_L_R_AL_EN_AN(UBiDi *pBiDi) {
+    స్థిరరాశి char16_t *పాఠ్యం=pBiDi->epilogue;
+    int32_t length=pBiDi->epi_నిడివి;
     int32_t i;
     UChar32 uchar;
     DirProp dirProp;
-    for(i=0; i<length; ) {
+    కొరకు(i=0; i<length; ) {
         /* i is incremented by U16_NEXT */
-        U16_NEXT(text, i, length, uchar);
+        U16_తదుపరి(పాఠ్యం, i, length, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(dirProp==L) {
-            return DirProp_L;
+        ఒకవేళ(dirProp==L) {
+            తిరిగి DirProp_L;
         }
-        if(dirProp==R || dirProp==AL) {
-            return DirProp_R;
+        ఒకవేళ(dirProp==R || dirProp==AL) {
+            తిరిగి DirProp_R;
         }
-        if(dirProp==EN) {
-            return DirProp_EN;
+        ఒకవేళ(dirProp==EN) {
+            తిరిగి DirProp_EN;
         }
-        if(dirProp==AN) {
-            return DirProp_AN;
+        ఒకవేళ(dirProp==AN) {
+            తిరిగి DirProp_AN;
         }
     }
-    return DirProp_ON;
+    తిరిగి DirProp_ON;
 }
 
-static void
-resolveImplicitLevels(UBiDi *pBiDi,
-                      int32_t start, int32_t limit,
+స్థిర శూన్య
+resolve_Implicit_స్థాయిలు(UBiDi *pBiDi,
+                      int32_t ప్రారంభం, int32_t హద్దు,
                       DirProp sor, DirProp eor) {
-    const DirProp *dirProps=pBiDi->dirProps;
+    స్థిరరాశి DirProp *dirProps=pBiDi->dirProps;
     DirProp dirProp;
     LevState levState;
     int32_t i, start1, start2;
     uint16_t oldStateImp, stateImp, actionImp;
     uint8_t gprop, resProp, cell;
     UBool inverseRTL;
-    DirProp nextStrongProp=R;
-    int32_t nextStrongPos=-1;
+    DirProp తదుపరి_Strong_Prop=R;
+    int32_t తదుపరి_Strong_Pos=-1;
 
     /* check for RTL inverse BiDi mode */
     /* FOOD FOR THOUGHT: in case of RTL inverse BiDi, it would make sense to
@@ -2152,138 +2152,138 @@ resolveImplicitLevels(UBiDi *pBiDi,
      * LTR corresponding ones.
      */
     inverseRTL =
-        static_cast<UBool>((start < pBiDi->lastArabicPos) && (GET_PARALEVEL(pBiDi, start) & 1) &&
-                           (pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_LIKE_DIRECT ||
-                            pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL));
+        static_cast<UBool>((ప్రారంభం < pBiDi->చివరి_Arabic_Pos) && (GET_PARALEVEL(pBiDi, ప్రారంభం) & 1) &&
+                           (pBiDi->reordering_బహుళకం == UBIDI_REORDER_INVERSE_LIKE_ప్రత్యక్ష ||
+                            pBiDi->reordering_బహుళకం == UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL));
 
     /* initialize for property and levels state tables */
-    levState.startL2EN=-1;              /* used for INVERSE_LIKE_DIRECT_WITH_MARKS */
-    levState.lastStrongRTL=-1;          /* used for INVERSE_LIKE_DIRECT_WITH_MARKS */
-    levState.runStart=start;
-    levState.runLevel=pBiDi->levels[start];
-    levState.pImpTab = static_cast<const ImpTab*>(((pBiDi->pImpTabPair)->pImpTab)[levState.runLevel & 1]);
-    levState.pImpAct = static_cast<const ImpAct*>(((pBiDi->pImpTabPair)->pImpAct)[levState.runLevel & 1]);
-    if(start==0 && pBiDi->proLength>0) {
-        DirProp lastStrong=lastL_R_AL(pBiDi);
-        if(lastStrong!=DirProp_ON) {
-            sor=lastStrong;
+    levState.ప్రారంభం_L2_EN=-1;              /* used for INVERSE_LIKE_DIRECT_WITH_MARKS */
+    levState.చివరి_Strong_RTL=-1;          /* used for INVERSE_LIKE_DIRECT_WITH_MARKS */
+    levState.నిరంతరం_ప్రారంభం=ప్రారంభం;
+    levState.నిరంతరం_Level=pBiDi->స్థాయిలు[ప్రారంభం];
+    levState.pImpTab = static_cast<స్థిరరాశి ImpTab*>(((pBiDi->pImpTabPair)->pImpTab)[levState.నిరంతరం_Level & 1]);
+    levState.pImpAct = static_cast<స్థిరరాశి ImpAct*>(((pBiDi->pImpTabPair)->pImpAct)[levState.నిరంతరం_Level & 1]);
+    ఒకవేళ(ప్రారంభం==0 && pBiDi->pro_నిడివి>0) {
+        DirProp చివరి_Strong=చివరి_L_R_AL(pBiDi);
+        ఒకవేళ(చివరి_Strong!=DirProp_ON) {
+            sor=చివరి_Strong;
         }
     }
     /* The isolates[] entries contain enough information to
        resume the bidi algorithm in the same state as it was
        when it was interrupted by an isolate sequence. */
-    if(dirProps[start]==PDI  && pBiDi->isolateCount >= 0) {
-        levState.startON=pBiDi->isolates[pBiDi->isolateCount].startON;
-        start1=pBiDi->isolates[pBiDi->isolateCount].start1;
-        stateImp=pBiDi->isolates[pBiDi->isolateCount].stateImp;
-        levState.state=pBiDi->isolates[pBiDi->isolateCount].state;
-        pBiDi->isolateCount--;
-    } else {
-        levState.startON=-1;
-        start1=start;
-        if(dirProps[start]==NSM)
+    ఒకవేళ(dirProps[ప్రారంభం]==PDI  && pBiDi->isolate_లెక్క >= 0) {
+        levState.ప్రారంభం_ON=pBiDi->isolates[pBiDi->isolate_లెక్క].ప్రారంభం_ON;
+        start1=pBiDi->isolates[pBiDi->isolate_లెక్క].start1;
+        stateImp=pBiDi->isolates[pBiDi->isolate_లెక్క].stateImp;
+        levState.state=pBiDi->isolates[pBiDi->isolate_లెక్క].state;
+        pBiDi->isolate_లెక్క--;
+    } లేకపోతే {
+        levState.ప్రారంభం_ON=-1;
+        start1=ప్రారంభం;
+        ఒకవేళ(dirProps[ప్రారంభం]==NSM)
             stateImp = 1 + sor;
-        else
+        లేకపోతే
             stateImp=0;
         levState.state=0;
-        processPropertySeq(pBiDi, &levState, sor, start, start);
+        processPropertySeq(pBiDi, &levState, sor, ప్రారంభం, ప్రారంభం);
     }
-    start2=start;                       /* to make Java compiler happy */
+    start2=ప్రారంభం;                       /* to make Java compiler happy */
 
-    for(i=start; i<=limit; i++) {
-        if(i>=limit) {
+    కొరకు(i=ప్రారంభం; i<=హద్దు; i++) {
+        ఒకవేళ(i>=హద్దు) {
             int32_t k;
-            for(k=limit-1; k>start&&(DIRPROP_FLAG(dirProps[k])&MASK_BN_EXPLICIT); k--);
+            కొరకు(k=హద్దు-1; k>ప్రారంభం&&(DIRPROP_FLAG(dirProps[k])&ముసుగు_BN_EXPLICIT); k--);
             dirProp=dirProps[k];
-            if(dirProp==LRI || dirProp==RLI)
-                break;      /* no forced closing for sequence ending with LRI/RLI */
+            ఒకవేళ(dirProp==LRI || dirProp==RLI)
+                ఆపు;      /* no forced closing for sequence ending with LRI/RLI */
             gprop=eor;
-        } else {
+        } లేకపోతే {
             DirProp prop, prop1;
             prop=dirProps[i];
-            if(prop==B) {
-                pBiDi->isolateCount=-1; /* current isolates stack entry == none */
+            ఒకవేళ(prop==B) {
+                pBiDi->isolate_లెక్క=-1; /* current isolates stack entry == none */
             }
-            if(inverseRTL) {
-                if(prop==AL) {
+            ఒకవేళ(inverseRTL) {
+                ఒకవేళ(prop==AL) {
                     /* AL before EN does not make it AN */
                     prop=R;
-                } else if(prop==EN) {
-                    if(nextStrongPos<=i) {
+                } లేకపోతే ఒకవేళ(prop==EN) {
+                    ఒకవేళ(తదుపరి_Strong_Pos<=i) {
                         /* look for next strong char (L/R/AL) */
                         int32_t j;
-                        nextStrongProp=R;   /* set default */
-                        nextStrongPos=limit;
-                        for(j=i+1; j<limit; j++) {
+                        తదుపరి_Strong_Prop=R;   /* set default */
+                        తదుపరి_Strong_Pos=హద్దు;
+                        కొరకు(j=i+1; j<హద్దు; j++) {
                             prop1=dirProps[j];
-                            if(prop1==L || prop1==R || prop1==AL) {
-                                nextStrongProp=prop1;
-                                nextStrongPos=j;
-                                break;
+                            ఒకవేళ(prop1==L || prop1==R || prop1==AL) {
+                                తదుపరి_Strong_Prop=prop1;
+                                తదుపరి_Strong_Pos=j;
+                                ఆపు;
                             }
                         }
                     }
-                    if(nextStrongProp==AL) {
+                    ఒకవేళ(తదుపరి_Strong_Prop==AL) {
                         prop=AN;
                     }
                 }
             }
-            gprop=groupProp[prop];
+            gprop=సమూహం_Prop[prop];
         }
         oldStateImp=stateImp;
         cell=impTabProps[oldStateImp][gprop];
         stateImp=GET_STATEPROPS(cell);      /* isolate the new state */
         actionImp=GET_ACTIONPROPS(cell);    /* isolate the action */
-        if((i==limit) && (actionImp==0)) {
+        ఒకవేళ((i==హద్దు) && (actionImp==0)) {
             /* there is an unprocessed sequence if its property == eor   */
             actionImp=1;                    /* process the last sequence */
         }
-        if(actionImp) {
+        ఒకవేళ(actionImp) {
             resProp=impTabProps[oldStateImp][IMPTABPROPS_RES];
-            switch(actionImp) {
-            case 1:             /* process current seq1, init new seq1 */
+            ఎంపిక(actionImp) {
+            స్థితి 1:             /* process current seq1, init new seq1 */
                 processPropertySeq(pBiDi, &levState, resProp, start1, i);
                 start1=i;
-                break;
-            case 2:             /* init new seq2 */
+                ఆపు;
+            స్థితి 2:             /* init new seq2 */
                 start2=i;
-                break;
-            case 3:             /* process seq1, process seq2, init new seq1 */
+                ఆపు;
+            స్థితి 3:             /* process seq1, process seq2, init new seq1 */
                 processPropertySeq(pBiDi, &levState, resProp, start1, start2);
                 processPropertySeq(pBiDi, &levState, DirProp_ON, start2, i);
                 start1=i;
-                break;
-            case 4:             /* process seq1, set seq1=seq2, init new seq2 */
+                ఆపు;
+            స్థితి 4:             /* process seq1, set seq1=seq2, init new seq2 */
                 processPropertySeq(pBiDi, &levState, resProp, start1, start2);
                 start1=start2;
                 start2=i;
-                break;
-            default:            /* we should never get here */
+                ఆపు;
+            అప్రమేయ:            /* we should never get here */
                 UPRV_UNREACHABLE_EXIT;
             }
         }
     }
 
     /* flush possible pending sequence, e.g. ON */
-    if(limit==pBiDi->length && pBiDi->epiLength>0) {
-        DirProp firstStrong=firstL_R_AL_EN_AN(pBiDi);
-        if(firstStrong!=DirProp_ON) {
-            eor=firstStrong;
+    ఒకవేళ(హద్దు==pBiDi->length && pBiDi->epi_నిడివి>0) {
+        DirProp మొదటి_Strong=మొదటి_L_R_AL_EN_AN(pBiDi);
+        ఒకవేళ(మొదటి_Strong!=DirProp_ON) {
+            eor=మొదటి_Strong;
         }
     }
 
     /* look for the last char not a BN or LRE/RLE/LRO/RLO/PDF */
-    for(i=limit-1; i>start&&(DIRPROP_FLAG(dirProps[i])&MASK_BN_EXPLICIT); i--);
+    కొరకు(i=హద్దు-1; i>ప్రారంభం&&(DIRPROP_FLAG(dirProps[i])&ముసుగు_BN_EXPLICIT); i--);
     dirProp=dirProps[i];
-    if((dirProp==LRI || dirProp==RLI) && limit<pBiDi->length) {
-        pBiDi->isolateCount++;
-        pBiDi->isolates[pBiDi->isolateCount].stateImp=stateImp;
-        pBiDi->isolates[pBiDi->isolateCount].state=levState.state;
-        pBiDi->isolates[pBiDi->isolateCount].start1=start1;
-        pBiDi->isolates[pBiDi->isolateCount].startON=levState.startON;
+    ఒకవేళ((dirProp==LRI || dirProp==RLI) && హద్దు<pBiDi->length) {
+        pBiDi->isolate_లెక్క++;
+        pBiDi->isolates[pBiDi->isolate_లెక్క].stateImp=stateImp;
+        pBiDi->isolates[pBiDi->isolate_లెక్క].state=levState.state;
+        pBiDi->isolates[pBiDi->isolate_లెక్క].start1=start1;
+        pBiDi->isolates[pBiDi->isolate_లెక్క].ప్రారంభం_ON=levState.ప్రారంభం_ON;
     }
-    else
-        processPropertySeq(pBiDi, &levState, eor, limit, limit);
+    లేకపోతే
+        processPropertySeq(pBiDi, &levState, eor, హద్దు, హద్దు);
 }
 
 /* perform (L1) and (X9) ---------------------------------------------------- */
@@ -2294,131 +2294,131 @@ resolveImplicitLevels(UBiDi *pBiDi,
  * explicit embedding types that are supposed to have been removed
  * from the paragraph in (X9).
  */
-static void
+స్థిర శూన్య
 adjustWSLevels(UBiDi *pBiDi) {
-    const DirProp *dirProps=pBiDi->dirProps;
-    UBiDiLevel *levels=pBiDi->levels;
+    స్థిరరాశి DirProp *dirProps=pBiDi->dirProps;
+    UBiDiLevel *స్థాయిలు=pBiDi->స్థాయిలు;
     int32_t i;
 
-    if(pBiDi->flags&MASK_WS) {
-        UBool orderParagraphsLTR=pBiDi->orderParagraphsLTR;
+    ఒకవేళ(pBiDi->flags&ముసుగు_WS) {
+        UBool క్రమం_Paragraphs_LTR=pBiDi->క్రమం_Paragraphs_LTR;
         Flags flag;
 
         i=pBiDi->trailingWSStart;
-        while(i>0) {
+        అయితే(i>0) {
             /* reset a sequence of WS/BN before eop and B/S to the paragraph paraLevel */
-            while(i>0 && (flag=DIRPROP_FLAG(dirProps[--i]))&MASK_WS) {
-                if(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
-                    levels[i]=0;
-                } else {
-                    levels[i]=GET_PARALEVEL(pBiDi, i);
+            అయితే(i>0 && (flag=DIRPROP_FLAG(dirProps[--i]))&ముసుగు_WS) {
+                ఒకవేళ(క్రమం_Paragraphs_LTR&&(flag&DIRPROP_FLAG(B))) {
+                    స్థాయిలు[i]=0;
+                } లేకపోతే {
+                    స్థాయిలు[i]=GET_PARALEVEL(pBiDi, i);
                 }
             }
 
             /* reset BN to the next character's paraLevel until B/S, which restarts above loop */
             /* here, i+1 is guaranteed to be <length */
-            while(i>0) {
+            అయితే(i>0) {
                 flag=DIRPROP_FLAG(dirProps[--i]);
-                if(flag&MASK_BN_EXPLICIT) {
-                    levels[i]=levels[i+1];
-                } else if(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
-                    levels[i]=0;
-                    break;
-                } else if(flag&MASK_B_S) {
-                    levels[i]=GET_PARALEVEL(pBiDi, i);
-                    break;
+                ఒకవేళ(flag&ముసుగు_BN_EXPLICIT) {
+                    స్థాయిలు[i]=స్థాయిలు[i+1];
+                } లేకపోతే ఒకవేళ(క్రమం_Paragraphs_LTR&&(flag&DIRPROP_FLAG(B))) {
+                    స్థాయిలు[i]=0;
+                    ఆపు;
+                } లేకపోతే ఒకవేళ(flag&ముసుగు_B_S) {
+                    స్థాయిలు[i]=GET_PARALEVEL(pBiDi, i);
+                    ఆపు;
                 }
             }
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_setContext(UBiDi *pBiDi,
-                 const char16_t *prologue, int32_t proLength,
-                 const char16_t *epilogue, int32_t epiLength,
-                 UErrorCode *pErrorCode) {
+U_CAPI శూన్య U_EXPORT2
+ubidi_సమితి_Context(UBiDi *pBiDi,
+                 స్థిరరాశి char16_t *prologue, int32_t pro_నిడివి,
+                 స్థిరరాశి char16_t *epilogue, int32_t epi_నిడివి,
+                 UError_సంకేతం *p_Error_సంకేతం) {
     /* check the argument values */
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr || proLength<-1 || epiLength<-1 ||
-       (prologue==nullptr && proLength!=0) || (epilogue==nullptr && epiLength!=0)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం);
+    ఒకవేళ(pBiDi==శూన్యసూచిక || pro_నిడివి<-1 || epi_నిడివి<-1 ||
+       (prologue==శూన్యసూచిక && pro_నిడివి!=0) || (epilogue==శూన్యసూచిక && epi_నిడివి!=0)) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    if(proLength==-1) {
-        pBiDi->proLength=u_strlen(prologue);
-    } else {
-        pBiDi->proLength=proLength;
+    ఒకవేళ(pro_నిడివి==-1) {
+        pBiDi->pro_నిడివి=u_strlen(prologue);
+    } లేకపోతే {
+        pBiDi->pro_నిడివి=pro_నిడివి;
     }
-    if(epiLength==-1) {
-        pBiDi->epiLength=u_strlen(epilogue);
-    } else {
-        pBiDi->epiLength=epiLength;
+    ఒకవేళ(epi_నిడివి==-1) {
+        pBiDi->epi_నిడివి=u_strlen(epilogue);
+    } లేకపోతే {
+        pBiDi->epi_నిడివి=epi_నిడివి;
     }
     pBiDi->prologue=prologue;
     pBiDi->epilogue=epilogue;
 }
 
-static void
-setParaSuccess(UBiDi *pBiDi) {
-    pBiDi->proLength=0;                 /* forget the last context */
-    pBiDi->epiLength=0;
+స్థిర శూన్య
+సమితి_Para_Success(UBiDi *pBiDi) {
+    pBiDi->pro_నిడివి=0;                 /* forget the last context */
+    pBiDi->epi_నిడివి=0;
     pBiDi->pParaBiDi=pBiDi;             /* mark successful setPara */
 }
 
-#define BIDI_MIN(x, y)   ((x)<(y) ? (x) : (y))
-#define BIDI_ABS(x)      ((x)>=0  ? (x) : (-(x)))
+#నిర్వచించు BIDI_MIN(x, y)   ((x)<(y) ? (x) : (y))
+#నిర్వచించు BIDI_ABS(x)      ((x)>=0  ? (x) : (-(x)))
 
-static void
-setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
-                UBiDiLevel paraLevel, UErrorCode *pErrorCode) {
-    int32_t *runsOnlyMemory = nullptr;
+స్థిర శూన్య
+సమితి_Para_Runs_Only(UBiDi *pBiDi, స్థిరరాశి char16_t *పాఠ్యం, int32_t length,
+                UBiDiLevel paraLevel, UError_సంకేతం *p_Error_సంకేతం) {
+    int32_t *runs_Only_జ్ఞాపకం = శూన్యసూచిక;
     int32_t *visualMap;
-    char16_t *visualText;
-    int32_t saveLength, saveTrailingWSStart;
-    const UBiDiLevel *levels;
-    UBiDiLevel *saveLevels;
+    char16_t *visual_పాఠ్యం;
+    int32_t save_నిడివి, saveTrailingWSStart;
+    స్థిరరాశి UBiDiLevel *స్థాయిలు;
+    UBiDiLevel *save_స్థాయిలు;
     UBiDiDirection saveDirection;
-    UBool saveMayAllocateText;
-    Run *runs;
-    int32_t visualLength, i, j, visualStart, logicalStart,
-            runCount, runLength, addedRuns, insertRemove,
-            start, limit, step, indexOddBit, logicalPos,
+    UBool save_May_Allocate_పాఠ్యం;
+    నిరంతరం *runs;
+    int32_t visual_నిడివి, i, j, visual_ప్రారంభం, logical_ప్రారంభం,
+            నిరంతరం_లెక్క, నిరంతరం_నిడివి, addedRuns, చొప్పించు_Remove,
+            ప్రారంభం, హద్దు, అడుగు, సూచీ_Odd_బిట్టు, logicalPos,
             index0, index1;
     uint32_t saveOptions;
 
-    pBiDi->reorderingMode=UBIDI_REORDER_DEFAULT;
-    if(length==0) {
-        ubidi_setPara(pBiDi, text, length, paraLevel, nullptr, pErrorCode);
-        goto cleanup3;
+    pBiDi->reordering_బహుళకం=UBIDI_REORDER_DEFAULT;
+    ఒకవేళ(length==0) {
+        ubidi_సమితి_Para(pBiDi, పాఠ్యం, length, paraLevel, శూన్యసూచిక, p_Error_సంకేతం);
+        వెళ్ళు cleanup3;
     }
     /* obtain memory for mapping table and visual text */
-    runsOnlyMemory=static_cast<int32_t *>(uprv_malloc(length*(sizeof(int32_t)+sizeof(char16_t)+sizeof(UBiDiLevel))));
-    if(runsOnlyMemory==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        goto cleanup3;
+    runs_Only_జ్ఞాపకం=static_cast<int32_t *>(uprv_malloc(length*(పరిమాణం(int32_t)+పరిమాణం(char16_t)+పరిమాణం(UBiDiLevel))));
+    ఒకవేళ(runs_Only_జ్ఞాపకం==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        వెళ్ళు cleanup3;
     }
-    visualMap=runsOnlyMemory;
-    visualText = reinterpret_cast<char16_t*>(&visualMap[length]);
-    saveLevels = reinterpret_cast<UBiDiLevel*>(&visualText[length]);
+    visualMap=runs_Only_జ్ఞాపకం;
+    visual_పాఠ్యం = reinterpret_cast<char16_t*>(&visualMap[length]);
+    save_స్థాయిలు = reinterpret_cast<UBiDiLevel*>(&visual_పాఠ్యం[length]);
     saveOptions=pBiDi->reorderingOptions;
-    if(saveOptions & UBIDI_OPTION_INSERT_MARKS) {
-        pBiDi->reorderingOptions&=~UBIDI_OPTION_INSERT_MARKS;
+    ఒకవేళ(saveOptions & UBIDI_OPTION_చొప్పించు_MARKS) {
+        pBiDi->reorderingOptions&=~UBIDI_OPTION_చొప్పించు_MARKS;
         pBiDi->reorderingOptions|=UBIDI_OPTION_REMOVE_CONTROLS;
     }
     paraLevel&=1;                       /* accept only 0 or 1 */
-    ubidi_setPara(pBiDi, text, length, paraLevel, nullptr, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        goto cleanup3;
+    ubidi_సమితి_Para(pBiDi, పాఠ్యం, length, paraLevel, శూన్యసూచిక, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        వెళ్ళు cleanup3;
     }
     /* we cannot access directly pBiDi->levels since it is not yet set if
      * direction is not MIXED
      */
-    levels=ubidi_getLevels(pBiDi, pErrorCode);
-    uprv_memcpy(saveLevels, levels, (size_t)pBiDi->length*sizeof(UBiDiLevel));
+    స్థాయిలు=ubidi_get_స్థాయిలు(pBiDi, p_Error_సంకేతం);
+    uprv_memcpy(save_స్థాయిలు, స్థాయిలు, (size_t)pBiDi->length*పరిమాణం(UBiDiLevel));
     saveTrailingWSStart=pBiDi->trailingWSStart;
-    saveLength=pBiDi->length;
+    save_నిడివి=pBiDi->length;
     saveDirection=pBiDi->direction;
 
     /* FOOD FOR THOUGHT: instead of writing the visual text, we could use
@@ -2434,15 +2434,15 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
      * trailing surrogate half (Bidi class LTR) to act as a run boundary splitter in the
      * subsequent ubidi_setPara call.
      */
-    visualLength=ubidi_writeReordered(pBiDi, visualText, length,
-                                      (saveOptions & UBIDI_DO_MIRRORING) | UBIDI_INTERNAL_RUNS_ONLY, pErrorCode);
-    ubidi_getVisualMap(pBiDi, visualMap, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        goto cleanup2;
+    visual_నిడివి=ubidi_writeReordered(pBiDi, visual_పాఠ్యం, length,
+                                      (saveOptions & UBIDI_DO_MIRRORING) | UBIDI_అంతర్గత_RUNS_ONLY, p_Error_సంకేతం);
+    ubidi_getVisualMap(pBiDi, visualMap, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        వెళ్ళు cleanup2;
     }
     pBiDi->reorderingOptions=saveOptions;
 
-    pBiDi->reorderingMode=UBIDI_REORDER_INVERSE_LIKE_DIRECT;
+    pBiDi->reordering_బహుళకం=UBIDI_REORDER_INVERSE_LIKE_ప్రత్యక్ష;
     paraLevel^=1;
     /* Because what we did with reorderingOptions, visualText may be shorter
      * than the original text. But we don't want the levels memory to be
@@ -2451,93 +2451,93 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
      * We will force mayAllocateText to false before the second call to
      * ubidi_setpara(), and will restore it afterwards.
      */
-    saveMayAllocateText=pBiDi->mayAllocateText;
-    pBiDi->mayAllocateText=false;
-    ubidi_setPara(pBiDi, visualText, visualLength, paraLevel, nullptr, pErrorCode);
-    pBiDi->mayAllocateText=saveMayAllocateText;
-    ubidi_getRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        goto cleanup1;
+    save_May_Allocate_పాఠ్యం=pBiDi->may_Allocate_పాఠ్యం;
+    pBiDi->may_Allocate_పాఠ్యం=అబద్ధం;
+    ubidi_సమితి_Para(pBiDi, visual_పాఠ్యం, visual_నిడివి, paraLevel, శూన్యసూచిక, p_Error_సంకేతం);
+    pBiDi->may_Allocate_పాఠ్యం=save_May_Allocate_పాఠ్యం;
+    ubidi_getRuns(pBiDi, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        వెళ్ళు cleanup1;
     }
     /* check if some runs must be split, count how many splits */
     addedRuns=0;
-    runCount=pBiDi->runCount;
+    నిరంతరం_లెక్క=pBiDi->నిరంతరం_లెక్క;
     runs=pBiDi->runs;
-    visualStart=0;
-    for(i=0; i<runCount; i++, visualStart+=runLength) {
-        runLength=runs[i].visualLimit-visualStart;
-        if(runLength<2) {
-            continue;
+    visual_ప్రారంభం=0;
+    కొరకు(i=0; i<నిరంతరం_లెక్క; i++, visual_ప్రారంభం+=నిరంతరం_నిడివి) {
+        నిరంతరం_నిడివి=runs[i].visual_హద్దు-visual_ప్రారంభం;
+        ఒకవేళ(నిరంతరం_నిడివి<2) {
+            కొనసాగు;
         }
-        logicalStart=GET_INDEX(runs[i].logicalStart);
-        for(j=logicalStart+1; j<logicalStart+runLength; j++) {
+        logical_ప్రారంభం=GET_సూచీ(runs[i].logical_ప్రారంభం);
+        కొరకు(j=logical_ప్రారంభం+1; j<logical_ప్రారంభం+నిరంతరం_నిడివి; j++) {
             index0=visualMap[j];
             index1=visualMap[j-1];
-            if((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
+            ఒకవేళ((BIDI_ABS(index0-index1)!=1) || (save_స్థాయిలు[index0]!=save_స్థాయిలు[index1])) {
                 addedRuns++;
             }
         }
     }
-    if(addedRuns) {
-        if(getRunsMemory(pBiDi, runCount+addedRuns)) {
-            if(runCount==1) {
+    ఒకవేళ(addedRuns) {
+        ఒకవేళ(get_Runs_జ్ఞాపకం(pBiDi, నిరంతరం_లెక్క+addedRuns)) {
+            ఒకవేళ(నిరంతరం_లెక్క==1) {
                 /* because we switch from UBiDi.simpleRuns to UBiDi.runs */
-                pBiDi->runsMemory[0]=runs[0];
+                pBiDi->runs_జ్ఞాపకం[0]=runs[0];
             }
-            runs=pBiDi->runs=pBiDi->runsMemory;
-            pBiDi->runCount+=addedRuns;
-        } else {
-            *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-            goto cleanup1;
+            runs=pBiDi->runs=pBiDi->runs_జ్ఞాపకం;
+            pBiDi->నిరంతరం_లెక్క+=addedRuns;
+        } లేకపోతే {
+            *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            వెళ్ళు cleanup1;
         }
     }
     /* split runs which are not consecutive in source text */
-    for(i=runCount-1; i>=0; i--) {
-        runLength= i==0 ? runs[0].visualLimit :
-                          runs[i].visualLimit-runs[i-1].visualLimit;
-        logicalStart=runs[i].logicalStart;
-        indexOddBit=GET_ODD_BIT(logicalStart);
-        logicalStart=GET_INDEX(logicalStart);
-        if(runLength<2) {
-            if(addedRuns) {
+    కొరకు(i=నిరంతరం_లెక్క-1; i>=0; i--) {
+        నిరంతరం_నిడివి= i==0 ? runs[0].visual_హద్దు :
+                          runs[i].visual_హద్దు-runs[i-1].visual_హద్దు;
+        logical_ప్రారంభం=runs[i].logical_ప్రారంభం;
+        సూచీ_Odd_బిట్టు=GET_ODD_బిట్టు(logical_ప్రారంభం);
+        logical_ప్రారంభం=GET_సూచీ(logical_ప్రారంభం);
+        ఒకవేళ(నిరంతరం_నిడివి<2) {
+            ఒకవేళ(addedRuns) {
                 runs[i+addedRuns]=runs[i];
             }
-            logicalPos=visualMap[logicalStart];
-            runs[i+addedRuns].logicalStart=MAKE_INDEX_ODD_PAIR(logicalPos,
-                                            saveLevels[logicalPos]^indexOddBit);
-            continue;
+            logicalPos=visualMap[logical_ప్రారంభం];
+            runs[i+addedRuns].logical_ప్రారంభం=MAKE_సూచీ_ODD_PAIR(logicalPos,
+                                            save_స్థాయిలు[logicalPos]^సూచీ_Odd_బిట్టు);
+            కొనసాగు;
         }
-        if(indexOddBit) {
-            start=logicalStart;
-            limit=logicalStart+runLength-1;
-            step=1;
-        } else {
-            start=logicalStart+runLength-1;
-            limit=logicalStart;
-            step=-1;
+        ఒకవేళ(సూచీ_Odd_బిట్టు) {
+            ప్రారంభం=logical_ప్రారంభం;
+            హద్దు=logical_ప్రారంభం+నిరంతరం_నిడివి-1;
+            అడుగు=1;
+        } లేకపోతే {
+            ప్రారంభం=logical_ప్రారంభం+నిరంతరం_నిడివి-1;
+            హద్దు=logical_ప్రారంభం;
+            అడుగు=-1;
         }
-        for(j=start; j!=limit; j+=step) {
+        కొరకు(j=ప్రారంభం; j!=హద్దు; j+=అడుగు) {
             index0=visualMap[j];
-            index1=visualMap[j+step];
-            if((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
-                logicalPos=BIDI_MIN(visualMap[start], index0);
-                runs[i+addedRuns].logicalStart=MAKE_INDEX_ODD_PAIR(logicalPos,
-                                            saveLevels[logicalPos]^indexOddBit);
-                runs[i+addedRuns].visualLimit=runs[i].visualLimit;
-                runs[i].visualLimit-=BIDI_ABS(j-start)+1;
-                insertRemove=runs[i].insertRemove&(LRM_AFTER|RLM_AFTER);
-                runs[i+addedRuns].insertRemove=insertRemove;
-                runs[i].insertRemove&=~insertRemove;
-                start=j+step;
+            index1=visualMap[j+అడుగు];
+            ఒకవేళ((BIDI_ABS(index0-index1)!=1) || (save_స్థాయిలు[index0]!=save_స్థాయిలు[index1])) {
+                logicalPos=BIDI_MIN(visualMap[ప్రారంభం], index0);
+                runs[i+addedRuns].logical_ప్రారంభం=MAKE_సూచీ_ODD_PAIR(logicalPos,
+                                            save_స్థాయిలు[logicalPos]^సూచీ_Odd_బిట్టు);
+                runs[i+addedRuns].visual_హద్దు=runs[i].visual_హద్దు;
+                runs[i].visual_హద్దు-=BIDI_ABS(j-ప్రారంభం)+1;
+                చొప్పించు_Remove=runs[i].చొప్పించు_Remove&(LRM_AFTER|RLM_AFTER);
+                runs[i+addedRuns].చొప్పించు_Remove=చొప్పించు_Remove;
+                runs[i].చొప్పించు_Remove&=~చొప్పించు_Remove;
+                ప్రారంభం=j+అడుగు;
                 addedRuns--;
             }
         }
-        if(addedRuns) {
+        ఒకవేళ(addedRuns) {
             runs[i+addedRuns]=runs[i];
         }
-        logicalPos=BIDI_MIN(visualMap[start], visualMap[limit]);
-        runs[i+addedRuns].logicalStart=MAKE_INDEX_ODD_PAIR(logicalPos,
-                                            saveLevels[logicalPos]^indexOddBit);
+        logicalPos=BIDI_MIN(visualMap[ప్రారంభం], visualMap[హద్దు]);
+        runs[i+addedRuns].logical_ప్రారంభం=MAKE_సూచీ_ODD_PAIR(logicalPos,
+                                            save_స్థాయిలు[logicalPos]^సూచీ_Odd_బిట్టు);
     }
 
   cleanup1:
@@ -2545,95 +2545,95 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     pBiDi->paraLevel^=1;
   cleanup2:
     /* restore real text */
-    pBiDi->text=text;
-    pBiDi->length=saveLength;
-    pBiDi->originalLength=length;
+    pBiDi->పాఠ్యం=పాఠ్యం;
+    pBiDi->length=save_నిడివి;
+    pBiDi->original_నిడివి=length;
     pBiDi->direction=saveDirection;
     /* the saved levels should never excess levelsSize, but we check anyway */
-    if(saveLength>pBiDi->levelsSize) {
-        saveLength=pBiDi->levelsSize;
+    ఒకవేళ(save_నిడివి>pBiDi->స్థాయిలు_కొలత) {
+        save_నిడివి=pBiDi->స్థాయిలు_కొలత;
     }
-    uprv_memcpy(pBiDi->levels, saveLevels, (size_t)saveLength*sizeof(UBiDiLevel));
+    uprv_memcpy(pBiDi->స్థాయిలు, save_స్థాయిలు, (size_t)save_నిడివి*పరిమాణం(UBiDiLevel));
     pBiDi->trailingWSStart=saveTrailingWSStart;
-    if(pBiDi->runCount>1) {
+    ఒకవేళ(pBiDi->నిరంతరం_లెక్క>1) {
         pBiDi->direction=UBIDI_MIXED;
     }
   cleanup3:
     /* free memory for mapping table and visual text */
-    uprv_free(runsOnlyMemory);
+    uprv_free(runs_Only_జ్ఞాపకం);
 
-    pBiDi->reorderingMode=UBIDI_REORDER_RUNS_ONLY;
+    pBiDi->reordering_బహుళకం=UBIDI_REORDER_RUNS_ONLY;
 }
 
 /* ubidi_setPara ------------------------------------------------------------ */
 
-U_CAPI void U_EXPORT2
-ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
-              UBiDiLevel paraLevel, UBiDiLevel *embeddingLevels,
-              UErrorCode *pErrorCode) {
+U_CAPI శూన్య U_EXPORT2
+ubidi_సమితి_Para(UBiDi *pBiDi, స్థిరరాశి char16_t *పాఠ్యం, int32_t length,
+              UBiDiLevel paraLevel, UBiDiLevel *embedding_స్థాయిలు,
+              UError_సంకేతం *p_Error_సంకేతం) {
     UBiDiDirection direction;
     DirProp *dirProps;
 
     /* check the argument values */
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr || text==nullptr || length<-1 ||
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం);
+    ఒకవేళ(pBiDi==శూన్యసూచిక || పాఠ్యం==శూన్యసూచిక || length<-1 ||
        (paraLevel>UBIDI_MAX_EXPLICIT_LEVEL && paraLevel<UBIDI_DEFAULT_LTR)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    if(length==-1) {
-        length=u_strlen(text);
+    ఒకవేళ(length==-1) {
+        length=u_strlen(పాఠ్యం);
     }
 
     /* special treatment for RUNS_ONLY mode */
-    if(pBiDi->reorderingMode==UBIDI_REORDER_RUNS_ONLY) {
-        setParaRunsOnly(pBiDi, text, length, paraLevel, pErrorCode);
-        return;
+    ఒకవేళ(pBiDi->reordering_బహుళకం==UBIDI_REORDER_RUNS_ONLY) {
+        సమితి_Para_Runs_Only(pBiDi, పాఠ్యం, length, paraLevel, p_Error_సంకేతం);
+        తిరిగి;
     }
 
     /* initialize the UBiDi structure */
-    pBiDi->pParaBiDi=nullptr;          /* mark unfinished setPara */
-    pBiDi->text=text;
-    pBiDi->length=pBiDi->originalLength=pBiDi->resultLength=length;
+    pBiDi->pParaBiDi=శూన్యసూచిక;          /* mark unfinished setPara */
+    pBiDi->పాఠ్యం=పాఠ్యం;
+    pBiDi->length=pBiDi->original_నిడివి=pBiDi->ఫలితం_నిడివి=length;
     pBiDi->paraLevel=paraLevel;
     pBiDi->direction=(UBiDiDirection)(paraLevel&1);
-    pBiDi->paraCount=1;
+    pBiDi->para_లెక్క=1;
 
-    pBiDi->dirProps=nullptr;
-    pBiDi->levels=nullptr;
-    pBiDi->runs=nullptr;
-    pBiDi->insertPoints.size=0;         /* clean up from last call */
-    pBiDi->insertPoints.confirmed=0;    /* clean up from last call */
+    pBiDi->dirProps=శూన్యసూచిక;
+    pBiDi->స్థాయిలు=శూన్యసూచిక;
+    pBiDi->runs=శూన్యసూచిక;
+    pBiDi->చొప్పించు_Points.size=0;         /* clean up from last call */
+    pBiDi->చొప్పించు_Points.confirmed=0;    /* clean up from last call */
 
     /*
      * Save the original paraLevel if contextual; otherwise, set to 0.
      */
     pBiDi->defaultParaLevel=IS_DEFAULT_LEVEL(paraLevel);
 
-    if(length==0) {
+    ఒకవేళ(length==0) {
         /*
          * For an empty paragraph, create a UBiDi object with the paraLevel and
          * the flags and the direction set but without allocating zero-length arrays.
          * There is nothing more to do.
          */
-        if(IS_DEFAULT_LEVEL(paraLevel)) {
+        ఒకవేళ(IS_DEFAULT_LEVEL(paraLevel)) {
             pBiDi->paraLevel&=1;
             pBiDi->defaultParaLevel=0;
         }
         pBiDi->flags=DIRPROP_FLAG_LR(paraLevel);
-        pBiDi->runCount=0;
-        pBiDi->paraCount=0;
-        setParaSuccess(pBiDi);          /* mark successful setPara */
-        return;
+        pBiDi->నిరంతరం_లెక్క=0;
+        pBiDi->para_లెక్క=0;
+        సమితి_Para_Success(pBiDi);          /* mark successful setPara */
+        తిరిగి;
     }
 
-    pBiDi->runCount=-1;
+    pBiDi->నిరంతరం_లెక్క=-1;
 
     /* allocate paras memory */
-    if(pBiDi->parasMemory)
-        pBiDi->paras=pBiDi->parasMemory;
-    else
+    ఒకవేళ(pBiDi->paras_జ్ఞాపకం)
+        pBiDi->paras=pBiDi->paras_జ్ఞాపకం;
+    లేకపోతే
         pBiDi->paras=pBiDi->simpleParas;
 
     /*
@@ -2641,15 +2641,15 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
      * the flags bit-set, and
      * determine the paragraph level if necessary.
      */
-    if(getDirPropsMemory(pBiDi, length)) {
-        pBiDi->dirProps=pBiDi->dirPropsMemory;
-        if(!getDirProps(pBiDi)) {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+    ఒకవేళ(get_Dir_Props_జ్ఞాపకం(pBiDi, length)) {
+        pBiDi->dirProps=pBiDi->dir_Props_జ్ఞాపకం;
+        ఒకవేళ(!getDirProps(pBiDi)) {
+            *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
-    } else {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    } లేకపోతే {
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
     dirProps=pBiDi->dirProps;
     /* the processed length may have changed if UBIDI_OPTION_STREAMING */
@@ -2657,89 +2657,89 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
     pBiDi->trailingWSStart=length;  /* the levels[] will reflect the WS run */
 
     /* are explicit levels specified? */
-    if(embeddingLevels==nullptr) {
+    ఒకవేళ(embedding_స్థాయిలు==శూన్యసూచిక) {
         /* no: determine explicit levels according to the (Xn) rules */\
-        if(getLevelsMemory(pBiDi, length)) {
-            pBiDi->levels=pBiDi->levelsMemory;
-            direction=resolveExplicitLevels(pBiDi, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+        ఒకవేళ(get_స్థాయిలు_జ్ఞాపకం(pBiDi, length)) {
+            pBiDi->స్థాయిలు=pBiDi->స్థాయిలు_జ్ఞాపకం;
+            direction=resolve_Explicit_స్థాయిలు(pBiDi, p_Error_సంకేతం);
+            ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+                తిరిగి;
             }
-        } else {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+        } లేకపోతే {
+            *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
-    } else {
+    } లేకపోతే {
         /* set BN for all explicit codes, check that all levels are 0 or paraLevel..UBIDI_MAX_EXPLICIT_LEVEL */
-        pBiDi->levels=embeddingLevels;
-        direction=checkExplicitLevels(pBiDi, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        pBiDi->స్థాయిలు=embedding_స్థాయిలు;
+        direction=check_Explicit_స్థాయిలు(pBiDi, p_Error_సంకేతం);
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+            తిరిగి;
         }
     }
 
     /* allocate isolate memory */
-    if(pBiDi->isolateCount<=SIMPLE_ISOLATES_COUNT)
+    ఒకవేళ(pBiDi->isolate_లెక్క<=SIMPLE_ISOLATES_లెక్క)
         pBiDi->isolates=pBiDi->simpleIsolates;
-    else
-        if((int32_t)(pBiDi->isolateCount*sizeof(Isolate))<=pBiDi->isolatesSize)
-            pBiDi->isolates=pBiDi->isolatesMemory;
-        else {
-            if(getInitialIsolatesMemory(pBiDi, pBiDi->isolateCount)) {
-                pBiDi->isolates=pBiDi->isolatesMemory;
-            } else {
-                *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return;
+    లేకపోతే
+        ఒకవేళ((int32_t)(pBiDi->isolate_లెక్క*పరిమాణం(Isolate))<=pBiDi->isolates_కొలత)
+            pBiDi->isolates=pBiDi->isolates_జ్ఞాపకం;
+        లేకపోతే {
+            ఒకవేళ(get_Initial_Isolates_జ్ఞాపకం(pBiDi, pBiDi->isolate_లెక్క)) {
+                pBiDi->isolates=pBiDi->isolates_జ్ఞాపకం;
+            } లేకపోతే {
+                *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి;
             }
         }
-    pBiDi->isolateCount=-1;             /* current isolates stack entry == none */
+    pBiDi->isolate_లెక్క=-1;             /* current isolates stack entry == none */
 
     /*
      * The steps after (X9) in the UBiDi algorithm are performed only if
      * the paragraph text has mixed directionality!
      */
     pBiDi->direction=direction;
-    switch(direction) {
-    case UBIDI_LTR:
+    ఎంపిక(direction) {
+    స్థితి UBIDI_LTR:
         /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
         pBiDi->trailingWSStart=0;
-        break;
-    case UBIDI_RTL:
+        ఆపు;
+    స్థితి UBIDI_RTL:
         /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
         pBiDi->trailingWSStart=0;
-        break;
-    default:
+        ఆపు;
+    అప్రమేయ:
         /*
          *  Choose the right implicit state table
          */
-        switch(pBiDi->reorderingMode) {
-        case UBIDI_REORDER_DEFAULT:
+        ఎంపిక(pBiDi->reordering_బహుళకం) {
+        స్థితి UBIDI_REORDER_DEFAULT:
             pBiDi->pImpTabPair=&impTab_DEFAULT;
-            break;
-        case UBIDI_REORDER_NUMBERS_SPECIAL:
+            ఆపు;
+        స్థితి UBIDI_REORDER_NUMBERS_SPECIAL:
             pBiDi->pImpTabPair=&impTab_NUMBERS_SPECIAL;
-            break;
-        case UBIDI_REORDER_GROUP_NUMBERS_WITH_R:
-            pBiDi->pImpTabPair=&impTab_GROUP_NUMBERS_WITH_R;
-            break;
-        case UBIDI_REORDER_INVERSE_NUMBERS_AS_L:
+            ఆపు;
+        స్థితి UBIDI_REORDER_సమూహం_NUMBERS_WITH_R:
+            pBiDi->pImpTabPair=&imp_Tab_సమూహం_NUMBERS_WITH_R;
+            ఆపు;
+        స్థితి UBIDI_REORDER_INVERSE_NUMBERS_AS_L:
             pBiDi->pImpTabPair=&impTab_INVERSE_NUMBERS_AS_L;
-            break;
-        case UBIDI_REORDER_INVERSE_LIKE_DIRECT:
-            if (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
-                pBiDi->pImpTabPair=&impTab_INVERSE_LIKE_DIRECT_WITH_MARKS;
-            } else {
-                pBiDi->pImpTabPair=&impTab_INVERSE_LIKE_DIRECT;
+            ఆపు;
+        స్థితి UBIDI_REORDER_INVERSE_LIKE_ప్రత్యక్ష:
+            ఒకవేళ (pBiDi->reorderingOptions & UBIDI_OPTION_చొప్పించు_MARKS) {
+                pBiDi->pImpTabPair=&imp_Tab_INVERSE_LIKE_ప్రత్యక్ష_WITH_MARKS;
+            } లేకపోతే {
+                pBiDi->pImpTabPair=&imp_Tab_INVERSE_LIKE_ప్రత్యక్ష;
             }
-            break;
-        case UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL:
-            if (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
+            ఆపు;
+        స్థితి UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL:
+            ఒకవేళ (pBiDi->reorderingOptions & UBIDI_OPTION_చొప్పించు_MARKS) {
                 pBiDi->pImpTabPair=&impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS;
-            } else {
+            } లేకపోతే {
                 pBiDi->pImpTabPair=&impTab_INVERSE_FOR_NUMBERS_SPECIAL;
             }
-            break;
-        default:
+            ఆపు;
+        అప్రమేయ:
             /* we should never get here */
             UPRV_UNREACHABLE_EXIT;
         }
@@ -2754,265 +2754,265 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
          * Examples for "insignificant" ones are empty embeddings
          * LRE-PDF, LRE-RLE-PDF-PDF, etc.
          */
-        if(embeddingLevels==nullptr && pBiDi->paraCount<=1 &&
+        ఒకవేళ(embedding_స్థాయిలు==శూన్యసూచిక && pBiDi->para_లెక్క<=1 &&
                                    !(pBiDi->flags&DIRPROP_FLAG_MULTI_RUNS)) {
-            resolveImplicitLevels(pBiDi, 0, length,
+            resolve_Implicit_స్థాయిలు(pBiDi, 0, length,
                                     GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, 0)),
                                     GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, length-1)));
-        } else {
+        } లేకపోతే {
             /* sor, eor: start and end types of same-level-run */
-            UBiDiLevel *levels=pBiDi->levels;
-            int32_t start, limit=0;
-            UBiDiLevel level, nextLevel;
+            UBiDiLevel *స్థాయిలు=pBiDi->స్థాయిలు;
+            int32_t ప్రారంభం, హద్దు=0;
+            UBiDiLevel level, తదుపరి_Level;
             DirProp sor, eor;
 
             /* determine the first sor and set eor to it because of the loop body (sor=eor there) */
             level=GET_PARALEVEL(pBiDi, 0);
-            nextLevel=levels[0];
-            if(level<nextLevel) {
-                eor=GET_LR_FROM_LEVEL(nextLevel);
-            } else {
+            తదుపరి_Level=స్థాయిలు[0];
+            ఒకవేళ(level<తదుపరి_Level) {
+                eor=GET_LR_FROM_LEVEL(తదుపరి_Level);
+            } లేకపోతే {
                 eor=GET_LR_FROM_LEVEL(level);
             }
 
-            do {
+            చేయి {
                 /* determine start and limit of the run (end points just behind the run) */
 
                 /* the values for this run's start are the same as for the previous run's end */
-                start=limit;
-                level=nextLevel;
-                if((start>0) && (dirProps[start-1]==B)) {
+                ప్రారంభం=హద్దు;
+                level=తదుపరి_Level;
+                ఒకవేళ((ప్రారంభం>0) && (dirProps[ప్రారంభం-1]==B)) {
                     /* except if this is a new paragraph, then set sor = para level */
-                    sor=GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, start));
-                } else {
+                    sor=GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, ప్రారంభం));
+                } లేకపోతే {
                     sor=eor;
                 }
 
                 /* search for the limit of this run */
-                while((++limit<length) &&
-                      ((levels[limit]==level) ||
-                       (DIRPROP_FLAG(dirProps[limit])&MASK_BN_EXPLICIT))) {}
+                అయితే((++హద్దు<length) &&
+                      ((స్థాయిలు[హద్దు]==level) ||
+                       (DIRPROP_FLAG(dirProps[హద్దు])&ముసుగు_BN_EXPLICIT))) {}
 
                 /* get the correct level of the next run */
-                if(limit<length) {
-                    nextLevel=levels[limit];
-                } else {
-                    nextLevel=GET_PARALEVEL(pBiDi, length-1);
+                ఒకవేళ(హద్దు<length) {
+                    తదుపరి_Level=స్థాయిలు[హద్దు];
+                } లేకపోతే {
+                    తదుపరి_Level=GET_PARALEVEL(pBiDi, length-1);
                 }
 
                 /* determine eor from max(level, nextLevel); sor is last run's eor */
-                if(NO_OVERRIDE(level)<NO_OVERRIDE(nextLevel)) {
-                    eor=GET_LR_FROM_LEVEL(nextLevel);
-                } else {
+                ఒకవేళ(NO_OVERRIDE(level)<NO_OVERRIDE(తదుపరి_Level)) {
+                    eor=GET_LR_FROM_LEVEL(తదుపరి_Level);
+                } లేకపోతే {
                     eor=GET_LR_FROM_LEVEL(level);
                 }
 
                 /* if the run consists of overridden directional types, then there
                    are no implicit types to be resolved */
-                if(!(level&UBIDI_LEVEL_OVERRIDE)) {
-                    resolveImplicitLevels(pBiDi, start, limit, sor, eor);
-                } else {
+                ఒకవేళ(!(level&UBIDI_LEVEL_OVERRIDE)) {
+                    resolve_Implicit_స్థాయిలు(pBiDi, ప్రారంభం, హద్దు, sor, eor);
+                } లేకపోతే {
                     /* remove the UBIDI_LEVEL_OVERRIDE flags */
-                    do {
-                        levels[start++]&=~UBIDI_LEVEL_OVERRIDE;
-                    } while(start<limit);
+                    చేయి {
+                        స్థాయిలు[ప్రారంభం++]&=~UBIDI_LEVEL_OVERRIDE;
+                    } అయితే(ప్రారంభం<హద్దు);
                 }
-            } while(limit<length);
+            } అయితే(హద్దు<length);
         }
         /* check if we got any memory shortage while adding insert points */
-        if (U_FAILURE(pBiDi->insertPoints.errorCode))
+        ఒకవేళ (U_FAILURE(pBiDi->చొప్పించు_Points.error_సంకేతం))
         {
-            *pErrorCode=pBiDi->insertPoints.errorCode;
-            return;
+            *p_Error_సంకేతం=pBiDi->చొప్పించు_Points.error_సంకేతం;
+            తిరిగి;
         }
         /* reset the embedding levels for some non-graphic characters (L1), (X9) */
         adjustWSLevels(pBiDi);
-        break;
+        ఆపు;
     }
     /* add RLM for inverse Bidi with contextual orientation resolving
      * to RTL which would not round-trip otherwise
      */
-    if((pBiDi->defaultParaLevel>0) &&
-       (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) &&
-       ((pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_LIKE_DIRECT) ||
-        (pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))) {
-        int32_t i, j, start, last;
+    ఒకవేళ((pBiDi->defaultParaLevel>0) &&
+       (pBiDi->reorderingOptions & UBIDI_OPTION_చొప్పించు_MARKS) &&
+       ((pBiDi->reordering_బహుళకం==UBIDI_REORDER_INVERSE_LIKE_ప్రత్యక్ష) ||
+        (pBiDi->reordering_బహుళకం==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))) {
+        int32_t i, j, ప్రారంభం, చివరి;
         UBiDiLevel level;
         DirProp dirProp;
-        for(i=0; i<pBiDi->paraCount; i++) {
-            last=(pBiDi->paras[i].limit)-1;
+        కొరకు(i=0; i<pBiDi->para_లెక్క; i++) {
+            చివరి=(pBiDi->paras[i].హద్దు)-1;
             level= static_cast<UBiDiLevel>(pBiDi->paras[i].level);
-            if(level==0)
-                continue;           /* LTR paragraph */
-            start= i==0 ? 0 : pBiDi->paras[i-1].limit;
-            for(j=last; j>=start; j--) {
+            ఒకవేళ(level==0)
+                కొనసాగు;           /* LTR paragraph */
+            ప్రారంభం= i==0 ? 0 : pBiDi->paras[i-1].హద్దు;
+            కొరకు(j=చివరి; j>=ప్రారంభం; j--) {
                 dirProp=dirProps[j];
-                if(dirProp==L) {
-                    if(j<last) {
-                        while(dirProps[last]==B) {
-                            last--;
+                ఒకవేళ(dirProp==L) {
+                    ఒకవేళ(j<చివరి) {
+                        అయితే(dirProps[చివరి]==B) {
+                            చివరి--;
                         }
                     }
-                    addPoint(pBiDi, last, RLM_BEFORE);
-                    break;
+                    కూడు_బిందువు(pBiDi, చివరి, RLM_BEFORE);
+                    ఆపు;
                 }
-                if(DIRPROP_FLAG(dirProp) & MASK_R_AL) {
-                    break;
+                ఒకవేళ(DIRPROP_FLAG(dirProp) & ముసుగు_R_AL) {
+                    ఆపు;
                 }
             }
         }
     }
 
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
-        pBiDi->resultLength -= pBiDi->controlCount;
-    } else {
-        pBiDi->resultLength += pBiDi->insertPoints.size;
+    ఒకవేళ(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+        pBiDi->ఫలితం_నిడివి -= pBiDi->control_లెక్క;
+    } లేకపోతే {
+        pBiDi->ఫలితం_నిడివి += pBiDi->చొప్పించు_Points.size;
     }
-    setParaSuccess(pBiDi);              /* mark successful setPara */
+    సమితి_Para_Success(pBiDi);              /* mark successful setPara */
 }
 
-U_CAPI void U_EXPORT2
-ubidi_orderParagraphsLTR(UBiDi *pBiDi, UBool orderParagraphsLTR) {
-    if(pBiDi!=nullptr) {
-        pBiDi->orderParagraphsLTR=orderParagraphsLTR;
+U_CAPI శూన్య U_EXPORT2
+ubidi_క్రమం_Paragraphs_LTR(UBiDi *pBiDi, UBool క్రమం_Paragraphs_LTR) {
+    ఒకవేళ(pBiDi!=శూన్యసూచిక) {
+        pBiDi->క్రమం_Paragraphs_LTR=క్రమం_Paragraphs_LTR;
     }
 }
 
 U_CAPI UBool U_EXPORT2
-ubidi_isOrderParagraphsLTR(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        return pBiDi->orderParagraphsLTR;
-    } else {
-        return false;
+ubidi_is_క్రమం_Paragraphs_LTR(UBiDi *pBiDi) {
+    ఒకవేళ(pBiDi!=శూన్యసూచిక) {
+        తిరిగి pBiDi->క్రమం_Paragraphs_LTR;
+    } లేకపోతే {
+        తిరిగి అబద్ధం;
     }
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
-ubidi_getDirection(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->direction;
-    } else {
-        return UBIDI_LTR;
+ubidi_getDirection(స్థిరరాశి UBiDi *pBiDi) {
+    ఒకవేళ(IS_VALID_PARA_OR_పంక్తి(pBiDi)) {
+        తిరిగి pBiDi->direction;
+    } లేకపోతే {
+        తిరిగి UBIDI_LTR;
     }
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ubidi_getText(const UBiDi* pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->text;
-    } else {
-        return nullptr;
-    }
-}
-
-U_CAPI int32_t U_EXPORT2
-ubidi_getLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->originalLength;
-    } else {
-        return 0;
+U_CAPI స్థిరరాశి char16_t* U_EXPORT2
+ubidi_get_పాఠ్యం(స్థిరరాశి UBiDi* pBiDi) {
+    ఒకవేళ(IS_VALID_PARA_OR_పంక్తి(pBiDi)) {
+        తిరిగి pBiDi->పాఠ్యం;
+    } లేకపోతే {
+        తిరిగి శూన్యసూచిక;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getProcessedLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->length;
-    } else {
-        return 0;
+ubidi_get_నిడివి(స్థిరరాశి UBiDi *pBiDi) {
+    ఒకవేళ(IS_VALID_PARA_OR_పంక్తి(pBiDi)) {
+        తిరిగి pBiDi->original_నిడివి;
+    } లేకపోతే {
+        తిరిగి 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getResultLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->resultLength;
-    } else {
-        return 0;
+ubidi_get_Processed_నిడివి(స్థిరరాశి UBiDi *pBiDi) {
+    ఒకవేళ(IS_VALID_PARA_OR_పంక్తి(pBiDi)) {
+        తిరిగి pBiDi->length;
+    } లేకపోతే {
+        తిరిగి 0;
+    }
+}
+
+U_CAPI int32_t U_EXPORT2
+ubidi_get_ఫలితం_నిడివి(స్థిరరాశి UBiDi *pBiDi) {
+    ఒకవేళ(IS_VALID_PARA_OR_పంక్తి(pBiDi)) {
+        తిరిగి pBiDi->ఫలితం_నిడివి;
+    } లేకపోతే {
+        తిరిగి 0;
     }
 }
 
 /* paragraphs API functions ------------------------------------------------- */
 
 U_CAPI UBiDiLevel U_EXPORT2
-ubidi_getParaLevel(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->paraLevel;
-    } else {
-        return 0;
+ubidi_getParaLevel(స్థిరరాశి UBiDi *pBiDi) {
+    ఒకవేళ(IS_VALID_PARA_OR_పంక్తి(pBiDi)) {
+        తిరిగి pBiDi->paraLevel;
+    } లేకపోతే {
+        తిరిగి 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_countParagraphs(UBiDi *pBiDi) {
-    if(!IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return 0;
-    } else {
-        return pBiDi->paraCount;
+ubidi_లెక్క_Paragraphs(UBiDi *pBiDi) {
+    ఒకవేళ(!IS_VALID_PARA_OR_పంక్తి(pBiDi)) {
+        తిరిగి 0;
+    } లేకపోతే {
+        తిరిగి pBiDi->para_లెక్క;
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getParagraphByIndex(const UBiDi *pBiDi, int32_t paraIndex,
-                          int32_t *pParaStart, int32_t *pParaLimit,
-                          UBiDiLevel *pParaLevel, UErrorCode *pErrorCode) {
-    int32_t paraStart;
+U_CAPI శూన్య U_EXPORT2
+ubidi_get_Paragraph_By_సూచీ(స్థిరరాశి UBiDi *pBiDi, int32_t para_సూచీ,
+                          int32_t *p_Para_ప్రారంభం, int32_t *p_Para_హద్దు,
+                          UBiDiLevel *pParaLevel, UError_సంకేతం *p_Error_సంకేతం) {
+    int32_t para_ప్రారంభం;
 
     /* check the argument values */
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    RETURN_VOID_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode);
-    RETURN_VOID_IF_BAD_RANGE(paraIndex, 0, pBiDi->paraCount, *pErrorCode);
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం);
+    RETURN_VOID_IF_NOT_VALID_PARA_OR_పంక్తి(pBiDi, *p_Error_సంకేతం);
+    RETURN_VOID_IF_BAD_RANGE(para_సూచీ, 0, pBiDi->para_లెక్క, *p_Error_సంకేతం);
 
     pBiDi=pBiDi->pParaBiDi;             /* get Para object if Line object */
-    if(paraIndex) {
-        paraStart=pBiDi->paras[paraIndex-1].limit;
-    } else {
-        paraStart=0;
+    ఒకవేళ(para_సూచీ) {
+        para_ప్రారంభం=pBiDi->paras[para_సూచీ-1].హద్దు;
+    } లేకపోతే {
+        para_ప్రారంభం=0;
     }
-    if(pParaStart!=nullptr) {
-        *pParaStart=paraStart;
+    ఒకవేళ(p_Para_ప్రారంభం!=శూన్యసూచిక) {
+        *p_Para_ప్రారంభం=para_ప్రారంభం;
     }
-    if(pParaLimit!=nullptr) {
-        *pParaLimit=pBiDi->paras[paraIndex].limit;
+    ఒకవేళ(p_Para_హద్దు!=శూన్యసూచిక) {
+        *p_Para_హద్దు=pBiDi->paras[para_సూచీ].హద్దు;
     }
-    if(pParaLevel!=nullptr) {
-        *pParaLevel=GET_PARALEVEL(pBiDi, paraStart);
+    ఒకవేళ(pParaLevel!=శూన్యసూచిక) {
+        *pParaLevel=GET_PARALEVEL(pBiDi, para_ప్రారంభం);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getParagraph(const UBiDi *pBiDi, int32_t charIndex,
-                          int32_t *pParaStart, int32_t *pParaLimit,
-                          UBiDiLevel *pParaLevel, UErrorCode *pErrorCode) {
-    int32_t paraIndex;
+ubidi_getParagraph(స్థిరరాశి UBiDi *pBiDi, int32_t char_సూచీ,
+                          int32_t *p_Para_ప్రారంభం, int32_t *p_Para_హద్దు,
+                          UBiDiLevel *pParaLevel, UError_సంకేతం *p_Error_సంకేతం) {
+    int32_t para_సూచీ;
 
     /* check the argument values */
     /* pErrorCode will be checked by the call to ubidi_getParagraphByIndex */
-    RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
+    RETURN_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం, -1);
+    RETURN_IF_NOT_VALID_PARA_OR_పంక్తి(pBiDi, *p_Error_సంకేతం, -1);
     pBiDi=pBiDi->pParaBiDi;             /* get Para object if Line object */
-    RETURN_IF_BAD_RANGE(charIndex, 0, pBiDi->length, *pErrorCode, -1);
+    RETURN_IF_BAD_RANGE(char_సూచీ, 0, pBiDi->length, *p_Error_సంకేతం, -1);
 
-    for(paraIndex=0; charIndex>=pBiDi->paras[paraIndex].limit; paraIndex++);
-    ubidi_getParagraphByIndex(pBiDi, paraIndex, pParaStart, pParaLimit, pParaLevel, pErrorCode);
-    return paraIndex;
+    కొరకు(para_సూచీ=0; char_సూచీ>=pBiDi->paras[para_సూచీ].హద్దు; para_సూచీ++);
+    ubidi_get_Paragraph_By_సూచీ(pBiDi, para_సూచీ, p_Para_ప్రారంభం, p_Para_హద్దు, pParaLevel, p_Error_సంకేతం);
+    తిరిగి para_సూచీ;
 }
 
-U_CAPI void U_EXPORT2
-ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
-                       const void *newContext, UBiDiClassCallback **oldFn,
-                       const void **oldContext, UErrorCode *pErrorCode)
+U_CAPI శూన్య U_EXPORT2
+ubidi_సమితి_Class_Callback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
+                       స్థిరరాశి శూన్య *newContext, UBiDiClassCallback **oldFn,
+                       స్థిరరాశి శూన్య **oldContext, UError_సంకేతం *p_Error_సంకేతం)
 {
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం);
+    ఒకవేళ(pBiDi==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    if( oldFn )
+    ఒకవేళ( oldFn )
     {
         *oldFn = pBiDi->fnClassCallback;
     }
-    if( oldContext )
+    ఒకవేళ( oldContext )
     {
         *oldContext = pBiDi->coClassCallback;
     }
@@ -3020,17 +3020,17 @@ ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
     pBiDi->coClassCallback = newContext;
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getClassCallback(UBiDi *pBiDi, UBiDiClassCallback **fn, const void **context)
+U_CAPI శూన్య U_EXPORT2
+ubidi_getClassCallback(UBiDi *pBiDi, UBiDiClassCallback **fn, స్థిరరాశి శూన్య **context)
 {
-    if(pBiDi==nullptr) {
-        return;
+    ఒకవేళ(pBiDi==శూన్యసూచిక) {
+        తిరిగి;
     }
-    if( fn )
+    ఒకవేళ( fn )
     {
         *fn = pBiDi->fnClassCallback;
     }
-    if( context )
+    ఒకవేళ( context )
     {
         *context = pBiDi->coClassCallback;
     }
@@ -3041,35 +3041,35 @@ ubidi_getCustomizedClass(UBiDi *pBiDi, UChar32 c)
 {
     UCharDirection dir;
 
-    if( pBiDi->fnClassCallback == nullptr ||
+    ఒకవేళ( pBiDi->fnClassCallback == శూన్యసూచిక ||
         (dir = (*pBiDi->fnClassCallback)(pBiDi->coClassCallback, c)) == U_BIDI_CLASS_DEFAULT )
     {
         dir = ubidi_getClass(c);
     }
-    if(dir >= U_CHAR_DIRECTION_COUNT) {
+    ఒకవేళ(dir >= U_CHAR_DIRECTION_లెక్క) {
         dir = (UCharDirection)ON;
     }
-    return dir;
+    తిరిగి dir;
 }
 
 /* Utilities for MessageFormat ------------------------------------------------*/
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
 U_CAPI UMFBidiOption U_EXPORT2
-ubidi_getMFOption(const UnicodeString& s) {
-    if (s == u"ltr") {
-        return U_MF_BIDI_OPTION_LTR;
+ubidi_getMFOption(స్థిరరాశి UnicodeString& s) {
+    ఒకవేళ (s == u"ltr") {
+        తిరిగి U_MF_BIDI_OPTION_LTR;
     }
-    if (s == u"rtl") {
-        return U_MF_BIDI_OPTION_RTL;
+    ఒకవేళ (s == u"rtl") {
+        తిరిగి U_MF_BIDI_OPTION_RTL;
     }
-    if (s == u"auto") {
-        return U_MF_BIDI_OPTION_AUTO;
+    ఒకవేళ (s == u"auto") {
+        తిరిగి U_MF_BIDI_OPTION_AUTO;
     }
-    return U_MF_BIDI_OPTION_INHERIT; // inherit is default
+    తిరిగి U_MF_BIDI_OPTION_INHERIT; // inherit is default
 }
 
 // BiDi isolation
@@ -3090,8 +3090,8 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
     // https://github.com/unicode-org/message-format-wg/blob/main/spec/formatting.md#handling-bidirectional-text
 
     // If strategy is 'none', just return the string
-    if (bidiIsolationStrategy == U_MF_BIDI_OFF)
-        return &fmt;
+    ఒకవేళ (bidiIsolationStrategy == U_MF_BIDI_OFF)
+        తిరిగి &fmt;
 
     /* 1. Let msgdir be the directionality of the whole message, one of « 'LTR', 'RTL', 'unknown' ». These correspond to the message having left-to-right directionality, right-to-left directionality, and to the message's directionality not being known. */
 
@@ -3102,54 +3102,54 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
     // (Passed as argument)
 
     // 2iii. Let the boolean value isolate be True if the u:dir option of the resolved value of exp has a value other than 'inherit', or False otherwise.
-    bool isolate = uDirOption != U_MF_BIDI_OPTION_INHERIT;
+    తార్కిక isolate = uDirOption != U_MF_BIDI_OPTION_INHERIT;
 
     UnicodeString bdiOpen("<bdi>");
     UnicodeString bdiClose("</bdi>");
 
     // 2iv. If dir is 'LTR'
-    switch (dir) {
-        case U_MF_DIRECTIONALITY_LTR:
-            if (msgdir == U_MF_DIRECTIONALITY_LTR && !isolate) {
+    ఎంపిక (dir) {
+        స్థితి U_MF_DIRECTIONALITY_LTR:
+            ఒకవేళ (msgdir == U_MF_DIRECTIONALITY_LTR && !isolate) {
                 // 2iv(a). If msgdir is 'LTR' in the formatted output, let fmt be itself
-                return &fmt;
+                తిరిగి &fmt;
             }
             // 2iii(b) Else, in the formatted output, prefix fmt with U+2066 LEFT-TO-RIGHT ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            ఒకవేళ (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, LRI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } లేకపోతే {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
-            break; // End of 2iii
+            ఆపు; // End of 2iii
         // 2iv. Else, if dir is 'RTL':
-        case U_MF_DIRECTIONALITY_RTL:
+        స్థితి U_MF_DIRECTIONALITY_RTL:
             // 2iv(a). In the formatted output, prefix fmt with U+2067 RIGHT-TO-LEFT ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            ఒకవేళ (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, RLI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } లేకపోతే {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
-            break; // End of 2iv.
+            ఆపు; // End of 2iv.
         // 2v. Else:
-        default:
+        అప్రమేయ:
             // 2v(a). In the formatted output, prefix fmt with U+2068 FIRST STRONG ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            ఒకవేళ (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, FSI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } లేకపోతే {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
-            break; // End of 2v
+            ఆపు; // End of 2v
     } // `fmt` now contains the isolated string
-    return &fmt;
+    తిరిగి &fmt;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif // #if SHOW_CPLUSPLUS_API
+#అయితే_ముగింపు // #if SHOW_CPLUSPLUS_API
 

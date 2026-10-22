@@ -11,42 +11,42 @@
 * created by: Markus W. Scherer & Maxime Serrano
 */
 
-#ifndef __DICTIONARYDATA_H__
-#define __DICTIONARYDATA_H__
+#నిర్వచితం_కాకపోతే __DICTIONARYDATA_H__
+#నిర్వచించు __DICTIONARYDATA_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/utext.h"
-#include "unicode/udata.h"
-#include "udataswp.h"
-#include "unicode/uobject.h"
-#include "unicode/ustringtrie.h"
+#అన్తర్భావ "unicode/utext.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "udataswp.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/ustringtrie.h"
 
 U_NAMESPACE_BEGIN
 
 class UCharsTrie;
-class BytesTrie;
+class బైట్లు_Trie;
 
-class U_COMMON_API DictionaryData : public UMemory {
-public:
-    static const int32_t TRIE_TYPE_BYTES; // = 0;
-    static const int32_t TRIE_TYPE_UCHARS; // = 1;
-    static const int32_t TRIE_TYPE_MASK; // = 7;
-    static const int32_t TRIE_HAS_VALUES; // = 8;
+class U_COMMON_API Dictionary_దత్తాంశం : బహిరంగ UMemory {
+బహిరంగ:
+    స్థిర స్థిరరాశి int32_t TRIE_TYPE_బైట్లు; // = 0;
+    స్థిర స్థిరరాశి int32_t TRIE_TYPE_UCHARS; // = 1;
+    స్థిర స్థిరరాశి int32_t TRIE_TYPE_ముసుగు; // = 7;
+    స్థిర స్థిరరాశి int32_t TRIE_HAS_విలువలు; // = 8;
 
-    static const int32_t TRANSFORM_NONE; // = 0;
-    static const int32_t TRANSFORM_TYPE_OFFSET; // = 0x1000000;
-    static const int32_t TRANSFORM_TYPE_MASK; // = 0x7f000000;
-    static const int32_t TRANSFORM_OFFSET_MASK; // = 0x1fffff;
+    స్థిర స్థిరరాశి int32_t TRANSFORM_NONE; // = 0;
+    స్థిర స్థిరరాశి int32_t TRANSFORM_TYPE_స్థానభ్రంశం; // = 0x1000000;
+    స్థిర స్థిరరాశి int32_t TRANSFORM_TYPE_ముసుగు; // = 0x7f000000;
+    స్థిర స్థిరరాశి int32_t TRANSFORM_స్థానభ్రంశం_ముసుగు; // = 0x1fffff;
 
-    enum {
+    గణన {
         // Byte offsets from the start of the data, after the generic header.
-        IX_STRING_TRIE_OFFSET,
-        IX_RESERVED1_OFFSET,
-        IX_RESERVED2_OFFSET,
-        IX_TOTAL_SIZE,
+        IX_STRING_TRIE_స్థానభ్రంశం,
+        IX_RESERVED1_స్థానభ్రంశం,
+        IX_RESERVED2_స్థానభ్రంశం,
+        IX_మొత్తం_కొలత,
 
         // Trie type: TRIE_HAS_VALUES | TRIE_TYPE_BYTES etc.
         IX_TRIE_TYPE,
@@ -55,7 +55,7 @@ public:
 
         IX_RESERVED6,
         IX_RESERVED7,
-        IX_COUNT
+        IX_లెక్క
     };
 };
 
@@ -66,10 +66,10 @@ public:
  * All implementations of this interface must be thread-safe if they are to be used inside of the
  * dictionary-based break iteration code.
  */
-class U_COMMON_API DictionaryMatcher : public UMemory {
-public:
+class U_COMMON_API DictionaryMatcher : బహిరంగ UMemory {
+బహిరంగ:
     DictionaryMatcher() {}
-    virtual ~DictionaryMatcher();
+    మాయా ~DictionaryMatcher();
     // this should emulate CompactTrieDictionary::matches()
     /*  @param text      The text in which to look for matching words. Matching begins
      *                   at the current position of the UText.
@@ -90,55 +90,55 @@ public:
      *                   of the longest complete word matched. May be nullptr.
      *  @return          Number of matching words found.
      */
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const = 0;
+    మాయా int32_t matches(UText *పాఠ్యం, int32_t max_నిడివి_2, int32_t హద్దు,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *విలువలు,
+                            int32_t *ఉపసర్గ) స్థిరరాశి = 0;
 
     /** @return DictionaryData::TRIE_TYPE_XYZ */
-    virtual int32_t getType() const = 0;
+    మాయా int32_t getType() స్థిరరాశి = 0;
 };
 
 // Implementation of the DictionaryMatcher interface for a UCharsTrie dictionary
-class U_COMMON_API UCharsDictionaryMatcher : public DictionaryMatcher {
-public:
+class U_COMMON_API UCharsDictionaryMatcher : బహిరంగ DictionaryMatcher {
+బహిరంగ:
     // constructs a new UCharsDictionaryMatcher.
     // The UDataMemory * will be closed on this object's destruction.
-    UCharsDictionaryMatcher(const char16_t *c, UDataMemory *f) : characters(c), file(f) { }
-    virtual ~UCharsDictionaryMatcher();
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const override;
-    virtual int32_t getType() const override;
-private:
-    const char16_t *characters;
-    UDataMemory *file;
+    UCharsDictionaryMatcher(స్థిరరాశి char16_t *c, UData_జ్ఞాపకం *f) : characters(c), file(f) { }
+    మాయా ~UCharsDictionaryMatcher();
+    మాయా int32_t matches(UText *పాఠ్యం, int32_t max_నిడివి_2, int32_t హద్దు,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *విలువలు,
+                            int32_t *ఉపసర్గ) స్థిరరాశి override;
+    మాయా int32_t getType() స్థిరరాశి override;
+అంతరంగ:
+    స్థిరరాశి char16_t *characters;
+    UData_జ్ఞాపకం *file;
 };
 
 // Implementation of the DictionaryMatcher interface for a BytesTrie dictionary
-class U_COMMON_API BytesDictionaryMatcher : public DictionaryMatcher {
-public:
+class U_COMMON_API బైట్లు_Dictionary_Matcher : బహిరంగ DictionaryMatcher {
+బహిరంగ:
     // constructs a new BytesTrieDictionaryMatcher
     // the transform constant should be the constant read from the file, not a masked version!
     // the UDataMemory * fed in here will be closed on this object's destruction
-    BytesDictionaryMatcher(const char *c, int32_t t, UDataMemory *f)
+    బైట్లు_Dictionary_Matcher(స్థిరరాశి అక్షరం *c, int32_t t, UData_జ్ఞాపకం *f)
             : characters(c), transformConstant(t), file(f) { }
-    virtual ~BytesDictionaryMatcher();
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const override;
-    virtual int32_t getType() const override;
-private:
-    UChar32 transform(UChar32 c) const;
+    మాయా ~బైట్లు_Dictionary_Matcher();
+    మాయా int32_t matches(UText *పాఠ్యం, int32_t max_నిడివి_2, int32_t హద్దు,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *విలువలు,
+                            int32_t *ఉపసర్గ) స్థిరరాశి override;
+    మాయా int32_t getType() స్థిరరాశి override;
+అంతరంగ:
+    UChar32 transform(UChar32 c) స్థిరరాశి;
 
-    const char *characters;
+    స్థిరరాశి అక్షరం *characters;
     int32_t transformConstant;
-    UDataMemory *file;
+    UData_జ్ఞాపకం *file;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outData, UErrorCode *pErrorCode);
+udict_మార్పిడి(స్థిరరాశి UDataSwapper *ds, స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t నిడివి, శూన్య *బహిర్గతం_దత్తాంశం, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Format of dictionary .dict data files.
@@ -187,5 +187,5 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *out
  *      or it maps all strings to 0 (TRIE_HAS_VALUES bit not set).
  */
 
-#endif  /* !UCONFIG_NO_BREAK_ITERATION */
-#endif  /* __DICTIONARYDATA_H__ */
+#అయితే_ముగింపు  /* !UCONFIG_NO_BREAK_ITERATION */
+#అయితే_ముగింపు  /* __DICTIONARYDATA_H__ */

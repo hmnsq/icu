@@ -14,83 +14,83 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/bytestream.h"
+#అన్తర్భావ "unicode/bytestrie.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
-BytesTrie::~BytesTrie() {
+బైట్లు_Trie::~బైట్లు_Trie() {
     uprv_free(ownedArray_);
 }
 
 // lead byte already shifted right by 1.
 int32_t
-BytesTrie::readValue(const uint8_t *pos, int32_t leadByte) {
+బైట్లు_Trie::read_విలువ(స్థిరరాశి uint8_t *pos, int32_t leadByte) {
     int32_t value;
-    if(leadByte<kMinTwoByteValueLead) {
-        value=leadByte-kMinOneByteValueLead;
-    } else if(leadByte<kMinThreeByteValueLead) {
-        value=((leadByte-kMinTwoByteValueLead)<<8)|*pos;
-    } else if(leadByte<kFourByteValueLead) {
-        value=((leadByte-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
-    } else if(leadByte==kFourByteValueLead) {
+    ఒకవేళ(leadByte<k_Min_Two_Byte_విలువ_Lead) {
+        value=leadByte-k_Min_One_Byte_విలువ_Lead;
+    } లేకపోతే ఒకవేళ(leadByte<k_Min_Three_Byte_విలువ_Lead) {
+        value=((leadByte-k_Min_Two_Byte_విలువ_Lead)<<8)|*pos;
+    } లేకపోతే ఒకవేళ(leadByte<k_Four_Byte_విలువ_Lead) {
+        value=((leadByte-k_Min_Three_Byte_విలువ_Lead)<<16)|(pos[0]<<8)|pos[1];
+    } లేకపోతే ఒకవేళ(leadByte==k_Four_Byte_విలువ_Lead) {
         value=(pos[0]<<16)|(pos[1]<<8)|pos[2];
-    } else {
+    } లేకపోతే {
         value=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
     }
-    return value;
+    తిరిగి value;
 }
 
-const uint8_t*
-BytesTrie::jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND) {
+స్థిరరాశి uint8_t*
+బైట్లు_Trie::jumpByDelta(స్థిరరాశి uint8_t* pos U_LIFETIME_BOUND) {
     int32_t delta=*pos++;
-    if(delta<kMinTwoByteDeltaLead) {
+    ఒకవేళ(delta<kMinTwoByteDeltaLead) {
         // nothing to do
-    } else if(delta<kMinThreeByteDeltaLead) {
+    } లేకపోతే ఒకవేళ(delta<kMinThreeByteDeltaLead) {
         delta=((delta-kMinTwoByteDeltaLead)<<8)|*pos++;
-    } else if(delta<kFourByteDeltaLead) {
+    } లేకపోతే ఒకవేళ(delta<kFourByteDeltaLead) {
         delta=((delta-kMinThreeByteDeltaLead)<<16)|(pos[0]<<8)|pos[1];
         pos+=2;
-    } else if(delta==kFourByteDeltaLead) {
+    } లేకపోతే ఒకవేళ(delta==kFourByteDeltaLead) {
         delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
         pos+=3;
-    } else {
+    } లేకపోతే {
         delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
         pos+=4;
     }
-    return pos+delta;
+    తిరిగి pos+delta;
 }
 
-UStringTrieResult
-BytesTrie::current() const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+UString_Trie_ఫలితం
+బైట్లు_Trie::current() స్థిరరాశి {
+    స్థిరరాశి uint8_t *pos=pos_;
+    ఒకవేళ(pos==శూన్యసూచిక) {
+        తిరిగి USTRINGTRIE_NO_సరిపోలిక;
+    } లేకపోతే {
+        int32_t కణుపు;
+        తిరిగి (మిగిలిన_సరిపోలిక_నిడివి<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
     }
 }
 
-UStringTrieResult
-BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
+UString_Trie_ఫలితం
+బైట్లు_Trie::branch_తదుపరి(స్థిరరాశి uint8_t *pos, int32_t length, int32_t లోపల_Byte) {
     // Branch according to the current byte.
-    if(length==0) {
+    ఒకవేళ(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of bytes to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(inByte<*pos++) {
+    అయితే(length>k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి) {
+        ఒకవేళ(లోపల_Byte<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } లేకపోతే {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -98,346 +98,346 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // Drop down to linear search for the last few bytes.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(inByte==*pos++) {
-            UStringTrieResult result;
-            int32_t node=*pos;
-            U_ASSERT(node>=kMinValueLead);
-            if(node&kValueIsFinal) {
+    చేయి {
+        ఒకవేళ(లోపల_Byte==*pos++) {
+            UString_Trie_ఫలితం ఫలితం;
+            int32_t కణుపు=*pos;
+            U_ASSERT(కణుపు>=k_Min_విలువ_Lead);
+            ఒకవేళ(కణుపు&k_విలువ_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+                ఫలితం=USTRINGTRIE_FINAL_విలువ;
+            } లేకపోతే {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node>>1);
-                node>>=1;
+                కణుపు>>=1;
                 int32_t delta;
-                if(node<kMinTwoByteValueLead) {
-                    delta=node-kMinOneByteValueLead;
-                } else if(node<kMinThreeByteValueLead) {
-                    delta=((node-kMinTwoByteValueLead)<<8)|*pos++;
-                } else if(node<kFourByteValueLead) {
-                    delta=((node-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
+                ఒకవేళ(కణుపు<k_Min_Two_Byte_విలువ_Lead) {
+                    delta=కణుపు-k_Min_One_Byte_విలువ_Lead;
+                } లేకపోతే ఒకవేళ(కణుపు<k_Min_Three_Byte_విలువ_Lead) {
+                    delta=((కణుపు-k_Min_Two_Byte_విలువ_Lead)<<8)|*pos++;
+                } లేకపోతే ఒకవేళ(కణుపు<k_Four_Byte_విలువ_Lead) {
+                    delta=((కణుపు-k_Min_Three_Byte_విలువ_Lead)<<16)|(pos[0]<<8)|pos[1];
                     pos+=2;
-                } else if(node==kFourByteValueLead) {
+                } లేకపోతే ఒకవేళ(కణుపు==k_Four_Byte_విలువ_Lead) {
                     delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
                     pos+=3;
-                } else {
+                } లేకపోతే {
                     delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
                     pos+=4;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                కణుపు=*pos;
+                ఫలితం= కణుపు>=k_Min_విలువ_Lead ? విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
             }
             pos_=pos;
-            return result;
+            తిరిగి ఫలితం;
         }
         --length;
-        pos=skipValue(pos);
-    } while(length>1);
-    if(inByte==*pos++) {
+        pos=skip_విలువ(pos);
+    } అయితే(length>1);
+    ఒకవేళ(లోపల_Byte==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        int32_t కణుపు=*pos;
+        తిరిగి కణుపు>=k_Min_విలువ_Lead ? విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
+    } లేకపోతే {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        తిరిగి USTRINGTRIE_NO_సరిపోలిక;
     }
 }
 
-UStringTrieResult
-BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, inByte);
-        } else if(node<kMinValueLead) {
+UString_Trie_ఫలితం
+బైట్లు_Trie::తదుపరి_Impl(స్థిరరాశి uint8_t *pos, int32_t లోపల_Byte) {
+    కొరకు(;;) {
+        int32_t కణుపు=*pos++;
+        ఒకవేళ(కణుపు<k_Min_రేఖీయ_సరిపోలిక) {
+            తిరిగి branch_తదుపరి(pos, కణుపు, లోపల_Byte);
+        } లేకపోతే ఒకవేళ(కణుపు<k_Min_విలువ_Lead) {
             // Match the first of length+1 bytes.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(inByte==*pos++) {
-                remainingMatchLength_=--length;
+            int32_t length=కణుపు-k_Min_రేఖీయ_సరిపోలిక;  // Actual match length minus 1.
+            ఒకవేళ(లోపల_Byte==*pos++) {
+                మిగిలిన_సరిపోలిక_నిడివి=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+                తిరిగి (length<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                        విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
+            } లేకపోతే {
                 // No match.
-                break;
+                ఆపు;
             }
-        } else if(node&kValueIsFinal) {
+        } లేకపోతే ఒకవేళ(కణుపు&k_విలువ_Is_Final) {
             // No further matching bytes.
-            break;
-        } else {
+            ఆపు;
+        } లేకపోతే {
             // Skip intermediate value.
-            pos=skipValue(pos, node);
+            pos=skip_విలువ(pos, కణుపు);
             // The next node must not also be a value node.
-            U_ASSERT(*pos<kMinValueLead);
+            U_ASSERT(*pos<k_Min_విలువ_Lead);
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
 }
 
-UStringTrieResult
-BytesTrie::next(int32_t inByte) {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+UString_Trie_ఫలితం
+బైట్లు_Trie::next(int32_t లోపల_Byte) {
+    స్థిరరాశి uint8_t *pos=pos_;
+    ఒకవేళ(pos==శూన్యసూచిక) {
+        తిరిగి USTRINGTRIE_NO_సరిపోలిక;
     }
-    if(inByte<0) {
-        inByte+=0x100;
+    ఒకవేళ(లోపల_Byte<0) {
+        లోపల_Byte+=0x100;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=మిగిలిన_సరిపోలిక_నిడివి;  // Actual remaining match length minus 1.
+    ఒకవేళ(length>=0) {
         // Remaining part of a linear-match node.
-        if(inByte==*pos++) {
-            remainingMatchLength_=--length;
+        ఒకవేళ(లోపల_Byte==*pos++) {
+            మిగిలిన_సరిపోలిక_నిడివి=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+            int32_t కణుపు;
+            తిరిగి (length<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                    విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
+        } లేకపోతే {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            తిరిగి USTRINGTRIE_NO_సరిపోలిక;
         }
     }
-    return nextImpl(pos, inByte);
+    తిరిగి తదుపరి_Impl(pos, లోపల_Byte);
 }
 
-UStringTrieResult
-BytesTrie::next(const char *s, int32_t sLength) {
-    if(sLength<0 ? *s==0 : sLength==0) {
+UString_Trie_ఫలితం
+బైట్లు_Trie::next(స్థిరరాశి అక్షరం *s, int32_t s_నిడివి) {
+    ఒకవేళ(s_నిడివి<0 ? *s==0 : s_నిడివి==0) {
         // Empty input.
-        return current();
+        తిరిగి current();
     }
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    స్థిరరాశి uint8_t *pos=pos_;
+    ఒకవేళ(pos==శూన్యసూచిక) {
+        తిరిగి USTRINGTRIE_NO_సరిపోలిక;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    int32_t length=మిగిలిన_సరిపోలిక_నిడివి;  // Actual remaining match length minus 1.
+    కొరకు(;;) {
         // Fetch the next input byte, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
-        int32_t inByte;
-        if(sLength<0) {
-            for(;;) {
-                if((inByte=*s++)==0) {
-                    remainingMatchLength_=length;
+        int32_t లోపల_Byte;
+        ఒకవేళ(s_నిడివి<0) {
+            కొరకు(;;) {
+                ఒకవేళ((లోపల_Byte=*s++)==0) {
+                    మిగిలిన_సరిపోలిక_నిడివి=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t కణుపు;
+                    తిరిగి (length<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                            విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
                 }
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                ఒకవేళ(length<0) {
+                    మిగిలిన_సరిపోలిక_నిడివి=length;
+                    ఆపు;
                 }
-                if(inByte!=*pos) {
+                ఒకవేళ(లోపల_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
-                    remainingMatchLength_=length;
+        } లేకపోతే {
+            కొరకు(;;) {
+                ఒకవేళ(s_నిడివి==0) {
+                    మిగిలిన_సరిపోలిక_నిడివి=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t కణుపు;
+                    తిరిగి (length<0 && (కణుపు=*pos)>=k_Min_విలువ_Lead) ?
+                            విలువ_ఫలితం(కణుపు) : USTRINGTRIE_NO_విలువ;
                 }
-                inByte=*s++;
-                --sLength;
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                లోపల_Byte=*s++;
+                --s_నిడివి;
+                ఒకవేళ(length<0) {
+                    మిగిలిన_సరిపోలిక_నిడివి=length;
+                    ఆపు;
                 }
-                if(inByte!=*pos) {
+                ఒకవేళ(లోపల_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 ++pos;
                 --length;
             }
         }
-        for(;;) {
-            int32_t node=*pos++;
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, inByte);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+        కొరకు(;;) {
+            int32_t కణుపు=*pos++;
+            ఒకవేళ(కణుపు<k_Min_రేఖీయ_సరిపోలిక) {
+                UString_Trie_ఫలితం ఫలితం=branch_తదుపరి(pos, కణుపు, లోపల_Byte);
+                ఒకవేళ(ఫలితం==USTRINGTRIE_NO_సరిపోలిక) {
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 // Fetch the next input byte, if there is one.
-                if(sLength<0) {
-                    if((inByte=*s++)==0) {
-                        return result;
+                ఒకవేళ(s_నిడివి<0) {
+                    ఒకవేళ((లోపల_Byte=*s++)==0) {
+                        తిరిగి ఫలితం;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } లేకపోతే {
+                    ఒకవేళ(s_నిడివి==0) {
+                        తిరిగి ఫలితం;
                     }
-                    inByte=*s++;
-                    --sLength;
+                    లోపల_Byte=*s++;
+                    --s_నిడివి;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                ఒకవేళ(ఫలితం==USTRINGTRIE_FINAL_విలువ) {
                     // No further matching bytes.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-            } else if(node<kMinValueLead) {
+            } లేకపోతే ఒకవేళ(కణుపు<k_Min_విలువ_Lead) {
                 // Match length+1 bytes.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(inByte!=*pos) {
+                length=కణుపు-k_Min_రేఖీయ_సరిపోలిక;  // Actual match length minus 1.
+                ఒకవేళ(లోపల_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    తిరిగి USTRINGTRIE_NO_సరిపోలిక;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                ఆపు;
+            } లేకపోతే ఒకవేళ(కణుపు&k_విలువ_Is_Final) {
                 // No further matching bytes.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                తిరిగి USTRINGTRIE_NO_సరిపోలిక;
+            } లేకపోతే {
                 // Skip intermediate value.
-                pos=skipValue(pos, node);
+                pos=skip_విలువ(pos, కణుపు);
                 // The next node must not also be a value node.
-                U_ASSERT(*pos<kMinValueLead);
+                U_ASSERT(*pos<k_Min_విలువ_Lead);
             }
         }
     }
 }
 
-const uint8_t*
-BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
+స్థిరరాశి uint8_t*
+బైట్లు_Trie::కనుగొను_Unique_విలువ_From_Branch(స్థిరరాశి uint8_t* pos U_LIFETIME_BOUND,
                                      int32_t length,
-                                     UBool haveUniqueValue,
-                                     int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                     UBool have_Unique_విలువ,
+                                     int32_t& unique_విలువ) {
+    అయితే(length>k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి) {
         ++pos;  // ignore the comparison byte
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        ఒకవేళ(శూన్యసూచిక==కనుగొను_Unique_విలువ_From_Branch(jumpByDelta(pos), length>>1, have_Unique_విలువ, unique_విలువ)) {
+            తిరిగి శూన్యసూచిక;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    చేయి {
         ++pos;  // ignore a comparison byte
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-        int32_t value=readValue(pos, node>>1);
-        pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        int32_t కణుపు=*pos++;
+        UBool isFinal = static_cast<UBool>(కణుపు & k_విలువ_Is_Final);
+        int32_t value=read_విలువ(pos, కణుపు>>1);
+        pos=skip_విలువ(pos, కణుపు);
+        ఒకవేళ(isFinal) {
+            ఒకవేళ(have_Unique_విలువ) {
+                ఒకవేళ(value!=unique_విలువ) {
+                    తిరిగి శూన్యసూచిక;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } లేకపోతే {
+                unique_విలువ=value;
+                have_Unique_విలువ=నిజం;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } లేకపోతే {
+            ఒకవేళ(!కనుగొను_Unique_విలువ(pos+value, have_Unique_విలువ, unique_విలువ)) {
+                తిరిగి శూన్యసూచిక;
             }
-            haveUniqueValue=true;
+            have_Unique_విలువ=నిజం;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison byte
+    } అయితే(--length>1);
+    తిరిగి pos+1;  // ignore the last comparison byte
 }
 
 UBool
-BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+బైట్లు_Trie::కనుగొను_Unique_విలువ(స్థిరరాశి uint8_t *pos, UBool have_Unique_విలువ, int32_t &unique_విలువ) {
+    కొరకు(;;) {
+        int32_t కణుపు=*pos++;
+        ఒకవేళ(కణుపు<k_Min_రేఖీయ_సరిపోలిక) {
+            ఒకవేళ(కణుపు==0) {
+                కణుపు=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            pos=కనుగొను_Unique_విలువ_From_Branch(pos, కణుపు+1, have_Unique_విలువ, unique_విలువ);
+            ఒకవేళ(pos==శూన్యసూచిక) {
+                తిరిగి అబద్ధం;
             }
-            haveUniqueValue=true;
-        } else if(node<kMinValueLead) {
+            have_Unique_విలువ=నిజం;
+        } లేకపోతే ఒకవేళ(కణుపు<k_Min_విలువ_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match bytes.
-        } else {
-            UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-            int32_t value=readValue(pos, node>>1);
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            pos+=కణుపు-k_Min_రేఖీయ_సరిపోలిక+1;  // Ignore the match bytes.
+        } లేకపోతే {
+            UBool isFinal = static_cast<UBool>(కణుపు & k_విలువ_Is_Final);
+            int32_t value=read_విలువ(pos, కణుపు>>1);
+            ఒకవేళ(have_Unique_విలువ) {
+                ఒకవేళ(value!=unique_విలువ) {
+                    తిరిగి అబద్ధం;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } లేకపోతే {
+                unique_విలువ=value;
+                have_Unique_విలువ=నిజం;
             }
-            if(isFinal) {
-                return true;
+            ఒకవేళ(isFinal) {
+                తిరిగి నిజం;
             }
-            pos=skipValue(pos, node);
+            pos=skip_విలువ(pos, కణుపు);
         }
     }
 }
 
 int32_t
-BytesTrie::getNextBytes(ByteSink &out) const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+బైట్లు_Trie::get_తదుపరి_బైట్లు(ByteSink &out) స్థిరరాశి {
+    స్థిరరాశి uint8_t *pos=pos_;
+    ఒకవేళ(pos==శూన్యసూచిక) {
+        తిరిగి 0;
     }
-    if(remainingMatchLength_>=0) {
+    ఒకవేళ(మిగిలిన_సరిపోలిక_నిడివి>=0) {
         append(out, *pos);  // Next byte of a pending linear-match node.
-        return 1;
+        తిరిగి 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
-            pos=skipValue(pos, node);
-            node=*pos++;
-            U_ASSERT(node<kMinValueLead);
+    int32_t కణుపు=*pos++;
+    ఒకవేళ(కణుపు>=k_Min_విలువ_Lead) {
+        ఒకవేళ(కణుపు&k_విలువ_Is_Final) {
+            తిరిగి 0;
+        } లేకపోతే {
+            pos=skip_విలువ(pos, కణుపు);
+            కణుపు=*pos++;
+            U_ASSERT(కణుపు<k_Min_విలువ_Lead);
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    ఒకవేళ(కణుపు<k_Min_రేఖీయ_సరిపోలిక) {
+        ఒకవేళ(కణుపు==0) {
+            కణుపు=*pos++;
         }
-        getNextBranchBytes(pos, ++node, out);
-        return node;
-    } else {
+        get_తదుపరి_Branch_బైట్లు(pos, ++కణుపు, out);
+        తిరిగి కణుపు;
+    } లేకపోతే {
         // First byte of the linear-match node.
         append(out, *pos);
-        return 1;
+        తిరిగి 1;
     }
 }
 
-void
-BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+శూన్య
+బైట్లు_Trie::get_తదుపరి_Branch_బైట్లు(స్థిరరాశి uint8_t *pos, int32_t length, ByteSink &out) {
+    అయితే(length>k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి) {
         ++pos;  // ignore the comparison byte
-        getNextBranchBytes(jumpByDelta(pos), length>>1, out);
+        get_తదుపరి_Branch_బైట్లు(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    చేయి {
         append(out, *pos++);
-        pos=skipValue(pos);
-    } while(--length>1);
+        pos=skip_విలువ(pos);
+    } అయితే(--length>1);
     append(out, *pos);
 }
 
-void
-BytesTrie::append(ByteSink &out, int c) {
-    char ch = static_cast<char>(c);
+శూన్య
+బైట్లు_Trie::append(ByteSink &out, పూర్ణాంకం c) {
+    అక్షరం ch = static_cast<అక్షరం>(c);
     out.Append(&ch, 1);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

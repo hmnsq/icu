@@ -15,23 +15,23 @@
 ******************************************************************************
 */
 
-#ifndef USTRING_H
-#define USTRING_H
+#నిర్వచితం_కాకపోతే USTRING_H
+#నిర్వచించు USTRING_H
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uiter.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/uiter.h"
 
 /**
  * \def UBRK_TYPEDEF_UBREAK_ITERATOR
  * @internal 
  */
 
-#ifndef UBRK_TYPEDEF_UBREAK_ITERATOR
+#నిర్వచితం_కాకపోతే UBRK_TYPEDEF_UBREAK_ITERATOR
 #   define UBRK_TYPEDEF_UBREAK_ITERATOR
 /** Simple declaration for u_strToTitle() to avoid including unicode/ubrk.h. @stable ICU 2.1*/
-    typedef struct UBreakIterator UBreakIterator;
-#endif
+    రకనిర్వచనం నిర్మాణం UBreakIterator UBreakIterator;
+#అయితే_ముగింపు
 
 /**
  * \file
@@ -90,7 +90,7 @@
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strlen(const UChar *s);
+u_strlen(స్థిరరాశి UChar *s);
 /*@}*/
 
 /**
@@ -107,7 +107,7 @@ u_strlen(const UChar *s);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_countChar32(const UChar *s, int32_t length);
+u_లెక్క_Char32(స్థిరరాశి UChar *s, int32_t నిడివి);
 
 /**
  * Check if the string contains more Unicode code points than a certain number.
@@ -128,7 +128,7 @@ u_countChar32(const UChar *s, int32_t length);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-u_strHasMoreChar32Than(const UChar *s, int32_t length, int32_t number);
+u_str_Has_మరిన్ని_Char32_Than(స్థిరరాశి UChar *s, int32_t నిడివి, int32_t సంఖ్య);
 
 /**
  * Concatenate two ustrings.  Appends a copy of <code>src</code>,
@@ -141,7 +141,7 @@ u_strHasMoreChar32Than(const UChar *s, int32_t length, int32_t number);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strcat(UChar* dst U_LIFETIME_BOUND, const UChar* src);
+u_strcat(UChar* dst U_LIFETIME_BOUND, స్థిరరాశి UChar* src);
 
 /**
  * Concatenate two ustrings.  
@@ -158,7 +158,7 @@ u_strcat(UChar* dst U_LIFETIME_BOUND, const UChar* src);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strncat(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
+u_strncat(UChar* dst U_LIFETIME_BOUND, స్థిరరాశి UChar* src, int32_t n);
 
 /**
  * Find the first occurrence of a substring in a string.
@@ -181,7 +181,7 @@ u_strncat(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strstr(const UChar* s U_LIFETIME_BOUND, const UChar* substring);
+u_strstr(స్థిరరాశి UChar* s U_LIFETIME_BOUND, స్థిరరాశి UChar* substring);
 
 /**
  * Find the first occurrence of a substring in a string.
@@ -205,10 +205,10 @@ u_strstr(const UChar* s U_LIFETIME_BOUND, const UChar* substring);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strFindFirst(const UChar* s U_LIFETIME_BOUND,
-               int32_t length,
-               const UChar* substring,
-               int32_t subLength);
+u_str_కనుగొను_మొదటి(స్థిరరాశి UChar* s U_LIFETIME_BOUND,
+               int32_t నిడివి,
+               స్థిరరాశి UChar* substring,
+               int32_t sub_నిడివి);
 
 /**
  * Find the first occurrence of a BMP code point in a string.
@@ -228,7 +228,7 @@ u_strFindFirst(const UChar* s U_LIFETIME_BOUND,
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_strchr(const UChar* s U_LIFETIME_BOUND, UChar c);
+u_strchr(స్థిరరాశి UChar* s U_LIFETIME_BOUND, UChar c);
 
 /**
  * Find the first occurrence of a code point in a string.
@@ -248,7 +248,7 @@ u_strchr(const UChar* s U_LIFETIME_BOUND, UChar c);
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_strchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c);
+u_strchr32(స్థిరరాశి UChar* s U_LIFETIME_BOUND, UChar32 c);
 
 /**
  * Find the last occurrence of a substring in a string.
@@ -271,7 +271,7 @@ u_strchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strrstr(const UChar* s U_LIFETIME_BOUND, const UChar* substring);
+u_strrstr(స్థిరరాశి UChar* s U_LIFETIME_BOUND, స్థిరరాశి UChar* substring);
 
 /**
  * Find the last occurrence of a substring in a string.
@@ -295,10 +295,10 @@ u_strrstr(const UChar* s U_LIFETIME_BOUND, const UChar* substring);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strFindLast(const UChar* s U_LIFETIME_BOUND,
-              int32_t length,
-              const UChar* substring,
-              int32_t subLength);
+u_str_కనుగొను_చివరి(స్థిరరాశి UChar* s U_LIFETIME_BOUND,
+              int32_t నిడివి,
+              స్థిరరాశి UChar* substring,
+              int32_t sub_నిడివి);
 
 /**
  * Find the last occurrence of a BMP code point in a string.
@@ -318,7 +318,7 @@ u_strFindLast(const UChar* s U_LIFETIME_BOUND,
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strrchr(const UChar* s U_LIFETIME_BOUND, UChar c);
+u_strrchr(స్థిరరాశి UChar* s U_LIFETIME_BOUND, UChar c);
 
 /**
  * Find the last occurrence of a code point in a string.
@@ -338,7 +338,7 @@ u_strrchr(const UChar* s U_LIFETIME_BOUND, UChar c);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_strrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c);
+u_strrchr32(స్థిరరాశి UChar* s U_LIFETIME_BOUND, UChar32 c);
 
 /**
  * Locates the first occurrence in the string <code>string</code> of any of the characters
@@ -353,7 +353,7 @@ u_strrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strpbrk(const UChar* string U_LIFETIME_BOUND, const UChar* matchSet);
+u_strpbrk(స్థిరరాశి UChar* string U_LIFETIME_BOUND, స్థిరరాశి UChar* సరిపోలిక_సమితి);
 
 /**
  * Returns the number of consecutive characters in <code>string</code>,
@@ -369,7 +369,7 @@ u_strpbrk(const UChar* string U_LIFETIME_BOUND, const UChar* matchSet);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strcspn(const UChar *string, const UChar *matchSet);
+u_strcspn(స్థిరరాశి UChar *string, స్థిరరాశి UChar *సరిపోలిక_సమితి);
 
 /**
  * Returns the number of consecutive characters in <code>string</code>,
@@ -385,7 +385,7 @@ u_strcspn(const UChar *string, const UChar *matchSet);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strspn(const UChar *string, const UChar *matchSet);
+u_strspn(స్థిరరాశి UChar *string, స్థిరరాశి UChar *సరిపోలిక_సమితి);
 
 /**
  * The string tokenizer API allows an application to break a string into
@@ -413,7 +413,7 @@ u_strspn(const UChar *string, const UChar *matchSet);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strtok_r(UChar* src U_LIFETIME_BOUND, const UChar* delim, UChar** saveState);
+u_strtok_r(UChar* src U_LIFETIME_BOUND, స్థిరరాశి UChar* delim, UChar** saveState);
 
 /**
  * Compare two Unicode strings for bitwise equality (code unit order).
@@ -426,8 +426,8 @@ u_strtok_r(UChar* src U_LIFETIME_BOUND, const UChar* delim, UChar** saveState);
  * @stable ICU 2.0
  */
 U_CAPI int32_t  U_EXPORT2
-u_strcmp(const UChar     *s1, 
-         const UChar     *s2);
+u_strcmp(స్థిరరాశి UChar     *s1, 
+         స్థిరరాశి UChar     *s2);
 
 /**
  * Compare two Unicode strings in code point order.
@@ -441,7 +441,7 @@ u_strcmp(const UChar     *s1,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strcmpCodePointOrder(const UChar *s1, const UChar *s2);
+u_strcmp_సంకేతం_బిందువు_క్రమం(స్థిరరాశి UChar *s1, స్థిరరాశి UChar *s2);
 
 /**
  * Compare two Unicode strings (binary order).
@@ -471,9 +471,9 @@ u_strcmpCodePointOrder(const UChar *s1, const UChar *s2);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_strCompare(const UChar *s1, int32_t length1,
-             const UChar *s2, int32_t length2,
-             UBool codePointOrder);
+u_strCompare(స్థిరరాశి UChar *s1, int32_t length1,
+             స్థిరరాశి UChar *s2, int32_t length2,
+             UBool సంకేతం_బిందువు_క్రమం);
 
 /**
  * Compare two Unicode strings (binary order)
@@ -496,7 +496,7 @@ u_strCompare(const UChar *s1, int32_t length1,
  * @stable ICU 2.6
  */
 U_CAPI int32_t U_EXPORT2
-u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrder);
+u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool సంకేతం_బిందువు_క్రమం);
 
 /**
  * Compare two strings case-insensitively using full case folding.
@@ -539,10 +539,10 @@ u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrde
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_strCaseCompare(const UChar *s1, int32_t length1,
-                 const UChar *s2, int32_t length2,
+u_strCaseCompare(స్థిరరాశి UChar *s1, int32_t length1,
+                 స్థిరరాశి UChar *s2, int32_t length2,
                  uint32_t options,
-                 UErrorCode *pErrorCode);
+                 UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Compare two ustrings for bitwise equality. 
@@ -557,8 +557,8 @@ u_strCaseCompare(const UChar *s1, int32_t length1,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strncmp(const UChar     *ucs1, 
-     const UChar     *ucs2, 
+u_strncmp(స్థిరరాశి UChar     *ucs1, 
+     స్థిరరాశి UChar     *ucs2, 
      int32_t     n);
 
 /**
@@ -575,7 +575,7 @@ u_strncmp(const UChar     *ucs1,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strncmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t n);
+u_strncmp_సంకేతం_బిందువు_క్రమం(స్థిరరాశి UChar *s1, స్థిరరాశి UChar *s2, int32_t n);
 
 /**
  * Compare two strings case-insensitively using full case folding.
@@ -597,7 +597,7 @@ u_strncmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t n);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strcasecmp(const UChar *s1, const UChar *s2, uint32_t options);
+u_strcasecmp(స్థిరరాశి UChar *s1, స్థిరరాశి UChar *s2, uint32_t options);
 
 /**
  * Compare two strings case-insensitively using full case folding.
@@ -621,7 +621,7 @@ u_strcasecmp(const UChar *s1, const UChar *s2, uint32_t options);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strncasecmp(const UChar *s1, const UChar *s2, int32_t n, uint32_t options);
+u_strncasecmp(స్థిరరాశి UChar *s1, స్థిరరాశి UChar *s2, int32_t n, uint32_t options);
 
 /**
  * Compare two strings case-insensitively using full case folding.
@@ -645,7 +645,7 @@ u_strncasecmp(const UChar *s1, const UChar *s2, int32_t n, uint32_t options);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_memcasecmp(const UChar *s1, const UChar *s2, int32_t length, uint32_t options);
+u_memcasecmp(స్థిరరాశి UChar *s1, స్థిరరాశి UChar *s2, int32_t నిడివి, uint32_t options);
 
 /**
  * Copy a ustring. Adds a null terminator.
@@ -656,7 +656,7 @@ u_memcasecmp(const UChar *s1, const UChar *s2, int32_t length, uint32_t options)
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strcpy(UChar* dst U_LIFETIME_BOUND, const UChar* src);
+u_strcpy(UChar* dst U_LIFETIME_BOUND, స్థిరరాశి UChar* src);
 
 /**
  * Copy a ustring.
@@ -670,9 +670,9 @@ u_strcpy(UChar* dst U_LIFETIME_BOUND, const UChar* src);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_strncpy(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
+u_strncpy(UChar* dst U_LIFETIME_BOUND, స్థిరరాశి UChar* src, int32_t n);
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
 /**
  * Copy a byte string encoded in the default codepage to a ustring.
@@ -684,7 +684,7 @@ u_strncpy(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI UChar* U_EXPORT2 u_uastrcpy(UChar* dst U_LIFETIME_BOUND, const char* src);
+U_CAPI UChar* U_EXPORT2 u_uastrcpy(UChar* dst U_LIFETIME_BOUND, స్థిరరాశి అక్షరం* src);
 
 /**
  * Copy a byte string encoded in the default codepage to a ustring.
@@ -698,7 +698,7 @@ U_CAPI UChar* U_EXPORT2 u_uastrcpy(UChar* dst U_LIFETIME_BOUND, const char* src)
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI UChar* U_EXPORT2 u_uastrncpy(UChar* dst U_LIFETIME_BOUND, const char* src, int32_t n);
+U_CAPI UChar* U_EXPORT2 u_uastrncpy(UChar* dst U_LIFETIME_BOUND, స్థిరరాశి అక్షరం* src, int32_t n);
 
 /**
  * Copy ustring to a byte string encoded in the default codepage.
@@ -710,7 +710,7 @@ U_CAPI UChar* U_EXPORT2 u_uastrncpy(UChar* dst U_LIFETIME_BOUND, const char* src
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI char* U_EXPORT2 u_austrcpy(char* dst U_LIFETIME_BOUND, const UChar* src);
+U_CAPI అక్షరం* U_EXPORT2 u_austrcpy(అక్షరం* dst U_LIFETIME_BOUND, స్థిరరాశి UChar* src);
 
 /**
  * Copy ustring to a byte string encoded in the default codepage.
@@ -724,9 +724,9 @@ U_CAPI char* U_EXPORT2 u_austrcpy(char* dst U_LIFETIME_BOUND, const UChar* src);
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI char* U_EXPORT2 u_austrncpy(char* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
+U_CAPI అక్షరం* U_EXPORT2 u_austrncpy(అక్షరం* dst U_LIFETIME_BOUND, స్థిరరాశి UChar* src, int32_t n);
 
-#endif
+#అయితే_ముగింపు
 
 /**
  * Synonym for memcpy(), but with UChars only.
@@ -737,7 +737,7 @@ U_CAPI char* U_EXPORT2 u_austrncpy(char* dst U_LIFETIME_BOUND, const UChar* src,
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_memcpy(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
+u_memcpy(UChar* dest U_LIFETIME_BOUND, స్థిరరాశి UChar* src, int32_t లెక్క);
 
 /**
  * Synonym for memmove(), but with UChars only.
@@ -748,7 +748,7 @@ u_memcpy(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_memmove(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
+u_memmove(UChar* dest U_LIFETIME_BOUND, స్థిరరాశి UChar* src, int32_t లెక్క);
 
 /**
  * Initialize <code>count</code> characters of <code>dest</code> to <code>c</code>.
@@ -760,7 +760,7 @@ u_memmove(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_memset(UChar* dest U_LIFETIME_BOUND, UChar c, int32_t count);
+u_memset(UChar* dest U_LIFETIME_BOUND, UChar c, int32_t లెక్క);
 
 /**
  * Compare the first <code>count</code> UChars of each buffer.
@@ -774,7 +774,7 @@ u_memset(UChar* dest U_LIFETIME_BOUND, UChar c, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_memcmp(const UChar *buf1, const UChar *buf2, int32_t count);
+u_memcmp(స్థిరరాశి UChar *buf1, స్థిరరాశి UChar *buf2, int32_t లెక్క);
 
 /**
  * Compare two Unicode strings in code point order.
@@ -790,7 +790,7 @@ u_memcmp(const UChar *buf1, const UChar *buf2, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_memcmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t count);
+u_memcmp_సంకేతం_బిందువు_క్రమం(స్థిరరాశి UChar *s1, స్థిరరాశి UChar *s2, int32_t లెక్క);
 
 /**
  * Find the first occurrence of a BMP code point in a string.
@@ -810,7 +810,7 @@ u_memcmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t count);
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_memchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
+u_memchr(స్థిరరాశి UChar* s U_LIFETIME_BOUND, UChar c, int32_t లెక్క);
 
 /**
  * Find the first occurrence of a code point in a string.
@@ -830,7 +830,7 @@ u_memchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_memchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
+u_memchr32(స్థిరరాశి UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t లెక్క);
 
 /**
  * Find the last occurrence of a BMP code point in a string.
@@ -850,7 +850,7 @@ u_memchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_memrchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
+u_memrchr(స్థిరరాశి UChar* s U_LIFETIME_BOUND, UChar c, int32_t లెక్క);
 
 /**
  * Find the last occurrence of a code point in a string.
@@ -870,7 +870,7 @@ u_memrchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
+u_memrchr32(స్థిరరాశి UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t లెక్క);
 
 /**
  * Unicode String literals in C.
@@ -919,19 +919,19 @@ u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  *
  * @stable ICU 2.0
  */
-#if defined(U_DECLARE_UTF16)
-#   define U_STRING_DECL(var, cs, length) static const UChar *var=(const UChar *)U_DECLARE_UTF16(cs)
+#ఒకవేళ defined(U_DECLARE_UTF16)
+#   define U_STRING_DECL(var, cs, నిడివి) స్థిర స్థిరరాశి UChar *var=(స్థిరరాశి UChar *)U_DECLARE_UTF16(cs)
     /**@stable ICU 2.0 */
-#   define U_STRING_INIT(var, cs, length)
-#elif U_SIZEOF_WCHAR_T==U_SIZEOF_UCHAR && (U_CHARSET_FAMILY==U_ASCII_FAMILY || defined(U_WCHAR_IS_UTF16))
-#   define U_STRING_DECL(var, cs, length) static const UChar var[(length)+1]=L ## cs
+#   define U_STRING_INIT(var, cs, నిడివి)
+#లేదావేళ U_SIZEOF_WCHAR_T==U_SIZEOF_UCHAR && (U_CHARSET_FAMILY==U_ASCII_FAMILY || defined(U_WCHAR_IS_UTF16))
+#   define U_STRING_DECL(var, cs, నిడివి) స్థిర స్థిరరాశి UChar var[(నిడివి)+1]=L ## cs
     /**@stable ICU 2.0 */
-#   define U_STRING_INIT(var, cs, length)
-#else
-#   define U_STRING_DECL(var, cs, length) static UChar var[(length)+1]
+#   define U_STRING_INIT(var, cs, నిడివి)
+#లేకపోతే
+#   define U_STRING_DECL(var, cs, నిడివి) స్థిర UChar var[(నిడివి)+1]
     /**@stable ICU 2.0 */
-#   define U_STRING_INIT(var, cs, length) u_charsToUChars(cs, var, length+1)
-#endif
+#   define U_STRING_INIT(var, cs, నిడివి) u_chars_గమ్యం_UChars(cs, var, నిడివి+1)
+#అయితే_ముగింపు
 
 /**
  * Unescape a string of characters and write the resulting
@@ -981,8 +981,8 @@ u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_unescape(const char *src,
-           UChar *dest, int32_t destCapacity);
+u_unescape(స్థిరరాశి అక్షరం *src,
+           UChar *dest, int32_t dest_సామర్థ్యం);
 
 U_CDECL_BEGIN
 /**
@@ -997,8 +997,8 @@ U_CDECL_BEGIN
  * @see u_unescapeAt
  * @stable ICU 2.0
  */
-typedef UChar (U_CALLCONV *UNESCAPE_CHAR_AT)(int32_t offset, void *context);
-U_CDECL_END
+రకనిర్వచనం UChar (U_CALLCONV *UNESCAPE_CHAR_AT)(int32_t స్థానభ్రంశం, శూన్య *context);
+U_CDECL_చివర
 
 /**
  * Unescape a single sequence. The character at offset-1 is assumed
@@ -1030,9 +1030,9 @@ U_CDECL_END
  */
 U_CAPI UChar32 U_EXPORT2
 u_unescapeAt(UNESCAPE_CHAR_AT charAt,
-             int32_t *offset,
-             int32_t length,
-             void *context);
+             int32_t *స్థానభ్రంశం,
+             int32_t నిడివి,
+             శూన్య *context);
 
 /**
  * Uppercase the characters in a string.
@@ -1055,10 +1055,10 @@ u_unescapeAt(UNESCAPE_CHAR_AT charAt,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strToUpper(UChar *dest, int32_t destCapacity,
-             const UChar *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode);
+u_str_గమ్యం_పై(UChar *dest, int32_t dest_సామర్థ్యం,
+             స్థిరరాశి UChar *src, int32_t src_నిడివి,
+             స్థిరరాశి అక్షరం *locale,
+             UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Lowercase the characters in a string.
@@ -1081,12 +1081,12 @@ u_strToUpper(UChar *dest, int32_t destCapacity,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strToLower(UChar *dest, int32_t destCapacity,
-             const UChar *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode);
+u_str_గమ్యం_క్రింది(UChar *dest, int32_t dest_సామర్థ్యం,
+             స్థిరరాశి UChar *src, int32_t src_నిడివి,
+             స్థిరరాశి అక్షరం *locale,
+             UError_సంకేతం *p_Error_సంకేతం);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Titlecase a string.
@@ -1127,13 +1127,13 @@ u_strToLower(UChar *dest, int32_t destCapacity,
  * @stable ICU 2.1
  */
 U_CAPI int32_t U_EXPORT2
-u_strToTitle(UChar *dest, int32_t destCapacity,
-             const UChar *src, int32_t srcLength,
+u_str_గమ్యం_Title(UChar *dest, int32_t dest_సామర్థ్యం,
+             స్థిరరాశి UChar *src, int32_t src_నిడివి,
              UBreakIterator *titleIter,
-             const char *locale,
-             UErrorCode *pErrorCode);
+             స్థిరరాశి అక్షరం *locale,
+             UError_సంకేతం *p_Error_సంకేతం);
 
-#endif
+#అయితే_ముగింపు
 
 /**
  * Case-folds the characters in a string.
@@ -1160,12 +1160,12 @@ u_strToTitle(UChar *dest, int32_t destCapacity,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_strFoldCase(UChar *dest, int32_t destCapacity,
-              const UChar *src, int32_t srcLength,
+u_strFoldCase(UChar *dest, int32_t dest_సామర్థ్యం,
+              స్థిరరాశి UChar *src, int32_t src_నిడివి,
               uint32_t options,
-              UErrorCode *pErrorCode);
+              UError_సంకేతం *p_Error_సంకేతం);
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#ఒకవేళ defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 /**
  * Convert a UTF-16 string to a wchar_t string.
  * If it is known at compile time that wchar_t strings are in UTF-16 or UTF-32, then
@@ -1189,12 +1189,12 @@ u_strFoldCase(UChar *dest, int32_t destCapacity,
  * @stable ICU 2.0
  */
 U_CAPI wchar_t* U_EXPORT2
-u_strToWCS(wchar_t* dest U_LIFETIME_BOUND,
-           int32_t destCapacity,
-           int32_t* pDestLength,
-           const UChar* src,
-           int32_t srcLength,
-           UErrorCode* pErrorCode);
+u_str_గమ్యం_WCS(wchar_t* dest U_LIFETIME_BOUND,
+           int32_t dest_సామర్థ్యం,
+           int32_t* p_Dest_నిడివి,
+           స్థిరరాశి UChar* src,
+           int32_t src_నిడివి,
+           UError_సంకేతం* p_Error_సంకేతం);
 /**
  * Convert a wchar_t string to UTF-16.
  * If it is known at compile time that wchar_t strings are in UTF-16 or UTF-32, then
@@ -1219,12 +1219,12 @@ u_strToWCS(wchar_t* dest U_LIFETIME_BOUND,
  */
 U_CAPI UChar* U_EXPORT2
 u_strFromWCS(UChar* dest U_LIFETIME_BOUND,
-             int32_t destCapacity,
-             int32_t* pDestLength,
-             const wchar_t* src,
-             int32_t srcLength,
-             UErrorCode* pErrorCode);
-#endif /* defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION */
+             int32_t dest_సామర్థ్యం,
+             int32_t* p_Dest_నిడివి,
+             స్థిరరాశి wchar_t* src,
+             int32_t src_నిడివి,
+             UError_సంకేతం* p_Error_సంకేతం);
+#అయితే_ముగింపు /* defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION */
 
 /**
  * Convert a UTF-16 string to UTF-8.
@@ -1248,13 +1248,13 @@ u_strFromWCS(UChar* dest U_LIFETIME_BOUND,
  * @see u_strToUTF8WithSub
  * @see u_strFromUTF8
  */
-U_CAPI char* U_EXPORT2
-u_strToUTF8(char* dest U_LIFETIME_BOUND,
-            int32_t destCapacity,
-            int32_t* pDestLength,
-            const UChar* src,
-            int32_t srcLength,
-            UErrorCode* pErrorCode);
+U_CAPI అక్షరం* U_EXPORT2
+u_str_గమ్యం_UTF8(అక్షరం* dest U_LIFETIME_BOUND,
+            int32_t dest_సామర్థ్యం,
+            int32_t* p_Dest_నిడివి,
+            స్థిరరాశి UChar* src,
+            int32_t src_నిడివి,
+            UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a UTF-8 string to UTF-16.
@@ -1280,11 +1280,11 @@ u_strToUTF8(char* dest U_LIFETIME_BOUND,
  */
 U_CAPI UChar* U_EXPORT2
 u_strFromUTF8(UChar* dest U_LIFETIME_BOUND,
-              int32_t destCapacity,
-              int32_t* pDestLength,
-              const char* src,
-              int32_t srcLength,
-              UErrorCode* pErrorCode);
+              int32_t dest_సామర్థ్యం,
+              int32_t* p_Dest_నిడివి,
+              స్థిరరాశి అక్షరం* src,
+              int32_t src_నిడివి,
+              UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a UTF-16 string to UTF-8.
@@ -1321,15 +1321,15 @@ u_strFromUTF8(UChar* dest U_LIFETIME_BOUND,
  * @see u_strFromUTF8WithSub
  * @stable ICU 3.6
  */
-U_CAPI char* U_EXPORT2
-u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
-                   int32_t destCapacity,
-                   int32_t* pDestLength,
-                   const UChar* src,
-                   int32_t srcLength,
+U_CAPI అక్షరం* U_EXPORT2
+u_str_గమ్యం_UTF8_With_Sub(అక్షరం* dest U_LIFETIME_BOUND,
+                   int32_t dest_సామర్థ్యం,
+                   int32_t* p_Dest_నిడివి,
+                   స్థిరరాశి UChar* src,
+                   int32_t src_నిడివి,
                    UChar32 subchar,
-                   int32_t* pNumSubstitutions,
-                   UErrorCode* pErrorCode);
+                   int32_t* p_అంకె_Substitutions,
+                   UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a UTF-8 string to UTF-16.
@@ -1369,13 +1369,13 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
  */
 U_CAPI UChar* U_EXPORT2
 u_strFromUTF8WithSub(UChar* dest U_LIFETIME_BOUND,
-                     int32_t destCapacity,
-                     int32_t* pDestLength,
-                     const char* src,
-                     int32_t srcLength,
+                     int32_t dest_సామర్థ్యం,
+                     int32_t* p_Dest_నిడివి,
+                     స్థిరరాశి అక్షరం* src,
+                     int32_t src_నిడివి,
                      UChar32 subchar,
-                     int32_t* pNumSubstitutions,
-                     UErrorCode* pErrorCode);
+                     int32_t* p_అంకె_Substitutions,
+                     UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a UTF-8 string to UTF-16.
@@ -1430,11 +1430,11 @@ u_strFromUTF8WithSub(UChar* dest U_LIFETIME_BOUND,
  */
 U_CAPI UChar* U_EXPORT2
 u_strFromUTF8Lenient(UChar* dest U_LIFETIME_BOUND,
-                     int32_t destCapacity,
-                     int32_t* pDestLength,
-                     const char* src,
-                     int32_t srcLength,
-                     UErrorCode* pErrorCode);
+                     int32_t dest_సామర్థ్యం,
+                     int32_t* p_Dest_నిడివి,
+                     స్థిరరాశి అక్షరం* src,
+                     int32_t src_నిడివి,
+                     UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a UTF-16 string to UTF-32.
@@ -1459,12 +1459,12 @@ u_strFromUTF8Lenient(UChar* dest U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI UChar32* U_EXPORT2
-u_strToUTF32(UChar32* dest U_LIFETIME_BOUND,
-             int32_t destCapacity,
-             int32_t* pDestLength,
-             const UChar* src,
-             int32_t srcLength,
-             UErrorCode* pErrorCode);
+u_str_గమ్యం_UTF32(UChar32* dest U_LIFETIME_BOUND,
+             int32_t dest_సామర్థ్యం,
+             int32_t* p_Dest_నిడివి,
+             స్థిరరాశి UChar* src,
+             int32_t src_నిడివి,
+             UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a UTF-32 string to UTF-16.
@@ -1490,11 +1490,11 @@ u_strToUTF32(UChar32* dest U_LIFETIME_BOUND,
  */
 U_CAPI UChar* U_EXPORT2
 u_strFromUTF32(UChar* dest U_LIFETIME_BOUND,
-               int32_t destCapacity,
-               int32_t* pDestLength,
-               const UChar32* src,
-               int32_t srcLength,
-               UErrorCode* pErrorCode);
+               int32_t dest_సామర్థ్యం,
+               int32_t* p_Dest_నిడివి,
+               స్థిరరాశి UChar32* src,
+               int32_t src_నిడివి,
+               UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a UTF-16 string to UTF-32.
@@ -1532,14 +1532,14 @@ u_strFromUTF32(UChar* dest U_LIFETIME_BOUND,
  * @stable ICU 4.2
  */
 U_CAPI UChar32* U_EXPORT2
-u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
-                    int32_t destCapacity,
-                    int32_t* pDestLength,
-                    const UChar* src,
-                    int32_t srcLength,
+u_str_గమ్యం_UTF32_With_Sub(UChar32* dest U_LIFETIME_BOUND,
+                    int32_t dest_సామర్థ్యం,
+                    int32_t* p_Dest_నిడివి,
+                    స్థిరరాశి UChar* src,
+                    int32_t src_నిడివి,
                     UChar32 subchar,
-                    int32_t* pNumSubstitutions,
-                    UErrorCode* pErrorCode);
+                    int32_t* p_అంకె_Substitutions,
+                    UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a UTF-32 string to UTF-16.
@@ -1578,13 +1578,13 @@ u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
  */
 U_CAPI UChar* U_EXPORT2
 u_strFromUTF32WithSub(UChar* dest U_LIFETIME_BOUND,
-                      int32_t destCapacity,
-                      int32_t* pDestLength,
-                      const UChar32* src,
-                      int32_t srcLength,
+                      int32_t dest_సామర్థ్యం,
+                      int32_t* p_Dest_నిడివి,
+                      స్థిరరాశి UChar32* src,
+                      int32_t src_నిడివి,
                       UChar32 subchar,
-                      int32_t* pNumSubstitutions,
-                      UErrorCode* pErrorCode);
+                      int32_t* p_అంకె_Substitutions,
+                      UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a 16-bit Unicode string to Java Modified UTF-8.
@@ -1618,13 +1618,13 @@ u_strFromUTF32WithSub(UChar* dest U_LIFETIME_BOUND,
  * @see u_strToUTF8WithSub
  * @see u_strFromJavaModifiedUTF8WithSub
  */
-U_CAPI char* U_EXPORT2
-u_strToJavaModifiedUTF8(char* dest U_LIFETIME_BOUND,
-                        int32_t destCapacity,
-                        int32_t* pDestLength,
-                        const UChar* src,
-                        int32_t srcLength,
-                        UErrorCode* pErrorCode);
+U_CAPI అక్షరం* U_EXPORT2
+u_str_గమ్యం_Java_Modified_UTF8(అక్షరం* dest U_LIFETIME_BOUND,
+                        int32_t dest_సామర్థ్యం,
+                        int32_t* p_Dest_నిడివి,
+                        స్థిరరాశి UChar* src,
+                        int32_t src_నిడివి,
+                        UError_సంకేతం* p_Error_సంకేతం);
 
 /**
  * Convert a Java Modified UTF-8 string to a 16-bit Unicode string.
@@ -1669,12 +1669,12 @@ u_strToJavaModifiedUTF8(char* dest U_LIFETIME_BOUND,
  */
 U_CAPI UChar* U_EXPORT2
 u_strFromJavaModifiedUTF8WithSub(UChar* dest U_LIFETIME_BOUND,
-                                 int32_t destCapacity,
-                                 int32_t* pDestLength,
-                                 const char* src,
-                                 int32_t srcLength,
+                                 int32_t dest_సామర్థ్యం,
+                                 int32_t* p_Dest_నిడివి,
+                                 స్థిరరాశి అక్షరం* src,
+                                 int32_t src_నిడివి,
                                  UChar32 subchar,
-                                 int32_t* pNumSubstitutions,
-                                 UErrorCode* pErrorCode);
+                                 int32_t* p_అంకె_Substitutions,
+                                 UError_సంకేతం* p_Error_సంకేతం);
 
-#endif
+#అయితే_ముగింపు

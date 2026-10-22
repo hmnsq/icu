@@ -26,216 +26,216 @@
  * stores all encodings a codepoint can map to
  */
 
-#include "unicode/ucnvsel.h"
+#అన్తర్భావ "unicode/ucnvsel.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "unicode/uchar.h"
-#include "unicode/uniset.h"
-#include "unicode/ucnv.h"
-#include "unicode/ustring.h"
-#include "unicode/uchriter.h"
-#include "utrie2.h"
-#include "propsvec.h"
-#include "uassert.h"
-#include "ucmndata.h"
-#include "udataswp.h"
-#include "uenumimp.h"
-#include "cmemory.h"
-#include "cstring.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/uchriter.h"
+#అన్తర్భావ "utrie2.h"
+#అన్తర్భావ "propsvec.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucmndata.h"
+#అన్తర్భావ "udataswp.h"
+#అన్తర్భావ "uenumimp.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
 
 U_NAMESPACE_USE
 
-struct UConverterSelector {
+నిర్మాణం UConverterSelector {
   UTrie2 *trie;              // 16 bit trie containing offsets into pv
   uint32_t* pv;              // table of bits!
-  int32_t pvCount;
-  char** encodings;          // which encodings did user ask to use?
-  int32_t encodingsCount;
-  int32_t encodingStrLength;
+  int32_t pv_లెక్క;
+  అక్షరం** encodings;          // which encodings did user ask to use?
+  int32_t encodings_లెక్క;
+  int32_t encoding_Str_నిడివి;
   uint8_t* swapped;
-  UBool ownPv, ownEncodingStrings;
+  UBool ownPv, own_Encoding_అక్షరశ్రేణులు;
 };
 
-static void generateSelectorData(UConverterSelector* result,
+స్థిర శూన్య generate_Selector_దత్తాంశం(UConverterSelector* ఫలితం,
                                  UPropsVectors *upvec,
-                                 const USet* excludedCodePoints,
-                                 const UConverterUnicodeSet whichSet,
-                                 UErrorCode* status) {
-  if (U_FAILURE(*status)) {
-    return;
+                                 స్థిరరాశి USet* excluded_సంకేతం_Points,
+                                 స్థిరరాశి UConverter_Unicode_సమితి which_సమితి,
+                                 UError_సంకేతం* స్థితి_2) {
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి;
   }
 
-  int32_t columns = (result->encodingsCount+31)/32;
+  int32_t columns = (ఫలితం->encodings_లెక్క+31)/32;
 
   // set errorValue to all-ones
-  for (int32_t col = 0; col < columns; col++) {
-    upvec_setValue(upvec, UPVEC_ERROR_VALUE_CP, UPVEC_ERROR_VALUE_CP,
-                   col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0), status);
+  కొరకు (int32_t నిలువు = 0; నిలువు < columns; నిలువు++) {
+    upvec_సమితి_విలువ(upvec, UPVEC_ERROR_విలువ_CP, UPVEC_ERROR_విలువ_CP,
+                   నిలువు, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0), స్థితి_2);
   }
 
-  for (int32_t i = 0; i < result->encodingsCount; ++i) {
+  కొరకు (int32_t i = 0; i < ఫలితం->encodings_లెక్క; ++i) {
     uint32_t mask;
-    uint32_t column;
-    int32_t item_count;
+    uint32_t స్తంభం;
+    int32_t అంశం_లెక్క;
     int32_t j;
-    UConverter* test_converter = ucnv_open(result->encodings[i], status);
-    if (U_FAILURE(*status)) {
-      return;
+    UConverter* test_converter = ucnv_open(ఫలితం->encodings[i], స్థితి_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+      తిరిగి;
     }
-    USet* unicode_point_set;
-    unicode_point_set = uset_open(1, 0);  // empty set
+    USet* unicode_బిందువు_సమితి;
+    unicode_బిందువు_సమితి = uset_open(1, 0);  // empty set
 
-    ucnv_getUnicodeSet(test_converter, unicode_point_set,
-                       whichSet, status);
-    if (U_FAILURE(*status)) {
+    ucnv_get_Unicode_సమితి(test_converter, unicode_బిందువు_సమితి,
+                       which_సమితి, స్థితి_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
       ucnv_close(test_converter);
-      return;
+      తిరిగి;
     }
 
-    column = i / 32;
+    స్తంభం = i / 32;
     mask = 1 << (i%32);
     // now iterate over intervals on set i!
-    item_count = uset_getItemCount(unicode_point_set);
+    అంశం_లెక్క = uset_get_అంశం_లెక్క(unicode_బిందువు_సమితి);
 
-    for (j = 0; j < item_count; ++j) {
-      UChar32 start_char;
-      UChar32 end_char;
-      UErrorCode smallStatus = U_ZERO_ERROR;
-      uset_getItem(unicode_point_set, j, &start_char, &end_char, nullptr, 0,
-                   &smallStatus);
-      if (U_FAILURE(smallStatus)) {
+    కొరకు (j = 0; j < అంశం_లెక్క; ++j) {
+      UChar32 ప్రారంభం_char;
+      UChar32 చివర_char;
+      UError_సంకేతం small_స్థితి = U_ZERO_ERROR;
+      uset_get_అంశం(unicode_బిందువు_సమితి, j, &ప్రారంభం_char, &చివర_char, శూన్యసూచిక, 0,
+                   &small_స్థితి);
+      ఒకవేళ (U_FAILURE(small_స్థితి)) {
         // this will be reached for the converters that fill the set with
         // strings. Those should be ignored by our system
-      } else {
-        upvec_setValue(upvec, start_char, end_char, column, static_cast<uint32_t>(~0), mask,
-                       status);
+      } లేకపోతే {
+        upvec_సమితి_విలువ(upvec, ప్రారంభం_char, చివర_char, స్తంభం, static_cast<uint32_t>(~0), mask,
+                       స్థితి_2);
       }
     }
     ucnv_close(test_converter);
-    uset_close(unicode_point_set);
-    if (U_FAILURE(*status)) {
-      return;
+    uset_close(unicode_బిందువు_సమితి);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+      తిరిగి;
     }
   }
 
   // handle excluded encodings! Simply set their values to all 1's in the upvec
-  if (excludedCodePoints) {
-    int32_t item_count = uset_getItemCount(excludedCodePoints);
-    for (int32_t j = 0; j < item_count; ++j) {
-      UChar32 start_char;
-      UChar32 end_char;
+  ఒకవేళ (excluded_సంకేతం_Points) {
+    int32_t అంశం_లెక్క = uset_get_అంశం_లెక్క(excluded_సంకేతం_Points);
+    కొరకు (int32_t j = 0; j < అంశం_లెక్క; ++j) {
+      UChar32 ప్రారంభం_char;
+      UChar32 చివర_char;
 
-      uset_getItem(excludedCodePoints, j, &start_char, &end_char, nullptr, 0,
-                   status);
-      for (int32_t col = 0; col < columns; col++) {
-        upvec_setValue(upvec, start_char, end_char, col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0),
-                      status);
+      uset_get_అంశం(excluded_సంకేతం_Points, j, &ప్రారంభం_char, &చివర_char, శూన్యసూచిక, 0,
+                   స్థితి_2);
+      కొరకు (int32_t నిలువు = 0; నిలువు < columns; నిలువు++) {
+        upvec_సమితి_విలువ(upvec, ప్రారంభం_char, చివర_char, నిలువు, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0),
+                      స్థితి_2);
       }
     }
   }
 
   // alright. Now, let's put things in the same exact form you'd get when you
   // unserialize things.
-  result->trie = upvec_compactToUTrie2WithRowIndexes(upvec, status);
-  result->pv = upvec_cloneArray(upvec, &result->pvCount, nullptr, status);
-  result->pvCount *= columns;  // number of uint32_t = rows * columns
-  result->ownPv = true;
+  ఫలితం->trie = upvec_compact_గమ్యం_UTrie2_With_అడ్డువరుస_Indexes(upvec, స్థితి_2);
+  ఫలితం->pv = upvec_cloneArray(upvec, &ఫలితం->pv_లెక్క, శూన్యసూచిక, స్థితి_2);
+  ఫలితం->pv_లెక్క *= columns;  // number of uint32_t = rows * columns
+  ఫలితం->ownPv = నిజం;
 }
 
 /* open a selector. If converterListSize is 0, build for all converters.
    If excludedCodePoints is nullptr, don't exclude any codepoints */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
-             const USet* excludedCodePoints,
-             const UConverterUnicodeSet whichSet, UErrorCode* status) {
+ucnvsel_open(స్థిరరాశి అక్షరం* స్థిరరాశి*  converterList, int32_t converter_List_కొలత,
+             స్థిరరాశి USet* excluded_సంకేతం_Points,
+             స్థిరరాశి UConverter_Unicode_సమితి which_సమితి, UError_సంకేతం* స్థితి_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
   // ensure args make sense!
-  if (converterListSize < 0 || (converterList == nullptr && converterListSize != 0)) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  ఒకవేళ (converter_List_కొలత < 0 || (converterList == శూన్యసూచిక && converter_List_కొలత != 0)) {
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
 
   // allocate a new converter
-  LocalUConverterSelectorPointer newSelector(
-    (UConverterSelector*)uprv_malloc(sizeof(UConverterSelector)));
-  if (newSelector.isNull()) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  Local_UConverter_Selector_సూచిక newSelector(
+    (UConverterSelector*)uprv_malloc(పరిమాణం(UConverterSelector)));
+  ఒకవేళ (newSelector.isNull()) {
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  uprv_memset(newSelector.getAlias(), 0, sizeof(UConverterSelector));
+  uprv_memset(newSelector.getAlias(), 0, పరిమాణం(UConverterSelector));
 
-  if (converterListSize == 0) {
-    converterList = nullptr;
-    converterListSize = ucnv_countAvailable();
+  ఒకవేళ (converter_List_కొలత == 0) {
+    converterList = శూన్యసూచిక;
+    converter_List_కొలత = ucnv_లెక్క_అందుబాటు();
   }
   newSelector->encodings =
-    (char**)uprv_malloc(converterListSize * sizeof(char*));
-  if (!newSelector->encodings) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    (అక్షరం**)uprv_malloc(converter_List_కొలత * పరిమాణం(అక్షరం*));
+  ఒకవేళ (!newSelector->encodings) {
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  newSelector->encodings[0] = nullptr;  // now we can call ucnvsel_close()
+  newSelector->encodings[0] = శూన్యసూచిక;  // now we can call ucnvsel_close()
 
   // make a backup copy of the list of converters
-  int32_t totalSize = 0;
+  int32_t మొత్తం_కొలత = 0;
   int32_t i;
-  for (i = 0; i < converterListSize; i++) {
-    totalSize +=
-      (int32_t)uprv_strlen(converterList != nullptr ? converterList[i] : ucnv_getAvailableName(i)) + 1;
+  కొరకు (i = 0; i < converter_List_కొలత; i++) {
+    మొత్తం_కొలత +=
+      (int32_t)uprv_strlen(converterList != శూన్యసూచిక ? converterList[i] : ucnv_get_అందుబాటు_Name(i)) + 1;
   }
   // 4-align the totalSize to 4-align the size of the serialized form
-  int32_t encodingStrPadding = totalSize & 3;
-  if (encodingStrPadding != 0) {
+  int32_t encodingStrPadding = మొత్తం_కొలత & 3;
+  ఒకవేళ (encodingStrPadding != 0) {
     encodingStrPadding = 4 - encodingStrPadding;
   }
-  newSelector->encodingStrLength = totalSize += encodingStrPadding;
-  char* allStrings = (char*) uprv_malloc(totalSize);
-  if (!allStrings) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  newSelector->encoding_Str_నిడివి = మొత్తం_కొలత += encodingStrPadding;
+  అక్షరం* all_అక్షరశ్రేణులు = (అక్షరం*) uprv_malloc(మొత్తం_కొలత);
+  ఒకవేళ (!all_అక్షరశ్రేణులు) {
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
 
-  for (i = 0; i < converterListSize; i++) {
-    newSelector->encodings[i] = allStrings;
+  కొరకు (i = 0; i < converter_List_కొలత; i++) {
+    newSelector->encodings[i] = all_అక్షరశ్రేణులు;
     uprv_strcpy(newSelector->encodings[i],
-                converterList != nullptr ? converterList[i] : ucnv_getAvailableName(i));
-    allStrings += uprv_strlen(newSelector->encodings[i]) + 1;
+                converterList != శూన్యసూచిక ? converterList[i] : ucnv_get_అందుబాటు_Name(i));
+    all_అక్షరశ్రేణులు += uprv_strlen(newSelector->encodings[i]) + 1;
   }
-  while (encodingStrPadding > 0) {
-    *allStrings++ = 0;
+  అయితే (encodingStrPadding > 0) {
+    *all_అక్షరశ్రేణులు++ = 0;
     --encodingStrPadding;
   }
 
-  newSelector->ownEncodingStrings = true;
-  newSelector->encodingsCount = converterListSize;
-  UPropsVectors *upvec = upvec_open((converterListSize+31)/32, status);
-  generateSelectorData(newSelector.getAlias(), upvec, excludedCodePoints, whichSet, status);
+  newSelector->own_Encoding_అక్షరశ్రేణులు = నిజం;
+  newSelector->encodings_లెక్క = converter_List_కొలత;
+  UPropsVectors *upvec = upvec_open((converter_List_కొలత+31)/32, స్థితి_2);
+  generate_Selector_దత్తాంశం(newSelector.getAlias(), upvec, excluded_సంకేతం_Points, which_సమితి, స్థితి_2);
   upvec_close(upvec);
 
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
 
-  return newSelector.orphan();
+  తిరిగి newSelector.orphan();
 }
 
 /* close opened selector */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 ucnvsel_close(UConverterSelector *sel) {
-  if (!sel) {
-    return;
+  ఒకవేళ (!sel) {
+    తిరిగి;
   }
-  if (sel->ownEncodingStrings) {
+  ఒకవేళ (sel->own_Encoding_అక్షరశ్రేణులు) {
     uprv_free(sel->encodings[0]);
   }
   uprv_free(sel->encodings);
-  if (sel->ownPv) {
+  ఒకవేళ (sel->ownPv) {
     uprv_free(sel->pv);
   }
   utrie2_close(sel->trie);
@@ -243,8 +243,8 @@ ucnvsel_close(UConverterSelector *sel) {
   uprv_free(sel);
 }
 
-static const UDataInfo dataInfo = {
-  sizeof(UDataInfo),
+స్థిర స్థిరరాశి UDataInfo దత్తాంశం_Info = {
+  పరిమాణం(UDataInfo),
   0,
 
   U_IS_BIG_ENDIAN,
@@ -257,13 +257,13 @@ static const UDataInfo dataInfo = {
   { 0, 0, 0, 0 }                /* dataVersion */
 };
 
-enum {
-  UCNVSEL_INDEX_TRIE_SIZE,      // trie size in bytes
-  UCNVSEL_INDEX_PV_COUNT,       // number of uint32_t in the bit vectors
-  UCNVSEL_INDEX_NAMES_COUNT,    // number of encoding names
-  UCNVSEL_INDEX_NAMES_LENGTH,   // number of encoding name bytes including padding
-  UCNVSEL_INDEX_SIZE = 15,      // bytes following the DataHeader
-  UCNVSEL_INDEX_COUNT = 16
+గణన {
+  UCNVSEL_సూచీ_TRIE_కొలత,      // trie size in bytes
+  UCNVSEL_సూచీ_PV_లెక్క,       // number of uint32_t in the bit vectors
+  UCNVSEL_సూచీ_పేర్లు_లెక్క,    // number of encoding names
+  UCNVSEL_సూచీ_పేర్లు_నిడివి,   // number of encoding name bytes including padding
+  UCNVSEL_సూచీ_కొలత = 15,      // bytes following the DataHeader
+  UCNVSEL_సూచీ_లెక్క = 16
 };
 
 /*
@@ -280,73 +280,73 @@ enum {
 
 /* serialize a selector */
 U_CAPI int32_t U_EXPORT2
-ucnvsel_serialize(const UConverterSelector* sel,
-                  void* buffer, int32_t bufferCapacity, UErrorCode* status) {
+ucnvsel_serialize(స్థిరరాశి UConverterSelector* sel,
+                  శూన్య* బఫరు, int32_t బఫరు_సామర్థ్యం, UError_సంకేతం* స్థితి_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return 0;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి 0;
   }
   // ensure args make sense!
-  uint8_t *p = (uint8_t *)buffer;
-  if (bufferCapacity < 0 ||
-      (bufferCapacity > 0 && (p == nullptr || (U_POINTER_MASK_LSB(p, 3) != 0)))
+  uint8_t *p = (uint8_t *)బఫరు;
+  ఒకవేళ (బఫరు_సామర్థ్యం < 0 ||
+      (బఫరు_సామర్థ్యం > 0 && (p == శూన్యసూచిక || (U_సూచిక_ముసుగు_LSB(p, 3) != 0)))
   ) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి 0;
   }
   // add up the size of the serialized form
-  int32_t serializedTrieSize = utrie2_serialize(sel->trie, nullptr, 0, status);
-  if (*status != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(*status)) {
-    return 0;
+  int32_t serialized_Trie_కొలత = utrie2_serialize(sel->trie, శూన్యసూచిక, 0, స్థితి_2);
+  ఒకవేళ (*స్థితి_2 != U_బఫరు_అధికప్రవాహం_ERROR && U_FAILURE(*స్థితి_2)) {
+    తిరిగి 0;
   }
-  *status = U_ZERO_ERROR;
+  *స్థితి_2 = U_ZERO_ERROR;
 
-  DataHeader header;
-  uprv_memset(&header, 0, sizeof(header));
-  header.dataHeader.headerSize = (uint16_t)((sizeof(header) + 15) & ~15);
-  header.dataHeader.magic1 = 0xda;
-  header.dataHeader.magic2 = 0x27;
-  uprv_memcpy(&header.info, &dataInfo, sizeof(dataInfo));
+  దత్తాంశం_శీర్షిక శీర్షిక;
+  uprv_memset(&శీర్షిక, 0, పరిమాణం(శీర్షిక));
+  శీర్షిక.దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత = (uint16_t)((పరిమాణం(శీర్షిక) + 15) & ~15);
+  శీర్షిక.దత్తాంశం_శీర్షిక_2.magic1 = 0xda;
+  శీర్షిక.దత్తాంశం_శీర్షిక_2.magic2 = 0x27;
+  uprv_memcpy(&శీర్షిక.info, &దత్తాంశం_Info, పరిమాణం(దత్తాంశం_Info));
 
-  int32_t indexes[UCNVSEL_INDEX_COUNT] = {
-    serializedTrieSize,
-    sel->pvCount,
-    sel->encodingsCount,
-    sel->encodingStrLength
+  int32_t indexes[UCNVSEL_సూచీ_లెక్క] = {
+    serialized_Trie_కొలత,
+    sel->pv_లెక్క,
+    sel->encodings_లెక్క,
+    sel->encoding_Str_నిడివి
   };
 
-  int32_t totalSize =
-    header.dataHeader.headerSize +
-    (int32_t)sizeof(indexes) +
-    serializedTrieSize +
-    sel->pvCount * 4 +
-    sel->encodingStrLength;
-  indexes[UCNVSEL_INDEX_SIZE] = totalSize - header.dataHeader.headerSize;
-  if (totalSize > bufferCapacity) {
-    *status = U_BUFFER_OVERFLOW_ERROR;
-    return totalSize;
+  int32_t మొత్తం_కొలత =
+    శీర్షిక.దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత +
+    (int32_t)పరిమాణం(indexes) +
+    serialized_Trie_కొలత +
+    sel->pv_లెక్క * 4 +
+    sel->encoding_Str_నిడివి;
+  indexes[UCNVSEL_సూచీ_కొలత] = మొత్తం_కొలత - శీర్షిక.దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత;
+  ఒకవేళ (మొత్తం_కొలత > బఫరు_సామర్థ్యం) {
+    *స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+    తిరిగి మొత్తం_కొలత;
   }
   // ok, save!
-  int32_t length = header.dataHeader.headerSize;
-  uprv_memcpy(p, &header, sizeof(header));
-  uprv_memset(p + sizeof(header), 0, length - sizeof(header));
+  int32_t length = శీర్షిక.దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత;
+  uprv_memcpy(p, &శీర్షిక, పరిమాణం(శీర్షిక));
+  uprv_memset(p + పరిమాణం(శీర్షిక), 0, length - పరిమాణం(శీర్షిక));
   p += length;
 
-  length = (int32_t)sizeof(indexes);
+  length = (int32_t)పరిమాణం(indexes);
   uprv_memcpy(p, indexes, length);
   p += length;
 
-  utrie2_serialize(sel->trie, p, serializedTrieSize, status);
-  p += serializedTrieSize;
+  utrie2_serialize(sel->trie, p, serialized_Trie_కొలత, స్థితి_2);
+  p += serialized_Trie_కొలత;
 
-  length = sel->pvCount * 4;
+  length = sel->pv_లెక్క * 4;
   uprv_memcpy(p, sel->pv, length);
   p += length;
 
-  uprv_memcpy(p, sel->encodings[0], sel->encodingStrLength);
-  p += sel->encodingStrLength;
+  uprv_memcpy(p, sel->encodings[0], sel->encoding_Str_నిడివి);
+  p += sel->encoding_Str_నిడివి;
 
-  return totalSize;
+  తిరిగి మొత్తం_కొలత;
 }
 
 /**
@@ -366,466 +366,466 @@ ucnvsel_serialize(const UConverterSelector* sel,
  * @return 0 on failure, number of bytes swapped on success
  *         number of bytes swapped can be smaller than length
  */
-static int32_t
-ucnvsel_swap(const UDataSwapper *ds,
-             const void *inData, int32_t length,
-             void *outData, UErrorCode *status) {
+స్థిర int32_t
+ucnvsel_మార్పిడి(స్థిరరాశి UDataSwapper *ds,
+             స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length,
+             శూన్య *బహిర్గతం_దత్తాంశం, UError_సంకేతం *స్థితి_2) {
   /* udata_swapDataHeader checks the arguments */
-  int32_t headerSize = udata_swapDataHeader(ds, inData, length, outData, status);
-  if(U_FAILURE(*status)) {
-    return 0;
+  int32_t శీర్షిక_కొలత = udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, స్థితి_2);
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+    తిరిగి 0;
   }
 
   /* check data format and format version */
-  const UDataInfo* pInfo = reinterpret_cast<const UDataInfo*>(static_cast<const char*>(inData) + 4);
-  if(!(
-    pInfo->dataFormat[0] == 0x43 &&  /* dataFormat="CSel" */
-    pInfo->dataFormat[1] == 0x53 &&
-    pInfo->dataFormat[2] == 0x65 &&
-    pInfo->dataFormat[3] == 0x6c
+  స్థిరరాశి UDataInfo* pInfo = reinterpret_cast<స్థిరరాశి UDataInfo*>(static_cast<స్థిరరాశి అక్షరం*>(లోపల_దత్తాంశం) + 4);
+  ఒకవేళ(!(
+    pInfo->దత్తాంశం_Format[0] == 0x43 &&  /* dataFormat="CSel" */
+    pInfo->దత్తాంశం_Format[1] == 0x53 &&
+    pInfo->దత్తాంశం_Format[2] == 0x65 &&
+    pInfo->దత్తాంశం_Format[3] == 0x6c
   )) {
     udata_printError(ds, "ucnvsel_swap(): data format %02x.%02x.%02x.%02x is not recognized as UConverterSelector data\n",
-                     pInfo->dataFormat[0], pInfo->dataFormat[1],
-                     pInfo->dataFormat[2], pInfo->dataFormat[3]);
-    *status = U_INVALID_FORMAT_ERROR;
-    return 0;
+                     pInfo->దత్తాంశం_Format[0], pInfo->దత్తాంశం_Format[1],
+                     pInfo->దత్తాంశం_Format[2], pInfo->దత్తాంశం_Format[3]);
+    *స్థితి_2 = U_INVALID_FORMAT_ERROR;
+    తిరిగి 0;
   }
-  if(pInfo->formatVersion[0] != 1) {
+  ఒకవేళ(pInfo->format_సంస్కరణ[0] != 1) {
     udata_printError(ds, "ucnvsel_swap(): format version %02x is not supported\n",
-                     pInfo->formatVersion[0]);
-    *status = U_UNSUPPORTED_ERROR;
-    return 0;
+                     pInfo->format_సంస్కరణ[0]);
+    *స్థితి_2 = U_UNSUPPORTED_ERROR;
+    తిరిగి 0;
   }
 
-  if(length >= 0) {
-    length -= headerSize;
-    if(length < 16*4) {
+  ఒకవేళ(length >= 0) {
+    length -= శీర్షిక_కొలత;
+    ఒకవేళ(length < 16*4) {
       udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for UConverterSelector data\n",
                        length);
-      *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return 0;
+      *స్థితి_2 = U_సూచీ_OUTOFBOUNDS_ERROR;
+      తిరిగి 0;
     }
   }
 
-  const uint8_t* inBytes = static_cast<const uint8_t*>(inData) + headerSize;
-  uint8_t* outBytes = static_cast<uint8_t*>(outData) + headerSize;
+  స్థిరరాశి uint8_t* లోపల_బైట్లు = static_cast<స్థిరరాశి uint8_t*>(లోపల_దత్తాంశం) + శీర్షిక_కొలత;
+  uint8_t* బహిర్గతం_బైట్లు = static_cast<uint8_t*>(బహిర్గతం_దత్తాంశం) + శీర్షిక_కొలత;
 
   /* read the indexes */
-  const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
+  స్థిరరాశి int32_t* లోపల_Indexes = reinterpret_cast<స్థిరరాశి int32_t*>(లోపల_బైట్లు);
   int32_t indexes[16];
   int32_t i;
-  for(i = 0; i < 16; ++i) {
-    indexes[i] = udata_readInt32(ds, inIndexes[i]);
+  కొరకు(i = 0; i < 16; ++i) {
+    indexes[i] = udata_readInt32(ds, లోపల_Indexes[i]);
   }
 
   /* get the total length of the data */
-  int32_t size = indexes[UCNVSEL_INDEX_SIZE];
-  if(length >= 0) {
-    if(length < size) {
+  int32_t size = indexes[UCNVSEL_సూచీ_కొలత];
+  ఒకవేళ(length >= 0) {
+    ఒకవేళ(length < size) {
       udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for all of UConverterSelector data\n",
                        length);
-      *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return 0;
+      *స్థితి_2 = U_సూచీ_OUTOFBOUNDS_ERROR;
+      తిరిగి 0;
     }
 
     /* copy the data for inaccessible bytes */
-    if(inBytes != outBytes) {
-      uprv_memcpy(outBytes, inBytes, size);
+    ఒకవేళ(లోపల_బైట్లు != బహిర్గతం_బైట్లు) {
+      uprv_memcpy(బహిర్గతం_బైట్లు, లోపల_బైట్లు, size);
     }
 
-    int32_t offset = 0, count;
+    int32_t స్థానభ్రంశం = 0, count;
 
     /* swap the int32_t indexes[] */
-    count = UCNVSEL_INDEX_COUNT*4;
-    ds->swapArray32(ds, inBytes, count, outBytes, status);
-    offset += count;
+    count = UCNVSEL_సూచీ_లెక్క*4;
+    ds->మార్పిడి_Array32(ds, లోపల_బైట్లు, count, బహిర్గతం_బైట్లు, స్థితి_2);
+    స్థానభ్రంశం += count;
 
     /* swap the UTrie2 */
-    count = indexes[UCNVSEL_INDEX_TRIE_SIZE];
-    utrie2_swap(ds, inBytes + offset, count, outBytes + offset, status);
-    offset += count;
+    count = indexes[UCNVSEL_సూచీ_TRIE_కొలత];
+    utrie2_మార్పిడి(ds, లోపల_బైట్లు + స్థానభ్రంశం, count, బహిర్గతం_బైట్లు + స్థానభ్రంశం, స్థితి_2);
+    స్థానభ్రంశం += count;
 
     /* swap the uint32_t pv[] */
-    count = indexes[UCNVSEL_INDEX_PV_COUNT]*4;
-    ds->swapArray32(ds, inBytes + offset, count, outBytes + offset, status);
-    offset += count;
+    count = indexes[UCNVSEL_సూచీ_PV_లెక్క]*4;
+    ds->మార్పిడి_Array32(ds, లోపల_బైట్లు + స్థానభ్రంశం, count, బహిర్గతం_బైట్లు + స్థానభ్రంశం, స్థితి_2);
+    స్థానభ్రంశం += count;
 
     /* swap the encoding names */
-    count = indexes[UCNVSEL_INDEX_NAMES_LENGTH];
-    ds->swapInvChars(ds, inBytes + offset, count, outBytes + offset, status);
-    offset += count;
+    count = indexes[UCNVSEL_సూచీ_పేర్లు_నిడివి];
+    ds->మార్పిడి_Inv_Chars(ds, లోపల_బైట్లు + స్థానభ్రంశం, count, బహిర్గతం_బైట్లు + స్థానభ్రంశం, స్థితి_2);
+    స్థానభ్రంశం += count;
 
-    U_ASSERT(offset == size);
+    U_ASSERT(స్థానభ్రంశం == size);
   }
 
-  return headerSize + size;
+  తిరిగి శీర్షిక_కొలత + size;
 }
 
 /* unserialize a selector */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
+ucnvsel_openFromSerialized(స్థిరరాశి శూన్య* బఫరు U_LIFETIME_BOUND,
                            int32_t length,
-                           UErrorCode* status) {
+                           UError_సంకేతం* స్థితి_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
   // ensure args make sense!
-  const uint8_t *p = (const uint8_t *)buffer;
-  if (length <= 0 ||
-      (length > 0 && (p == nullptr || (U_POINTER_MASK_LSB(p, 3) != 0)))
+  స్థిరరాశి uint8_t *p = (స్థిరరాశి uint8_t *)బఫరు;
+  ఒకవేళ (length <= 0 ||
+      (length > 0 && (p == శూన్యసూచిక || (U_సూచిక_ముసుగు_LSB(p, 3) != 0)))
   ) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  // header
-  if (length < 32) {
+  //శీర్షిక
+  ఒకవేళ (length < 32) {
     // not even enough space for a minimal header
-    *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    *స్థితి_2 = U_సూచీ_OUTOFBOUNDS_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  const DataHeader *pHeader = (const DataHeader *)p;
-  if (!(
-    pHeader->dataHeader.magic1==0xda &&
-    pHeader->dataHeader.magic2==0x27 &&
-    pHeader->info.dataFormat[0] == 0x43 &&
-    pHeader->info.dataFormat[1] == 0x53 &&
-    pHeader->info.dataFormat[2] == 0x65 &&
-    pHeader->info.dataFormat[3] == 0x6c
+  స్థిరరాశి దత్తాంశం_శీర్షిక *p_శీర్షిక = (స్థిరరాశి దత్తాంశం_శీర్షిక *)p;
+  ఒకవేళ (!(
+    p_శీర్షిక->దత్తాంశం_శీర్షిక_2.magic1==0xda &&
+    p_శీర్షిక->దత్తాంశం_శీర్షిక_2.magic2==0x27 &&
+    p_శీర్షిక->info.దత్తాంశం_Format[0] == 0x43 &&
+    p_శీర్షిక->info.దత్తాంశం_Format[1] == 0x53 &&
+    p_శీర్షిక->info.దత్తాంశం_Format[2] == 0x65 &&
+    p_శీర్షిక->info.దత్తాంశం_Format[3] == 0x6c
   )) {
     /* header not valid or dataFormat not recognized */
-    *status = U_INVALID_FORMAT_ERROR;
-    return nullptr;
+    *స్థితి_2 = U_INVALID_FORMAT_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  if (pHeader->info.formatVersion[0] != 1) {
-    *status = U_UNSUPPORTED_ERROR;
-    return nullptr;
+  ఒకవేళ (p_శీర్షిక->info.format_సంస్కరణ[0] != 1) {
+    *స్థితి_2 = U_UNSUPPORTED_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  uint8_t* swapped = nullptr;
-  if (pHeader->info.isBigEndian != U_IS_BIG_ENDIAN ||
-      pHeader->info.charsetFamily != U_CHARSET_FAMILY
+  uint8_t* swapped = శూన్యసూచిక;
+  ఒకవేళ (p_శీర్షిక->info.isBigEndian != U_IS_BIG_ENDIAN ||
+      p_శీర్షిక->info.charsetFamily != U_CHARSET_FAMILY
   ) {
     // swap the data
     UDataSwapper *ds =
-      udata_openSwapperForInputData(p, length, U_IS_BIG_ENDIAN, U_CHARSET_FAMILY, status);
-    int32_t totalSize = ucnvsel_swap(ds, p, -1, nullptr, status);
-    if (U_FAILURE(*status)) {
+      udata_open_Swapper_For_ఆదానం_దత్తాంశం(p, length, U_IS_BIG_ENDIAN, U_CHARSET_FAMILY, స్థితి_2);
+    int32_t మొత్తం_కొలత = ucnvsel_మార్పిడి(ds, p, -1, శూన్యసూచిక, స్థితి_2);
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
       udata_closeSwapper(ds);
-      return nullptr;
+      తిరిగి శూన్యసూచిక;
     }
-    if (length < totalSize) {
+    ఒకవేళ (length < మొత్తం_కొలత) {
       udata_closeSwapper(ds);
-      *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return nullptr;
+      *స్థితి_2 = U_సూచీ_OUTOFBOUNDS_ERROR;
+      తిరిగి శూన్యసూచిక;
     }
-    swapped = (uint8_t*)uprv_malloc(totalSize);
-    if (swapped == nullptr) {
+    swapped = (uint8_t*)uprv_malloc(మొత్తం_కొలత);
+    ఒకవేళ (swapped == శూన్యసూచిక) {
       udata_closeSwapper(ds);
-      *status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+      *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+      తిరిగి శూన్యసూచిక;
     }
-    ucnvsel_swap(ds, p, length, swapped, status);
+    ucnvsel_మార్పిడి(ds, p, length, swapped, స్థితి_2);
     udata_closeSwapper(ds);
-    if (U_FAILURE(*status)) {
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
       uprv_free(swapped);
-      return nullptr;
+      తిరిగి శూన్యసూచిక;
     }
     p = swapped;
-    pHeader = (const DataHeader *)p;
+    p_శీర్షిక = (స్థిరరాశి దత్తాంశం_శీర్షిక *)p;
   }
-  if (length < (pHeader->dataHeader.headerSize + 16 * 4)) {
+  ఒకవేళ (length < (p_శీర్షిక->దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత + 16 * 4)) {
     // not even enough space for the header and the indexes
     uprv_free(swapped);
-    *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    *స్థితి_2 = U_సూచీ_OUTOFBOUNDS_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  p += pHeader->dataHeader.headerSize;
-  length -= pHeader->dataHeader.headerSize;
+  p += p_శీర్షిక->దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత;
+  length -= p_శీర్షిక->దత్తాంశం_శీర్షిక_2.శీర్షిక_కొలత;
   // indexes
-  const int32_t *indexes = (const int32_t *)p;
-  if (length < indexes[UCNVSEL_INDEX_SIZE]) {
+  స్థిరరాశి int32_t *indexes = (స్థిరరాశి int32_t *)p;
+  ఒకవేళ (length < indexes[UCNVSEL_సూచీ_కొలత]) {
     uprv_free(swapped);
-    *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    *స్థితి_2 = U_సూచీ_OUTOFBOUNDS_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  p += UCNVSEL_INDEX_COUNT * 4;
+  p += UCNVSEL_సూచీ_లెక్క * 4;
   // create and populate the selector object
-  UConverterSelector* sel = (UConverterSelector*)uprv_malloc(sizeof(UConverterSelector));
-  char **encodings =
-    (char **)uprv_malloc(
-      indexes[UCNVSEL_INDEX_NAMES_COUNT] * sizeof(char *));
-  if (sel == nullptr || encodings == nullptr) {
+  UConverterSelector* sel = (UConverterSelector*)uprv_malloc(పరిమాణం(UConverterSelector));
+  అక్షరం **encodings =
+    (అక్షరం **)uprv_malloc(
+      indexes[UCNVSEL_సూచీ_పేర్లు_లెక్క] * పరిమాణం(అక్షరం *));
+  ఒకవేళ (sel == శూన్యసూచిక || encodings == శూన్యసూచిక) {
     uprv_free(swapped);
     uprv_free(sel);
     uprv_free(encodings);
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  uprv_memset(sel, 0, sizeof(UConverterSelector));
-  sel->pvCount = indexes[UCNVSEL_INDEX_PV_COUNT];
+  uprv_memset(sel, 0, పరిమాణం(UConverterSelector));
+  sel->pv_లెక్క = indexes[UCNVSEL_సూచీ_PV_లెక్క];
   sel->encodings = encodings;
-  sel->encodingsCount = indexes[UCNVSEL_INDEX_NAMES_COUNT];
-  sel->encodingStrLength = indexes[UCNVSEL_INDEX_NAMES_LENGTH];
+  sel->encodings_లెక్క = indexes[UCNVSEL_సూచీ_పేర్లు_లెక్క];
+  sel->encoding_Str_నిడివి = indexes[UCNVSEL_సూచీ_పేర్లు_నిడివి];
   sel->swapped = swapped;
   // trie
-  sel->trie = utrie2_openFromSerialized(UTRIE2_16_VALUE_BITS,
-                                        p, indexes[UCNVSEL_INDEX_TRIE_SIZE], nullptr,
-                                        status);
-  p += indexes[UCNVSEL_INDEX_TRIE_SIZE];
-  if (U_FAILURE(*status)) {
+  sel->trie = utrie2_openFromSerialized(UTRIE2_16_విలువ_బిట్లు,
+                                        p, indexes[UCNVSEL_సూచీ_TRIE_కొలత], శూన్యసూచిక,
+                                        స్థితి_2);
+  p += indexes[UCNVSEL_సూచీ_TRIE_కొలత];
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
     ucnvsel_close(sel);
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
   }
   // bit vectors
   sel->pv = (uint32_t *)p;
-  p += sel->pvCount * 4;
+  p += sel->pv_లెక్క * 4;
   // encoding names
-  char* s = (char*)p;
-  for (int32_t i = 0; i < sel->encodingsCount; ++i) {
+  అక్షరం* s = (అక్షరం*)p;
+  కొరకు (int32_t i = 0; i < sel->encodings_లెక్క; ++i) {
     sel->encodings[i] = s;
     s += uprv_strlen(s) + 1;
   }
-  p += sel->encodingStrLength;
+  p += sel->encoding_Str_నిడివి;
 
-  return sel;
+  తిరిగి sel;
 }
 
 // a bunch of functions for the enumeration thingie! Nothing fancy here. Just
 // iterate over the selected encodings
-struct Enumerator {
-  int16_t* index;
+నిర్మాణం Enumerator {
+  int16_t* సూచీ;
   int16_t length;
   int16_t cur;
-  const UConverterSelector* sel;
+  స్థిరరాశి UConverterSelector* sel;
 };
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 ucnvsel_close_selector_iterator(UEnumeration *enumerator) {
-  uprv_free(((Enumerator*)(enumerator->context))->index);
+  uprv_free(((Enumerator*)(enumerator->context))->సూచీ);
   uprv_free(enumerator->context);
   uprv_free(enumerator);
 }
 
 
-static int32_t U_CALLCONV
-ucnvsel_count_encodings(UEnumeration *enumerator, UErrorCode *status) {
+స్థిర int32_t U_CALLCONV
+ucnvsel_లెక్క_encodings(UEnumeration *enumerator, UError_సంకేతం *స్థితి_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return 0;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి 0;
   }
-  return ((Enumerator*)(enumerator->context))->length;
+  తిరిగి ((Enumerator*)(enumerator->context))->length;
 }
 
 
-static const char* U_CALLCONV ucnvsel_next_encoding(UEnumeration* enumerator,
-                                                 int32_t* resultLength,
-                                                 UErrorCode* status) {
+స్థిర స్థిరరాశి అక్షరం* U_CALLCONV ucnvsel_తదుపరి_encoding(UEnumeration* enumerator,
+                                                 int32_t* ఫలితం_నిడివి,
+                                                 UError_సంకేతం* స్థితి_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
 
   int16_t cur = ((Enumerator*)(enumerator->context))->cur;
-  const UConverterSelector* sel;
-  const char* result;
-  if (cur >= ((Enumerator*)(enumerator->context))->length) {
-    return nullptr;
+  స్థిరరాశి UConverterSelector* sel;
+  స్థిరరాశి అక్షరం* ఫలితం;
+  ఒకవేళ (cur >= ((Enumerator*)(enumerator->context))->length) {
+    తిరిగి శూన్యసూచిక;
   }
   sel = ((Enumerator*)(enumerator->context))->sel;
-  result = sel->encodings[((Enumerator*)(enumerator->context))->index[cur] ];
+  ఫలితం = sel->encodings[((Enumerator*)(enumerator->context))->సూచీ[cur] ];
   ((Enumerator*)(enumerator->context))->cur++;
-  if (resultLength) {
-    *resultLength = (int32_t)uprv_strlen(result);
+  ఒకవేళ (ఫలితం_నిడివి) {
+    *ఫలితం_నిడివి = (int32_t)uprv_strlen(ఫలితం);
   }
-  return result;
+  తిరిగి ఫలితం;
 }
 
-static void U_CALLCONV ucnvsel_reset_iterator(UEnumeration* enumerator,
-                                           UErrorCode* status) {
+స్థిర శూన్య U_CALLCONV ucnvsel_reset_iterator(UEnumeration* enumerator,
+                                           UError_సంకేతం* స్థితి_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return ;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి ;
   }
   ((Enumerator*)(enumerator->context))->cur = 0;
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
 
-static const UEnumeration defaultEncodings = {
-  nullptr,
-    nullptr,
+స్థిర స్థిరరాశి UEnumeration defaultEncodings = {
+  శూన్యసూచిక,
+    శూన్యసూచిక,
     ucnvsel_close_selector_iterator,
-    ucnvsel_count_encodings,
+    ucnvsel_లెక్క_encodings,
     uenum_unextDefault,
-    ucnvsel_next_encoding, 
+    ucnvsel_తదుపరి_encoding, 
     ucnvsel_reset_iterator
 };
 
 
 // internal fn to intersect two sets of masks
 // returns whether the mask has reduced to all zeros
-static UBool intersectMasks(uint32_t* dest, const uint32_t* source1, int32_t len) {
+స్థిర UBool intersectMasks(uint32_t* dest, స్థిరరాశి uint32_t* source1, int32_t len) {
   int32_t i;
   uint32_t oredDest = 0;
-  for (i = 0 ; i < len ; ++i) {
+  కొరకు (i = 0 ; i < len ; ++i) {
     oredDest |= (dest[i] &= source1[i]);
   }
-  return oredDest == 0;
+  తిరిగి oredDest == 0;
 }
 
 // internal fn to count how many 1's are there in a mask
 // algorithm taken from  http://graphics.stanford.edu/~seander/bithacks.html
-static int16_t countOnes(uint32_t* mask, int32_t len) {
-  int32_t i, totalOnes = 0;
-  for (i = 0 ; i < len ; ++i) {
+స్థిర int16_t లెక్క_Ones(uint32_t* mask, int32_t len) {
+  int32_t i, మొత్తం_Ones = 0;
+  కొరకు (i = 0 ; i < len ; ++i) {
     uint32_t ent = mask[i];
-    for (; ent; totalOnes++)
+    కొరకు (; ent; మొత్తం_Ones++)
     {
       ent &= ent - 1; // clear the least significant bit set
     }
   }
-  return static_cast<int16_t>(totalOnes);
+  తిరిగి static_cast<int16_t>(మొత్తం_Ones);
 }
 
 
 /* internal function! */
-static UEnumeration*
-selectForMask(const UConverterSelector* sel U_LIFETIME_BOUND,
-              uint32_t* theMask,
-              UErrorCode* status) {
-  LocalMemory<uint32_t> mask(theMask);
+స్థిర UEnumeration*
+select_For_ముసుగు(స్థిరరాశి UConverterSelector* sel U_LIFETIME_BOUND,
+              uint32_t* the_ముసుగు,
+              UError_సంకేతం* స్థితి_2) {
+  Local_జ్ఞాపకం<uint32_t> mask(the_ముసుగు);
   // this is the context we will use. Store a table of indices to which
   // encodings are legit.
-  LocalMemory<Enumerator> result(static_cast<Enumerator *>(uprv_malloc(sizeof(Enumerator))));
-  if (result.isNull()) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  Local_జ్ఞాపకం<Enumerator> ఫలితం(static_cast<Enumerator *>(uprv_malloc(పరిమాణం(Enumerator))));
+  ఒకవేళ (ఫలితం.isNull()) {
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  result->index = nullptr;  // this will be allocated later!
-  result->length = result->cur = 0;
-  result->sel = sel;
+  ఫలితం->సూచీ = శూన్యసూచిక;  // this will be allocated later!
+  ఫలితం->length = ఫలితం->cur = 0;
+  ఫలితం->sel = sel;
 
-  LocalMemory<UEnumeration> en(static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration))));
-  if (en.isNull()) {
+  Local_జ్ఞాపకం<UEnumeration> en(static_cast<UEnumeration *>(uprv_malloc(పరిమాణం(UEnumeration))));
+  ఒకవేళ (en.isNull()) {
     // TODO(markus): Combine Enumerator and UEnumeration into one struct.
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
-  memcpy(en.getAlias(), &defaultEncodings, sizeof(UEnumeration));
+  జ్ఞాపకం_నకలు(en.getAlias(), &defaultEncodings, పరిమాణం(UEnumeration));
   
-  int32_t columns = (sel->encodingsCount+31)/32;
-  int16_t numOnes = countOnes(mask.getAlias(), columns);
+  int32_t columns = (sel->encodings_లెక్క+31)/32;
+  int16_t అంకె_Ones = లెక్క_Ones(mask.getAlias(), columns);
   // now, we know the exact space we need for index
-  if (numOnes > 0) {
-    result->index = static_cast<int16_t*>(uprv_malloc(numOnes * sizeof(int16_t)));
-    if (result->index == nullptr) {
-      *status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+  ఒకవేళ (అంకె_Ones > 0) {
+    ఫలితం->సూచీ = static_cast<int16_t*>(uprv_malloc(అంకె_Ones * పరిమాణం(int16_t)));
+    ఒకవేళ (ఫలితం->సూచీ == శూన్యసూచిక) {
+      *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+      తిరిగి శూన్యసూచిక;
     }
     int32_t i, j;
     int16_t k = 0;
-    for (j = 0 ; j < columns; j++) {
+    కొరకు (j = 0 ; j < columns; j++) {
       uint32_t v = mask[j];
-      for (i = 0 ; i < 32 && k < sel->encodingsCount; i++, k++) {
-        if ((v & 1) != 0) {
-          result->index[result->length++] = k;
+      కొరకు (i = 0 ; i < 32 && k < sel->encodings_లెక్క; i++, k++) {
+        ఒకవేళ ((v & 1) != 0) {
+          ఫలితం->సూచీ[ఫలితం->length++] = k;
         }
         v >>= 1;
       }
     }
   } //otherwise, index will remain nullptr (and will never be touched by
     //the enumerator code anyway)
-  en->context = result.orphan();
-  return en.orphan();
+  en->context = ఫలితం.orphan();
+  తిరిగి en.orphan();
 }
 
 /* check a string against the selector - UTF16 version */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
-                        const char16_t* s,
+ucnvsel_selectForString(స్థిరరాశి UConverterSelector* sel U_LIFETIME_BOUND,
+                        స్థిరరాశి char16_t* s,
                         int32_t length,
-                        UErrorCode* status) {
+                        UError_సంకేతం* స్థితి_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
   // ensure args make sense!
-  if (sel == nullptr || (s == nullptr && length != 0)) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  ఒకవేళ (sel == శూన్యసూచిక || (s == శూన్యసూచిక && length != 0)) {
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
 
-  int32_t columns = (sel->encodingsCount+31)/32;
+  int32_t columns = (sel->encodings_లెక్క+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
-  if (mask == nullptr) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  ఒకవేళ (mask == శూన్యసూచిక) {
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
   uprv_memset(mask, ~0, columns *4);
 
-  if(s!=nullptr) {
-    const char16_t *limit;
-    if (length >= 0) {
-      limit = s + length;
-    } else {
-      limit = nullptr;
+  ఒకవేళ(s!=శూన్యసూచిక) {
+    స్థిరరాశి char16_t *హద్దు;
+    ఒకవేళ (length >= 0) {
+      హద్దు = s + length;
+    } లేకపోతే {
+      హద్దు = శూన్యసూచిక;
     }
     
-    while (limit == nullptr ? *s != 0 : s != limit) {
+    అయితే (హద్దు == శూన్యసూచిక ? *s != 0 : s != హద్దు) {
       UChar32 c;
-      uint16_t pvIndex;
-      UTRIE2_U16_NEXT16(sel->trie, s, limit, c, pvIndex);
-      if (intersectMasks(mask, sel->pv+pvIndex, columns)) {
-        break;
+      uint16_t pv_సూచీ;
+      UTRIE2_U16_NEXT16(sel->trie, s, హద్దు, c, pv_సూచీ);
+      ఒకవేళ (intersectMasks(mask, sel->pv+pv_సూచీ, columns)) {
+        ఆపు;
       }
     }
   }
-  return selectForMask(sel, mask, status);
+  తిరిగి select_For_ముసుగు(sel, mask, స్థితి_2);
 }
 
 /* check a string against the selector - UTF8 version */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
-                      const char* s,
+ucnvsel_selectForUTF8(స్థిరరాశి UConverterSelector* sel U_LIFETIME_BOUND,
+                      స్థిరరాశి అక్షరం* s,
                       int32_t length,
-                      UErrorCode* status) {
+                      UError_సంకేతం* స్థితి_2) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
   // ensure args make sense!
-  if (sel == nullptr || (s == nullptr && length != 0)) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  ఒకవేళ (sel == శూన్యసూచిక || (s == శూన్యసూచిక && length != 0)) {
+    *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
 
-  int32_t columns = (sel->encodingsCount+31)/32;
+  int32_t columns = (sel->encodings_లెక్క+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
-  if (mask == nullptr) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  ఒకవేళ (mask == శూన్యసూచిక) {
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
   uprv_memset(mask, ~0, columns *4);
 
-  if (length < 0) {
+  ఒకవేళ (length < 0) {
     length = (int32_t)uprv_strlen(s);
   }
 
-  if(s!=nullptr) {
-    const char *limit = s + length;
+  ఒకవేళ(s!=శూన్యసూచిక) {
+    స్థిరరాశి అక్షరం *హద్దు = s + length;
     
-    while (s != limit) {
-      uint16_t pvIndex;
-      UTRIE2_U8_NEXT16(sel->trie, s, limit, pvIndex);
-      if (intersectMasks(mask, sel->pv+pvIndex, columns)) {
-        break;
+    అయితే (s != హద్దు) {
+      uint16_t pv_సూచీ;
+      UTRIE2_U8_NEXT16(sel->trie, s, హద్దు, pv_సూచీ);
+      ఒకవేళ (intersectMasks(mask, sel->pv+pv_సూచీ, columns)) {
+        ఆపు;
       }
     }
   }
-  return selectForMask(sel, mask, status);
+  తిరిగి select_For_ముసుగు(sel, mask, స్థితి_2);
 }
 
-#endif  // !UCONFIG_NO_CONVERSION
+#అయితే_ముగింపు  // !UCONFIG_NO_CONVERSION

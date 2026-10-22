@@ -4,26 +4,26 @@
 // utfiterator.h
 // created: 2024aug12 Markus W. Scherer
 
-#ifndef __UTFITERATOR_H__
-#define __UTFITERATOR_H__
+#నిర్వచితం_కాకపోతే __UTFITERATOR_H__
+#నిర్వచించు __UTFITERATOR_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API || !defined(UTYPES_H)
+#ఒకవేళ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_శీర్షిక_API || !defined(UTYPES_H)
 
-#include <iterator>
-#if __has_include(<version>)
-#include <version>
-#endif
-#if defined(__cpp_lib_ranges)
-#include <ranges>
-#endif
-#include <string>
-#include <string_view>
-#include <type_traits>
-#include "unicode/utf16.h"
-#include "unicode/utf8.h"
-#include "unicode/uversion.h"
+#అన్తర్భావ <iterator>
+#ఒకవేళ __has_include(<సంస్కరణ>)
+#అన్తర్భావ <version>
+#అయితే_ముగింపు
+#ఒకవేళ defined(__cpp_lib_ranges)
+#అన్తర్భావ <ranges>
+#అయితే_ముగింపు
+#అన్తర్భావ <string>
+#అన్తర్భావ <string_view>
+#అన్తర్భావ <type_traits>
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "unicode/uversion.h"
 
 /**
  * \file
@@ -138,7 +138,7 @@
  * \endcode
  */
 
-#ifndef U_HIDE_DRAFT_API
+#నిర్వచితం_కాకపోతే U_HIDE_DRAFT_API
 
 /**
  * Some defined behaviors for handling ill-formed Unicode strings.
@@ -152,7 +152,7 @@
  * @see UTFIterator
  * @see UTFStringCodePoints
  */
-typedef enum UTFIllFormedBehavior {
+రకనిర్వచనం గణన UTFIllFormedBehavior {
     /**
      * Returns a negative value (-1=U_SENTINEL) instead of a code point.
      * If the CP32 template parameter for the relevant classes is an unsigned type,
@@ -173,122 +173,122 @@ typedef enum UTFIllFormedBehavior {
     UTF_BEHAVIOR_SURROGATE
 } UTFIllFormedBehavior;
 
-namespace U_HEADER_ONLY_NAMESPACE {
+namespace U_శీర్షిక_ONLY_NAMESPACE {
 
 namespace prv {
-#if U_CPLUSPLUS_VERSION >= 20
+#ఒకవేళ U_CPLUSPLUS_సంస్కరణ >= 20
 
 /** @internal */
-template<typename Iter>
-using iter_value_t = typename std::iter_value_t<Iter>;
+మూస<typename Iter>
+using iter_విలువ_t = typename std::iter_విలువ_t<Iter>;
 
 /** @internal */
-template<typename Iter>
+మూస<typename Iter>
 using iter_difference_t = std::iter_difference_t<Iter>;
 
 /** @internal */
-template<typename Iter>
+మూస<typename Iter>
 constexpr bool forward_iterator = std::forward_iterator<Iter>;
 
 /** @internal */
-template<typename Iter>
+మూస<typename Iter>
 constexpr bool bidirectional_iterator = std::bidirectional_iterator<Iter>;
 
 /** @internal */
-template<typename Range>
+మూస<typename Range>
 constexpr bool range = std::ranges::range<Range>;
 
-#else
+#లేకపోతే
 
 /** @internal */
-template<typename Iter>
-using iter_value_t = typename std::iterator_traits<Iter>::value_type;
+మూస<typename Iter>
+using iter_విలువ_t = typename std::iterator_traits<Iter>::విలువ_type;
 
 /** @internal */
-template<typename Iter>
+మూస<typename Iter>
 using iter_difference_t = typename std::iterator_traits<Iter>::difference_type;
 
 /** @internal */
-template<typename Iter>
+మూస<typename Iter>
 constexpr bool forward_iterator =
-    std::is_base_of_v<
-        std::forward_iterator_tag,
+    std::is_పునాది_యొక్క_v<
+        std::forward_iterator_ట్యాగ్,
         typename std::iterator_traits<Iter>::iterator_category>;
 
 /** @internal */
-template<typename Iter>
+మూస<typename Iter>
 constexpr bool bidirectional_iterator =
-    std::is_base_of_v<
-        std::bidirectional_iterator_tag,
+    std::is_పునాది_యొక్క_v<
+        std::bidirectional_iterator_ట్యాగ్,
         typename std::iterator_traits<Iter>::iterator_category>;
 
 /** @internal */
-template<typename Range, typename = void>
-struct range_type : std::false_type {};
+మూస<typename Range, typename = శూన్య>
+నిర్మాణం range_type : std::false_type {};
 
 /** @internal */
-template<typename Range>
-struct range_type<
+మూస<typename Range>
+నిర్మాణం range_type<
     Range,
     std::void_t<decltype(std::declval<Range>().begin()),
-                decltype(std::declval<Range>().end())>> : std::true_type {};
+                decltype(std::declval<Range>().చివర())>> : std::true_type {};
 
 /** @internal */
-template<typename Range>
-constexpr bool range = range_type<Range>::value;
+మూస<typename Range>
+constexpr bool range = range_type<Range>::విలువ_2;
 
-#endif
-
-/** @internal */
-template <typename T> struct is_basic_string_view : std::false_type {};
+#అయితే_ముగింపు
 
 /** @internal */
-template <typename... Args>
-struct is_basic_string_view<std::basic_string_view<Args...>> : std::true_type {};
+మూస <typename T> నిర్మాణం is_basic_string_view : std::false_type {};
 
 /** @internal */
-template <typename T> constexpr bool is_basic_string_view_v = is_basic_string_view<T>::value;
+మూస <typename... వాదనలు>
+నిర్మాణం is_basic_string_view<std::basic_string_view<వాదనలు...>> : std::true_type {};
 
 /** @internal */
-template<typename CP32, bool skipSurrogates>
-class CodePointsIterator {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+మూస <typename T> constexpr bool is_basic_string_view_v = is_basic_string_view<T>::విలువ_2;
+
+/** @internal */
+మూస<typename CP32, bool skipSurrogates>
+class సంకేతం_Points_Iterator {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
     /** C++ iterator boilerplate @internal */
-    using value_type = CP32;
+    using విలువ_type = CP32;
     /** C++ iterator boilerplate @internal */
-    using reference = value_type;
+    using reference = విలువ_type;
     /** C++ iterator boilerplate @internal */
-    using pointer = CP32 *;
+    using సూచిక = CP32 *;
     /** C++ iterator boilerplate @internal */
     using difference_type = int32_t;
     /** C++ iterator boilerplate @internal */
-    using iterator_category = std::forward_iterator_tag;
+    using iterator_category = std::forward_iterator_ట్యాగ్;
 
     /** @internal */
-    inline CodePointsIterator(CP32 c) : c_(c) {}
+    అంతఃవరుస సంకేతం_Points_Iterator(CP32 c) : c_(c) {}
     /** @internal */
-    inline bool operator==(const CodePointsIterator &other) const { return c_ == other.c_; }
+    అంతఃవరుస bool క్రియాకారకం==(స్థిరరాశి సంకేతం_Points_Iterator &other) స్థిరరాశి { తిరిగి c_ == other.c_; }
     /** @internal */
-    inline bool operator!=(const CodePointsIterator &other) const { return !operator==(other); }
+    అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి సంకేతం_Points_Iterator &other) స్థిరరాశి { తిరిగి !క్రియాకారకం==(other); }
     /** @internal */
-    inline CP32 operator*() const { return c_; }
+    అంతఃవరుస CP32 క్రియాకారకం*() స్థిరరాశి { తిరిగి c_; }
     /** @internal */
-    inline CodePointsIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
+    అంతఃవరుస సంకేతం_Points_Iterator& క్రియాకారకం++() U_LIFETIME_BOUND {  // pre-increment
         ++c_;
-        if (skipSurrogates && c_ == 0xd800) {
+        ఒకవేళ (skipSurrogates && c_ == 0xd800) {
             c_ = 0xe000;
         }
-        return *this;
+        తిరిగి *this;
     }
     /** @internal */
-    inline CodePointsIterator operator++(int) {  // post-increment
-        CodePointsIterator result(*this);
+    అంతఃవరుస సంకేతం_Points_Iterator క్రియాకారకం++(పూర్ణాంకం) {  // post-increment
+        సంకేతం_Points_Iterator ఫలితం(*this);
         ++(*this);
-        return result;
+        తిరిగి ఫలితం;
     }
 
-private:
+అంతరంగ:
     CP32 c_;
 };
 
@@ -304,23 +304,23 @@ private:
  * @draft ICU 78
  * @see U_IS_CODE_POINT
  */
-template<typename CP32>
-class AllCodePoints {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+మూస<typename CP32>
+class All_సంకేతం_Points {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
     /** Constructor. @draft ICU 78 */
-    AllCodePoints() {}
+    All_సంకేతం_Points() {}
     /**
      * @return an iterator over all Unicode code points.
      *     The iterator returns CP32 integers.
      * @draft ICU 78
      */
-    auto begin() const { return prv::CodePointsIterator<CP32, false>(0); }
+    స్వయంచాలక begin() స్థిరరాశి { తిరిగి prv::సంకేతం_Points_Iterator<CP32, false>(0); }
     /**
      * @return an exclusive-end iterator over all Unicode code points.
      * @draft ICU 78
      */
-    auto end() const { return prv::CodePointsIterator<CP32, false>(0x110000); }
+    స్వయంచాలక చివర() స్థిరరాశి { తిరిగి prv::సంకేతం_Points_Iterator<CP32, false>(0x110000); }
 };
 
 /**
@@ -335,23 +335,23 @@ public:
  * @draft ICU 78
  * @see U_IS_SCALAR_VALUE
  */
-template<typename CP32>
-class AllScalarValues {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+మూస<typename CP32>
+class All_Scalar_విలువలు {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
     /** Constructor. @draft ICU 78 */
-    AllScalarValues() {}
+    All_Scalar_విలువలు() {}
     /**
      * @return an iterator over all Unicode scalar values.
      *     The iterator returns CP32 integers.
      * @draft ICU 78
      */
-    auto begin() const { return prv::CodePointsIterator<CP32, true>(0); }
+    స్వయంచాలక begin() స్థిరరాశి { తిరిగి prv::సంకేతం_Points_Iterator<CP32, true>(0); }
     /**
      * @return an exclusive-end iterator over all Unicode scalar values.
      * @draft ICU 78
      */
-    auto end() const { return prv::CodePointsIterator<CP32, true>(0x110000); }
+    స్వయంచాలక చివర() స్థిరరాశి { తిరిగి prv::సంకేతం_Points_Iterator<CP32, true>(0x110000); }
 };
 
 /**
@@ -369,19 +369,19 @@ public:
  * @see UnsafeUTFStringCodePoints
  * @draft ICU 78
  */
-template<typename CP32, typename UnitIter, typename = void>
-class UnsafeCodeUnits {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-    using Unit = typename prv::iter_value_t<UnitIter>;
-public:
+మూస<typename CP32, typename UnitIter, typename = శూన్య>
+class Unsafe_సంకేతం_Units {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    using Unit = typename prv::iter_విలువ_t<UnitIter>;
+బహిరంగ:
     /** @internal */
-    UnsafeCodeUnits(CP32 codePoint, uint8_t length, UnitIter start, UnitIter limit) :
-            c_(codePoint), len_(length), start_(start), limit_(limit) {}
+    Unsafe_సంకేతం_Units(CP32 సంకేతం_బిందువు, uint8_t నిడివి, UnitIter ప్రారంభం, UnitIter హద్దు) :
+            c_(సంకేతం_బిందువు), len_(నిడివి), ప్రారంభం_3(ప్రారంభం), హద్దు_3(హద్దు) {}
 
     /** Copy constructor. @draft ICU 78 */
-    UnsafeCodeUnits(const UnsafeCodeUnits &other) = default;
+    Unsafe_సంకేతం_Units(స్థిరరాశి Unsafe_సంకేతం_Units &other) = అప్రమేయ;
     /** Copy assignment operator. @draft ICU 78 */
-    UnsafeCodeUnits &operator=(const UnsafeCodeUnits &other) = default;
+    Unsafe_సంకేతం_Units &క్రియాకారకం=(స్థిరరాశి Unsafe_సంకేతం_Units &other) = అప్రమేయ;
 
     /**
      * @return the Unicode code point decoded from the code unit sequence.
@@ -390,89 +390,89 @@ public:
      *     UTFIllFormedBehavior template parameter.
      * @draft ICU 78
      */
-    CP32 codePoint() const { return c_; }
+    CP32 సంకేతం_బిందువు() స్థిరరాశి { తిరిగి c_; }
 
     /**
      * @return the start of the code unit sequence for one code point.
      * Only enabled if UnitIter is a (multi-pass) forward_iterator or better.
      * @draft ICU 78
      */
-    UnitIter begin() const { return start_; }
+    UnitIter begin() స్థిరరాశి { తిరిగి ప్రారంభం_3; }
 
     /**
      * @return the limit (exclusive end) of the code unit sequence for one code point.
      * Only enabled if UnitIter is a (multi-pass) forward_iterator or better.
      * @draft ICU 78
      */
-    UnitIter end() const { return limit_; }
+    UnitIter చివర() స్థిరరాశి { తిరిగి హద్దు_3; }
 
     /**
      * @return the length of the code unit sequence for one code point.
      * @draft ICU 78
      */
-    uint8_t length() const { return len_; }
+    uint8_t నిడివి() స్థిరరాశి { తిరిగి len_; }
 
-#if U_CPLUSPLUS_VERSION >= 20
+#ఒకవేళ U_CPLUSPLUS_సంస్కరణ >= 20
     /**
      * @return a string_view of the code unit sequence for one code point.
      * Only works if UnitIter is a pointer or a contiguous_iterator.
      * @draft ICU 78
      */
-    template<std::contiguous_iterator Iter = UnitIter>
-    std::basic_string_view<Unit> stringView() const {
-        return std::basic_string_view<Unit>(begin(), end());
+    మూస<std::contiguous_iterator Iter = UnitIter>
+    std::basic_string_view<Unit> stringView() స్థిరరాశి {
+        తిరిగి std::basic_string_view<Unit>(begin(), చివర());
     }
-#else
+#లేకపోతే
     /**
      * @return a string_view of the code unit sequence for one code point.
      * Only works if UnitIter is a pointer or a contiguous_iterator.
      * @draft ICU 78
      */
-    template<typename Iter = UnitIter, typename Unit = typename std::iterator_traits<Iter>::value_type>
-    std::enable_if_t<std::is_pointer_v<Iter> ||
+    మూస<typename Iter = UnitIter, typename Unit = typename std::iterator_traits<Iter>::విలువ_type>
+    std::enable_if_t<std::is_సూచిక_v<Iter> ||
                          std::is_same_v<Iter, typename std::basic_string<Unit>::iterator> ||
                          std::is_same_v<Iter, typename std::basic_string<Unit>::const_iterator> ||
                          std::is_same_v<Iter, typename std::basic_string_view<Unit>::iterator> ||
                          std::is_same_v<Iter, typename std::basic_string_view<Unit>::const_iterator>,
                      std::basic_string_view<Unit>>
-    stringView() const {
-        return std::basic_string_view<Unit>(&*start_, len_);
+    stringView() స్థిరరాశి {
+        తిరిగి std::basic_string_view<Unit>(&*ప్రారంభం_3, len_);
     }
-#endif
+#అయితే_ముగింపు
 
-private:
+అంతరంగ:
     // Order of fields with padding and access frequency in mind.
     CP32 c_;
     uint8_t len_;
-    UnitIter start_;
-    UnitIter limit_;
+    UnitIter ప్రారంభం_3;
+    UnitIter హద్దు_3;
 };
 
-#ifndef U_IN_DOXYGEN
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
 // Partial template specialization for single-pass input iterator.
 // No UnitIter field, no getter for it, no stringView().
-template<typename CP32, typename UnitIter>
-class UnsafeCodeUnits<
+మూస<typename CP32, typename UnitIter>
+class Unsafe_సంకేతం_Units<
         CP32,
         UnitIter,
         std::enable_if_t<!prv::forward_iterator<UnitIter>>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
-    UnsafeCodeUnits(CP32 codePoint, uint8_t length) : c_(codePoint), len_(length) {}
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
+    Unsafe_సంకేతం_Units(CP32 సంకేతం_బిందువు, uint8_t నిడివి) : c_(సంకేతం_బిందువు), len_(నిడివి) {}
 
-    UnsafeCodeUnits(const UnsafeCodeUnits &other) = default;
-    UnsafeCodeUnits &operator=(const UnsafeCodeUnits &other) = default;
+    Unsafe_సంకేతం_Units(స్థిరరాశి Unsafe_సంకేతం_Units &other) = అప్రమేయ;
+    Unsafe_సంకేతం_Units &క్రియాకారకం=(స్థిరరాశి Unsafe_సంకేతం_Units &other) = అప్రమేయ;
 
-    CP32 codePoint() const { return c_; }
+    CP32 సంకేతం_బిందువు() స్థిరరాశి { తిరిగి c_; }
 
-    uint8_t length() const { return len_; }
+    uint8_t నిడివి() స్థిరరాశి { తిరిగి len_; }
 
-private:
+అంతరంగ:
     // Order of fields with padding and access frequency in mind.
     CP32 c_;
     uint8_t len_;
 };
-#endif  // U_IN_DOXYGEN
+#అయితే_ముగింపు  // U_IN_DOXYGEN
 
 /**
  * Result of validating and decoding a code unit sequence for one code point.
@@ -489,56 +489,56 @@ private:
  * @see UTFStringCodePoints
  * @draft ICU 78
  */
-template<typename CP32, typename UnitIter, typename = void>
-class CodeUnits : public UnsafeCodeUnits<CP32, UnitIter> {
-public:
+మూస<typename CP32, typename UnitIter, typename = శూన్య>
+class సంకేతం_Units_2 : బహిరంగ Unsafe_సంకేతం_Units<CP32, UnitIter> {
+బహిరంగ:
     /** @internal */
-    CodeUnits(CP32 codePoint, uint8_t length, bool wellFormed, UnitIter start, UnitIter limit) :
-            UnsafeCodeUnits<CP32, UnitIter>(codePoint, length, start, limit), ok_(wellFormed) {}
+    సంకేతం_Units_2(CP32 సంకేతం_బిందువు, uint8_t నిడివి, bool wellFormed, UnitIter ప్రారంభం, UnitIter హద్దు) :
+            Unsafe_సంకేతం_Units<CP32, UnitIter>(సంకేతం_బిందువు, నిడివి, ప్రారంభం, హద్దు), ok_(wellFormed) {}
 
     /** Copy constructor. @draft ICU 78 */
-    CodeUnits(const CodeUnits &other) = default;
+    సంకేతం_Units_2(స్థిరరాశి సంకేతం_Units_2 &other) = అప్రమేయ;
     /** Copy assignment operator. @draft ICU 78 */
-    CodeUnits &operator=(const CodeUnits &other) = default;
+    సంకేతం_Units_2 &క్రియాకారకం=(స్థిరరాశి సంకేతం_Units_2 &other) = అప్రమేయ;
 
     /**
      * @return true if the decoded code unit sequence is well-formed.
      * @draft ICU 78
      */
-    bool wellFormed() const { return ok_; }
+    bool wellFormed() స్థిరరాశి { తిరిగి ok_; }
 
-private:
+అంతరంగ:
     bool ok_;
 };
 
-#ifndef U_IN_DOXYGEN
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
 // Partial template specialization for single-pass input iterator.
 // No UnitIter field, no getter for it, no stringView().
-template<typename CP32, typename UnitIter>
-class CodeUnits<
+మూస<typename CP32, typename UnitIter>
+class సంకేతం_Units_2<
         CP32,
         UnitIter,
         std::enable_if_t<!prv::forward_iterator<UnitIter>>> :
-            public UnsafeCodeUnits<CP32, UnitIter> {
-public:
-    CodeUnits(CP32 codePoint, uint8_t length, bool wellFormed) :
-            UnsafeCodeUnits<CP32, UnitIter>(codePoint, length), ok_(wellFormed) {}
+            బహిరంగ Unsafe_సంకేతం_Units<CP32, UnitIter> {
+బహిరంగ:
+    సంకేతం_Units_2(CP32 సంకేతం_బిందువు, uint8_t నిడివి, bool wellFormed) :
+            Unsafe_సంకేతం_Units<CP32, UnitIter>(సంకేతం_బిందువు, నిడివి), ok_(wellFormed) {}
 
-    CodeUnits(const CodeUnits &other) = default;
-    CodeUnits &operator=(const CodeUnits &other) = default;
+    సంకేతం_Units_2(స్థిరరాశి సంకేతం_Units_2 &other) = అప్రమేయ;
+    సంకేతం_Units_2 &క్రియాకారకం=(స్థిరరాశి సంకేతం_Units_2 &other) = అప్రమేయ;
 
-    bool wellFormed() const { return ok_; }
+    bool wellFormed() స్థిరరాశి { తిరిగి ok_; }
 
-private:
+అంతరంగ:
     bool ok_;
 };
-#endif  // U_IN_DOXYGEN
+#అయితే_ముగింపు  // U_IN_DOXYGEN
 
 // Validating implementations ---------------------------------------------- ***
 
-#ifndef U_IN_DOXYGEN
-template<typename CP32, UTFIllFormedBehavior behavior,
-         typename UnitIter, typename LimitIter = UnitIter, typename = void>
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
+మూస<typename CP32, UTFIllFormedBehavior behavior,
+         typename UnitIter, typename హద్దు_Iter = UnitIter, typename = శూన్య>
 class UTFImpl;
 
 // Note: readAndInc() functions take both a p0 and a p iterator.
@@ -552,531 +552,531 @@ class UTFImpl;
 // which may not be possible for a single-pass iterator.
 
 // UTF-8
-template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typename LimitIter>
+మూస<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typename హద్దు_Iter>
 class UTFImpl<
         CP32, behavior,
-        UnitIter, LimitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 1>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+        UnitIter, హద్దు_Iter,
+        std::enable_if_t<పరిమాణం(typename prv::iter_విలువ_t<UnitIter>) == 1>> {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     static_assert(behavior != UTF_BEHAVIOR_SURROGATE,
                   "For 8-bit strings, the SURROGATE option does not have an equivalent.");
-public:
+బహిరంగ:
     // Handle ill-formed UTF-8
-    U_FORCE_INLINE static CP32 sub() {
-        if constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
-            return U_SENTINEL;
-        } else {
+    U_FORCE_INLINE స్థిర CP32 sub() {
+        ఒకవేళ constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
+            తిరిగి U_SENTINEL;
+        } లేకపోతే {
             static_assert(behavior == UTF_BEHAVIOR_FFFD);
-            return 0xfffd;
+            తిరిగి 0xfffd;
         }
     }
 
-    U_FORCE_INLINE static void inc(UnitIter &p, const LimitIter &limit) {
+    U_FORCE_INLINE స్థిర శూన్య inc(UnitIter &p, స్థిరరాశి హద్దు_Iter &హద్దు) {
         // Very similar to U8_FWD_1().
         uint8_t b = *p;
         ++p;
-        if (U8_IS_LEAD(b) && p != limit) {
+        ఒకవేళ (U8_IS_LEAD(b) && p != హద్దు) {
             uint8_t t1 = *p;
-            if ((0xe0 <= b && b < 0xf0)) {
-                if (U8_IS_VALID_LEAD3_AND_T1(b, t1) &&
-                        ++p != limit && U8_IS_TRAIL(*p)) {
+            ఒకవేళ ((0xe0 <= b && b < 0xf0)) {
+                ఒకవేళ (U8_IS_VALID_LEAD3_AND_T1(b, t1) &&
+                        ++p != హద్దు && U8_IS_TRAIL(*p)) {
                     ++p;
                 }
-            } else if (b < 0xe0) {
-                if (U8_IS_TRAIL(t1)) {
+            } లేకపోతే ఒకవేళ (b < 0xe0) {
+                ఒకవేళ (U8_IS_TRAIL(t1)) {
                     ++p;
                 }
-            } else /* b >= 0xf0 */ {
-                if (U8_IS_VALID_LEAD4_AND_T1(b, t1) &&
-                        ++p != limit && U8_IS_TRAIL(*p) &&
-                        ++p != limit && U8_IS_TRAIL(*p)) {
+            } లేకపోతే /* b >= 0xf0 */ {
+                ఒకవేళ (U8_IS_VALID_LEAD4_AND_T1(b, t1) &&
+                        ++p != హద్దు && U8_IS_TRAIL(*p) &&
+                        ++p != హద్దు && U8_IS_TRAIL(*p)) {
                     ++p;
                 }
             }
         }
     }
 
-    U_FORCE_INLINE static void dec(UnitIter start, UnitIter &p) {
+    U_FORCE_INLINE స్థిర శూన్య dec(UnitIter ప్రారంభం, UnitIter &p) {
         // Very similar to U8_BACK_1().
         uint8_t c = *--p;
-        if (U8_IS_TRAIL(c) && p != start) {
+        ఒకవేళ (U8_IS_TRAIL(c) && p != ప్రారంభం) {
             UnitIter p1 = p;
             uint8_t b1 = *--p1;
-            if (U8_IS_LEAD(b1)) {
-                if (b1 < 0xe0 ||
+            ఒకవేళ (U8_IS_LEAD(b1)) {
+                ఒకవేళ (b1 < 0xe0 ||
                         (b1 < 0xf0 ?
                             U8_IS_VALID_LEAD3_AND_T1(b1, c) :
                             U8_IS_VALID_LEAD4_AND_T1(b1, c))) {
                     p = p1;
-                    return;
+                    తిరిగి;
                 }
-            } else if (U8_IS_TRAIL(b1) && p1 != start) {
+            } లేకపోతే ఒకవేళ (U8_IS_TRAIL(b1) && p1 != ప్రారంభం) {
                 uint8_t b2 = *--p1;
-                if (0xe0 <= b2 && b2 <= 0xf4) {
-                    if (b2 < 0xf0 ?
+                ఒకవేళ (0xe0 <= b2 && b2 <= 0xf4) {
+                    ఒకవేళ (b2 < 0xf0 ?
                             U8_IS_VALID_LEAD3_AND_T1(b2, b1) :
                             U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
                         p = p1;
-                        return;
+                        తిరిగి;
                     }
-                } else if (U8_IS_TRAIL(b2) && p1 != start) {
+                } లేకపోతే ఒకవేళ (U8_IS_TRAIL(b2) && p1 != ప్రారంభం) {
                     uint8_t b3 = *--p1;
-                    if (0xf0 <= b3 && b3 <= 0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    ఒకవేళ (0xf0 <= b3 && b3 <= 0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
                         p = p1;
-                        return;
+                        తిరిగి;
                     }
                 }
             }
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> readAndInc(
-            UnitIter &p0, UnitIter &p, const LimitIter &limit) {
+    U_FORCE_INLINE స్థిర సంకేతం_Units_2<CP32, UnitIter> readAndInc(
+            UnitIter &p0, UnitIter &p, స్థిరరాశి హద్దు_Iter &హద్దు) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         // Very similar to U8_NEXT_OR_FFFD().
         CP32 c = uint8_t(*p);
         ++p;
-        if (U8_IS_SINGLE(c)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, true, p0, p};
-            } else {
-                return {c, 1, true};
+        ఒకవేళ (U8_IS_SINGLE(c)) {
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, 1, true, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, 1, true};
             }
         }
-        uint8_t length = 1;
+        uint8_t నిడివి = 1;
         uint8_t t = 0;
-        if (p != limit &&
+        ఒకవేళ (p != హద్దు &&
                 // fetch/validate/assemble all but last trail byte
                 (c >= 0xe0 ?
                     (c < 0xf0 ?  // U+0800..U+FFFF except surrogates
-                        U8_LEAD3_T1_BITS[c &= 0xf] & (1 << ((t = *p) >> 5)) &&
+                        U8_LEAD3_T1_బిట్లు[c &= 0xf] & (1 << ((t = *p) >> 5)) &&
                         (t &= 0x3f, 1)
                     :  // U+10000..U+10FFFF
                         (c -= 0xf0) <= 4 &&
-                        U8_LEAD4_T1_BITS[(t = *p) >> 4] & (1 << c) &&
-                        (c = (c << 6) | (t & 0x3f), ++length, ++p != limit) &&
+                        U8_LEAD4_T1_బిట్లు[(t = *p) >> 4] & (1 << c) &&
+                        (c = (c << 6) | (t & 0x3f), ++నిడివి, ++p != హద్దు) &&
                         (t = *p - 0x80) <= 0x3f) &&
                     // valid second-to-last trail byte
-                    (c = (c << 6) | t, ++length, ++p != limit)
+                    (c = (c << 6) | t, ++నిడివి, ++p != హద్దు)
                 :  // U+0080..U+07FF
                     c >= 0xc2 && (c &= 0x1f, 1)) &&
                 // last trail byte
                 (t = *p - 0x80) <= 0x3f) {
             c = (c << 6) | t;
-            ++length;
+            ++నిడివి;
             ++p;
-            if constexpr (isMultiPass) {
-                return {c, length, true, p0, p};
-            } else {
-                return {c, length, true};
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, నిడివి, true, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, నిడివి, true};
             }
         }
-        if constexpr (isMultiPass) {
-            return {sub(), length, false, p0, p};
-        } else {
-            return {sub(), length, false};
+        ఒకవేళ constexpr (isMultiPass) {
+            తిరిగి {sub(), నిడివి, false, p0, p};
+        } లేకపోతే {
+            తిరిగి {sub(), నిడివి, false};
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> decAndRead(UnitIter start, UnitIter &p) {
+    U_FORCE_INLINE స్థిర సంకేతం_Units_2<CP32, UnitIter> decAndRead(UnitIter ప్రారంభం, UnitIter &p) {
         // Very similar to U8_PREV_OR_FFFD().
         UnitIter p0 = p;
         CP32 c = uint8_t(*--p);
-        if (U8_IS_SINGLE(c)) {
-            return {c, 1, true, p, p0};
+        ఒకవేళ (U8_IS_SINGLE(c)) {
+            తిరిగి {c, 1, true, p, p0};
         }
-        if (U8_IS_TRAIL(c) && p != start) {
+        ఒకవేళ (U8_IS_TRAIL(c) && p != ప్రారంభం) {
             UnitIter p1 = p;
             uint8_t b1 = *--p1;
-            if (U8_IS_LEAD(b1)) {
-                if (b1 < 0xe0) {
+            ఒకవేళ (U8_IS_LEAD(b1)) {
+                ఒకవేళ (b1 < 0xe0) {
                     p = p1;
                     c = ((b1 - 0xc0) << 6) | (c & 0x3f);
-                    return {c, 2, true, p, p0};
-                } else if (b1 < 0xf0 ?
+                    తిరిగి {c, 2, true, p, p0};
+                } లేకపోతే ఒకవేళ (b1 < 0xf0 ?
                             U8_IS_VALID_LEAD3_AND_T1(b1, c) :
                             U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
                     // Truncated 3- or 4-byte sequence.
                     p = p1;
-                    return {sub(), 2, false, p, p0};
+                    తిరిగి {sub(), 2, false, p, p0};
                 }
-            } else if (U8_IS_TRAIL(b1) && p1 != start) {
+            } లేకపోతే ఒకవేళ (U8_IS_TRAIL(b1) && p1 != ప్రారంభం) {
                 // Extract the value bits from the last trail byte.
                 c &= 0x3f;
                 uint8_t b2 = *--p1;
-                if (0xe0 <= b2 && b2 <= 0xf4) {
-                    if (b2 < 0xf0) {
+                ఒకవేళ (0xe0 <= b2 && b2 <= 0xf4) {
+                    ఒకవేళ (b2 < 0xf0) {
                         b2 &= 0xf;
-                        if (U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                        ఒకవేళ (U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                             p = p1;
                             c = (b2 << 12) | ((b1 & 0x3f) << 6) | c;
-                            return {c, 3, true, p, p0};
+                            తిరిగి {c, 3, true, p, p0};
                         }
-                    } else if (U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                    } లేకపోతే ఒకవేళ (U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
                         // Truncated 4-byte sequence.
                         p = p1;
-                        return {sub(), 3, false, p, p0};
+                        తిరిగి {sub(), 3, false, p, p0};
                     }
-                } else if (U8_IS_TRAIL(b2) && p1 != start) {
+                } లేకపోతే ఒకవేళ (U8_IS_TRAIL(b2) && p1 != ప్రారంభం) {
                     uint8_t b3 = *--p1;
-                    if (0xf0 <= b3 && b3 <= 0xf4) {
+                    ఒకవేళ (0xf0 <= b3 && b3 <= 0xf4) {
                         b3 &= 7;
-                        if (U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                        ఒకవేళ (U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
                             p = p1;
                             c = (b3 << 18) | ((b2 & 0x3f) << 12) | ((b1 & 0x3f) << 6) | c;
-                            return {c, 4, true, p, p0};
+                            తిరిగి {c, 4, true, p, p0};
                         }
                     }
                 }
             }
         }
-        return {sub(), 1, false, p, p0};
+        తిరిగి {sub(), 1, false, p, p0};
     }
 };
 
 // UTF-16
-template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typename LimitIter>
+మూస<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typename హద్దు_Iter>
 class UTFImpl<
         CP32, behavior,
-        UnitIter, LimitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 2>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+        UnitIter, హద్దు_Iter,
+        std::enable_if_t<పరిమాణం(typename prv::iter_విలువ_t<UnitIter>) == 2>> {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
     // Handle ill-formed UTF-16: One unpaired surrogate.
-    U_FORCE_INLINE static CP32 sub(CP32 surrogate) {
-        if constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
-            return U_SENTINEL;
-        } else if constexpr (behavior == UTF_BEHAVIOR_FFFD) {
-            return 0xfffd;
-        } else {
+    U_FORCE_INLINE స్థిర CP32 sub(CP32 surrogate) {
+        ఒకవేళ constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
+            తిరిగి U_SENTINEL;
+        } లేకపోతే ఒకవేళ constexpr (behavior == UTF_BEHAVIOR_FFFD) {
+            తిరిగి 0xfffd;
+        } లేకపోతే {
             static_assert(behavior == UTF_BEHAVIOR_SURROGATE);
-            return surrogate;
+            తిరిగి surrogate;
         }
     }
 
-    U_FORCE_INLINE static void inc(UnitIter &p, const LimitIter &limit) {
+    U_FORCE_INLINE స్థిర శూన్య inc(UnitIter &p, స్థిరరాశి హద్దు_Iter &హద్దు) {
         // Very similar to U16_FWD_1().
-        auto c = *p;
+        స్వయంచాలక c = *p;
         ++p;
-        if (U16_IS_LEAD(c) && p != limit && U16_IS_TRAIL(*p)) {
+        ఒకవేళ (U16_IS_LEAD(c) && p != హద్దు && U16_IS_TRAIL(*p)) {
             ++p;
         }
     }
 
-    U_FORCE_INLINE static void dec(UnitIter start, UnitIter &p) {
+    U_FORCE_INLINE స్థిర శూన్య dec(UnitIter ప్రారంభం, UnitIter &p) {
         // Very similar to U16_BACK_1().
         UnitIter p1;
-        if (U16_IS_TRAIL(*--p) && p != start && (p1 = p, U16_IS_LEAD(*--p1))) {
+        ఒకవేళ (U16_IS_TRAIL(*--p) && p != ప్రారంభం && (p1 = p, U16_IS_LEAD(*--p1))) {
             p = p1;
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> readAndInc(
-            UnitIter &p0, UnitIter &p, const LimitIter &limit) {
+    U_FORCE_INLINE స్థిర సంకేతం_Units_2<CP32, UnitIter> readAndInc(
+            UnitIter &p0, UnitIter &p, స్థిరరాశి హద్దు_Iter &హద్దు) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         // Very similar to U16_NEXT_OR_FFFD().
         CP32 c = static_cast<CP32>(*p);
         ++p;
-        if (!U16_IS_SURROGATE(c)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, true, p0, p};
-            } else {
-                return {c, 1, true};
+        ఒకవేళ (!U16_IS_SURROGATE(c)) {
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, 1, true, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, 1, true};
             }
-        } else {
+        } లేకపోతే {
             uint16_t c2;
-            if (U16_IS_SURROGATE_LEAD(c) && p != limit && U16_IS_TRAIL(c2 = *p)) {
+            ఒకవేళ (U16_IS_SURROGATE_LEAD(c) && p != హద్దు && U16_IS_TRAIL(c2 = *p)) {
                 ++p;
                 c = U16_GET_SUPPLEMENTARY(c, c2);
-                if constexpr (isMultiPass) {
-                    return {c, 2, true, p0, p};
-                } else {
-                    return {c, 2, true};
+                ఒకవేళ constexpr (isMultiPass) {
+                    తిరిగి {c, 2, true, p0, p};
+                } లేకపోతే {
+                    తిరిగి {c, 2, true};
                 }
-            } else {
-                if constexpr (isMultiPass) {
-                    return {sub(c), 1, false, p0, p};
-                } else {
-                    return {sub(c), 1, false};
+            } లేకపోతే {
+                ఒకవేళ constexpr (isMultiPass) {
+                    తిరిగి {sub(c), 1, false, p0, p};
+                } లేకపోతే {
+                    తిరిగి {sub(c), 1, false};
                 }
             }
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> decAndRead(UnitIter start, UnitIter &p) {
+    U_FORCE_INLINE స్థిర సంకేతం_Units_2<CP32, UnitIter> decAndRead(UnitIter ప్రారంభం, UnitIter &p) {
         // Very similar to U16_PREV_OR_FFFD().
         UnitIter p0 = p;
         CP32 c = static_cast<CP32>(*--p);
-        if (!U16_IS_SURROGATE(c)) {
-            return {c, 1, true, p, p0};
-        } else {
+        ఒకవేళ (!U16_IS_SURROGATE(c)) {
+            తిరిగి {c, 1, true, p, p0};
+        } లేకపోతే {
             UnitIter p1;
             uint16_t c2;
-            if (U16_IS_SURROGATE_TRAIL(c) && p != start && (p1 = p, U16_IS_LEAD(c2 = *--p1))) {
+            ఒకవేళ (U16_IS_SURROGATE_TRAIL(c) && p != ప్రారంభం && (p1 = p, U16_IS_LEAD(c2 = *--p1))) {
                 p = p1;
                 c = U16_GET_SUPPLEMENTARY(c2, c);
-                return {c, 2, true, p, p0};
-            } else {
-                return {sub(c), 1, false, p, p0};
+                తిరిగి {c, 2, true, p, p0};
+            } లేకపోతే {
+                తిరిగి {sub(c), 1, false, p, p0};
             }
         }
     }
 };
 
 // UTF-32: trivial, but still validating
-template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typename LimitIter>
+మూస<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typename హద్దు_Iter>
 class UTFImpl<
         CP32, behavior,
-        UnitIter, LimitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 4>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+        UnitIter, హద్దు_Iter,
+        std::enable_if_t<పరిమాణం(typename prv::iter_విలువ_t<UnitIter>) == 4>> {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
     // Handle ill-formed UTF-32
-    U_FORCE_INLINE static CP32 sub(bool forSurrogate, CP32 surrogate) {
-        if constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
-            return U_SENTINEL;
-        } else if constexpr (behavior == UTF_BEHAVIOR_FFFD) {
-            return 0xfffd;
-        } else {
+    U_FORCE_INLINE స్థిర CP32 sub(bool forSurrogate, CP32 surrogate) {
+        ఒకవేళ constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
+            తిరిగి U_SENTINEL;
+        } లేకపోతే ఒకవేళ constexpr (behavior == UTF_BEHAVIOR_FFFD) {
+            తిరిగి 0xfffd;
+        } లేకపోతే {
             static_assert(behavior == UTF_BEHAVIOR_SURROGATE);
-            return forSurrogate ? surrogate : 0xfffd;
+            తిరిగి forSurrogate ? surrogate : 0xfffd;
         }
     }
 
-    U_FORCE_INLINE static void inc(UnitIter &p, const LimitIter &/*limit*/) {
+    U_FORCE_INLINE స్థిర శూన్య inc(UnitIter &p, స్థిరరాశి హద్దు_Iter &/*హద్దు*/) {
         ++p;
     }
 
-    U_FORCE_INLINE static void dec(UnitIter /*start*/, UnitIter &p) {
+    U_FORCE_INLINE స్థిర శూన్య dec(UnitIter /*ప్రారంభం*/, UnitIter &p) {
         --p;
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> readAndInc(
-            UnitIter &p0, UnitIter &p, const LimitIter &/*limit*/) {
+    U_FORCE_INLINE స్థిర సంకేతం_Units_2<CP32, UnitIter> readAndInc(
+            UnitIter &p0, UnitIter &p, స్థిరరాశి హద్దు_Iter &/*హద్దు*/) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         uint32_t uc = *p;
         CP32 c = uc;
         ++p;
-        if (uc < 0xd800 || (0xe000 <= uc && uc <= 0x10ffff)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, true, p0, p};
-            } else {
-                return {c, 1, true};
+        ఒకవేళ (uc < 0xd800 || (0xe000 <= uc && uc <= 0x10ffff)) {
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, 1, true, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, 1, true};
             }
-        } else {
-            if constexpr (isMultiPass) {
-                return {sub(uc < 0xe000, c), 1, false, p0, p};
-            } else {
-                return {sub(uc < 0xe000, c), 1, false};
+        } లేకపోతే {
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {sub(uc < 0xe000, c), 1, false, p0, p};
+            } లేకపోతే {
+                తిరిగి {sub(uc < 0xe000, c), 1, false};
             }
         }
     }
 
-    U_FORCE_INLINE static CodeUnits<CP32, UnitIter> decAndRead(UnitIter /*start*/, UnitIter &p) {
+    U_FORCE_INLINE స్థిర సంకేతం_Units_2<CP32, UnitIter> decAndRead(UnitIter /*ప్రారంభం*/, UnitIter &p) {
         UnitIter p0 = p;
         uint32_t uc = *--p;
         CP32 c = uc;
-        if (uc < 0xd800 || (0xe000 <= uc && uc <= 0x10ffff)) {
-            return {c, 1, true, p, p0};
-        } else {
-            return {sub(uc < 0xe000, c), 1, false, p, p0};
+        ఒకవేళ (uc < 0xd800 || (0xe000 <= uc && uc <= 0x10ffff)) {
+            తిరిగి {c, 1, true, p, p0};
+        } లేకపోతే {
+            తిరిగి {sub(uc < 0xe000, c), 1, false, p, p0};
         }
     }
 };
 
 // Non-validating implementations ------------------------------------------ ***
 
-template<typename CP32, typename UnitIter, typename = void>
+మూస<typename CP32, typename UnitIter, typename = శూన్య>
 class UnsafeUTFImpl;
 
 // UTF-8
-template<typename CP32, typename UnitIter>
+మూస<typename CP32, typename UnitIter>
 class UnsafeUTFImpl<
         CP32,
         UnitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 1>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
-    U_FORCE_INLINE static void inc(UnitIter &p) {
+        std::enable_if_t<పరిమాణం(typename prv::iter_విలువ_t<UnitIter>) == 1>> {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
+    U_FORCE_INLINE స్థిర శూన్య inc(UnitIter &p) {
         // Very similar to U8_FWD_1_UNSAFE().
         uint8_t b = *p;
-        std::advance(p, 1 + U8_COUNT_TRAIL_BYTES_UNSAFE(b));
+        std::advance(p, 1 + U8_లెక్క_TRAIL_బైట్లు_UNSAFE(b));
     }
 
-    U_FORCE_INLINE static void dec(UnitIter &p) {
+    U_FORCE_INLINE స్థిర శూన్య dec(UnitIter &p) {
         // Very similar to U8_BACK_1_UNSAFE().
-        while (U8_IS_TRAIL(*--p)) {}
+        అయితే (U8_IS_TRAIL(*--p)) {}
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
+    U_FORCE_INLINE స్థిర Unsafe_సంకేతం_Units<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         // Very similar to U8_NEXT_UNSAFE().
         CP32 c = uint8_t(*p);
         ++p;
-        if (U8_IS_SINGLE(c)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, p0, p};
-            } else {
-                return {c, 1};
+        ఒకవేళ (U8_IS_SINGLE(c)) {
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, 1, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, 1};
             }
-        } else if (c < 0xe0) {
+        } లేకపోతే ఒకవేళ (c < 0xe0) {
             c = ((c & 0x1f) << 6) | (*p & 0x3f);
             ++p;
-            if constexpr (isMultiPass) {
-                return {c, 2, p0, p};
-            } else {
-                return {c, 2};
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, 2, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, 2};
             }
-        } else if (c < 0xf0) {
+        } లేకపోతే ఒకవేళ (c < 0xf0) {
             // No need for (c&0xf) because the upper bits are truncated
             // after <<12 in the cast to uint16_t.
             c = uint16_t(c << 12) | ((*p & 0x3f) << 6);
             ++p;
             c |= *p & 0x3f;
             ++p;
-            if constexpr (isMultiPass) {
-                return {c, 3, p0, p};
-            } else {
-                return {c, 3};
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, 3, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, 3};
             }
-        } else {
+        } లేకపోతే {
             c = ((c & 7) << 18) | ((*p & 0x3f) << 12);
             ++p;
             c |= (*p & 0x3f) << 6;
             ++p;
             c |= *p & 0x3f;
             ++p;
-            if constexpr (isMultiPass) {
-                return {c, 4, p0, p};
-            } else {
-                return {c, 4};
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, 4, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, 4};
             }
         }
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> decAndRead(UnitIter &p) {
+    U_FORCE_INLINE స్థిర Unsafe_సంకేతం_Units<CP32, UnitIter> decAndRead(UnitIter &p) {
         // Very similar to U8_PREV_UNSAFE().
         UnitIter p0 = p;
         CP32 c = uint8_t(*--p);
-        if (U8_IS_SINGLE(c)) {
-            return {c, 1, p, p0};
+        ఒకవేళ (U8_IS_SINGLE(c)) {
+            తిరిగి {c, 1, p, p0};
         }
         // U8_IS_TRAIL(c) if well-formed
         c &= 0x3f;
-        uint8_t count = 1;
-        for (uint8_t shift = 6;;) {
+        uint8_t లెక్క = 1;
+        కొరకు (uint8_t జరుపు = 6;;) {
             uint8_t b = *--p;
-            if (b >= 0xc0) {
-                U8_MASK_LEAD_BYTE(b, count);
-                c |= uint32_t{b} << shift;
-                break;
-            } else {
-                c |= (uint32_t{b} & 0x3f) << shift;
-                ++count;
-                shift += 6;
+            ఒకవేళ (b >= 0xc0) {
+                U8_ముసుగు_LEAD_BYTE(b, లెక్క);
+                c |= uint32_t{b} << జరుపు;
+                ఆపు;
+            } లేకపోతే {
+                c |= (uint32_t{b} & 0x3f) << జరుపు;
+                ++లెక్క;
+                జరుపు += 6;
             }
         }
-        ++count;
-        return {c, count, p, p0};
+        ++లెక్క;
+        తిరిగి {c, లెక్క, p, p0};
     }
 };
 
 // UTF-16
-template<typename CP32, typename UnitIter>
+మూస<typename CP32, typename UnitIter>
 class UnsafeUTFImpl<
         CP32,
         UnitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 2>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
-    U_FORCE_INLINE static void inc(UnitIter &p) {
+        std::enable_if_t<పరిమాణం(typename prv::iter_విలువ_t<UnitIter>) == 2>> {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
+    U_FORCE_INLINE స్థిర శూన్య inc(UnitIter &p) {
         // Very similar to U16_FWD_1_UNSAFE().
-        auto c = *p;
+        స్వయంచాలక c = *p;
         ++p;
-        if (U16_IS_LEAD(c)) {
+        ఒకవేళ (U16_IS_LEAD(c)) {
             ++p;
         }
     }
 
-    U_FORCE_INLINE static void dec(UnitIter &p) {
+    U_FORCE_INLINE స్థిర శూన్య dec(UnitIter &p) {
         // Very similar to U16_BACK_1_UNSAFE().
-        if (U16_IS_TRAIL(*--p)) {
+        ఒకవేళ (U16_IS_TRAIL(*--p)) {
             --p;
         }
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
+    U_FORCE_INLINE స్థిర Unsafe_సంకేతం_Units<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         // Very similar to U16_NEXT_UNSAFE().
         CP32 c = static_cast<CP32>(*p);
         ++p;
-        if (!U16_IS_LEAD(c)) {
-            if constexpr (isMultiPass) {
-                return {c, 1, p0, p};
-            } else {
-                return {c, 1};
+        ఒకవేళ (!U16_IS_LEAD(c)) {
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, 1, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, 1};
             }
-        } else {
+        } లేకపోతే {
             uint16_t c2 = *p;
             ++p;
             c = U16_GET_SUPPLEMENTARY(c, c2);
-            if constexpr (isMultiPass) {
-                return {c, 2, p0, p};
-            } else {
-                return {c, 2};
+            ఒకవేళ constexpr (isMultiPass) {
+                తిరిగి {c, 2, p0, p};
+            } లేకపోతే {
+                తిరిగి {c, 2};
             }
         }
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> decAndRead(UnitIter &p) {
+    U_FORCE_INLINE స్థిర Unsafe_సంకేతం_Units<CP32, UnitIter> decAndRead(UnitIter &p) {
         // Very similar to U16_PREV_UNSAFE().
         UnitIter p0 = p;
         CP32 c = static_cast<CP32>(*--p);
-        if (!U16_IS_TRAIL(c)) {
-            return {c, 1, p, p0};
-        } else {
+        ఒకవేళ (!U16_IS_TRAIL(c)) {
+            తిరిగి {c, 1, p, p0};
+        } లేకపోతే {
             uint16_t c2 = *--p;
             c = U16_GET_SUPPLEMENTARY(c2, c);
-            return {c, 2, p, p0};
+            తిరిగి {c, 2, p, p0};
         }
     }
 };
 
 // UTF-32: trivial
-template<typename CP32, typename UnitIter>
+మూస<typename CP32, typename UnitIter>
 class UnsafeUTFImpl<
         CP32,
         UnitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 4>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
-    U_FORCE_INLINE static void inc(UnitIter &p) {
+        std::enable_if_t<పరిమాణం(typename prv::iter_విలువ_t<UnitIter>) == 4>> {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
+    U_FORCE_INLINE స్థిర శూన్య inc(UnitIter &p) {
         ++p;
     }
 
-    U_FORCE_INLINE static void dec(UnitIter &p) {
+    U_FORCE_INLINE స్థిర శూన్య dec(UnitIter &p) {
         --p;
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
+    U_FORCE_INLINE స్థిర Unsafe_సంకేతం_Units<CP32, UnitIter> readAndInc(UnitIter &p0, UnitIter &p) {
         constexpr bool isMultiPass = prv::forward_iterator<UnitIter>;
         CP32 c = *p;
         ++p;
-        if constexpr (isMultiPass) {
-            return {c, 1, p0, p};
-        } else {
-            return {c, 1};
+        ఒకవేళ constexpr (isMultiPass) {
+            తిరిగి {c, 1, p0, p};
+        } లేకపోతే {
+            తిరిగి {c, 1};
         }
     }
 
-    U_FORCE_INLINE static UnsafeCodeUnits<CP32, UnitIter> decAndRead(UnitIter &p) {
+    U_FORCE_INLINE స్థిర Unsafe_సంకేతం_Units<CP32, UnitIter> decAndRead(UnitIter &p) {
         UnitIter p0 = p;
         CP32 c = *--p;
-        return {c, 1, p, p0};
+        తిరిగి {c, 1, p, p0};
     }
 };
 
-#endif
+#అయితే_ముగింపు
 
 // Validating iterators ---------------------------------------------------- ***
 
@@ -1103,37 +1103,37 @@ public:
  * @draft ICU 78
  * @see utfIterator
  */
-template<typename CP32, UTFIllFormedBehavior behavior,
-         typename UnitIter, typename LimitIter = UnitIter, typename = void>
+మూస<typename CP32, UTFIllFormedBehavior behavior,
+         typename UnitIter, typename హద్దు_Iter = UnitIter, typename = శూన్య>
 class UTFIterator {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-    using Impl = UTFImpl<CP32, behavior, UnitIter, LimitIter>;
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    using Impl = UTFImpl<CP32, behavior, UnitIter, హద్దు_Iter>;
 
     // Proxy type for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning CodeUnits.
     class Proxy {
-    public:
-        explicit Proxy(CodeUnits<CP32, UnitIter> &units) : units_(units) {}
-        CodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { return units_; }
-        CodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
-        CodeUnits<CP32, UnitIter> units_;
+    బహిరంగ:
+        explicit Proxy(సంకేతం_Units_2<CP32, UnitIter> &units) : units_(units) {}
+        సంకేతం_Units_2<CP32, UnitIter>& క్రియాకారకం*() U_LIFETIME_BOUND { తిరిగి units_; }
+        సంకేతం_Units_2<CP32, UnitIter>* క్రియాకారకం->() U_LIFETIME_BOUND { తిరిగి &units_; }
+    అంతరంగ:
+        సంకేతం_Units_2<CP32, UnitIter> units_;
     };
 
-public:
+బహిరంగ:
     /** C++ iterator boilerplate @internal */
-    using value_type = CodeUnits<CP32, UnitIter>;
+    using విలువ_type = సంకేతం_Units_2<CP32, UnitIter>;
     /** C++ iterator boilerplate @internal */
-    using reference = value_type;
+    using reference = విలువ_type;
     /** C++ iterator boilerplate @internal */
-    using pointer = Proxy;
+    using సూచిక = Proxy;
     /** C++ iterator boilerplate @internal */
     using difference_type = prv::iter_difference_t<UnitIter>;
     /** C++ iterator boilerplate @internal */
     using iterator_category = std::conditional_t<
         prv::bidirectional_iterator<UnitIter>,
-        std::bidirectional_iterator_tag,
-        std::forward_iterator_tag>;
+        std::bidirectional_iterator_ట్యాగ్,
+        std::forward_iterator_ట్యాగ్>;
 
     /**
      * Constructor with start <= p < limit.
@@ -1148,8 +1148,8 @@ public:
      * @param limit Limit (exclusive end) of the range
      * @draft ICU 78
      */
-    U_FORCE_INLINE UTFIterator(UnitIter start, UnitIter p, LimitIter limit) :
-            p_(p), start_(start), limit_(limit), units_(0, 0, false, p, p) {}
+    U_FORCE_INLINE UTFIterator(UnitIter ప్రారంభం, UnitIter p, హద్దు_Iter హద్దు) :
+            p_(p), ప్రారంభం_3(ప్రారంభం), హద్దు_3(హద్దు), units_(0, 0, false, p, p) {}
     /**
      * Constructor with start == p < limit.
      * All of these iterators/pointers should be at code point boundaries.
@@ -1161,8 +1161,8 @@ public:
      * @param limit Limit (exclusive end) of the range
      * @draft ICU 78
      */
-    U_FORCE_INLINE UTFIterator(UnitIter p, LimitIter limit) :
-            p_(p), start_(p), limit_(limit), units_(0, 0, false, p, p) {}
+    U_FORCE_INLINE UTFIterator(UnitIter p, హద్దు_Iter హద్దు) :
+            p_(p), ప్రారంభం_3(p), హద్దు_3(హద్దు), units_(0, 0, false, p, p) {}
     /**
      * Constructs an iterator start or limit sentinel.
      * The iterator/pointer should be at a code point boundary.
@@ -1174,38 +1174,38 @@ public:
      * @param p Range start or limit
      * @draft ICU 78
      */
-    U_FORCE_INLINE explicit UTFIterator(UnitIter p) : p_(p), start_(p), limit_(p), units_(0, 0, false, p, p) {}
+    U_FORCE_INLINE explicit UTFIterator(UnitIter p) : p_(p), ప్రారంభం_3(p), హద్దు_3(p), units_(0, 0, false, p, p) {}
     /**
      * Default constructor. Makes a non-functional iterator.
      *
      * @draft ICU 78
      */
-    U_FORCE_INLINE UTFIterator() : p_{}, start_{}, limit_{}, units_(0, 0, false, p_, p_) {}
+    U_FORCE_INLINE UTFIterator() : p_{}, ప్రారంభం_3{}, హద్దు_3{}, units_(0, 0, false, p_, p_) {}
 
     /** Move constructor. @draft ICU 78 */
-    U_FORCE_INLINE UTFIterator(UTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UTFIterator(UTFIterator &&src) noexcept = అప్రమేయ;
     /** Move assignment operator. @draft ICU 78 */
-    U_FORCE_INLINE UTFIterator &operator=(UTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UTFIterator &క్రియాకారకం=(UTFIterator &&src) noexcept = అప్రమేయ;
 
     /** Copy constructor. @draft ICU 78 */
-    U_FORCE_INLINE UTFIterator(const UTFIterator &other) = default;
+    U_FORCE_INLINE UTFIterator(స్థిరరాశి UTFIterator &other) = అప్రమేయ;
     /** Copy assignment operator. @draft ICU 78 */
-    U_FORCE_INLINE UTFIterator &operator=(const UTFIterator &other) = default;
+    U_FORCE_INLINE UTFIterator &క్రియాకారకం=(స్థిరరాశి UTFIterator &other) = అప్రమేయ;
 
     /**
      * @param other Another iterator
      * @return true if this iterator is at the same position as the other one
      * @draft ICU 78
      */
-    U_FORCE_INLINE bool operator==(const UTFIterator &other) const {
-        return base() == other.base();
+    U_FORCE_INLINE bool క్రియాకారకం==(స్థిరరాశి UTFIterator &other) స్థిరరాశి {
+        తిరిగి పునాది() == other.పునాది();
     }
     /**
      * @param other Another iterator
      * @return true if this iterator is not at the same position as the other one
      * @draft ICU 78
      */
-    U_FORCE_INLINE bool operator!=(const UTFIterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool క్రియాకారకం!=(స్థిరరాశి UTFIterator &other) స్థిరరాశి { తిరిగి !క్రియాకారకం==(other); }
 
     // Asymmetric equality & nonequality with a sentinel type.
 
@@ -1215,15 +1215,15 @@ public:
      * @return true if the iterator’s position is equal to the sentinel
      * @draft ICU 78
      */
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const UTFIterator &iter, const Sentinel &s) {
-        return iter.base() == s;
+    క్రియాకారకం==(స్థిరరాశి UTFIterator &iter, స్థిరరాశి Sentinel &s) {
+        తిరిగి iter.పునాది() == s;
     }
 
-#if U_CPLUSPLUS_VERSION < 20
+#ఒకవేళ U_CPLUSPLUS_సంస్కరణ < 20
     // C++17: Need to define all four combinations of == / != vs. parameter order.
     // Once we require C++20, we could remove all but the first == because
     // the compiler would generate the rest.
@@ -1234,12 +1234,12 @@ public:
      * @return true if the iterator’s position is equal to the sentinel
      * @internal
      */
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const Sentinel &s, const UTFIterator &iter) {
-        return iter.base() == s;
+    క్రియాకారకం==(స్థిరరాశి Sentinel &s, స్థిరరాశి UTFIterator &iter) {
+        తిరిగి iter.పునాది() == s;
     }
     /**
      * @param iter A UTFIterator
@@ -1247,23 +1247,23 @@ public:
      * @return true if the iterator’s position is not equal to the sentinel
      * @internal
      */
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const UTFIterator &iter, const Sentinel &s) { return !(iter == s); }
+    క్రియాకారకం!=(స్థిరరాశి UTFIterator &iter, స్థిరరాశి Sentinel &s) { తిరిగి !(iter == s); }
     /**
      * @param s A unit iterator sentinel
      * @param iter A UTFIterator
      * @return true if the iterator’s position is not equal to the sentinel
      * @internal
      */
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const Sentinel &s, const UTFIterator &iter) { return !(iter == s); }
-#endif  // C++17
+    క్రియాకారకం!=(స్థిరరాశి Sentinel &s, స్థిరరాశి UTFIterator &iter) { తిరిగి !(iter == s); }
+#అయితే_ముగింపు  // C++17
 
     /**
      * Returns the current position as a code unit iterator.
@@ -1272,9 +1272,9 @@ public:
      * @return current position as a code unit iterator
      * @draft ICU 79
      */
-    U_FORCE_INLINE UnitIter base() const {
+    U_FORCE_INLINE UnitIter పునాది() స్థిరరాశి {
         // Return the logical position.
-        return state_ <= 0 ? p_ : units_.begin();
+        తిరిగి state_ <= 0 ? p_ : units_.begin();
     }
 
     /**
@@ -1283,13 +1283,13 @@ public:
      * @return CodeUnits with the decoded code point etc.
      * @draft ICU 78
      */
-    U_FORCE_INLINE CodeUnits<CP32, UnitIter> operator*() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE సంకేతం_Units_2<CP32, UnitIter> క్రియాకారకం*() స్థిరరాశి {
+        ఒకవేళ (state_ == 0) {
             UnitIter p0 = p_;
-            units_ = Impl::readAndInc(p0, p_, limit_);
+            units_ = Impl::readAndInc(p0, p_, హద్దు_3);
             state_ = 1;
         }
-        return units_;
+        తిరిగి units_;
     }
 
     /**
@@ -1300,13 +1300,13 @@ public:
      *     an opaque proxy object so that <code>iter->codePoint()</code> etc. works.
      * @draft ICU 78
      */
-    U_FORCE_INLINE Proxy operator->() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE Proxy క్రియాకారకం->() స్థిరరాశి {
+        ఒకవేళ (state_ == 0) {
             UnitIter p0 = p_;
-            units_ = Impl::readAndInc(p0, p_, limit_);
+            units_ = Impl::readAndInc(p0, p_, హద్దు_3);
             state_ = 1;
         }
-        return Proxy(units_);
+        తిరిగి Proxy(units_);
     }
 
     /**
@@ -1315,18 +1315,18 @@ public:
      * @return this iterator
      * @draft ICU 78
      */
-    U_FORCE_INLINE UTFIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (state_ > 0) {
+    U_FORCE_INLINE UTFIterator& క్రియాకారకం++() U_LIFETIME_BOUND {  // pre-increment
+        ఒకవేళ (state_ > 0) {
             // operator*() called readAndInc() so p_ is already ahead.
             state_ = 0;
-        } else if (state_ == 0) {
-            Impl::inc(p_, limit_);
-        } else /* state_ < 0 */ {
+        } లేకపోతే ఒకవేళ (state_ == 0) {
+            Impl::inc(p_, హద్దు_3);
+        } లేకపోతే /* state_ < 0 */ {
             // operator--() called decAndRead() so we know how far to skip.
-            p_ = units_.end();
+            p_ = units_.చివర();
             state_ = 0;
         }
-        return *this;
+        తిరిగి *this;
     }
 
     /**
@@ -1337,25 +1337,25 @@ public:
      *     returns an opaque proxy object so that <code>*iter++</code> still works.
      * @draft ICU 78
      */
-    U_FORCE_INLINE UTFIterator operator++(int) {  // post-increment
-        if (state_ > 0) {
+    U_FORCE_INLINE UTFIterator క్రియాకారకం++(పూర్ణాంకం) {  // post-increment
+        ఒకవేళ (state_ > 0) {
             // operator*() called readAndInc() so p_ is already ahead.
-            UTFIterator result(*this);
+            UTFIterator ఫలితం(*this);
             state_ = 0;
-            return result;
-        } else if (state_ == 0) {
+            తిరిగి ఫలితం;
+        } లేకపోతే ఒకవేళ (state_ == 0) {
             UnitIter p0 = p_;
-            units_ = Impl::readAndInc(p0, p_, limit_);
-            UTFIterator result(*this);
-            result.state_ = 1;
+            units_ = Impl::readAndInc(p0, p_, హద్దు_3);
+            UTFIterator ఫలితం(*this);
+            ఫలితం.state_ = 1;
             // keep this->state_ == 0
-            return result;
-        } else /* state_ < 0 */ {
-            UTFIterator result(*this);
+            తిరిగి ఫలితం;
+        } లేకపోతే /* state_ < 0 */ {
+            UTFIterator ఫలితం(*this);
             // operator--() called decAndRead() so we know how far to skip.
-            p_ = units_.end();
+            p_ = units_.చివర();
             state_ = 0;
-            return result;
+            తిరిగి ఫలితం;
         }
     }
 
@@ -1366,17 +1366,17 @@ public:
      * @return this iterator
      * @draft ICU 78
      */
-    template <typename Iter = UnitIter>
+    మూస <typename Iter = UnitIter>
     U_FORCE_INLINE
     std::enable_if_t<prv::bidirectional_iterator<Iter>, UTFIterator&>
-    operator--() U_LIFETIME_BOUND {  // pre-decrement
-        if (state_ > 0) {
+    క్రియాకారకం--() U_LIFETIME_BOUND {  // pre-decrement
+        ఒకవేళ (state_ > 0) {
             // operator*() called readAndInc() so p_ is ahead of the logical position.
             p_ = units_.begin();
         }
-        units_ = Impl::decAndRead(start_, p_);
+        units_ = Impl::decAndRead(ప్రారంభం_3, p_);
         state_ = -1;
-        return *this;
+        తిరిగి *this;
     }
 
     /**
@@ -1386,27 +1386,27 @@ public:
      * @return a copy of this iterator from before the decrement.
      * @draft ICU 78
      */
-    template<typename Iter = UnitIter>
+    మూస<typename Iter = UnitIter>
     U_FORCE_INLINE
     std::enable_if_t<prv::bidirectional_iterator<Iter>, UTFIterator>
-    operator--(int) {  // post-decrement
-        UTFIterator result(*this);
-        operator--();
-        return result;
+    క్రియాకారకం--(పూర్ణాంకం) {  // post-decrement
+        UTFIterator ఫలితం(*this);
+        క్రియాకారకం--();
+        తిరిగి ఫలితం;
     }
 
-private:
-    friend class std::reverse_iterator<UTFIterator<CP32, behavior, UnitIter>>;
+అంతరంగ:
+    మిత్ర class std::తిరగేయి_iterator<UTFIterator<CP32, behavior, UnitIter>>;
 
     // operator*() etc. are logically const.
     mutable UnitIter p_;
     // In a validating iterator, we need start_ & limit_ so that when we read a code point
     // (forward or backward) we can test if there are enough code units.
-    UnitIter start_;
-    LimitIter limit_;
+    UnitIter ప్రారంభం_3;
+    హద్దు_Iter హద్దు_3;
     // Keep state so that we call readAndInc() only once for both operator*() and ++
     // to make it easy for the compiler to optimize.
-    mutable CodeUnits<CP32, UnitIter> units_;
+    mutable సంకేతం_Units_2<CP32, UnitIter> units_;
     // >0: units_ = readAndInc(), p_ = units limit
     //     which means that p_ is ahead of its logical position
     //  0: initial state
@@ -1414,279 +1414,279 @@ private:
     mutable int8_t state_ = 0;
 };
 
-#ifndef U_IN_DOXYGEN
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
 // Partial template specialization for single-pass input iterator.
-template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typename LimitIter>
+మూస<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typename హద్దు_Iter>
 class UTFIterator<
         CP32, behavior,
-        UnitIter, LimitIter,
+        UnitIter, హద్దు_Iter,
         std::enable_if_t<!prv::forward_iterator<UnitIter>>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-    using Impl = UTFImpl<CP32, behavior, UnitIter, LimitIter>;
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    using Impl = UTFImpl<CP32, behavior, UnitIter, హద్దు_Iter>;
 
     // Proxy type for post-increment return value, to make *iter++ work.
     // Also for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning CodeUnits.
     class Proxy {
-    public:
-        explicit Proxy(CodeUnits<CP32, UnitIter> &units) : units_(units) {}
-        CodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { return units_; }
-        CodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
-        CodeUnits<CP32, UnitIter> units_;
+    బహిరంగ:
+        explicit Proxy(సంకేతం_Units_2<CP32, UnitIter> &units) : units_(units) {}
+        సంకేతం_Units_2<CP32, UnitIter>& క్రియాకారకం*() U_LIFETIME_BOUND { తిరిగి units_; }
+        సంకేతం_Units_2<CP32, UnitIter>* క్రియాకారకం->() U_LIFETIME_BOUND { తిరిగి &units_; }
+    అంతరంగ:
+        సంకేతం_Units_2<CP32, UnitIter> units_;
     };
 
-public:
-    using value_type = CodeUnits<CP32, UnitIter>;
-    using reference = value_type;
-    using pointer = Proxy;
+బహిరంగ:
+    using విలువ_type = సంకేతం_Units_2<CP32, UnitIter>;
+    using reference = విలువ_type;
+    using సూచిక = Proxy;
     using difference_type = prv::iter_difference_t<UnitIter>;
-    using iterator_category = std::input_iterator_tag;
+    using iterator_category = std::ఆదానం_iterator_ట్యాగ్;
 
-    U_FORCE_INLINE UTFIterator(UnitIter p, LimitIter limit) : p_(std::move(p)), limit_(std::move(limit)) {}
+    U_FORCE_INLINE UTFIterator(UnitIter p, హద్దు_Iter హద్దు) : p_(std::move(p)), హద్దు_3(std::move(హద్దు)) {}
 
     // Constructs an iterator start or limit sentinel.
     // Requires p to be copyable.
-    U_FORCE_INLINE explicit UTFIterator(UnitIter p) : p_(std::move(p)), limit_(p_) {}
+    U_FORCE_INLINE explicit UTFIterator(UnitIter p) : p_(std::move(p)), హద్దు_3(p_) {}
 
-    U_FORCE_INLINE UTFIterator(UTFIterator &&src) noexcept = default;
-    U_FORCE_INLINE UTFIterator &operator=(UTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UTFIterator(UTFIterator &&src) noexcept = అప్రమేయ;
+    U_FORCE_INLINE UTFIterator &క్రియాకారకం=(UTFIterator &&src) noexcept = అప్రమేయ;
 
-    U_FORCE_INLINE UTFIterator(const UTFIterator &other) = default;
-    U_FORCE_INLINE UTFIterator &operator=(const UTFIterator &other) = default;
+    U_FORCE_INLINE UTFIterator(స్థిరరాశి UTFIterator &other) = అప్రమేయ;
+    U_FORCE_INLINE UTFIterator &క్రియాకారకం=(స్థిరరాశి UTFIterator &other) = అప్రమేయ;
 
-    U_FORCE_INLINE bool operator==(const UTFIterator &other) const {
-        return p_ == other.p_ && ahead_ == other.ahead_;
+    U_FORCE_INLINE bool క్రియాకారకం==(స్థిరరాశి UTFIterator &other) స్థిరరాశి {
+        తిరిగి p_ == other.p_ && ahead_ == other.ahead_;
         // Strictly speaking, we should check if the logical position is the same.
         // However, we cannot advance, or do arithmetic with, a single-pass UnitIter.
     }
-    U_FORCE_INLINE bool operator!=(const UTFIterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool క్రియాకారకం!=(స్థిరరాశి UTFIterator &other) స్థిరరాశి { తిరిగి !క్రియాకారకం==(other); }
 
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const UTFIterator &iter, const Sentinel &s) {
-        return !iter.ahead_ && iter.p_ == s;
+    క్రియాకారకం==(స్థిరరాశి UTFIterator &iter, స్థిరరాశి Sentinel &s) {
+        తిరిగి !iter.ahead_ && iter.p_ == s;
     }
 
-#if U_CPLUSPLUS_VERSION < 20
-    template<typename Sentinel> U_FORCE_INLINE friend
+#ఒకవేళ U_CPLUSPLUS_సంస్కరణ < 20
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const Sentinel &s, const UTFIterator &iter) {
-        return !iter.ahead_ && iter.p_ == s;
+    క్రియాకారకం==(స్థిరరాశి Sentinel &s, స్థిరరాశి UTFIterator &iter) {
+        తిరిగి !iter.ahead_ && iter.p_ == s;
     }
 
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const UTFIterator &iter, const Sentinel &s) { return !(iter == s); }
+    క్రియాకారకం!=(స్థిరరాశి UTFIterator &iter, స్థిరరాశి Sentinel &s) { తిరిగి !(iter == s); }
 
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const Sentinel &s, const UTFIterator &iter) { return !(iter == s); }
-#endif  // C++17
+    క్రియాకారకం!=(స్థిరరాశి Sentinel &s, స్థిరరాశి UTFIterator &iter) { తిరిగి !(iter == s); }
+#అయితే_ముగింపు  // C++17
 
-    U_FORCE_INLINE CodeUnits<CP32, UnitIter> operator*() const {
-        if (!ahead_) {
-            units_ = Impl::readAndInc(p_, p_, limit_);
+    U_FORCE_INLINE సంకేతం_Units_2<CP32, UnitIter> క్రియాకారకం*() స్థిరరాశి {
+        ఒకవేళ (!ahead_) {
+            units_ = Impl::readAndInc(p_, p_, హద్దు_3);
             ahead_ = true;
         }
-        return units_;
+        తిరిగి units_;
     }
 
-    U_FORCE_INLINE Proxy operator->() const {
-        if (!ahead_) {
-            units_ = Impl::readAndInc(p_, p_, limit_);
+    U_FORCE_INLINE Proxy క్రియాకారకం->() స్థిరరాశి {
+        ఒకవేళ (!ahead_) {
+            units_ = Impl::readAndInc(p_, p_, హద్దు_3);
             ahead_ = true;
         }
-        return Proxy(units_);
+        తిరిగి Proxy(units_);
     }
 
-    U_FORCE_INLINE UTFIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (ahead_) {
+    U_FORCE_INLINE UTFIterator& క్రియాకారకం++() U_LIFETIME_BOUND {  // pre-increment
+        ఒకవేళ (ahead_) {
             // operator*() called readAndInc() so p_ is already ahead.
             ahead_ = false;
-        } else {
-            Impl::inc(p_, limit_);
+        } లేకపోతే {
+            Impl::inc(p_, హద్దు_3);
         }
-        return *this;
+        తిరిగి *this;
     }
 
-    U_FORCE_INLINE Proxy operator++(int) {  // post-increment
-        if (ahead_) {
+    U_FORCE_INLINE Proxy క్రియాకారకం++(పూర్ణాంకం) {  // post-increment
+        ఒకవేళ (ahead_) {
             // operator*() called readAndInc() so p_ is already ahead.
             ahead_ = false;
-        } else {
-            units_ = Impl::readAndInc(p_, p_, limit_);
+        } లేకపోతే {
+            units_ = Impl::readAndInc(p_, p_, హద్దు_3);
             // keep this->ahead_ == false
         }
-        return Proxy(units_);
+        తిరిగి Proxy(units_);
     }
 
-private:
+అంతరంగ:
     // operator*() etc. are logically const.
     mutable UnitIter p_;
     // In a validating iterator, we need limit_ so that when we read a code point
     // we can test if there are enough code units.
-    LimitIter limit_;
+    హద్దు_Iter హద్దు_3;
     // Keep state so that we call readAndInc() only once for both operator*() and ++
     // so that we can use a single-pass input iterator for UnitIter.
-    mutable CodeUnits<CP32, UnitIter> units_ = {0, 0, false};
+    mutable సంకేతం_Units_2<CP32, UnitIter> units_ = {0, 0, false};
     // true: units_ = readAndInc(), p_ = units limit
     //     which means that p_ is ahead of its logical position
     // false: initial state
     mutable bool ahead_ = false;
 };
-#endif  // U_IN_DOXYGEN
+#అయితే_ముగింపు  // U_IN_DOXYGEN
 
 }  // namespace U_HEADER_ONLY_NAMESPACE
 
-#ifndef U_IN_DOXYGEN
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
 // Bespoke specialization of reverse_iterator.
 // The default implementation implements reverse operator*() and ++ in a way
 // that does most of the same work twice for reading variable-length sequences.
-template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter>
-class std::reverse_iterator<U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-    using Impl = U_HEADER_ONLY_NAMESPACE::UTFImpl<CP32, behavior, UnitIter>;
-    using CodeUnits_ = U_HEADER_ONLY_NAMESPACE::CodeUnits<CP32, UnitIter>;
+మూస<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter>
+class std::తిరగేయి_iterator<U_శీర్షిక_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter>> {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    using Impl = U_శీర్షిక_ONLY_NAMESPACE::UTFImpl<CP32, behavior, UnitIter>;
+    using సంకేతం_Units_3 = U_శీర్షిక_ONLY_NAMESPACE::సంకేతం_Units_2<CP32, UnitIter>;
 
     // Proxy type for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning CodeUnits.
     class Proxy {
-    public:
-        explicit Proxy(CodeUnits_ units) : units_(units) {}
-        CodeUnits_& operator*() U_LIFETIME_BOUND { return units_; }
-        CodeUnits_* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
-        CodeUnits_ units_;
+    బహిరంగ:
+        explicit Proxy(సంకేతం_Units_3 units) : units_(units) {}
+        సంకేతం_Units_3& క్రియాకారకం*() U_LIFETIME_BOUND { తిరిగి units_; }
+        సంకేతం_Units_3* క్రియాకారకం->() U_LIFETIME_BOUND { తిరిగి &units_; }
+    అంతరంగ:
+        సంకేతం_Units_3 units_;
     };
 
-public:
-    using value_type = CodeUnits_;
-    using reference = value_type;
-    using pointer = Proxy;
-    using difference_type = U_HEADER_ONLY_NAMESPACE::prv::iter_difference_t<UnitIter>;
-    using iterator_category = std::bidirectional_iterator_tag;
+బహిరంగ:
+    using విలువ_type = సంకేతం_Units_3;
+    using reference = విలువ_type;
+    using సూచిక = Proxy;
+    using difference_type = U_శీర్షిక_ONLY_NAMESPACE::prv::iter_difference_t<UnitIter>;
+    using iterator_category = std::bidirectional_iterator_ట్యాగ్;
 
-    U_FORCE_INLINE explicit reverse_iterator(U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter> iter) :
-            p_(iter.base()), start_(iter.start_), limit_(iter.limit_),
+    U_FORCE_INLINE explicit తిరగేయి_iterator(U_శీర్షిక_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter> iter) :
+            p_(iter.పునాది()), ప్రారంభం_3(iter.ప్రారంభం_3), హద్దు_3(iter.హద్దు_3),
             units_(0, 0, false, p_, p_) {}
-    U_FORCE_INLINE reverse_iterator() : p_{}, start_{}, limit_{}, units_(0, 0, false, p_, p_) {}
+    U_FORCE_INLINE తిరగేయి_iterator() : p_{}, ప్రారంభం_3{}, హద్దు_3{}, units_(0, 0, false, p_, p_) {}
 
-    U_FORCE_INLINE reverse_iterator(reverse_iterator &&src) noexcept = default;
-    U_FORCE_INLINE reverse_iterator &operator=(reverse_iterator &&src) noexcept = default;
+    U_FORCE_INLINE తిరగేయి_iterator(తిరగేయి_iterator &&src) noexcept = అప్రమేయ;
+    U_FORCE_INLINE తిరగేయి_iterator &క్రియాకారకం=(తిరగేయి_iterator &&src) noexcept = అప్రమేయ;
 
-    U_FORCE_INLINE reverse_iterator(const reverse_iterator &other) = default;
-    U_FORCE_INLINE reverse_iterator &operator=(const reverse_iterator &other) = default;
+    U_FORCE_INLINE తిరగేయి_iterator(స్థిరరాశి తిరగేయి_iterator &other) = అప్రమేయ;
+    U_FORCE_INLINE తిరగేయి_iterator &క్రియాకారకం=(స్థిరరాశి తిరగేయి_iterator &other) = అప్రమేయ;
 
-    U_FORCE_INLINE bool operator==(const reverse_iterator &other) const {
-        return getLogicalPosition() == other.getLogicalPosition();
+    U_FORCE_INLINE bool క్రియాకారకం==(స్థిరరాశి తిరగేయి_iterator &other) స్థిరరాశి {
+        తిరిగి getLogicalPosition() == other.getLogicalPosition();
     }
-    U_FORCE_INLINE bool operator!=(const reverse_iterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool క్రియాకారకం!=(స్థిరరాశి తిరగేయి_iterator &other) స్థిరరాశి { తిరిగి !క్రియాకారకం==(other); }
 
-    U_FORCE_INLINE U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter> base() const {
-        return U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter>(
-            start_, getLogicalPosition(), limit_);
+    U_FORCE_INLINE U_శీర్షిక_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter> పునాది() స్థిరరాశి {
+        తిరిగి U_శీర్షిక_ONLY_NAMESPACE::UTFIterator<CP32, behavior, UnitIter>(
+            ప్రారంభం_3, getLogicalPosition(), హద్దు_3);
     }
 
-    U_FORCE_INLINE CodeUnits_ operator*() const {
-        if (state_ == 0) {
-            units_ = Impl::decAndRead(start_, p_);
+    U_FORCE_INLINE సంకేతం_Units_3 క్రియాకారకం*() స్థిరరాశి {
+        ఒకవేళ (state_ == 0) {
+            units_ = Impl::decAndRead(ప్రారంభం_3, p_);
             state_ = -1;
         }
-        return units_;
+        తిరిగి units_;
     }
 
-    U_FORCE_INLINE Proxy operator->() const {
-        if (state_ == 0) {
-            units_ = Impl::decAndRead(start_, p_);
+    U_FORCE_INLINE Proxy క్రియాకారకం->() స్థిరరాశి {
+        ఒకవేళ (state_ == 0) {
+            units_ = Impl::decAndRead(ప్రారంభం_3, p_);
             state_ = -1;
         }
-        return Proxy(units_);
+        తిరిగి Proxy(units_);
     }
 
-    U_FORCE_INLINE reverse_iterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (state_ < 0) {
+    U_FORCE_INLINE తిరగేయి_iterator& క్రియాకారకం++() U_LIFETIME_BOUND {  // pre-increment
+        ఒకవేళ (state_ < 0) {
             // operator*() called decAndRead() so p_ is already behind.
             state_ = 0;
-        } else if (state_ == 0) {
-            Impl::dec(start_, p_);
-        } else /* state_ > 0 */ {
+        } లేకపోతే ఒకవేళ (state_ == 0) {
+            Impl::dec(ప్రారంభం_3, p_);
+        } లేకపోతే /* state_ > 0 */ {
             // operator--() called readAndInc() so we know how far to skip.
             p_ = units_.begin();
             state_ = 0;
         }
-        return *this;
+        తిరిగి *this;
     }
 
-    U_FORCE_INLINE reverse_iterator operator++(int) {  // post-increment
-        if (state_ < 0) {
+    U_FORCE_INLINE తిరగేయి_iterator క్రియాకారకం++(పూర్ణాంకం) {  // post-increment
+        ఒకవేళ (state_ < 0) {
             // operator*() called decAndRead() so p_ is already behind.
-            reverse_iterator result(*this);
+            తిరగేయి_iterator ఫలితం(*this);
             state_ = 0;
-            return result;
-        } else if (state_ == 0) {
-            units_ = Impl::decAndRead(start_, p_);
-            reverse_iterator result(*this);
-            result.state_ = -1;
+            తిరిగి ఫలితం;
+        } లేకపోతే ఒకవేళ (state_ == 0) {
+            units_ = Impl::decAndRead(ప్రారంభం_3, p_);
+            తిరగేయి_iterator ఫలితం(*this);
+            ఫలితం.state_ = -1;
             // keep this->state_ == 0
-            return result;
-        } else /* state_ > 0 */ {
-            reverse_iterator result(*this);
+            తిరిగి ఫలితం;
+        } లేకపోతే /* state_ > 0 */ {
+            తిరగేయి_iterator ఫలితం(*this);
             // operator--() called readAndInc() so we know how far to skip.
             p_ = units_.begin();
             state_ = 0;
-            return result;
+            తిరిగి ఫలితం;
         }
     }
 
-    U_FORCE_INLINE reverse_iterator& operator--() U_LIFETIME_BOUND {  // pre-decrement
-        if (state_ < 0) {
+    U_FORCE_INLINE తిరగేయి_iterator& క్రియాకారకం--() U_LIFETIME_BOUND {  // pre-decrement
+        ఒకవేళ (state_ < 0) {
             // operator*() called decAndRead() so p_ is behind the logical position.
-            p_ = units_.end();
+            p_ = units_.చివర();
         }
         UnitIter p0 = p_;
-        units_ = Impl::readAndInc(p0, p_, limit_);
+        units_ = Impl::readAndInc(p0, p_, హద్దు_3);
         state_ = 1;
-        return *this;
+        తిరిగి *this;
     }
 
-    U_FORCE_INLINE reverse_iterator operator--(int) {  // post-decrement
-        reverse_iterator result(*this);
-        operator--();
-        return result;
+    U_FORCE_INLINE తిరగేయి_iterator క్రియాకారకం--(పూర్ణాంకం) {  // post-decrement
+        తిరగేయి_iterator ఫలితం(*this);
+        క్రియాకారకం--();
+        తిరిగి ఫలితం;
     }
 
-private:
-    U_FORCE_INLINE UnitIter getLogicalPosition() const {
-        return state_ >= 0 ? p_ : units_.end();
+అంతరంగ:
+    U_FORCE_INLINE UnitIter getLogicalPosition() స్థిరరాశి {
+        తిరిగి state_ >= 0 ? p_ : units_.చివర();
     }
 
     // operator*() etc. are logically const.
     mutable UnitIter p_;
     // In a validating iterator, we need start_ & limit_ so that when we read a code point
     // (forward or backward) we can test if there are enough code units.
-    UnitIter start_;
-    UnitIter limit_;
+    UnitIter ప్రారంభం_3;
+    UnitIter హద్దు_3;
     // Keep state so that we call decAndRead() only once for both operator*() and ++
     // to make it easy for the compiler to optimize.
-    mutable CodeUnits_ units_;
+    mutable సంకేతం_Units_3 units_;
     // >0: units_ = readAndInc(), p_ = units limit
     //  0: initial state
     // <0: units_ = decAndRead(), p_ = units start
     //     which means that p_ is behind its logical position
     mutable int8_t state_ = 0;
 };
-#endif  // U_IN_DOXYGEN
+#అయితే_ముగింపు  // U_IN_DOXYGEN
 
-namespace U_HEADER_ONLY_NAMESPACE {
+namespace U_శీర్షిక_ONLY_NAMESPACE {
 
 /**
  * UTFIterator factory function for start <= p < limit.
@@ -1710,11 +1710,11 @@ namespace U_HEADER_ONLY_NAMESPACE {
  *     for the given code unit iterators or character pointers
  * @draft ICU 78
  */
-template<typename CP32, UTFIllFormedBehavior behavior,
-         typename UnitIter, typename LimitIter = UnitIter>
-auto utfIterator(UnitIter start, UnitIter p, LimitIter limit) {
-    return UTFIterator<CP32, behavior, UnitIter, LimitIter>(
-        std::move(start), std::move(p), std::move(limit));
+మూస<typename CP32, UTFIllFormedBehavior behavior,
+         typename UnitIter, typename హద్దు_Iter = UnitIter>
+స్వయంచాలక utfIterator(UnitIter ప్రారంభం, UnitIter p, హద్దు_Iter హద్దు) {
+    తిరిగి UTFIterator<CP32, behavior, UnitIter, హద్దు_Iter>(
+        std::move(ప్రారంభం), std::move(p), std::move(హద్దు));
 }
 
 /**
@@ -1737,11 +1737,11 @@ auto utfIterator(UnitIter start, UnitIter p, LimitIter limit) {
  *     for the given code unit iterators or character pointers
  * @draft ICU 78
  */
-template<typename CP32, UTFIllFormedBehavior behavior,
-         typename UnitIter, typename LimitIter = UnitIter>
-auto utfIterator(UnitIter p, LimitIter limit) {
-    return UTFIterator<CP32, behavior, UnitIter, LimitIter>(
-        std::move(p), std::move(limit));
+మూస<typename CP32, UTFIllFormedBehavior behavior,
+         typename UnitIter, typename హద్దు_Iter = UnitIter>
+స్వయంచాలక utfIterator(UnitIter p, హద్దు_Iter హద్దు) {
+    తిరిగి UTFIterator<CP32, behavior, UnitIter, హద్దు_Iter>(
+        std::move(p), std::move(హద్దు));
 }
 
 // Note: We should only enable the following factory function for a copyable UnitIter.
@@ -1768,9 +1768,9 @@ auto utfIterator(UnitIter p, LimitIter limit) {
  *     for the given code unit iterator or character pointer
  * @draft ICU 78
  */
-template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter>
-auto utfIterator(UnitIter p) {
-    return UTFIterator<CP32, behavior, UnitIter>(std::move(p));
+మూస<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter>
+స్వయంచాలక utfIterator(UnitIter p) {
+    తిరిగి UTFIterator<CP32, behavior, UnitIter>(std::move(p));
 }
 
 /**
@@ -1800,26 +1800,26 @@ auto utfIterator(UnitIter p) {
  * @draft ICU 78
  * @see utfStringCodePoints
  */
-template<typename CP32, UTFIllFormedBehavior behavior, typename Range>
-#if defined(__cpp_lib_ranges)
+మూస<typename CP32, UTFIllFormedBehavior behavior, typename Range>
+#ఒకవేళ defined(__cpp_lib_ranges)
     requires std::ranges::range<Range>
-#endif
-class UTFStringCodePoints {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+#అయితే_ముగింపు
+class UTFString_సంకేతం_Points {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
     /**
      * Constructs an empty C++ "range" object.
      * @draft ICU 78
      */
-    UTFStringCodePoints() = default;
+    UTFString_సంకేతం_Points() = అప్రమేయ;
 
     /**
      * Constructs a C++ "range" object over the code points in the string.
      * @param unitRange input range
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<!std::is_reference_v<R>>>
-    explicit UTFStringCodePoints(Range unitRange) : unitRange(std::move(unitRange)) {}
+    మూస<typename R = Range, typename = std::enable_if_t<!std::is_reference_v<R>>>
+    explicit UTFString_సంకేతం_Points(Range unitRange) : unitRange(std::move(unitRange)) {}
     /**
      * Constructs a C++ "range" object over the code points in the string,
      * keeping a reference to the code unit range.  This overload is used by
@@ -1828,47 +1828,47 @@ public:
      * @param unitRange input range
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<std::is_reference_v<R>>, typename = void>
-    explicit UTFStringCodePoints(Range unitRange U_LIFETIME_BOUND) : unitRange(unitRange) {}
+    మూస<typename R = Range, typename = std::enable_if_t<std::is_reference_v<R>>, typename = శూన్య>
+    explicit UTFString_సంకేతం_Points(Range unitRange U_LIFETIME_BOUND) : unitRange(unitRange) {}
 
     /** Copy constructor. @draft ICU 78 */
-    UTFStringCodePoints(const UTFStringCodePoints &other) = default;
+    UTFString_సంకేతం_Points(స్థిరరాశి UTFString_సంకేతం_Points &other) = అప్రమేయ;
 
     /** Copy assignment operator. @draft ICU 78 */
-    UTFStringCodePoints &operator=(const UTFStringCodePoints &other) = default;
+    UTFString_సంకేతం_Points &క్రియాకారకం=(స్థిరరాశి UTFString_సంకేతం_Points &other) = అప్రమేయ;
 
     /**
      * @return the range start iterator
      * @draft ICU 78
      */
-    auto begin() {
-        return utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end());
+    స్వయంచాలక begin() {
+        తిరిగి utfIterator<CP32, behavior>(unitRange.begin(), unitRange.చివర());
     }
 
     /**
      * @return the range start iterator
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<prv::range<const R>>>
-    auto begin() const {
-        return utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end());
+    మూస<typename R = Range, typename = std::enable_if_t<prv::range<స్థిరరాశి R>>>
+    స్వయంచాలక begin() స్థిరరాశి {
+        తిరిగి utfIterator<CP32, behavior>(unitRange.begin(), unitRange.చివర());
     }
 
     /**
      * @return the range limit (exclusive end) iterator
      * @draft ICU 78
      */
-    auto end() {
+    స్వయంచాలక చివర() {
         using UnitIter = decltype(unitRange.begin());
-        using LimitIter = decltype(unitRange.end());
-        if constexpr (!std::is_same_v<UnitIter, LimitIter>) {
+        using హద్దు_Iter = decltype(unitRange.చివర());
+        ఒకవేళ constexpr (!std::is_same_v<UnitIter, హద్దు_Iter>) {
             // Return the code unit sentinel.
-            return unitRange.end();
-        } else if constexpr (prv::bidirectional_iterator<UnitIter>) {
-            return utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end(), unitRange.end());
-        } else {
+            తిరిగి unitRange.చివర();
+        } లేకపోతే ఒకవేళ constexpr (prv::bidirectional_iterator<UnitIter>) {
+            తిరిగి utfIterator<CP32, behavior>(unitRange.begin(), unitRange.చివర(), unitRange.చివర());
+        } లేకపోతే {
             // The input iterator specialization has no three-argument constructor.
-            return utfIterator<CP32, behavior>(unitRange.end(), unitRange.end());
+            తిరిగి utfIterator<CP32, behavior>(unitRange.చివర(), unitRange.చివర());
         }
     }
 
@@ -1876,18 +1876,18 @@ public:
      * @return the range limit (exclusive end) iterator
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<prv::range<const R>>>
-    auto end() const {
+    మూస<typename R = Range, typename = std::enable_if_t<prv::range<స్థిరరాశి R>>>
+    స్వయంచాలక చివర() స్థిరరాశి {
         using UnitIter = decltype(unitRange.begin());
-        using LimitIter = decltype(unitRange.end());
-        if constexpr (!std::is_same_v<UnitIter, LimitIter>) {
+        using హద్దు_Iter = decltype(unitRange.చివర());
+        ఒకవేళ constexpr (!std::is_same_v<UnitIter, హద్దు_Iter>) {
             // Return the code unit sentinel.
-            return unitRange.end();
-        } else if constexpr (prv::bidirectional_iterator<UnitIter>) {
-            return utfIterator<CP32, behavior>(unitRange.begin(), unitRange.end(), unitRange.end());
-        } else {
+            తిరిగి unitRange.చివర();
+        } లేకపోతే ఒకవేళ constexpr (prv::bidirectional_iterator<UnitIter>) {
+            తిరిగి utfIterator<CP32, behavior>(unitRange.begin(), unitRange.చివర(), unitRange.చివర());
+        } లేకపోతే {
             // The input iterator specialization has no three-argument constructor.
-            return utfIterator<CP32, behavior>(unitRange.end(), unitRange.end());
+            తిరిగి utfIterator<CP32, behavior>(unitRange.చివర(), unitRange.చివర());
         }
     }
 
@@ -1895,16 +1895,16 @@ public:
      * @return std::reverse_iterator(end())
      * @draft ICU 78
      */
-    auto rbegin() const {
-        return std::make_reverse_iterator(end());
+    స్వయంచాలక rbegin() స్థిరరాశి {
+        తిరిగి std::make_తిరగేయి_iterator(చివర());
     }
 
     /**
      * @return std::reverse_iterator(begin())
      * @draft ICU 78
      */
-    auto rend() const {
-        return std::make_reverse_iterator(begin());
+    స్వయంచాలక rend() స్థిరరాశి {
+        తిరిగి std::make_తిరగేయి_iterator(begin());
     }
 
     /**
@@ -1914,8 +1914,8 @@ public:
      * @return the CodeUnits for the first character/code point.
      * @draft ICU 79
      */
-    auto front() const {
-        return *begin();
+    స్వయంచాలక front() స్థిరరాశి {
+        తిరిగి *begin();
     }
 
     /**
@@ -1925,38 +1925,38 @@ public:
      * @return the CodeUnits for the last character/code point.
      * @draft ICU 79
      */
-    auto back() const {
-        return *(--end());
+    స్వయంచాలక వెనుక() స్థిరరాశి {
+        తిరిగి *(--చివర());
     }
 
-private:
+అంతరంగ:
     Range unitRange;
 };
 
 /** @internal */
-template<typename CP32, UTFIllFormedBehavior behavior>
-struct UTFStringCodePointsAdaptor
-#if U_CPLUSPLUS_VERSION >= 23 && __cpp_lib_ranges >= 2022'02 &&                                         \
+మూస<typename CP32, UTFIllFormedBehavior behavior>
+నిర్మాణం UTFString_సంకేతం_Points_Adaptor
+#ఒకవేళ U_CPLUSPLUS_సంస్కరణ >= 23 && __cpp_lib_ranges >= 2022'02 &&                                         \
     __cpp_lib_bind_back >= 2022'02 // http://wg21.link/P2387R3.
-    : std::ranges::range_adaptor_closure<UTFStringCodePointsAdaptor<CP32, behavior>>
-#endif
+    : std::ranges::range_adaptor_సంవృతం<UTFString_సంకేతం_Points_Adaptor<CP32, behavior>>
+#అయితే_ముగింపు
 {
     /** @internal */
-    template<typename Range>
-    auto operator()(Range &&unitRange) const {
-#if defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 2021'10  // We need https://wg21.link/P2415R2.
-        return UTFStringCodePoints<CP32, behavior, std::ranges::views::all_t<Range>>(
+    మూస<typename Range>
+    స్వయంచాలక క్రియాకారకం()(Range &&unitRange) స్థిరరాశి {
+#ఒకవేళ defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 2021'10  // We need https://wg21.link/P2415R2.
+        తిరిగి UTFString_సంకేతం_Points<CP32, behavior, std::ranges::views::all_t<Range>>(
             std::forward<Range>(unitRange));
-#else
-        if constexpr (prv::is_basic_string_view_v<std::decay_t<Range>>) {
+#లేకపోతే
+        ఒకవేళ constexpr (prv::is_basic_string_view_v<std::decay_t<Range>>) {
             // Take basic_string_view by copy, not by reference.  In C++20 this is handled by
             // all_t<Range>, which is Range if Range is a view.
-            return UTFStringCodePoints<CP32, behavior, std::decay_t<Range>>(
+            తిరిగి UTFString_సంకేతం_Points<CP32, behavior, std::decay_t<Range>>(
                 std::forward<Range>(unitRange));
-        } else {
-            return UTFStringCodePoints<CP32, behavior, Range>(std::forward<Range>(unitRange));
+        } లేకపోతే {
+            తిరిగి UTFString_సంకేతం_Points<CP32, behavior, Range>(std::forward<Range>(unitRange));
         }
-#endif
+#అయితే_ముగింపు
     }
 };
 
@@ -1974,8 +1974,8 @@ struct UTFStringCodePointsAdaptor
  * @return a UTFStringCodePoints&lt;CP32, behavior, Range&gt; for the given unitRange
  * @draft ICU 78
  */
-template<typename CP32, UTFIllFormedBehavior behavior>
-constexpr UTFStringCodePointsAdaptor<CP32, behavior> utfStringCodePoints;
+మూస<typename CP32, UTFIllFormedBehavior behavior>
+constexpr UTFString_సంకేతం_Points_Adaptor<CP32, behavior> utf_String_సంకేతం_Points;
 
 // Non-validating iterators ------------------------------------------------ ***
 
@@ -2000,36 +2000,36 @@ constexpr UTFStringCodePointsAdaptor<CP32, behavior> utfStringCodePoints;
  * @draft ICU 78
  * @see unsafeUTFIterator
  */
-template<typename CP32, typename UnitIter, typename = void>
+మూస<typename CP32, typename UnitIter, typename = శూన్య>
 class UnsafeUTFIterator {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     using Impl = UnsafeUTFImpl<CP32, UnitIter>;
 
     // Proxy type for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning UnsafeCodeUnits.
     class Proxy {
-    public:
-        explicit Proxy(UnsafeCodeUnits<CP32, UnitIter> &units) : units_(units) {}
-        UnsafeCodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { return units_; }
-        UnsafeCodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
-        UnsafeCodeUnits<CP32, UnitIter> units_;
+    బహిరంగ:
+        explicit Proxy(Unsafe_సంకేతం_Units<CP32, UnitIter> &units) : units_(units) {}
+        Unsafe_సంకేతం_Units<CP32, UnitIter>& క్రియాకారకం*() U_LIFETIME_BOUND { తిరిగి units_; }
+        Unsafe_సంకేతం_Units<CP32, UnitIter>* క్రియాకారకం->() U_LIFETIME_BOUND { తిరిగి &units_; }
+    అంతరంగ:
+        Unsafe_సంకేతం_Units<CP32, UnitIter> units_;
     };
 
-public:
+బహిరంగ:
     /** C++ iterator boilerplate @internal */
-    using value_type = UnsafeCodeUnits<CP32, UnitIter>;
+    using విలువ_type = Unsafe_సంకేతం_Units<CP32, UnitIter>;
     /** C++ iterator boilerplate @internal */
-    using reference = value_type;
+    using reference = విలువ_type;
     /** C++ iterator boilerplate @internal */
-    using pointer = Proxy;
+    using సూచిక = Proxy;
     /** C++ iterator boilerplate @internal */
     using difference_type = prv::iter_difference_t<UnitIter>;
     /** C++ iterator boilerplate @internal */
     using iterator_category = std::conditional_t<
         prv::bidirectional_iterator<UnitIter>,
-        std::bidirectional_iterator_tag,
-        std::forward_iterator_tag>;
+        std::bidirectional_iterator_ట్యాగ్,
+        std::forward_iterator_ట్యాగ్>;
 
     /**
      * Constructor; the iterator/pointer should be at a code point boundary.
@@ -2049,29 +2049,29 @@ public:
     U_FORCE_INLINE UnsafeUTFIterator() : p_{}, units_(0, 0, p_, p_) {}
 
     /** Move constructor. @draft ICU 78 */
-    U_FORCE_INLINE UnsafeUTFIterator(UnsafeUTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UnsafeUTFIterator(UnsafeUTFIterator &&src) noexcept = అప్రమేయ;
     /** Move assignment operator. @draft ICU 78 */
-    U_FORCE_INLINE UnsafeUTFIterator &operator=(UnsafeUTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UnsafeUTFIterator &క్రియాకారకం=(UnsafeUTFIterator &&src) noexcept = అప్రమేయ;
 
     /** Copy constructor. @draft ICU 78 */
-    U_FORCE_INLINE UnsafeUTFIterator(const UnsafeUTFIterator &other) = default;
+    U_FORCE_INLINE UnsafeUTFIterator(స్థిరరాశి UnsafeUTFIterator &other) = అప్రమేయ;
     /** Copy assignment operator. @draft ICU 78 */
-    U_FORCE_INLINE UnsafeUTFIterator &operator=(const UnsafeUTFIterator &other) = default;
+    U_FORCE_INLINE UnsafeUTFIterator &క్రియాకారకం=(స్థిరరాశి UnsafeUTFIterator &other) = అప్రమేయ;
 
     /**
      * @param other Another iterator
      * @return true if this iterator is at the same position as the other one
      * @draft ICU 78
      */
-    U_FORCE_INLINE bool operator==(const UnsafeUTFIterator &other) const {
-        return base() == other.base();
+    U_FORCE_INLINE bool క్రియాకారకం==(స్థిరరాశి UnsafeUTFIterator &other) స్థిరరాశి {
+        తిరిగి పునాది() == other.పునాది();
     }
     /**
      * @param other Another iterator
      * @return true if this iterator is not at the same position as the other one
      * @draft ICU 78
      */
-    U_FORCE_INLINE bool operator!=(const UnsafeUTFIterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool క్రియాకారకం!=(స్థిరరాశి UnsafeUTFIterator &other) స్థిరరాశి { తిరిగి !క్రియాకారకం==(other); }
 
     /**
      * @param iter An UnsafeUTFIterator
@@ -2079,27 +2079,27 @@ public:
      * @return true if the iterator’s position is equal to the sentinel
      * @draft ICU 78
      */
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const UnsafeUTFIterator &iter, const Sentinel &s) {
-        return iter.base() == s;
+    క్రియాకారకం==(స్థిరరాశి UnsafeUTFIterator &iter, స్థిరరాశి Sentinel &s) {
+        తిరిగి iter.పునాది() == s;
     }
 
-#if U_CPLUSPLUS_VERSION < 20
+#ఒకవేళ U_CPLUSPLUS_సంస్కరణ < 20
     /**
      * @param s A unit iterator sentinel
      * @param iter An UnsafeUTFIterator
      * @return true if the iterator’s position is equal to the sentinel
      * @internal
      */
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const Sentinel &s, const UnsafeUTFIterator &iter) {
-        return iter.base() == s;
+    క్రియాకారకం==(స్థిరరాశి Sentinel &s, స్థిరరాశి UnsafeUTFIterator &iter) {
+        తిరిగి iter.పునాది() == s;
     }
     /**
      * @param iter An UnsafeUTFIterator
@@ -2107,23 +2107,23 @@ public:
      * @return true if the iterator’s position is not equal to the sentinel
      * @internal
      */
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const UnsafeUTFIterator &iter, const Sentinel &s) { return !(iter == s); }
+    క్రియాకారకం!=(స్థిరరాశి UnsafeUTFIterator &iter, స్థిరరాశి Sentinel &s) { తిరిగి !(iter == s); }
     /**
      * @param s A unit iterator sentinel
      * @param iter An UnsafeUTFIterator
      * @return true if the iterator’s position is not equal to the sentinel
      * @internal
      */
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const Sentinel &s, const UnsafeUTFIterator &iter) { return !(iter == s); }
-#endif  // C++17
+    క్రియాకారకం!=(స్థిరరాశి Sentinel &s, స్థిరరాశి UnsafeUTFIterator &iter) { తిరిగి !(iter == s); }
+#అయితే_ముగింపు  // C++17
 
     /**
      * Returns the current position as a code unit iterator.
@@ -2132,9 +2132,9 @@ public:
      * @return current position as a code unit iterator
      * @draft ICU 79
      */
-    U_FORCE_INLINE UnitIter base() const {
+    U_FORCE_INLINE UnitIter పునాది() స్థిరరాశి {
         // Return the logical position.
-        return state_ <= 0 ? p_ : units_.begin();
+        తిరిగి state_ <= 0 ? p_ : units_.begin();
     }
 
     /**
@@ -2143,13 +2143,13 @@ public:
      * @return CodeUnits with the decoded code point etc.
      * @draft ICU 78
      */
-    U_FORCE_INLINE UnsafeCodeUnits<CP32, UnitIter> operator*() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE Unsafe_సంకేతం_Units<CP32, UnitIter> క్రియాకారకం*() స్థిరరాశి {
+        ఒకవేళ (state_ == 0) {
             UnitIter p0 = p_;
             units_ = Impl::readAndInc(p0, p_);
             state_ = 1;
         }
-        return units_;
+        తిరిగి units_;
     }
 
     /**
@@ -2160,13 +2160,13 @@ public:
      *     an opaque proxy object so that <code>iter->codePoint()</code> etc. works.
      * @draft ICU 78
      */
-    U_FORCE_INLINE Proxy operator->() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE Proxy క్రియాకారకం->() స్థిరరాశి {
+        ఒకవేళ (state_ == 0) {
             UnitIter p0 = p_;
             units_ = Impl::readAndInc(p0, p_);
             state_ = 1;
         }
-        return Proxy(units_);
+        తిరిగి Proxy(units_);
     }
 
     /**
@@ -2175,18 +2175,18 @@ public:
      * @return this iterator
      * @draft ICU 78
      */
-    U_FORCE_INLINE UnsafeUTFIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (state_ > 0) {
+    U_FORCE_INLINE UnsafeUTFIterator& క్రియాకారకం++() U_LIFETIME_BOUND {  // pre-increment
+        ఒకవేళ (state_ > 0) {
             // operator*() called readAndInc() so p_ is already ahead.
             state_ = 0;
-        } else if (state_ == 0) {
+        } లేకపోతే ఒకవేళ (state_ == 0) {
             Impl::inc(p_);
-        } else /* state_ < 0 */ {
+        } లేకపోతే /* state_ < 0 */ {
             // operator--() called decAndRead() so we know how far to skip.
-            p_ = units_.end();
+            p_ = units_.చివర();
             state_ = 0;
         }
-        return *this;
+        తిరిగి *this;
     }
 
     /**
@@ -2197,25 +2197,25 @@ public:
      *     returns an opaque proxy object so that <code>*iter++</code> still works.
      * @draft ICU 78
      */
-    U_FORCE_INLINE UnsafeUTFIterator operator++(int) {  // post-increment
-        if (state_ > 0) {
+    U_FORCE_INLINE UnsafeUTFIterator క్రియాకారకం++(పూర్ణాంకం) {  // post-increment
+        ఒకవేళ (state_ > 0) {
             // operator*() called readAndInc() so p_ is already ahead.
-            UnsafeUTFIterator result(*this);
+            UnsafeUTFIterator ఫలితం(*this);
             state_ = 0;
-            return result;
-        } else if (state_ == 0) {
+            తిరిగి ఫలితం;
+        } లేకపోతే ఒకవేళ (state_ == 0) {
             UnitIter p0 = p_;
             units_ = Impl::readAndInc(p0, p_);
-            UnsafeUTFIterator result(*this);
-            result.state_ = 1;
+            UnsafeUTFIterator ఫలితం(*this);
+            ఫలితం.state_ = 1;
             // keep this->state_ == 0
-            return result;
-        } else /* state_ < 0 */ {
-            UnsafeUTFIterator result(*this);
+            తిరిగి ఫలితం;
+        } లేకపోతే /* state_ < 0 */ {
+            UnsafeUTFIterator ఫలితం(*this);
             // operator--() called decAndRead() so we know how far to skip.
-            p_ = units_.end();
+            p_ = units_.చివర();
             state_ = 0;
-            return result;
+            తిరిగి ఫలితం;
         }
     }
 
@@ -2226,17 +2226,17 @@ public:
      * @return this iterator
      * @draft ICU 78
      */
-    template <typename Iter = UnitIter>
+    మూస <typename Iter = UnitIter>
     U_FORCE_INLINE
     std::enable_if_t<prv::bidirectional_iterator<Iter>, UnsafeUTFIterator&>
-    operator--() U_LIFETIME_BOUND {  // pre-decrement
-        if (state_ > 0) {
+    క్రియాకారకం--() U_LIFETIME_BOUND {  // pre-decrement
+        ఒకవేళ (state_ > 0) {
             // operator*() called readAndInc() so p_ is ahead of the logical position.
             p_ = units_.begin();
         }
         units_ = Impl::decAndRead(p_);
         state_ = -1;
-        return *this;
+        తిరిగి *this;
     }
 
     /**
@@ -2246,23 +2246,23 @@ public:
      * @return a copy of this iterator from before the decrement.
      * @draft ICU 78
      */
-    template<typename Iter = UnitIter>
+    మూస<typename Iter = UnitIter>
     U_FORCE_INLINE
     std::enable_if_t<prv::bidirectional_iterator<Iter>, UnsafeUTFIterator>
-    operator--(int) {  // post-decrement
-        UnsafeUTFIterator result(*this);
-        operator--();
-        return result;
+    క్రియాకారకం--(పూర్ణాంకం) {  // post-decrement
+        UnsafeUTFIterator ఫలితం(*this);
+        క్రియాకారకం--();
+        తిరిగి ఫలితం;
     }
 
-private:
-    friend class std::reverse_iterator<UnsafeUTFIterator<CP32, UnitIter>>;
+అంతరంగ:
+    మిత్ర class std::తిరగేయి_iterator<UnsafeUTFIterator<CP32, UnitIter>>;
 
     // operator*() etc. are logically const.
     mutable UnitIter p_;
     // Keep state so that we call readAndInc() only once for both operator*() and ++
     // to make it easy for the compiler to optimize.
-    mutable UnsafeCodeUnits<CP32, UnitIter> units_;
+    mutable Unsafe_సంకేతం_Units<CP32, UnitIter> units_;
     // >0: units_ = readAndInc(), p_ = units limit
     //     which means that p_ is ahead of its logical position
     //  0: initial state
@@ -2270,267 +2270,267 @@ private:
     mutable int8_t state_ = 0;
 };
 
-#ifndef U_IN_DOXYGEN
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
 // Partial template specialization for single-pass input iterator.
-template<typename CP32, typename UnitIter>
+మూస<typename CP32, typename UnitIter>
 class UnsafeUTFIterator<
         CP32,
         UnitIter,
         std::enable_if_t<!prv::forward_iterator<UnitIter>>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     using Impl = UnsafeUTFImpl<CP32, UnitIter>;
 
     // Proxy type for post-increment return value, to make *iter++ work.
     // Also for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning UnsafeCodeUnits.
     class Proxy {
-    public:
-        explicit Proxy(UnsafeCodeUnits<CP32, UnitIter> &units) : units_(units) {}
-        UnsafeCodeUnits<CP32, UnitIter>& operator*() U_LIFETIME_BOUND { return units_; }
-        UnsafeCodeUnits<CP32, UnitIter>* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
-        UnsafeCodeUnits<CP32, UnitIter> units_;
+    బహిరంగ:
+        explicit Proxy(Unsafe_సంకేతం_Units<CP32, UnitIter> &units) : units_(units) {}
+        Unsafe_సంకేతం_Units<CP32, UnitIter>& క్రియాకారకం*() U_LIFETIME_BOUND { తిరిగి units_; }
+        Unsafe_సంకేతం_Units<CP32, UnitIter>* క్రియాకారకం->() U_LIFETIME_BOUND { తిరిగి &units_; }
+    అంతరంగ:
+        Unsafe_సంకేతం_Units<CP32, UnitIter> units_;
     };
 
-public:
-    using value_type = UnsafeCodeUnits<CP32, UnitIter>;
-    using reference = value_type;
-    using pointer = Proxy;
+బహిరంగ:
+    using విలువ_type = Unsafe_సంకేతం_Units<CP32, UnitIter>;
+    using reference = విలువ_type;
+    using సూచిక = Proxy;
     using difference_type = prv::iter_difference_t<UnitIter>;
-    using iterator_category = std::input_iterator_tag;
+    using iterator_category = std::ఆదానం_iterator_ట్యాగ్;
 
     U_FORCE_INLINE explicit UnsafeUTFIterator(UnitIter p) : p_(std::move(p)) {}
 
-    U_FORCE_INLINE UnsafeUTFIterator(UnsafeUTFIterator &&src) noexcept = default;
-    U_FORCE_INLINE UnsafeUTFIterator &operator=(UnsafeUTFIterator &&src) noexcept = default;
+    U_FORCE_INLINE UnsafeUTFIterator(UnsafeUTFIterator &&src) noexcept = అప్రమేయ;
+    U_FORCE_INLINE UnsafeUTFIterator &క్రియాకారకం=(UnsafeUTFIterator &&src) noexcept = అప్రమేయ;
 
-    U_FORCE_INLINE UnsafeUTFIterator(const UnsafeUTFIterator &other) = default;
-    U_FORCE_INLINE UnsafeUTFIterator &operator=(const UnsafeUTFIterator &other) = default;
+    U_FORCE_INLINE UnsafeUTFIterator(స్థిరరాశి UnsafeUTFIterator &other) = అప్రమేయ;
+    U_FORCE_INLINE UnsafeUTFIterator &క్రియాకారకం=(స్థిరరాశి UnsafeUTFIterator &other) = అప్రమేయ;
 
-    U_FORCE_INLINE bool operator==(const UnsafeUTFIterator &other) const {
-        return p_ == other.p_ && ahead_ == other.ahead_;
+    U_FORCE_INLINE bool క్రియాకారకం==(స్థిరరాశి UnsafeUTFIterator &other) స్థిరరాశి {
+        తిరిగి p_ == other.p_ && ahead_ == other.ahead_;
         // Strictly speaking, we should check if the logical position is the same.
         // However, we cannot advance, or do arithmetic with, a single-pass UnitIter.
     }
-    U_FORCE_INLINE bool operator!=(const UnsafeUTFIterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool క్రియాకారకం!=(స్థిరరాశి UnsafeUTFIterator &other) స్థిరరాశి { తిరిగి !క్రియాకారకం==(other); }
 
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const UnsafeUTFIterator &iter, const Sentinel &s) {
-        return !iter.ahead_ && iter.p_ == s;
+    క్రియాకారకం==(స్థిరరాశి UnsafeUTFIterator &iter, స్థిరరాశి Sentinel &s) {
+        తిరిగి !iter.ahead_ && iter.p_ == s;
     }
 
-#if U_CPLUSPLUS_VERSION < 20
-    template<typename Sentinel> U_FORCE_INLINE friend
+#ఒకవేళ U_CPLUSPLUS_సంస్కరణ < 20
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator==(const Sentinel &s, const UnsafeUTFIterator &iter) {
-        return !iter.ahead_ && iter.p_ == s;
+    క్రియాకారకం==(స్థిరరాశి Sentinel &s, స్థిరరాశి UnsafeUTFIterator &iter) {
+        తిరిగి !iter.ahead_ && iter.p_ == s;
     }
 
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const UnsafeUTFIterator &iter, const Sentinel &s) { return !(iter == s); }
+    క్రియాకారకం!=(స్థిరరాశి UnsafeUTFIterator &iter, స్థిరరాశి Sentinel &s) { తిరిగి !(iter == s); }
 
-    template<typename Sentinel> U_FORCE_INLINE friend
+    మూస<typename Sentinel> U_FORCE_INLINE మిత్ర
     std::enable_if_t<
         !std::is_same_v<Sentinel, UnsafeUTFIterator> && !std::is_same_v<Sentinel, UnitIter>,
         bool>
-    operator!=(const Sentinel &s, const UnsafeUTFIterator &iter) { return !(iter == s); }
-#endif  // C++17
+    క్రియాకారకం!=(స్థిరరాశి Sentinel &s, స్థిరరాశి UnsafeUTFIterator &iter) { తిరిగి !(iter == s); }
+#అయితే_ముగింపు  // C++17
 
-    U_FORCE_INLINE UnsafeCodeUnits<CP32, UnitIter> operator*() const {
-        if (!ahead_) {
+    U_FORCE_INLINE Unsafe_సంకేతం_Units<CP32, UnitIter> క్రియాకారకం*() స్థిరరాశి {
+        ఒకవేళ (!ahead_) {
             units_ = Impl::readAndInc(p_, p_);
             ahead_ = true;
         }
-        return units_;
+        తిరిగి units_;
     }
 
-    U_FORCE_INLINE Proxy operator->() const {
-        if (!ahead_) {
+    U_FORCE_INLINE Proxy క్రియాకారకం->() స్థిరరాశి {
+        ఒకవేళ (!ahead_) {
             units_ = Impl::readAndInc(p_, p_);
             ahead_ = true;
         }
-        return Proxy(units_);
+        తిరిగి Proxy(units_);
     }
 
-    U_FORCE_INLINE UnsafeUTFIterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (ahead_) {
+    U_FORCE_INLINE UnsafeUTFIterator& క్రియాకారకం++() U_LIFETIME_BOUND {  // pre-increment
+        ఒకవేళ (ahead_) {
             // operator*() called readAndInc() so p_ is already ahead.
             ahead_ = false;
-        } else {
+        } లేకపోతే {
             Impl::inc(p_);
         }
-        return *this;
+        తిరిగి *this;
     }
 
-    U_FORCE_INLINE Proxy operator++(int) {  // post-increment
-        if (ahead_) {
+    U_FORCE_INLINE Proxy క్రియాకారకం++(పూర్ణాంకం) {  // post-increment
+        ఒకవేళ (ahead_) {
             // operator*() called readAndInc() so p_ is already ahead.
             ahead_ = false;
-        } else {
+        } లేకపోతే {
             units_ = Impl::readAndInc(p_, p_);
             // keep this->ahead_ == false
         }
-        return Proxy(units_);
+        తిరిగి Proxy(units_);
     }
 
-private:
+అంతరంగ:
     // operator*() etc. are logically const.
     mutable UnitIter p_;
     // Keep state so that we call readAndInc() only once for both operator*() and ++
     // so that we can use a single-pass input iterator for UnitIter.
-    mutable UnsafeCodeUnits<CP32, UnitIter> units_ = {0, 0};
+    mutable Unsafe_సంకేతం_Units<CP32, UnitIter> units_ = {0, 0};
     // true: units_ = readAndInc(), p_ = units limit
     //     which means that p_ is ahead of its logical position
     // false: initial state
     mutable bool ahead_ = false;
 };
-#endif  // U_IN_DOXYGEN
+#అయితే_ముగింపు  // U_IN_DOXYGEN
 
 }  // namespace U_HEADER_ONLY_NAMESPACE
 
-#ifndef U_IN_DOXYGEN
+#నిర్వచితం_కాకపోతే U_లోపల_DOXYGEN
 // Bespoke specialization of reverse_iterator.
 // The default implementation implements reverse operator*() and ++ in a way
 // that does most of the same work twice for reading variable-length sequences.
-template<typename CP32, typename UnitIter>
-class std::reverse_iterator<U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter>> {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-    using Impl = U_HEADER_ONLY_NAMESPACE::UnsafeUTFImpl<CP32, UnitIter>;
-    using UnsafeCodeUnits_ = U_HEADER_ONLY_NAMESPACE::UnsafeCodeUnits<CP32, UnitIter>;
+మూస<typename CP32, typename UnitIter>
+class std::తిరగేయి_iterator<U_శీర్షిక_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter>> {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+    using Impl = U_శీర్షిక_ONLY_NAMESPACE::UnsafeUTFImpl<CP32, UnitIter>;
+    using Unsafe_సంకేతం_Units_2 = U_శీర్షిక_ONLY_NAMESPACE::Unsafe_సంకేతం_Units<CP32, UnitIter>;
 
     // Proxy type for operator->() (required by LegacyInputIterator)
     // so that we don't promise always returning UnsafeCodeUnits.
     class Proxy {
-    public:
-        explicit Proxy(UnsafeCodeUnits_ units) : units_(units) {}
-        UnsafeCodeUnits_& operator*() U_LIFETIME_BOUND { return units_; }
-        UnsafeCodeUnits_* operator->() U_LIFETIME_BOUND { return &units_; }
-    private:
-        UnsafeCodeUnits_ units_;
+    బహిరంగ:
+        explicit Proxy(Unsafe_సంకేతం_Units_2 units) : units_(units) {}
+        Unsafe_సంకేతం_Units_2& క్రియాకారకం*() U_LIFETIME_BOUND { తిరిగి units_; }
+        Unsafe_సంకేతం_Units_2* క్రియాకారకం->() U_LIFETIME_BOUND { తిరిగి &units_; }
+    అంతరంగ:
+        Unsafe_సంకేతం_Units_2 units_;
     };
 
-public:
-    using value_type = UnsafeCodeUnits_;
-    using reference = value_type;
-    using pointer = Proxy;
-    using difference_type = U_HEADER_ONLY_NAMESPACE::prv::iter_difference_t<UnitIter>;
-    using iterator_category = std::bidirectional_iterator_tag;
+బహిరంగ:
+    using విలువ_type = Unsafe_సంకేతం_Units_2;
+    using reference = విలువ_type;
+    using సూచిక = Proxy;
+    using difference_type = U_శీర్షిక_ONLY_NAMESPACE::prv::iter_difference_t<UnitIter>;
+    using iterator_category = std::bidirectional_iterator_ట్యాగ్;
 
-    U_FORCE_INLINE explicit reverse_iterator(U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter> iter) :
-            p_(iter.base()), units_(0, 0, p_, p_) {}
-    U_FORCE_INLINE reverse_iterator() : p_{}, units_(0, 0, p_, p_) {}
+    U_FORCE_INLINE explicit తిరగేయి_iterator(U_శీర్షిక_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter> iter) :
+            p_(iter.పునాది()), units_(0, 0, p_, p_) {}
+    U_FORCE_INLINE తిరగేయి_iterator() : p_{}, units_(0, 0, p_, p_) {}
 
-    U_FORCE_INLINE reverse_iterator(reverse_iterator &&src) noexcept = default;
-    U_FORCE_INLINE reverse_iterator &operator=(reverse_iterator &&src) noexcept = default;
+    U_FORCE_INLINE తిరగేయి_iterator(తిరగేయి_iterator &&src) noexcept = అప్రమేయ;
+    U_FORCE_INLINE తిరగేయి_iterator &క్రియాకారకం=(తిరగేయి_iterator &&src) noexcept = అప్రమేయ;
 
-    U_FORCE_INLINE reverse_iterator(const reverse_iterator &other) = default;
-    U_FORCE_INLINE reverse_iterator &operator=(const reverse_iterator &other) = default;
+    U_FORCE_INLINE తిరగేయి_iterator(స్థిరరాశి తిరగేయి_iterator &other) = అప్రమేయ;
+    U_FORCE_INLINE తిరగేయి_iterator &క్రియాకారకం=(స్థిరరాశి తిరగేయి_iterator &other) = అప్రమేయ;
 
-    U_FORCE_INLINE bool operator==(const reverse_iterator &other) const {
-        return getLogicalPosition() == other.getLogicalPosition();
+    U_FORCE_INLINE bool క్రియాకారకం==(స్థిరరాశి తిరగేయి_iterator &other) స్థిరరాశి {
+        తిరిగి getLogicalPosition() == other.getLogicalPosition();
     }
-    U_FORCE_INLINE bool operator!=(const reverse_iterator &other) const { return !operator==(other); }
+    U_FORCE_INLINE bool క్రియాకారకం!=(స్థిరరాశి తిరగేయి_iterator &other) స్థిరరాశి { తిరిగి !క్రియాకారకం==(other); }
 
-    U_FORCE_INLINE U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter> base() const {
-        return U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter>(
+    U_FORCE_INLINE U_శీర్షిక_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter> పునాది() స్థిరరాశి {
+        తిరిగి U_శీర్షిక_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, UnitIter>(
             getLogicalPosition());
     }
 
-    U_FORCE_INLINE UnsafeCodeUnits_ operator*() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE Unsafe_సంకేతం_Units_2 క్రియాకారకం*() స్థిరరాశి {
+        ఒకవేళ (state_ == 0) {
             units_ = Impl::decAndRead(p_);
             state_ = -1;
         }
-        return units_;
+        తిరిగి units_;
     }
 
-    U_FORCE_INLINE Proxy operator->() const {
-        if (state_ == 0) {
+    U_FORCE_INLINE Proxy క్రియాకారకం->() స్థిరరాశి {
+        ఒకవేళ (state_ == 0) {
             units_ = Impl::decAndRead(p_);
             state_ = -1;
         }
-        return Proxy(units_);
+        తిరిగి Proxy(units_);
     }
 
-    U_FORCE_INLINE reverse_iterator& operator++() U_LIFETIME_BOUND {  // pre-increment
-        if (state_ < 0) {
+    U_FORCE_INLINE తిరగేయి_iterator& క్రియాకారకం++() U_LIFETIME_BOUND {  // pre-increment
+        ఒకవేళ (state_ < 0) {
             // operator*() called decAndRead() so p_ is already behind.
             state_ = 0;
-        } else if (state_ == 0) {
+        } లేకపోతే ఒకవేళ (state_ == 0) {
             Impl::dec(p_);
-        } else /* state_ > 0 */ {
+        } లేకపోతే /* state_ > 0 */ {
             // operator--() called readAndInc() so we know how far to skip.
             p_ = units_.begin();
             state_ = 0;
         }
-        return *this;
+        తిరిగి *this;
     }
 
-    U_FORCE_INLINE reverse_iterator operator++(int) {  // post-increment
-        if (state_ < 0) {
+    U_FORCE_INLINE తిరగేయి_iterator క్రియాకారకం++(పూర్ణాంకం) {  // post-increment
+        ఒకవేళ (state_ < 0) {
             // operator*() called decAndRead() so p_ is already behind.
-            reverse_iterator result(*this);
+            తిరగేయి_iterator ఫలితం(*this);
             state_ = 0;
-            return result;
-        } else if (state_ == 0) {
+            తిరిగి ఫలితం;
+        } లేకపోతే ఒకవేళ (state_ == 0) {
             units_ = Impl::decAndRead(p_);
-            reverse_iterator result(*this);
-            result.state_ = -1;
+            తిరగేయి_iterator ఫలితం(*this);
+            ఫలితం.state_ = -1;
             // keep this->state_ == 0
-            return result;
-        } else /* state_ > 0 */ {
-            reverse_iterator result(*this);
+            తిరిగి ఫలితం;
+        } లేకపోతే /* state_ > 0 */ {
+            తిరగేయి_iterator ఫలితం(*this);
             // operator--() called readAndInc() so we know how far to skip.
             p_ = units_.begin();
             state_ = 0;
-            return result;
+            తిరిగి ఫలితం;
         }
     }
 
-    U_FORCE_INLINE reverse_iterator& operator--() U_LIFETIME_BOUND {  // pre-decrement
-        if (state_ < 0) {
+    U_FORCE_INLINE తిరగేయి_iterator& క్రియాకారకం--() U_LIFETIME_BOUND {  // pre-decrement
+        ఒకవేళ (state_ < 0) {
             // operator*() called decAndRead() so p_ is behind the logical position.
-            p_ = units_.end();
+            p_ = units_.చివర();
         }
         UnitIter p0 = p_;
         units_ = Impl::readAndInc(p0, p_);
         state_ = 1;
-        return *this;
+        తిరిగి *this;
     }
 
-    U_FORCE_INLINE reverse_iterator operator--(int) {  // post-decrement
-        reverse_iterator result(*this);
-        operator--();
-        return result;
+    U_FORCE_INLINE తిరగేయి_iterator క్రియాకారకం--(పూర్ణాంకం) {  // post-decrement
+        తిరగేయి_iterator ఫలితం(*this);
+        క్రియాకారకం--();
+        తిరిగి ఫలితం;
     }
 
-private:
-    U_FORCE_INLINE UnitIter getLogicalPosition() const {
-        return state_ >= 0 ? p_ : units_.end();
+అంతరంగ:
+    U_FORCE_INLINE UnitIter getLogicalPosition() స్థిరరాశి {
+        తిరిగి state_ >= 0 ? p_ : units_.చివర();
     }
 
     // operator*() etc. are logically const.
     mutable UnitIter p_;
     // Keep state so that we call decAndRead() only once for both operator*() and ++
     // to make it easy for the compiler to optimize.
-    mutable UnsafeCodeUnits_ units_;
+    mutable Unsafe_సంకేతం_Units_2 units_;
     // >0: units_ = readAndInc(), p_ = units limit
     //  0: initial state
     // <0: units_ = decAndRead(), p_ = units start
     //     which means that p_ is behind its logical position
     mutable int8_t state_ = 0;
 };
-#endif  // U_IN_DOXYGEN
+#అయితే_ముగింపు  // U_IN_DOXYGEN
 
-namespace U_HEADER_ONLY_NAMESPACE {
+namespace U_శీర్షిక_ONLY_NAMESPACE {
 
 /**
  * UnsafeUTFIterator factory function.
@@ -2547,9 +2547,9 @@ namespace U_HEADER_ONLY_NAMESPACE {
  *     for the given code unit iterator or character pointer
  * @draft ICU 78
  */
-template<typename CP32, typename UnitIter>
-auto unsafeUTFIterator(UnitIter iter) {
-    return UnsafeUTFIterator<CP32, UnitIter>(std::move(iter));
+మూస<typename CP32, typename UnitIter>
+స్వయంచాలక unsafeUTFIterator(UnitIter iter) {
+    తిరిగి UnsafeUTFIterator<CP32, UnitIter>(std::move(iter));
 }
 
 /**
@@ -2579,26 +2579,26 @@ auto unsafeUTFIterator(UnitIter iter) {
  * @draft ICU 78
  * @see unsafeUTFStringCodePoints
  */
-template<typename CP32, typename Range>
-#if defined(__cpp_lib_ranges)
+మూస<typename CP32, typename Range>
+#ఒకవేళ defined(__cpp_lib_ranges)
     requires std::ranges::range<Range>
-#endif
-class UnsafeUTFStringCodePoints {
-    static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-public:
+#అయితే_ముగింపు
+class Unsafe_UTFString_సంకేతం_Points {
+    static_assert(పరిమాణం(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
+బహిరంగ:
     /**
      * Constructs an empty C++ "range" object.
      * @draft ICU 78
      */
-    UnsafeUTFStringCodePoints() = default;
+    Unsafe_UTFString_సంకేతం_Points() = అప్రమేయ;
 
     /**
      * Constructs a C++ "range" object over the code points in the string.
      * @param unitRange input range
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<!std::is_reference_v<R>>>
-    explicit UnsafeUTFStringCodePoints(Range unitRange) : unitRange(std::move(unitRange)) {}
+    మూస<typename R = Range, typename = std::enable_if_t<!std::is_reference_v<R>>>
+    explicit Unsafe_UTFString_సంకేతం_Points(Range unitRange) : unitRange(std::move(unitRange)) {}
     /**
      * Constructs a C++ "range" object over the code points in the string,
      * keeping a reference to the code unit range.  This overload is used by
@@ -2607,44 +2607,44 @@ public:
      * @param unitRange input range
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<std::is_reference_v<R>>, typename = void>
-    explicit UnsafeUTFStringCodePoints(Range unitRange U_LIFETIME_BOUND) : unitRange(unitRange) {}
+    మూస<typename R = Range, typename = std::enable_if_t<std::is_reference_v<R>>, typename = శూన్య>
+    explicit Unsafe_UTFString_సంకేతం_Points(Range unitRange U_LIFETIME_BOUND) : unitRange(unitRange) {}
 
     /** Copy constructor. @draft ICU 78 */
-    UnsafeUTFStringCodePoints(const UnsafeUTFStringCodePoints &other) = default;
+    Unsafe_UTFString_సంకేతం_Points(స్థిరరాశి Unsafe_UTFString_సంకేతం_Points &other) = అప్రమేయ;
 
     /** Copy assignment operator. @draft ICU 78 */
-    UnsafeUTFStringCodePoints &operator=(const UnsafeUTFStringCodePoints &other) = default;
+    Unsafe_UTFString_సంకేతం_Points &క్రియాకారకం=(స్థిరరాశి Unsafe_UTFString_సంకేతం_Points &other) = అప్రమేయ;
 
     /**
      * @return the range start iterator
      * @draft ICU 78
      */
-    auto begin() {
-        return unsafeUTFIterator<CP32>(unitRange.begin());
+    స్వయంచాలక begin() {
+        తిరిగి unsafeUTFIterator<CP32>(unitRange.begin());
     }
 
     /**
      * @return the range start iterator
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<prv::range<const R>>>
-    auto begin() const {
-        return unsafeUTFIterator<CP32>(unitRange.begin());
+    మూస<typename R = Range, typename = std::enable_if_t<prv::range<స్థిరరాశి R>>>
+    స్వయంచాలక begin() స్థిరరాశి {
+        తిరిగి unsafeUTFIterator<CP32>(unitRange.begin());
     }
 
     /**
      * @return the range limit (exclusive end) iterator
      * @draft ICU 78
      */
-    auto end() {
+    స్వయంచాలక చివర() {
         using UnitIter = decltype(unitRange.begin());
-        using LimitIter = decltype(unitRange.end());
-        if constexpr (!std::is_same_v<UnitIter, LimitIter>) {
+        using హద్దు_Iter = decltype(unitRange.చివర());
+        ఒకవేళ constexpr (!std::is_same_v<UnitIter, హద్దు_Iter>) {
             // Return the code unit sentinel.
-            return unitRange.end();
-        } else {
-            return unsafeUTFIterator<CP32>(unitRange.end());
+            తిరిగి unitRange.చివర();
+        } లేకపోతే {
+            తిరిగి unsafeUTFIterator<CP32>(unitRange.చివర());
         }
     }
 
@@ -2652,15 +2652,15 @@ public:
      * @return the range limit (exclusive end) iterator
      * @draft ICU 78
      */
-    template<typename R = Range, typename = std::enable_if_t<prv::range<const R>>>
-    auto end() const {
+    మూస<typename R = Range, typename = std::enable_if_t<prv::range<స్థిరరాశి R>>>
+    స్వయంచాలక చివర() స్థిరరాశి {
         using UnitIter = decltype(unitRange.begin());
-        using LimitIter = decltype(unitRange.end());
-        if constexpr (!std::is_same_v<UnitIter, LimitIter>) {
+        using హద్దు_Iter = decltype(unitRange.చివర());
+        ఒకవేళ constexpr (!std::is_same_v<UnitIter, హద్దు_Iter>) {
             // Return the code unit sentinel.
-            return unitRange.end();
-        } else {
-            return unsafeUTFIterator<CP32>(unitRange.end());
+            తిరిగి unitRange.చివర();
+        } లేకపోతే {
+            తిరిగి unsafeUTFIterator<CP32>(unitRange.చివర());
         }
     }
 
@@ -2668,16 +2668,16 @@ public:
      * @return std::reverse_iterator(end())
      * @draft ICU 78
      */
-    auto rbegin() const {
-        return std::make_reverse_iterator(end());
+    స్వయంచాలక rbegin() స్థిరరాశి {
+        తిరిగి std::make_తిరగేయి_iterator(చివర());
     }
 
     /**
      * @return std::reverse_iterator(begin())
      * @draft ICU 78
      */
-    auto rend() const {
-        return std::make_reverse_iterator(begin());
+    స్వయంచాలక rend() స్థిరరాశి {
+        తిరిగి std::make_తిరగేయి_iterator(begin());
     }
 
     /**
@@ -2687,8 +2687,8 @@ public:
      * @return the CodeUnits for the first character/code point.
      * @draft ICU 79
      */
-    auto front() const {
-        return *begin();
+    స్వయంచాలక front() స్థిరరాశి {
+        తిరిగి *begin();
     }
 
     /**
@@ -2698,36 +2698,36 @@ public:
      * @return the CodeUnits for the last character/code point.
      * @draft ICU 79
      */
-    auto back() const {
-        return *(--end());
+    స్వయంచాలక వెనుక() స్థిరరాశి {
+        తిరిగి *(--చివర());
     }
 
-private:
+అంతరంగ:
     Range unitRange;
 };
 
 /** @internal */
-template<typename CP32>
-struct UnsafeUTFStringCodePointsAdaptor
-#if U_CPLUSPLUS_VERSION >= 23 && __cpp_lib_ranges >= 2022'02 &&                                         \
+మూస<typename CP32>
+నిర్మాణం Unsafe_UTFString_సంకేతం_Points_Adaptor
+#ఒకవేళ U_CPLUSPLUS_సంస్కరణ >= 23 && __cpp_lib_ranges >= 2022'02 &&                                         \
     __cpp_lib_bind_back >= 2022'02 // http://wg21.link/P2387R3.
-    : std::ranges::range_adaptor_closure<UnsafeUTFStringCodePointsAdaptor<CP32>>
-#endif
+    : std::ranges::range_adaptor_సంవృతం<Unsafe_UTFString_సంకేతం_Points_Adaptor<CP32>>
+#అయితే_ముగింపు
 {
     /** @internal */
-    template<typename Range>
-    auto operator()(Range &&unitRange) const {
-#if defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 2021'10  // We need https://wg21.link/P2415R2.
-        return UnsafeUTFStringCodePoints<CP32, std::ranges::views::all_t<Range>>(std::forward<Range>(unitRange));
-#else
-        if constexpr (prv::is_basic_string_view_v<std::decay_t<Range>>) {
+    మూస<typename Range>
+    స్వయంచాలక క్రియాకారకం()(Range &&unitRange) స్థిరరాశి {
+#ఒకవేళ defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 2021'10  // We need https://wg21.link/P2415R2.
+        తిరిగి Unsafe_UTFString_సంకేతం_Points<CP32, std::ranges::views::all_t<Range>>(std::forward<Range>(unitRange));
+#లేకపోతే
+        ఒకవేళ constexpr (prv::is_basic_string_view_v<std::decay_t<Range>>) {
             // Take basic_string_view by copy, not by reference.  In C++20 this is handled by
             // all_t<Range>, which is Range if Range is a view.
-            return UnsafeUTFStringCodePoints<CP32, std::decay_t<Range>>(std::forward<Range>(unitRange));
-        } else {
-            return UnsafeUTFStringCodePoints<CP32, Range>(std::forward<Range>(unitRange));
+            తిరిగి Unsafe_UTFString_సంకేతం_Points<CP32, std::decay_t<Range>>(std::forward<Range>(unitRange));
+        } లేకపోతే {
+            తిరిగి Unsafe_UTFString_సంకేతం_Points<CP32, Range>(std::forward<Range>(unitRange));
         }
-#endif
+#అయితే_ముగింపు
     }
 };
 
@@ -2744,24 +2744,24 @@ struct UnsafeUTFStringCodePointsAdaptor
  * @return an UnsafeUTFStringCodePoints&lt;CP32, Range&gt; for the given unitRange
  * @draft ICU 78
  */
-template<typename CP32>
-constexpr UnsafeUTFStringCodePointsAdaptor<CP32> unsafeUTFStringCodePoints;
+మూస<typename CP32>
+constexpr Unsafe_UTFString_సంకేతం_Points_Adaptor<CP32> unsafe_UTFString_సంకేతం_Points;
 
 }  // namespace U_HEADER_ONLY_NAMESPACE
 
 
-#if defined(__cpp_lib_ranges)
-template <typename CP32, UTFIllFormedBehavior behavior, typename Range>
+#ఒకవేళ defined(__cpp_lib_ranges)
+మూస <typename CP32, UTFIllFormedBehavior behavior, typename Range>
 constexpr bool std::ranges::enable_borrowed_range<
-    U_HEADER_ONLY_NAMESPACE::UTFStringCodePoints<CP32, behavior, Range>> =
+    U_శీర్షిక_ONLY_NAMESPACE::UTFString_సంకేతం_Points<CP32, behavior, Range>> =
     std::ranges::enable_borrowed_range<Range>;
 
-template <typename CP32, typename Range>
+మూస <typename CP32, typename Range>
 constexpr bool std::ranges::enable_borrowed_range<
-    U_HEADER_ONLY_NAMESPACE::UnsafeUTFStringCodePoints<CP32, Range>> =
+    U_శీర్షిక_ONLY_NAMESPACE::Unsafe_UTFString_సంకేతం_Points<CP32, Range>> =
     std::ranges::enable_borrowed_range<Range>;
-#endif
+#అయితే_ముగింపు
 
-#endif  // U_HIDE_DRAFT_API
-#endif  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
-#endif  // __UTFITERATOR_H__
+#అయితే_ముగింపు  // U_HIDE_DRAFT_API
+#అయితే_ముగింపు  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#అయితే_ముగింపు  // __UTFITERATOR_H__

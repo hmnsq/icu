@@ -31,14 +31,14 @@
  * bodies and all macro statements should be terminated with semicolon.
  */
 
-#ifndef __UTF16_H__
-#define __UTF16_H__
+#నిర్వచితం_కాకపోతే __UTF16_H__
+#నిర్వచించు __UTF16_H__
 
-#include <stdbool.h>
-#include "unicode/umachine.h"
-#ifndef __UTF_H__
+#అన్తర్భావ <stdbool.h>
+#అన్తర్భావ "unicode/umachine.h"
+#నిర్వచితం_కాకపోతే __UTF_H__
 #   include "unicode/utf.h"
-#endif
+#అయితే_ముగింపు
 
 /* single-code point definitions -------------------------------------------- */
 
@@ -48,7 +48,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_SINGLE(c) !U_IS_SURROGATE(c)
+#నిర్వచించు U16_IS_SINGLE(c) !U_IS_SURROGATE(c)
 
 /**
  * Is this code unit a lead surrogate (U+d800..U+dbff)?
@@ -56,7 +56,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_LEAD(c) (((c)&0xfffffc00)==0xd800)
+#నిర్వచించు U16_IS_LEAD(c) (((c)&0xfffffc00)==0xd800)
 
 /**
  * Is this code unit a trail surrogate (U+dc00..U+dfff)?
@@ -64,7 +64,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_TRAIL(c) (((c)&0xfffffc00)==0xdc00)
+#నిర్వచించు U16_IS_TRAIL(c) (((c)&0xfffffc00)==0xdc00)
 
 /**
  * Is this code unit a surrogate (U+d800..U+dfff)?
@@ -72,7 +72,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_SURROGATE(c) U_IS_SURROGATE(c)
+#నిర్వచించు U16_IS_SURROGATE(c) U_IS_SURROGATE(c)
 
 /**
  * Assuming c is a surrogate code point (U16_IS_SURROGATE(c)),
@@ -81,7 +81,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_SURROGATE_LEAD(c) (((c)&0x400)==0)
+#నిర్వచించు U16_IS_SURROGATE_LEAD(c) (((c)&0x400)==0)
 
 /**
  * Assuming c is a surrogate code point (U16_IS_SURROGATE(c)),
@@ -90,13 +90,13 @@
  * @return true or false
  * @stable ICU 4.2
  */
-#define U16_IS_SURROGATE_TRAIL(c) (((c)&0x400)!=0)
+#నిర్వచించు U16_IS_SURROGATE_TRAIL(c) (((c)&0x400)!=0)
 
 /**
  * Helper constant for U16_GET_SUPPLEMENTARY.
  * @internal
  */
-#define U16_SURROGATE_OFFSET ((0xd800<<10UL)+0xdc00-0x10000)
+#నిర్వచించు U16_SURROGATE_స్థానభ్రంశం ((0xd800<<10UL)+0xdc00-0x10000)
 
 /**
  * Get a supplementary code point value (U+10000..U+10ffff)
@@ -109,8 +109,8 @@
  * @return supplementary code point (U+10000..U+10ffff)
  * @stable ICU 2.4
  */
-#define U16_GET_SUPPLEMENTARY(lead, trail) \
-    (((UChar32)(lead)<<10UL)+(UChar32)(trail)-U16_SURROGATE_OFFSET)
+#నిర్వచించు U16_GET_SUPPLEMENTARY(lead, trail) \
+    (((UChar32)(lead)<<10UL)+(UChar32)(trail)-U16_SURROGATE_స్థానభ్రంశం)
 
 
 /**
@@ -120,7 +120,7 @@
  * @return lead surrogate (U+d800..U+dbff) for supplementary
  * @stable ICU 2.4
  */
-#define U16_LEAD(supplementary) (UChar)(((supplementary)>>10)+0xd7c0)
+#నిర్వచించు U16_LEAD(supplementary) (UChar)(((supplementary)>>10)+0xd7c0)
 
 /**
  * Get the trail surrogate (0xdc00..0xdfff) for a
@@ -129,7 +129,7 @@
  * @return trail surrogate (U+dc00..U+dfff) for supplementary
  * @stable ICU 2.4
  */
-#define U16_TRAIL(supplementary) (UChar)(((supplementary)&0x3ff)|0xdc00)
+#నిర్వచించు U16_TRAIL(supplementary) (UChar)(((supplementary)&0x3ff)|0xdc00)
 
 /**
  * How many 16-bit code units are used to encode this Unicode code point? (1 or 2)
@@ -138,14 +138,14 @@
  * @return 1 or 2
  * @stable ICU 2.4
  */
-#define U16_LENGTH(c) ((uint32_t)(c)<=0xffff ? 1 : 2)
+#నిర్వచించు U16_నిడివి(c) ((uint32_t)(c)<=0xffff ? 1 : 2)
 
 /**
  * The maximum number of 16-bit code units per Unicode code point (U+0000..U+10ffff).
  * @return 2
  * @stable ICU 2.4
  */
-#define U16_MAX_LENGTH 2
+#నిర్వచించు U16_MAX_నిడివి 2
 
 /**
  * Get a code point from a string at a random-access offset,
@@ -164,16 +164,16 @@
  * @see U16_GET
  * @stable ICU 2.4
  */
-#define U16_GET_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_GET_UNSAFE(s, i, c) UPRV_ఖండం_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(U16_IS_SURROGATE(c)) { \
-        if(U16_IS_SURROGATE_LEAD(c)) { \
+    ఒకవేళ(U16_IS_SURROGATE(c)) { \
+        ఒకవేళ(U16_IS_SURROGATE_LEAD(c)) { \
             (c)=U16_GET_SUPPLEMENTARY((c), (s)[(i)+1]); \
-        } else { \
+        } లేకపోతే { \
             (c)=U16_GET_SUPPLEMENTARY((s)[(i)-1], (c)); \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Get a code point from a string at a random-access offset,
@@ -198,21 +198,21 @@
  * @see U16_GET_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_GET(s, start, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_GET(s, ప్రారంభం, i, నిడివి, c) UPRV_ఖండం_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(U16_IS_SURROGATE(c)) { \
+    ఒకవేళ(U16_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(U16_IS_SURROGATE_LEAD(c)) { \
-            if((i)+1!=(length) && U16_IS_TRAIL(__c2=(s)[(i)+1])) { \
+        ఒకవేళ(U16_IS_SURROGATE_LEAD(c)) { \
+            ఒకవేళ((i)+1!=(నిడివి) && U16_IS_TRAIL(__c2=(s)[(i)+1])) { \
                 (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
             } \
-        } else { \
-            if((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
+        } లేకపోతే { \
+            ఒకవేళ((i)>(ప్రారంభం) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
                 (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
             } \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Get a code point from a string at a random-access offset,
@@ -237,25 +237,25 @@
  * @see U16_GET_UNSAFE
  * @stable ICU 60
  */
-#define U16_GET_OR_FFFD(s, start, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_GET_OR_FFFD(s, ప్రారంభం, i, నిడివి, c) UPRV_ఖండం_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(U16_IS_SURROGATE(c)) { \
+    ఒకవేళ(U16_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(U16_IS_SURROGATE_LEAD(c)) { \
-            if((i)+1!=(length) && U16_IS_TRAIL(__c2=(s)[(i)+1])) { \
+        ఒకవేళ(U16_IS_SURROGATE_LEAD(c)) { \
+            ఒకవేళ((i)+1!=(నిడివి) && U16_IS_TRAIL(__c2=(s)[(i)+1])) { \
                 (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
-            } else { \
+            } లేకపోతే { \
                 (c)=0xfffd; \
             } \
-        } else { \
-            if((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
+        } లేకపోతే { \
+            ఒకవేళ((i)>(ప్రారంభం) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
                 (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
-            } else { \
+            } లేకపోతే { \
                 (c)=0xfffd; \
             } \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /* definitions with forward iteration --------------------------------------- */
 
@@ -278,12 +278,12 @@
  * @see U16_NEXT
  * @stable ICU 2.4
  */
-#define U16_NEXT_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_తదుపరి_UNSAFE(s, i, c) UPRV_ఖండం_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(U16_IS_LEAD(c)) { \
+    ఒకవేళ(U16_IS_LEAD(c)) { \
         (c)=U16_GET_SUPPLEMENTARY((c), (s)[(i)++]); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Get a code point from a string at a code point boundary offset,
@@ -306,16 +306,16 @@
  * @see U16_NEXT_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_NEXT(s, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_తదుపరి(s, i, నిడివి, c) UPRV_ఖండం_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(U16_IS_LEAD(c)) { \
+    ఒకవేళ(U16_IS_LEAD(c)) { \
         uint16_t __c2; \
-        if((i)!=(length) && U16_IS_TRAIL(__c2=(s)[(i)])) { \
+        ఒకవేళ((i)!=(నిడివి) && U16_IS_TRAIL(__c2=(s)[(i)])) { \
             ++(i); \
             (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Get a code point from a string at a code point boundary offset,
@@ -338,18 +338,18 @@
  * @see U16_NEXT_UNSAFE
  * @stable ICU 60
  */
-#define U16_NEXT_OR_FFFD(s, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_తదుపరి_OR_FFFD(s, i, నిడివి, c) UPRV_ఖండం_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(U16_IS_SURROGATE(c)) { \
+    ఒకవేళ(U16_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(U16_IS_SURROGATE_LEAD(c) && (i)!=(length) && U16_IS_TRAIL(__c2=(s)[(i)])) { \
+        ఒకవేళ(U16_IS_SURROGATE_LEAD(c) && (i)!=(నిడివి) && U16_IS_TRAIL(__c2=(s)[(i)])) { \
             ++(i); \
             (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
-        } else { \
+        } లేకపోతే { \
             (c)=0xfffd; \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Append a code point to a string, overwriting 1 or 2 code units.
@@ -364,14 +364,14 @@
  * @see U16_APPEND
  * @stable ICU 2.4
  */
-#define U16_APPEND_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0xffff) { \
+#నిర్వచించు U16_APPEND_UNSAFE(s, i, c) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ((uint32_t)(c)<=0xffff) { \
         (s)[(i)++]=(uint16_t)(c); \
-    } else { \
+    } లేకపోతే { \
         (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
         (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Append a code point to a string, overwriting 1 or 2 code units.
@@ -390,16 +390,16 @@
  * @see U16_APPEND_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_APPEND(s, i, capacity, c, isError) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0xffff) { \
+#నిర్వచించు U16_APPEND(s, i, సామర్థ్యం, c, isError) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ((uint32_t)(c)<=0xffff) { \
         (s)[(i)++]=(uint16_t)(c); \
-    } else if((uint32_t)(c)<=0x10ffff && (i)+1<(capacity)) { \
+    } లేకపోతే ఒకవేళ((uint32_t)(c)<=0x10ffff && (i)+1<(సామర్థ్యం)) { \
         (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
         (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
-    } else /* c>0x10ffff or not enough space */ { \
+    } లేకపోతే /* c>0x10ffff or not enough space */ { \
         (isError)=true; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Advance the string offset from one code point boundary to the next.
@@ -411,11 +411,11 @@
  * @see U16_FWD_1
  * @stable ICU 2.4
  */
-#define U16_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_LEAD((s)[(i)++])) { \
+#నిర్వచించు U16_FWD_1_UNSAFE(s, i) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(U16_IS_LEAD((s)[(i)++])) { \
         ++(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Advance the string offset from one code point boundary to the next.
@@ -430,11 +430,11 @@
  * @see U16_FWD_1_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_FWD_1(s, i, length) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_LEAD((s)[(i)++]) && (i)!=(length) && U16_IS_TRAIL((s)[i])) { \
+#నిర్వచించు U16_FWD_1(s, i, నిడివి) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(U16_IS_LEAD((s)[(i)++]) && (i)!=(నిడివి) && U16_IS_TRAIL((s)[i])) { \
         ++(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Advance the string offset from one code point boundary to the n-th next one,
@@ -448,13 +448,13 @@
  * @see U16_FWD_N
  * @stable ICU 2.4
  */
-#define U16_FWD_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_FWD_N_UNSAFE(s, i, n) UPRV_ఖండం_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    అయితే(__N>0) { \
         U16_FWD_1_UNSAFE(s, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Advance the string offset from one code point boundary to the n-th next one,
@@ -471,13 +471,13 @@
  * @see U16_FWD_N_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_FWD_N(s, i, length, n) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_FWD_N(s, i, నిడివి, n) UPRV_ఖండం_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0 && ((i)<(length) || ((length)<0 && (s)[i]!=0))) { \
-        U16_FWD_1(s, i, length); \
+    అయితే(__N>0 && ((i)<(నిడివి) || ((నిడివి)<0 && (s)[i]!=0))) { \
+        U16_FWD_1(s, i, నిడివి); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Adjust a random-access offset to a code point boundary
@@ -492,11 +492,11 @@
  * @see U16_SET_CP_START
  * @stable ICU 2.4
  */
-#define U16_SET_CP_START_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_TRAIL((s)[i])) { \
+#నిర్వచించు U16_సమితి_CP_ప్రారంభం_UNSAFE(s, i) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(U16_IS_TRAIL((s)[i])) { \
         --(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Adjust a random-access offset to a code point boundary
@@ -512,11 +512,11 @@
  * @see U16_SET_CP_START_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_SET_CP_START(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_TRAIL((s)[i]) && (i)>(start) && U16_IS_LEAD((s)[(i)-1])) { \
+#నిర్వచించు U16_సమితి_CP_ప్రారంభం(s, ప్రారంభం, i) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(U16_IS_TRAIL((s)[i]) && (i)>(ప్రారంభం) && U16_IS_LEAD((s)[(i)-1])) { \
         --(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /* definitions with backward iteration -------------------------------------- */
 
@@ -540,12 +540,12 @@
  * @see U16_PREV
  * @stable ICU 2.4
  */
-#define U16_PREV_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_PREV_UNSAFE(s, i, c) UPRV_ఖండం_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(U16_IS_TRAIL(c)) { \
+    ఒకవేళ(U16_IS_TRAIL(c)) { \
         (c)=U16_GET_SUPPLEMENTARY((s)[--(i)], (c)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Move the string offset from one code point boundary to the previous one
@@ -567,16 +567,16 @@
  * @see U16_PREV_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_PREV(s, start, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_PREV(s, ప్రారంభం, i, c) UPRV_ఖండం_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(U16_IS_TRAIL(c)) { \
+    ఒకవేళ(U16_IS_TRAIL(c)) { \
         uint16_t __c2; \
-        if((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
+        ఒకవేళ((i)>(ప్రారంభం) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
             --(i); \
             (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Move the string offset from one code point boundary to the previous one
@@ -598,18 +598,18 @@
  * @see U16_PREV_UNSAFE
  * @stable ICU 60
  */
-#define U16_PREV_OR_FFFD(s, start, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_PREV_OR_FFFD(s, ప్రారంభం, i, c) UPRV_ఖండం_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(U16_IS_SURROGATE(c)) { \
+    ఒకవేళ(U16_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(U16_IS_SURROGATE_TRAIL(c) && (i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
+        ఒకవేళ(U16_IS_SURROGATE_TRAIL(c) && (i)>(ప్రారంభం) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
             --(i); \
             (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
-        } else { \
+        } లేకపోతే { \
             (c)=0xfffd; \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Move the string offset from one code point boundary to the previous one.
@@ -622,11 +622,11 @@
  * @see U16_BACK_1
  * @stable ICU 2.4
  */
-#define U16_BACK_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_TRAIL((s)[--(i)])) { \
+#నిర్వచించు U16_వెనుక_1_UNSAFE(s, i) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(U16_IS_TRAIL((s)[--(i)])) { \
         --(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Move the string offset from one code point boundary to the previous one.
@@ -640,11 +640,11 @@
  * @see U16_BACK_1_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_BACK_1(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_TRAIL((s)[--(i)]) && (i)>(start) && U16_IS_LEAD((s)[(i)-1])) { \
+#నిర్వచించు U16_వెనుక_1(s, ప్రారంభం, i) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(U16_IS_TRAIL((s)[--(i)]) && (i)>(ప్రారంభం) && U16_IS_LEAD((s)[(i)-1])) { \
         --(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Move the string offset from one code point boundary to the n-th one before it,
@@ -659,13 +659,13 @@
  * @see U16_BACK_N
  * @stable ICU 2.4
  */
-#define U16_BACK_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_వెనుక_N_UNSAFE(s, i, n) UPRV_ఖండం_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
-        U16_BACK_1_UNSAFE(s, i); \
+    అయితే(__N>0) { \
+        U16_వెనుక_1_UNSAFE(s, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Move the string offset from one code point boundary to the n-th one before it,
@@ -681,13 +681,13 @@
  * @see U16_BACK_N_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_BACK_N(s, start, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#నిర్వచించు U16_వెనుక_N(s, ప్రారంభం, i, n) UPRV_ఖండం_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0 && (i)>(start)) { \
-        U16_BACK_1(s, start, i); \
+    అయితే(__N>0 && (i)>(ప్రారంభం)) { \
+        U16_వెనుక_1(s, ప్రారంభం, i); \
         --__N; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Adjust a random-access offset to a code point boundary after a code point.
@@ -702,11 +702,11 @@
  * @see U16_SET_CP_LIMIT
  * @stable ICU 2.4
  */
-#define U16_SET_CP_LIMIT_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_LEAD((s)[(i)-1])) { \
+#నిర్వచించు U16_సమితి_CP_హద్దు_UNSAFE(s, i) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ(U16_IS_LEAD((s)[(i)-1])) { \
         ++(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /**
  * Adjust a random-access offset to a code point boundary after a code point.
@@ -725,10 +725,10 @@
  * @see U16_SET_CP_LIMIT_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_SET_CP_LIMIT(s, start, i, length) UPRV_BLOCK_MACRO_BEGIN { \
-    if((start)<(i) && ((i)<(length) || (length)<0) && U16_IS_LEAD((s)[(i)-1]) && U16_IS_TRAIL((s)[i])) { \
+#నిర్వచించు U16_సమితి_CP_హద్దు(s, ప్రారంభం, i, నిడివి) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ((ప్రారంభం)<(i) && ((i)<(నిడివి) || (నిడివి)<0) && U16_IS_LEAD((s)[(i)-1]) && U16_IS_TRAIL((s)[i])) { \
         ++(i); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
-#endif
+#అయితే_ముగింపు

@@ -16,988 +16,988 @@
 *   UTF-32 converter implementation. Used to be in ucnv_utf.c.
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/utf.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/utf.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "cmemory.h"
 
-#define MAXIMUM_UCS2            0x0000FFFF
-#define MAXIMUM_UTF             0x0010FFFF
-#define HALF_SHIFT              10
-#define HALF_BASE               0x0010000
-#define HALF_MASK               0x3FF
-#define SURROGATE_HIGH_START    0xD800
-#define SURROGATE_LOW_START     0xDC00
+#నిర్వచించు గరిష్ఠ_UCS2            0x0000FFFF
+#నిర్వచించు గరిష్ఠ_UTF             0x0010FFFF
+#నిర్వచించు HALF_జరుపు              10
+#నిర్వచించు HALF_పునాది               0x0010000
+#నిర్వచించు HALF_ముసుగు               0x3FF
+#నిర్వచించు SURROGATE_ఎగువ_ప్రారంభం    0xD800
+#నిర్వచించు SURROGATE_దిగువ_ప్రారంభం     0xDC00
 
 /* -SURROGATE_LOW_START + HALF_BASE */
-#define SURROGATE_LOW_BASE      9216
+#నిర్వచించు SURROGATE_దిగువ_పునాది      9216
 
-enum {
-    UCNV_NEED_TO_WRITE_BOM=1
+గణన {
+    UCNV_NEED_గమ్యం_WRITE_BOM=1
 };
 
 /* UTF-32BE ----------------------------------------------------------------- */
 U_CDECL_BEGIN
-static void U_CALLCONV
-T_UConverter_toUnicode_UTF32_BE(UConverterToUnicodeArgs * args,
-                                UErrorCode * err)
+స్థిర శూన్య U_CALLCONV
+T_UConverter_గమ్యం_Unicode_UTF32_BE(UConverter_గమ్యం_Unicode_వాదనలు * వాదనలు_2,
+                                UError_సంకేతం * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    స్థిరరాశి గుర్తులేని అక్షరం *my_ఆధారం = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం;
+    char16_t *my_లక్ష్యం = వాదనలు_2->లక్ష్యం;
+    స్థిరరాశి గుర్తులేని అక్షరం *ఆధారం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు = వాదనలు_2->లక్ష్యం_హద్దు;
+    గుర్తులేని అక్షరం *గమ్యం_UBytes = వాదనలు_2->converter->గమ్యం_UBytes;
     uint32_t ch, i;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit) {
-        i = args->converter->toULength;       /* restore # of bytes consumed */
-        args->converter->toULength = 0;
+    ఒకవేళ (వాదనలు_2->converter->గమ్యం_ULength > 0 && my_లక్ష్యం < లక్ష్యం_హద్దు) {
+        i = వాదనలు_2->converter->గమ్యం_ULength;       /* restore # of bytes consumed */
+        వాదనలు_2->converter->గమ్యం_ULength = 0;
 
-        ch = args->converter->toUnicodeStatus - 1;/*Stores the previously calculated ch from a previous call*/
-        args->converter->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = వాదనలు_2->converter->గమ్యం_Unicode_స్థితి - 1;/*Stores the previously calculated ch from a previous call*/
+        వాదనలు_2->converter->గమ్యం_Unicode_స్థితి = 0;
+        వెళ్ళు morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు) {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t)) {
-            if (mySource < sourceLimit) {
-                ch = (ch << 8) | (uint8_t)(*mySource);
-                toUBytes[i++] = (char) *(mySource++);
+        అయితే (i < పరిమాణం(uint32_t)) {
+            ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు) {
+                ch = (ch << 8) | (uint8_t)(*my_ఆధారం);
+                గమ్యం_UBytes[i++] = (అక్షరం) *(my_ఆధారం++);
             }
-            else {
+            లేకపోతే {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
-                args->converter->toUnicodeStatus = ch + 1;
-                args->converter->toULength = (int8_t) i;
-                goto donefornow;
+                వాదనలు_2->converter->గమ్యం_Unicode_స్థితి = ch + 1;
+                వాదనలు_2->converter->గమ్యం_ULength = (int8_t) i;
+                వెళ్ళు donefornow;
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
+        ఒకవేళ (ch <= గరిష్ఠ_UTF && !U_IS_SURROGATE(ch)) {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) 
+            ఒకవేళ (ch <= గరిష్ఠ_UCS2) 
             {
                 /* fits in 16 bits */
-                *(myTarget++) = (char16_t) ch;
+                *(my_లక్ష్యం++) = (char16_t) ch;
             }
-            else {
+            లేకపోతే {
                 /* write out the surrogates */
-                *(myTarget++) = U16_LEAD(ch);
+                *(my_లక్ష్యం++) = U16_LEAD(ch);
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit) {
-                    *(myTarget++) = (char16_t)ch;
+                ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు) {
+                    *(my_లక్ష్యం++) = (char16_t)ch;
                 }
-                else {
+                లేకపోతే {
                     /* Put in overflow buffer (not handled here) */
-                    args->converter->UCharErrorBuffer[0] = (char16_t) ch;
-                    args->converter->UCharErrorBufferLength = 1;
-                    *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    వాదనలు_2->converter->UChar_Error_బఫరు[0] = (char16_t) ch;
+                    వాదనలు_2->converter->UChar_Error_బఫరు_నిడివి = 1;
+                    *err = U_బఫరు_అధికప్రవాహం_ERROR;
+                    ఆపు;
                 }
             }
         }
-        else {
-            args->converter->toULength = (int8_t)i;
-            *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+        లేకపోతే {
+            వాదనలు_2->converter->గమ్యం_ULength = (int8_t)i;
+            *err = U_ILLEGAL_CHAR_దొరికింది;
+            ఆపు;
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err)) {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
+    వాదనలు_2->లక్ష్యం = my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *) my_ఆధారం;
 }
 
-static void U_CALLCONV
-T_UConverter_toUnicode_UTF32_BE_OFFSET_LOGIC(UConverterToUnicodeArgs * args,
-                                             UErrorCode * err)
+స్థిర శూన్య U_CALLCONV
+T_UConverter_గమ్యం_Unicode_UTF32_BE_స్థానభ్రంశం_LOGIC(UConverter_గమ్యం_Unicode_వాదనలు * వాదనలు_2,
+                                             UError_సంకేతం * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    int32_t *myOffsets = args->offsets;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    స్థిరరాశి గుర్తులేని అక్షరం *my_ఆధారం = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం;
+    char16_t *my_లక్ష్యం = వాదనలు_2->లక్ష్యం;
+    int32_t *myOffsets = వాదనలు_2->offsets;
+    స్థిరరాశి గుర్తులేని అక్షరం *ఆధారం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు = వాదనలు_2->లక్ష్యం_హద్దు;
+    గుర్తులేని అక్షరం *గమ్యం_UBytes = వాదనలు_2->converter->గమ్యం_UBytes;
     uint32_t ch, i;
-    int32_t offsetNum = 0;
+    int32_t స్థానభ్రంశం_అంకె = 0;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit) {
-        i = args->converter->toULength;       /* restore # of bytes consumed */
-        args->converter->toULength = 0;
+    ఒకవేళ (వాదనలు_2->converter->గమ్యం_ULength > 0 && my_లక్ష్యం < లక్ష్యం_హద్దు) {
+        i = వాదనలు_2->converter->గమ్యం_ULength;       /* restore # of bytes consumed */
+        వాదనలు_2->converter->గమ్యం_ULength = 0;
 
-        ch = args->converter->toUnicodeStatus - 1;/*Stores the previously calculated ch from a previous call*/
-        args->converter->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = వాదనలు_2->converter->గమ్యం_Unicode_స్థితి - 1;/*Stores the previously calculated ch from a previous call*/
+        వాదనలు_2->converter->గమ్యం_Unicode_స్థితి = 0;
+        వెళ్ళు morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు) {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t)) {
-            if (mySource < sourceLimit) {
-                ch = (ch << 8) | (uint8_t)(*mySource);
-                toUBytes[i++] = (char) *(mySource++);
+        అయితే (i < పరిమాణం(uint32_t)) {
+            ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు) {
+                ch = (ch << 8) | (uint8_t)(*my_ఆధారం);
+                గమ్యం_UBytes[i++] = (అక్షరం) *(my_ఆధారం++);
             }
-            else {
+            లేకపోతే {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
-                args->converter->toUnicodeStatus = ch + 1;
-                args->converter->toULength = (int8_t) i;
-                goto donefornow;
+                వాదనలు_2->converter->గమ్యం_Unicode_స్థితి = ch + 1;
+                వాదనలు_2->converter->గమ్యం_ULength = (int8_t) i;
+                వెళ్ళు donefornow;
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
+        ఒకవేళ (ch <= గరిష్ఠ_UTF && !U_IS_SURROGATE(ch)) {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) {
+            ఒకవేళ (ch <= గరిష్ఠ_UCS2) {
                 /* fits in 16 bits */
-                *(myTarget++) = (char16_t) ch;
-                *(myOffsets++) = offsetNum;
+                *(my_లక్ష్యం++) = (char16_t) ch;
+                *(myOffsets++) = స్థానభ్రంశం_అంకె;
             }
-            else {
+            లేకపోతే {
                 /* write out the surrogates */
-                *(myTarget++) = U16_LEAD(ch);
-                *myOffsets++ = offsetNum;
+                *(my_లక్ష్యం++) = U16_LEAD(ch);
+                *myOffsets++ = స్థానభ్రంశం_అంకె;
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit)
+                ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు)
                 {
-                    *(myTarget++) = (char16_t)ch;
-                    *(myOffsets++) = offsetNum;
+                    *(my_లక్ష్యం++) = (char16_t)ch;
+                    *(myOffsets++) = స్థానభ్రంశం_అంకె;
                 }
-                else {
+                లేకపోతే {
                     /* Put in overflow buffer (not handled here) */
-                    args->converter->UCharErrorBuffer[0] = (char16_t) ch;
-                    args->converter->UCharErrorBufferLength = 1;
-                    *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    వాదనలు_2->converter->UChar_Error_బఫరు[0] = (char16_t) ch;
+                    వాదనలు_2->converter->UChar_Error_బఫరు_నిడివి = 1;
+                    *err = U_బఫరు_అధికప్రవాహం_ERROR;
+                    ఆపు;
                 }
             }
         }
-        else {
-            args->converter->toULength = (int8_t)i;
-            *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+        లేకపోతే {
+            వాదనలు_2->converter->గమ్యం_ULength = (int8_t)i;
+            *err = U_ILLEGAL_CHAR_దొరికింది;
+            ఆపు;
         }
-        offsetNum += i;
+        స్థానభ్రంశం_అంకె += i;
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err))
     {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
-    args->offsets = myOffsets;
+    వాదనలు_2->లక్ష్యం = my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *) my_ఆధారం;
+    వాదనలు_2->offsets = myOffsets;
 }
 
-static void U_CALLCONV
-T_UConverter_fromUnicode_UTF32_BE(UConverterFromUnicodeArgs * args,
-                                  UErrorCode * err)
+స్థిర శూన్య U_CALLCONV
+T_UConverter_fromUnicode_UTF32_BE(UConverter_From_Unicode_వాదనలు * వాదనలు_2,
+                                  UError_సంకేతం * err)
 {
-    const char16_t *mySource = args->source;
-    unsigned char *myTarget;
-    const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    స్థిరరాశి char16_t *my_ఆధారం = వాదనలు_2->ఆధారం;
+    గుర్తులేని అక్షరం *my_లక్ష్యం;
+    స్థిరరాశి char16_t *ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి గుర్తులేని అక్షరం *లక్ష్యం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం_హద్దు;
     UChar32 ch, ch2;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    గుర్తులేని పూర్ణాంకం సూచీ_గమ్యం_Write;
+    గుర్తులేని అక్షరం తాత్కాలిక[పరిమాణం(uint32_t)];
 
-    if(mySource >= sourceLimit) {
+    ఒకవేళ(my_ఆధారం >= ఆధారం_హద్దు) {
         /* no input, nothing to do */
-        return;
+        తిరిగి;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ 0, 0, (char)0xfeu, (char)0xffu };
-        ucnv_fromUWriteBytes(args->converter,
+    ఒకవేళ(వాదనలు_2->converter->from_Unicode_స్థితి==UCNV_NEED_గమ్యం_WRITE_BOM) {
+        స్థిర స్థిరరాశి అక్షరం bom[]={ 0, 0, (అక్షరం)0xfeu, (అక్షరం)0xffu };
+        ucnv_from_UWrite_బైట్లు(వాదనలు_2->converter,
                              bom, 4,
-                             &args->target, args->targetLimit,
-                             &args->offsets, -1,
+                             &వాదనలు_2->లక్ష్యం, వాదనలు_2->లక్ష్యం_హద్దు,
+                             &వాదనలు_2->offsets, -1,
                              err);
-        args->converter->fromUnicodeStatus=0;
+        వాదనలు_2->converter->from_Unicode_స్థితి=0;
     }
 
-    myTarget = (unsigned char *) args->target;
-    temp[0] = 0;
+    my_లక్ష్యం = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం;
+    తాత్కాలిక[0] = 0;
 
-    if (args->converter->fromUChar32) {
-        ch = args->converter->fromUChar32;
-        args->converter->fromUChar32 = 0;
-        goto lowsurogate;
+    ఒకవేళ (వాదనలు_2->converter->fromUChar32) {
+        ch = వాదనలు_2->converter->fromUChar32;
+        వాదనలు_2->converter->fromUChar32 = 0;
+        వెళ్ళు lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
-        ch = *(mySource++);
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు) {
+        ch = *(my_ఆధారం++);
 
-        if (U_IS_SURROGATE(ch)) {
-            if (U_IS_LEAD(ch)) {
+        ఒకవేళ (U_IS_SURROGATE(ch)) {
+            ఒకవేళ (U_IS_LEAD(ch)) {
 lowsurogate:
-                if (mySource < sourceLimit) {
-                    ch2 = *mySource;
-                    if (U_IS_TRAIL(ch2)) {
-                        ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
-                        mySource++;
+                ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు) {
+                    ch2 = *my_ఆధారం;
+                    ఒకవేళ (U_IS_TRAIL(ch2)) {
+                        ch = ((ch - SURROGATE_ఎగువ_ప్రారంభం) << HALF_జరుపు) + ch2 + SURROGATE_దిగువ_పునాది;
+                        my_ఆధారం++;
                     }
-                    else {
+                    లేకపోతే {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        args->converter->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        వాదనలు_2->converter->fromUChar32 = ch;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
                     }
                 }
-                else {
+                లేకపోతే {
                     /* ran out of source */
-                    args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    వాదనలు_2->converter->fromUChar32 = ch;
+                    ఒకవేళ (వాదనలు_2->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err = U_ILLEGAL_CHAR_FOUND;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
                     }
-                    break;
+                    ఆపు;
                 }
             }
-            else {
+            లేకపోతే {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
-                args->converter->fromUChar32 = ch;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                వాదనలు_2->converter->fromUChar32 = ch;
+                *err = U_ILLEGAL_CHAR_దొరికింది;
+                ఆపు;
             }
         }
 
         /* We cannot get any larger than 10FFFF because we are coming from UTF-16 */
-        temp[1] = (uint8_t) (ch >> 16 & 0x1F);
-        temp[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
-        temp[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
+        తాత్కాలిక[1] = (uint8_t) (ch >> 16 & 0x1F);
+        తాత్కాలిక[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
+        తాత్కాలిక[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++) {
-            if (myTarget < targetLimit) {
-                *(myTarget++) = temp[indexToWrite];
+        కొరకు (సూచీ_గమ్యం_Write = 0; సూచీ_గమ్యం_Write <= పరిమాణం(uint32_t) - 1; సూచీ_గమ్యం_Write++) {
+            ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు) {
+                *(my_లక్ష్యం++) = తాత్కాలిక[సూచీ_గమ్యం_Write];
             }
-            else {
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
-                *err = U_BUFFER_OVERFLOW_ERROR;
+            లేకపోతే {
+                వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] = తాత్కాలిక[సూచీ_గమ్యం_Write];
+                *err = U_బఫరు_అధికప్రవాహం_ERROR;
             }
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err)) {
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
+    వాదనలు_2->లక్ష్యం = (అక్షరం *) my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = my_ఆధారం;
 }
 
-static void U_CALLCONV
-T_UConverter_fromUnicode_UTF32_BE_OFFSET_LOGIC(UConverterFromUnicodeArgs * args,
-                                               UErrorCode * err)
+స్థిర శూన్య U_CALLCONV
+T_UConverter_from_Unicode_UTF32_BE_స్థానభ్రంశం_LOGIC(UConverter_From_Unicode_వాదనలు * వాదనలు_2,
+                                               UError_సంకేతం * err)
 {
-    const char16_t *mySource = args->source;
-    unsigned char *myTarget;
+    స్థిరరాశి char16_t *my_ఆధారం = వాదనలు_2->ఆధారం;
+    గుర్తులేని అక్షరం *my_లక్ష్యం;
     int32_t *myOffsets;
-    const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    స్థిరరాశి char16_t *ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి గుర్తులేని అక్షరం *లక్ష్యం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం_హద్దు;
     UChar32 ch, ch2;
-    int32_t offsetNum = 0;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    int32_t స్థానభ్రంశం_అంకె = 0;
+    గుర్తులేని పూర్ణాంకం సూచీ_గమ్యం_Write;
+    గుర్తులేని అక్షరం తాత్కాలిక[పరిమాణం(uint32_t)];
 
-    if(mySource >= sourceLimit) {
+    ఒకవేళ(my_ఆధారం >= ఆధారం_హద్దు) {
         /* no input, nothing to do */
-        return;
+        తిరిగి;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ 0, 0, (char)0xfeu, (char)0xffu };
-        ucnv_fromUWriteBytes(args->converter,
+    ఒకవేళ(వాదనలు_2->converter->from_Unicode_స్థితి==UCNV_NEED_గమ్యం_WRITE_BOM) {
+        స్థిర స్థిరరాశి అక్షరం bom[]={ 0, 0, (అక్షరం)0xfeu, (అక్షరం)0xffu };
+        ucnv_from_UWrite_బైట్లు(వాదనలు_2->converter,
                              bom, 4,
-                             &args->target, args->targetLimit,
-                             &args->offsets, -1,
+                             &వాదనలు_2->లక్ష్యం, వాదనలు_2->లక్ష్యం_హద్దు,
+                             &వాదనలు_2->offsets, -1,
                              err);
-        args->converter->fromUnicodeStatus=0;
+        వాదనలు_2->converter->from_Unicode_స్థితి=0;
     }
 
-    myTarget = (unsigned char *) args->target;
-    myOffsets = args->offsets;
-    temp[0] = 0;
+    my_లక్ష్యం = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం;
+    myOffsets = వాదనలు_2->offsets;
+    తాత్కాలిక[0] = 0;
 
-    if (args->converter->fromUChar32) {
-        ch = args->converter->fromUChar32;
-        args->converter->fromUChar32 = 0;
-        goto lowsurogate;
+    ఒకవేళ (వాదనలు_2->converter->fromUChar32) {
+        ch = వాదనలు_2->converter->fromUChar32;
+        వాదనలు_2->converter->fromUChar32 = 0;
+        వెళ్ళు lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
-        ch = *(mySource++);
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు) {
+        ch = *(my_ఆధారం++);
 
-        if (U_IS_SURROGATE(ch)) {
-            if (U_IS_LEAD(ch)) {
+        ఒకవేళ (U_IS_SURROGATE(ch)) {
+            ఒకవేళ (U_IS_LEAD(ch)) {
 lowsurogate:
-                if (mySource < sourceLimit) {
-                    ch2 = *mySource;
-                    if (U_IS_TRAIL(ch2)) {
-                        ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
-                        mySource++;
+                ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు) {
+                    ch2 = *my_ఆధారం;
+                    ఒకవేళ (U_IS_TRAIL(ch2)) {
+                        ch = ((ch - SURROGATE_ఎగువ_ప్రారంభం) << HALF_జరుపు) + ch2 + SURROGATE_దిగువ_పునాది;
+                        my_ఆధారం++;
                     }
-                    else {
+                    లేకపోతే {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        args->converter->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        వాదనలు_2->converter->fromUChar32 = ch;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
                     }
                 }
-                else {
+                లేకపోతే {
                     /* ran out of source */
-                    args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    వాదనలు_2->converter->fromUChar32 = ch;
+                    ఒకవేళ (వాదనలు_2->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err = U_ILLEGAL_CHAR_FOUND;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
                     }
-                    break;
+                    ఆపు;
                 }
             }
-            else {
+            లేకపోతే {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
-                args->converter->fromUChar32 = ch;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                వాదనలు_2->converter->fromUChar32 = ch;
+                *err = U_ILLEGAL_CHAR_దొరికింది;
+                ఆపు;
             }
         }
 
         /* We cannot get any larger than 10FFFF because we are coming from UTF-16 */
-        temp[1] = (uint8_t) (ch >> 16 & 0x1F);
-        temp[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
-        temp[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
+        తాత్కాలిక[1] = (uint8_t) (ch >> 16 & 0x1F);
+        తాత్కాలిక[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
+        తాత్కాలిక[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++) {
-            if (myTarget < targetLimit) {
-                *(myTarget++) = temp[indexToWrite];
-                *(myOffsets++) = offsetNum;
+        కొరకు (సూచీ_గమ్యం_Write = 0; సూచీ_గమ్యం_Write <= పరిమాణం(uint32_t) - 1; సూచీ_గమ్యం_Write++) {
+            ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు) {
+                *(my_లక్ష్యం++) = తాత్కాలిక[సూచీ_గమ్యం_Write];
+                *(myOffsets++) = స్థానభ్రంశం_అంకె;
             }
-            else {
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
-                *err = U_BUFFER_OVERFLOW_ERROR;
+            లేకపోతే {
+                వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] = తాత్కాలిక[సూచీ_గమ్యం_Write];
+                *err = U_బఫరు_అధికప్రవాహం_ERROR;
             }
         }
-        offsetNum = offsetNum + 1 + (temp[1] != 0);
+        స్థానభ్రంశం_అంకె = స్థానభ్రంశం_అంకె + 1 + (తాత్కాలిక[1] != 0);
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err)) {
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
-    args->offsets = myOffsets;
+    వాదనలు_2->లక్ష్యం = (అక్షరం *) my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = my_ఆధారం;
+    వాదనలు_2->offsets = myOffsets;
 }
 
-static UChar32 U_CALLCONV
-T_UConverter_getNextUChar_UTF32_BE(UConverterToUnicodeArgs* args,
-                                   UErrorCode* err)
+స్థిర UChar32 U_CALLCONV
+T_UConverter_get_తదుపరి_UChar_UTF32_BE(UConverter_గమ్యం_Unicode_వాదనలు* వాదనలు_2,
+                                   UError_సంకేతం* err)
 {
-    const uint8_t *mySource;
+    స్థిరరాశి uint8_t *my_ఆధారం;
     UChar32 myUChar;
     int32_t length;
 
-    mySource = (const uint8_t *)args->source;
-    if (mySource >= (const uint8_t *)args->sourceLimit)
+    my_ఆధారం = (స్థిరరాశి uint8_t *)వాదనలు_2->ఆధారం;
+    ఒకవేళ (my_ఆధారం >= (స్థిరరాశి uint8_t *)వాదనలు_2->ఆధారం_హద్దు)
     {
         /* no input */
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err = U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0xffff;
     }
 
-    length = (int32_t)((const uint8_t *)args->sourceLimit - mySource);
-    if (length < 4) 
+    length = (int32_t)((స్థిరరాశి uint8_t *)వాదనలు_2->ఆధారం_హద్దు - my_ఆధారం);
+    ఒకవేళ (length < 4) 
     {
         /* got a partial character */
-        uprv_memcpy(args->converter->toUBytes, mySource, length);
-        args->converter->toULength = (int8_t)length;
-        args->source = (const char *)(mySource + length);
-        *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        uprv_memcpy(వాదనలు_2->converter->గమ్యం_UBytes, my_ఆధారం, length);
+        వాదనలు_2->converter->గమ్యం_ULength = (int8_t)length;
+        వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)(my_ఆధారం + length);
+        *err = U_TRUNCATED_CHAR_దొరికింది;
+        తిరిగి 0xffff;
     }
 
     /* Don't even try to do a direct cast because the value may be on an odd address. */
-    myUChar = ((UChar32)mySource[0] << 24)
-            | ((UChar32)mySource[1] << 16)
-            | ((UChar32)mySource[2] << 8)
-            | ((UChar32)mySource[3]);
+    myUChar = ((UChar32)my_ఆధారం[0] << 24)
+            | ((UChar32)my_ఆధారం[1] << 16)
+            | ((UChar32)my_ఆధారం[2] << 8)
+            | ((UChar32)my_ఆధారం[3]);
 
-    args->source = (const char *)(mySource + 4);
-    if ((uint32_t)myUChar <= MAXIMUM_UTF && !U_IS_SURROGATE(myUChar)) {
-        return myUChar;
+    వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)(my_ఆధారం + 4);
+    ఒకవేళ ((uint32_t)myUChar <= గరిష్ఠ_UTF && !U_IS_SURROGATE(myUChar)) {
+        తిరిగి myUChar;
     }
 
-    uprv_memcpy(args->converter->toUBytes, mySource, 4);
-    args->converter->toULength = 4;
+    uprv_memcpy(వాదనలు_2->converter->గమ్యం_UBytes, my_ఆధారం, 4);
+    వాదనలు_2->converter->గమ్యం_ULength = 4;
 
-    *err = U_ILLEGAL_CHAR_FOUND;
-    return 0xffff;
+    *err = U_ILLEGAL_CHAR_దొరికింది;
+    తిరిగి 0xffff;
 }
-U_CDECL_END
-static const UConverterImpl _UTF32BEImpl = {
+U_CDECL_చివర
+స్థిర స్థిరరాశి UConverterImpl _UTF32BEImpl = {
     UCNV_UTF32_BigEndian,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    T_UConverter_toUnicode_UTF32_BE,
-    T_UConverter_toUnicode_UTF32_BE_OFFSET_LOGIC,
+    T_UConverter_గమ్యం_Unicode_UTF32_BE,
+    T_UConverter_గమ్యం_Unicode_UTF32_BE_స్థానభ్రంశం_LOGIC,
     T_UConverter_fromUnicode_UTF32_BE,
-    T_UConverter_fromUnicode_UTF32_BE_OFFSET_LOGIC,
-    T_UConverter_getNextUChar_UTF32_BE,
+    T_UConverter_from_Unicode_UTF32_BE_స్థానభ్రంశం_LOGIC,
+    T_UConverter_get_తదుపరి_UChar_UTF32_BE,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    ucnv_get_Non_Surrogate_Unicode_సమితి,
 
-    nullptr,
-    nullptr
+    శూన్యసూచిక,
+    శూన్యసూచిక
 };
 
 /* The 1232 CCSID refers to any version of Unicode with any endianness of UTF-32 */
-static const UConverterStaticData _UTF32BEStaticData = {
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం UTF32_BEStatic_దత్తాంశం = {
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "UTF-32BE",
     1232,
     UCNV_IBM, UCNV_UTF32_BigEndian, 4, 4,
-    { 0, 0, 0xff, 0xfd }, 4, false, false,
+    { 0, 0, 0xff, 0xfd }, 4, అబద్ధం, అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF32BEData =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF32BEStaticData, &_UTF32BEImpl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం _UTF32BEData =
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&UTF32_BEStatic_దత్తాంశం, &_UTF32BEImpl);
 
 /* UTF-32LE ---------------------------------------------------------- */
 U_CDECL_BEGIN
-static void U_CALLCONV
-T_UConverter_toUnicode_UTF32_LE(UConverterToUnicodeArgs * args,
-                                UErrorCode * err)
+స్థిర శూన్య U_CALLCONV
+T_UConverter_గమ్యం_Unicode_UTF32_LE(UConverter_గమ్యం_Unicode_వాదనలు * వాదనలు_2,
+                                UError_సంకేతం * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    స్థిరరాశి గుర్తులేని అక్షరం *my_ఆధారం = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం;
+    char16_t *my_లక్ష్యం = వాదనలు_2->లక్ష్యం;
+    స్థిరరాశి గుర్తులేని అక్షరం *ఆధారం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు = వాదనలు_2->లక్ష్యం_హద్దు;
+    గుర్తులేని అక్షరం *గమ్యం_UBytes = వాదనలు_2->converter->గమ్యం_UBytes;
     uint32_t ch, i;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit)
+    ఒకవేళ (వాదనలు_2->converter->గమ్యం_ULength > 0 && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        i = args->converter->toULength;       /* restore # of bytes consumed */
-        args->converter->toULength = 0;
+        i = వాదనలు_2->converter->గమ్యం_ULength;       /* restore # of bytes consumed */
+        వాదనలు_2->converter->గమ్యం_ULength = 0;
 
         /* Stores the previously calculated ch from a previous call*/
-        ch = args->converter->toUnicodeStatus - 1;
-        args->converter->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = వాదనలు_2->converter->గమ్యం_Unicode_స్థితి - 1;
+        వాదనలు_2->converter->గమ్యం_Unicode_స్థితి = 0;
+        వెళ్ళు morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t))
+        అయితే (i < పరిమాణం(uint32_t))
         {
-            if (mySource < sourceLimit)
+            ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు)
             {
-                ch |= ((uint8_t)(*mySource)) << (i * 8);
-                toUBytes[i++] = (char) *(mySource++);
+                ch |= ((uint8_t)(*my_ఆధారం)) << (i * 8);
+                గమ్యం_UBytes[i++] = (అక్షరం) *(my_ఆధారం++);
             }
-            else
+            లేకపోతే
             {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
-                args->converter->toUnicodeStatus = ch + 1;
-                args->converter->toULength = (int8_t) i;
-                goto donefornow;
+                వాదనలు_2->converter->గమ్యం_Unicode_స్థితి = ch + 1;
+                వాదనలు_2->converter->గమ్యం_ULength = (int8_t) i;
+                వెళ్ళు donefornow;
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
+        ఒకవేళ (ch <= గరిష్ఠ_UTF && !U_IS_SURROGATE(ch)) {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) {
+            ఒకవేళ (ch <= గరిష్ఠ_UCS2) {
                 /* fits in 16 bits */
-                *(myTarget++) = (char16_t) ch;
+                *(my_లక్ష్యం++) = (char16_t) ch;
             }
-            else {
+            లేకపోతే {
                 /* write out the surrogates */
-                *(myTarget++) = U16_LEAD(ch);
+                *(my_లక్ష్యం++) = U16_LEAD(ch);
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit) {
-                    *(myTarget++) = (char16_t)ch;
+                ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు) {
+                    *(my_లక్ష్యం++) = (char16_t)ch;
                 }
-                else {
+                లేకపోతే {
                     /* Put in overflow buffer (not handled here) */
-                    args->converter->UCharErrorBuffer[0] = (char16_t) ch;
-                    args->converter->UCharErrorBufferLength = 1;
-                    *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    వాదనలు_2->converter->UChar_Error_బఫరు[0] = (char16_t) ch;
+                    వాదనలు_2->converter->UChar_Error_బఫరు_నిడివి = 1;
+                    *err = U_బఫరు_అధికప్రవాహం_ERROR;
+                    ఆపు;
                 }
             }
         }
-        else {
-            args->converter->toULength = (int8_t)i;
-            *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+        లేకపోతే {
+            వాదనలు_2->converter->గమ్యం_ULength = (int8_t)i;
+            *err = U_ILLEGAL_CHAR_దొరికింది;
+            ఆపు;
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err))
     {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
+    వాదనలు_2->లక్ష్యం = my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *) my_ఆధారం;
 }
 
-static void U_CALLCONV
-T_UConverter_toUnicode_UTF32_LE_OFFSET_LOGIC(UConverterToUnicodeArgs * args,
-                                             UErrorCode * err)
+స్థిర శూన్య U_CALLCONV
+T_UConverter_గమ్యం_Unicode_UTF32_LE_స్థానభ్రంశం_LOGIC(UConverter_గమ్యం_Unicode_వాదనలు * వాదనలు_2,
+                                             UError_సంకేతం * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    int32_t *myOffsets = args->offsets;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    స్థిరరాశి గుర్తులేని అక్షరం *my_ఆధారం = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం;
+    char16_t *my_లక్ష్యం = వాదనలు_2->లక్ష్యం;
+    int32_t *myOffsets = వాదనలు_2->offsets;
+    స్థిరరాశి గుర్తులేని అక్షరం *ఆధారం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు = వాదనలు_2->లక్ష్యం_హద్దు;
+    గుర్తులేని అక్షరం *గమ్యం_UBytes = వాదనలు_2->converter->గమ్యం_UBytes;
     uint32_t ch, i;
-    int32_t offsetNum = 0;
+    int32_t స్థానభ్రంశం_అంకె = 0;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit)
+    ఒకవేళ (వాదనలు_2->converter->గమ్యం_ULength > 0 && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        i = args->converter->toULength;       /* restore # of bytes consumed */
-        args->converter->toULength = 0;
+        i = వాదనలు_2->converter->గమ్యం_ULength;       /* restore # of bytes consumed */
+        వాదనలు_2->converter->గమ్యం_ULength = 0;
 
         /* Stores the previously calculated ch from a previous call*/
-        ch = args->converter->toUnicodeStatus - 1;
-        args->converter->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = వాదనలు_2->converter->గమ్యం_Unicode_స్థితి - 1;
+        వాదనలు_2->converter->గమ్యం_Unicode_స్థితి = 0;
+        వెళ్ళు morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t))
+        అయితే (i < పరిమాణం(uint32_t))
         {
-            if (mySource < sourceLimit)
+            ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు)
             {
-                ch |= ((uint8_t)(*mySource)) << (i * 8);
-                toUBytes[i++] = (char) *(mySource++);
+                ch |= ((uint8_t)(*my_ఆధారం)) << (i * 8);
+                గమ్యం_UBytes[i++] = (అక్షరం) *(my_ఆధారం++);
             }
-            else
+            లేకపోతే
             {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
-                args->converter->toUnicodeStatus = ch + 1;
-                args->converter->toULength = (int8_t) i;
-                goto donefornow;
+                వాదనలు_2->converter->గమ్యం_Unicode_స్థితి = ch + 1;
+                వాదనలు_2->converter->గమ్యం_ULength = (int8_t) i;
+                వెళ్ళు donefornow;
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch))
+        ఒకవేళ (ch <= గరిష్ఠ_UTF && !U_IS_SURROGATE(ch))
         {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) 
+            ఒకవేళ (ch <= గరిష్ఠ_UCS2) 
             {
                 /* fits in 16 bits */
-                *(myTarget++) = (char16_t) ch;
-                *(myOffsets++) = offsetNum;
+                *(my_లక్ష్యం++) = (char16_t) ch;
+                *(myOffsets++) = స్థానభ్రంశం_అంకె;
             }
-            else {
+            లేకపోతే {
                 /* write out the surrogates */
-                *(myTarget++) = U16_LEAD(ch);
-                *(myOffsets++) = offsetNum;
+                *(my_లక్ష్యం++) = U16_LEAD(ch);
+                *(myOffsets++) = స్థానభ్రంశం_అంకె;
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit)
+                ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు)
                 {
-                    *(myTarget++) = (char16_t)ch;
-                    *(myOffsets++) = offsetNum;
+                    *(my_లక్ష్యం++) = (char16_t)ch;
+                    *(myOffsets++) = స్థానభ్రంశం_అంకె;
                 }
-                else
+                లేకపోతే
                 {
                     /* Put in overflow buffer (not handled here) */
-                    args->converter->UCharErrorBuffer[0] = (char16_t) ch;
-                    args->converter->UCharErrorBufferLength = 1;
-                    *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    వాదనలు_2->converter->UChar_Error_బఫరు[0] = (char16_t) ch;
+                    వాదనలు_2->converter->UChar_Error_బఫరు_నిడివి = 1;
+                    *err = U_బఫరు_అధికప్రవాహం_ERROR;
+                    ఆపు;
                 }
             }
         }
-        else
+        లేకపోతే
         {
-            args->converter->toULength = (int8_t)i;
-            *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+            వాదనలు_2->converter->గమ్యం_ULength = (int8_t)i;
+            *err = U_ILLEGAL_CHAR_దొరికింది;
+            ఆపు;
         }
-        offsetNum += i;
+        స్థానభ్రంశం_అంకె += i;
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err))
     {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
-    args->offsets = myOffsets;
+    వాదనలు_2->లక్ష్యం = my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *) my_ఆధారం;
+    వాదనలు_2->offsets = myOffsets;
 }
 
-static void U_CALLCONV
-T_UConverter_fromUnicode_UTF32_LE(UConverterFromUnicodeArgs * args,
-                                  UErrorCode * err)
+స్థిర శూన్య U_CALLCONV
+T_UConverter_fromUnicode_UTF32_LE(UConverter_From_Unicode_వాదనలు * వాదనలు_2,
+                                  UError_సంకేతం * err)
 {
-    const char16_t *mySource = args->source;
-    unsigned char *myTarget;
-    const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    స్థిరరాశి char16_t *my_ఆధారం = వాదనలు_2->ఆధారం;
+    గుర్తులేని అక్షరం *my_లక్ష్యం;
+    స్థిరరాశి char16_t *ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి గుర్తులేని అక్షరం *లక్ష్యం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం_హద్దు;
     UChar32 ch, ch2;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    గుర్తులేని పూర్ణాంకం సూచీ_గమ్యం_Write;
+    గుర్తులేని అక్షరం తాత్కాలిక[పరిమాణం(uint32_t)];
 
-    if(mySource >= sourceLimit) {
+    ఒకవేళ(my_ఆధారం >= ఆధారం_హద్దు) {
         /* no input, nothing to do */
-        return;
+        తిరిగి;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xffu, (char)0xfeu, 0, 0 };
-        ucnv_fromUWriteBytes(args->converter,
+    ఒకవేళ(వాదనలు_2->converter->from_Unicode_స్థితి==UCNV_NEED_గమ్యం_WRITE_BOM) {
+        స్థిర స్థిరరాశి అక్షరం bom[]={ (అక్షరం)0xffu, (అక్షరం)0xfeu, 0, 0 };
+        ucnv_from_UWrite_బైట్లు(వాదనలు_2->converter,
                              bom, 4,
-                             &args->target, args->targetLimit,
-                             &args->offsets, -1,
+                             &వాదనలు_2->లక్ష్యం, వాదనలు_2->లక్ష్యం_హద్దు,
+                             &వాదనలు_2->offsets, -1,
                              err);
-        args->converter->fromUnicodeStatus=0;
+        వాదనలు_2->converter->from_Unicode_స్థితి=0;
     }
 
-    myTarget = (unsigned char *) args->target;
-    temp[3] = 0;
+    my_లక్ష్యం = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం;
+    తాత్కాలిక[3] = 0;
 
-    if (args->converter->fromUChar32)
+    ఒకవేళ (వాదనలు_2->converter->fromUChar32)
     {
-        ch = args->converter->fromUChar32;
-        args->converter->fromUChar32 = 0;
-        goto lowsurogate;
+        ch = వాదనలు_2->converter->fromUChar32;
+        వాదనలు_2->converter->fromUChar32 = 0;
+        వెళ్ళు lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        ch = *(mySource++);
+        ch = *(my_ఆధారం++);
 
-        if (U16_IS_SURROGATE(ch)) {
-            if (U16_IS_LEAD(ch))
+        ఒకవేళ (U16_IS_SURROGATE(ch)) {
+            ఒకవేళ (U16_IS_LEAD(ch))
             {
 lowsurogate:
-                if (mySource < sourceLimit)
+                ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు)
                 {
-                    ch2 = *mySource;
-                    if (U16_IS_TRAIL(ch2)) {
-                        ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
-                        mySource++;
+                    ch2 = *my_ఆధారం;
+                    ఒకవేళ (U16_IS_TRAIL(ch2)) {
+                        ch = ((ch - SURROGATE_ఎగువ_ప్రారంభం) << HALF_జరుపు) + ch2 + SURROGATE_దిగువ_పునాది;
+                        my_ఆధారం++;
                     }
-                    else {
+                    లేకపోతే {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        args->converter->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        వాదనలు_2->converter->fromUChar32 = ch;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
                     }
                 }
-                else {
+                లేకపోతే {
                     /* ran out of source */
-                    args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    వాదనలు_2->converter->fromUChar32 = ch;
+                    ఒకవేళ (వాదనలు_2->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err = U_ILLEGAL_CHAR_FOUND;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
                     }
-                    break;
+                    ఆపు;
                 }
             }
-            else {
+            లేకపోతే {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
-                args->converter->fromUChar32 = ch;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                వాదనలు_2->converter->fromUChar32 = ch;
+                *err = U_ILLEGAL_CHAR_దొరికింది;
+                ఆపు;
             }
         }
 
         /* We cannot get any larger than 10FFFF because we are coming from UTF-16 */
-        temp[2] = (uint8_t) (ch >> 16 & 0x1F);
-        temp[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
-        temp[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
+        తాత్కాలిక[2] = (uint8_t) (ch >> 16 & 0x1F);
+        తాత్కాలిక[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
+        తాత్కాలిక[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++)
+        కొరకు (సూచీ_గమ్యం_Write = 0; సూచీ_గమ్యం_Write <= పరిమాణం(uint32_t) - 1; సూచీ_గమ్యం_Write++)
         {
-            if (myTarget < targetLimit)
+            ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు)
             {
-                *(myTarget++) = temp[indexToWrite];
+                *(my_లక్ష్యం++) = తాత్కాలిక[సూచీ_గమ్యం_Write];
             }
-            else
+            లేకపోతే
             {
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
-                *err = U_BUFFER_OVERFLOW_ERROR;
+                వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] = తాత్కాలిక[సూచీ_గమ్యం_Write];
+                *err = U_బఫరు_అధికప్రవాహం_ERROR;
             }
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err))
     {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
+    వాదనలు_2->లక్ష్యం = (అక్షరం *) my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = my_ఆధారం;
 }
 
-static void U_CALLCONV
-T_UConverter_fromUnicode_UTF32_LE_OFFSET_LOGIC(UConverterFromUnicodeArgs * args,
-                                               UErrorCode * err)
+స్థిర శూన్య U_CALLCONV
+T_UConverter_from_Unicode_UTF32_LE_స్థానభ్రంశం_LOGIC(UConverter_From_Unicode_వాదనలు * వాదనలు_2,
+                                               UError_సంకేతం * err)
 {
-    const char16_t *mySource = args->source;
-    unsigned char *myTarget;
+    స్థిరరాశి char16_t *my_ఆధారం = వాదనలు_2->ఆధారం;
+    గుర్తులేని అక్షరం *my_లక్ష్యం;
     int32_t *myOffsets;
-    const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    స్థిరరాశి char16_t *ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి గుర్తులేని అక్షరం *లక్ష్యం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం_హద్దు;
     UChar32 ch, ch2;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
-    int32_t offsetNum = 0;
+    గుర్తులేని పూర్ణాంకం సూచీ_గమ్యం_Write;
+    గుర్తులేని అక్షరం తాత్కాలిక[పరిమాణం(uint32_t)];
+    int32_t స్థానభ్రంశం_అంకె = 0;
 
-    if(mySource >= sourceLimit) {
+    ఒకవేళ(my_ఆధారం >= ఆధారం_హద్దు) {
         /* no input, nothing to do */
-        return;
+        తిరిగి;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xffu, (char)0xfeu, 0, 0 };
-        ucnv_fromUWriteBytes(args->converter,
+    ఒకవేళ(వాదనలు_2->converter->from_Unicode_స్థితి==UCNV_NEED_గమ్యం_WRITE_BOM) {
+        స్థిర స్థిరరాశి అక్షరం bom[]={ (అక్షరం)0xffu, (అక్షరం)0xfeu, 0, 0 };
+        ucnv_from_UWrite_బైట్లు(వాదనలు_2->converter,
                              bom, 4,
-                             &args->target, args->targetLimit,
-                             &args->offsets, -1,
+                             &వాదనలు_2->లక్ష్యం, వాదనలు_2->లక్ష్యం_హద్దు,
+                             &వాదనలు_2->offsets, -1,
                              err);
-        args->converter->fromUnicodeStatus=0;
+        వాదనలు_2->converter->from_Unicode_స్థితి=0;
     }
 
-    myTarget = (unsigned char *) args->target;
-    myOffsets = args->offsets;
-    temp[3] = 0;
+    my_లక్ష్యం = (గుర్తులేని అక్షరం *) వాదనలు_2->లక్ష్యం;
+    myOffsets = వాదనలు_2->offsets;
+    తాత్కాలిక[3] = 0;
 
-    if (args->converter->fromUChar32)
+    ఒకవేళ (వాదనలు_2->converter->fromUChar32)
     {
-        ch = args->converter->fromUChar32;
-        args->converter->fromUChar32 = 0;
-        goto lowsurogate;
+        ch = వాదనలు_2->converter->fromUChar32;
+        వాదనలు_2->converter->fromUChar32 = 0;
+        వెళ్ళు lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        ch = *(mySource++);
+        ch = *(my_ఆధారం++);
 
-        if (U16_IS_SURROGATE(ch)) {
-            if (U16_IS_LEAD(ch))
+        ఒకవేళ (U16_IS_SURROGATE(ch)) {
+            ఒకవేళ (U16_IS_LEAD(ch))
             {
 lowsurogate:
-                if (mySource < sourceLimit)
+                ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు)
                 {
-                    ch2 = *mySource;
-                    if (U16_IS_TRAIL(ch2))
+                    ch2 = *my_ఆధారం;
+                    ఒకవేళ (U16_IS_TRAIL(ch2))
                     {
-                        ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
-                        mySource++;
+                        ch = ((ch - SURROGATE_ఎగువ_ప్రారంభం) << HALF_జరుపు) + ch2 + SURROGATE_దిగువ_పునాది;
+                        my_ఆధారం++;
                     }
-                    else {
+                    లేకపోతే {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        args->converter->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        వాదనలు_2->converter->fromUChar32 = ch;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
                     }
                 }
-                else {
+                లేకపోతే {
                     /* ran out of source */
-                    args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    వాదనలు_2->converter->fromUChar32 = ch;
+                    ఒకవేళ (వాదనలు_2->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err = U_ILLEGAL_CHAR_FOUND;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
                     }
-                    break;
+                    ఆపు;
                 }
             }
-            else {
+            లేకపోతే {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
-                args->converter->fromUChar32 = ch;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                వాదనలు_2->converter->fromUChar32 = ch;
+                *err = U_ILLEGAL_CHAR_దొరికింది;
+                ఆపు;
             }
         }
 
         /* We cannot get any larger than 10FFFF because we are coming from UTF-16 */
-        temp[2] = (uint8_t) (ch >> 16 & 0x1F);
-        temp[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
-        temp[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
+        తాత్కాలిక[2] = (uint8_t) (ch >> 16 & 0x1F);
+        తాత్కాలిక[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
+        తాత్కాలిక[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++)
+        కొరకు (సూచీ_గమ్యం_Write = 0; సూచీ_గమ్యం_Write <= పరిమాణం(uint32_t) - 1; సూచీ_గమ్యం_Write++)
         {
-            if (myTarget < targetLimit)
+            ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు)
             {
-                *(myTarget++) = temp[indexToWrite];
-                *(myOffsets++) = offsetNum;
+                *(my_లక్ష్యం++) = తాత్కాలిక[సూచీ_గమ్యం_Write];
+                *(myOffsets++) = స్థానభ్రంశం_అంకె;
             }
-            else
+            లేకపోతే
             {
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
-                *err = U_BUFFER_OVERFLOW_ERROR;
+                వాదనలు_2->converter->char_Error_బఫరు[వాదనలు_2->converter->char_Error_బఫరు_నిడివి++] = తాత్కాలిక[సూచీ_గమ్యం_Write];
+                *err = U_బఫరు_అధికప్రవాహం_ERROR;
             }
         }
-        offsetNum = offsetNum + 1 + (temp[2] != 0);
+        స్థానభ్రంశం_అంకె = స్థానభ్రంశం_అంకె + 1 + (తాత్కాలిక[2] != 0);
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err))
     {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
-    args->offsets = myOffsets;
+    వాదనలు_2->లక్ష్యం = (అక్షరం *) my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = my_ఆధారం;
+    వాదనలు_2->offsets = myOffsets;
 }
 
-static UChar32 U_CALLCONV
-T_UConverter_getNextUChar_UTF32_LE(UConverterToUnicodeArgs* args,
-                                   UErrorCode* err)
+స్థిర UChar32 U_CALLCONV
+T_UConverter_get_తదుపరి_UChar_UTF32_LE(UConverter_గమ్యం_Unicode_వాదనలు* వాదనలు_2,
+                                   UError_సంకేతం* err)
 {
-    const uint8_t *mySource;
+    స్థిరరాశి uint8_t *my_ఆధారం;
     UChar32 myUChar;
     int32_t length;
 
-    mySource = (const uint8_t *)args->source;
-    if (mySource >= (const uint8_t *)args->sourceLimit)
+    my_ఆధారం = (స్థిరరాశి uint8_t *)వాదనలు_2->ఆధారం;
+    ఒకవేళ (my_ఆధారం >= (స్థిరరాశి uint8_t *)వాదనలు_2->ఆధారం_హద్దు)
     {
         /* no input */
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err = U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0xffff;
     }
 
-    length = (int32_t)((const uint8_t *)args->sourceLimit - mySource);
-    if (length < 4) 
+    length = (int32_t)((స్థిరరాశి uint8_t *)వాదనలు_2->ఆధారం_హద్దు - my_ఆధారం);
+    ఒకవేళ (length < 4) 
     {
         /* got a partial character */
-        uprv_memcpy(args->converter->toUBytes, mySource, length);
-        args->converter->toULength = (int8_t)length;
-        args->source = (const char *)(mySource + length);
-        *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        uprv_memcpy(వాదనలు_2->converter->గమ్యం_UBytes, my_ఆధారం, length);
+        వాదనలు_2->converter->గమ్యం_ULength = (int8_t)length;
+        వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)(my_ఆధారం + length);
+        *err = U_TRUNCATED_CHAR_దొరికింది;
+        తిరిగి 0xffff;
     }
 
     /* Don't even try to do a direct cast because the value may be on an odd address. */
-    myUChar = ((UChar32)mySource[3] << 24)
-            | ((UChar32)mySource[2] << 16)
-            | ((UChar32)mySource[1] << 8)
-            | ((UChar32)mySource[0]);
+    myUChar = ((UChar32)my_ఆధారం[3] << 24)
+            | ((UChar32)my_ఆధారం[2] << 16)
+            | ((UChar32)my_ఆధారం[1] << 8)
+            | ((UChar32)my_ఆధారం[0]);
 
-    args->source = (const char *)(mySource + 4);
-    if ((uint32_t)myUChar <= MAXIMUM_UTF && !U_IS_SURROGATE(myUChar)) {
-        return myUChar;
+    వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)(my_ఆధారం + 4);
+    ఒకవేళ ((uint32_t)myUChar <= గరిష్ఠ_UTF && !U_IS_SURROGATE(myUChar)) {
+        తిరిగి myUChar;
     }
 
-    uprv_memcpy(args->converter->toUBytes, mySource, 4);
-    args->converter->toULength = 4;
+    uprv_memcpy(వాదనలు_2->converter->గమ్యం_UBytes, my_ఆధారం, 4);
+    వాదనలు_2->converter->గమ్యం_ULength = 4;
 
-    *err = U_ILLEGAL_CHAR_FOUND;
-    return 0xffff;
+    *err = U_ILLEGAL_CHAR_దొరికింది;
+    తిరిగి 0xffff;
 }
-U_CDECL_END
-static const UConverterImpl _UTF32LEImpl = {
+U_CDECL_చివర
+స్థిర స్థిరరాశి UConverterImpl _UTF32LEImpl = {
     UCNV_UTF32_LittleEndian,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    T_UConverter_toUnicode_UTF32_LE,
-    T_UConverter_toUnicode_UTF32_LE_OFFSET_LOGIC,
+    T_UConverter_గమ్యం_Unicode_UTF32_LE,
+    T_UConverter_గమ్యం_Unicode_UTF32_LE_స్థానభ్రంశం_LOGIC,
     T_UConverter_fromUnicode_UTF32_LE,
-    T_UConverter_fromUnicode_UTF32_LE_OFFSET_LOGIC,
-    T_UConverter_getNextUChar_UTF32_LE,
+    T_UConverter_from_Unicode_UTF32_LE_స్థానభ్రంశం_LOGIC,
+    T_UConverter_get_తదుపరి_UChar_UTF32_LE,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    ucnv_get_Non_Surrogate_Unicode_సమితి,
 
-    nullptr,
-    nullptr
+    శూన్యసూచిక,
+    శూన్యసూచిక
 };
 
 /* The 1232 CCSID refers to any version of Unicode with any endianness of UTF-32 */
-static const UConverterStaticData _UTF32LEStaticData = {
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం UTF32_LEStatic_దత్తాంశం = {
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "UTF-32LE",
     1234,
     UCNV_IBM, UCNV_UTF32_LittleEndian, 4, 4,
-    { 0xfd, 0xff, 0, 0 }, 4, false, false,
+    { 0xfd, 0xff, 0, 0 }, 4, అబద్ధం, అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _UTF32LEData =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF32LEStaticData, &_UTF32LEImpl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం _UTF32LEData =
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&UTF32_LEStatic_దత్తాంశం, &_UTF32LEImpl);
 
 /* UTF-32 (Detect BOM) ------------------------------------------------------ */
 
@@ -1022,232 +1022,232 @@ const UConverterSharedData _UTF32LEData =
  * On output, emit U+FEFF as the first code point.
  */
 U_CDECL_BEGIN
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 _UTF32Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    ఒకవేళ(choice<=UCNV_RESET_గమ్యం_UNICODE) {
         /* reset toUnicode: state=0 */
-        cnv->mode=0;
+        cnv->బహుళకం=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    ఒకవేళ(choice!=UCNV_RESET_గమ్యం_UNICODE) {
         /* reset fromUnicode: prepare to output the UTF-32PE BOM */
-        cnv->fromUnicodeStatus=UCNV_NEED_TO_WRITE_BOM;
+        cnv->from_Unicode_స్థితి=UCNV_NEED_గమ్యం_WRITE_BOM;
     }
 }
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 _UTF32Open(UConverter *cnv,
-           UConverterLoadArgs *pArgs,
-           UErrorCode *pErrorCode) {
-    (void)pArgs;
-    (void)pErrorCode;
+           UConverter_ఎక్కించు_వాదనలు *p_వాదనలు,
+           UError_సంకేతం *p_Error_సంకేతం) {
+    (శూన్య)p_వాదనలు;
+    (శూన్య)p_Error_సంకేతం;
     _UTF32Reset(cnv, UCNV_RESET_BOTH);
 }
 
-static const char utf32BOM[8]={ 0, 0, (char)0xfeu, (char)0xffu, (char)0xffu, (char)0xfeu, 0, 0 };
+స్థిర స్థిరరాశి అక్షరం utf32BOM[8]={ 0, 0, (అక్షరం)0xfeu, (అక్షరం)0xffu, (అక్షరం)0xffu, (అక్షరం)0xfeu, 0, 0 };
 
-static void U_CALLCONV
-_UTF32ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode) {
-    UConverter *cnv=pArgs->converter;
-    const char *source=pArgs->source;
-    const char *sourceLimit=pArgs->sourceLimit;
-    int32_t *offsets=pArgs->offsets;
+స్థిర శూన్య U_CALLCONV
+UTF32_గమ్యం_Unicode_With_Offsets(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                           UError_సంకేతం *p_Error_సంకేతం) {
+    UConverter *cnv=p_వాదనలు->converter;
+    స్థిరరాశి అక్షరం *ఆధారం=p_వాదనలు->ఆధారం;
+    స్థిరరాశి అక్షరం *ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+    int32_t *offsets=p_వాదనలు->offsets;
 
-    int32_t state, offsetDelta;
-    char b;
+    int32_t state, స్థానభ్రంశం_Delta;
+    అక్షరం b;
 
-    state=cnv->mode;
+    state=cnv->బహుళకం;
 
     /*
      * If we detect a BOM in this buffer, then we must add the BOM size to the
      * offsets because the actual converter function will not see and count the BOM.
      * offsetDelta will have the number of the BOM bytes that are in the current buffer.
      */
-    offsetDelta=0;
+    స్థానభ్రంశం_Delta=0;
 
-    while(source<sourceLimit && U_SUCCESS(*pErrorCode)) {
-        switch(state) {
-        case 0:
-            b=*source;
-            if(b==0) {
+    అయితే(ఆధారం<ఆధారం_హద్దు && U_SUCCESS(*p_Error_సంకేతం)) {
+        ఎంపిక(state) {
+        స్థితి 0:
+            b=*ఆధారం;
+            ఒకవేళ(b==0) {
                 state=1; /* could be 00 00 FE FF */
-            } else if(b==(char)0xffu) {
+            } లేకపోతే ఒకవేళ(b==(అక్షరం)0xffu) {
                 state=5; /* could be FF FE 00 00 */
-            } else {
+            } లేకపోతే {
                 state=8; /* default to UTF-32BE */
-                continue;
+                కొనసాగు;
             }
-            ++source;
-            break;
-        case 1:
-        case 2:
-        case 3:
-        case 5:
-        case 6:
-        case 7:
-            if(*source==utf32BOM[state]) {
+            ++ఆధారం;
+            ఆపు;
+        స్థితి 1:
+        స్థితి 2:
+        స్థితి 3:
+        స్థితి 5:
+        స్థితి 6:
+        స్థితి 7:
+            ఒకవేళ(*ఆధారం==utf32BOM[state]) {
                 ++state;
-                ++source;
-                if(state==4) {
+                ++ఆధారం;
+                ఒకవేళ(state==4) {
                     state=8; /* detect UTF-32BE */
-                    offsetDelta=(int32_t)(source-pArgs->source);
-                } else if(state==8) {
+                    స్థానభ్రంశం_Delta=(int32_t)(ఆధారం-p_వాదనలు->ఆధారం);
+                } లేకపోతే ఒకవేళ(state==8) {
                     state=9; /* detect UTF-32LE */
-                    offsetDelta=(int32_t)(source-pArgs->source);
+                    స్థానభ్రంశం_Delta=(int32_t)(ఆధారం-p_వాదనలు->ఆధారం);
                 }
-            } else {
+            } లేకపోతే {
                 /* switch to UTF-32BE and pass the previous bytes */
-                int32_t count=(int32_t)(source-pArgs->source); /* number of bytes from this buffer */
+                int32_t count=(int32_t)(ఆధారం-p_వాదనలు->ఆధారం); /* number of bytes from this buffer */
 
                 /* reset the source */
-                source=pArgs->source;
+                ఆధారం=p_వాదనలు->ఆధారం;
 
-                if(count==(state&3)) {
+                ఒకవేళ(count==(state&3)) {
                     /* simple: all in the same buffer, just reset source */
-                } else {
-                    UBool oldFlush=pArgs->flush;
+                } లేకపోతే {
+                    UBool oldFlush=p_వాదనలు->flush;
 
                     /* some of the bytes are from a previous buffer, replay those first */
-                    pArgs->source=utf32BOM+(state&4); /* select the correct BOM */
-                    pArgs->sourceLimit=pArgs->source+((state&3)-count); /* replay previous bytes */
-                    pArgs->flush=false; /* this sourceLimit is not the real source stream limit */
+                    p_వాదనలు->ఆధారం=utf32BOM+(state&4); /* select the correct BOM */
+                    p_వాదనలు->ఆధారం_హద్దు=p_వాదనలు->ఆధారం+((state&3)-count); /* replay previous bytes */
+                    p_వాదనలు->flush=అబద్ధం; /* this sourceLimit is not the real source stream limit */
 
                     /* no offsets: bytes from previous buffer, and not enough for output */
-                    T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
+                    T_UConverter_గమ్యం_Unicode_UTF32_BE(p_వాదనలు, p_Error_సంకేతం);
 
                     /* restore real pointers; pArgs->source will be set in case 8/9 */
-                    pArgs->sourceLimit=sourceLimit;
-                    pArgs->flush=oldFlush;
+                    p_వాదనలు->ఆధారం_హద్దు=ఆధారం_హద్దు;
+                    p_వాదనలు->flush=oldFlush;
                 }
                 state=8;
-                continue;
+                కొనసాగు;
             }
-            break;
-        case 8:
+            ఆపు;
+        స్థితి 8:
             /* call UTF-32BE */
-            pArgs->source=source;
-            if(offsets==nullptr) {
-                T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
-            } else {
-                T_UConverter_toUnicode_UTF32_BE_OFFSET_LOGIC(pArgs, pErrorCode);
+            p_వాదనలు->ఆధారం=ఆధారం;
+            ఒకవేళ(offsets==శూన్యసూచిక) {
+                T_UConverter_గమ్యం_Unicode_UTF32_BE(p_వాదనలు, p_Error_సంకేతం);
+            } లేకపోతే {
+                T_UConverter_గమ్యం_Unicode_UTF32_BE_స్థానభ్రంశం_LOGIC(p_వాదనలు, p_Error_సంకేతం);
             }
-            source=pArgs->source;
-            break;
-        case 9:
+            ఆధారం=p_వాదనలు->ఆధారం;
+            ఆపు;
+        స్థితి 9:
             /* call UTF-32LE */
-            pArgs->source=source;
-            if(offsets==nullptr) {
-                T_UConverter_toUnicode_UTF32_LE(pArgs, pErrorCode);
-            } else {
-                T_UConverter_toUnicode_UTF32_LE_OFFSET_LOGIC(pArgs, pErrorCode);
+            p_వాదనలు->ఆధారం=ఆధారం;
+            ఒకవేళ(offsets==శూన్యసూచిక) {
+                T_UConverter_గమ్యం_Unicode_UTF32_LE(p_వాదనలు, p_Error_సంకేతం);
+            } లేకపోతే {
+                T_UConverter_గమ్యం_Unicode_UTF32_LE_స్థానభ్రంశం_LOGIC(p_వాదనలు, p_Error_సంకేతం);
             }
-            source=pArgs->source;
-            break;
-        default:
-            break; /* does not occur */
+            ఆధారం=p_వాదనలు->ఆధారం;
+            ఆపు;
+        అప్రమేయ:
+            ఆపు; /* does not occur */
         }
     }
 
     /* add BOM size to offsets - see comment at offsetDelta declaration */
-    if(offsets!=nullptr && offsetDelta!=0) {
-        int32_t *offsetsLimit=pArgs->offsets;
-        while(offsets<offsetsLimit) {
-            *offsets++ += offsetDelta;
+    ఒకవేళ(offsets!=శూన్యసూచిక && స్థానభ్రంశం_Delta!=0) {
+        int32_t *offsets_హద్దు=p_వాదనలు->offsets;
+        అయితే(offsets<offsets_హద్దు) {
+            *offsets++ += స్థానభ్రంశం_Delta;
         }
     }
 
-    pArgs->source=source;
+    p_వాదనలు->ఆధారం=ఆధారం;
 
-    if(source==sourceLimit && pArgs->flush) {
+    ఒకవేళ(ఆధారం==ఆధారం_హద్దు && p_వాదనలు->flush) {
         /* handle truncated input */
-        switch(state) {
-        case 0:
-            break; /* no input at all, nothing to do */
-        case 8:
-            T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
-            break;
-        case 9:
-            T_UConverter_toUnicode_UTF32_LE(pArgs, pErrorCode);
-            break;
-        default:
+        ఎంపిక(state) {
+        స్థితి 0:
+            ఆపు; /* no input at all, nothing to do */
+        స్థితి 8:
+            T_UConverter_గమ్యం_Unicode_UTF32_BE(p_వాదనలు, p_Error_సంకేతం);
+            ఆపు;
+        స్థితి 9:
+            T_UConverter_గమ్యం_Unicode_UTF32_LE(p_వాదనలు, p_Error_సంకేతం);
+            ఆపు;
+        అప్రమేయ:
             /* handle 0<state<8: call UTF-32BE with too-short input */
-            pArgs->source=utf32BOM+(state&4); /* select the correct BOM */
-            pArgs->sourceLimit=pArgs->source+(state&3); /* replay bytes */
+            p_వాదనలు->ఆధారం=utf32BOM+(state&4); /* select the correct BOM */
+            p_వాదనలు->ఆధారం_హద్దు=p_వాదనలు->ఆధారం+(state&3); /* replay bytes */
 
             /* no offsets: not enough for output */
-            T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
-            pArgs->source=source;
-            pArgs->sourceLimit=sourceLimit;
+            T_UConverter_గమ్యం_Unicode_UTF32_BE(p_వాదనలు, p_Error_సంకేతం);
+            p_వాదనలు->ఆధారం=ఆధారం;
+            p_వాదనలు->ఆధారం_హద్దు=ఆధారం_హద్దు;
             state=8;
-            break;
+            ఆపు;
         }
     }
 
-    cnv->mode=state;
+    cnv->బహుళకం=state;
 }
 
-static UChar32 U_CALLCONV
-_UTF32GetNextUChar(UConverterToUnicodeArgs *pArgs,
-                   UErrorCode *pErrorCode) {
-    switch(pArgs->converter->mode) {
-    case 8:
-        return T_UConverter_getNextUChar_UTF32_BE(pArgs, pErrorCode);
-    case 9:
-        return T_UConverter_getNextUChar_UTF32_LE(pArgs, pErrorCode);
-    default:
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+స్థిర UChar32 U_CALLCONV
+UTF32_Get_తదుపరి_UChar(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                   UError_సంకేతం *p_Error_సంకేతం) {
+    ఎంపిక(p_వాదనలు->converter->బహుళకం) {
+    స్థితి 8:
+        తిరిగి T_UConverter_get_తదుపరి_UChar_UTF32_BE(p_వాదనలు, p_Error_సంకేతం);
+    స్థితి 9:
+        తిరిగి T_UConverter_get_తదుపరి_UChar_UTF32_LE(p_వాదనలు, p_Error_సంకేతం);
+    అప్రమేయ:
+        తిరిగి UCNV_GET_తదుపరి_UCHAR_USE_గమ్యం_U;
     }
 }
-U_CDECL_END
-static const UConverterImpl _UTF32Impl = {
+U_CDECL_చివర
+స్థిర స్థిరరాశి UConverterImpl _UTF32Impl = {
     UCNV_UTF32,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
     _UTF32Open,
-    nullptr,
+    శూన్యసూచిక,
     _UTF32Reset,
 
-    _UTF32ToUnicodeWithOffsets,
-    _UTF32ToUnicodeWithOffsets,
-#if U_IS_BIG_ENDIAN
+    UTF32_గమ్యం_Unicode_With_Offsets,
+    UTF32_గమ్యం_Unicode_With_Offsets,
+#ఒకవేళ U_IS_BIG_ENDIAN
     T_UConverter_fromUnicode_UTF32_BE,
-    T_UConverter_fromUnicode_UTF32_BE_OFFSET_LOGIC,
-#else
+    T_UConverter_from_Unicode_UTF32_BE_స్థానభ్రంశం_LOGIC,
+#లేకపోతే
     T_UConverter_fromUnicode_UTF32_LE,
-    T_UConverter_fromUnicode_UTF32_LE_OFFSET_LOGIC,
-#endif
-    _UTF32GetNextUChar,
+    T_UConverter_from_Unicode_UTF32_LE_స్థానభ్రంశం_LOGIC,
+#అయితే_ముగింపు
+    UTF32_Get_తదుపరి_UChar,
 
-    nullptr, /* ### TODO implement getStarters for all Unicode encodings?! */
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    శూన్యసూచిక, /* ### TODO implement getStarters for all Unicode encodings?! */
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    ucnv_get_Non_Surrogate_Unicode_సమితి,
 
-    nullptr,
-    nullptr
+    శూన్యసూచిక,
+    శూన్యసూచిక
 };
 
 /* The 1236 CCSID refers to any version of Unicode with a BOM sensitive endianness of UTF-32 */
-static const UConverterStaticData _UTF32StaticData = {
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం UTF32_Static_దత్తాంశం = {
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "UTF-32",
     1236,
     UCNV_IBM, UCNV_UTF32, 4, 4,
-#if U_IS_BIG_ENDIAN
+#ఒకవేళ U_IS_BIG_ENDIAN
     { 0, 0, 0xff, 0xfd }, 4,
-#else
+#లేకపోతే
     { 0xfd, 0xff, 0, 0 }, 4,
-#endif
-    false, false,
+#అయితే_ముగింపు
+    అబద్ధం, అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF32Data = 
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF32StaticData, &_UTF32Impl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం UTF32_దత్తాంశం = 
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&UTF32_Static_దత్తాంశం, &_UTF32Impl);
 
-#endif
+#అయితే_ముగింపు

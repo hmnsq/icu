@@ -8,109 +8,109 @@
 // Author: wilsonh@google.com (Wilson Hsieh)
 //
 
-#include "unicode/utypes.h"
-#include "unicode/stringpiece.h"
-#include "cstring.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
-    : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
+StringPiece::StringPiece(స్థిరరాశి అక్షరం* str U_LIFETIME_BOUND)
+    : ptr_(str), నిడివి_2((str == శూన్యసూచిక) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+StringPiece::StringPiece(స్థిరరాశి StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
+  ఒకవేళ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
-    pos = x.length_;
+  } లేకపోతే ఒకవేళ (pos > x.నిడివి_2) {
+    pos = x.నిడివి_2;
   }
   ptr_ = x.ptr_ + pos;
-  length_ = x.length_ - pos;
+  నిడివి_2 = x.నిడివి_2 - pos;
 }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+StringPiece::StringPiece(స్థిరరాశి StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
+  ఒకవేళ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
-    pos = x.length_;
+  } లేకపోతే ఒకవేళ (pos > x.నిడివి_2) {
+    pos = x.నిడివి_2;
   }
-  if (len < 0) {
+  ఒకవేళ (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
-    len = x.length_ - pos;
+  } లేకపోతే ఒకవేళ (len > x.నిడివి_2 - pos) {
+    len = x.నిడివి_2 - pos;
   }
   ptr_ = x.ptr_ + pos;
-  length_ = len;
+  నిడివి_2 = len;
 }
 
-void StringPiece::set(const char* str) {
+శూన్య StringPiece::సమితి(స్థిరరాశి అక్షరం* str) {
   ptr_ = str;
-  if (str != nullptr)
-    length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
-    length_ = 0;
+  ఒకవేళ (str != శూన్యసూచిక)
+    నిడివి_2 = static_cast<int32_t>(uprv_strlen(str));
+  లేకపోతే
+    నిడివి_2 = 0;
 }
 
-int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+int32_t StringPiece::find(StringPiece needle, int32_t స్థానభ్రంశం) {
+  ఒకవేళ (length() == 0 && needle.length() == 0) {
+    తిరిగి 0;
   }
   // TODO: Improve to be better than O(N^2)?
-  for (int32_t i = offset; i < length(); i++) {
+  కొరకు (int32_t i = స్థానభ్రంశం; i < length(); i++) {
     int32_t j = 0;
-    for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+    కొరకు (; j < needle.length(); i++, j++) {
+      ఒకవేళ (దత్తాంశం()[i] != needle.దత్తాంశం()[j]) {
         i -= j;
-        goto outer_end;
+        వెళ్ళు outer_చివర_2;
       }
     }
-    return i - j;
-    outer_end: void();
+    తిరిగి i - j;
+    outer_చివర_2: శూన్య();
   }
-  return -1;
+  తిరిగి -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
-  for (; i < length(); i++) {
-    if (i == other.length()) {
+  కొరకు (; i < length(); i++) {
+    ఒకవేళ (i == other.length()) {
       // this is longer
-      return 1;
+      తిరిగి 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    అక్షరం a = దత్తాంశం()[i];
+    అక్షరం b = other.దత్తాంశం()[i];
+    ఒకవేళ (a < b) {
+      తిరిగి -1;
+    } లేకపోతే ఒకవేళ (a > b) {
+      తిరిగి 1;
     }
   }
-  if (i < other.length()) {
+  ఒకవేళ (i < other.length()) {
     // other is longer
-    return -1;
+    తిరిగి -1;
   }
-  return 0;
+  తిరిగి 0;
 }
 
 U_EXPORT UBool U_EXPORT2
-operator==(const StringPiece& x, const StringPiece& y) {
+క్రియాకారకం==(స్థిరరాశి StringPiece& x, స్థిరరాశి StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  ఒకవేళ (len != y.size()) {
+    తిరిగి అబద్ధం;
   }
-  if (len == 0) {
-    return true;
+  ఒకవేళ (len == 0) {
+    తిరిగి నిజం;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  స్థిరరాశి అక్షరం* p = x.దత్తాంశం();
+  స్థిరరాశి అక్షరం* p2 = y.దత్తాంశం();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  ఒకవేళ (p[len] != p2[len]) తిరిగి అబద్ధం;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  తిరిగి uprv_memcmp(p, p2, len) == 0;
 }
 
 
-const int32_t StringPiece::npos = 0x7fffffff;
+స్థిరరాశి int32_t StringPiece::npos = 0x7fffffff;
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

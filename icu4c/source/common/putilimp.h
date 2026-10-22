@@ -15,11 +15,11 @@
 ******************************************************************************
 */
 
-#ifndef PUTILIMP_H
-#define PUTILIMP_H
+#నిర్వచితం_కాకపోతే PUTILIMP_H
+#నిర్వచించు PUTILIMP_H
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/putil.h"
 
 /**
  * \def U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
@@ -42,21 +42,21 @@
  * with an alternate path for unusual platforms.
  * @internal
  */
-#ifdef U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#నిర్వచితమైతే U_SIGNED_కుడి_జరుపు_IS_ARITHMETIC
     /* Use the predefined value. */
-#else
+#లేకపోతే
     /*
      * Nearly all CPUs & compilers implement a right-shift of a signed integer
      * as an Arithmetic Shift Right (with sign extension).
      */
-#   define U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC 1
-#endif
+#   define U_SIGNED_కుడి_జరుపు_IS_ARITHMETIC 1
+#అయితే_ముగింపు
 
 /** Define this to 1 if your platform supports IEEE 754 floating point,
    to 0 if it does not. */
-#ifndef IEEE_754
+#నిర్వచితం_కాకపోతే IEEE_754
 #   define IEEE_754 1
-#endif
+#అయితే_ముగింపు
 
 /**
  * uintptr_t is an optional part of the standard definitions in stdint.h.
@@ -68,125 +68,125 @@
  * Do not use ptrdiff_t since it is signed. size_t is unsigned.
  */
 /* TODO: This check fails on some z environments. Filed a ticket #9357 for this. */
-#if !defined(__intptr_t_defined) && !defined(UINTPTR_MAX) && (U_PLATFORM != U_PF_OS390)
-typedef size_t uintptr_t;
-#endif
+#ఒకవేళ !defined(__intptr_t_defined) && !defined(UINTPTR_MAX) && (U_PLATFORM != U_PF_OS390)
+రకనిర్వచనం size_t uintptr_t;
+#అయితే_ముగింపు
 
 /*===========================================================================*/
 /** @{ Information about POSIX support                                       */
 /*===========================================================================*/
 
-#ifdef U_HAVE_NL_LANGINFO_CODESET
+#నిర్వచితమైతే U_HAVE_NL_LANGINFO_CODESET
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_ANDROID || U_PLATFORM == U_PF_QNX
+#లేదావేళ U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API || U_PLATFORM == U_PF_ANDROID || U_PLATFORM == U_PF_QNX
 #   define U_HAVE_NL_LANGINFO_CODESET 0
-#else
+#లేకపోతే
 #   define U_HAVE_NL_LANGINFO_CODESET 1
-#endif
+#అయితే_ముగింపు
 
-#ifdef U_NL_LANGINFO_CODESET
+#నిర్వచితమైతే U_NL_LANGINFO_CODESET
     /* Use the predefined value. */
-#elif !U_HAVE_NL_LANGINFO_CODESET
+#లేదావేళ !U_HAVE_NL_LANGINFO_CODESET
 #   define U_NL_LANGINFO_CODESET -1
-#elif U_PLATFORM == U_PF_OS400
+#లేదావేళ U_PLATFORM == U_PF_OS400
    /* not defined */
-#elif U_PLATFORM == U_PF_HAIKU
+#లేదావేళ U_PLATFORM == U_PF_HAIKU
    /* not defined */
-#else
+#లేకపోతే
 #   define U_NL_LANGINFO_CODESET CODESET
-#endif
+#అయితే_ముగింపు
 
-#if defined(U_TZSET) || defined(U_HAVE_TZSET)
+#ఒకవేళ defined(U_TZSET) || defined(U_HAVE_TZSET)
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#లేదావేళ U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API
     // UWP doesn't support tzset or environment variables for tz
-#if U_PLATFORM_HAS_WINUWP_API == 0
+#ఒకవేళ U_PLATFORM_HAS_WINUWP_API == 0
 #   define U_TZSET _tzset
-#endif
-#elif U_PLATFORM == U_PF_OS400
+#అయితే_ముగింపు
+#లేదావేళ U_PLATFORM == U_PF_OS400
    /* not defined */
-#elif U_PLATFORM == U_PF_HAIKU
+#లేదావేళ U_PLATFORM == U_PF_HAIKU
    /* not defined */
-#elif defined(__wasi__)
+#లేదావేళ defined(__wasi__)
    /* not defined */
-#else
+#లేకపోతే
 #   define U_TZSET tzset
-#endif
+#అయితే_ముగింపు
 
-#if defined(U_TIMEZONE) || defined(U_HAVE_TIMEZONE)
+#ఒకవేళ defined(U_TIMEZONE) || defined(U_HAVE_TIMEZONE)
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_ANDROID
+#లేదావేళ U_PLATFORM == U_PF_ANDROID
 #   define U_TIMEZONE timezone
-#elif defined(__UCLIBC__)
+#లేదావేళ defined(__UCLIBC__)
     // uClibc does not have __timezone or _timezone.
-#elif defined(_NEWLIB_VERSION)
+#లేదావేళ defined(NEWLIB_సంస్కరణ)
 #   define U_TIMEZONE _timezone
-#elif defined(__GLIBC__)
+#లేదావేళ defined(__GLIBC__)
     // glibc
 #   define U_TIMEZONE __timezone
-#elif U_PLATFORM_IS_LINUX_BASED
+#లేదావేళ U_PLATFORM_IS_LINUX_BASED
     // not defined
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#లేదావేళ U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API
 #   define U_TIMEZONE _timezone
-#elif U_PLATFORM == U_PF_BSD && !defined(__NetBSD__)
+#లేదావేళ U_PLATFORM == U_PF_BSD && !defined(__NetBSD__)
    /* not defined */
-#elif U_PLATFORM == U_PF_OS400
+#లేదావేళ U_PLATFORM == U_PF_OS400
    /* not defined */
-#elif U_PLATFORM == U_PF_IPHONE
+#లేదావేళ U_PLATFORM == U_PF_IPHONE
    /* not defined */
-#elif defined(__wasi__)
+#లేదావేళ defined(__wasi__)
    /* not defined */
-#else
+#లేకపోతే
 #   define U_TIMEZONE timezone
-#endif
+#అయితే_ముగింపు
 
-#if defined(U_TZNAME) || defined(U_HAVE_TZNAME)
+#ఒకవేళ defined(U_TZNAME) || defined(U_HAVE_TZNAME)
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#లేదావేళ U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API
     /* not usable on all windows platforms */
-#if U_PLATFORM_HAS_WINUWP_API == 0
+#ఒకవేళ U_PLATFORM_HAS_WINUWP_API == 0
 #   define U_TZNAME _tzname
-#endif
-#elif U_PLATFORM == U_PF_OS400
+#అయితే_ముగింపు
+#లేదావేళ U_PLATFORM == U_PF_OS400
    /* not defined */
-#elif U_PLATFORM == U_PF_HAIKU
+#లేదావేళ U_PLATFORM == U_PF_HAIKU
     /* not defined, (well it is but a loop back to icu) */
-#elif defined(__wasi__)
+#లేదావేళ defined(__wasi__)
    /* not defined */
-#else
+#లేకపోతే
 #   define U_TZNAME tzname
-#endif
+#అయితే_ముగింపు
 
-#ifdef U_HAVE_MMAP
+#నిర్వచితమైతే U_HAVE_MMAP
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#లేదావేళ U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API
 #   define U_HAVE_MMAP 0
-#else
+#లేకపోతే
 #   define U_HAVE_MMAP 1
-#endif
+#అయితే_ముగింపు
 
-#ifdef U_HAVE_POPEN
+#నిర్వచితమైతే U_HAVE_POPEN
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#లేదావేళ U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API
 #   define U_HAVE_POPEN 0
-#elif U_PLATFORM == U_PF_OS400
+#లేదావేళ U_PLATFORM == U_PF_OS400
 #   define U_HAVE_POPEN 0
-#else
+#లేకపోతే
 #   define U_HAVE_POPEN 1
-#endif
+#అయితే_ముగింపు
 
 /**
  * \def U_HAVE_DIRENT_H
  * Defines whether dirent.h is available.
  * @internal
  */
-#ifdef U_HAVE_DIRENT_H
+#నిర్వచితమైతే U_HAVE_DIRENT_H
     /* Use the predefined value. */
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#లేదావేళ U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API
 #   define U_HAVE_DIRENT_H 0
-#else
+#లేకపోతే
 #   define U_HAVE_DIRENT_H 1
-#endif
+#అయితే_ముగింపు
 
 /** @} */
 
@@ -198,13 +198,13 @@ typedef size_t uintptr_t;
  * \def U_MAKE_IS_NMAKE
  * Defines whether the "make" program is Windows nmake.
  */
-#ifdef U_MAKE_IS_NMAKE
+#నిర్వచితమైతే U_MAKE_IS_NMAKE
     /* Use the predefined value. */
-#elif U_PLATFORM == U_PF_WINDOWS
+#లేదావేళ U_PLATFORM == U_PF_WINDOWS
 #   define U_MAKE_IS_NMAKE 1
-#else
+#లేకపోతే
 #   define U_MAKE_IS_NMAKE 0
-#endif
+#అయితే_ముగింపు
 
 /** @} */
 
@@ -222,83 +222,83 @@ typedef size_t uintptr_t;
  * Floating point utility to determine if a double is Not a Number (NaN).
  * @internal
  */
-U_CAPI UBool   U_EXPORT2 uprv_isNaN(double d);
+U_CAPI UBool   U_EXPORT2 uprv_isNaN(ద్విగుణ d);
 /**
  * Floating point utility to determine if a double has an infinite value.
  * @internal
  */
-U_CAPI UBool   U_EXPORT2 uprv_isInfinite(double d);
+U_CAPI UBool   U_EXPORT2 uprv_isInfinite(ద్విగుణ d);
 /**
  * Floating point utility to determine if a double has a positive infinite value.
  * @internal
  */
-U_CAPI UBool   U_EXPORT2 uprv_isPositiveInfinity(double d);
+U_CAPI UBool   U_EXPORT2 uprv_is_ధనాత్మక_Infinity(ద్విగుణ d);
 /**
  * Floating point utility to determine if a double has a negative infinite value.
  * @internal
  */
-U_CAPI UBool   U_EXPORT2 uprv_isNegativeInfinity(double d);
+U_CAPI UBool   U_EXPORT2 uprv_isNegativeInfinity(ద్విగుణ d);
 /**
  * Floating point utility that returns a Not a Number (NaN) value.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_getNaN(void);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_getNaN(శూన్య);
 /**
  * Floating point utility that returns an infinite value.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_getInfinity(void);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_getInfinity(శూన్య);
 
 /**
  * Floating point utility to truncate a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_trunc(double d);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_trunc(ద్విగుణ d);
 /**
  * Floating point utility to calculate the floor of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_floor(double d);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_floor(ద్విగుణ d);
 /**
  * Floating point utility to calculate the ceiling of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_ceil(double d);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_ceil(ద్విగుణ d);
 /**
  * Floating point utility to calculate the absolute value of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_fabs(double d);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_fabs(ద్విగుణ d);
 /**
  * Floating point utility to calculate the fractional and integer parts of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_modf(double d, double* pinteger);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_modf(ద్విగుణ d, ద్విగుణ* pinteger);
 /**
  * Floating point utility to calculate the remainder of a double divided by another double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_fmod(double d, double y);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_fmod(ద్విగుణ d, ద్విగుణ y);
 /**
  * Floating point utility to calculate d to the power of exponent (d^exponent).
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_pow(double d, double exponent);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_pow(ద్విగుణ d, ద్విగుణ exponent);
 /**
  * Floating point utility to calculate 10 to the power of exponent (10^exponent).
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_pow10(int32_t exponent);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_pow10(int32_t exponent);
 /**
  * Floating point utility to calculate the maximum value of two doubles.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_fmax(double d, double y);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_fmax(ద్విగుణ d, ద్విగుణ y);
 /**
  * Floating point utility to calculate the minimum value of two doubles.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_fmin(double d, double y);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_fmin(ద్విగుణ d, ద్విగుణ y);
 /**
  * Private utility to calculate the maximum value of two integers.
  * @internal
@@ -310,24 +310,24 @@ U_CAPI int32_t U_EXPORT2 uprv_max(int32_t d, int32_t y);
  */
 U_CAPI int32_t U_EXPORT2 uprv_min(int32_t d, int32_t y);
 
-#if U_IS_BIG_ENDIAN
-#   define uprv_isNegative(number) (*((signed char *)&(number))<0)
-#else
-#   define uprv_isNegative(number) (*((signed char *)&(number)+sizeof(number)-1)<0)
-#endif
+#ఒకవేళ U_IS_BIG_ENDIAN
+#   define uprv_isNegative(సంఖ్య) (*((గుర్తుగల అక్షరం *)&(సంఖ్య))<0)
+#లేకపోతే
+#   define uprv_isNegative(సంఖ్య) (*((గుర్తుగల అక్షరం *)&(సంఖ్య)+పరిమాణం(సంఖ్య)-1)<0)
+#అయితే_ముగింపు
 
 /**
  * Return the largest positive number that can be represented by an integer
  * type of arbitrary bit length.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_maxMantissa(void);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_maxMantissa(శూన్య);
 
 /**
  * Floating point utility to calculate the logarithm of a double.
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_log(double d);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_log(ద్విగుణ d);
 
 /**
  * Does common notion of rounding e.g. uprv_floor(x + 0.5);
@@ -335,7 +335,7 @@ U_CAPI double  U_EXPORT2 uprv_log(double d);
  * @return the rounded double
  * @internal
  */
-U_CAPI double  U_EXPORT2 uprv_round(double x);
+U_CAPI ద్విగుణ  U_EXPORT2 uprv_విడత(ద్విగుణ x);
 
 /**
  * Adds the signed integers a and b, storing the result in res.
@@ -348,7 +348,7 @@ U_CAPI double  U_EXPORT2 uprv_round(double x);
  * @return true if overflow occurred; false if no overflow occurred.
  * @internal
  */
-U_CAPI UBool U_EXPORT2 uprv_add32_overflow(int32_t a, int32_t b, int32_t* res);
+U_CAPI UBool U_EXPORT2 uprv_add32_అధికప్రవాహం(int32_t a, int32_t b, int32_t* res);
 
 /**
  * Multiplies the signed integers a and b, storing the result in res.
@@ -361,9 +361,9 @@ U_CAPI UBool U_EXPORT2 uprv_add32_overflow(int32_t a, int32_t b, int32_t* res);
  * @return true if overflow occurred; false if no overflow occurred.
  * @internal
  */
-U_CAPI UBool U_EXPORT2 uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res);
+U_CAPI UBool U_EXPORT2 uprv_mul32_అధికప్రవాహం(int32_t a, int32_t b, int32_t* res);
 
-#if 0
+#ఒకవేళ 0
 /**
  * Returns the number of digits after the decimal point in a double number x.
  *
@@ -372,9 +372,9 @@ U_CAPI UBool U_EXPORT2 uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res);
  * @internal
  */
 /*U_CAPI int32_t  U_EXPORT2 uprv_digitsAfterDecimal(double x);*/
-#endif
+#అయితే_ముగింపు
 
-#if !U_CHARSET_IS_UTF8
+#ఒకవేళ !U_CHARSET_IS_UTF8
 /**
  * Please use ucnv_getDefaultName() instead.
  * Return the default codepage for this platform and locale.
@@ -383,8 +383,8 @@ U_CAPI UBool U_EXPORT2 uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res);
  * @return the default codepage for this platform
  * @internal
  */
-U_CAPI const char*  U_EXPORT2 uprv_getDefaultCodepage(void);
-#endif
+U_CAPI స్థిరరాశి అక్షరం*  U_EXPORT2 uprv_getDefaultCodepage(శూన్య);
+#అయితే_ముగింపు
 
 /**
  * Please use uloc_getDefault() instead.
@@ -395,7 +395,7 @@ U_CAPI const char*  U_EXPORT2 uprv_getDefaultCodepage(void);
  * @return the default locale ID string
  * @internal
  */
-U_CAPI const char*  U_EXPORT2 uprv_getDefaultLocaleID(void);
+U_CAPI స్థిరరాశి అక్షరం*  U_EXPORT2 uprv_getDefaultLocaleID(శూన్య);
 
 /**
  * Time zone utilities
@@ -429,7 +429,7 @@ U_CAPI const char*  U_EXPORT2 uprv_getDefaultLocaleID(void);
  * Date/Time application.
  * @internal
  */
-U_CAPI void     U_EXPORT2 uprv_tzset(void);
+U_CAPI శూన్య     U_EXPORT2 uprv_tzset(శూన్య);
 
 /**
  * Difference in seconds between coordinated universal
@@ -437,7 +437,7 @@ U_CAPI void     U_EXPORT2 uprv_tzset(void);
  * @return the difference in seconds between coordinated universal time and local time.
  * @internal
  */
-U_CAPI int32_t  U_EXPORT2 uprv_timezone(void);
+U_CAPI int32_t  U_EXPORT2 uprv_timezone(శూన్య);
 
 /**
  *   tzname(0)  Three-letter time-zone name derived from TZ environment
@@ -447,13 +447,13 @@ U_CAPI int32_t  U_EXPORT2 uprv_timezone(void);
  *              tzname(1) is an empty string.
  * @internal
  */
-U_CAPI const char* U_EXPORT2 uprv_tzname(int n);
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2 uprv_tzname(పూర్ణాంకం n);
 
 /**
  * Reset the global tzname cache.
  * @internal
  */
-U_CAPI void uprv_tzname_clear_cache(void);
+U_CAPI శూన్య uprv_tzname_clear_cache(శూన్య);
 
 /**
  * Get UTC (GMT) time measured in milliseconds since 0:00 on 1/1/1970.
@@ -461,7 +461,7 @@ U_CAPI void uprv_tzname_clear_cache(void);
  * @return the UTC time measured in milliseconds
  * @internal
  */
-U_CAPI UDate U_EXPORT2 uprv_getUTCtime(void);
+U_CAPI UDate U_EXPORT2 uprv_getUTCtime(శూన్య);
 
 /**
  * Get UTC (GMT) time measured in milliseconds since 0:00 on 1/1/1970.
@@ -470,7 +470,7 @@ U_CAPI UDate U_EXPORT2 uprv_getUTCtime(void);
  * @return the UTC time measured in milliseconds
  * @internal
  */
-U_CAPI UDate U_EXPORT2 uprv_getRawUTCtime(void);
+U_CAPI UDate U_EXPORT2 uprv_getRawUTCtime(శూన్య);
 
 /**
  * Determine whether a pathname is absolute or not, as defined by the platform.
@@ -478,7 +478,7 @@ U_CAPI UDate U_EXPORT2 uprv_getRawUTCtime(void);
  * @return true if the path is absolute
  * @internal (ICU 3.0)
  */
-U_CAPI UBool U_EXPORT2 uprv_pathIsAbsolute(const char *path);
+U_CAPI UBool U_EXPORT2 uprv_మార్గం_Is_Absolute(స్థిరరాశి అక్షరం *మార్గం);
 
 /**
  * Use U_MAX_PTR instead of this function.
@@ -486,7 +486,7 @@ U_CAPI UBool U_EXPORT2 uprv_pathIsAbsolute(const char *path);
  * @return the largest possible pointer greater than the base
  * @internal (ICU 3.8)
  */
-U_CAPI void * U_EXPORT2 uprv_maximumPtr(void *base);
+U_CAPI శూన్య * U_EXPORT2 uprv_గరిష్ఠ_Ptr(శూన్య *పునాది);
 
 /**
  * Maximum value of a (void*) - use to indicate the limit of an 'infinite' buffer.
@@ -502,12 +502,12 @@ U_CAPI void * U_EXPORT2 uprv_maximumPtr(void *base);
  * @param base The beginning of a buffer to find the maximum offset from
  * @internal
  */
-#ifndef U_MAX_PTR
-#  if U_PLATFORM == U_PF_OS390 && !defined(_LP64)
+#నిర్వచితం_కాకపోతే U_MAX_PTR
+#  ఒకవేళ U_PLATFORM == U_PF_OS390 && !defined(_LP64)
     /* We have 31-bit pointers. */
-#    define U_MAX_PTR(base) ((void *)0x7fffffff)
+#    define U_MAX_PTR(పునాది) ((శూన్య *)0x7fffffff)
 #  elif U_PLATFORM == U_PF_OS400
-#    define U_MAX_PTR(base) uprv_maximumPtr((void *)base)
+#    define U_MAX_PTR(పునాది) uprv_గరిష్ఠ_Ptr((శూన్య *)పునాది)
 #  elif 0
     /*
      * For platforms where pointers are scalar values (which is normal, but unlike i5/OS)
@@ -519,21 +519,21 @@ U_CAPI void * U_EXPORT2 uprv_maximumPtr(void *base);
      * Thus, modern compilers optimize away the ">" comparison.
      * (See ICU tickets #7187 and #8096.)
      */
-#    define U_MAX_PTR(base) \
-    ((void *)(((char *)(base)+0x7fffffffu) > (char *)(base) \
-        ? ((char *)(base)+0x7fffffffu) \
-        : (char *)-1))
-#  else
+#    define U_MAX_PTR(పునాది) \
+    ((శూన్య *)(((అక్షరం *)(పునాది)+0x7fffffffu) > (అక్షరం *)(పునాది) \
+        ? ((అక్షరం *)(పునాది)+0x7fffffffu) \
+        : (అక్షరం *)-1))
+#  లేకపోతే
     /* Default version. C++ standard compliant for scalar pointers. */
-#    define U_MAX_PTR(base) \
-    ((void *)(((uintptr_t)(base)+0x7fffffffu) > (uintptr_t)(base) \
-        ? ((uintptr_t)(base)+0x7fffffffu) \
+#    define U_MAX_PTR(పునాది) \
+    ((శూన్య *)(((uintptr_t)(పునాది)+0x7fffffffu) > (uintptr_t)(పునాది) \
+        ? ((uintptr_t)(పునాది)+0x7fffffffu) \
         : (uintptr_t)-1))
 #  endif
-#endif
+#అయితే_ముగింపు
 
 
-#ifdef __cplusplus
+#నిర్వచితమైతే __cplusplus
 /**
  * Pin a buffer capacity such that doing pointer arithmetic
  * on the destination pointer and capacity cannot overflow.
@@ -548,55 +548,55 @@ U_CAPI void * U_EXPORT2 uprv_maximumPtr(void *base);
  * @return the pinned capacity.
  * @internal
  */
-template <typename T>
-inline int32_t pinCapacity(T *dest, int32_t capacity) {
-    if (capacity <= 0) { return capacity; }
+మూస <typename T>
+అంతఃవరుస int32_t pin_సామర్థ్యం(T *dest, int32_t సామర్థ్యం) {
+    ఒకవేళ (సామర్థ్యం <= 0) { తిరిగి సామర్థ్యం; }
 
     uintptr_t destInt = (uintptr_t)dest;
     uintptr_t maxInt;
 
-#  if U_PLATFORM == U_PF_OS390 && !defined(_LP64)
+#  ఒకవేళ U_PLATFORM == U_PF_OS390 && !defined(_LP64)
     // We have 31-bit pointers.
     maxInt = 0x7fffffff;
 #  elif U_PLATFORM == U_PF_OS400
-    maxInt = (uintptr_t)uprv_maximumPtr((void *)dest);
-#  else
+    maxInt = (uintptr_t)uprv_గరిష్ఠ_Ptr((శూన్య *)dest);
+#  లేకపోతే
     maxInt = destInt + 0x7fffffffu;
-    if (maxInt < destInt) {
+    ఒకవేళ (maxInt < destInt) {
         // Less than 2GB to the end of the address space.
         // Pin to that to prevent address overflow.
         maxInt = static_cast<uintptr_t>(-1);
     }
 #  endif
 
-    uintptr_t maxBytes = maxInt - destInt;  // max. 2GB
-    int32_t maxCapacity = (int32_t)(maxBytes / sizeof(T));
-    return capacity <= maxCapacity ? capacity : maxCapacity;
+    uintptr_t max_బైట్లు = maxInt - destInt;  // max. 2GB
+    int32_t max_సామర్థ్యం = (int32_t)(max_బైట్లు / పరిమాణం(T));
+    తిరిగి సామర్థ్యం <= max_సామర్థ్యం ? సామర్థ్యం : max_సామర్థ్యం;
 }
-#endif   // __cplusplus
+#అయితే_ముగింపు   // __cplusplus
 
 /*  Dynamic Library Functions */
 
-typedef void (UVoidFunction)(void);
+రకనిర్వచనం శూన్య (UVoidFunction)(శూన్య);
 
-#if U_ENABLE_DYLOAD
+#ఒకవేళ U_ENABLE_DYLOAD
 /**
  * Load a library
  * @internal (ICU 4.4)
  */
-U_CAPI void * U_EXPORT2 uprv_dl_open(const char *libName, UErrorCode *status);
+U_CAPI శూన్య * U_EXPORT2 uprv_dl_open(స్థిరరాశి అక్షరం *libName, UError_సంకేతం *స్థితి_2);
 
 /**
  * Close a library
  * @internal (ICU 4.4)
  */
-U_CAPI void U_EXPORT2 uprv_dl_close( void *lib, UErrorCode *status);
+U_CAPI శూన్య U_EXPORT2 uprv_dl_close( శూన్య *lib, UError_సంకేతం *స్థితి_2);
 
 /**
  * Extract a symbol from a library (function)
  * @internal (ICU 4.8)
  */
-U_CAPI UVoidFunction* U_EXPORT2 uprv_dlsym_func( void *lib, const char *symbolName, UErrorCode *status);
+U_CAPI UVoidFunction* U_EXPORT2 uprv_dlsym_func( శూన్య *lib, స్థిరరాశి అక్షరం *చిహ్నం_Name, UError_సంకేతం *స్థితి_2);
 
 /**
  * Extract a symbol from a library (function)
@@ -605,23 +605,23 @@ U_CAPI UVoidFunction* U_EXPORT2 uprv_dlsym_func( void *lib, const char *symbolNa
  */
 /* U_CAPI void * U_EXPORT2 uprv_dlsym_data( void *lib, const char *symbolName, UErrorCode *status); */
 
-#endif
+#అయితే_ముగింపు
 
 /**
  * Define malloc and related functions
  * @internal
  */
-#if U_PLATFORM == U_PF_OS400
+#ఒకవేళ U_PLATFORM == U_PF_OS400
 # define uprv_default_malloc(x) _C_TS_malloc(x)
 # define uprv_default_realloc(x,y) _C_TS_realloc(x,y)
 # define uprv_default_free(x) _C_TS_free(x)
 /* also _C_TS_calloc(x) */
-#else
+#లేకపోతే
 /* C defaults */
-# define uprv_default_malloc(x) malloc(x)
+# define uprv_default_malloc(x) జ్ఞాపకం_ఇవ్వు(x)
 # define uprv_default_realloc(x,y) realloc(x,y)
-# define uprv_default_free(x) free(x)
-#endif
+# define uprv_default_free(x) విడుదల(x)
+#అయితే_ముగింపు
 
 
-#endif
+#అయితే_ముగింపు

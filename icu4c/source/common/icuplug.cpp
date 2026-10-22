@@ -15,59 +15,59 @@
 ******************************************************************************
 */
 
-#include "unicode/icuplug.h"
+#అన్తర్భావ "unicode/icuplug.h"
 
 
-#if UCONFIG_ENABLE_PLUGINS
+#ఒకవేళ UCONFIG_ENABLE_PLUGINS
 
 
-#include "icuplugimp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "ucln.h"
-#include <stdio.h>
-#ifdef __MVS__  /* defined by z/OS compiler */
-#define _POSIX_SOURCE
-#include <cics.h> /* 12 Nov 2011 JAM iscics() function */
-#endif
-#include "charstr.h"
+#అన్తర్భావ "icuplugimp.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "ucln.h"
+#అన్తర్భావ <stdio.h>
+#నిర్వచితమైతే __MVS__  /* defined by z/OS compiler */
+#నిర్వచించు _POSIX_SOURCE
+#అన్తర్భావ <cics.h> /* 12 Nov 2011 JAM iscics() function */
+#అయితే_ముగింపు
+#అన్తర్భావ "charstr.h"
 
-using namespace icu;
+ఉపయోగించి నామాకాశ icu;
 
-#ifndef UPLUG_TRACE
-#define UPLUG_TRACE 0
-#endif
+#నిర్వచితం_కాకపోతే UPLUG_TRACE
+#నిర్వచించు UPLUG_TRACE 0
+#అయితే_ముగింపు
 
-#if UPLUG_TRACE
-#include <stdio.h>
-#define DBG(x) fprintf(stderr, "%s:%d: ",__FILE__,__LINE__); fprintf x
-#endif
+#ఒకవేళ UPLUG_TRACE
+#అన్తర్భావ <stdio.h>
+#నిర్వచించు DBG(x) fprintf(stderr, "%s:%d: ",__FILE__,__LINE__); fprintf x
+#అయితే_ముగింపు
 
 /**
  * Internal structure of an ICU plugin. 
  */
 
-struct UPlugData {
+నిర్మాణం UPlug_దత్తాంశం {
   UPlugEntrypoint  *entrypoint; /**< plugin entrypoint */
-  uint32_t structSize;    /**< initialized to the size of this structure */
+  uint32_t struct_కొలత;    /**< initialized to the size of this structure */
   uint32_t token;         /**< must be U_PLUG_TOKEN */
-  void *lib;              /**< plugin library, or nullptr */
-  char libName[UPLUG_NAME_MAX];   /**< library name */
-  char sym[UPLUG_NAME_MAX];        /**< plugin symbol, or nullptr */
-  char config[UPLUG_NAME_MAX];     /**< configuration data */
-  void *context;          /**< user context data */
-  char name[UPLUG_NAME_MAX];   /**< name of plugin */
+  శూన్య *lib;              /**< plugin library, or nullptr */
+  అక్షరం libName[UPLUG_NAME_MAX];   /**< library name */
+  అక్షరం sym[UPLUG_NAME_MAX];        /**< plugin symbol, or nullptr */
+  అక్షరం config[UPLUG_NAME_MAX];     /**< configuration data */
+  శూన్య *context;          /**< user context data */
+  అక్షరం name[UPLUG_NAME_MAX];   /**< name of plugin */
   UPlugLevel  level; /**< level of plugin */
-  UBool   awaitingLoad; /**< true if the plugin is awaiting a load call */
+  UBool   awaiting_ఎక్కించు; /**< true if the plugin is awaiting a load call */
   UBool   dontUnload; /**< true if plugin must stay resident (leak plugin and lib) */
-  UErrorCode pluginStatus; /**< status code of plugin */
+  UError_సంకేతం plugin_స్థితి; /**< status code of plugin */
 };
 
 
 
-#define UPLUG_LIBRARY_INITIAL_COUNT 8
-#define UPLUG_PLUGIN_INITIAL_COUNT 12
+#నిర్వచించు UPLUG_LIBRARY_INITIAL_లెక్క 8
+#నిర్వచించు UPLUG_PLUGIN_INITIAL_లెక్క 12
 
 /**
  * Remove an item
@@ -77,191 +77,191 @@ struct UPlugData {
  * @param itemToRemove the item number of the member
  * @return the new listsize 
  */
-static int32_t uplug_removeEntryAt(void *list, int32_t listSize, int32_t memberSize, int32_t itemToRemove) {
+స్థిర int32_t uplug_remove_నమోదు_At(శూన్య *list, int32_t list_కొలత, int32_t member_కొలత, int32_t అంశం_గమ్యం_Remove) {
   uint8_t *bytePtr = (uint8_t *)list;
     
   /* get rid of some bad cases first */
-  if(listSize<1) {
-    return listSize;
+  ఒకవేళ(list_కొలత<1) {
+    తిరిగి list_కొలత;
   }
     
   /* is there anything to move? */
-  if(listSize > itemToRemove+1) {
-    memmove(bytePtr+(itemToRemove*memberSize), bytePtr+((itemToRemove+1)*memberSize), memberSize);
+  ఒకవేళ(list_కొలత > అంశం_గమ్యం_Remove+1) {
+    memmove(bytePtr+(అంశం_గమ్యం_Remove*member_కొలత), bytePtr+((అంశం_గమ్యం_Remove+1)*member_కొలత), member_కొలత);
   }
     
-  return listSize-1;
+  తిరిగి list_కొలత-1;
 }
 
 
 
 
-#if U_ENABLE_DYLOAD
+#ఒకవేళ U_ENABLE_DYLOAD
 /**
  * Library management. Internal. 
  * @internal
  */
-struct UPlugLibrary;
+నిర్మాణం UPlugLibrary;
 
 /**
  * Library management. Internal. 
  * @internal
  */
-typedef struct UPlugLibrary {
-  void *lib;                           /**< library ptr */
-  char name[UPLUG_NAME_MAX]; /**< library name */
+రకనిర్వచనం నిర్మాణం UPlugLibrary {
+  శూన్య *lib;                           /**< library ptr */
+  అక్షరం name[UPLUG_NAME_MAX]; /**< library name */
   uint32_t ref;                        /**< reference count */
 } UPlugLibrary;
 
-static UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_COUNT];
-static UPlugLibrary * libraryList = staticLibraryList;
-static int32_t libraryCount = 0;
-static int32_t libraryMax = UPLUG_LIBRARY_INITIAL_COUNT;
+స్థిర UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_లెక్క];
+స్థిర UPlugLibrary * libraryList = staticLibraryList;
+స్థిర int32_t library_లెక్క = 0;
+స్థిర int32_t libraryMax = UPLUG_LIBRARY_INITIAL_లెక్క;
 
 /**
  * Search for a library. Doesn't lock
  * @param libName libname to search for
  * @return the library's struct
  */
-static int32_t searchForLibraryName(const char *libName) {
+స్థిర int32_t శోధన_For_Library_Name(స్థిరరాశి అక్షరం *libName) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
-    if(!uprv_strcmp(libName, libraryList[i].name)) {
-      return i;
+  కొరకు(i=0;i<library_లెక్క;i++) {
+    ఒకవేళ(!uprv_strcmp(libName, libraryList[i].name)) {
+      తిరిగి i;
     }
   }
-  return -1;
+  తిరిగి -1;
 }
 
-static int32_t searchForLibrary(void *lib) {
+స్థిర int32_t శోధన_For_Library(శూన్య *lib) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
-    if(lib==libraryList[i].lib) {
-      return i;
+  కొరకు(i=0;i<library_లెక్క;i++) {
+    ఒకవేళ(lib==libraryList[i].lib) {
+      తిరిగి i;
     }
   }
-  return -1;
+  తిరిగి -1;
 }
 
-U_CAPI char * U_EXPORT2
-uplug_findLibrary(void *lib, UErrorCode *status) {
+U_CAPI అక్షరం * U_EXPORT2
+uplug_కనుగొను_Library(శూన్య *lib, UError_సంకేతం *స్థితి_2) {
   int32_t libEnt;
-  char *ret = nullptr;
-  if(U_FAILURE(*status)) {
-    return nullptr;
+  అక్షరం *ret = శూన్యసూచిక;
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
-  libEnt = searchForLibrary(lib);
-  if(libEnt!=-1) { 
+  libEnt = శోధన_For_Library(lib);
+  ఒకవేళ(libEnt!=-1) { 
     ret = libraryList[libEnt].name;
-  } else {
-    *status = U_MISSING_RESOURCE_ERROR;
+  } లేకపోతే {
+    *స్థితి_2 = U_MISSING_RESOURCE_ERROR;
   }
-  return ret;
+  తిరిగి ret;
 }
 
-U_CAPI void * U_EXPORT2
-uplug_openLibrary(const char *libName, UErrorCode *status) {
-  int32_t libEntry = -1;
-  void *lib = nullptr;
+U_CAPI శూన్య * U_EXPORT2
+uplug_openLibrary(స్థిరరాశి అక్షరం *libName, UError_సంకేతం *స్థితి_2) {
+  int32_t lib_నమోదు = -1;
+  శూన్య *lib = శూన్యసూచిక;
     
-  if(U_FAILURE(*status)) return nullptr;
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) తిరిగి శూన్యసూచిక;
 
-  libEntry = searchForLibraryName(libName);
-  if(libEntry == -1) {
-    libEntry = libraryCount++;
-    if(libraryCount >= libraryMax) {
+  lib_నమోదు = శోధన_For_Library_Name(libName);
+  ఒకవేళ(lib_నమోదు == -1) {
+    lib_నమోదు = library_లెక్క++;
+    ఒకవేళ(library_లెక్క >= libraryMax) {
       /* Ran out of library slots. Statically allocated because we can't depend on allocating memory.. */
-      *status = U_MEMORY_ALLOCATION_ERROR;
-#if UPLUG_TRACE
+      *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+#ఒకవేళ UPLUG_TRACE
       DBG((stderr, "uplug_openLibrary() - out of library slots (max %d)\n", libraryMax));
-#endif
-      return nullptr;
+#అయితే_ముగింపు
+      తిరిగి శూన్యసూచిక;
     }
     /* Some operating systems don't want 
        DL operations from multiple threads. */
-    libraryList[libEntry].lib = uprv_dl_open(libName, status);
-#if UPLUG_TRACE
-    DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*status), libEntry, lib));
-#endif
+    libraryList[lib_నమోదు].lib = uprv_dl_open(libName, స్థితి_2);
+#ఒకవేళ UPLUG_TRACE
+    DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*స్థితి_2), lib_నమోదు, lib));
+#అయితే_ముగింపు
         
-    if(libraryList[libEntry].lib == nullptr || U_FAILURE(*status)) {
+    ఒకవేళ(libraryList[lib_నమోదు].lib == శూన్యసూచిక || U_FAILURE(*స్థితి_2)) {
       /* cleanup. */
-      libraryList[libEntry].lib = nullptr; /* failure with open */
-      libraryList[libEntry].name[0] = 0;
-#if UPLUG_TRACE
-      DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*status), libEntry, lib));
-#endif
+      libraryList[lib_నమోదు].lib = శూన్యసూచిక; /* failure with open */
+      libraryList[lib_నమోదు].name[0] = 0;
+#ఒకవేళ UPLUG_TRACE
+      DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*స్థితి_2), lib_నమోదు, lib));
+#అయితే_ముగింపు
       /* no need to free - just won't increase the count. */
-      libraryCount--;
-    } else { /* is it still there? */
+      library_లెక్క--;
+    } లేకపోతే { /* is it still there? */
       /* link it in */
-      uprv_strncpy(libraryList[libEntry].name,libName,UPLUG_NAME_MAX);
-      libraryList[libEntry].ref=1;
-      lib = libraryList[libEntry].lib;
+      uprv_strncpy(libraryList[lib_నమోదు].name,libName,UPLUG_NAME_MAX);
+      libraryList[lib_నమోదు].ref=1;
+      lib = libraryList[lib_నమోదు].lib;
     }
 
-  } else {
-    lib = libraryList[libEntry].lib;
-    libraryList[libEntry].ref++;
+  } లేకపోతే {
+    lib = libraryList[lib_నమోదు].lib;
+    libraryList[lib_నమోదు].ref++;
   }
-  return lib;
+  తిరిగి lib;
 }
 
-U_CAPI void U_EXPORT2
-uplug_closeLibrary(void *lib, UErrorCode *status) {
+U_CAPI శూన్య U_EXPORT2
+uplug_closeLibrary(శూన్య *lib, UError_సంకేతం *స్థితి_2) {
   int32_t i;
     
-#if UPLUG_TRACE
-  DBG((stderr, "uplug_closeLibrary(%p,%s) list %p\n", lib, u_errorName(*status), (void*)libraryList));
-#endif
-  if(U_FAILURE(*status)) return;
+#ఒకవేళ UPLUG_TRACE
+  DBG((stderr, "uplug_closeLibrary(%p,%s) list %p\n", lib, u_errorName(*స్థితి_2), (శూన్య*)libraryList));
+#అయితే_ముగింపు
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) తిరిగి;
     
-  for(i=0;i<libraryCount;i++) {
-    if(lib==libraryList[i].lib) {
-      if(--(libraryList[i].ref) == 0) {
-        uprv_dl_close(libraryList[i].lib, status);
-        libraryCount = uplug_removeEntryAt(libraryList, libraryCount, sizeof(*libraryList), i);
+  కొరకు(i=0;i<library_లెక్క;i++) {
+    ఒకవేళ(lib==libraryList[i].lib) {
+      ఒకవేళ(--(libraryList[i].ref) == 0) {
+        uprv_dl_close(libraryList[i].lib, స్థితి_2);
+        library_లెక్క = uplug_remove_నమోదు_At(libraryList, library_లెక్క, పరిమాణం(*libraryList), i);
       }
-      return;
+      తిరిగి;
     }
   }
-  *status = U_INTERNAL_PROGRAM_ERROR; /* could not find the entry! */
+  *స్థితి_2 = U_అంతర్గత_కార్యక్రమం_ERROR; /* could not find the entry! */
 }
 
-#endif
+#అయితే_ముగింపు
 
-static UPlugData pluginList[UPLUG_PLUGIN_INITIAL_COUNT];
-static int32_t pluginCount = 0;
+స్థిర UPlug_దత్తాంశం pluginList[UPLUG_PLUGIN_INITIAL_లెక్క];
+స్థిర int32_t plugin_లెక్క = 0;
 
 
 
   
-static int32_t uplug_pluginNumber(UPlugData* d) {
-  UPlugData *pastPlug = &pluginList[pluginCount];
-  if(d<=pluginList) {
-    return 0;
-  } else if(d>=pastPlug) {
-    return pluginCount;
-  } else {
-    return (d-pluginList)/sizeof(pluginList[0]);
+స్థిర int32_t uplug_plugin_సంఖ్య(UPlug_దత్తాంశం* d) {
+  UPlug_దత్తాంశం *pastPlug = &pluginList[plugin_లెక్క];
+  ఒకవేళ(d<=pluginList) {
+    తిరిగి 0;
+  } లేకపోతే ఒకవేళ(d>=pastPlug) {
+    తిరిగి plugin_లెక్క;
+  } లేకపోతే {
+    తిరిగి (d-pluginList)/పరిమాణం(pluginList[0]);
   }
 }
 
 
-U_CAPI UPlugData * U_EXPORT2
-uplug_nextPlug(UPlugData *prior) {
-  if(prior==nullptr) {
-    return pluginList;
-  } else {
-    UPlugData *nextPlug = &prior[1];
-    UPlugData *pastPlug = &pluginList[pluginCount];
+U_CAPI UPlug_దత్తాంశం * U_EXPORT2
+uplug_తదుపరి_Plug(UPlug_దత్తాంశం *పూర్వ) {
+  ఒకవేళ(పూర్వ==శూన్యసూచిక) {
+    తిరిగి pluginList;
+  } లేకపోతే {
+    UPlug_దత్తాంశం *తదుపరి_Plug = &పూర్వ[1];
+    UPlug_దత్తాంశం *pastPlug = &pluginList[plugin_లెక్క];
     
-    if(nextPlug>=pastPlug) {
-      return nullptr;
-    } else {
-      return nextPlug;
+    ఒకవేళ(తదుపరి_Plug>=pastPlug) {
+      తిరిగి శూన్యసూచిక;
+    } లేకపోతే {
+      తిరిగి తదుపరి_Plug;
     }
   }
 }
@@ -271,255 +271,255 @@ uplug_nextPlug(UPlugData *prior) {
 /**
  * Call the plugin with some params
  */
-static void uplug_callPlug(UPlugData *plug, UPlugReason reason, UErrorCode *status) {
+స్థిర శూన్య uplug_callPlug(UPlug_దత్తాంశం *plug, UPlugReason reason, UError_సంకేతం *స్థితి_2) {
   UPlugTokenReturn token;
-  if(plug==nullptr||U_FAILURE(*status)) {
-    return;
+  ఒకవేళ(plug==శూన్యసూచిక||U_FAILURE(*స్థితి_2)) {
+    తిరిగి;
   }
-  token = (*(plug->entrypoint))(plug, reason, status);
-  if(token!=UPLUG_TOKEN) {
-    *status = U_INTERNAL_PROGRAM_ERROR;
+  token = (*(plug->entrypoint))(plug, reason, స్థితి_2);
+  ఒకవేళ(token!=UPLUG_TOKEN) {
+    *స్థితి_2 = U_అంతర్గత_కార్యక్రమం_ERROR;
   }
 }
 
 
-static void uplug_unloadPlug(UPlugData *plug, UErrorCode *status) {
-  if(plug->awaitingLoad) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
-    *status = U_INTERNAL_PROGRAM_ERROR;
-    return; 
+స్థిర శూన్య uplug_unloadPlug(UPlug_దత్తాంశం *plug, UError_సంకేతం *స్థితి_2) {
+  ఒకవేళ(plug->awaiting_ఎక్కించు) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+    *స్థితి_2 = U_అంతర్గత_కార్యక్రమం_ERROR;
+    తిరిగి; 
   }
-  if(U_SUCCESS(plug->pluginStatus)) {
+  ఒకవేళ(U_SUCCESS(plug->plugin_స్థితి)) {
     /* Don't unload a plug which has a failing load status - means it didn't actually load. */
-    uplug_callPlug(plug, UPLUG_REASON_UNLOAD, status);
+    uplug_callPlug(plug, UPLUG_REASON_UNLOAD, స్థితి_2);
   }
 }
 
-static void uplug_queryPlug(UPlugData *plug, UErrorCode *status) {
-  if(!plug->awaitingLoad || !(plug->level == UPLUG_LEVEL_UNKNOWN) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
-    *status = U_INTERNAL_PROGRAM_ERROR;
-    return; 
+స్థిర శూన్య uplug_queryPlug(UPlug_దత్తాంశం *plug, UError_సంకేతం *స్థితి_2) {
+  ఒకవేళ(!plug->awaiting_ఎక్కించు || !(plug->level == UPLUG_LEVEL_UNKNOWN) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+    *స్థితి_2 = U_అంతర్గత_కార్యక్రమం_ERROR;
+    తిరిగి; 
   }
   plug->level = UPLUG_LEVEL_INVALID;
-  uplug_callPlug(plug, UPLUG_REASON_QUERY, status);
-  if(U_SUCCESS(*status)) { 
-    if(plug->level == UPLUG_LEVEL_INVALID) {
-      plug->pluginStatus = U_PLUGIN_DIDNT_SET_LEVEL;
-      plug->awaitingLoad = false;
+  uplug_callPlug(plug, UPLUG_REASON_QUERY, స్థితి_2);
+  ఒకవేళ(U_SUCCESS(*స్థితి_2)) { 
+    ఒకవేళ(plug->level == UPLUG_LEVEL_INVALID) {
+      plug->plugin_స్థితి = U_PLUGIN_DIDNT_సమితి_LEVEL;
+      plug->awaiting_ఎక్కించు = అబద్ధం;
     }
-  } else {
-    plug->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
-    plug->awaitingLoad = false;
+  } లేకపోతే {
+    plug->plugin_స్థితి = U_అంతర్గత_కార్యక్రమం_ERROR;
+    plug->awaiting_ఎక్కించు = అబద్ధం;
   }
 }
 
 
-static void uplug_loadPlug(UPlugData *plug, UErrorCode *status) {
-  if(U_FAILURE(*status)) {
-    return;
+స్థిర శూన్య uplug_ఎక్కించు_Plug(UPlug_దత్తాంశం *plug, UError_సంకేతం *స్థితి_2) {
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+    తిరిగి;
   }
-  if(!plug->awaitingLoad || (plug->level < UPLUG_LEVEL_LOW) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
-    *status = U_INTERNAL_PROGRAM_ERROR;
-    return;
+  ఒకవేళ(!plug->awaiting_ఎక్కించు || (plug->level < UPLUG_LEVEL_దిగువ) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+    *స్థితి_2 = U_అంతర్గత_కార్యక్రమం_ERROR;
+    తిరిగి;
   }
-  uplug_callPlug(plug, UPLUG_REASON_LOAD, status);
-  plug->awaitingLoad = false;
-  if(!U_SUCCESS(*status)) {
-    plug->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
+  uplug_callPlug(plug, UPLUG_REASON_ఎక్కించు, స్థితి_2);
+  plug->awaiting_ఎక్కించు = అబద్ధం;
+  ఒకవేళ(!U_SUCCESS(*స్థితి_2)) {
+    plug->plugin_స్థితి = U_అంతర్గత_కార్యక్రమం_ERROR;
   }
 }
 
-static UPlugData *uplug_allocateEmptyPlug(UErrorCode *status)
+స్థిర UPlug_దత్తాంశం *uplug_allocate_ఖాళీలు_Plug(UError_సంకేతం *స్థితి_2)
 {
-  UPlugData *plug = nullptr;
+  UPlug_దత్తాంశం *plug = శూన్యసూచిక;
 
-  if(U_FAILURE(*status)) {
-    return nullptr;
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
 
-  if(pluginCount == UPLUG_PLUGIN_INITIAL_COUNT) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  ఒకవేళ(plugin_లెక్క == UPLUG_PLUGIN_INITIAL_లెక్క) {
+    *స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+    తిరిగి శూన్యసూచిక;
   }
 
-  plug = &pluginList[pluginCount++];
+  plug = &pluginList[plugin_లెక్క++];
 
   plug->token = UPLUG_TOKEN;
-  plug->structSize = sizeof(UPlugData);
+  plug->struct_కొలత = పరిమాణం(UPlug_దత్తాంశం);
   plug->name[0]=0;
   plug->level = UPLUG_LEVEL_UNKNOWN; /* initialize to null state */
-  plug->awaitingLoad = true;
-  plug->dontUnload = false;
-  plug->pluginStatus = U_ZERO_ERROR;
+  plug->awaiting_ఎక్కించు = నిజం;
+  plug->dontUnload = అబద్ధం;
+  plug->plugin_స్థితి = U_ZERO_ERROR;
   plug->libName[0] = 0;
   plug->config[0]=0;
   plug->sym[0]=0;
-  plug->lib=nullptr;
-  plug->entrypoint=nullptr;
+  plug->lib=శూన్యసూచిక;
+  plug->entrypoint=శూన్యసూచిక;
 
 
-  return plug;
+  తిరిగి plug;
 }
 
-static UPlugData *uplug_allocatePlug(UPlugEntrypoint *entrypoint, const char *config, void *lib, const char *symName,
-                                     UErrorCode *status) {
-  UPlugData *plug = uplug_allocateEmptyPlug(status);
-  if(U_FAILURE(*status)) {
-    return nullptr;
+స్థిర UPlug_దత్తాంశం *uplug_allocatePlug(UPlugEntrypoint *entrypoint, స్థిరరాశి అక్షరం *config, శూన్య *lib, స్థిరరాశి అక్షరం *symName,
+                                     UError_సంకేతం *స్థితి_2) {
+  UPlug_దత్తాంశం *plug = uplug_allocate_ఖాళీలు_Plug(స్థితి_2);
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+    తిరిగి శూన్యసూచిక;
   }
 
-  if(config!=nullptr) {
+  ఒకవేళ(config!=శూన్యసూచిక) {
     uprv_strncpy(plug->config, config, UPLUG_NAME_MAX);
-  } else {
+  } లేకపోతే {
     plug->config[0] = 0;
   }
     
-  if(symName!=nullptr) {
+  ఒకవేళ(symName!=శూన్యసూచిక) {
     uprv_strncpy(plug->sym, symName, UPLUG_NAME_MAX);
-  } else {
+  } లేకపోతే {
     plug->sym[0] = 0;
   }
     
   plug->entrypoint = entrypoint;
   plug->lib = lib;
-  uplug_queryPlug(plug, status);
+  uplug_queryPlug(plug, స్థితి_2);
     
-  return plug;
+  తిరిగి plug;
 }
 
-static void uplug_deallocatePlug(UPlugData *plug, UErrorCode *status) {
-  UErrorCode subStatus = U_ZERO_ERROR;
-  if(!plug->dontUnload) {
-#if U_ENABLE_DYLOAD
-    uplug_closeLibrary(plug->lib, &subStatus);
-#endif
+స్థిర శూన్య uplug_deallocatePlug(UPlug_దత్తాంశం *plug, UError_సంకేతం *స్థితి_2) {
+  UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+  ఒకవేళ(!plug->dontUnload) {
+#ఒకవేళ U_ENABLE_DYLOAD
+    uplug_closeLibrary(plug->lib, &sub_స్థితి);
+#అయితే_ముగింపు
   }
-  plug->lib = nullptr;
-  if(U_SUCCESS(*status) && U_FAILURE(subStatus)) {
-    *status = subStatus;
+  plug->lib = శూన్యసూచిక;
+  ఒకవేళ(U_SUCCESS(*స్థితి_2) && U_FAILURE(sub_స్థితి)) {
+    *స్థితి_2 = sub_స్థితి;
   }
   /* shift plugins up and decrement count. */
-  if(U_SUCCESS(*status)) {
+  ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
     /* all ok- remove. */
-    pluginCount = uplug_removeEntryAt(pluginList, pluginCount, sizeof(plug[0]), uplug_pluginNumber(plug));
-  } else {
+    plugin_లెక్క = uplug_remove_నమోదు_At(pluginList, plugin_లెక్క, పరిమాణం(plug[0]), uplug_plugin_సంఖ్య(plug));
+  } లేకపోతే {
     /* not ok- leave as a message. */
-    plug->awaitingLoad=false;
+    plug->awaiting_ఎక్కించు=అబద్ధం;
     plug->entrypoint=0;
-    plug->dontUnload=true;
+    plug->dontUnload=నిజం;
   }
 }
 
-static void uplug_doUnloadPlug(UPlugData *plugToRemove, UErrorCode *status) {
-  if(plugToRemove != nullptr) {
-    uplug_unloadPlug(plugToRemove, status);
-    uplug_deallocatePlug(plugToRemove, status);
+స్థిర శూన్య uplug_doUnloadPlug(UPlug_దత్తాంశం *plug_గమ్యం_Remove, UError_సంకేతం *స్థితి_2) {
+  ఒకవేళ(plug_గమ్యం_Remove != శూన్యసూచిక) {
+    uplug_unloadPlug(plug_గమ్యం_Remove, స్థితి_2);
+    uplug_deallocatePlug(plug_గమ్యం_Remove, స్థితి_2);
   }
 }
 
-U_CAPI void U_EXPORT2
-uplug_removePlug(UPlugData *plug, UErrorCode *status)  {
-  UPlugData *cursor = nullptr;
-  UPlugData *plugToRemove = nullptr;
-  if(U_FAILURE(*status)) return;
+U_CAPI శూన్య U_EXPORT2
+uplug_removePlug(UPlug_దత్తాంశం *plug, UError_సంకేతం *స్థితి_2)  {
+  UPlug_దత్తాంశం *cursor = శూన్యసూచిక;
+  UPlug_దత్తాంశం *plug_గమ్యం_Remove = శూన్యసూచిక;
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) తిరిగి;
     
-  for(cursor=pluginList;cursor!=nullptr;) {
-    if(cursor==plug) {
-      plugToRemove = plug;
-      cursor=nullptr;
-    } else {
-      cursor = uplug_nextPlug(cursor);
+  కొరకు(cursor=pluginList;cursor!=శూన్యసూచిక;) {
+    ఒకవేళ(cursor==plug) {
+      plug_గమ్యం_Remove = plug;
+      cursor=శూన్యసూచిక;
+    } లేకపోతే {
+      cursor = uplug_తదుపరి_Plug(cursor);
     }
   }
     
-  uplug_doUnloadPlug(plugToRemove, status);
+  uplug_doUnloadPlug(plug_గమ్యం_Remove, స్థితి_2);
 }
 
 
 
 
-U_CAPI void U_EXPORT2 
-uplug_setPlugNoUnload(UPlugData *data, UBool dontUnload)
+U_CAPI శూన్య U_EXPORT2 
+uplug_సమితి_Plug_No_Unload(UPlug_దత్తాంశం *దత్తాంశం, UBool dontUnload)
 {
-  data->dontUnload = dontUnload;
+  దత్తాంశం->dontUnload = dontUnload;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setPlugLevel(UPlugData *data, UPlugLevel level) {
-  data->level = level;
+U_CAPI శూన్య U_EXPORT2
+uplug_సమితి_Plug_Level(UPlug_దత్తాంశం *దత్తాంశం, UPlugLevel level) {
+  దత్తాంశం->level = level;
 }
 
 
 U_CAPI UPlugLevel U_EXPORT2
-uplug_getPlugLevel(UPlugData *data) {
-  return data->level;
+uplug_getPlugLevel(UPlug_దత్తాంశం *దత్తాంశం) {
+  తిరిగి దత్తాంశం->level;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setPlugName(UPlugData *data, const char *name) {
-  uprv_strncpy(data->name, name, UPLUG_NAME_MAX);
+U_CAPI శూన్య U_EXPORT2
+uplug_సమితి_Plug_Name(UPlug_దత్తాంశం *దత్తాంశం, స్థిరరాశి అక్షరం *name) {
+  uprv_strncpy(దత్తాంశం->name, name, UPLUG_NAME_MAX);
 }
 
 
-U_CAPI const char* U_EXPORT2
-uplug_getPlugName(UPlugData* data U_LIFETIME_BOUND) {
-  return data->name;
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uplug_getPlugName(UPlug_దత్తాంశం* దత్తాంశం U_LIFETIME_BOUND) {
+  తిరిగి దత్తాంశం->name;
 }
 
 
-U_CAPI const char* U_EXPORT2
-uplug_getSymbolName(UPlugData* data U_LIFETIME_BOUND) {
-  return data->sym;
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uplug_get_చిహ్నం_Name(UPlug_దత్తాంశం* దత్తాంశం U_LIFETIME_BOUND) {
+  తిరిగి దత్తాంశం->sym;
 }
 
-U_CAPI const char* U_EXPORT2
-uplug_getLibraryName(UPlugData* data U_LIFETIME_BOUND, UErrorCode* status) {
-  if(data->libName[0]) {
-    return data->libName;
-  } else {
-#if U_ENABLE_DYLOAD
-    return uplug_findLibrary(data->lib, status);
-#else
-    return nullptr;
-#endif
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uplug_getLibraryName(UPlug_దత్తాంశం* దత్తాంశం U_LIFETIME_BOUND, UError_సంకేతం* స్థితి_2) {
+  ఒకవేళ(దత్తాంశం->libName[0]) {
+    తిరిగి దత్తాంశం->libName;
+  } లేకపోతే {
+#ఒకవేళ U_ENABLE_DYLOAD
+    తిరిగి uplug_కనుగొను_Library(దత్తాంశం->lib, స్థితి_2);
+#లేకపోతే
+    తిరిగి శూన్యసూచిక;
+#అయితే_ముగింపు
   }
 }
 
-U_CAPI void * U_EXPORT2
-uplug_getLibrary(UPlugData *data) {
-  return data->lib;
+U_CAPI శూన్య * U_EXPORT2
+uplug_getLibrary(UPlug_దత్తాంశం *దత్తాంశం) {
+  తిరిగి దత్తాంశం->lib;
 }
 
-U_CAPI void * U_EXPORT2
-uplug_getContext(UPlugData *data) {
-  return data->context;
+U_CAPI శూన్య * U_EXPORT2
+uplug_getContext(UPlug_దత్తాంశం *దత్తాంశం) {
+  తిరిగి దత్తాంశం->context;
 }
 
 
-U_CAPI void U_EXPORT2
-uplug_setContext(UPlugData *data, void *context) {
-  data->context = context;
+U_CAPI శూన్య U_EXPORT2
+uplug_సమితి_Context(UPlug_దత్తాంశం *దత్తాంశం, శూన్య *context) {
+  దత్తాంశం->context = context;
 }
 
-U_CAPI const char* U_EXPORT2
-uplug_getConfiguration(UPlugData* data U_LIFETIME_BOUND) {
-  return data->config;
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uplug_getConfiguration(UPlug_దత్తాంశం* దత్తాంశం U_LIFETIME_BOUND) {
+  తిరిగి దత్తాంశం->config;
 }
 
-U_CAPI UPlugData* U_EXPORT2
-uplug_getPlugInternal(int32_t n) { 
-  if(n <0 || n >= pluginCount) {
-    return nullptr;
-  } else { 
-    return &(pluginList[n]);
+U_CAPI UPlug_దత్తాంశం* U_EXPORT2
+uplug_get_Plug_అంతర్గత(int32_t n) { 
+  ఒకవేళ(n <0 || n >= plugin_లెక్క) {
+    తిరిగి శూన్యసూచిక;
+  } లేకపోతే { 
+    తిరిగి &(pluginList[n]);
   }
 }
 
 
-U_CAPI UErrorCode U_EXPORT2
-uplug_getPlugLoadStatus(UPlugData *plug) {
-  return plug->pluginStatus;
+U_CAPI UError_సంకేతం U_EXPORT2
+uplug_get_Plug_ఎక్కించు_స్థితి(UPlug_దత్తాంశం *plug) {
+  తిరిగి plug->plugin_స్థితి;
 }
 
 
@@ -528,226 +528,226 @@ uplug_getPlugLoadStatus(UPlugData *plug) {
 /**
  * Initialize a plugin from an entrypoint and library - but don't load it.
  */
-static UPlugData* uplug_initPlugFromEntrypointAndLibrary(UPlugEntrypoint *entrypoint, const char *config, void *lib, const char *sym,
-                                                         UErrorCode *status) {
-  UPlugData *plug = nullptr;
+స్థిర UPlug_దత్తాంశం* uplug_initPlugFromEntrypointAndLibrary(UPlugEntrypoint *entrypoint, స్థిరరాశి అక్షరం *config, శూన్య *lib, స్థిరరాశి అక్షరం *sym,
+                                                         UError_సంకేతం *స్థితి_2) {
+  UPlug_దత్తాంశం *plug = శూన్యసూచిక;
 
-  plug = uplug_allocatePlug(entrypoint, config, lib, sym, status);
+  plug = uplug_allocatePlug(entrypoint, config, lib, sym, స్థితి_2);
 
-  if(U_SUCCESS(*status)) {
-    return plug;
-  } else {
-    uplug_deallocatePlug(plug, status);
-    return nullptr;
+  ఒకవేళ(U_SUCCESS(*స్థితి_2)) {
+    తిరిగి plug;
+  } లేకపోతే {
+    uplug_deallocatePlug(plug, స్థితి_2);
+    తిరిగి శూన్యసూచిక;
   }
 }
 
-U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UErrorCode *status) {
-  UPlugData* plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, nullptr, nullptr, status);
-  uplug_loadPlug(plug, status);
-  return plug;
+U_CAPI UPlug_దత్తాంశం* U_EXPORT2
+uplug_ఎక్కించు_Plug_From_Entrypoint(UPlugEntrypoint *entrypoint, స్థిరరాశి అక్షరం *config, UError_సంకేతం *స్థితి_2) {
+  UPlug_దత్తాంశం* plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, శూన్యసూచిక, శూన్యసూచిక, స్థితి_2);
+  uplug_ఎక్కించు_Plug(plug, స్థితి_2);
+  తిరిగి plug;
 }
 
-#if U_ENABLE_DYLOAD
+#ఒకవేళ U_ENABLE_DYLOAD
 
-static UPlugData* 
-uplug_initErrorPlug(const char *libName, const char *sym, const char *config, const char *nameOrError, UErrorCode loadStatus, UErrorCode *status)
+స్థిర UPlug_దత్తాంశం* 
+uplug_initErrorPlug(స్థిరరాశి అక్షరం *libName, స్థిరరాశి అక్షరం *sym, స్థిరరాశి అక్షరం *config, స్థిరరాశి అక్షరం *nameOrError, UError_సంకేతం ఎక్కించు_స్థితి, UError_సంకేతం *స్థితి_2)
 {
-  UPlugData *plug = uplug_allocateEmptyPlug(status);
-  if(U_FAILURE(*status)) return nullptr;
+  UPlug_దత్తాంశం *plug = uplug_allocate_ఖాళీలు_Plug(స్థితి_2);
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) తిరిగి శూన్యసూచిక;
 
-  plug->pluginStatus = loadStatus;
-  plug->awaitingLoad = false; /* Won't load. */
-  plug->dontUnload = true; /* cannot unload. */
+  plug->plugin_స్థితి = ఎక్కించు_స్థితి;
+  plug->awaiting_ఎక్కించు = అబద్ధం; /* Won't load. */
+  plug->dontUnload = నిజం; /* cannot unload. */
 
-  if(sym!=nullptr) {
+  ఒకవేళ(sym!=శూన్యసూచిక) {
     uprv_strncpy(plug->sym, sym, UPLUG_NAME_MAX);
   }
 
-  if(libName!=nullptr) {
+  ఒకవేళ(libName!=శూన్యసూచిక) {
     uprv_strncpy(plug->libName, libName, UPLUG_NAME_MAX);
   }
 
-  if(nameOrError!=nullptr) {
+  ఒకవేళ(nameOrError!=శూన్యసూచిక) {
     uprv_strncpy(plug->name, nameOrError, UPLUG_NAME_MAX);
   }
 
-  if(config!=nullptr) {
+  ఒకవేళ(config!=శూన్యసూచిక) {
     uprv_strncpy(plug->config, config, UPLUG_NAME_MAX);
   }
 
-  return plug;
+  తిరిగి plug;
 }
 
 /**
  * Fetch a plugin from DLL, and then initialize it from a library- but don't load it.
  */
-static UPlugData* 
-uplug_initPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status) {
-  void *lib = nullptr;
-  UPlugData *plug = nullptr;
-  if(U_FAILURE(*status)) { return nullptr; }
-  lib = uplug_openLibrary(libName, status);
-  if(lib!=nullptr && U_SUCCESS(*status)) {
-    UPlugEntrypoint *entrypoint = nullptr;
-    entrypoint = (UPlugEntrypoint*)uprv_dlsym_func(lib, sym, status);
+స్థిర UPlug_దత్తాంశం* 
+uplug_initPlugFromLibrary(స్థిరరాశి అక్షరం *libName, స్థిరరాశి అక్షరం *sym, స్థిరరాశి అక్షరం *config, UError_సంకేతం *స్థితి_2) {
+  శూన్య *lib = శూన్యసూచిక;
+  UPlug_దత్తాంశం *plug = శూన్యసూచిక;
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) { తిరిగి శూన్యసూచిక; }
+  lib = uplug_openLibrary(libName, స్థితి_2);
+  ఒకవేళ(lib!=శూన్యసూచిక && U_SUCCESS(*స్థితి_2)) {
+    UPlugEntrypoint *entrypoint = శూన్యసూచిక;
+    entrypoint = (UPlugEntrypoint*)uprv_dlsym_func(lib, sym, స్థితి_2);
 
-    if(entrypoint!=nullptr&&U_SUCCESS(*status)) {
-      plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, lib, sym, status);
-      if(plug!=nullptr&&U_SUCCESS(*status)) {
+    ఒకవేళ(entrypoint!=శూన్యసూచిక&&U_SUCCESS(*స్థితి_2)) {
+      plug = uplug_initPlugFromEntrypointAndLibrary(entrypoint, config, lib, sym, స్థితి_2);
+      ఒకవేళ(plug!=శూన్యసూచిక&&U_SUCCESS(*స్థితి_2)) {
         plug->lib = lib; /* plug takes ownership of library */
-        lib = nullptr; /* library is now owned by plugin. */
+        lib = శూన్యసూచిక; /* library is now owned by plugin. */
       }
-    } else {
-      UErrorCode subStatus = U_ZERO_ERROR;
-      plug = uplug_initErrorPlug(libName,sym,config,"ERROR: Could not load entrypoint",(lib==nullptr)?U_MISSING_RESOURCE_ERROR:*status,&subStatus);
+    } లేకపోతే {
+      UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+      plug = uplug_initErrorPlug(libName,sym,config,"ERROR: Could not load entrypoint",(lib==శూన్యసూచిక)?U_MISSING_RESOURCE_ERROR:*స్థితి_2,&sub_స్థితి);
     }
-    if(lib!=nullptr) { /* still need to close the lib */
-      UErrorCode subStatus = U_ZERO_ERROR;
-      uplug_closeLibrary(lib, &subStatus); /* don't care here */
+    ఒకవేళ(lib!=శూన్యసూచిక) { /* still need to close the lib */
+      UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+      uplug_closeLibrary(lib, &sub_స్థితి); /* don't care here */
     }
-  } else {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    plug = uplug_initErrorPlug(libName,sym,config,"ERROR: could not load library",(lib==nullptr)?U_MISSING_RESOURCE_ERROR:*status,&subStatus);
+  } లేకపోతే {
+    UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+    plug = uplug_initErrorPlug(libName,sym,config,"ERROR: could not load library",(lib==శూన్యసూచిక)?U_MISSING_RESOURCE_ERROR:*స్థితి_2,&sub_స్థితి);
   }
-  return plug;
+  తిరిగి plug;
 }
 
-U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status) { 
-  UPlugData *plug = nullptr;
-  if(U_FAILURE(*status)) { return nullptr; }
-  plug = uplug_initPlugFromLibrary(libName, sym, config, status);
-  uplug_loadPlug(plug, status);
+U_CAPI UPlug_దత్తాంశం* U_EXPORT2
+uplug_ఎక్కించు_Plug_From_Library(స్థిరరాశి అక్షరం *libName, స్థిరరాశి అక్షరం *sym, స్థిరరాశి అక్షరం *config, UError_సంకేతం *స్థితి_2) { 
+  UPlug_దత్తాంశం *plug = శూన్యసూచిక;
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) { తిరిగి శూన్యసూచిక; }
+  plug = uplug_initPlugFromLibrary(libName, sym, config, స్థితి_2);
+  uplug_ఎక్కించు_Plug(plug, స్థితి_2);
 
-  return plug;
+  తిరిగి plug;
 }
 
-#endif
+#అయితే_ముగింపు
 
-static UPlugLevel gCurrentLevel = UPLUG_LEVEL_LOW;
+స్థిర UPlugLevel gCurrentLevel = UPLUG_LEVEL_దిగువ;
 
 U_CAPI UPlugLevel U_EXPORT2 uplug_getCurrentLevel() {
-  return gCurrentLevel;
+  తిరిగి gCurrentLevel;
 }
 
-static UBool U_CALLCONV uplug_cleanup()
+స్థిర UBool U_CALLCONV uplug_cleanup()
 {
   int32_t i;
     
-  UPlugData *pluginToRemove;
+  UPlug_దత్తాంశం *plugin_గమ్యం_Remove;
   /* cleanup plugs */
-  for(i=0;i<pluginCount;i++) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    pluginToRemove = &pluginList[i];
+  కొరకు(i=0;i<plugin_లెక్క;i++) {
+    UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+    plugin_గమ్యం_Remove = &pluginList[i];
     /* unload and deallocate */
-    uplug_doUnloadPlug(pluginToRemove, &subStatus);
+    uplug_doUnloadPlug(plugin_గమ్యం_Remove, &sub_స్థితి);
   }
   /* close other held libs? */
-  gCurrentLevel = UPLUG_LEVEL_LOW;
-  return true;
+  gCurrentLevel = UPLUG_LEVEL_దిగువ;
+  తిరిగి నిజం;
 }
 
-#if U_ENABLE_DYLOAD
+#ఒకవేళ U_ENABLE_DYLOAD
 
-static void uplug_loadWaitingPlugs(UErrorCode *status) {
+స్థిర శూన్య uplug_ఎక్కించు_నిరీక్షణ_Plugs(UError_సంకేతం *స్థితి_2) {
   int32_t i;
   UPlugLevel currentLevel = uplug_getCurrentLevel();
     
-  if(U_FAILURE(*status)) {
-    return;
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+    తిరిగి;
   }
-#if UPLUG_TRACE
+#ఒకవేళ UPLUG_TRACE
   DBG((stderr,  "uplug_loadWaitingPlugs() Level: %d\n", currentLevel));
-#endif
+#అయితే_ముగింపు
   /* pass #1: low level plugs */
-  for(i=0;i<pluginCount;i++) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    UPlugData *pluginToLoad = &pluginList[i];
-    if(pluginToLoad->awaitingLoad) {
-      if(pluginToLoad->level == UPLUG_LEVEL_LOW) {
-        if(currentLevel > UPLUG_LEVEL_LOW) {
-          pluginToLoad->pluginStatus = U_PLUGIN_TOO_HIGH;
-        } else {
+  కొరకు(i=0;i<plugin_లెక్క;i++) {
+    UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+    UPlug_దత్తాంశం *plugin_గమ్యం_ఎక్కించు = &pluginList[i];
+    ఒకవేళ(plugin_గమ్యం_ఎక్కించు->awaiting_ఎక్కించు) {
+      ఒకవేళ(plugin_గమ్యం_ఎక్కించు->level == UPLUG_LEVEL_దిగువ) {
+        ఒకవేళ(currentLevel > UPLUG_LEVEL_దిగువ) {
+          plugin_గమ్యం_ఎక్కించు->plugin_స్థితి = U_PLUGIN_TOO_ఎగువ;
+        } లేకపోతే {
           UPlugLevel newLevel;
-          uplug_loadPlug(pluginToLoad, &subStatus);
+          uplug_ఎక్కించు_Plug(plugin_గమ్యం_ఎక్కించు, &sub_స్థితి);
           newLevel = uplug_getCurrentLevel();
-          if(newLevel > currentLevel) {
-            pluginToLoad->pluginStatus = U_PLUGIN_CHANGED_LEVEL_WARNING;
+          ఒకవేళ(newLevel > currentLevel) {
+            plugin_గమ్యం_ఎక్కించు->plugin_స్థితి = U_PLUGIN_మారింది_LEVEL_WARNING;
             currentLevel = newLevel;
           }
         }
-        pluginToLoad->awaitingLoad = false;
+        plugin_గమ్యం_ఎక్కించు->awaiting_ఎక్కించు = అబద్ధం;
       } 
     }
   }    
-  for(i=0;i<pluginCount;i++) {
-    UErrorCode subStatus = U_ZERO_ERROR;
-    UPlugData *pluginToLoad = &pluginList[i];
+  కొరకు(i=0;i<plugin_లెక్క;i++) {
+    UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+    UPlug_దత్తాంశం *plugin_గమ్యం_ఎక్కించు = &pluginList[i];
         
-    if(pluginToLoad->awaitingLoad) {
-      if(pluginToLoad->level == UPLUG_LEVEL_INVALID) { 
-        pluginToLoad->pluginStatus = U_PLUGIN_DIDNT_SET_LEVEL;
-      } else if(pluginToLoad->level == UPLUG_LEVEL_UNKNOWN) {
-        pluginToLoad->pluginStatus = U_INTERNAL_PROGRAM_ERROR;
-      } else {
-        uplug_loadPlug(pluginToLoad, &subStatus);
+    ఒకవేళ(plugin_గమ్యం_ఎక్కించు->awaiting_ఎక్కించు) {
+      ఒకవేళ(plugin_గమ్యం_ఎక్కించు->level == UPLUG_LEVEL_INVALID) { 
+        plugin_గమ్యం_ఎక్కించు->plugin_స్థితి = U_PLUGIN_DIDNT_సమితి_LEVEL;
+      } లేకపోతే ఒకవేళ(plugin_గమ్యం_ఎక్కించు->level == UPLUG_LEVEL_UNKNOWN) {
+        plugin_గమ్యం_ఎక్కించు->plugin_స్థితి = U_అంతర్గత_కార్యక్రమం_ERROR;
+      } లేకపోతే {
+        uplug_ఎక్కించు_Plug(plugin_గమ్యం_ఎక్కించు, &sub_స్థితి);
       }
-      pluginToLoad->awaitingLoad = false;
+      plugin_గమ్యం_ఎక్కించు->awaiting_ఎక్కించు = అబద్ధం;
     }
   }
     
-#if UPLUG_TRACE
+#ఒకవేళ UPLUG_TRACE
   DBG((stderr,  " Done Loading Plugs. Level: %d\n", (int32_t)uplug_getCurrentLevel()));
-#endif
+#అయితే_ముగింపు
 }
 
 /* Name of the plugin config file */
-static char plugin_file[2048] = "";
-#endif
+స్థిర అక్షరం plugin_file[2048] = "";
+#అయితే_ముగింపు
 
-U_CAPI const char* U_EXPORT2
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
 uplug_getPluginFile() {
-#if U_ENABLE_DYLOAD && !UCONFIG_NO_FILE_IO
-  return plugin_file;
-#else
-  return nullptr;
-#endif
+#ఒకవేళ U_ENABLE_DYLOAD && !UCONFIG_NO_FILE_IO
+  తిరిగి plugin_file;
+#లేకపోతే
+  తిరిగి శూన్యసూచిక;
+#అయితే_ముగింపు
 }
 
 
 //  uplug_init()  is called first thing from u_init().
 
-U_CAPI void U_EXPORT2
-uplug_init(UErrorCode *status) {
-#if !U_ENABLE_DYLOAD
-  (void)status; /* unused */
-#elif !UCONFIG_NO_FILE_IO
+U_CAPI శూన్య U_EXPORT2
+uplug_init(UError_సంకేతం *స్థితి_2) {
+#ఒకవేళ !U_ENABLE_DYLOAD
+  (శూన్య)స్థితి_2; /*వాడని*/
+#లేదావేళ !UCONFIG_NO_FILE_IO
   CharString plugin_dir;
-  const char *env = getenv("ICU_PLUGINS");
+  స్థిరరాశి అక్షరం *env = getenv("ICU_PLUGINS");
 
-  if(U_FAILURE(*status)) return;
-  if(env != nullptr) {
-    plugin_dir.append(env, -1, *status);
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) తిరిగి;
+  ఒకవేళ(env != శూన్యసూచిక) {
+    plugin_dir.append(env, -1, *స్థితి_2);
   }
-  if(U_FAILURE(*status)) return;
+  ఒకవేళ(U_FAILURE(*స్థితి_2)) తిరిగి;
 
-#if defined(DEFAULT_ICU_PLUGINS) 
-  if(plugin_dir.isEmpty()) {
-    plugin_dir.append(DEFAULT_ICU_PLUGINS, -1, *status);
+#ఒకవేళ defined(DEFAULT_ICU_PLUGINS) 
+  ఒకవేళ(plugin_dir.is_ఖాళీలు()) {
+    plugin_dir.append(DEFAULT_ICU_PLUGINS, -1, *స్థితి_2);
   }
-#endif
+#అయితే_ముగింపు
 
-#if UPLUG_TRACE
-  DBG((stderr, "ICU_PLUGINS=%s\n", plugin_dir.data()));
-#endif
+#ఒకవేళ UPLUG_TRACE
+  DBG((stderr, "ICU_PLUGINS=%s\n", plugin_dir.దత్తాంశం()));
+#అయితే_ముగింపు
 
-  if(!plugin_dir.isEmpty()) {
+  ఒకవేళ(!plugin_dir.is_ఖాళీలు()) {
     FILE *f;
         
     CharString pluginFile;
-#ifdef ICU_PLUGINS_DD
+#నిర్వచితమైతే ICU_PLUGINS_DD
 /* There are potentially a lot of ways to implement a plugin directory on OS390/zOS  */
 /* Keeping in mind that unauthorized file access is logged, monitored, and enforced  */
 /* I've chosen to open a DDNAME if BATCH and leave it alone for (presumably) UNIX    */
@@ -755,130 +755,130 @@ uplug_init(UErrorCode *status) {
 /* SYS1.PARMLIB or setting an environment variable "ICU_PLUGIN_PATH" (?).  The       */
 /* DDNAME can be connected to a file in the HFS if need be.                          */
 
-    pluginFile.append("//DD:ICUPLUG", -1, *status);        /* JAM 20 Oct 2011 */
-#else
-    pluginFile.append(plugin_dir, *status);
-    pluginFile.append(U_FILE_SEP_STRING, -1, *status);
-    pluginFile.append("icuplugins", -1, *status);
-    pluginFile.append(U_ICU_VERSION_SHORT, -1, *status);
-    pluginFile.append(".txt", -1, *status);
-#endif
+    pluginFile.append("//DD:ICUPLUG", -1, *స్థితి_2);        /* JAM 20 Oct 2011 */
+#లేకపోతే
+    pluginFile.append(plugin_dir, *స్థితి_2);
+    pluginFile.append(U_FILE_SEP_STRING, -1, *స్థితి_2);
+    pluginFile.append("icuplugins", -1, *స్థితి_2);
+    pluginFile.append(U_ICU_సంస్కరణ_SHORT, -1, *స్థితి_2);
+    pluginFile.append(".txt", -1, *స్థితి_2);
+#అయితే_ముగింపు
 
-#if UPLUG_TRACE
-    DBG((stderr, "status=%s\n", u_errorName(*status)));
-#endif
+#ఒకవేళ UPLUG_TRACE
+    DBG((stderr, "status=%s\n", u_errorName(*స్థితి_2)));
+#అయితే_ముగింపు
 
-    if(U_FAILURE(*status)) {
-      return;
+    ఒకవేళ(U_FAILURE(*స్థితి_2)) {
+      తిరిగి;
     }
-    if((size_t)pluginFile.length() > (sizeof(plugin_file)-1)) {
-      *status = U_BUFFER_OVERFLOW_ERROR;
-#if UPLUG_TRACE
-      DBG((stderr, "status=%s\n", u_errorName(*status)));
-#endif
-      return;
+    ఒకవేళ((size_t)pluginFile.length() > (పరిమాణం(plugin_file)-1)) {
+      *స్థితి_2 = U_బఫరు_అధికప్రవాహం_ERROR;
+#ఒకవేళ UPLUG_TRACE
+      DBG((stderr, "status=%s\n", u_errorName(*స్థితి_2)));
+#అయితే_ముగింపు
+      తిరిగి;
     }
     
     /* plugin_file is not used for processing - it is only used 
        so that uplug_getPluginFile() works (i.e. icuinfo)
     */
-    pluginFile.extract(plugin_file, sizeof(plugin_file), *status);
+    pluginFile.extract(plugin_file, పరిమాణం(plugin_file), *స్థితి_2);
 
-#if UPLUG_TRACE
-    DBG((stderr, "pluginfile= %s len %d/%d\n", plugin_file, (int)strlen(plugin_file), (int)sizeof(plugin_file)));
-#endif
+#ఒకవేళ UPLUG_TRACE
+    DBG((stderr, "pluginfile= %s len %d/%d\n", plugin_file, (పూర్ణాంకం)అక్షరశ్రేణి_పొడవు(plugin_file), (పూర్ణాంకం)పరిమాణం(plugin_file)));
+#అయితే_ముగింపు
         
-#ifdef __MVS__
-    if (iscics()) /* 12 Nov 2011 JAM */
+#నిర్వచితమైతే __MVS__
+    ఒకవేళ (iscics()) /* 12 Nov 2011 JAM */
     {
-        f = nullptr;
+        f = శూన్యసూచిక;
     }
-    else
-#endif
+    లేకపోతే
+#అయితే_ముగింపు
     {
-        f = fopen(pluginFile.data(), "r");
+        f = fopen(pluginFile.దత్తాంశం(), "r");
     }
 
-    if(f != nullptr) {
-      char linebuf[1024];
-      char *p, *libName=nullptr, *symName=nullptr, *config=nullptr;
-      int32_t line = 0;
+    ఒకవేళ(f != శూన్యసూచిక) {
+      అక్షరం linebuf[1024];
+      అక్షరం *p, *libName=శూన్యసూచిక, *symName=శూన్యసూచిక, *config=శూన్యసూచిక;
+      int32_t పంక్తి = 0;
             
             
-      while(fgets(linebuf,1023,f)) {
-        line++;
+      అయితే(fgets(linebuf,1023,f)) {
+        పంక్తి++;
 
-        if(!*linebuf || *linebuf=='#') {
-          continue;
-        } else {
+        ఒకవేళ(!*linebuf || *linebuf=='#') {
+          కొనసాగు;
+        } లేకపోతే {
           p = linebuf;
-          while(*p&&isspace((int)*p))
+          అయితే(*p&&ఖాళీనా((పూర్ణాంకం)*p))
             p++;
-          if(!*p || *p=='#') continue;
+          ఒకవేళ(!*p || *p=='#') కొనసాగు;
           libName = p;
-          while(*p&&!isspace((int)*p)) {
+          అయితే(*p&&!ఖాళీనా((పూర్ణాంకం)*p)) {
             p++;
           }
-          if(!*p || *p=='#') continue; /* no tab after libname */
+          ఒకవేళ(!*p || *p=='#') కొనసాగు; /* no tab after libname */
           *p=0; /* end of libname */
           p++;
-          while(*p&&isspace((int)*p)) {
+          అయితే(*p&&ఖాళీనా((పూర్ణాంకం)*p)) {
             p++;
           }
-          if(!*p||*p=='#') continue; /* no symname after libname +tab */
+          ఒకవేళ(!*p||*p=='#') కొనసాగు; /* no symname after libname +tab */
           symName = p;
-          while(*p&&!isspace((int)*p)) {
+          అయితే(*p&&!ఖాళీనా((పూర్ణాంకం)*p)) {
             p++;
           }
                     
-          if(*p) { /* has config */
+          ఒకవేళ(*p) { /* has config */
             *p=0;
             ++p;
-            while(*p&&isspace((int)*p)) {
+            అయితే(*p&&ఖాళీనా((పూర్ణాంకం)*p)) {
               p++;
             }
-            if(*p) {
+            ఒకవేళ(*p) {
               config = p;
             }
           }
                     
           /* chop whitespace at the end of the config */
-          if(config!=nullptr&&*config!=0) {
-            p = config+strlen(config);
-            while(p>config&&isspace((int)*(--p))) {
+          ఒకవేళ(config!=శూన్యసూచిక&&*config!=0) {
+            p = config+అక్షరశ్రేణి_పొడవు(config);
+            అయితే(p>config&&ఖాళీనా((పూర్ణాంకం)*(--p))) {
               *p=0;
             }
           }
                 
           /* OK, we're good. */
           { 
-            UErrorCode subStatus = U_ZERO_ERROR;
-            UPlugData *plug = uplug_initPlugFromLibrary(libName, symName, config, &subStatus);
-            if(U_FAILURE(subStatus) && U_SUCCESS(*status)) {
-              *status = subStatus;
+            UError_సంకేతం sub_స్థితి = U_ZERO_ERROR;
+            UPlug_దత్తాంశం *plug = uplug_initPlugFromLibrary(libName, symName, config, &sub_స్థితి);
+            ఒకవేళ(U_FAILURE(sub_స్థితి) && U_SUCCESS(*స్థితి_2)) {
+              *స్థితి_2 = sub_స్థితి;
             }
-#if UPLUG_TRACE
+#ఒకవేళ UPLUG_TRACE
             DBG((stderr, "PLUGIN libName=[%s], sym=[%s], config=[%s]\n", libName, symName, config));
-            DBG((stderr, " -> %p, %s\n", (void*)plug, u_errorName(subStatus)));
-#else
-            (void)plug; /* unused */
-#endif
+            DBG((stderr, " -> %p, %s\n", (శూన్య*)plug, u_errorName(sub_స్థితి)));
+#లేకపోతే
+            (శూన్య)plug; /*వాడని*/
+#అయితే_ముగింపు
           }
         }
       }
       fclose(f);
-    } else {
-#if UPLUG_TRACE
+    } లేకపోతే {
+#ఒకవేళ UPLUG_TRACE
       DBG((stderr, "Can't open plugin file %s\n", plugin_file));
-#endif
+#అయితే_ముగింపు
     }
   }
-  uplug_loadWaitingPlugs(status);
-#endif /* U_ENABLE_DYLOAD */
-  gCurrentLevel = UPLUG_LEVEL_HIGH;
-  ucln_registerCleanup(UCLN_UPLUG, uplug_cleanup);
+  uplug_ఎక్కించు_నిరీక్షణ_Plugs(స్థితి_2);
+#అయితే_ముగింపు /* U_ENABLE_DYLOAD */
+  gCurrentLevel = UPLUG_LEVEL_ఎగువ;
+  ucln_రిజిస్టరు_Cleanup(UCLN_UPLUG, uplug_cleanup);
 }
 
-#endif
+#అయితే_ముగింపు
 
 

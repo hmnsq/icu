@@ -7,15 +7,15 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/localpointer.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/localpointer.h"
 
-#if !UCONFIG_NO_SERVICE
+#ఒకవేళ !UCONFIG_NO_SERVICE
 
-#include "serv.h"
-#include "umutex.h"
+#అన్తర్భావ "serv.h"
+#అన్తర్భావ "umutex.h"
 
-#undef SERVICE_REFCOUNT
+#నిర్వచనం_రద్దు SERVICE_REFCOUNT
 
 // in case we use the refcount stuff
 
@@ -25,99 +25,99 @@ U_NAMESPACE_BEGIN
 ******************************************************************
 */
 
-const char16_t ICUServiceKey::PREFIX_DELIMITER = 0x002F;   /* '/' */
+స్థిరరాశి char16_t ICUService_కీలకం::ఉపసర్గ_DELIMITER = 0x002F;   /* '/' */
 
-ICUServiceKey::ICUServiceKey(const UnicodeString& id) 
+ICUService_కీలకం::ICUService_కీలకం(స్థిరరాశి UnicodeString& id) 
 : _id(id) {
 }
 
-ICUServiceKey::~ICUServiceKey() 
+ICUService_కీలకం::~ICUService_కీలకం() 
 {
 }
 
-const UnicodeString& 
-ICUServiceKey::getID() const 
+స్థిరరాశి UnicodeString& 
+ICUService_కీలకం::getID() స్థిరరాశి 
 {
-    return _id;
-}
-
-UnicodeString& 
-ICUServiceKey::canonicalID(UnicodeString& result) const 
-{
-    return result.append(_id);
+    తిరిగి _id;
 }
 
 UnicodeString& 
-ICUServiceKey::currentID(UnicodeString& result) const 
+ICUService_కీలకం::canonicalID(UnicodeString& ఫలితం) స్థిరరాశి 
 {
-    return canonicalID(result);
+    తిరిగి ఫలితం.append(_id);
 }
 
 UnicodeString& 
-ICUServiceKey::currentDescriptor(UnicodeString& result) const 
+ICUService_కీలకం::currentID(UnicodeString& ఫలితం) స్థిరరాశి 
 {
-    prefix(result);
-    result.append(PREFIX_DELIMITER);
-    return currentID(result);
+    తిరిగి canonicalID(ఫలితం);
+}
+
+UnicodeString& 
+ICUService_కీలకం::currentDescriptor(UnicodeString& ఫలితం) స్థిరరాశి 
+{
+    ఉపసర్గ(ఫలితం);
+    ఫలితం.append(ఉపసర్గ_DELIMITER);
+    తిరిగి currentID(ఫలితం);
 }
 
 UBool 
-ICUServiceKey::fallback() 
+ICUService_కీలకం::fallback() 
 {
-    return false;
+    తిరిగి అబద్ధం;
 }
 
 UBool 
-ICUServiceKey::isFallbackOf(const UnicodeString& id) const 
+ICUService_కీలకం::is_Fallback_యొక్క(స్థిరరాశి UnicodeString& id) స్థిరరాశి 
 {
-    return id == _id;
+    తిరిగి id == _id;
 }
 
 UnicodeString& 
-ICUServiceKey::prefix(UnicodeString& result) const 
+ICUService_కీలకం::ఉపసర్గ(UnicodeString& ఫలితం) స్థిరరాశి 
 {
-    return result;
+    తిరిగి ఫలితం;
 }
 
 UnicodeString& 
-ICUServiceKey::parsePrefix(UnicodeString& result) 
+ICUService_కీలకం::parse_ఉపసర్గ(UnicodeString& ఫలితం) 
 {
-    int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n < 0) {
+    int32_t n = ఫలితం.సూచీ_యొక్క(ఉపసర్గ_DELIMITER);
+    ఒకవేళ (n < 0) {
         n = 0;
     }
-    result.remove(n);
-    return result;
+    ఫలితం.remove(n);
+    తిరిగి ఫలితం;
 }
 
 UnicodeString& 
-ICUServiceKey::parseSuffix(UnicodeString& result) 
+ICUService_కీలకం::parseSuffix(UnicodeString& ఫలితం) 
 {
-    int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n >= 0) {
-        result.remove(0, n+1);
+    int32_t n = ఫలితం.సూచీ_యొక్క(ఉపసర్గ_DELIMITER);
+    ఒకవేళ (n >= 0) {
+        ఫలితం.remove(0, n+1);
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-#ifdef SERVICE_DEBUG
+#నిర్వచితమైతే SERVICE_DEBUG
 UnicodeString& 
-ICUServiceKey::debug(UnicodeString& result) const 
+ICUService_కీలకం::debug(UnicodeString& ఫలితం) స్థిరరాశి 
 {
-    debugClass(result);
-    result.append((UnicodeString)" id: ");
-    result.append(_id);
-    return result;
+    debugClass(ఫలితం);
+    ఫలితం.append((UnicodeString)" id: ");
+    ఫలితం.append(_id);
+    తిరిగి ఫలితం;
 }
 
 UnicodeString& 
-ICUServiceKey::debugClass(UnicodeString& result) const 
+ICUService_కీలకం::debugClass(UnicodeString& ఫలితం) స్థిరరాశి 
 {
-    return result.append((UnicodeString)"ICUServiceKey");
+    తిరిగి ఫలితం.append((UnicodeString)"ICUServiceKey");
 }
-#endif
+#అయితే_ముగింపు
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUServiceKey)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUService_కీలకం)
 
 /*
 ******************************************************************
@@ -125,67 +125,67 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUServiceKey)
 
 ICUServiceFactory::~ICUServiceFactory() {}
 
-SimpleFactory::SimpleFactory(UObject* instanceToAdopt, const UnicodeString& id, UBool visible) 
-: _instance(instanceToAdopt), _id(id), _visible(visible)
+SimpleFactory::SimpleFactory(UObject* instance_గమ్యం_Adopt, స్థిరరాశి UnicodeString& id, UBool visible) 
+: _instance(instance_గమ్యం_Adopt), _id(id), _visible(visible)
 {
 }
 
 SimpleFactory::~SimpleFactory() 
 {
-    delete _instance;
+    తొలగించు _instance;
 }
 
 UObject* 
-SimpleFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const 
+SimpleFactory::create(స్థిరరాశి ICUService_కీలకం& కీలకం, స్థిరరాశి ICUService* service, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    if (U_SUCCESS(status)) {
-        UnicodeString temp;
-        if (_id == key.currentID(temp)) {
-            return service->cloneInstance(_instance); 
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        UnicodeString తాత్కాలిక;
+        ఒకవేళ (_id == కీలకం.currentID(తాత్కాలిక)) {
+            తిరిగి service->cloneInstance(_instance); 
         }
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-void 
-SimpleFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
+శూన్య 
+SimpleFactory::updateVisibleIDs(Hashtable& ఫలితం, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    if (_visible) {
-        result.put(_id, (void*)this, status); // cast away const
-    } else {
-        result.remove(_id);
+    ఒకవేళ (_visible) {
+        ఫలితం.put(_id, (శూన్య*)ఇది, స్థితి_2); // cast away const
+    } లేకపోతే {
+        ఫలితం.remove(_id);
     }
 }
 
 UnicodeString& 
-SimpleFactory::getDisplayName(const UnicodeString& id, const Locale& /* locale */, UnicodeString& result) const 
+SimpleFactory::getDisplayName(స్థిరరాశి UnicodeString& id, స్థిరరాశి Locale& /* locale */, UnicodeString& ఫలితం) స్థిరరాశి 
 {
-    if (_visible && _id == id) {
-        result = _id;
-    } else {
-        result.setToBogus();
+    ఒకవేళ (_visible && _id == id) {
+        ఫలితం = _id;
+    } లేకపోతే {
+        ఫలితం.సమితి_గమ్యం_Bogus();
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-#ifdef SERVICE_DEBUG
+#నిర్వచితమైతే SERVICE_DEBUG
 UnicodeString& 
-SimpleFactory::debug(UnicodeString& toAppendTo) const 
+SimpleFactory::debug(UnicodeString& గమ్యం_Append_గమ్యం) స్థిరరాశి 
 {
-    debugClass(toAppendTo);
-    toAppendTo.append((UnicodeString)" id: ");
-    toAppendTo.append(_id);
-    toAppendTo.append((UnicodeString)", visible: ");
-    toAppendTo.append(_visible ? (UnicodeString)"T" : (UnicodeString)"F");
-    return toAppendTo;
+    debugClass(గమ్యం_Append_గమ్యం);
+    గమ్యం_Append_గమ్యం.append((UnicodeString)" id: ");
+    గమ్యం_Append_గమ్యం.append(_id);
+    గమ్యం_Append_గమ్యం.append((UnicodeString)", visible: ");
+    గమ్యం_Append_గమ్యం.append(_visible ? (UnicodeString)"T" : (UnicodeString)"F");
+    తిరిగి గమ్యం_Append_గమ్యం;
 }
 
 UnicodeString& 
-SimpleFactory::debugClass(UnicodeString& toAppendTo) const 
+SimpleFactory::debugClass(UnicodeString& గమ్యం_Append_గమ్యం) స్థిరరాశి 
 {
-    return toAppendTo.append((UnicodeString)"SimpleFactory");
+    తిరిగి గమ్యం_Append_గమ్యం.append((UnicodeString)"SimpleFactory");
 }
-#endif
+#అయితే_ముగింపు
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleFactory)
 
@@ -203,22 +203,22 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ServiceListener)
 
 // Record the actual id for this service in the cache, so we can return it
 // even if we succeed later with a different id.
-class CacheEntry : public UMemory {
-private:
+తరగతి Cache_నమోదు : బహిరంగ UMemory {
+అంతరంగ:
     int32_t refcount;
 
-public:
+బహిరంగ:
     UnicodeString actualDescriptor;
     UObject* service;
 
     /**
     * Releases a reference to the shared resource.
     */
-    ~CacheEntry() {
-        delete service;
+    ~Cache_నమోదు() {
+        తొలగించు service;
     }
 
-    CacheEntry(const UnicodeString& _actualDescriptor, UObject* _service) 
+    Cache_నమోదు(స్థిరరాశి UnicodeString& _actualDescriptor, UObject* _service) 
         : refcount(1), actualDescriptor(_actualDescriptor), service(_service) {
     }
 
@@ -228,9 +228,9 @@ public:
     * that pointer will have to know how to deal with refcounts.  
     * Return true if the resource has not already been released.
     */
-    CacheEntry* ref() {
+    Cache_నమోదు* ref() {
         ++refcount;
-        return this;
+        తిరిగి ఇది;
     }
 
     /**
@@ -240,42 +240,42 @@ public:
     * the refcount drops to zero, the resource is released.  Return
     * false if the resource has been released.
     */
-    CacheEntry* unref() {
-        if ((--refcount) == 0) {
-            delete this;
-            return nullptr;
+    Cache_నమోదు* unref() {
+        ఒకవేళ ((--refcount) == 0) {
+            తొలగించు ఇది;
+            తిరిగి శూన్యసూచిక;
         }
-        return this;
+        తిరిగి ఇది;
     }
 
     /**
     * Return true if there is at least one reference to this and the
     * resource has not been released.
     */
-    UBool isShared() const {
-        return refcount > 1;
+    UBool isShared() స్థిరరాశి {
+        తిరిగి refcount > 1;
     }
 };
 
 // Deleter for serviceCache
 U_CDECL_BEGIN
-static void U_CALLCONV
-cacheDeleter(void* obj) {
-    U_NAMESPACE_USE ((CacheEntry*)obj)->unref();
+స్థిర శూన్య U_CALLCONV
+cacheDeleter(శూన్య* obj) {
+    U_NAMESPACE_USE ((Cache_నమోదు*)obj)->unref();
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
 /*
 ******************************************************************
 */
 
-class DNCache : public UMemory {
-public:
+తరగతి DNCache : బహిరంగ UMemory {
+బహిరంగ:
     Hashtable cache;
-    const Locale locale;
+    స్థిరరాశి Locale locale;
 
-    DNCache(const Locale& _locale) 
+    DNCache(స్థిరరాశి Locale& _locale) 
         : cache(), locale(_locale) 
     {
         // cache.setKeyDeleter(uprv_deleteUObject);
@@ -288,145 +288,145 @@ public:
 */
 
 StringPair* 
-StringPair::create(const UnicodeString& displayName, 
-                   const UnicodeString& id,
-                   UErrorCode& status)
+StringPair::create(స్థిరరాశి UnicodeString& displayName, 
+                   స్థిరరాశి UnicodeString& id,
+                   UError_సంకేతం& స్థితి_2)
 {
-    if (U_SUCCESS(status)) {
-        StringPair* sp = new StringPair(displayName, id);
-        if (sp == nullptr || sp->isBogus()) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            delete sp;
-            return nullptr;
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        StringPair* sp = కొత్త StringPair(displayName, id);
+        ఒకవేళ (sp == శూన్యసూచిక || sp->isBogus()) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తొలగించు sp;
+            తిరిగి శూన్యసూచిక;
         }
-        return sp;
+        తిరిగి sp;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 UBool 
-StringPair::isBogus() const {
-    return displayName.isBogus() || id.isBogus();
+StringPair::isBogus() స్థిరరాశి {
+    తిరిగి displayName.isBogus() || id.isBogus();
 }
 
-StringPair::StringPair(const UnicodeString& _displayName, 
-                       const UnicodeString& _id)
+StringPair::StringPair(స్థిరరాశి UnicodeString& _displayName, 
+                       స్థిరరాశి UnicodeString& _id)
 : displayName(_displayName)
 , id(_id)
 {
 }
 
 U_CDECL_BEGIN
-static void U_CALLCONV
-userv_deleteStringPair(void *obj) {
-    U_NAMESPACE_USE delete (StringPair*) obj;
+స్థిర శూన్య U_CALLCONV
+userv_deleteStringPair(శూన్య *obj) {
+    U_NAMESPACE_USE తొలగించు (StringPair*) obj;
 }
-U_CDECL_END
+U_CDECL_చివర
 
 /*
 ******************************************************************
 */
 
-static UMutex lock;
+స్థిర UMutex తాళం;
 
 ICUService::ICUService()
 : name()
 , timestamp(0)
-, factories(nullptr)
-, serviceCache(nullptr)
-, idCache(nullptr)
-, dnCache(nullptr)
+, factories(శూన్యసూచిక)
+, serviceCache(శూన్యసూచిక)
+, idCache(శూన్యసూచిక)
+, dnCache(శూన్యసూచిక)
 {
 }
 
-ICUService::ICUService(const UnicodeString& newName) 
+ICUService::ICUService(స్థిరరాశి UnicodeString& newName) 
 : name(newName)
 , timestamp(0)
-, factories(nullptr)
-, serviceCache(nullptr)
-, idCache(nullptr)
-, dnCache(nullptr)
+, factories(శూన్యసూచిక)
+, serviceCache(శూన్యసూచిక)
+, idCache(శూన్యసూచిక)
+, dnCache(శూన్యసూచిక)
 {
 }
 
 ICUService::~ICUService()
 {
     {
-        Mutex mutex(&lock);
+        Mutex mutex(&తాళం);
         clearCaches();
-        delete factories;
-        factories = nullptr;
+        తొలగించు factories;
+        factories = శూన్యసూచిక;
     }
 }
 
 UObject* 
-ICUService::get(const UnicodeString& descriptor, UErrorCode& status) const 
+ICUService::get(స్థిరరాశి UnicodeString& descriptor, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    return get(descriptor, nullptr, status);
+    తిరిగి get(descriptor, శూన్యసూచిక, స్థితి_2);
 }
 
 UObject* 
-ICUService::get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const 
+ICUService::get(స్థిరరాశి UnicodeString& descriptor, UnicodeString* actualReturn, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    UObject* result = nullptr;
-    ICUServiceKey* key = createKey(&descriptor, status);
-    if (key) {
-        result = getKey(*key, actualReturn, status);
-        delete key;
+    UObject* ఫలితం = శూన్యసూచిక;
+    ICUService_కీలకం* కీలకం = create_కీలకం(&descriptor, స్థితి_2);
+    ఒకవేళ (కీలకం) {
+        ఫలితం = get_కీలకం(*కీలకం, actualReturn, స్థితి_2);
+        తొలగించు కీలకం;
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UErrorCode& status) const 
+ICUService::get_కీలకం(ICUService_కీలకం& కీలకం, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    return getKey(key, nullptr, status);
+    తిరిగి get_కీలకం(కీలకం, శూన్యసూచిక, స్థితి_2);
 }
 
 // this is a vector that subclasses of ICUService can override to further customize the result object
 // before returning it.  All other public get functions should call this one.
 
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const 
+ICUService::get_కీలకం(ICUService_కీలకం& కీలకం, UnicodeString* actualReturn, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    return getKey(key, actualReturn, nullptr, status);
+    తిరిగి get_కీలకం(కీలకం, actualReturn, శూన్యసూచిక, స్థితి_2);
 }
 
 // make it possible to call reentrantly on systems that don't have reentrant mutexes.
 // we can use this simple approach since we know the situation where we're calling
 // reentrantly even without knowing the thread.
-class XMutex : public UMemory {
-public:
-    inline XMutex(UMutex *mutex, UBool reentering) 
+తరగతి XMutex : బహిరంగ UMemory {
+బహిరంగ:
+    అంతఃవరుస XMutex(UMutex *mutex, UBool reentering) 
         : fMutex(mutex)
-        , fActive(!reentering) 
+        , f_చురుకైన(!reentering) 
     {
-        if (fActive) umtx_lock(fMutex);
+        ఒకవేళ (f_చురుకైన) umtx_తాళం(fMutex);
     }
-    inline ~XMutex() {
-        if (fActive) umtx_unlock(fMutex);
+    అంతఃవరుస ~XMutex() {
+        ఒకవేళ (f_చురుకైన) umtx_unlock(fMutex);
     }
 
-private:
+అంతరంగ:
     UMutex  *fMutex;
-    UBool fActive;
+    UBool f_చురుకైన;
 };
 
 // called only by factories, treat as private
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const 
+ICUService::get_కీలకం(ICUService_కీలకం& కీలకం, UnicodeString* actualReturn, స్థిరరాశి ICUServiceFactory* factory, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    if (isDefault()) {
-        return handleDefault(key, actualReturn, status);
+    ఒకవేళ (isDefault()) {
+        తిరిగి handleDefault(కీలకం, actualReturn, స్థితి_2);
     }
 
-    ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
+    ICUService* ncthis = const_cast<ICUService*>(ఇది); // cast away semantic const
 
-    CacheEntry* result = nullptr;
+    Cache_నమోదు* ఫలితం = శూన్యసూచిక;
     {
         // The factory list can't be modified until we're done, 
         // otherwise we might update the cache with an invalid result.
@@ -437,73 +437,73 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
         // if factory is not null, we're calling from within the mutex,
         // and since some unix machines don't have reentrant mutexes we
         // need to make sure not to try to lock it again.
-        XMutex mutex(&lock, factory != nullptr);
+        XMutex mutex(&తాళం, factory != శూన్యసూచిక);
 
-        if (serviceCache == nullptr) {
-            ncthis->serviceCache = new Hashtable(status);
-            if (ncthis->serviceCache == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+        ఒకవేళ (serviceCache == శూన్యసూచిక) {
+            ncthis->serviceCache = కొత్త Hashtable(స్థితి_2);
+            ఒకవేళ (ncthis->serviceCache == శూన్యసూచిక) {
+                స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి శూన్యసూచిక;
             }
-            if (U_FAILURE(status)) {
-                delete serviceCache;
-                return nullptr;
+            ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తొలగించు serviceCache;
+                తిరిగి శూన్యసూచిక;
             }
-            serviceCache->setValueDeleter(cacheDeleter);
+            serviceCache->సమితి_విలువ_Deleter(cacheDeleter);
         }
 
         UnicodeString currentDescriptor;
-        LocalPointer<UVector> cacheDescriptorList;
-        UBool putInCache = false;
+        Local_సూచిక<UVector> cacheDescriptorList;
+        UBool put_లోపల_Cache = అబద్ధం;
 
-        int32_t startIndex = 0;
-        int32_t limit = factories->size();
-        UBool cacheResult = true;
+        int32_t ప్రారంభం_సూచీ = 0;
+        int32_t హద్దు = factories->size();
+        UBool cache_ఫలితం = నిజం;
 
-        if (factory != nullptr) {
-            for (int32_t i = 0; i < limit; ++i) {
-                if (factory == static_cast<const ICUServiceFactory*>(factories->elementAt(i))) {
-                    startIndex = i + 1;
-                    break;
+        ఒకవేళ (factory != శూన్యసూచిక) {
+            కొరకు (int32_t i = 0; i < హద్దు; ++i) {
+                ఒకవేళ (factory == static_cast<స్థిరరాశి ICUServiceFactory*>(factories->elementAt(i))) {
+                    ప్రారంభం_సూచీ = i + 1;
+                    ఆపు;
                 }
             }
-            if (startIndex == 0) {
+            ఒకవేళ (ప్రారంభం_సూచీ == 0) {
                 // throw new InternalError("Factory " + factory + "not registered with service: " + this);
-                status = U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+                తిరిగి శూన్యసూచిక;
             }
-            cacheResult = false;
+            cache_ఫలితం = అబద్ధం;
         }
 
-        do {
+        చేయి {
             currentDescriptor.remove();
-            key.currentDescriptor(currentDescriptor);
-            result = static_cast<CacheEntry*>(serviceCache->get(currentDescriptor));
-            if (result != nullptr) {
-                break;
+            కీలకం.currentDescriptor(currentDescriptor);
+            ఫలితం = static_cast<Cache_నమోదు*>(serviceCache->get(currentDescriptor));
+            ఒకవేళ (ఫలితం != శూన్యసూచిక) {
+                ఆపు;
             }
 
             // first test of cache failed, so we'll have to update
             // the cache if we eventually succeed-- that is, if we're 
             // going to update the cache at all.
-            putInCache = true;
+            put_లోపల_Cache = నిజం;
 
-            int32_t index = startIndex;
-            while (index < limit) {
-                ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(index++));
-                LocalPointer<UObject> service(f->create(key, this, status));
-                if (U_FAILURE(status)) {
-                    return nullptr;
+            int32_t సూచీ = ప్రారంభం_సూచీ;
+            అయితే (సూచీ < హద్దు) {
+                ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(సూచీ++));
+                Local_సూచిక<UObject> service(f->create(కీలకం, ఇది, స్థితి_2));
+                ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                    తిరిగి శూన్యసూచిక;
                 }
-                if (service.isValid()) {
-                    result = new CacheEntry(currentDescriptor, service.getAlias());
-                    if (result == nullptr) {
-                        status = U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                ఒకవేళ (service.isValid()) {
+                    ఫలితం = కొత్త Cache_నమోదు(currentDescriptor, service.getAlias());
+                    ఒకవేళ (ఫలితం == శూన్యసూచిక) {
+                        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                        తిరిగి శూన్యసూచిక;
                     }
                     service.orphan(); // result now owns service.
 
-                    goto outerEnd;
+                    వెళ్ళు outer_చివర;
                 }
             }
 
@@ -512,457 +512,457 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             // don't want to keep querying on an id that's going to
             // fallback to the one that succeeded, we want to hit the
             // cache the first time next goaround.
-            if (cacheDescriptorList.isNull()) {
-                cacheDescriptorList.adoptInsteadAndCheckErrorCode(new UVector(uprv_deleteUObject, nullptr, 5, status), status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+            ఒకవేళ (cacheDescriptorList.isNull()) {
+                cacheDescriptorList.adopt_Instead_And_Check_Error_సంకేతం(కొత్త UVector(uprv_deleteUObject, శూన్యసూచిక, 5, స్థితి_2), స్థితి_2);
+                ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                    తిరిగి శూన్యసూచిక;
                 }
             }
 
-            LocalPointer<UnicodeString> idToCache(new UnicodeString(currentDescriptor), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            Local_సూచిక<UnicodeString> id_గమ్యం_Cache(కొత్త UnicodeString(currentDescriptor), స్థితి_2);
+            ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తిరిగి శూన్యసూచిక;
             }
-            if (idToCache->isBogus()) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+            ఒకవేళ (id_గమ్యం_Cache->isBogus()) {
+                స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి శూన్యసూచిక;
             }
-            cacheDescriptorList->adoptElement(idToCache.orphan(), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            cacheDescriptorList->adoptElement(id_గమ్యం_Cache.orphan(), స్థితి_2);
+            ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తిరిగి శూన్యసూచిక;
             }
-        } while (key.fallback());
-outerEnd:
+        } అయితే (కీలకం.fallback());
+outer_చివర:
 
-        if (result != nullptr) {
-            if (putInCache && cacheResult) {
-                serviceCache->put(result->actualDescriptor, result, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+        ఒకవేళ (ఫలితం != శూన్యసూచిక) {
+            ఒకవేళ (put_లోపల_Cache && cache_ఫలితం) {
+                serviceCache->put(ఫలితం->actualDescriptor, ఫలితం, స్థితి_2);
+                ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                    తిరిగి శూన్యసూచిక;
                 }
 
-                if (cacheDescriptorList.isValid()) {
-                    for (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
+                ఒకవేళ (cacheDescriptorList.isValid()) {
+                    కొరకు (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
                         UnicodeString* desc = static_cast<UnicodeString*>(cacheDescriptorList->elementAt(i));
 
-                        serviceCache->put(*desc, result, status);
-                        if (U_FAILURE(status)) {
-                            return nullptr;
+                        serviceCache->put(*desc, ఫలితం, స్థితి_2);
+                        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                            తిరిగి శూన్యసూచిక;
                         }
 
-                        result->ref();
+                        ఫలితం->ref();
                         cacheDescriptorList->removeElementAt(i);
                     }
                 }
             }
 
-            if (actualReturn != nullptr) {
+            ఒకవేళ (actualReturn != శూన్యసూచిక) {
                 // strip null prefix
-                if (result->actualDescriptor.indexOf(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
+                ఒకవేళ (ఫలితం->actualDescriptor.సూచీ_యొక్క(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
                     actualReturn->remove();
-                    actualReturn->append(result->actualDescriptor, 
+                    actualReturn->append(ఫలితం->actualDescriptor, 
                         1, 
-                        result->actualDescriptor.length() - 1);
-                } else {
-                    *actualReturn = result->actualDescriptor;
+                        ఫలితం->actualDescriptor.length() - 1);
+                } లేకపోతే {
+                    *actualReturn = ఫలితం->actualDescriptor;
                 }
 
-                if (actualReturn->isBogus()) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                    delete result;
-                    return nullptr;
+                ఒకవేళ (actualReturn->isBogus()) {
+                    స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    తొలగించు ఫలితం;
+                    తిరిగి శూన్యసూచిక;
                 }
             }
 
-            UObject* service = cloneInstance(result->service);
-            if (putInCache && !cacheResult) {
-                delete result;
+            UObject* service = cloneInstance(ఫలితం->service);
+            ఒకవేళ (put_లోపల_Cache && !cache_ఫలితం) {
+                తొలగించు ఫలితం;
             }
-            return service;
+            తిరిగి service;
         }
     }
 
-    return handleDefault(key, actualReturn, status);
+    తిరిగి handleDefault(కీలకం, actualReturn, స్థితి_2);
 }
 
 UObject* 
-ICUService::handleDefault(const ICUServiceKey& /* key */, UnicodeString* /* actualIDReturn */, UErrorCode& /* status */) const 
+ICUService::handleDefault(స్థిరరాశి ICUService_కీలకం& /*కీలకం*/, UnicodeString* /* actualIDReturn */, UError_సంకేతం& /* status */) స్థిరరాశి 
 {
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 UVector& 
-ICUService::getVisibleIDs(UVector& result, UErrorCode& status) const {
-    return getVisibleIDs(result, nullptr, status);
+ICUService::getVisibleIDs(UVector& ఫలితం, UError_సంకేతం& స్థితి_2) స్థిరరాశి {
+    తిరిగి getVisibleIDs(ఫలితం, శూన్యసూచిక, స్థితి_2);
 }
 
 UVector& 
-ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorCode& status) const 
+ICUService::getVisibleIDs(UVector& ఫలితం, స్థిరరాశి UnicodeString* సరిపోలిక_ID, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    result.removeAllElements();
+    ఫలితం.removeAllElements();
 
-    if (U_FAILURE(status)) {
-        return result;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి ఫలితం;
     }
-    UObjectDeleter *savedDeleter = result.setDeleter(uprv_deleteUObject);
+    UObjectDeleter *savedDeleter = ఫలితం.సమితి_Deleter(uprv_deleteUObject);
 
     {
-        Mutex mutex(&lock);
-        const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
-            ICUServiceKey* fallbackKey = createKey(matchID, status);
+        Mutex mutex(&తాళం);
+        స్థిరరాశి Hashtable* map = getVisibleIDMap(స్థితి_2);
+        ఒకవేళ (map != శూన్యసూచిక) {
+            ICUService_కీలకం* fallback_కీలకం = create_కీలకం(సరిపోలిక_ID, స్థితి_2);
 
-            for (int32_t pos = UHASH_FIRST; U_SUCCESS(status); ) {
-                const UHashElement* e = map->nextElement(pos);
-                if (e == nullptr) {
-                    break;
+            కొరకు (int32_t pos = UHASH_మొదటి; U_SUCCESS(స్థితి_2); ) {
+                స్థిరరాశి UHashElement* e = map->తదుపరి_Element(pos);
+                ఒకవేళ (e == శూన్యసూచిక) {
+                    ఆపు;
                 }
 
-                const UnicodeString* id = static_cast<const UnicodeString*>(e->key.pointer);
-                if (fallbackKey != nullptr) {
-                    if (!fallbackKey->isFallbackOf(*id)) {
-                        continue;
+                స్థిరరాశి UnicodeString* id = static_cast<స్థిరరాశి UnicodeString*>(e->కీలకం.సూచిక);
+                ఒకవేళ (fallback_కీలకం != శూన్యసూచిక) {
+                    ఒకవేళ (!fallback_కీలకం->is_Fallback_యొక్క(*id)) {
+                        కొనసాగు;
                     }
                 }
 
-                LocalPointer<UnicodeString> idClone(id->clone(), status);
-                result.adoptElement(idClone.orphan(), status);
+                Local_సూచిక<UnicodeString> idClone(id->clone(), స్థితి_2);
+                ఫలితం.adoptElement(idClone.orphan(), స్థితి_2);
             }
-            delete fallbackKey;
+            తొలగించు fallback_కీలకం;
         }
     }
-    if (U_FAILURE(status)) {
-        result.removeAllElements();
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        ఫలితం.removeAllElements();
     }
-    result.setDeleter(savedDeleter);
-    return result;
+    ఫలితం.సమితి_Deleter(savedDeleter);
+    తిరిగి ఫలితం;
 }
 
-const Hashtable* 
-ICUService::getVisibleIDMap(UErrorCode& status) const {
-    if (U_FAILURE(status)) return nullptr;
+స్థిరరాశి Hashtable* 
+ICUService::getVisibleIDMap(UError_సంకేతం& స్థితి_2) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి శూన్యసూచిక;
 
     // must only be called when lock is already held
 
-    ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
-    if (idCache == nullptr) {
-        ncthis->idCache = new Hashtable(status);
-        if (idCache == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-        } else if (factories != nullptr) {
-            for (int32_t pos = factories->size(); --pos >= 0;) {
+    ICUService* ncthis = const_cast<ICUService*>(ఇది); // cast away semantic const
+    ఒకవేళ (idCache == శూన్యసూచిక) {
+        ncthis->idCache = కొత్త Hashtable(స్థితి_2);
+        ఒకవేళ (idCache == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        } లేకపోతే ఒకవేళ (factories != శూన్యసూచిక) {
+            కొరకు (int32_t pos = factories->size(); --pos >= 0;) {
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(pos));
-                f->updateVisibleIDs(*idCache, status);
+                f->updateVisibleIDs(*idCache, స్థితి_2);
             }
-            if (U_FAILURE(status)) {
-                delete idCache;
-                ncthis->idCache = nullptr;
+            ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తొలగించు idCache;
+                ncthis->idCache = శూన్యసూచిక;
             }
         }
     }
 
-    return idCache;
+    తిరిగి idCache;
 }
 
 
 UnicodeString& 
-ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result) const 
+ICUService::getDisplayName(స్థిరరాశి UnicodeString& id, UnicodeString& ఫలితం) స్థిరరాశి 
 {
-    return getDisplayName(id, result, Locale::getDefault());
+    తిరిగి getDisplayName(id, ఫలితం, Locale::getDefault());
 }
 
 UnicodeString& 
-ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result, const Locale& locale) const 
+ICUService::getDisplayName(స్థిరరాశి UnicodeString& id, UnicodeString& ఫలితం, స్థిరరాశి Locale& locale) స్థిరరాశి 
 {
     {
-        UErrorCode status = U_ZERO_ERROR;
-        Mutex mutex(&lock);
-        const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+        Mutex mutex(&తాళం);
+        స్థిరరాశి Hashtable* map = getVisibleIDMap(స్థితి_2);
+        ఒకవేళ (map != శూన్యసూచిక) {
             ICUServiceFactory* f = static_cast<ICUServiceFactory*>(map->get(id));
-            if (f != nullptr) {
-                f->getDisplayName(id, locale, result);
-                return result;
+            ఒకవేళ (f != శూన్యసూచిక) {
+                f->getDisplayName(id, locale, ఫలితం);
+                తిరిగి ఫలితం;
             }
 
             // fallback
-            status = U_ZERO_ERROR;
-            ICUServiceKey* fallbackKey = createKey(&id, status);
-            while (fallbackKey != nullptr && fallbackKey->fallback()) {
+            స్థితి_2 = U_ZERO_ERROR;
+            ICUService_కీలకం* fallback_కీలకం = create_కీలకం(&id, స్థితి_2);
+            అయితే (fallback_కీలకం != శూన్యసూచిక && fallback_కీలకం->fallback()) {
                 UnicodeString us;
-                fallbackKey->currentID(us);
+                fallback_కీలకం->currentID(us);
                 f = static_cast<ICUServiceFactory*>(map->get(us));
-                if (f != nullptr) {
-                    f->getDisplayName(id, locale, result);
-                    delete fallbackKey;
-                    return result;
+                ఒకవేళ (f != శూన్యసూచిక) {
+                    f->getDisplayName(id, locale, ఫలితం);
+                    తొలగించు fallback_కీలకం;
+                    తిరిగి ఫలితం;
                 }
             }
-            delete fallbackKey;
+            తొలగించు fallback_కీలకం;
         }
     }
-    result.setToBogus();
-    return result;
+    ఫలితం.సమితి_గమ్యం_Bogus();
+    తిరిగి ఫలితం;
 }
 
 UVector& 
-ICUService::getDisplayNames(UVector& result, UErrorCode& status) const 
+ICUService::get_Display_పేర్లు(UVector& ఫలితం, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    return getDisplayNames(result, Locale::getDefault(), nullptr, status);
+    తిరిగి get_Display_పేర్లు(ఫలితం, Locale::getDefault(), శూన్యసూచిక, స్థితి_2);
 }
 
 
 UVector& 
-ICUService::getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const 
+ICUService::get_Display_పేర్లు(UVector& ఫలితం, స్థిరరాశి Locale& locale, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    return getDisplayNames(result, locale, nullptr, status);
+    తిరిగి get_Display_పేర్లు(ఫలితం, locale, శూన్యసూచిక, స్థితి_2);
 }
 
 UVector& 
-ICUService::getDisplayNames(UVector& result, 
-                            const Locale& locale, 
-                            const UnicodeString* matchID, 
-                            UErrorCode& status) const 
+ICUService::get_Display_పేర్లు(UVector& ఫలితం, 
+                            స్థిరరాశి Locale& locale, 
+                            స్థిరరాశి UnicodeString* సరిపోలిక_ID, 
+                            UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    result.removeAllElements();
-    result.setDeleter(userv_deleteStringPair);
-    if (U_SUCCESS(status)) {
-        ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
-        Mutex mutex(&lock);
+    ఫలితం.removeAllElements();
+    ఫలితం.సమితి_Deleter(userv_deleteStringPair);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        ICUService* ncthis = const_cast<ICUService*>(ఇది); // cast away semantic const
+        Mutex mutex(&తాళం);
 
-        if (dnCache != nullptr && dnCache->locale != locale) {
-            delete dnCache;
-            ncthis->dnCache = nullptr;
+        ఒకవేళ (dnCache != శూన్యసూచిక && dnCache->locale != locale) {
+            తొలగించు dnCache;
+            ncthis->dnCache = శూన్యసూచిక;
         }
 
-        if (dnCache == nullptr) {
-            const Hashtable* m = getVisibleIDMap(status);
-            if (U_FAILURE(status)) {
-                return result;
+        ఒకవేళ (dnCache == శూన్యసూచిక) {
+            స్థిరరాశి Hashtable* m = getVisibleIDMap(స్థితి_2);
+            ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తిరిగి ఫలితం;
             }
-            ncthis->dnCache = new DNCache(locale); 
-            if (dnCache == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return result;
+            ncthis->dnCache = కొత్త DNCache(locale); 
+            ఒకవేళ (dnCache == శూన్యసూచిక) {
+                స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి ఫలితం;
             }
 
-            int32_t pos = UHASH_FIRST;
-            const UHashElement* entry = nullptr;
-            while ((entry = m->nextElement(pos)) != nullptr) {
-                const UnicodeString* id = static_cast<const UnicodeString*>(entry->key.pointer);
-                ICUServiceFactory* f = static_cast<ICUServiceFactory*>(entry->value.pointer);
+            int32_t pos = UHASH_మొదటి;
+            స్థిరరాశి UHashElement* నమోదు_2 = శూన్యసూచిక;
+            అయితే ((నమోదు_2 = m->తదుపరి_Element(pos)) != శూన్యసూచిక) {
+                స్థిరరాశి UnicodeString* id = static_cast<స్థిరరాశి UnicodeString*>(నమోదు_2->కీలకం.సూచిక);
+                ICUServiceFactory* f = static_cast<ICUServiceFactory*>(నమోదు_2->value.సూచిక);
                 UnicodeString dname;
                 f->getDisplayName(*id, locale, dname);
-                if (dname.isBogus()) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                } else {
-                    dnCache->cache.put(dname, (void*)id, status); // share pointer with visibleIDMap
-                    if (U_SUCCESS(status)) {
-                        continue;
+                ఒకవేళ (dname.isBogus()) {
+                    స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                } లేకపోతే {
+                    dnCache->cache.put(dname, (శూన్య*)id, స్థితి_2); // share pointer with visibleIDMap
+                    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+                        కొనసాగు;
                     }
                 }
-                delete dnCache;
-                ncthis->dnCache = nullptr;
-                return result;
+                తొలగించు dnCache;
+                ncthis->dnCache = శూన్యసూచిక;
+                తిరిగి ఫలితం;
             }
         }
     }
 
-    ICUServiceKey* matchKey = createKey(matchID, status);
+    ICUService_కీలకం* సరిపోలిక_కీలకం = create_కీలకం(సరిపోలిక_ID, స్థితి_2);
     /* To ensure that all elements in the hashtable are iterated, set pos to -1.
      * nextElement(pos) will skip the position at pos and begin the iteration
      * at the next position, which in this case will be 0.
      */
-    int32_t pos = UHASH_FIRST; 
-    const UHashElement *entry = nullptr;
-    while ((entry = dnCache->cache.nextElement(pos)) != nullptr) {
-        const UnicodeString* id = static_cast<const UnicodeString*>(entry->value.pointer);
-        if (matchKey != nullptr && !matchKey->isFallbackOf(*id)) {
-            continue;
+    int32_t pos = UHASH_మొదటి; 
+    స్థిరరాశి UHashElement *నమోదు_2 = శూన్యసూచిక;
+    అయితే ((నమోదు_2 = dnCache->cache.తదుపరి_Element(pos)) != శూన్యసూచిక) {
+        స్థిరరాశి UnicodeString* id = static_cast<స్థిరరాశి UnicodeString*>(నమోదు_2->value.సూచిక);
+        ఒకవేళ (సరిపోలిక_కీలకం != శూన్యసూచిక && !సరిపోలిక_కీలకం->is_Fallback_యొక్క(*id)) {
+            కొనసాగు;
         }
-        const UnicodeString* dn = static_cast<const UnicodeString*>(entry->key.pointer);
-        StringPair* sp = StringPair::create(*id, *dn, status);
-        result.adoptElement(sp, status);
-        if (U_FAILURE(status)) {
-            result.removeAllElements();
-            break;
+        స్థిరరాశి UnicodeString* dn = static_cast<స్థిరరాశి UnicodeString*>(నమోదు_2->కీలకం.సూచిక);
+        StringPair* sp = StringPair::create(*id, *dn, స్థితి_2);
+        ఫలితం.adoptElement(sp, స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            ఫలితం.removeAllElements();
+            ఆపు;
         }
     }
-    delete matchKey;
+    తొలగించు సరిపోలిక_కీలకం;
 
-    return result;
+    తిరిగి ఫలితం;
 }
 
-URegistryKey
-ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status) 
+URegistry_కీలకం
+ICUService::రిజిస్టరు_Instance(UObject* obj_గమ్యం_Adopt, స్థిరరాశి UnicodeString& id, UError_సంకేతం& స్థితి_2) 
 {
-    return registerInstance(objToAdopt, id, true, status);
+    తిరిగి రిజిస్టరు_Instance(obj_గమ్యం_Adopt, id, నిజం, స్థితి_2);
 }
 
-URegistryKey
-ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status) 
+URegistry_కీలకం
+ICUService::రిజిస్టరు_Instance(UObject* obj_గమ్యం_Adopt, స్థిరరాశి UnicodeString& id, UBool visible, UError_సంకేతం& స్థితి_2) 
 {
-    ICUServiceKey* key = createKey(&id, status);
-    if (key != nullptr) {
+    ICUService_కీలకం* కీలకం = create_కీలకం(&id, స్థితి_2);
+    ఒకవేళ (కీలకం != శూన్యసూచిక) {
         UnicodeString canonicalID;
-        key->canonicalID(canonicalID);
-        delete key;
+        కీలకం->canonicalID(canonicalID);
+        తొలగించు కీలకం;
 
-        ICUServiceFactory* f = createSimpleFactory(objToAdopt, canonicalID, visible, status);
-        if (f != nullptr) {
-            return registerFactory(f, status);
+        ICUServiceFactory* f = createSimpleFactory(obj_గమ్యం_Adopt, canonicalID, visible, స్థితి_2);
+        ఒకవేళ (f != శూన్యసూచిక) {
+            తిరిగి రిజిస్టరు_Factory(f, స్థితి_2);
         }
     }
-    delete objToAdopt;
-    return nullptr;
+    తొలగించు obj_గమ్యం_Adopt;
+    తిరిగి శూన్యసూచిక;
 }
 
 ICUServiceFactory* 
-ICUService::createSimpleFactory(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status)
+ICUService::createSimpleFactory(UObject* obj_గమ్యం_Adopt, స్థిరరాశి UnicodeString& id, UBool visible, UError_సంకేతం& స్థితి_2)
 {
-    if (U_SUCCESS(status)) {
-        if ((objToAdopt != nullptr) && (!id.isBogus())) {
-            return new SimpleFactory(objToAdopt, id, visible);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        ఒకవేళ ((obj_గమ్యం_Adopt != శూన్యసూచిక) && (!id.isBogus())) {
+            తిరిగి కొత్త SimpleFactory(obj_గమ్యం_Adopt, id, visible);
         }
-        status = U_ILLEGAL_ARGUMENT_ERROR;
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-URegistryKey
-ICUService::registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& status)
+URegistry_కీలకం
+ICUService::రిజిస్టరు_Factory(ICUServiceFactory* factory_గమ్యం_Adopt, UError_సంకేతం& స్థితి_2)
 {
-    LocalPointer<ICUServiceFactory>lpFactoryToAdopt(factoryToAdopt);
-    if (U_FAILURE(status) || factoryToAdopt == nullptr) {
-        return nullptr;
+    Local_సూచిక<ICUServiceFactory>lp_Factory_గమ్యం_Adopt(factory_గమ్యం_Adopt);
+    ఒకవేళ (U_FAILURE(స్థితి_2) || factory_గమ్యం_Adopt == శూన్యసూచిక) {
+        తిరిగి శూన్యసూచిక;
     }
     {
-        Mutex mutex(&lock);
+        Mutex mutex(&తాళం);
 
-        if (factories == nullptr) {
-            LocalPointer<UVector> lpFactories(new UVector(uprv_deleteUObject, nullptr, status), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+        ఒకవేళ (factories == శూన్యసూచిక) {
+            Local_సూచిక<UVector> lpFactories(కొత్త UVector(uprv_deleteUObject, శూన్యసూచిక, స్థితి_2), స్థితి_2);
+            ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తిరిగి శూన్యసూచిక;
             }
             factories = lpFactories.orphan();
         }
-        factories->insertElementAt(lpFactoryToAdopt.orphan(), 0, status);
-        if (U_SUCCESS(status)) {
+        factories->చొప్పించు_Element_At(lp_Factory_గమ్యం_Adopt.orphan(), 0, స్థితి_2);
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
             clearCaches();
         }
     }   // Close of mutex lock block.
 
-    if (U_SUCCESS(status)) {
-        notifyChanged();
-        return (URegistryKey)factoryToAdopt;
-    } else {
-        return nullptr;
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        notify_మారింది();
+        తిరిగి (URegistry_కీలకం)factory_గమ్యం_Adopt;
+    } లేకపోతే {
+        తిరిగి శూన్యసూచిక;
     }
 }
 
 UBool 
-ICUService::unregister(URegistryKey rkey, UErrorCode& status) 
+ICUService::unregister(URegistry_కీలకం rkey, UError_సంకేతం& స్థితి_2) 
 {
     ICUServiceFactory *factory = (ICUServiceFactory*)rkey;
-    UBool result = false;
-    if (factory != nullptr && factories != nullptr) {
-        Mutex mutex(&lock);
+    UBool ఫలితం = అబద్ధం;
+    ఒకవేళ (factory != శూన్యసూచిక && factories != శూన్యసూచిక) {
+        Mutex mutex(&తాళం);
 
-        if (factories->removeElement(factory)) {
+        ఒకవేళ (factories->removeElement(factory)) {
             clearCaches();
-            result = true;
-        } else {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            delete factory;
+            ఫలితం = నిజం;
+        } లేకపోతే {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+            తొలగించు factory;
         }
     }
-    if (result) {
-        notifyChanged();
+    ఒకవేళ (ఫలితం) {
+        notify_మారింది();
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-void 
+శూన్య 
 ICUService::reset() 
 {
     {
-        Mutex mutex(&lock);
+        Mutex mutex(&తాళం);
         reInitializeFactories();
         clearCaches();
     }
-    notifyChanged();
+    notify_మారింది();
 }
 
-void 
+శూన్య 
 ICUService::reInitializeFactories() 
 {
-    if (factories != nullptr) {
+    ఒకవేళ (factories != శూన్యసూచిక) {
         factories->removeAllElements();
     }
 }
 
 UBool 
-ICUService::isDefault() const 
+ICUService::isDefault() స్థిరరాశి 
 {
-    return countFactories() == 0;
+    తిరిగి లెక్క_Factories() == 0;
 }
 
-ICUServiceKey* 
-ICUService::createKey(const UnicodeString* id, UErrorCode& status) const 
+ICUService_కీలకం* 
+ICUService::create_కీలకం(స్థిరరాశి UnicodeString* id, UError_సంకేతం& స్థితి_2) స్థిరరాశి 
 {
-    return (U_FAILURE(status) || id == nullptr) ? nullptr : new ICUServiceKey(*id);
+    తిరిగి (U_FAILURE(స్థితి_2) || id == శూన్యసూచిక) ? శూన్యసూచిక : కొత్త ICUService_కీలకం(*id);
 }
 
-void 
+శూన్య 
 ICUService::clearCaches() 
 {
     // callers synchronize before use
     ++timestamp;
-    delete dnCache;
-    dnCache = nullptr;
-    delete idCache;
-    idCache = nullptr;
-    delete serviceCache; serviceCache = nullptr;
+    తొలగించు dnCache;
+    dnCache = శూన్యసూచిక;
+    తొలగించు idCache;
+    idCache = శూన్యసూచిక;
+    తొలగించు serviceCache; serviceCache = శూన్యసూచిక;
 }
 
-void 
+శూన్య 
 ICUService::clearServiceCache() 
 {
     // callers synchronize before use
-    delete serviceCache; serviceCache = nullptr;
+    తొలగించు serviceCache; serviceCache = శూన్యసూచిక;
 }
 
 UBool 
-ICUService::acceptsListener(const EventListener& l) const 
+ICUService::స్వీకరించు_Listener(స్థిరరాశి EventListener& l) స్థిరరాశి 
 {
-    return dynamic_cast<const ServiceListener*>(&l) != nullptr;
+    తిరిగి dynamic_cast<స్థిరరాశి ServiceListener*>(&l) != శూన్యసూచిక;
 }
 
-void 
-ICUService::notifyListener(EventListener& l) const 
+శూన్య 
+ICUService::notifyListener(EventListener& l) స్థిరరాశి 
 {
-    (static_cast<ServiceListener&>(l)).serviceChanged(*this);
+    (static_cast<ServiceListener&>(l)).service_మారింది(*ఇది);
 }
 
 UnicodeString&
-ICUService::getName(UnicodeString& result) const 
+ICUService::getName(UnicodeString& ఫలితం) స్థిరరాశి 
 {
-    return result.append(name);
+    తిరిగి ఫలితం.append(name);
 }
 
 int32_t 
-ICUService::countFactories() const 
+ICUService::లెక్క_Factories() స్థిరరాశి 
 {
-    return factories == nullptr ? 0 : factories->size();
+    తిరిగి factories == శూన్యసూచిక ? 0 : factories->size();
 }
 
 int32_t
-ICUService::getTimestamp() const
+ICUService::getTimestamp() స్థిరరాశి
 {
-    return timestamp;
+    తిరిగి timestamp;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* UCONFIG_NO_SERVICE */
-#endif
+#అయితే_ముగింపు

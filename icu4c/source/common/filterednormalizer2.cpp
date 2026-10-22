@@ -16,37 +16,37 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ఒకవేళ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/edits.h"
-#include "unicode/normalizer2.h"
-#include "unicode/stringoptions.h"
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "cpputils.h"
+#అన్తర్భావ "unicode/edits.h"
+#అన్తర్భావ "unicode/normalizer2.h"
+#అన్తర్భావ "unicode/stringoptions.h"
+#అన్తర్భావ "unicode/uniset.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/unorm.h"
+#అన్తర్భావ "cpputils.h"
 
 U_NAMESPACE_BEGIN
 
 FilteredNormalizer2::~FilteredNormalizer2() {}
 
 UnicodeString&
-FilteredNormalizer2::normalize(const UnicodeString& src,
+FilteredNormalizer2::normalize(స్థిరరాశి UnicodeString& src,
                                UnicodeString& dest U_LIFETIME_BOUND,
-                               UErrorCode& errorCode) const {
-    uprv_checkCanGetBuffer(src, errorCode);
-    if(U_FAILURE(errorCode)) {
-        dest.setToBogus();
-        return dest;
+                               UError_సంకేతం& error_సంకేతం) స్థిరరాశి {
+    uprv_check_Can_Get_బఫరు(src, error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        dest.సమితి_గమ్యం_Bogus();
+        తిరిగి dest;
     }
-    if(&dest==&src) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return dest;
+    ఒకవేళ(&dest==&src) {
+        error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి dest;
     }
     dest.remove();
-    return normalize(src, dest, USET_SPAN_SIMPLE, errorCode);
+    తిరిగి normalize(src, dest, USET_పరిధి_SIMPLE, error_సంకేతం);
 }
 
 // Internal: No argument checking, and appends to dest.
@@ -57,309 +57,309 @@ FilteredNormalizer2::normalize(const UnicodeString& src,
 // and USET_SPAN_NOT_CONTAINED should be passed in if we continue after
 // an in-filter prefix.
 UnicodeString&
-FilteredNormalizer2::normalize(const UnicodeString& src,
+FilteredNormalizer2::normalize(స్థిరరాశి UnicodeString& src,
                                UnicodeString& dest U_LIFETIME_BOUND,
-                               USetSpanCondition spanCondition,
-                               UErrorCode& errorCode) const {
-    UnicodeString tempDest;  // Don't throw away destination buffer between iterations.
-    for(int32_t prevSpanLimit=0; prevSpanLimit<src.length();) {
-        int32_t spanLimit=set.span(src, prevSpanLimit, spanCondition);
-        int32_t spanLength=spanLimit-prevSpanLimit;
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            if(spanLength!=0) {
-                dest.append(src, prevSpanLimit, spanLength);
+                               USet_పరిధి_Condition పరిధి_Condition,
+                               UError_సంకేతం& error_సంకేతం) స్థిరరాశి {
+    UnicodeString తాత్కాలిక_Dest;  // Don't throw away destination buffer between iterations.
+    కొరకు(int32_t prev_పరిధి_హద్దు=0; prev_పరిధి_హద్దు<src.length();) {
+        int32_t పరిధి_హద్దు=సమితి.పరిధి(src, prev_పరిధి_హద్దు, పరిధి_Condition);
+        int32_t పరిధి_నిడివి=పరిధి_హద్దు-prev_పరిధి_హద్దు;
+        ఒకవేళ(పరిధి_Condition==USET_పరిధి_NOT_CONTAINED) {
+            ఒకవేళ(పరిధి_నిడివి!=0) {
+                dest.append(src, prev_పరిధి_హద్దు, పరిధి_నిడివి);
             }
-            spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            if(spanLength!=0) {
+            పరిధి_Condition=USET_పరిధి_SIMPLE;
+        } లేకపోతే {
+            ఒకవేళ(పరిధి_నిడివి!=0) {
                 // Not norm2.normalizeSecondAndAppend() because we do not want
                 // to modify the non-filter part of dest.
-                dest.append(norm2.normalize(src.tempSubStringBetween(prevSpanLimit, spanLimit),
-                                            tempDest, errorCode));
-                if(U_FAILURE(errorCode)) {
-                    break;
+                dest.append(norm2.normalize(src.తాత్కాలిక_Sub_String_Between(prev_పరిధి_హద్దు, పరిధి_హద్దు),
+                                            తాత్కాలిక_Dest, error_సంకేతం));
+                ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+                    ఆపు;
                 }
             }
-            spanCondition=USET_SPAN_NOT_CONTAINED;
+            పరిధి_Condition=USET_పరిధి_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        prev_పరిధి_హద్దు=పరిధి_హద్దు;
     }
-    return dest;
+    తిరిగి dest;
 }
 
-void
+శూన్య
 FilteredNormalizer2::normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                                   Edits *edits, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return;
+                                   Edits *edits, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    ఒకవేళ (edits != శూన్యసూచిక && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     options |= U_EDITS_NO_RESET;  // Do not reset for each span.
-    normalizeUTF8(options, src.data(), src.length(), sink, edits, USET_SPAN_SIMPLE, errorCode);
+    normalizeUTF8(options, src.దత్తాంశం(), src.length(), sink, edits, USET_పరిధి_SIMPLE, error_సంకేతం);
 }
 
-void
-FilteredNormalizer2::normalizeUTF8(uint32_t options, const char *src, int32_t length,
+శూన్య
+FilteredNormalizer2::normalizeUTF8(uint32_t options, స్థిరరాశి అక్షరం *src, int32_t length,
                                    ByteSink &sink, Edits *edits,
-                                   USetSpanCondition spanCondition,
-                                   UErrorCode &errorCode) const {
-    while (length > 0) {
-        int32_t spanLength = set.spanUTF8(src, length, spanCondition);
-        if (spanCondition == USET_SPAN_NOT_CONTAINED) {
-            if (spanLength != 0) {
-                if (edits != nullptr) {
-                    edits->addUnchanged(spanLength);
+                                   USet_పరిధి_Condition పరిధి_Condition,
+                                   UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    అయితే (length > 0) {
+        int32_t పరిధి_నిడివి = సమితి.పరిధి_UTF8(src, length, పరిధి_Condition);
+        ఒకవేళ (పరిధి_Condition == USET_పరిధి_NOT_CONTAINED) {
+            ఒకవేళ (పరిధి_నిడివి != 0) {
+                ఒకవేళ (edits != శూన్యసూచిక) {
+                    edits->కూడు_Unchanged(పరిధి_నిడివి);
                 }
-                if ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-                    sink.Append(src, spanLength);
+                ఒకవేళ ((options & U_OMIT_UNCHANGED_పాఠ్యం) == 0) {
+                    sink.Append(src, పరిధి_నిడివి);
                 }
             }
-            spanCondition = USET_SPAN_SIMPLE;
-        } else {
-            if (spanLength != 0) {
+            పరిధి_Condition = USET_పరిధి_SIMPLE;
+        } లేకపోతే {
+            ఒకవేళ (పరిధి_నిడివి != 0) {
                 // Not norm2.normalizeSecondAndAppend() because we do not want
                 // to modify the non-filter part of dest.
-                norm2.normalizeUTF8(options, StringPiece(src, spanLength), sink, edits, errorCode);
-                if (U_FAILURE(errorCode)) {
-                    break;
+                norm2.normalizeUTF8(options, StringPiece(src, పరిధి_నిడివి), sink, edits, error_సంకేతం);
+                ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+                    ఆపు;
                 }
             }
-            spanCondition = USET_SPAN_NOT_CONTAINED;
+            పరిధి_Condition = USET_పరిధి_NOT_CONTAINED;
         }
-        src += spanLength;
-        length -= spanLength;
+        src += పరిధి_నిడివి;
+        length -= పరిధి_నిడివి;
     }
 }
 
 UnicodeString&
-FilteredNormalizer2::normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                                              const UnicodeString& second,
-                                              UErrorCode& errorCode) const {
-    return normalizeSecondAndAppend(first, second, true, errorCode);
+FilteredNormalizer2::normalize_రెండవ_And_Append(UnicodeString& first U_LIFETIME_BOUND,
+                                              స్థిరరాశి UnicodeString& రెండవ,
+                                              UError_సంకేతం& error_సంకేతం) స్థిరరాశి {
+    తిరిగి normalize_రెండవ_And_Append(first, రెండవ, నిజం, error_సంకేతం);
 }
 
 UnicodeString&
 FilteredNormalizer2::append(UnicodeString& first U_LIFETIME_BOUND,
-                            const UnicodeString& second,
-                            UErrorCode& errorCode) const {
-    return normalizeSecondAndAppend(first, second, false, errorCode);
+                            స్థిరరాశి UnicodeString& రెండవ,
+                            UError_సంకేతం& error_సంకేతం) స్థిరరాశి {
+    తిరిగి normalize_రెండవ_And_Append(first, రెండవ, అబద్ధం, error_సంకేతం);
 }
 
 UnicodeString&
-FilteredNormalizer2::normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                                              const UnicodeString& second,
+FilteredNormalizer2::normalize_రెండవ_And_Append(UnicodeString& first U_LIFETIME_BOUND,
+                                              స్థిరరాశి UnicodeString& రెండవ,
                                               UBool doNormalize,
-                                              UErrorCode& errorCode) const {
-    uprv_checkCanGetBuffer(first, errorCode);
-    uprv_checkCanGetBuffer(second, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return first;
+                                              UError_సంకేతం& error_సంకేతం) స్థిరరాశి {
+    uprv_check_Can_Get_బఫరు(first, error_సంకేతం);
+    uprv_check_Can_Get_బఫరు(రెండవ, error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి first;
     }
-    if(&first==&second) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return first;
+    ఒకవేళ(&first==&రెండవ) {
+        error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి first;
     }
-    if(first.isEmpty()) {
-        if(doNormalize) {
-            return normalize(second, first, errorCode);
-        } else {
-            return first=second;
+    ఒకవేళ(first.is_ఖాళీలు()) {
+        ఒకవేళ(doNormalize) {
+            తిరిగి normalize(రెండవ, first, error_సంకేతం);
+        } లేకపోతే {
+            తిరిగి first=రెండవ;
         }
     }
     // merge the in-filter suffix of the first string with the in-filter prefix of the second
-    int32_t prefixLimit=set.span(second, 0, USET_SPAN_SIMPLE);
-    if(prefixLimit!=0) {
-        UnicodeString prefix(second.tempSubString(0, prefixLimit));
-        int32_t suffixStart=set.spanBack(first, INT32_MAX, USET_SPAN_SIMPLE);
-        if(suffixStart==0) {
-            if(doNormalize) {
-                norm2.normalizeSecondAndAppend(first, prefix, errorCode);
-            } else {
-                norm2.append(first, prefix, errorCode);
+    int32_t ఉపసర్గ_హద్దు=సమితి.పరిధి(రెండవ, 0, USET_పరిధి_SIMPLE);
+    ఒకవేళ(ఉపసర్గ_హద్దు!=0) {
+        UnicodeString ఉపసర్గ(రెండవ.తాత్కాలిక_Sub_String(0, ఉపసర్గ_హద్దు));
+        int32_t suffix_ప్రారంభం=సమితి.పరిధి_వెనుక(first, INT32_MAX, USET_పరిధి_SIMPLE);
+        ఒకవేళ(suffix_ప్రారంభం==0) {
+            ఒకవేళ(doNormalize) {
+                norm2.normalize_రెండవ_And_Append(first, ఉపసర్గ, error_సంకేతం);
+            } లేకపోతే {
+                norm2.append(first, ఉపసర్గ, error_సంకేతం);
             }
-        } else {
-            UnicodeString middle(first, suffixStart, INT32_MAX);
-            if(doNormalize) {
-                norm2.normalizeSecondAndAppend(middle, prefix, errorCode);
-            } else {
-                norm2.append(middle, prefix, errorCode);
+        } లేకపోతే {
+            UnicodeString మధ్య(first, suffix_ప్రారంభం, INT32_MAX);
+            ఒకవేళ(doNormalize) {
+                norm2.normalize_రెండవ_And_Append(మధ్య, ఉపసర్గ, error_సంకేతం);
+            } లేకపోతే {
+                norm2.append(మధ్య, ఉపసర్గ, error_సంకేతం);
             }
-            first.replace(suffixStart, INT32_MAX, middle);
+            first.replace(suffix_ప్రారంభం, INT32_MAX, మధ్య);
         }
     }
-    if(prefixLimit<second.length()) {
-        UnicodeString rest(second.tempSubString(prefixLimit, INT32_MAX));
-        if(doNormalize) {
-            normalize(rest, first, USET_SPAN_NOT_CONTAINED, errorCode);
-        } else {
+    ఒకవేళ(ఉపసర్గ_హద్దు<రెండవ.length()) {
+        UnicodeString rest(రెండవ.తాత్కాలిక_Sub_String(ఉపసర్గ_హద్దు, INT32_MAX));
+        ఒకవేళ(doNormalize) {
+            normalize(rest, first, USET_పరిధి_NOT_CONTAINED, error_సంకేతం);
+        } లేకపోతే {
             first.append(rest);
         }
     }
-    return first;
+    తిరిగి first;
 }
 
 UBool
-FilteredNormalizer2::getDecomposition(UChar32 c, UnicodeString &decomposition) const {
-    return set.contains(c) && norm2.getDecomposition(c, decomposition);
+FilteredNormalizer2::getDecomposition(UChar32 c, UnicodeString &decomposition) స్థిరరాశి {
+    తిరిగి సమితి.కలిగియుంది(c) && norm2.getDecomposition(c, decomposition);
 }
 
 UBool
-FilteredNormalizer2::getRawDecomposition(UChar32 c, UnicodeString &decomposition) const {
-    return set.contains(c) && norm2.getRawDecomposition(c, decomposition);
+FilteredNormalizer2::getRawDecomposition(UChar32 c, UnicodeString &decomposition) స్థిరరాశి {
+    తిరిగి సమితి.కలిగియుంది(c) && norm2.getRawDecomposition(c, decomposition);
 }
 
 UChar32
-FilteredNormalizer2::composePair(UChar32 a, UChar32 b) const {
-    return (set.contains(a) && set.contains(b)) ? norm2.composePair(a, b) : U_SENTINEL;
+FilteredNormalizer2::composePair(UChar32 a, UChar32 b) స్థిరరాశి {
+    తిరిగి (సమితి.కలిగియుంది(a) && సమితి.కలిగియుంది(b)) ? norm2.composePair(a, b) : U_SENTINEL;
 }
 
 uint8_t
-FilteredNormalizer2::getCombiningClass(UChar32 c) const {
-    return set.contains(c) ? norm2.getCombiningClass(c) : 0;
+FilteredNormalizer2::getCombiningClass(UChar32 c) స్థిరరాశి {
+    తిరిగి సమితి.కలిగియుంది(c) ? norm2.getCombiningClass(c) : 0;
 }
 
 UBool
-FilteredNormalizer2::isNormalized(const UnicodeString &s, UErrorCode &errorCode) const {
-    uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return false;
+FilteredNormalizer2::isNormalized(స్థిరరాశి UnicodeString &s, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    uprv_check_Can_Get_బఫరు(s, error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి అబద్ధం;
     }
-    USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
-        int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            if( !norm2.isNormalized(s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode) ||
-                U_FAILURE(errorCode)
+    USet_పరిధి_Condition పరిధి_Condition=USET_పరిధి_SIMPLE;
+    కొరకు(int32_t prev_పరిధి_హద్దు=0; prev_పరిధి_హద్దు<s.length();) {
+        int32_t పరిధి_హద్దు=సమితి.పరిధి(s, prev_పరిధి_హద్దు, పరిధి_Condition);
+        ఒకవేళ(పరిధి_Condition==USET_పరిధి_NOT_CONTAINED) {
+            పరిధి_Condition=USET_పరిధి_SIMPLE;
+        } లేకపోతే {
+            ఒకవేళ( !norm2.isNormalized(s.తాత్కాలిక_Sub_String_Between(prev_పరిధి_హద్దు, పరిధి_హద్దు), error_సంకేతం) ||
+                U_FAILURE(error_సంకేతం)
             ) {
-                return false;
+                తిరిగి అబద్ధం;
             }
-            spanCondition=USET_SPAN_NOT_CONTAINED;
+            పరిధి_Condition=USET_పరిధి_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        prev_పరిధి_హద్దు=పరిధి_హద్దు;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 UBool
-FilteredNormalizer2::isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return false;
+FilteredNormalizer2::isNormalizedUTF8(StringPiece sp, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి అబద్ధం;
     }
-    const char *s = sp.data();
+    స్థిరరాశి అక్షరం *s = sp.దత్తాంశం();
     int32_t length = sp.length();
-    USetSpanCondition spanCondition = USET_SPAN_SIMPLE;
-    while (length > 0) {
-        int32_t spanLength = set.spanUTF8(s, length, spanCondition);
-        if (spanCondition == USET_SPAN_NOT_CONTAINED) {
-            spanCondition = USET_SPAN_SIMPLE;
-        } else {
-            if (!norm2.isNormalizedUTF8(StringPiece(s, spanLength), errorCode) ||
-                    U_FAILURE(errorCode)) {
-                return false;
+    USet_పరిధి_Condition పరిధి_Condition = USET_పరిధి_SIMPLE;
+    అయితే (length > 0) {
+        int32_t పరిధి_నిడివి = సమితి.పరిధి_UTF8(s, length, పరిధి_Condition);
+        ఒకవేళ (పరిధి_Condition == USET_పరిధి_NOT_CONTAINED) {
+            పరిధి_Condition = USET_పరిధి_SIMPLE;
+        } లేకపోతే {
+            ఒకవేళ (!norm2.isNormalizedUTF8(StringPiece(s, పరిధి_నిడివి), error_సంకేతం) ||
+                    U_FAILURE(error_సంకేతం)) {
+                తిరిగి అబద్ధం;
             }
-            spanCondition = USET_SPAN_NOT_CONTAINED;
+            పరిధి_Condition = USET_పరిధి_NOT_CONTAINED;
         }
-        s += spanLength;
-        length -= spanLength;
+        s += పరిధి_నిడివి;
+        length -= పరిధి_నిడివి;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-UNormalizationCheckResult
-FilteredNormalizer2::quickCheck(const UnicodeString &s, UErrorCode &errorCode) const {
-    uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return UNORM_MAYBE;
+UNormalization_Check_ఫలితం
+FilteredNormalizer2::శీఘ్ర_Check(స్థిరరాశి UnicodeString &s, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    uprv_check_Can_Get_బఫరు(s, error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి UNORM_MAYBE;
     }
-    UNormalizationCheckResult result=UNORM_YES;
-    USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
-        int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            UNormalizationCheckResult qcResult=
-                norm2.quickCheck(s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode);
-            if(U_FAILURE(errorCode) || qcResult==UNORM_NO) {
-                return qcResult;
-            } else if(qcResult==UNORM_MAYBE) {
-                result=qcResult;
+    UNormalization_Check_ఫలితం ఫలితం=UNORM_YES;
+    USet_పరిధి_Condition పరిధి_Condition=USET_పరిధి_SIMPLE;
+    కొరకు(int32_t prev_పరిధి_హద్దు=0; prev_పరిధి_హద్దు<s.length();) {
+        int32_t పరిధి_హద్దు=సమితి.పరిధి(s, prev_పరిధి_హద్దు, పరిధి_Condition);
+        ఒకవేళ(పరిధి_Condition==USET_పరిధి_NOT_CONTAINED) {
+            పరిధి_Condition=USET_పరిధి_SIMPLE;
+        } లేకపోతే {
+            UNormalization_Check_ఫలితం qc_ఫలితం=
+                norm2.శీఘ్ర_Check(s.తాత్కాలిక_Sub_String_Between(prev_పరిధి_హద్దు, పరిధి_హద్దు), error_సంకేతం);
+            ఒకవేళ(U_FAILURE(error_సంకేతం) || qc_ఫలితం==UNORM_NO) {
+                తిరిగి qc_ఫలితం;
+            } లేకపోతే ఒకవేళ(qc_ఫలితం==UNORM_MAYBE) {
+                ఫలితం=qc_ఫలితం;
             }
-            spanCondition=USET_SPAN_NOT_CONTAINED;
+            పరిధి_Condition=USET_పరిధి_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        prev_పరిధి_హద్దు=పరిధి_హద్దు;
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 int32_t
-FilteredNormalizer2::spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const {
-    uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return 0;
+FilteredNormalizer2::పరిధి_శీఘ్ర_Check_Yes(స్థిరరాశి UnicodeString &s, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    uprv_check_Can_Get_బఫరు(s, error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి 0;
     }
-    USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
-        int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            int32_t yesLimit=
-                prevSpanLimit+
-                norm2.spanQuickCheckYes(
-                    s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode);
-            if(U_FAILURE(errorCode) || yesLimit<spanLimit) {
-                return yesLimit;
+    USet_పరిధి_Condition పరిధి_Condition=USET_పరిధి_SIMPLE;
+    కొరకు(int32_t prev_పరిధి_హద్దు=0; prev_పరిధి_హద్దు<s.length();) {
+        int32_t పరిధి_హద్దు=సమితి.పరిధి(s, prev_పరిధి_హద్దు, పరిధి_Condition);
+        ఒకవేళ(పరిధి_Condition==USET_పరిధి_NOT_CONTAINED) {
+            పరిధి_Condition=USET_పరిధి_SIMPLE;
+        } లేకపోతే {
+            int32_t yes_హద్దు=
+                prev_పరిధి_హద్దు+
+                norm2.పరిధి_శీఘ్ర_Check_Yes(
+                    s.తాత్కాలిక_Sub_String_Between(prev_పరిధి_హద్దు, పరిధి_హద్దు), error_సంకేతం);
+            ఒకవేళ(U_FAILURE(error_సంకేతం) || yes_హద్దు<పరిధి_హద్దు) {
+                తిరిగి yes_హద్దు;
             }
-            spanCondition=USET_SPAN_NOT_CONTAINED;
+            పరిధి_Condition=USET_పరిధి_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        prev_పరిధి_హద్దు=పరిధి_హద్దు;
     }
-    return s.length();
+    తిరిగి s.length();
 }
 
 UBool
-FilteredNormalizer2::hasBoundaryBefore(UChar32 c) const {
-    return !set.contains(c) || norm2.hasBoundaryBefore(c);
+FilteredNormalizer2::hasBoundaryBefore(UChar32 c) స్థిరరాశి {
+    తిరిగి !సమితి.కలిగియుంది(c) || norm2.hasBoundaryBefore(c);
 }
 
 UBool
-FilteredNormalizer2::hasBoundaryAfter(UChar32 c) const {
-    return !set.contains(c) || norm2.hasBoundaryAfter(c);
+FilteredNormalizer2::hasBoundaryAfter(UChar32 c) స్థిరరాశి {
+    తిరిగి !సమితి.కలిగియుంది(c) || norm2.hasBoundaryAfter(c);
 }
 
 UBool
-FilteredNormalizer2::isInert(UChar32 c) const {
-    return !set.contains(c) || norm2.isInert(c);
+FilteredNormalizer2::isInert(UChar32 c) స్థిరరాశి {
+    తిరిగి !సమితి.కలిగియుంది(c) || norm2.isInert(c);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 // C API ------------------------------------------------------------------- ***
 
 U_NAMESPACE_USE
 
 U_CAPI UNormalizer2* U_EXPORT2
-unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
-                    const USet* filterSet U_LIFETIME_BOUND,
-                    UErrorCode* pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+unorm2_openFiltered(స్థిరరాశి UNormalizer2* norm2 U_LIFETIME_BOUND,
+                    స్థిరరాశి USet* filter_సమితి U_LIFETIME_BOUND,
+                    UError_సంకేతం* p_Error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(filterSet==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ(filter_సమితి==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    Normalizer2 *fn2=new FilteredNormalizer2(*(Normalizer2 *)norm2,
-                                             *UnicodeSet::fromUSet(filterSet));
-    if(fn2==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
+    Normalizer2 *fn2=కొత్త FilteredNormalizer2(*(Normalizer2 *)norm2,
+                                             *Unicode_సమితి::fromUSet(filter_సమితి));
+    ఒకవేళ(fn2==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
-    return (UNormalizer2 *)fn2;
+    తిరిగి (UNormalizer2 *)fn2;
 }
 
-#endif  // !UCONFIG_NO_NORMALIZATION
+#అయితే_ముగింపు  // !UCONFIG_NO_NORMALIZATION

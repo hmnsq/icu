@@ -22,30 +22,30 @@
  *
  *----------------------------------------------------------------------------------*/
 
-#ifndef __UMAPFILE_H__
-#define __UMAPFILE_H__
+#నిర్వచితం_కాకపోతే __UMAPFILE_H__
+#నిర్వచించు __UMAPFILE_H__
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "putilimp.h"
+#అన్తర్భావ "unicode/putil.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "putilimp.h"
 
-U_CAPI  UBool U_EXPORT2 uprv_mapFile(UDataMemory *pdm, const char *path, UErrorCode *status);
-U_CFUNC void  uprv_unmapFile(UDataMemory *pData);
+U_CAPI  UBool U_EXPORT2 uprv_mapFile(UData_జ్ఞాపకం *pdm, స్థిరరాశి అక్షరం *మార్గం, UError_సంకేతం *స్థితి_2);
+U_CFUNC శూన్య  uprv_unmapFile(UData_జ్ఞాపకం *p_దత్తాంశం);
 
 /* MAP_NONE: no memory mapping, no file access at all */
-#define MAP_NONE        0
-#define MAP_WIN32       1
-#define MAP_POSIX       2
-#define MAP_STDIO       3
+#నిర్వచించు MAP_NONE        0
+#నిర్వచించు MAP_WIN32       1
+#నిర్వచించు MAP_POSIX       2
+#నిర్వచించు MAP_STDIO       3
 
-#if UCONFIG_NO_FILE_IO
+#ఒకవేళ UCONFIG_NO_FILE_IO
 #   define MAP_IMPLEMENTATION MAP_NONE
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#లేదావేళ U_PLATFORM_ఉపయోగిస్తుంది_ONLY_WIN32_API
 #   define MAP_IMPLEMENTATION MAP_WIN32
-#elif U_HAVE_MMAP || U_PLATFORM == U_PF_OS390
+#లేదావేళ U_HAVE_MMAP || U_PLATFORM == U_PF_OS390
 #   define MAP_IMPLEMENTATION MAP_POSIX
-#else /* unknown platform, no memory map implementation: use stdio.h and uprv_malloc() instead */
+#లేకపోతే /* unknown platform, no memory map implementation: use stdio.h and uprv_malloc() instead */
 #   define MAP_IMPLEMENTATION MAP_STDIO
-#endif
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు

@@ -20,684 +20,684 @@
 *   UTF-8 converter, with a branch for converting supplementary code points.
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "uassert.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/utf.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ustr_imp.h"
 
 /* Prototypes --------------------------------------------------------------- */
 
 /* Keep these here to make finicky compilers happy */
 
-U_CFUNC void ucnv_fromUnicode_UTF8(UConverterFromUnicodeArgs *args,
-                                           UErrorCode *err);
-U_CFUNC void ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverterFromUnicodeArgs *args,
-                                                        UErrorCode *err);
+U_CFUNC శూన్య ucnv_fromUnicode_UTF8(UConverter_From_Unicode_వాదనలు *వాదనలు_2,
+                                           UError_సంకేతం *err);
+U_CFUNC శూన్య ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverter_From_Unicode_వాదనలు *వాదనలు_2,
+                                                        UError_సంకేతం *err);
 
 
 /* UTF-8 -------------------------------------------------------------------- */
 
-#define MAXIMUM_UCS2            0x0000FFFF
+#నిర్వచించు గరిష్ఠ_UCS2            0x0000FFFF
 
-static const uint32_t offsetsFromUTF8[5] = {0,
+స్థిర స్థిరరాశి uint32_t offsetsFromUTF8[5] = {0,
   static_cast<uint32_t>(0x00000000), static_cast<uint32_t>(0x00003080),
   static_cast<uint32_t>(0x000E2080), static_cast<uint32_t>(0x03C82080)
 };
 
-static UBool hasCESU8Data(const UConverter *cnv)
+స్థిర UBool has_CESU8_దత్తాంశం(స్థిరరాశి UConverter *cnv)
 {
-#if UCONFIG_ONLY_HTML_CONVERSION
-    return false;
-#else
-    return cnv->sharedData == &_CESU8Data;
-#endif
+#ఒకవేళ UCONFIG_ONLY_HTML_CONVERSION
+    తిరిగి అబద్ధం;
+#లేకపోతే
+    తిరిగి cnv->shared_దత్తాంశం == &CESU8_దత్తాంశం;
+#అయితే_ముగింపు
 }
 U_CDECL_BEGIN
-static void  U_CALLCONV ucnv_toUnicode_UTF8 (UConverterToUnicodeArgs * args,
-                                  UErrorCode * err)
+స్థిర శూన్య  U_CALLCONV ucnv_గమ్యం_Unicode_UTF8 (UConverter_గమ్యం_Unicode_వాదనలు * వాదనలు_2,
+                                  UError_సంకేతం * err)
 {
-    UConverter *cnv = args->converter;
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = cnv->toUBytes;
-    UBool isCESU8 = hasCESU8Data(cnv);
+    UConverter *cnv = వాదనలు_2->converter;
+    స్థిరరాశి గుర్తులేని అక్షరం *my_ఆధారం = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం;
+    char16_t *my_లక్ష్యం = వాదనలు_2->లక్ష్యం;
+    స్థిరరాశి గుర్తులేని అక్షరం *ఆధారం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు = వాదనలు_2->లక్ష్యం_హద్దు;
+    గుర్తులేని అక్షరం *గమ్యం_UBytes = cnv->గమ్యం_UBytes;
+    UBool isCESU8 = has_CESU8_దత్తాంశం(cnv);
     uint32_t ch, ch2 = 0;
-    int32_t i, inBytes;
+    int32_t i, లోపల_బైట్లు;
 
     /* Restore size of current sequence */
-    if (cnv->toULength > 0 && myTarget < targetLimit)
+    ఒకవేళ (cnv->గమ్యం_ULength > 0 && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        inBytes = cnv->mode;            /* restore # of bytes to consume */
-        i = cnv->toULength;             /* restore # of bytes consumed */
-        cnv->toULength = 0;
+        లోపల_బైట్లు = cnv->బహుళకం;            /* restore # of bytes to consume */
+        i = cnv->గమ్యం_ULength;             /* restore # of bytes consumed */
+        cnv->గమ్యం_ULength = 0;
 
-        ch = cnv->toUnicodeStatus;/*Stores the previously calculated ch from a previous call*/
-        cnv->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = cnv->గమ్యం_Unicode_స్థితి;/*Stores the previously calculated ch from a previous call*/
+        cnv->గమ్యం_Unicode_స్థితి = 0;
+        వెళ్ళు morebytes;
     }
 
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        ch = *(mySource++);
-        if (U8_IS_SINGLE(ch))        /* Simple case */
+        ch = *(my_ఆధారం++);
+        ఒకవేళ (U8_IS_SINGLE(ch))        /* Simple case */
         {
-            *(myTarget++) = (char16_t) ch;
+            *(my_లక్ష్యం++) = (char16_t) ch;
         }
-        else
+        లేకపోతే
         {
             /* store the first char */
-            toUBytes[0] = (char)ch;
-            inBytes = U8_COUNT_BYTES_NON_ASCII(ch); /* lookup current sequence length */
+            గమ్యం_UBytes[0] = (అక్షరం)ch;
+            లోపల_బైట్లు = U8_లెక్క_బైట్లు_NON_ASCII(ch); /* lookup current sequence length */
             i = 1;
 
 morebytes:
-            while (i < inBytes)
+            అయితే (i < లోపల_బైట్లు)
             {
-                if (mySource < sourceLimit)
+                ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు)
                 {
-                    toUBytes[i] = (char) (ch2 = *mySource);
-                    if (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, inBytes) &&
+                    గమ్యం_UBytes[i] = (అక్షరం) (ch2 = *my_ఆధారం);
+                    ఒకవేళ (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, లోపల_బైట్లు) &&
                             !(isCESU8 && i == 1 && ch == 0xed && U8_IS_TRAIL(ch2)))
                     {
-                        break; /* i < inBytes */
+                        ఆపు; /* i < inBytes */
                     }
                     ch = (ch << 6) + ch2;
-                    ++mySource;
+                    ++my_ఆధారం;
                     i++;
                 }
-                else
+                లేకపోతే
                 {
                     /* stores a partially calculated target*/
-                    cnv->toUnicodeStatus = ch;
-                    cnv->mode = inBytes;
-                    cnv->toULength = (int8_t) i;
-                    goto donefornow;
+                    cnv->గమ్యం_Unicode_స్థితి = ch;
+                    cnv->బహుళకం = లోపల_బైట్లు;
+                    cnv->గమ్యం_ULength = (int8_t) i;
+                    వెళ్ళు donefornow;
                 }
             }
 
             // In CESU-8, only surrogates, not supplementary code points, are encoded directly.
-            if (i == inBytes && (!isCESU8 || i <= 3))
+            ఒకవేళ (i == లోపల_బైట్లు && (!isCESU8 || i <= 3))
             {
                 /* Remove the accumulated high bits */
-                ch -= offsetsFromUTF8[inBytes];
+                ch -= offsetsFromUTF8[లోపల_బైట్లు];
 
                 /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-                if (ch <= MAXIMUM_UCS2) 
+                ఒకవేళ (ch <= గరిష్ఠ_UCS2) 
                 {
                     /* fits in 16 bits */
-                    *(myTarget++) = (char16_t) ch;
+                    *(my_లక్ష్యం++) = (char16_t) ch;
                 }
-                else
+                లేకపోతే
                 {
                     /* write out the surrogates */
-                    *(myTarget++) = U16_LEAD(ch);
+                    *(my_లక్ష్యం++) = U16_LEAD(ch);
                     ch = U16_TRAIL(ch);
-                    if (myTarget < targetLimit)
+                    ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు)
                     {
-                        *(myTarget++) = (char16_t)ch;
+                        *(my_లక్ష్యం++) = (char16_t)ch;
                     }
-                    else
+                    లేకపోతే
                     {
                         /* Put in overflow buffer (not handled here) */
-                        cnv->UCharErrorBuffer[0] = (char16_t) ch;
-                        cnv->UCharErrorBufferLength = 1;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                        cnv->UChar_Error_బఫరు[0] = (char16_t) ch;
+                        cnv->UChar_Error_బఫరు_నిడివి = 1;
+                        *err = U_బఫరు_అధికప్రవాహం_ERROR;
+                        ఆపు;
                     }
                 }
             }
-            else
+            లేకపోతే
             {
-                cnv->toULength = (int8_t)i;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                cnv->గమ్యం_ULength = (int8_t)i;
+                *err = U_ILLEGAL_CHAR_దొరికింది;
+                ఆపు;
             }
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err))
     {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
+    వాదనలు_2->లక్ష్యం = my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *) my_ఆధారం;
 }
 
-static void  U_CALLCONV ucnv_toUnicode_UTF8_OFFSETS_LOGIC (UConverterToUnicodeArgs * args,
-                                                UErrorCode * err)
+స్థిర శూన్య  U_CALLCONV ucnv_గమ్యం_Unicode_UTF8_OFFSETS_LOGIC (UConverter_గమ్యం_Unicode_వాదనలు * వాదనలు_2,
+                                                UError_సంకేతం * err)
 {
-    UConverter *cnv = args->converter;
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    int32_t *myOffsets = args->offsets;
-    int32_t offsetNum = 0;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = cnv->toUBytes;
-    UBool isCESU8 = hasCESU8Data(cnv);
+    UConverter *cnv = వాదనలు_2->converter;
+    స్థిరరాశి గుర్తులేని అక్షరం *my_ఆధారం = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం;
+    char16_t *my_లక్ష్యం = వాదనలు_2->లక్ష్యం;
+    int32_t *myOffsets = వాదనలు_2->offsets;
+    int32_t స్థానభ్రంశం_అంకె = 0;
+    స్థిరరాశి గుర్తులేని అక్షరం *ఆధారం_హద్దు = (గుర్తులేని అక్షరం *) వాదనలు_2->ఆధారం_హద్దు;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు = వాదనలు_2->లక్ష్యం_హద్దు;
+    గుర్తులేని అక్షరం *గమ్యం_UBytes = cnv->గమ్యం_UBytes;
+    UBool isCESU8 = has_CESU8_దత్తాంశం(cnv);
     uint32_t ch, ch2 = 0;
-    int32_t i, inBytes;
+    int32_t i, లోపల_బైట్లు;
 
     /* Restore size of current sequence */
-    if (cnv->toULength > 0 && myTarget < targetLimit)
+    ఒకవేళ (cnv->గమ్యం_ULength > 0 && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        inBytes = cnv->mode;            /* restore # of bytes to consume */
-        i = cnv->toULength;             /* restore # of bytes consumed */
-        cnv->toULength = 0;
+        లోపల_బైట్లు = cnv->బహుళకం;            /* restore # of bytes to consume */
+        i = cnv->గమ్యం_ULength;             /* restore # of bytes consumed */
+        cnv->గమ్యం_ULength = 0;
 
-        ch = cnv->toUnicodeStatus;/*Stores the previously calculated ch from a previous call*/
-        cnv->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = cnv->గమ్యం_Unicode_స్థితి;/*Stores the previously calculated ch from a previous call*/
+        cnv->గమ్యం_Unicode_స్థితి = 0;
+        వెళ్ళు morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        ch = *(mySource++);
-        if (U8_IS_SINGLE(ch))        /* Simple case */
+        ch = *(my_ఆధారం++);
+        ఒకవేళ (U8_IS_SINGLE(ch))        /* Simple case */
         {
-            *(myTarget++) = (char16_t) ch;
-            *(myOffsets++) = offsetNum++;
+            *(my_లక్ష్యం++) = (char16_t) ch;
+            *(myOffsets++) = స్థానభ్రంశం_అంకె++;
         }
-        else
+        లేకపోతే
         {
-            toUBytes[0] = (char)ch;
-            inBytes = U8_COUNT_BYTES_NON_ASCII(ch);
+            గమ్యం_UBytes[0] = (అక్షరం)ch;
+            లోపల_బైట్లు = U8_లెక్క_బైట్లు_NON_ASCII(ch);
             i = 1;
 
 morebytes:
-            while (i < inBytes)
+            అయితే (i < లోపల_బైట్లు)
             {
-                if (mySource < sourceLimit)
+                ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు)
                 {
-                    toUBytes[i] = (char) (ch2 = *mySource);
-                    if (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, inBytes) &&
+                    గమ్యం_UBytes[i] = (అక్షరం) (ch2 = *my_ఆధారం);
+                    ఒకవేళ (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, లోపల_బైట్లు) &&
                             !(isCESU8 && i == 1 && ch == 0xed && U8_IS_TRAIL(ch2)))
                     {
-                        break; /* i < inBytes */
+                        ఆపు; /* i < inBytes */
                     }
                     ch = (ch << 6) + ch2;
-                    ++mySource;
+                    ++my_ఆధారం;
                     i++;
                 }
-                else
+                లేకపోతే
                 {
-                    cnv->toUnicodeStatus = ch;
-                    cnv->mode = inBytes;
-                    cnv->toULength = (int8_t)i;
-                    goto donefornow;
+                    cnv->గమ్యం_Unicode_స్థితి = ch;
+                    cnv->బహుళకం = లోపల_బైట్లు;
+                    cnv->గమ్యం_ULength = (int8_t)i;
+                    వెళ్ళు donefornow;
                 }
             }
 
             // In CESU-8, only surrogates, not supplementary code points, are encoded directly.
-            if (i == inBytes && (!isCESU8 || i <= 3))
+            ఒకవేళ (i == లోపల_బైట్లు && (!isCESU8 || i <= 3))
             {
                 /* Remove the accumulated high bits */
-                ch -= offsetsFromUTF8[inBytes];
+                ch -= offsetsFromUTF8[లోపల_బైట్లు];
 
                 /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-                if (ch <= MAXIMUM_UCS2) 
+                ఒకవేళ (ch <= గరిష్ఠ_UCS2) 
                 {
                     /* fits in 16 bits */
-                    *(myTarget++) = (char16_t) ch;
-                    *(myOffsets++) = offsetNum;
+                    *(my_లక్ష్యం++) = (char16_t) ch;
+                    *(myOffsets++) = స్థానభ్రంశం_అంకె;
                 }
-                else
+                లేకపోతే
                 {
                     /* write out the surrogates */
-                    *(myTarget++) = U16_LEAD(ch);
-                    *(myOffsets++) = offsetNum;
+                    *(my_లక్ష్యం++) = U16_LEAD(ch);
+                    *(myOffsets++) = స్థానభ్రంశం_అంకె;
                     ch = U16_TRAIL(ch);
-                    if (myTarget < targetLimit)
+                    ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు)
                     {
-                        *(myTarget++) = (char16_t)ch;
-                        *(myOffsets++) = offsetNum;
+                        *(my_లక్ష్యం++) = (char16_t)ch;
+                        *(myOffsets++) = స్థానభ్రంశం_అంకె;
                     }
-                    else
+                    లేకపోతే
                     {
-                        cnv->UCharErrorBuffer[0] = (char16_t) ch;
-                        cnv->UCharErrorBufferLength = 1;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                        cnv->UChar_Error_బఫరు[0] = (char16_t) ch;
+                        cnv->UChar_Error_బఫరు_నిడివి = 1;
+                        *err = U_బఫరు_అధికప్రవాహం_ERROR;
                     }
                 }
-                offsetNum += i;
+                స్థానభ్రంశం_అంకె += i;
             }
-            else
+            లేకపోతే
             {
-                cnv->toULength = (int8_t)i;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                cnv->గమ్యం_ULength = (int8_t)i;
+                *err = U_ILLEGAL_CHAR_దొరికింది;
+                ఆపు;
             }
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err))
     {   /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
-    args->offsets = myOffsets;
+    వాదనలు_2->లక్ష్యం = my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *) my_ఆధారం;
+    వాదనలు_2->offsets = myOffsets;
 }
-U_CDECL_END
+U_CDECL_చివర
 
-U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8 (UConverterFromUnicodeArgs * args,
-                                    UErrorCode * err)
+U_CFUNC శూన్య  U_CALLCONV ucnv_fromUnicode_UTF8 (UConverter_From_Unicode_వాదనలు * వాదనలు_2,
+                                    UError_సంకేతం * err)
 {
-    UConverter *cnv = args->converter;
-    const char16_t *mySource = args->source;
-    const char16_t *sourceLimit = args->sourceLimit;
-    uint8_t *myTarget = (uint8_t *) args->target;
-    const uint8_t *targetLimit = (uint8_t *) args->targetLimit;
-    uint8_t *tempPtr;
+    UConverter *cnv = వాదనలు_2->converter;
+    స్థిరరాశి char16_t *my_ఆధారం = వాదనలు_2->ఆధారం;
+    స్థిరరాశి char16_t *ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+    uint8_t *my_లక్ష్యం = (uint8_t *) వాదనలు_2->లక్ష్యం;
+    స్థిరరాశి uint8_t *లక్ష్యం_హద్దు = (uint8_t *) వాదనలు_2->లక్ష్యం_హద్దు;
+    uint8_t *తాత్కాలిక_Ptr;
     UChar32 ch;
-    uint8_t tempBuf[4];
-    int32_t indexToWrite;
-    UBool isNotCESU8 = !hasCESU8Data(cnv);
+    uint8_t తాత్కాలిక_Buf[4];
+    int32_t సూచీ_గమ్యం_Write;
+    UBool isNotCESU8 = !has_CESU8_దత్తాంశం(cnv);
 
-    if (cnv->fromUChar32 && myTarget < targetLimit)
+    ఒకవేళ (cnv->fromUChar32 && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
         ch = cnv->fromUChar32;
         cnv->fromUChar32 = 0;
-        goto lowsurrogate;
+        వెళ్ళు lowsurrogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        ch = *(mySource++);
+        ch = *(my_ఆధారం++);
 
-        if (ch < 0x80)        /* Single byte */
+        ఒకవేళ (ch < 0x80)        /* Single byte */
         {
-            *(myTarget++) = (uint8_t) ch;
+            *(my_లక్ష్యం++) = (uint8_t) ch;
         }
-        else if (ch < 0x800)  /* Double byte */
+        లేకపోతే ఒకవేళ (ch < 0x800)  /* Double byte */
         {
-            *(myTarget++) = (uint8_t) ((ch >> 6) | 0xc0);
-            if (myTarget < targetLimit)
+            *(my_లక్ష్యం++) = (uint8_t) ((ch >> 6) | 0xc0);
+            ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు)
             {
-                *(myTarget++) = (uint8_t) ((ch & 0x3f) | 0x80);
+                *(my_లక్ష్యం++) = (uint8_t) ((ch & 0x3f) | 0x80);
             }
-            else
+            లేకపోతే
             {
-                cnv->charErrorBuffer[0] = (uint8_t) ((ch & 0x3f) | 0x80);
-                cnv->charErrorBufferLength = 1;
-                *err = U_BUFFER_OVERFLOW_ERROR;
+                cnv->char_Error_బఫరు[0] = (uint8_t) ((ch & 0x3f) | 0x80);
+                cnv->char_Error_బఫరు_నిడివి = 1;
+                *err = U_బఫరు_అధికప్రవాహం_ERROR;
             }
         }
-        else {
+        లేకపోతే {
             /* Check for surrogates */
-            if(U16_IS_SURROGATE(ch) && isNotCESU8) {
+            ఒకవేళ(U16_IS_SURROGATE(ch) && isNotCESU8) {
 lowsurrogate:
-                if (mySource < sourceLimit) {
+                ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు) {
                     /* test both code units */
-                    if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*mySource)) {
+                    ఒకవేళ(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*my_ఆధారం)) {
                         /* convert and consume this supplementary code point */
-                        ch=U16_GET_SUPPLEMENTARY(ch, *mySource);
-                        ++mySource;
+                        ch=U16_GET_SUPPLEMENTARY(ch, *my_ఆధారం);
+                        ++my_ఆధారం;
                         /* exit this condition tree */
                     }
-                    else {
+                    లేకపోతే {
                         /* this is an unpaired trail or lead code unit */
                         /* callback(illegal) */
                         cnv->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
                     }
                 }
-                else {
+                లేకపోతే {
                     /* no more input */
                     cnv->fromUChar32 = ch;
-                    break;
+                    ఆపు;
                 }
             }
 
             /* Do we write the buffer directly for speed,
             or do we have to be careful about target buffer space? */
-            tempPtr = (((targetLimit - myTarget) >= 4) ? myTarget : tempBuf);
+            తాత్కాలిక_Ptr = (((లక్ష్యం_హద్దు - my_లక్ష్యం) >= 4) ? my_లక్ష్యం : తాత్కాలిక_Buf);
 
-            if (ch <= MAXIMUM_UCS2) {
-                indexToWrite = 2;
-                tempPtr[0] = (uint8_t) ((ch >> 12) | 0xe0);
+            ఒకవేళ (ch <= గరిష్ఠ_UCS2) {
+                సూచీ_గమ్యం_Write = 2;
+                తాత్కాలిక_Ptr[0] = (uint8_t) ((ch >> 12) | 0xe0);
             }
-            else {
-                indexToWrite = 3;
-                tempPtr[0] = (uint8_t) ((ch >> 18) | 0xf0);
-                tempPtr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
+            లేకపోతే {
+                సూచీ_గమ్యం_Write = 3;
+                తాత్కాలిక_Ptr[0] = (uint8_t) ((ch >> 18) | 0xf0);
+                తాత్కాలిక_Ptr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
             }
-            tempPtr[indexToWrite-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
-            tempPtr[indexToWrite] = (uint8_t) ((ch & 0x3f) | 0x80);
+            తాత్కాలిక_Ptr[సూచీ_గమ్యం_Write-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
+            తాత్కాలిక_Ptr[సూచీ_గమ్యం_Write] = (uint8_t) ((ch & 0x3f) | 0x80);
 
-            if (tempPtr == myTarget) {
+            ఒకవేళ (తాత్కాలిక_Ptr == my_లక్ష్యం) {
                 /* There was enough space to write the codepoint directly. */
-                myTarget += (indexToWrite + 1);
+                my_లక్ష్యం += (సూచీ_గమ్యం_Write + 1);
             }
-            else {
+            లేకపోతే {
                 /* We might run out of room soon. Write it slowly. */
-                for (; tempPtr <= (tempBuf + indexToWrite); tempPtr++) {
-                    if (myTarget < targetLimit) {
-                        *(myTarget++) = *tempPtr;
+                కొరకు (; తాత్కాలిక_Ptr <= (తాత్కాలిక_Buf + సూచీ_గమ్యం_Write); తాత్కాలిక_Ptr++) {
+                    ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు) {
+                        *(my_లక్ష్యం++) = *తాత్కాలిక_Ptr;
                     }
-                    else {
-                        cnv->charErrorBuffer[cnv->charErrorBufferLength++] = *tempPtr;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                    లేకపోతే {
+                        cnv->char_Error_బఫరు[cnv->char_Error_బఫరు_నిడివి++] = *తాత్కాలిక_Ptr;
+                        *err = U_బఫరు_అధికప్రవాహం_ERROR;
                     }
                 }
             }
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err))
     {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
+    వాదనలు_2->లక్ష్యం = (అక్షరం *) my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = my_ఆధారం;
 }
 
-U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverterFromUnicodeArgs * args,
-                                                  UErrorCode * err)
+U_CFUNC శూన్య  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverter_From_Unicode_వాదనలు * వాదనలు_2,
+                                                  UError_సంకేతం * err)
 {
-    UConverter *cnv = args->converter;
-    const char16_t *mySource = args->source;
-    int32_t *myOffsets = args->offsets;
-    const char16_t *sourceLimit = args->sourceLimit;
-    uint8_t *myTarget = (uint8_t *) args->target;
-    const uint8_t *targetLimit = (uint8_t *) args->targetLimit;
-    uint8_t *tempPtr;
+    UConverter *cnv = వాదనలు_2->converter;
+    స్థిరరాశి char16_t *my_ఆధారం = వాదనలు_2->ఆధారం;
+    int32_t *myOffsets = వాదనలు_2->offsets;
+    స్థిరరాశి char16_t *ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+    uint8_t *my_లక్ష్యం = (uint8_t *) వాదనలు_2->లక్ష్యం;
+    స్థిరరాశి uint8_t *లక్ష్యం_హద్దు = (uint8_t *) వాదనలు_2->లక్ష్యం_హద్దు;
+    uint8_t *తాత్కాలిక_Ptr;
     UChar32 ch;
-    int32_t offsetNum, nextSourceIndex;
-    int32_t indexToWrite;
-    uint8_t tempBuf[4];
-    UBool isNotCESU8 = !hasCESU8Data(cnv);
+    int32_t స్థానభ్రంశం_అంకె, తదుపరి_ఆధారం_సూచీ;
+    int32_t సూచీ_గమ్యం_Write;
+    uint8_t తాత్కాలిక_Buf[4];
+    UBool isNotCESU8 = !has_CESU8_దత్తాంశం(cnv);
 
-    if (cnv->fromUChar32 && myTarget < targetLimit)
+    ఒకవేళ (cnv->fromUChar32 && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
         ch = cnv->fromUChar32;
         cnv->fromUChar32 = 0;
-        offsetNum = -1;
-        nextSourceIndex = 0;
-        goto lowsurrogate;
-    } else {
-        offsetNum = 0;
+        స్థానభ్రంశం_అంకె = -1;
+        తదుపరి_ఆధారం_సూచీ = 0;
+        వెళ్ళు lowsurrogate;
+    } లేకపోతే {
+        స్థానభ్రంశం_అంకె = 0;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    అయితే (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం < లక్ష్యం_హద్దు)
     {
-        ch = *(mySource++);
+        ch = *(my_ఆధారం++);
 
-        if (ch < 0x80)        /* Single byte */
+        ఒకవేళ (ch < 0x80)        /* Single byte */
         {
-            *(myOffsets++) = offsetNum++;
-            *(myTarget++) = (char) ch;
+            *(myOffsets++) = స్థానభ్రంశం_అంకె++;
+            *(my_లక్ష్యం++) = (అక్షరం) ch;
         }
-        else if (ch < 0x800)  /* Double byte */
+        లేకపోతే ఒకవేళ (ch < 0x800)  /* Double byte */
         {
-            *(myOffsets++) = offsetNum;
-            *(myTarget++) = (uint8_t) ((ch >> 6) | 0xc0);
-            if (myTarget < targetLimit)
+            *(myOffsets++) = స్థానభ్రంశం_అంకె;
+            *(my_లక్ష్యం++) = (uint8_t) ((ch >> 6) | 0xc0);
+            ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు)
             {
-                *(myOffsets++) = offsetNum++;
-                *(myTarget++) = (uint8_t) ((ch & 0x3f) | 0x80);
+                *(myOffsets++) = స్థానభ్రంశం_అంకె++;
+                *(my_లక్ష్యం++) = (uint8_t) ((ch & 0x3f) | 0x80);
             }
-            else
+            లేకపోతే
             {
-                cnv->charErrorBuffer[0] = (uint8_t) ((ch & 0x3f) | 0x80);
-                cnv->charErrorBufferLength = 1;
-                *err = U_BUFFER_OVERFLOW_ERROR;
+                cnv->char_Error_బఫరు[0] = (uint8_t) ((ch & 0x3f) | 0x80);
+                cnv->char_Error_బఫరు_నిడివి = 1;
+                *err = U_బఫరు_అధికప్రవాహం_ERROR;
             }
         }
-        else
+        లేకపోతే
         /* Check for surrogates */
         {
-            nextSourceIndex = offsetNum + 1;
+            తదుపరి_ఆధారం_సూచీ = స్థానభ్రంశం_అంకె + 1;
 
-            if(U16_IS_SURROGATE(ch) && isNotCESU8) {
+            ఒకవేళ(U16_IS_SURROGATE(ch) && isNotCESU8) {
 lowsurrogate:
-                if (mySource < sourceLimit) {
+                ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు) {
                     /* test both code units */
-                    if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*mySource)) {
+                    ఒకవేళ(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*my_ఆధారం)) {
                         /* convert and consume this supplementary code point */
-                        ch=U16_GET_SUPPLEMENTARY(ch, *mySource);
-                        ++mySource;
-                        ++nextSourceIndex;
+                        ch=U16_GET_SUPPLEMENTARY(ch, *my_ఆధారం);
+                        ++my_ఆధారం;
+                        ++తదుపరి_ఆధారం_సూచీ;
                         /* exit this condition tree */
                     }
-                    else {
+                    లేకపోతే {
                         /* this is an unpaired trail or lead code unit */
                         /* callback(illegal) */
                         cnv->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        *err = U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
                     }
                 }
-                else {
+                లేకపోతే {
                     /* no more input */
                     cnv->fromUChar32 = ch;
-                    break;
+                    ఆపు;
                 }
             }
 
             /* Do we write the buffer directly for speed,
             or do we have to be careful about target buffer space? */
-            tempPtr = (((targetLimit - myTarget) >= 4) ? myTarget : tempBuf);
+            తాత్కాలిక_Ptr = (((లక్ష్యం_హద్దు - my_లక్ష్యం) >= 4) ? my_లక్ష్యం : తాత్కాలిక_Buf);
 
-            if (ch <= MAXIMUM_UCS2) {
-                indexToWrite = 2;
-                tempPtr[0] = (uint8_t) ((ch >> 12) | 0xe0);
+            ఒకవేళ (ch <= గరిష్ఠ_UCS2) {
+                సూచీ_గమ్యం_Write = 2;
+                తాత్కాలిక_Ptr[0] = (uint8_t) ((ch >> 12) | 0xe0);
             }
-            else {
-                indexToWrite = 3;
-                tempPtr[0] = (uint8_t) ((ch >> 18) | 0xf0);
-                tempPtr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
+            లేకపోతే {
+                సూచీ_గమ్యం_Write = 3;
+                తాత్కాలిక_Ptr[0] = (uint8_t) ((ch >> 18) | 0xf0);
+                తాత్కాలిక_Ptr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
             }
-            tempPtr[indexToWrite-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
-            tempPtr[indexToWrite] = (uint8_t) ((ch & 0x3f) | 0x80);
+            తాత్కాలిక_Ptr[సూచీ_గమ్యం_Write-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
+            తాత్కాలిక_Ptr[సూచీ_గమ్యం_Write] = (uint8_t) ((ch & 0x3f) | 0x80);
 
-            if (tempPtr == myTarget) {
+            ఒకవేళ (తాత్కాలిక_Ptr == my_లక్ష్యం) {
                 /* There was enough space to write the codepoint directly. */
-                myTarget += (indexToWrite + 1);
-                myOffsets[0] = offsetNum;
-                myOffsets[1] = offsetNum;
-                myOffsets[2] = offsetNum;
-                if (indexToWrite >= 3) {
-                    myOffsets[3] = offsetNum;
+                my_లక్ష్యం += (సూచీ_గమ్యం_Write + 1);
+                myOffsets[0] = స్థానభ్రంశం_అంకె;
+                myOffsets[1] = స్థానభ్రంశం_అంకె;
+                myOffsets[2] = స్థానభ్రంశం_అంకె;
+                ఒకవేళ (సూచీ_గమ్యం_Write >= 3) {
+                    myOffsets[3] = స్థానభ్రంశం_అంకె;
                 }
-                myOffsets += (indexToWrite + 1);
+                myOffsets += (సూచీ_గమ్యం_Write + 1);
             }
-            else {
+            లేకపోతే {
                 /* We might run out of room soon. Write it slowly. */
-                for (; tempPtr <= (tempBuf + indexToWrite); tempPtr++) {
-                    if (myTarget < targetLimit)
+                కొరకు (; తాత్కాలిక_Ptr <= (తాత్కాలిక_Buf + సూచీ_గమ్యం_Write); తాత్కాలిక_Ptr++) {
+                    ఒకవేళ (my_లక్ష్యం < లక్ష్యం_హద్దు)
                     {
-                        *(myOffsets++) = offsetNum;
-                        *(myTarget++) = *tempPtr;
+                        *(myOffsets++) = స్థానభ్రంశం_అంకె;
+                        *(my_లక్ష్యం++) = *తాత్కాలిక_Ptr;
                     }
-                    else
+                    లేకపోతే
                     {
-                        cnv->charErrorBuffer[cnv->charErrorBufferLength++] = *tempPtr;
-                        *err = U_BUFFER_OVERFLOW_ERROR;
+                        cnv->char_Error_బఫరు[cnv->char_Error_బఫరు_నిడివి++] = *తాత్కాలిక_Ptr;
+                        *err = U_బఫరు_అధికప్రవాహం_ERROR;
                     }
                 }
             }
-            offsetNum = nextSourceIndex;
+            స్థానభ్రంశం_అంకె = తదుపరి_ఆధారం_సూచీ;
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ఒకవేళ (my_ఆధారం < ఆధారం_హద్దు && my_లక్ష్యం >= లక్ష్యం_హద్దు && U_SUCCESS(*err))
     {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
-    args->offsets = myOffsets;
+    వాదనలు_2->లక్ష్యం = (అక్షరం *) my_లక్ష్యం;
+    వాదనలు_2->ఆధారం = my_ఆధారం;
+    వాదనలు_2->offsets = myOffsets;
 }
 
 U_CDECL_BEGIN
-static UChar32 U_CALLCONV ucnv_getNextUChar_UTF8(UConverterToUnicodeArgs *args,
-                                               UErrorCode *err) {
+స్థిర UChar32 U_CALLCONV ucnv_get_తదుపరి_UChar_UTF8(UConverter_గమ్యం_Unicode_వాదనలు *వాదనలు_2,
+                                               UError_సంకేతం *err) {
     UConverter *cnv;
-    const uint8_t *sourceInitial;
-    const uint8_t *source;
+    స్థిరరాశి uint8_t *ఆధారం_Initial;
+    స్థిరరాశి uint8_t *ఆధారం;
     uint8_t myByte;
     UChar32 ch;
     int8_t i;
 
     /* UTF-8 only here, the framework handles CESU-8 to combine surrogate pairs */
 
-    cnv = args->converter;
-    sourceInitial = source = (const uint8_t *)args->source;
-    if (source >= (const uint8_t *)args->sourceLimit)
+    cnv = వాదనలు_2->converter;
+    ఆధారం_Initial = ఆధారం = (స్థిరరాశి uint8_t *)వాదనలు_2->ఆధారం;
+    ఒకవేళ (ఆధారం >= (స్థిరరాశి uint8_t *)వాదనలు_2->ఆధారం_హద్దు)
     {
         /* no input */
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err = U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి 0xffff;
     }
 
-    myByte = *(source++);
-    if (U8_IS_SINGLE(myByte))
+    myByte = *(ఆధారం++);
+    ఒకవేళ (U8_IS_SINGLE(myByte))
     {
-        args->source = (const char *)source;
-        return (UChar32)myByte;
+        వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)ఆధారం;
+        తిరిగి (UChar32)myByte;
     }
 
-    uint16_t countTrailBytes = U8_COUNT_TRAIL_BYTES(myByte);
-    if (countTrailBytes == 0) {
-        cnv->toUBytes[0] = myByte;
-        cnv->toULength = 1;
-        *err = U_ILLEGAL_CHAR_FOUND;
-        args->source = (const char *)source;
-        return 0xffff;
+    uint16_t లెక్క_Trail_బైట్లు = U8_లెక్క_TRAIL_బైట్లు(myByte);
+    ఒకవేళ (లెక్క_Trail_బైట్లు == 0) {
+        cnv->గమ్యం_UBytes[0] = myByte;
+        cnv->గమ్యం_ULength = 1;
+        *err = U_ILLEGAL_CHAR_దొరికింది;
+        వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)ఆధారం;
+        తిరిగి 0xffff;
     }
 
     /*The byte sequence is longer than the buffer area passed*/
-    if (((const char *)source + countTrailBytes) > args->sourceLimit)
+    ఒకవేళ (((స్థిరరాశి అక్షరం *)ఆధారం + లెక్క_Trail_బైట్లు) > వాదనలు_2->ఆధారం_హద్దు)
     {
         /* check if all of the remaining bytes are trail bytes */
-        uint16_t extraBytesToWrite = countTrailBytes + 1;
-        cnv->toUBytes[0] = myByte;
+        uint16_t extra_బైట్లు_గమ్యం_Write = లెక్క_Trail_బైట్లు + 1;
+        cnv->గమ్యం_UBytes[0] = myByte;
         i = 1;
-        *err = U_TRUNCATED_CHAR_FOUND;
-        while(source < (const uint8_t *)args->sourceLimit) {
-            uint8_t b = *source;
-            if(icu::UTF8::isValidTrail(myByte, b, i, extraBytesToWrite)) {
-                cnv->toUBytes[i++] = b;
-                ++source;
-            } else {
+        *err = U_TRUNCATED_CHAR_దొరికింది;
+        అయితే(ఆధారం < (స్థిరరాశి uint8_t *)వాదనలు_2->ఆధారం_హద్దు) {
+            uint8_t b = *ఆధారం;
+            ఒకవేళ(icu::UTF8::isValidTrail(myByte, b, i, extra_బైట్లు_గమ్యం_Write)) {
+                cnv->గమ్యం_UBytes[i++] = b;
+                ++ఆధారం;
+            } లేకపోతే {
                 /* error even before we run out of input */
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                *err = U_ILLEGAL_CHAR_దొరికింది;
+                ఆపు;
             }
         }
-        cnv->toULength = i;
-        args->source = (const char *)source;
-        return 0xffff;
+        cnv->గమ్యం_ULength = i;
+        వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)ఆధారం;
+        తిరిగి 0xffff;
     }
 
     ch = myByte << 6;
-    if(countTrailBytes == 2) {
-        uint8_t t1 = *source, t2;
-        if(U8_IS_VALID_LEAD3_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source)) {
-            args->source = (const char *)(source + 1);
-            return (((ch + t1) << 6) + t2) - offsetsFromUTF8[3];
+    ఒకవేళ(లెక్క_Trail_బైట్లు == 2) {
+        uint8_t t1 = *ఆధారం, t2;
+        ఒకవేళ(U8_IS_VALID_LEAD3_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++ఆధారం)) {
+            వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)(ఆధారం + 1);
+            తిరిగి (((ch + t1) << 6) + t2) - offsetsFromUTF8[3];
         }
-    } else if(countTrailBytes == 1) {
-        uint8_t t1 = *source;
-        if(U8_IS_TRAIL(t1)) {
-            args->source = (const char *)(source + 1);
-            return (ch + t1) - offsetsFromUTF8[2];
+    } లేకపోతే ఒకవేళ(లెక్క_Trail_బైట్లు == 1) {
+        uint8_t t1 = *ఆధారం;
+        ఒకవేళ(U8_IS_TRAIL(t1)) {
+            వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)(ఆధారం + 1);
+            తిరిగి (ch + t1) - offsetsFromUTF8[2];
         }
-    } else {  // countTrailBytes == 3
-        uint8_t t1 = *source, t2, t3;
-        if(U8_IS_VALID_LEAD4_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source) &&
-                U8_IS_TRAIL(t3 = *++source)) {
-            args->source = (const char *)(source + 1);
-            return (((((ch + t1) << 6) + t2) << 6) + t3) - offsetsFromUTF8[4];
+    } లేకపోతే {  // countTrailBytes == 3
+        uint8_t t1 = *ఆధారం, t2, t3;
+        ఒకవేళ(U8_IS_VALID_LEAD4_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++ఆధారం) &&
+                U8_IS_TRAIL(t3 = *++ఆధారం)) {
+            వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)(ఆధారం + 1);
+            తిరిగి (((((ch + t1) << 6) + t2) << 6) + t3) - offsetsFromUTF8[4];
         }
     }
-    args->source = (const char *)source;
+    వాదనలు_2->ఆధారం = (స్థిరరాశి అక్షరం *)ఆధారం;
 
-    for(i = 0; sourceInitial < source; ++i) {
-        cnv->toUBytes[i] = *sourceInitial++;
+    కొరకు(i = 0; ఆధారం_Initial < ఆధారం; ++i) {
+        cnv->గమ్యం_UBytes[i] = *ఆధారం_Initial++;
     }
-    cnv->toULength = i;
-    *err = U_ILLEGAL_CHAR_FOUND;
-    return 0xffff;
+    cnv->గమ్యం_ULength = i;
+    *err = U_ILLEGAL_CHAR_దొరికింది;
+    తిరిగి 0xffff;
 } 
-U_CDECL_END
+U_CDECL_చివర
 
 /* UTF-8-from-UTF-8 conversion functions ------------------------------------ */
 
 U_CDECL_BEGIN
 /* "Convert" UTF-8 to UTF-8: Validate and copy. Modified from ucnv_DBCSFromUTF8(). */
-static void U_CALLCONV
-ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+ucnv_UTF8FromUTF8(UConverter_From_Unicode_వాదనలు *pFromUArgs,
+                  UConverter_గమ్యం_Unicode_వాదనలు *p_గమ్యం_UArgs,
+                  UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *utf8;
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం;
+    int32_t లక్ష్యం_సామర్థ్యం;
     int32_t count;
 
-    int8_t oldToULength, toULength, toULimit;
+    int8_t old_గమ్యం_ULength, గమ్యం_ULength, గమ్యం_ULimit;
 
     UChar32 c;
     uint8_t b, t1, t2;
 
     /* set up the local pointers */
-    utf8=pToUArgs->converter;
-    source=(uint8_t *)pToUArgs->source;
-    sourceLimit=(uint8_t *)pToUArgs->sourceLimit;
-    target=(uint8_t *)pFromUArgs->target;
-    targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
+    utf8=p_గమ్యం_UArgs->converter;
+    ఆధారం=(uint8_t *)p_గమ్యం_UArgs->ఆధారం;
+    ఆధారం_హద్దు=(uint8_t *)p_గమ్యం_UArgs->ఆధారం_హద్దు;
+    లక్ష్యం=(uint8_t *)pFromUArgs->లక్ష్యం;
+    లక్ష్యం_సామర్థ్యం=(int32_t)(pFromUArgs->లక్ష్యం_హద్దు-pFromUArgs->లక్ష్యం);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
-        toULength=oldToULength=utf8->toULength;
-        toULimit=(int8_t)utf8->mode;
-        c=(UChar32)utf8->toUnicodeStatus;
-    } else {
-        toULength=oldToULength=toULimit=0;
+    ఒకవేళ(utf8->గమ్యం_ULength > 0) {
+        గమ్యం_ULength=old_గమ్యం_ULength=utf8->గమ్యం_ULength;
+        గమ్యం_ULimit=(int8_t)utf8->బహుళకం;
+        c=(UChar32)utf8->గమ్యం_Unicode_స్థితి;
+    } లేకపోతే {
+        గమ్యం_ULength=old_గమ్యం_ULength=గమ్యం_ULimit=0;
         c = 0;
     }
 
-    count=(int32_t)(sourceLimit-source)+oldToULength;
-    if(count<toULimit) {
+    count=(int32_t)(ఆధారం_హద్దు-ఆధారం)+old_గమ్యం_ULength;
+    ఒకవేళ(count<గమ్యం_ULimit) {
         /*
          * Not enough input to complete the partial character.
          * Jump to moreBytes below - it will not output to target.
          */
-    } else if(targetCapacity<toULimit) {
+    } లేకపోతే ఒకవేళ(లక్ష్యం_సామర్థ్యం<గమ్యం_ULimit) {
         /*
          * Not enough target capacity to output the partial character.
          * Let the standard converter handle this.
          */
-        *pErrorCode=U_USING_DEFAULT_WARNING;
-        return;
-    } else {
+        *p_Error_సంకేతం=U_USING_DEFAULT_WARNING;
+        తిరిగి;
+    } లేకపోతే {
         // Use a single counter for source and target, counting the minimum of
         // the source length and the target capacity.
         // Let the standard converter handle edge cases.
-        if(count>targetCapacity) {
-            count=targetCapacity;
+        ఒకవేళ(count>లక్ష్యం_సామర్థ్యం) {
+            count=లక్ష్యం_సామర్థ్యం;
         }
 
         // The conversion loop checks count>0 only once per character.
@@ -707,238 +707,238 @@ ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
 
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
-        int32_t length=count-toULength;
-        U8_TRUNCATE_IF_INCOMPLETE(source, 0, length);
-        count=toULength+length;
+        int32_t length=count-గమ్యం_ULength;
+        U8_TRUNCATE_IF_INCOMPLETE(ఆధారం, 0, length);
+        count=గమ్యం_ULength+length;
     }
 
-    if(c!=0) {
-        utf8->toUnicodeStatus=0;
-        utf8->toULength=0;
-        goto moreBytes;
+    ఒకవేళ(c!=0) {
+        utf8->గమ్యం_Unicode_స్థితి=0;
+        utf8->గమ్యం_ULength=0;
+        వెళ్ళు మరిన్ని_బైట్లు;
         /* See note in ucnv_SBCSFromUTF8() about this goto. */
     }
 
     /* conversion loop */
-    while(count>0) {
-        b=*source++;
-        if(U8_IS_SINGLE(b)) {
+    అయితే(count>0) {
+        b=*ఆధారం++;
+        ఒకవేళ(U8_IS_SINGLE(b)) {
             /* convert ASCII */
-            *target++=b;
+            *లక్ష్యం++=b;
             --count;
-            continue;
-        } else {
-            if(b>=0xe0) {
-                if( /* handle U+0800..U+FFFF inline */
+            కొనసాగు;
+        } లేకపోతే {
+            ఒకవేళ(b>=0xe0) {
+                ఒకవేళ( /* handle U+0800..U+FFFF inline */
                     b<0xf0 &&
-                    U8_IS_VALID_LEAD3_AND_T1(b, t1=source[0]) &&
-                    U8_IS_TRAIL(t2=source[1])
+                    U8_IS_VALID_LEAD3_AND_T1(b, t1=ఆధారం[0]) &&
+                    U8_IS_TRAIL(t2=ఆధారం[1])
                 ) {
-                    source+=2;
-                    *target++=b;
-                    *target++=t1;
-                    *target++=t2;
+                    ఆధారం+=2;
+                    *లక్ష్యం++=b;
+                    *లక్ష్యం++=t1;
+                    *లక్ష్యం++=t2;
                     count-=3;
-                    continue;
+                    కొనసాగు;
                 }
-            } else {
-                if( /* handle U+0080..U+07FF inline */
+            } లేకపోతే {
+                ఒకవేళ( /* handle U+0080..U+07FF inline */
                     b>=0xc2 &&
-                    U8_IS_TRAIL(t1=*source)
+                    U8_IS_TRAIL(t1=*ఆధారం)
                 ) {
-                    ++source;
-                    *target++=b;
-                    *target++=t1;
+                    ++ఆధారం;
+                    *లక్ష్యం++=b;
+                    *లక్ష్యం++=t1;
                     count-=2;
-                    continue;
+                    కొనసాగు;
                 }
             }
 
             /* handle "complicated" and error cases, and continuing partial characters */
-            oldToULength=0;
-            toULength=1;
-            toULimit=U8_COUNT_BYTES_NON_ASCII(b);
+            old_గమ్యం_ULength=0;
+            గమ్యం_ULength=1;
+            గమ్యం_ULimit=U8_లెక్క_బైట్లు_NON_ASCII(b);
             c=b;
-moreBytes:
-            while(toULength<toULimit) {
-                if(source<sourceLimit) {
-                    b=*source;
-                    if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
-                        ++source;
-                        ++toULength;
+మరిన్ని_బైట్లు:
+            అయితే(గమ్యం_ULength<గమ్యం_ULimit) {
+                ఒకవేళ(ఆధారం<ఆధారం_హద్దు) {
+                    b=*ఆధారం;
+                    ఒకవేళ(icu::UTF8::isValidTrail(c, b, గమ్యం_ULength, గమ్యం_ULimit)) {
+                        ++ఆధారం;
+                        ++గమ్యం_ULength;
                         c=(c<<6)+b;
-                    } else {
-                        break; /* sequence too short, stop with toULength<toULimit */
+                    } లేకపోతే {
+                        ఆపు; /* sequence too short, stop with toULength<toULimit */
                     }
-                } else {
+                } లేకపోతే {
                     /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
-                    source-=(toULength-oldToULength);
-                    while(oldToULength<toULength) {
-                        utf8->toUBytes[oldToULength++]=*source++;
+                    ఆధారం-=(గమ్యం_ULength-old_గమ్యం_ULength);
+                    అయితే(old_గమ్యం_ULength<గమ్యం_ULength) {
+                        utf8->గమ్యం_UBytes[old_గమ్యం_ULength++]=*ఆధారం++;
                     }
-                    utf8->toUnicodeStatus=c;
-                    utf8->toULength=toULength;
-                    utf8->mode=toULimit;
-                    pToUArgs->source=(char *)source;
-                    pFromUArgs->target=(char *)target;
-                    return;
+                    utf8->గమ్యం_Unicode_స్థితి=c;
+                    utf8->గమ్యం_ULength=గమ్యం_ULength;
+                    utf8->బహుళకం=గమ్యం_ULimit;
+                    p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+                    pFromUArgs->లక్ష్యం=(అక్షరం *)లక్ష్యం;
+                    తిరిగి;
                 }
             }
 
-            if(toULength!=toULimit) {
+            ఒకవేళ(గమ్యం_ULength!=గమ్యం_ULimit) {
                 /* error handling: illegal UTF-8 byte sequence */
-                source-=(toULength-oldToULength);
-                while(oldToULength<toULength) {
-                    utf8->toUBytes[oldToULength++]=*source++;
+                ఆధారం-=(గమ్యం_ULength-old_గమ్యం_ULength);
+                అయితే(old_గమ్యం_ULength<గమ్యం_ULength) {
+                    utf8->గమ్యం_UBytes[old_గమ్యం_ULength++]=*ఆధారం++;
                 }
-                utf8->toULength=toULength;
-                pToUArgs->source=(char *)source;
-                pFromUArgs->target=(char *)target;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return;
+                utf8->గమ్యం_ULength=గమ్యం_ULength;
+                p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+                pFromUArgs->లక్ష్యం=(అక్షరం *)లక్ష్యం;
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                తిరిగి;
             }
 
             /* copy the legal byte sequence to the target */
             {
                 int8_t i;
 
-                for(i=0; i<oldToULength; ++i) {
-                    *target++=utf8->toUBytes[i];
+                కొరకు(i=0; i<old_గమ్యం_ULength; ++i) {
+                    *లక్ష్యం++=utf8->గమ్యం_UBytes[i];
                 }
-                source-=(toULength-oldToULength);
-                for(; i<toULength; ++i) {
-                    *target++=*source++;
+                ఆధారం-=(గమ్యం_ULength-old_గమ్యం_ULength);
+                కొరకు(; i<గమ్యం_ULength; ++i) {
+                    *లక్ష్యం++=*ఆధారం++;
                 }
-                count-=toULength;
+                count-=గమ్యం_ULength;
             }
         }
     }
     U_ASSERT(count>=0);
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit) {
-        if(target==(const uint8_t *)pFromUArgs->targetLimit) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            b=*source;
-            toULimit=U8_COUNT_BYTES(b);
-            if(toULimit>(sourceLimit-source)) {
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం) && ఆధారం<ఆధారం_హద్దు) {
+        ఒకవేళ(లక్ష్యం==(స్థిరరాశి uint8_t *)pFromUArgs->లక్ష్యం_హద్దు) {
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+        } లేకపోతే {
+            b=*ఆధారం;
+            గమ్యం_ULimit=U8_లెక్క_బైట్లు(b);
+            ఒకవేళ(గమ్యం_ULimit>(ఆధారం_హద్దు-ఆధారం)) {
                 /* collect a truncated byte sequence */
-                toULength=0;
+                గమ్యం_ULength=0;
                 c=b;
-                for(;;) {
-                    utf8->toUBytes[toULength++]=b;
-                    if(++source==sourceLimit) {
+                కొరకు(;;) {
+                    utf8->గమ్యం_UBytes[గమ్యం_ULength++]=b;
+                    ఒకవేళ(++ఆధారం==ఆధారం_హద్దు) {
                         /* partial byte sequence at end of source */
-                        utf8->toUnicodeStatus=c;
-                        utf8->toULength=toULength;
-                        utf8->mode=toULimit;
-                        break;
-                    } else if(!icu::UTF8::isValidTrail(c, b=*source, toULength, toULimit)) {
-                        utf8->toULength=toULength;
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        utf8->గమ్యం_Unicode_స్థితి=c;
+                        utf8->గమ్యం_ULength=గమ్యం_ULength;
+                        utf8->బహుళకం=గమ్యం_ULimit;
+                        ఆపు;
+                    } లేకపోతే ఒకవేళ(!icu::UTF8::isValidTrail(c, b=*ఆధారం, గమ్యం_ULength, గమ్యం_ULimit)) {
+                        utf8->గమ్యం_ULength=గమ్యం_ULength;
+                        *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
                     }
                     c=(c<<6)+b;
                 }
-            } else {
+            } లేకపోతే {
                 /* partial-sequence target overflow: fall back to the pivoting implementation */
-                *pErrorCode=U_USING_DEFAULT_WARNING;
+                *p_Error_సంకేతం=U_USING_DEFAULT_WARNING;
             }
         }
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target=(char *)target;
+    p_గమ్యం_UArgs->ఆధారం=(అక్షరం *)ఆధారం;
+    pFromUArgs->లక్ష్యం=(అక్షరం *)లక్ష్యం;
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
 /* UTF-8 converter data ----------------------------------------------------- */
 
-static const UConverterImpl _UTF8Impl={
+స్థిర స్థిరరాశి UConverterImpl _UTF8Impl={
     UCNV_UTF8,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    ucnv_toUnicode_UTF8,
-    ucnv_toUnicode_UTF8_OFFSETS_LOGIC,
+    ucnv_గమ్యం_Unicode_UTF8,
+    ucnv_గమ్యం_Unicode_UTF8_OFFSETS_LOGIC,
     ucnv_fromUnicode_UTF8,
     ucnv_fromUnicode_UTF8_OFFSETS_LOGIC,
-    ucnv_getNextUChar_UTF8,
+    ucnv_get_తదుపరి_UChar_UTF8,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    ucnv_get_Non_Surrogate_Unicode_సమితి,
 
     ucnv_UTF8FromUTF8,
     ucnv_UTF8FromUTF8
 };
 
 /* The 1208 CCSID refers to any version of Unicode of UTF-8 */
-static const UConverterStaticData _UTF8StaticData={
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం UTF8_Static_దత్తాంశం={
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "UTF-8",
     1208, UCNV_IBM, UCNV_UTF8,
     1, 3, /* max 3 bytes per char16_t from UTF-8 (4 bytes from surrogate _pair_) */
-    { 0xef, 0xbf, 0xbd, 0 },3,false,false,
+    { 0xef, 0xbf, 0xbd, 0 },3,అబద్ధం,అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _UTF8Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF8StaticData, &_UTF8Impl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం UTF8_దత్తాంశం=
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&UTF8_Static_దత్తాంశం, &_UTF8Impl);
 
 /* CESU-8 converter data ---------------------------------------------------- */
 
-static const UConverterImpl _CESU8Impl={
+స్థిర స్థిరరాశి UConverterImpl _CESU8Impl={
     UCNV_CESU8,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
-    ucnv_toUnicode_UTF8,
-    ucnv_toUnicode_UTF8_OFFSETS_LOGIC,
+    ucnv_గమ్యం_Unicode_UTF8,
+    ucnv_గమ్యం_Unicode_UTF8_OFFSETS_LOGIC,
     ucnv_fromUnicode_UTF8,
     ucnv_fromUnicode_UTF8_OFFSETS_LOGIC,
-    nullptr,
+    శూన్యసూచిక,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getCompleteUnicodeSet,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    ucnv_get_Complete_Unicode_సమితి,
 
-    nullptr,
-    nullptr
+    శూన్యసూచిక,
+    శూన్యసూచిక
 };
 
-static const UConverterStaticData _CESU8StaticData={
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం CESU8_Static_దత్తాంశం={
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "CESU-8",
     9400, /* CCSID for CESU-8 */
     UCNV_UNKNOWN, UCNV_CESU8, 1, 3,
-    { 0xef, 0xbf, 0xbd, 0 },3,false,false,
+    { 0xef, 0xbf, 0xbd, 0 },3,అబద్ధం,అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _CESU8Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_CESU8StaticData, &_CESU8Impl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం CESU8_దత్తాంశం=
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&CESU8_Static_దత్తాంశం, &_CESU8Impl);
 
-#endif
+#అయితే_ముగింపు

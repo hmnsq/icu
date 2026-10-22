@@ -16,15 +16,15 @@
 *   UTF-7 converter implementation. Used to be in ucnv_utf.c.
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "cmemory.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "uassert.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnv_cnv.h"
+#అన్తర్భావ "uassert.h"
 
 /* UTF-7 -------------------------------------------------------------------- */
 
@@ -70,7 +70,7 @@
  * - DEL
  * - all codes beyond US-ASCII, i.e. all >127
  */
-#define inSetD(c) \
+#నిర్వచించు లోపల_సమితి_D(c) \
     ((uint8_t)((c)-97)<26 || (uint8_t)((c)-65)<26 || /* letters */ \
      (uint8_t)((c)-48)<10 ||    /* digits */ \
      (uint8_t)((c)-39)<3 ||     /* '() */ \
@@ -78,7 +78,7 @@
      (c)==58 || (c)==63         /* :? */ \
     )
 
-#define inSetO(c) \
+#నిర్వచించు లోపల_సమితి_O(c) \
     ((uint8_t)((c)-33)<6 ||         /* !"#$%& */ \
      (uint8_t)((c)-59)<4 ||         /* ;<=> */ \
      (uint8_t)((c)-93)<4 ||         /* ]^_` */ \
@@ -86,19 +86,19 @@
      (c)==42 || (c)==64 || (c)==91  /* *@[ */ \
     )
 
-#define isCRLFTAB(c) ((c)==13 || (c)==10 || (c)==9)
-#define isCRLFSPTAB(c) ((c)==32 || (c)==13 || (c)==10 || (c)==9)
+#నిర్వచించు isCRLFTAB(c) ((c)==13 || (c)==10 || (c)==9)
+#నిర్వచించు isCRLFSPTAB(c) ((c)==32 || (c)==13 || (c)==10 || (c)==9)
 
-#define PLUS  43
-#define MINUS 45
-#define BACKSLASH 92
-#define TILDE 126
+#నిర్వచించు PLUS  43
+#నిర్వచించు MINUS 45
+#నిర్వచించు BACKSLASH 92
+#నిర్వచించు TILDE 126
 
 /* legal byte values: all US-ASCII graphic characters from space to before tilde, and CR LF TAB */
-#define isLegalUTF7(c) (((uint8_t)((c)-32)<94 && (c)!=BACKSLASH) || isCRLFTAB(c))
+#నిర్వచించు isLegalUTF7(c) (((uint8_t)((c)-32)<94 && (c)!=BACKSLASH) || isCRLFTAB(c))
 
 /* encode directly sets D and O and CR LF SP TAB */
-static const UBool encodeDirectlyMaximum[128]={
+స్థిర స్థిరరాశి UBool encode_Directly_గరిష్ఠ[128]={
  /* 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -114,7 +114,7 @@ static const UBool encodeDirectlyMaximum[128]={
 };
 
 /* encode directly set D and CR LF SP TAB but not set O */
-static const UBool encodeDirectlyRestricted[128]={
+స్థిర స్థిరరాశి UBool encodeDirectlyRestricted[128]={
  /* 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -129,8 +129,8 @@ static const UBool encodeDirectlyRestricted[128]={
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
 };
 
-static const uint8_t
-toBase64[64]={
+స్థిర స్థిరరాశి uint8_t
+గమ్యం_Base64[64]={
     /* A-Z */
     65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
     78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
@@ -143,7 +143,7 @@ toBase64[64]={
     43, 47
 };
 
-static const int8_t
+స్థిర స్థిరరాశి int8_t
 fromBase64[128]={
     /* C0 controls, -1 for legal ones (CR LF TAB), -3 for illegal ones */
     -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -3, -3, -1, -3, -3,
@@ -180,81 +180,81 @@ fromBase64[128]={
  */
 
 U_CDECL_BEGIN
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 _UTF7Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    ఒకవేళ(choice<=UCNV_RESET_గమ్యం_UNICODE) {
         /* reset toUnicode */
-        cnv->toUnicodeStatus=0x1000000; /* inDirectMode=true */
-        cnv->toULength=0;
+        cnv->గమ్యం_Unicode_స్థితి=0x1000000; /* inDirectMode=true */
+        cnv->గమ్యం_ULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    ఒకవేళ(choice!=UCNV_RESET_గమ్యం_UNICODE) {
         /* reset fromUnicode */
-        cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
+        cnv->from_Unicode_స్థితి=(cnv->from_Unicode_స్థితి&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
     }
 }
 
-static void U_CALLCONV
+స్థిర శూన్య U_CALLCONV
 _UTF7Open(UConverter *cnv,
-          UConverterLoadArgs *pArgs,
-          UErrorCode *pErrorCode) {
-    (void)pArgs;
-    if(UCNV_GET_VERSION(cnv)<=1) {
+          UConverter_ఎక్కించు_వాదనలు *p_వాదనలు,
+          UError_సంకేతం *p_Error_సంకేతం) {
+    (శూన్య)p_వాదనలు;
+    ఒకవేళ(UCNV_GET_సంస్కరణ(cnv)<=1) {
         /* TODO(markus): Should just use cnv->options rather than copying the version number. */
-        cnv->fromUnicodeStatus=UCNV_GET_VERSION(cnv)<<28;
+        cnv->from_Unicode_స్థితి=UCNV_GET_సంస్కరణ(cnv)<<28;
         _UTF7Reset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    } లేకపోతే {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
     }
 }
 
-static void U_CALLCONV
-_UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+UTF7_గమ్యం_Unicode_With_Offsets(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                          UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    char16_t *లక్ష్యం;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు;
     int32_t *offsets;
 
-    uint8_t *bytes;
-    uint8_t byteIndex;
+    uint8_t *బైట్లు;
+    uint8_t byte_సూచీ;
 
-    int32_t length, targetCapacity;
+    int32_t length, లక్ష్యం_సామర్థ్యం;
 
     /* UTF-7 state */
-    uint16_t bits;
+    uint16_t బిట్లు;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool లోపల_ప్రత్యక్ష_బహుళకం;
 
-    int8_t base64Value;
+    int8_t base64_విలువ;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ఆధారం_సూచీ, తదుపరి_ఆధారం_సూచీ;
 
     uint8_t b;
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_వాదనలు->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ఆధారం=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం=p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_హద్దు=p_వాదనలు->లక్ష్యం_హద్దు;
+    offsets=p_వాదనలు->offsets;
     /* get the state machine state */
     {
-        uint32_t status=cnv->toUnicodeStatus;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint16_t)status;
+        uint32_t స్థితి_2=cnv->గమ్యం_Unicode_స్థితి;
+        లోపల_ప్రత్యక్ష_బహుళకం=(UBool)((స్థితి_2>>24)&1);
+        base64Counter=(int8_t)(స్థితి_2>>16);
+        బిట్లు=(uint16_t)స్థితి_2;
     }
-    bytes=cnv->toUBytes;
-    byteIndex=cnv->toULength;
+    బైట్లు=cnv->గమ్యం_UBytes;
+    byte_సూచీ=cnv->గమ్యం_ULength;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ఆధారం_సూచీ=byte_సూచీ==0 ? 0 : -1;
+    తదుపరి_ఆధారం_సూచీ=0;
 
-    if(inDirectMode) {
-directMode:
+    ఒకవేళ(లోపల_ప్రత్యక్ష_బహుళకం) {
+ప్రత్యక్ష_బహుళకం:
         /*
          * In Direct Mode, most US-ASCII characters are encoded directly, i.e.,
          * with their US-ASCII byte values.
@@ -263,43 +263,43 @@ directMode:
          *
          * In Direct Mode, only the sourceIndex is used.
          */
-        byteIndex=0;
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+        byte_సూచీ=0;
+        length=(int32_t)(ఆధారం_హద్దు-ఆధారం);
+        లక్ష్యం_సామర్థ్యం=(int32_t)(లక్ష్యం_హద్దు-లక్ష్యం);
+        ఒకవేళ(length>లక్ష్యం_సామర్థ్యం) {
+            length=లక్ష్యం_సామర్థ్యం;
         }
-        while(length>0) {
-            b=*source++;
-            if(!isLegalUTF7(b)) {
+        అయితే(length>0) {
+            b=*ఆధారం++;
+            ఒకవేళ(!isLegalUTF7(b)) {
                 /* illegal */
-                bytes[0]=b;
-                byteIndex=1;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
-            } else if(b!=PLUS) {
+                బైట్లు[0]=b;
+                byte_సూచీ=1;
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                ఆపు;
+            } లేకపోతే ఒకవేళ(b!=PLUS) {
                 /* write directly encoded character */
-                *target++=b;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *లక్ష్యం++=b;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ++;
                 }
-            } else /* PLUS */ {
+            } లేకపోతే /* PLUS */ {
                 /* switch to Unicode mode */
-                nextSourceIndex=++sourceIndex;
-                inDirectMode=false;
-                byteIndex=0;
-                bits=0;
+                తదుపరి_ఆధారం_సూచీ=++ఆధారం_సూచీ;
+                లోపల_ప్రత్యక్ష_బహుళకం=అబద్ధం;
+                byte_సూచీ=0;
+                బిట్లు=0;
                 base64Counter=-1;
-                goto unicodeMode;
+                వెళ్ళు unicode_బహుళకం;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        ఒకవేళ(ఆధారం<ఆధారం_హద్దు && లక్ష్యం>=లక్ష్యం_హద్దు) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
         }
-    } else {
-unicodeMode:
+    } లేకపోతే {
+unicode_బహుళకం:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
          * The base64 sequence ends with any character that is not in the base64 alphabet.
@@ -310,12 +310,12 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                bytes[byteIndex++]=b=*source++;
-                ++nextSourceIndex;
-                base64Value = -3; /* initialize as illegal */
-                if(b>=126 || (base64Value=fromBase64[b])==-3 || base64Value==-1) {
+        అయితే(ఆధారం<ఆధారం_హద్దు) {
+            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                బైట్లు[byte_సూచీ++]=b=*ఆధారం++;
+                ++తదుపరి_ఆధారం_సూచీ;
+                base64_విలువ = -3; /* initialize as illegal */
+                ఒకవేళ(b>=126 || (base64_విలువ=fromBase64[b])==-3 || base64_విలువ==-1) {
                     /* either
                      * base64Value==-1 for any legal character except base64 and minus sign, or
                      * base64Value==-3 for illegal characters:
@@ -329,263 +329,263 @@ unicodeMode:
                      *        It may be for example, a plus which we need to deal with in direct mode.
                      * 2.2.2. Else if the current char is illegal, we might as well deal with it here.
                      */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
+                    ఒకవేళ(base64Counter==-1) {
                         /* illegal: + immediately followed by something other than base64 or minus sign */
                         /* include the plus sign in the reported sequence, but not the subsequent char */
-                        --source;
-                        bytes[0]=PLUS;
-                        byteIndex=1;
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
-                    } else if(bits!=0) {
+                        --ఆధారం;
+                        బైట్లు[0]=PLUS;
+                        byte_సూచీ=1;
+                        *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
+                    } లేకపోతే ఒకవేళ(బిట్లు!=0) {
                         /* bits are illegally left over, a char16_t is incomplete */
                         /* don't include current char (legal or illegal) in error seq */
-                        --source;
-                        --byteIndex;
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
-                    } else {
+                        --ఆధారం;
+                        --byte_సూచీ;
+                        *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                        ఆపు;
+                    } లేకపోతే {
                         /* previous char16_t was complete */
-                        if(base64Value==-3) {
+                        ఒకవేళ(base64_విలువ==-3) {
                             /* current character is illegal, deal with it here */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
-                        } else {
+                            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                            ఆపు;
+                        } లేకపోతే {
                             /* un-read the current character in case it is a plus sign */
-                            --source;
-                            sourceIndex=nextSourceIndex-1;
-                            goto directMode;
+                            --ఆధారం;
+                            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ-1;
+                            వెళ్ళు ప్రత్యక్ష_బహుళకం;
                         }
                     }
-                } else if(base64Value>=0) {
+                } లేకపోతే ఒకవేళ(base64_విలువ>=0) {
                     /* collect base64 bytes into UChars */
-                    switch(base64Counter) {
-                    case -1: /* -1 is immediately after the + */
-                    case 0:
-                        bits=base64Value;
+                    ఎంపిక(base64Counter) {
+                    స్థితి -1: /* -1 is immediately after the + */
+                    స్థితి 0:
+                        బిట్లు=base64_విలువ;
                         base64Counter=1;
-                        break;
-                    case 1:
-                    case 3:
-                    case 4:
-                    case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        ఆపు;
+                    స్థితి 1:
+                    స్థితి 3:
+                    స్థితి 4:
+                    స్థితి 6:
+                        బిట్లు=(uint16_t)((బిట్లు<<6)|base64_విలువ);
                         ++base64Counter;
-                        break;
-                    case 2:
-                        *target++=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        ఆపు;
+                    స్థితి 2:
+                        *లక్ష్యం++=(char16_t)((బిట్లు<<4)|(base64_విలువ>>2));
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ;
+                            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        బైట్లు[0]=b; /* keep this byte in case an error occurs */
+                        byte_సూచీ=1;
+                        బిట్లు=(uint16_t)(base64_విలువ&3);
                         base64Counter=3;
-                        break;
-                    case 5:
-                        *target++=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        ఆపు;
+                    స్థితి 5:
+                        *లక్ష్యం++=(char16_t)((బిట్లు<<2)|(base64_విలువ>>4));
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ;
+                            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        బైట్లు[0]=b; /* keep this byte in case an error occurs */
+                        byte_సూచీ=1;
+                        బిట్లు=(uint16_t)(base64_విలువ&15);
                         base64Counter=6;
-                        break;
-                    case 7:
-                        *target++=(char16_t)((bits<<6)|base64Value);
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex;
+                        ఆపు;
+                    స్థితి 7:
+                        *లక్ష్యం++=(char16_t)((బిట్లు<<6)|base64_విలువ);
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ;
+                            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
                         }
-                        byteIndex=0;
-                        bits=0;
+                        byte_సూచీ=0;
+                        బిట్లు=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ఆపు;
+                    అప్రమేయ:
                         /* will never occur */
-                        break;
+                        ఆపు;
                     }
-                } else /*base64Value==-2*/ {
+                } లేకపోతే /*base64Value==-2*/ {
                     /* minus sign terminates the base64 sequence */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
+                    ఒకవేళ(base64Counter==-1) {
                         /* +- i.e. a minus immediately following a plus */
-                        *target++=PLUS;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *లక్ష్యం++=PLUS;
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ-1;
                         }
-                    } else {
+                    } లేకపోతే {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0) {
+                        ఒకవేళ(బిట్లు!=0) {
                             /* bits are illegally left over, a char16_t is incomplete */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                            ఆపు;
                         }
                     }
-                    sourceIndex=nextSourceIndex;
-                    goto directMode;
+                    ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
+                    వెళ్ళు ప్రత్యక్ష_బహుళకం;
                 }
-            } else {
+            } లేకపోతే {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                ఆపు;
             }
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && pArgs->flush && source==sourceLimit && bits==0) {
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం) && p_వాదనలు->flush && ఆధారం==ఆధారం_హద్దు && బిట్లు==0) {
         /*
          * if we are in Unicode mode, then the byteIndex might not be 0,
          * but that is ok if bits==0
          * -> we set byteIndex=0 at the end of the stream to avoid a truncated error
          * (not true for IMAP-mailbox-name where we must end in direct mode)
          */
-        byteIndex=0;
+        byte_సూచీ=0;
     }
 
     /* set the converter state back into UConverter */
-    cnv->toUnicodeStatus=((uint32_t)inDirectMode<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)bits;
-    cnv->toULength=byteIndex;
+    cnv->గమ్యం_Unicode_స్థితి=((uint32_t)లోపల_ప్రత్యక్ష_బహుళకం<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)బిట్లు;
+    cnv->గమ్యం_ULength=byte_సూచీ;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=(స్థిరరాశి అక్షరం *)ఆధారం;
+    p_వాదనలు->లక్ష్యం=లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
 
-static void U_CALLCONV
-_UTF7FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+_UTF7FromUnicodeWithOffsets(UConverter_From_Unicode_వాదనలు *p_వాదనలు,
+                            UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target, *targetLimit;
+    స్థిరరాశి char16_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం, *లక్ష్యం_హద్దు;
     int32_t *offsets;
 
-    int32_t length, targetCapacity, sourceIndex;
+    int32_t length, లక్ష్యం_సామర్థ్యం, ఆధారం_సూచీ;
     char16_t c;
 
     /* UTF-7 state */
-    const UBool *encodeDirectly;
-    uint8_t bits;
+    స్థిరరాశి UBool *encodeDirectly;
+    uint8_t బిట్లు;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool లోపల_ప్రత్యక్ష_బహుళకం;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_వాదనలు->converter;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetLimit=(uint8_t *)pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ఆధారం=p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం=(uint8_t *)p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_హద్దు=(uint8_t *)p_వాదనలు->లక్ష్యం_హద్దు;
+    offsets=p_వాదనలు->offsets;
 
     /* get the state machine state */
     {
-        uint32_t status=cnv->fromUnicodeStatus;
-        encodeDirectly= status<0x10000000 ? encodeDirectlyMaximum : encodeDirectlyRestricted;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint8_t)status;
-        U_ASSERT(bits<=UPRV_LENGTHOF(toBase64));
+        uint32_t స్థితి_2=cnv->from_Unicode_స్థితి;
+        encodeDirectly= స్థితి_2<0x10000000 ? encode_Directly_గరిష్ఠ : encodeDirectlyRestricted;
+        లోపల_ప్రత్యక్ష_బహుళకం=(UBool)((స్థితి_2>>24)&1);
+        base64Counter=(int8_t)(స్థితి_2>>16);
+        బిట్లు=(uint8_t)స్థితి_2;
+        U_ASSERT(బిట్లు<=UPRV_LENGTHOF(గమ్యం_Base64));
     }
 
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
-    sourceIndex=0;
+    ఆధారం_సూచీ=0;
 
-    if(inDirectMode) {
-directMode:
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+    ఒకవేళ(లోపల_ప్రత్యక్ష_బహుళకం) {
+ప్రత్యక్ష_బహుళకం:
+        length=(int32_t)(ఆధారం_హద్దు-ఆధారం);
+        లక్ష్యం_సామర్థ్యం=(int32_t)(లక్ష్యం_హద్దు-లక్ష్యం);
+        ఒకవేళ(length>లక్ష్యం_సామర్థ్యం) {
+            length=లక్ష్యం_సామర్థ్యం;
         }
-        while(length>0) {
-            c=*source++;
+        అయితే(length>0) {
+            c=*ఆధారం++;
             /* currently always encode CR LF SP TAB directly */
-            if(c<=127 && encodeDirectly[c]) {
+            ఒకవేళ(c<=127 && encodeDirectly[c]) {
                 /* encode directly */
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *లక్ష్యం++=(uint8_t)c;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ++;
                 }
-            } else if(c==PLUS) {
+            } లేకపోతే ఒకవేళ(c==PLUS) {
                 /* output +- for + */
-                *target++=PLUS;
-                if(target<targetLimit) {
-                    *target++=MINUS;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex++;
+                *లక్ష్యం++=PLUS;
+                ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                    *లక్ష్యం++=MINUS;
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ;
+                        *offsets++=ఆధారం_సూచీ++;
                     }
                     /* realign length and targetCapacity */
-                    goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex++;
+                    వెళ్ళు ప్రత్యక్ష_బహుళకం;
+                } లేకపోతే {
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ++;
                     }
-                    cnv->charErrorBuffer[0]=MINUS;
-                    cnv->charErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    cnv->char_Error_బఫరు[0]=MINUS;
+                    cnv->char_Error_బఫరు_నిడివి=1;
+                    *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 /* un-read this character and switch to Unicode Mode */
-                --source;
-                *target++=PLUS;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                --ఆధారం;
+                *లక్ష్యం++=PLUS;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-                inDirectMode=false;
+                లోపల_ప్రత్యక్ష_బహుళకం=అబద్ధం;
                 base64Counter=0;
-                goto unicodeMode;
+                వెళ్ళు unicode_బహుళకం;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        ఒకవేళ(ఆధారం<ఆధారం_హద్దు && లక్ష్యం>=లక్ష్యం_హద్దు) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
         }
-    } else {
-unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                c=*source++;
-                if(c<=127 && encodeDirectly[c]) {
+    } లేకపోతే {
+unicode_బహుళకం:
+        అయితే(ఆధారం<ఆధారం_హద్దు) {
+            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                c=*ఆధారం++;
+                ఒకవేళ(c<=127 && encodeDirectly[c]) {
                     /* encode directly */
-                    inDirectMode=true;
+                    లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
 
                     /* trick: back out this character to make this easier */
-                    --source;
+                    --ఆధారం;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    ఒకవేళ(base64Counter!=0) {
                         /* write remaining bits for the previous character */
-                        *target++=toBase64[bits];
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *లక్ష్యం++=గమ్యం_Base64[బిట్లు];
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ-1;
                         }
                     }
-                    if(fromBase64[c]!=-1) {
+                    ఒకవేళ(fromBase64[c]!=-1) {
                         /* need to terminate with a minus */
-                        if(target<targetLimit) {
-                            *target++=MINUS;
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex-1;
+                        ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                            *లక్ష్యం++=MINUS;
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ-1;
                             }
-                        } else {
-                            cnv->charErrorBuffer[0]=MINUS;
-                            cnv->charErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            break;
+                        } లేకపోతే {
+                            cnv->char_Error_బఫరు[0]=MINUS;
+                            cnv->char_Error_బఫరు_నిడివి=1;
+                            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                            ఆపు;
                         }
                     }
-                    goto directMode;
-                } else {
+                    వెళ్ళు ప్రత్యక్ష_బహుళకం;
+                } లేకపోతే {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -595,195 +595,195 @@ unicodeMode:
                      * character to the next. The actual 2 or 4 bits are shifted to the left edge
                      * of the 6-bits field 5..0 to make the termination of the base64 sequence easier.
                      */
-                    switch(base64Counter) {
-                    case 0:
-                        *target++=toBase64[c>>10];
-                        if(target<targetLimit) {
-                            *target++=toBase64[(c>>4)&0x3f];
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex++;
+                    ఎంపిక(base64Counter) {
+                    స్థితి 0:
+                        *లక్ష్యం++=గమ్యం_Base64[c>>10];
+                        ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                            *లక్ష్యం++=గమ్యం_Base64[(c>>4)&0x3f];
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ;
+                                *offsets++=ఆధారం_సూచీ++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } లేకపోతే {
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ++;
                             }
-                            cnv->charErrorBuffer[0]=toBase64[(c>>4)&0x3f];
-                            cnv->charErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_బఫరు[0]=గమ్యం_Base64[(c>>4)&0x3f];
+                            cnv->char_Error_బఫరు_నిడివి=1;
+                            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                         }
-                        bits=(uint8_t)((c&15)<<2);
+                        బిట్లు=(uint8_t)((c&15)<<2);
                         base64Counter=1;
-                        break;
-                    case 1:
-                        *target++=toBase64[bits|(c>>14)];
-                        if(target<targetLimit) {
-                            *target++=toBase64[(c>>8)&0x3f];
-                            if(target<targetLimit) {
-                                *target++=toBase64[(c>>2)&0x3f];
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                        ఆపు;
+                    స్థితి 1:
+                        *లక్ష్యం++=గమ్యం_Base64[బిట్లు|(c>>14)];
+                        ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                            *లక్ష్యం++=గమ్యం_Base64[(c>>8)&0x3f];
+                            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                                *లక్ష్యం++=గమ్యం_Base64[(c>>2)&0x3f];
+                                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } లేకపోతే {
+                                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ++;
                                 }
-                                cnv->charErrorBuffer[0]=toBase64[(c>>2)&0x3f];
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_బఫరు[0]=గమ్యం_Base64[(c>>2)&0x3f];
+                                cnv->char_Error_బఫరు_నిడివి=1;
+                                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } లేకపోతే {
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ++;
                             }
-                            cnv->charErrorBuffer[0]=toBase64[(c>>8)&0x3f];
-                            cnv->charErrorBuffer[1]=toBase64[(c>>2)&0x3f];
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_బఫరు[0]=గమ్యం_Base64[(c>>8)&0x3f];
+                            cnv->char_Error_బఫరు[1]=గమ్యం_Base64[(c>>2)&0x3f];
+                            cnv->char_Error_బఫరు_నిడివి=2;
+                            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                         }
-                        bits=(uint8_t)((c&3)<<4);
+                        బిట్లు=(uint8_t)((c&3)<<4);
                         base64Counter=2;
-                        break;
-                    case 2:
-                        *target++=toBase64[bits|(c>>12)];
-                        if(target<targetLimit) {
-                            *target++=toBase64[(c>>6)&0x3f];
-                            if(target<targetLimit) {
-                                *target++=toBase64[c&0x3f];
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                        ఆపు;
+                    స్థితి 2:
+                        *లక్ష్యం++=గమ్యం_Base64[బిట్లు|(c>>12)];
+                        ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                            *లక్ష్యం++=గమ్యం_Base64[(c>>6)&0x3f];
+                            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                                *లక్ష్యం++=గమ్యం_Base64[c&0x3f];
+                                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } లేకపోతే {
+                                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ++;
                                 }
-                                cnv->charErrorBuffer[0]=toBase64[c&0x3f];
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_బఫరు[0]=గమ్యం_Base64[c&0x3f];
+                                cnv->char_Error_బఫరు_నిడివి=1;
+                                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } లేకపోతే {
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ++;
                             }
-                            cnv->charErrorBuffer[0]=toBase64[(c>>6)&0x3f];
-                            cnv->charErrorBuffer[1]=toBase64[c&0x3f];
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_బఫరు[0]=గమ్యం_Base64[(c>>6)&0x3f];
+                            cnv->char_Error_బఫరు[1]=గమ్యం_Base64[c&0x3f];
+                            cnv->char_Error_బఫరు_నిడివి=2;
+                            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                         }
-                        bits=0;
+                        బిట్లు=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ఆపు;
+                    అప్రమేయ:
                         /* will never occur */
-                        break;
+                        ఆపు;
                     }
                 }
-            } else {
+            } లేకపోతే {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                ఆపు;
             }
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    ఒకవేళ(p_వాదనలు->flush && ఆధారం>=ఆధారం_హద్దు) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if (base64Counter!=0) {
-                if(target<targetLimit) {
-                    *target++=toBase64[bits];
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex-1;
+        ఒకవేళ(!లోపల_ప్రత్యక్ష_బహుళకం) {
+            ఒకవేళ (base64Counter!=0) {
+                ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                    *లక్ష్యం++=గమ్యం_Base64[బిట్లు];
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ-1;
                     }
-                } else {
-                    cnv->charErrorBuffer[cnv->charErrorBufferLength++]=toBase64[bits];
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                } లేకపోతే {
+                    cnv->char_Error_బఫరు[cnv->char_Error_బఫరు_నిడివి++]=గమ్యం_Base64[బిట్లు];
+                    *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                 }
             }
             /* Add final MINUS to terminate unicodeMode */
-            if(target<targetLimit) {
-                *target++=MINUS;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex-1;
+            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                *లక్ష్యం++=MINUS;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ-1;
                 }
-            } else {
-                cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            } లేకపోతే {
+                cnv->char_Error_బఫరు[cnv->char_Error_బఫరు_నిడివి++]=MINUS;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
             }
         }
         /* reset the state for the next conversion */
-        cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+        cnv->from_Unicode_స్థితి=(cnv->from_Unicode_స్థితి&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
+    } లేకపోతే {
         /* set the converter state back into UConverter */
-        cnv->fromUnicodeStatus=
-            (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/
-            ((uint32_t)inDirectMode<<24)|((uint32_t)base64Counter<<16)|(uint32_t)bits;
+        cnv->from_Unicode_స్థితి=
+            (cnv->from_Unicode_స్థితి&0xf0000000)|    /* keep version*/
+            ((uint32_t)లోపల_ప్రత్యక్ష_బహుళకం<<24)|((uint32_t)base64Counter<<16)|(uint32_t)బిట్లు;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=ఆధారం;
+    p_వాదనలు->లక్ష్యం=(అక్షరం *)లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
 
-static const char * U_CALLCONV
-_UTF7GetName(const UConverter *cnv) {
-    switch(cnv->fromUnicodeStatus>>28) {
-    case 1:
-        return "UTF-7,version=1";
-    default:
-        return "UTF-7";
+స్థిర స్థిరరాశి అక్షరం * U_CALLCONV
+_UTF7GetName(స్థిరరాశి UConverter *cnv) {
+    ఎంపిక(cnv->from_Unicode_స్థితి>>28) {
+    స్థితి 1:
+        తిరిగి "UTF-7,version=1";
+    అప్రమేయ:
+        తిరిగి "UTF-7";
     }
 }
-U_CDECL_END
+U_CDECL_చివర
 
-static const UConverterImpl _UTF7Impl={
+స్థిర స్థిరరాశి UConverterImpl _UTF7Impl={
     UCNV_UTF7,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
     _UTF7Open,
-    nullptr,
+    శూన్యసూచిక,
     _UTF7Reset,
 
-    _UTF7ToUnicodeWithOffsets,
-    _UTF7ToUnicodeWithOffsets,
+    UTF7_గమ్యం_Unicode_With_Offsets,
+    UTF7_గమ్యం_Unicode_With_Offsets,
     _UTF7FromUnicodeWithOffsets,
     _UTF7FromUnicodeWithOffsets,
-    nullptr,
+    శూన్యసూచిక,
 
-    nullptr,
+    శూన్యసూచిక,
     _UTF7GetName,
-    nullptr, /* we don't need writeSub() because we never call a callback at fromUnicode() */
-    nullptr,
-    ucnv_getCompleteUnicodeSet,
+    శూన్యసూచిక, /* we don't need writeSub() because we never call a callback at fromUnicode() */
+    శూన్యసూచిక,
+    ucnv_get_Complete_Unicode_సమితి,
 
-    nullptr,
-    nullptr
+    శూన్యసూచిక,
+    శూన్యసూచిక
 };
 
-static const UConverterStaticData _UTF7StaticData={
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం UTF7_Static_దత్తాంశం={
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "UTF-7",
     0, /* TODO CCSID for UTF-7 */
     UCNV_IBM, UCNV_UTF7,
     1, 4,
     { 0x3f, 0, 0, 0 }, 1, /* the subchar is not used */
-    false, false,
+    అబద్ధం, అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF7Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF7StaticData, &_UTF7Impl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం UTF7_దత్తాంశం=
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&UTF7_Static_దత్తాంశం, &_UTF7Impl);
 
 /* IMAP mailbox name encoding ----------------------------------------------- */
 
@@ -859,18 +859,18 @@ const UConverterSharedData _UTF7Data=
  */
 
 /* uses '&' not '+' to start a base64 sequence */
-#define AMPERSAND 0x26
-#define COMMA 0x2c
-#define SLASH 0x2f
+#నిర్వచించు AMPERSAND 0x26
+#నిర్వచించు COMMA 0x2c
+#నిర్వచించు SLASH 0x2f
 
 /* legal byte values: all US-ASCII graphic characters 0x20..0x7e */
-#define isLegalIMAP(c) (0x20<=(c) && (c)<=0x7e)
+#నిర్వచించు isLegalIMAP(c) (0x20<=(c) && (c)<=0x7e)
 
 /* direct-encode all of printable ASCII 0x20..0x7e except '&' 0x26 */
-#define inSetDIMAP(c) (isLegalIMAP(c) && c!=AMPERSAND)
+#నిర్వచించు లోపల_సమితి_DIMAP(c) (isLegalIMAP(c) && c!=AMPERSAND)
 
-#define TO_BASE64_IMAP(n) ((n)<63 ? toBase64[n] : COMMA)
-#define FROM_BASE64_IMAP(c) ((c)==COMMA ? 63 : (c)==SLASH ? -1 : fromBase64[c])
+#నిర్వచించు గమ్యం_BASE64_IMAP(n) ((n)<63 ? గమ్యం_Base64[n] : COMMA)
+#నిర్వచించు FROM_BASE64_IMAP(c) ((c)==COMMA ? 63 : (c)==SLASH ? -1 : fromBase64[c])
 
 /*
  * converter status values:
@@ -889,56 +889,56 @@ const UConverterSharedData _UTF7Data=
  */
 
 U_CDECL_BEGIN
-static void U_CALLCONV
-_IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+_IMAPToUnicodeWithOffsets(UConverter_గమ్యం_Unicode_వాదనలు *p_వాదనలు,
+                          UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    స్థిరరాశి uint8_t *ఆధారం, *ఆధారం_హద్దు;
+    char16_t *లక్ష్యం;
+    స్థిరరాశి char16_t *లక్ష్యం_హద్దు;
     int32_t *offsets;
 
-    uint8_t *bytes;
-    uint8_t byteIndex;
+    uint8_t *బైట్లు;
+    uint8_t byte_సూచీ;
 
-    int32_t length, targetCapacity;
+    int32_t length, లక్ష్యం_సామర్థ్యం;
 
     /* UTF-7 state */
-    uint16_t bits;
+    uint16_t బిట్లు;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool లోపల_ప్రత్యక్ష_బహుళకం;
 
-    int8_t base64Value;
+    int8_t base64_విలువ;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ఆధారం_సూచీ, తదుపరి_ఆధారం_సూచీ;
 
     char16_t c;
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_వాదనలు->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ఆధారం=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=(స్థిరరాశి uint8_t *)p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం=p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_హద్దు=p_వాదనలు->లక్ష్యం_హద్దు;
+    offsets=p_వాదనలు->offsets;
     /* get the state machine state */
     {
-        uint32_t status=cnv->toUnicodeStatus;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint16_t)status;
+        uint32_t స్థితి_2=cnv->గమ్యం_Unicode_స్థితి;
+        లోపల_ప్రత్యక్ష_బహుళకం=(UBool)((స్థితి_2>>24)&1);
+        base64Counter=(int8_t)(స్థితి_2>>16);
+        బిట్లు=(uint16_t)స్థితి_2;
     }
-    bytes=cnv->toUBytes;
-    byteIndex=cnv->toULength;
+    బైట్లు=cnv->గమ్యం_UBytes;
+    byte_సూచీ=cnv->గమ్యం_ULength;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ఆధారం_సూచీ=byte_సూచీ==0 ? 0 : -1;
+    తదుపరి_ఆధారం_సూచీ=0;
 
-    if(inDirectMode) {
-directMode:
+    ఒకవేళ(లోపల_ప్రత్యక్ష_బహుళకం) {
+ప్రత్యక్ష_బహుళకం:
         /*
          * In Direct Mode, US-ASCII characters are encoded directly, i.e.,
          * with their US-ASCII byte values.
@@ -946,43 +946,43 @@ directMode:
          *
          * In Direct Mode, only the sourceIndex is used.
          */
-        byteIndex=0;
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+        byte_సూచీ=0;
+        length=(int32_t)(ఆధారం_హద్దు-ఆధారం);
+        లక్ష్యం_సామర్థ్యం=(int32_t)(లక్ష్యం_హద్దు-లక్ష్యం);
+        ఒకవేళ(length>లక్ష్యం_సామర్థ్యం) {
+            length=లక్ష్యం_సామర్థ్యం;
         }
-        while(length>0) {
-            b=*source++;
-            if(!isLegalIMAP(b)) {
+        అయితే(length>0) {
+            b=*ఆధారం++;
+            ఒకవేళ(!isLegalIMAP(b)) {
                 /* illegal */
-                bytes[0]=b;
-                byteIndex=1;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
-            } else if(b!=AMPERSAND) {
+                బైట్లు[0]=b;
+                byte_సూచీ=1;
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                ఆపు;
+            } లేకపోతే ఒకవేళ(b!=AMPERSAND) {
                 /* write directly encoded character */
-                *target++=b;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *లక్ష్యం++=b;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ++;
                 }
-            } else /* AMPERSAND */ {
+            } లేకపోతే /* AMPERSAND */ {
                 /* switch to Unicode mode */
-                nextSourceIndex=++sourceIndex;
-                inDirectMode=false;
-                byteIndex=0;
-                bits=0;
+                తదుపరి_ఆధారం_సూచీ=++ఆధారం_సూచీ;
+                లోపల_ప్రత్యక్ష_బహుళకం=అబద్ధం;
+                byte_సూచీ=0;
+                బిట్లు=0;
                 base64Counter=-1;
-                goto unicodeMode;
+                వెళ్ళు unicode_బహుళకం;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        ఒకవేళ(ఆధారం<ఆధారం_హద్దు && లక్ష్యం>=లక్ష్యం_హద్దు) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
         }
-    } else {
-unicodeMode:
+    } లేకపోతే {
+unicode_బహుళకం:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
          * The base64 sequence ends with any character that is not in the base64 alphabet.
@@ -994,127 +994,127 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                bytes[byteIndex++]=b=*source++;
-                ++nextSourceIndex;
-                if(b>0x7e) {
+        అయితే(ఆధారం<ఆధారం_హద్దు) {
+            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                బైట్లు[byte_సూచీ++]=b=*ఆధారం++;
+                ++తదుపరి_ఆధారం_సూచీ;
+                ఒకవేళ(b>0x7e) {
                     /* illegal - test other illegal US-ASCII values by base64Value==-3 */
-                    inDirectMode=true;
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
-                } else if((base64Value=FROM_BASE64_IMAP(b))>=0) {
+                    లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
+                    *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                    ఆపు;
+                } లేకపోతే ఒకవేళ((base64_విలువ=FROM_BASE64_IMAP(b))>=0) {
                     /* collect base64 bytes into UChars */
-                    switch(base64Counter) {
-                    case -1: /* -1 is immediately after the & */
-                    case 0:
-                        bits=base64Value;
+                    ఎంపిక(base64Counter) {
+                    స్థితి -1: /* -1 is immediately after the & */
+                    స్థితి 0:
+                        బిట్లు=base64_విలువ;
                         base64Counter=1;
-                        break;
-                    case 1:
-                    case 3:
-                    case 4:
-                    case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        ఆపు;
+                    స్థితి 1:
+                    స్థితి 3:
+                    స్థితి 4:
+                    స్థితి 6:
+                        బిట్లు=(uint16_t)((బిట్లు<<6)|base64_విలువ);
                         ++base64Counter;
-                        break;
-                    case 2:
-                        c=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(isLegalIMAP(c)) {
+                        ఆపు;
+                    స్థితి 2:
+                        c=(char16_t)((బిట్లు<<4)|(base64_విలువ>>2));
+                        ఒకవేళ(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
+                            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                            వెళ్ళు endloop;
                         }
-                        *target++=c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        *లక్ష్యం++=c;
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ;
+                            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        బైట్లు[0]=b; /* keep this byte in case an error occurs */
+                        byte_సూచీ=1;
+                        బిట్లు=(uint16_t)(base64_విలువ&3);
                         base64Counter=3;
-                        break;
-                    case 5:
-                        c=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(isLegalIMAP(c)) {
+                        ఆపు;
+                    స్థితి 5:
+                        c=(char16_t)((బిట్లు<<2)|(base64_విలువ>>4));
+                        ఒకవేళ(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
+                            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                            వెళ్ళు endloop;
                         }
-                        *target++=c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        *లక్ష్యం++=c;
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ;
+                            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        బైట్లు[0]=b; /* keep this byte in case an error occurs */
+                        byte_సూచీ=1;
+                        బిట్లు=(uint16_t)(base64_విలువ&15);
                         base64Counter=6;
-                        break;
-                    case 7:
-                        c=(char16_t)((bits<<6)|base64Value);
-                        if(isLegalIMAP(c)) {
+                        ఆపు;
+                    స్థితి 7:
+                        c=(char16_t)((బిట్లు<<6)|base64_విలువ);
+                        ఒకవేళ(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
+                            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                            వెళ్ళు endloop;
                         }
-                        *target++=c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex;
+                        *లక్ష్యం++=c;
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ;
+                            ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
                         }
-                        byteIndex=0;
-                        bits=0;
+                        byte_సూచీ=0;
+                        బిట్లు=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ఆపు;
+                    అప్రమేయ:
                         /* will never occur */
-                        break;
+                        ఆపు;
                     }
-                } else if(base64Value==-2) {
+                } లేకపోతే ఒకవేళ(base64_విలువ==-2) {
                     /* minus sign terminates the base64 sequence */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
+                    ఒకవేళ(base64Counter==-1) {
                         /* &- i.e. a minus immediately following an ampersand */
-                        *target++=AMPERSAND;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *లక్ష్యం++=AMPERSAND;
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ-1;
                         }
-                    } else {
+                    } లేకపోతే {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
+                        ఒకవేళ(బిట్లు!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
                             /* bits are illegally left over, a char16_t is incomplete */
                             /* base64Counter other than 0, 3, 6 means non-minimal zero-padding, also illegal */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                            ఆపు;
                         }
                     }
-                    sourceIndex=nextSourceIndex;
-                    goto directMode;
-                } else {
-                    if(base64Counter==-1) {
+                    ఆధారం_సూచీ=తదుపరి_ఆధారం_సూచీ;
+                    వెళ్ళు ప్రత్యక్ష_బహుళకం;
+                } లేకపోతే {
+                    ఒకవేళ(base64Counter==-1) {
                         /* illegal: & immediately followed by something other than base64 or minus sign */
                         /* include the ampersand in the reported sequence */
-                        --sourceIndex;
-                        bytes[0]=AMPERSAND;
-                        bytes[1]=b;
-                        byteIndex=2;
+                        --ఆధారం_సూచీ;
+                        బైట్లు[0]=AMPERSAND;
+                        బైట్లు[1]=b;
+                        byte_సూచీ=2;
                     }
                     /* base64Value==-1 for characters that are illegal only in Unicode mode */
                     /* base64Value==-3 for illegal characters */
                     /* illegal */
-                    inDirectMode=true;
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
+                    *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                ఆపు;
             }
         }
     }
@@ -1130,157 +1130,157 @@ endloop:
      *   in Unicode mode and byteIndex==0
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*pErrorCode) &&
-        !inDirectMode && byteIndex==0 &&
-        pArgs->flush && source>=sourceLimit
+    ఒకవేళ( U_SUCCESS(*p_Error_సంకేతం) &&
+        !లోపల_ప్రత్యక్ష_బహుళకం && byte_సూచీ==0 &&
+        p_వాదనలు->flush && ఆధారం>=ఆధారం_హద్దు
     ) {
-        if(base64Counter==-1) {
+        ఒకవేళ(base64Counter==-1) {
             /* & at the very end of the input */
             /* make the ampersand the reported sequence */
-            bytes[0]=AMPERSAND;
-            byteIndex=1;
+            బైట్లు[0]=AMPERSAND;
+            byte_సూచీ=1;
         }
         /* else if(base64Counter!=-1) byteIndex remains 0 because there is no particular byte sequence */
 
-        inDirectMode=true; /* avoid looping */
-        *pErrorCode=U_TRUNCATED_CHAR_FOUND;
+        లోపల_ప్రత్యక్ష_బహుళకం=నిజం; /* avoid looping */
+        *p_Error_సంకేతం=U_TRUNCATED_CHAR_దొరికింది;
     }
 
     /* set the converter state back into UConverter */
-    cnv->toUnicodeStatus=((uint32_t)inDirectMode<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)bits;
-    cnv->toULength=byteIndex;
+    cnv->గమ్యం_Unicode_స్థితి=((uint32_t)లోపల_ప్రత్యక్ష_బహుళకం<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)బిట్లు;
+    cnv->గమ్యం_ULength=byte_సూచీ;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=(స్థిరరాశి అక్షరం *)ఆధారం;
+    p_వాదనలు->లక్ష్యం=లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
 
-static void U_CALLCONV
-_IMAPFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+స్థిర శూన్య U_CALLCONV
+_IMAPFromUnicodeWithOffsets(UConverter_From_Unicode_వాదనలు *p_వాదనలు,
+                            UError_సంకేతం *p_Error_సంకేతం) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target, *targetLimit;
+    స్థిరరాశి char16_t *ఆధారం, *ఆధారం_హద్దు;
+    uint8_t *లక్ష్యం, *లక్ష్యం_హద్దు;
     int32_t *offsets;
 
-    int32_t length, targetCapacity, sourceIndex;
+    int32_t length, లక్ష్యం_సామర్థ్యం, ఆధారం_సూచీ;
     char16_t c;
     uint8_t b;
 
     /* UTF-7 state */
-    uint8_t bits;
+    uint8_t బిట్లు;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool లోపల_ప్రత్యక్ష_బహుళకం;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_వాదనలు->converter;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetLimit=(uint8_t *)pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ఆధారం=p_వాదనలు->ఆధారం;
+    ఆధారం_హద్దు=p_వాదనలు->ఆధారం_హద్దు;
+    లక్ష్యం=(uint8_t *)p_వాదనలు->లక్ష్యం;
+    లక్ష్యం_హద్దు=(uint8_t *)p_వాదనలు->లక్ష్యం_హద్దు;
+    offsets=p_వాదనలు->offsets;
 
     /* get the state machine state */
     {
-        uint32_t status=cnv->fromUnicodeStatus;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint8_t)status;
+        uint32_t స్థితి_2=cnv->from_Unicode_స్థితి;
+        లోపల_ప్రత్యక్ష_బహుళకం=(UBool)((స్థితి_2>>24)&1);
+        base64Counter=(int8_t)(స్థితి_2>>16);
+        బిట్లు=(uint8_t)స్థితి_2;
     }
 
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
-    sourceIndex=0;
+    ఆధారం_సూచీ=0;
 
-    if(inDirectMode) {
-directMode:
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+    ఒకవేళ(లోపల_ప్రత్యక్ష_బహుళకం) {
+ప్రత్యక్ష_బహుళకం:
+        length=(int32_t)(ఆధారం_హద్దు-ఆధారం);
+        లక్ష్యం_సామర్థ్యం=(int32_t)(లక్ష్యం_హద్దు-లక్ష్యం);
+        ఒకవేళ(length>లక్ష్యం_సామర్థ్యం) {
+            length=లక్ష్యం_సామర్థ్యం;
         }
-        while(length>0) {
-            c=*source++;
+        అయితే(length>0) {
+            c=*ఆధారం++;
             /* encode 0x20..0x7e except '&' directly */
-            if(inSetDIMAP(c)) {
+            ఒకవేళ(లోపల_సమితి_DIMAP(c)) {
                 /* encode directly */
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *లక్ష్యం++=(uint8_t)c;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ++;
                 }
-            } else if(c==AMPERSAND) {
+            } లేకపోతే ఒకవేళ(c==AMPERSAND) {
                 /* output &- for & */
-                *target++=AMPERSAND;
-                if(target<targetLimit) {
-                    *target++=MINUS;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex++;
+                *లక్ష్యం++=AMPERSAND;
+                ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                    *లక్ష్యం++=MINUS;
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ;
+                        *offsets++=ఆధారం_సూచీ++;
                     }
                     /* realign length and targetCapacity */
-                    goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex++;
+                    వెళ్ళు ప్రత్యక్ష_బహుళకం;
+                } లేకపోతే {
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ++;
                     }
-                    cnv->charErrorBuffer[0]=MINUS;
-                    cnv->charErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    cnv->char_Error_బఫరు[0]=MINUS;
+                    cnv->char_Error_బఫరు_నిడివి=1;
+                    *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 /* un-read this character and switch to Unicode Mode */
-                --source;
-                *target++=AMPERSAND;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                --ఆధారం;
+                *లక్ష్యం++=AMPERSAND;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ;
                 }
-                inDirectMode=false;
+                లోపల_ప్రత్యక్ష_బహుళకం=అబద్ధం;
                 base64Counter=0;
-                goto unicodeMode;
+                వెళ్ళు unicode_బహుళకం;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        ఒకవేళ(ఆధారం<ఆధారం_హద్దు && లక్ష్యం>=లక్ష్యం_హద్దు) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
         }
-    } else {
-unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                c=*source++;
-                if(isLegalIMAP(c)) {
+    } లేకపోతే {
+unicode_బహుళకం:
+        అయితే(ఆధారం<ఆధారం_హద్దు) {
+            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                c=*ఆధారం++;
+                ఒకవేళ(isLegalIMAP(c)) {
                     /* encode directly */
-                    inDirectMode=true;
+                    లోపల_ప్రత్యక్ష_బహుళకం=నిజం;
 
                     /* trick: back out this character to make this easier */
-                    --source;
+                    --ఆధారం;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    ఒకవేళ(base64Counter!=0) {
                         /* write remaining bits for the previous character */
-                        *target++=TO_BASE64_IMAP(bits);
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *లక్ష్యం++=గమ్యం_BASE64_IMAP(బిట్లు);
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ-1;
                         }
                     }
                     /* need to terminate with a minus */
-                    if(target<targetLimit) {
-                        *target++=MINUS;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                    ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                        *లక్ష్యం++=MINUS;
+                        ఒకవేళ(offsets!=శూన్యసూచిక) {
+                            *offsets++=ఆధారం_సూచీ-1;
                         }
-                    } else {
-                        cnv->charErrorBuffer[0]=MINUS;
-                        cnv->charErrorBufferLength=1;
-                        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                    } లేకపోతే {
+                        cnv->char_Error_బఫరు[0]=MINUS;
+                        cnv->char_Error_బఫరు_నిడివి=1;
+                        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                        ఆపు;
                     }
-                    goto directMode;
-                } else {
+                    వెళ్ళు ప్రత్యక్ష_బహుళకం;
+                } లేకపోతే {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -1290,198 +1290,198 @@ unicodeMode:
                      * character to the next. The actual 2 or 4 bits are shifted to the left edge
                      * of the 6-bits field 5..0 to make the termination of the base64 sequence easier.
                      */
-                    switch(base64Counter) {
-                    case 0:
+                    ఎంపిక(base64Counter) {
+                    స్థితి 0:
                         b=(uint8_t)(c>>10);
-                        *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        *లక్ష్యం++=గమ్యం_BASE64_IMAP(b);
+                        ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
                             b=(uint8_t)((c>>4)&0x3f);
-                            *target++=TO_BASE64_IMAP(b);
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex++;
+                            *లక్ష్యం++=గమ్యం_BASE64_IMAP(b);
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ;
+                                *offsets++=ఆధారం_సూచీ++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } లేకపోతే {
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ++;
                             }
                             b=(uint8_t)((c>>4)&0x3f);
-                            cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
-                            cnv->charErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_బఫరు[0]=గమ్యం_BASE64_IMAP(b);
+                            cnv->char_Error_బఫరు_నిడివి=1;
+                            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                         }
-                        bits=(uint8_t)((c&15)<<2);
+                        బిట్లు=(uint8_t)((c&15)<<2);
                         base64Counter=1;
-                        break;
-                    case 1:
-                        b=(uint8_t)(bits|(c>>14));
-                        *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        ఆపు;
+                    స్థితి 1:
+                        b=(uint8_t)(బిట్లు|(c>>14));
+                        *లక్ష్యం++=గమ్యం_BASE64_IMAP(b);
+                        ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
                             b=(uint8_t)((c>>8)&0x3f);
-                            *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            *లక్ష్యం++=గమ్యం_BASE64_IMAP(b);
+                            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
                                 b=(uint8_t)((c>>2)&0x3f);
-                                *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                                *లక్ష్యం++=గమ్యం_BASE64_IMAP(b);
+                                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } లేకపోతే {
+                                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ++;
                                 }
                                 b=(uint8_t)((c>>2)&0x3f);
-                                cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_బఫరు[0]=గమ్యం_BASE64_IMAP(b);
+                                cnv->char_Error_బఫరు_నిడివి=1;
+                                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } లేకపోతే {
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ++;
                             }
                             b=(uint8_t)((c>>8)&0x3f);
-                            cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
+                            cnv->char_Error_బఫరు[0]=గమ్యం_BASE64_IMAP(b);
                             b=(uint8_t)((c>>2)&0x3f);
-                            cnv->charErrorBuffer[1]=TO_BASE64_IMAP(b);
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_బఫరు[1]=గమ్యం_BASE64_IMAP(b);
+                            cnv->char_Error_బఫరు_నిడివి=2;
+                            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                         }
-                        bits=(uint8_t)((c&3)<<4);
+                        బిట్లు=(uint8_t)((c&3)<<4);
                         base64Counter=2;
-                        break;
-                    case 2:
-                        b=(uint8_t)(bits|(c>>12));
-                        *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        ఆపు;
+                    స్థితి 2:
+                        b=(uint8_t)(బిట్లు|(c>>12));
+                        *లక్ష్యం++=గమ్యం_BASE64_IMAP(b);
+                        ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
                             b=(uint8_t)((c>>6)&0x3f);
-                            *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            *లక్ష్యం++=గమ్యం_BASE64_IMAP(b);
+                            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
                                 b=(uint8_t)(c&0x3f);
-                                *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                                *లక్ష్యం++=గమ్యం_BASE64_IMAP(b);
+                                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } లేకపోతే {
+                                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                    *offsets++=ఆధారం_సూచీ;
+                                    *offsets++=ఆధారం_సూచీ++;
                                 }
                                 b=(uint8_t)(c&0x3f);
-                                cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_బఫరు[0]=గమ్యం_BASE64_IMAP(b);
+                                cnv->char_Error_బఫరు_నిడివి=1;
+                                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } లేకపోతే {
+                            ఒకవేళ(offsets!=శూన్యసూచిక) {
+                                *offsets++=ఆధారం_సూచీ++;
                             }
                             b=(uint8_t)((c>>6)&0x3f);
-                            cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
+                            cnv->char_Error_బఫరు[0]=గమ్యం_BASE64_IMAP(b);
                             b=(uint8_t)(c&0x3f);
-                            cnv->charErrorBuffer[1]=TO_BASE64_IMAP(b);
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_బఫరు[1]=గమ్యం_BASE64_IMAP(b);
+                            cnv->char_Error_బఫరు_నిడివి=2;
+                            *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                         }
-                        bits=0;
+                        బిట్లు=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ఆపు;
+                    అప్రమేయ:
                         /* will never occur */
-                        break;
+                        ఆపు;
                     }
                 }
-            } else {
+            } లేకపోతే {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+                ఆపు;
             }
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    ఒకవేళ(p_వాదనలు->flush && ఆధారం>=ఆధారం_హద్దు) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if(base64Counter!=0) {
-                if(target<targetLimit) {
-                    *target++=TO_BASE64_IMAP(bits);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex-1;
+        ఒకవేళ(!లోపల_ప్రత్యక్ష_బహుళకం) {
+            ఒకవేళ(base64Counter!=0) {
+                ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                    *లక్ష్యం++=గమ్యం_BASE64_IMAP(బిట్లు);
+                    ఒకవేళ(offsets!=శూన్యసూచిక) {
+                        *offsets++=ఆధారం_సూచీ-1;
                     }
-                } else {
-                    cnv->charErrorBuffer[cnv->charErrorBufferLength++]=TO_BASE64_IMAP(bits);
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                } లేకపోతే {
+                    cnv->char_Error_బఫరు[cnv->char_Error_బఫరు_నిడివి++]=గమ్యం_BASE64_IMAP(బిట్లు);
+                    *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
                 }
             }
             /* need to terminate with a minus */
-            if(target<targetLimit) {
-                *target++=MINUS;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex-1;
+            ఒకవేళ(లక్ష్యం<లక్ష్యం_హద్దు) {
+                *లక్ష్యం++=MINUS;
+                ఒకవేళ(offsets!=శూన్యసూచిక) {
+                    *offsets++=ఆధారం_సూచీ-1;
                 }
-            } else {
-                cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            } లేకపోతే {
+                cnv->char_Error_బఫరు[cnv->char_Error_బఫరు_నిడివి++]=MINUS;
+                *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
             }
         }
         /* reset the state for the next conversion */
-        cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+        cnv->from_Unicode_స్థితి=(cnv->from_Unicode_స్థితి&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
+    } లేకపోతే {
         /* set the converter state back into UConverter */
-        cnv->fromUnicodeStatus=
-            (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/
-            ((uint32_t)inDirectMode<<24)|((uint32_t)base64Counter<<16)|(uint32_t)bits;
+        cnv->from_Unicode_స్థితి=
+            (cnv->from_Unicode_స్థితి&0xf0000000)|    /* keep version*/
+            ((uint32_t)లోపల_ప్రత్యక్ష_బహుళకం<<24)|((uint32_t)base64Counter<<16)|(uint32_t)బిట్లు;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_వాదనలు->ఆధారం=ఆధారం;
+    p_వాదనలు->లక్ష్యం=(అక్షరం *)లక్ష్యం;
+    p_వాదనలు->offsets=offsets;
 }
-U_CDECL_END
+U_CDECL_చివర
 
-static const UConverterImpl _IMAPImpl={
+స్థిర స్థిరరాశి UConverterImpl _IMAPImpl={
     UCNV_IMAP_MAILBOX,
 
-    nullptr,
-    nullptr,
+    శూన్యసూచిక,
+    శూన్యసూచిక,
 
     _UTF7Open,
-    nullptr,
+    శూన్యసూచిక,
     _UTF7Reset,
 
     _IMAPToUnicodeWithOffsets,
     _IMAPToUnicodeWithOffsets,
     _IMAPFromUnicodeWithOffsets,
     _IMAPFromUnicodeWithOffsets,
-    nullptr,
+    శూన్యసూచిక,
 
-    nullptr,
-    nullptr,
-    nullptr, /* we don't need writeSub() because we never call a callback at fromUnicode() */
-    nullptr,
-    ucnv_getCompleteUnicodeSet,
-    nullptr,
-    nullptr
+    శూన్యసూచిక,
+    శూన్యసూచిక,
+    శూన్యసూచిక, /* we don't need writeSub() because we never call a callback at fromUnicode() */
+    శూన్యసూచిక,
+    ucnv_get_Complete_Unicode_సమితి,
+    శూన్యసూచిక,
+    శూన్యసూచిక
 };
 
-static const UConverterStaticData _IMAPStaticData={
-    sizeof(UConverterStaticData),
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం IMAPStatic_దత్తాంశం={
+    పరిమాణం(UConverter_Static_దత్తాంశం),
     "IMAP-mailbox-name",
     0, /* TODO CCSID for IMAP-mailbox-name */
     UCNV_IBM, UCNV_IMAP_MAILBOX,
     1, 4,
     { 0x3f, 0, 0, 0 }, 1, /* the subchar is not used */
-    false, false,
+    అబద్ధం, అబద్ధం,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _IMAPData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_IMAPStaticData, &_IMAPImpl);
+స్థిరరాశి UConverter_Shared_దత్తాంశం _IMAPData=
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&IMAPStatic_దత్తాంశం, &_IMAPImpl);
 
-#endif
+#అయితే_ముగింపు

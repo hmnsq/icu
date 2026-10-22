@@ -11,18 +11,18 @@
 * 2010nov19 Markus Scherer  Rewrite for formatVersion 2.
 **********************************************************************
 */
-#include "propname.h"
-#include "unicode/uchar.h"
-#include "unicode/udata.h"
-#include "unicode/uscript.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uarrsort.h"
-#include "uinvchar.h"
+#అన్తర్భావ "propname.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/uscript.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uarrsort.h"
+#అన్తర్భావ "uinvchar.h"
 
-#define INCLUDED_FROM_PROPNAME_CPP
-#include "propname_data.h"
+#నిర్వచించు INCLUDED_FROM_PROPNAME_CPP
+#అన్తర్భావ "propname_data.h"
 
 U_CDECL_BEGIN
 
@@ -31,21 +31,21 @@ U_CDECL_BEGIN
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getASCIIPropertyNameChar(const char *name) {
+స్థిర అంతఃవరుస int32_t
+getASCIIPropertyNameChar(స్థిరరాశి అక్షరం *name) {
     int32_t i;
-    char c;
+    అక్షరం c;
 
     /* Ignore delimiters '-', '_', and ASCII White_Space */
-    for(i=0;
+    కొరకు(i=0;
         (c=name[i++])==0x2d || c==0x5f ||
         c==0x20 || (0x09<=c && c<=0x0d);
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
-    } else {
-        return i<<8;
+    ఒకవేళ(c!=0) {
+        తిరిగి (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
+    } లేకపోతే {
+        తిరిగి i<<8;
     }
 }
 
@@ -54,21 +54,21 @@ getASCIIPropertyNameChar(const char *name) {
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getEBCDICPropertyNameChar(const char *name) {
+స్థిర అంతఃవరుస int32_t
+getEBCDICPropertyNameChar(స్థిరరాశి అక్షరం *name) {
     int32_t i;
-    char c;
+    అక్షరం c;
 
     /* Ignore delimiters '-', '_', and EBCDIC White_Space */
-    for(i=0;
+    కొరకు(i=0;
         (c=name[i++])==0x60 || c==0x6d ||
         c==0x40 || c==0x05 || c==0x15 || c==0x25 || c==0x0b || c==0x0c || c==0x0d;
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
-    } else {
-        return i<<8;
+    ఒకవేళ(c!=0) {
+        తిరిగి (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
+    } లేకపోతే {
+        తిరిగి i<<8;
     }
 }
 
@@ -90,23 +90,23 @@ getEBCDICPropertyNameChar(const char *name) {
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
+uprv_compare_ASCIIProperty_పేర్లు(స్థిరరాశి అక్షరం *name1, స్థిరరాశి అక్షరం *name2) {
     int32_t rc, r1, r2;
 
-    for(;;) {
+    కొరకు(;;) {
         r1=getASCIIPropertyNameChar(name1);
         r2=getASCIIPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        ఒకవేళ(((r1|r2)&0xff)==0) {
+            తిరిగి 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        ఒకవేళ(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            ఒకవేళ(rc!=0) {
+                తిరిగి rc;
             }
         }
 
@@ -116,23 +116,23 @@ uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2) {
+uprv_compare_EBCDICProperty_పేర్లు(స్థిరరాశి అక్షరం *name1, స్థిరరాశి అక్షరం *name2) {
     int32_t rc, r1, r2;
 
-    for(;;) {
+    కొరకు(;;) {
         r1=getEBCDICPropertyNameChar(name1);
         r2=getEBCDICPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        ఒకవేళ(((r1|r2)&0xff)==0) {
+            తిరిగి 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        ఒకవేళ(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            ఒకవేళ(rc!=0) {
+                తిరిగి rc;
             }
         }
 
@@ -141,194 +141,194 @@ uprv_compareEBCDICPropertyNames(const char *name1, const char *name2) {
     }
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
 U_NAMESPACE_BEGIN
 
-int32_t PropNameData::findProperty(int32_t property) {
+int32_t Prop_Name_దత్తాంశం::కనుగొను_Property(int32_t property) {
     int32_t i=1;  // valueMaps index, initially after numRanges
-    for(int32_t numRanges=valueMaps[0]; numRanges>0; --numRanges) {
+    కొరకు(int32_t అంకె_Ranges=విలువ_Maps[0]; అంకె_Ranges>0; --అంకె_Ranges) {
         // Read and skip the start and limit of this range.
-        int32_t start=valueMaps[i];
-        int32_t limit=valueMaps[i+1];
+        int32_t ప్రారంభం=విలువ_Maps[i];
+        int32_t హద్దు=విలువ_Maps[i+1];
         i+=2;
-        if(property<start) {
-            break;
+        ఒకవేళ(property<ప్రారంభం) {
+            ఆపు;
         }
-        if(property<limit) {
-            return i+(property-start)*2;
+        ఒకవేళ(property<హద్దు) {
+            తిరిగి i+(property-ప్రారంభం)*2;
         }
-        i+=(limit-start)*2;  // Skip all entries for this range.
+        i+=(హద్దు-ప్రారంభం)*2;  // Skip all entries for this range.
     }
-    return 0;
+    తిరిగి 0;
 }
 
-int32_t PropNameData::findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value) {
-    if(valueMapIndex==0) {
-        return 0;  // The property does not have named values.
+int32_t Prop_Name_దత్తాంశం::కనుగొను_Property_విలువ_Name_సమూహం(int32_t విలువ_Map_సూచీ, int32_t value) {
+    ఒకవేళ(విలువ_Map_సూచీ==0) {
+        తిరిగి 0;  // The property does not have named values.
     }
-    ++valueMapIndex;  // Skip the BytesTrie offset.
-    int32_t numRanges=valueMaps[valueMapIndex++];
-    if(numRanges<0x10) {
+    ++విలువ_Map_సూచీ;  // Skip the BytesTrie offset.
+    int32_t అంకె_Ranges=విలువ_Maps[విలువ_Map_సూచీ++];
+    ఒకవేళ(అంకె_Ranges<0x10) {
         // Ranges of values.
-        for(; numRanges>0; --numRanges) {
+        కొరకు(; అంకె_Ranges>0; --అంకె_Ranges) {
             // Read and skip the start and limit of this range.
-            int32_t start=valueMaps[valueMapIndex];
-            int32_t limit=valueMaps[valueMapIndex+1];
-            valueMapIndex+=2;
-            if(value<start) {
-                break;
+            int32_t ప్రారంభం=విలువ_Maps[విలువ_Map_సూచీ];
+            int32_t హద్దు=విలువ_Maps[విలువ_Map_సూచీ+1];
+            విలువ_Map_సూచీ+=2;
+            ఒకవేళ(value<ప్రారంభం) {
+                ఆపు;
             }
-            if(value<limit) {
-                return valueMaps[valueMapIndex+value-start];
+            ఒకవేళ(value<హద్దు) {
+                తిరిగి విలువ_Maps[విలువ_Map_సూచీ+value-ప్రారంభం];
             }
-            valueMapIndex+=limit-start;  // Skip all entries for this range.
+            విలువ_Map_సూచీ+=హద్దు-ప్రారంభం;  // Skip all entries for this range.
         }
-    } else {
+    } లేకపోతే {
         // List of values.
-        int32_t valuesStart=valueMapIndex;
-        int32_t nameGroupOffsetsStart=valueMapIndex+numRanges-0x10;
-        do {
-            int32_t v=valueMaps[valueMapIndex];
-            if(value<v) {
-                break;
+        int32_t విలువలు_ప్రారంభం=విలువ_Map_సూచీ;
+        int32_t name_సమూహం_Offsets_ప్రారంభం=విలువ_Map_సూచీ+అంకె_Ranges-0x10;
+        చేయి {
+            int32_t v=విలువ_Maps[విలువ_Map_సూచీ];
+            ఒకవేళ(value<v) {
+                ఆపు;
             }
-            if(value==v) {
-                return valueMaps[nameGroupOffsetsStart+valueMapIndex-valuesStart];
+            ఒకవేళ(value==v) {
+                తిరిగి విలువ_Maps[name_సమూహం_Offsets_ప్రారంభం+విలువ_Map_సూచీ-విలువలు_ప్రారంభం];
             }
-        } while(++valueMapIndex<nameGroupOffsetsStart);
+        } అయితే(++విలువ_Map_సూచీ<name_సమూహం_Offsets_ప్రారంభం);
     }
-    return 0;
+    తిరిగి 0;
 }
 
-const char *PropNameData::getName(const char *nameGroup, int32_t nameIndex) {
-    int32_t numNames=*nameGroup++;
-    if(nameIndex<0 || numNames<=nameIndex) {
-        return nullptr;
+స్థిరరాశి అక్షరం *Prop_Name_దత్తాంశం::getName(స్థిరరాశి అక్షరం *name_సమూహం, int32_t name_సూచీ) {
+    int32_t అంకె_పేర్లు=*name_సమూహం++;
+    ఒకవేళ(name_సూచీ<0 || అంకె_పేర్లు<=name_సూచీ) {
+        తిరిగి శూన్యసూచిక;
     }
     // Skip nameIndex names.
-    for(; nameIndex>0; --nameIndex) {
-        nameGroup=uprv_strchr(nameGroup, 0)+1;
+    కొరకు(; name_సూచీ>0; --name_సూచీ) {
+        name_సమూహం=uprv_strchr(name_సమూహం, 0)+1;
     }
-    if(*nameGroup==0) {
-        return nullptr;  // no name (Property[Value]Aliases.txt has "n/a")
+    ఒకవేళ(*name_సమూహం==0) {
+        తిరిగి శూన్యసూచిక;  // no name (Property[Value]Aliases.txt has "n/a")
     }
-    return nameGroup;
+    తిరిగి name_సమూహం;
 }
 
-UBool PropNameData::containsName(BytesTrie &trie, const char *name) {
-    if(name==nullptr) {
-        return false;
+UBool Prop_Name_దత్తాంశం::కలిగియుంది_Name(బైట్లు_Trie &trie, స్థిరరాశి అక్షరం *name) {
+    ఒకవేళ(name==శూన్యసూచిక) {
+        తిరిగి అబద్ధం;
     }
-    UStringTrieResult result=USTRINGTRIE_NO_VALUE;
-    char c;
-    while((c=*name++)!=0) {
-        c=uprv_invCharToLowercaseAscii(c);
+    UString_Trie_ఫలితం ఫలితం=USTRINGTRIE_NO_విలువ;
+    అక్షరం c;
+    అయితే((c=*name++)!=0) {
+        c=uprv_inv_Char_గమ్యం_Lowercase_Ascii(c);
         // Ignore delimiters '-', '_', and ASCII White_Space.
-        if(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
-            continue;
+        ఒకవేళ(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
+            కొనసాగు;
         }
-        if(!USTRINGTRIE_HAS_NEXT(result)) {
-            return false;
+        ఒకవేళ(!USTRINGTRIE_HAS_తదుపరి(ఫలితం)) {
+            తిరిగి అబద్ధం;
         }
-        result = trie.next(static_cast<uint8_t>(c));
+        ఫలితం = trie.next(static_cast<uint8_t>(c));
     }
-    return USTRINGTRIE_HAS_VALUE(result);
+    తిరిగి USTRINGTRIE_HAS_విలువ(ఫలితం);
 }
 
-const char *PropNameData::getPropertyName(int32_t property, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+స్థిరరాశి అక్షరం *Prop_Name_దత్తాంశం::getPropertyName(int32_t property, int32_t nameChoice) {
+    int32_t విలువ_Map_సూచీ=కనుగొను_Property(property);
+    ఒకవేళ(విలువ_Map_సూచీ==0) {
+        తిరిగి శూన్యసూచిక;  // Not a known property.
     }
-    return getName(nameGroups+valueMaps[valueMapIndex], nameChoice);
+    తిరిగి getName(nameGroups+విలువ_Maps[విలువ_Map_సూచీ], nameChoice);
 }
 
-const char *PropNameData::getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+స్థిరరాశి అక్షరం *Prop_Name_దత్తాంశం::get_Property_విలువ_Name(int32_t property, int32_t value, int32_t nameChoice) {
+    int32_t విలువ_Map_సూచీ=కనుగొను_Property(property);
+    ఒకవేళ(విలువ_Map_సూచీ==0) {
+        తిరిగి శూన్యసూచిక;  // Not a known property.
     }
-    int32_t nameGroupOffset=findPropertyValueNameGroup(valueMaps[valueMapIndex+1], value);
-    if(nameGroupOffset==0) {
-        return nullptr;
+    int32_t name_సమూహం_స్థానభ్రంశం=కనుగొను_Property_విలువ_Name_సమూహం(విలువ_Maps[విలువ_Map_సూచీ+1], value);
+    ఒకవేళ(name_సమూహం_స్థానభ్రంశం==0) {
+        తిరిగి శూన్యసూచిక;
     }
-    return getName(nameGroups+nameGroupOffset, nameChoice);
+    తిరిగి getName(nameGroups+name_సమూహం_స్థానభ్రంశం, nameChoice);
 }
 
-int32_t PropNameData::getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias) {
-    BytesTrie trie(bytesTries+bytesTrieOffset);
-    if(containsName(trie, alias)) {
-        return trie.getValue();
-    } else {
-        return UCHAR_INVALID_CODE;
+int32_t Prop_Name_దత్తాంశం::get_Property_Or_విలువ_Enum(int32_t బైట్లు_Trie_స్థానభ్రంశం, స్థిరరాశి అక్షరం *alias) {
+    బైట్లు_Trie trie(బైట్లు_Tries+బైట్లు_Trie_స్థానభ్రంశం);
+    ఒకవేళ(కలిగియుంది_Name(trie, alias)) {
+        తిరిగి trie.get_విలువ();
+    } లేకపోతే {
+        తిరిగి UCHAR_INVALID_సంకేతం;
     }
 }
 
-int32_t PropNameData::getPropertyEnum(const char *alias) {
-    return getPropertyOrValueEnum(0, alias);
+int32_t Prop_Name_దత్తాంశం::getPropertyEnum(స్థిరరాశి అక్షరం *alias) {
+    తిరిగి get_Property_Or_విలువ_Enum(0, alias);
 }
 
-int32_t PropNameData::getPropertyValueEnum(int32_t property, const char *alias) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // Not a known property.
+int32_t Prop_Name_దత్తాంశం::get_Property_విలువ_Enum(int32_t property, స్థిరరాశి అక్షరం *alias) {
+    int32_t విలువ_Map_సూచీ=కనుగొను_Property(property);
+    ఒకవేళ(విలువ_Map_సూచీ==0) {
+        తిరిగి UCHAR_INVALID_సంకేతం;  // Not a known property.
     }
-    valueMapIndex=valueMaps[valueMapIndex+1];
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // The property does not have named values.
+    విలువ_Map_సూచీ=విలువ_Maps[విలువ_Map_సూచీ+1];
+    ఒకవేళ(విలువ_Map_సూచీ==0) {
+        తిరిగి UCHAR_INVALID_సంకేతం;  // The property does not have named values.
     }
     // valueMapIndex is the start of the property's valueMap,
     // where the first word is the BytesTrie offset.
-    return getPropertyOrValueEnum(valueMaps[valueMapIndex], alias);
+    తిరిగి get_Property_Or_విలువ_Enum(విలువ_Maps[విలువ_Map_సూచీ], alias);
 }
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 //----------------------------------------------------------------------
 // Public API implementation
 
-U_CAPI const char* U_EXPORT2
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
 u_getPropertyName(UProperty property,
                   UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyName(property, nameChoice);
+    తిరిగి Prop_Name_దత్తాంశం::getPropertyName(property, nameChoice);
 }
 
 U_CAPI UProperty U_EXPORT2
-u_getPropertyEnum(const char* alias) {
+u_getPropertyEnum(స్థిరరాశి అక్షరం* alias) {
     U_NAMESPACE_USE
-    return (UProperty)PropNameData::getPropertyEnum(alias);
+    తిరిగి (UProperty)Prop_Name_దత్తాంశం::getPropertyEnum(alias);
 }
 
-U_CAPI const char* U_EXPORT2
-u_getPropertyValueName(UProperty property,
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+u_get_Property_విలువ_Name(UProperty property,
                        int32_t value,
                        UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueName(property, value, nameChoice);
+    తిరిగి Prop_Name_దత్తాంశం::get_Property_విలువ_Name(property, value, nameChoice);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_getPropertyValueEnum(UProperty property,
-                       const char* alias) {
+u_get_Property_విలువ_Enum(UProperty property,
+                       స్థిరరాశి అక్షరం* alias) {
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueEnum(property, alias);
+    తిరిగి Prop_Name_దత్తాంశం::get_Property_విలువ_Enum(property, alias);
 }
 
-U_CAPI const char*  U_EXPORT2
-uscript_getName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+U_CAPI స్థిరరాశి అక్షరం*  U_EXPORT2
+uscript_getName(UScript_సంకేతం script_సంకేతం){
+    తిరిగి u_get_Property_విలువ_Name(UCHAR_SCRIPT, script_సంకేతం,
                                   U_LONG_PROPERTY_NAME);
 }
 
-U_CAPI const char*  U_EXPORT2
-uscript_getShortName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+U_CAPI స్థిరరాశి అక్షరం*  U_EXPORT2
+uscript_getShortName(UScript_సంకేతం script_సంకేతం){
+    తిరిగి u_get_Property_విలువ_Name(UCHAR_SCRIPT, script_సంకేతం,
                                   U_SHORT_PROPERTY_NAME);
 }

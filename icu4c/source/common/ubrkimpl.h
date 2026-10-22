@@ -7,9 +7,9 @@
 **********************************************************************
 */
 
-#ifndef UBRKIMPL_H
-#define UBRKIMPL_H
+#నిర్వచితం_కాకపోతే UBRKIMPL_H
+#నిర్వచించు UBRKIMPL_H
 
-#define U_ICUDATA_BRKITR U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "brkitr"
+#నిర్వచించు U_ICUDATA_BRKITR U_ICUDATA_NAME U_వృక్షం_SEPARATOR_STRING "brkitr"
 
-#endif /*UBRKIMPL_H*/
+#అయితే_ముగింపు /*UBRKIMPL_H*/

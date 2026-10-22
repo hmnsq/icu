@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UCHARSTRIEBUILDER_H__
-#define __UCHARSTRIEBUILDER_H__
+#నిర్వచితం_కాకపోతే __UCHARSTRIEBUILDER_H__
+#నిర్వచించు __UCHARSTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringtriebuilder.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
+#అన్తర్భావ "unicode/stringtriebuilder.h"
+#అన్తర్భావ "unicode/ucharstrie.h"
+#అన్తర్భావ "unicode/unistr.h"
 
 /**
  * \file
@@ -40,20 +40,20 @@ class UCharsTrieElement;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API UCharsTrieBuilder : బహిరంగ StringTrieBuilder {
+బహిరంగ:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder(UErrorCode &errorCode);
+    UCharsTrieBuilder(UError_సంకేతం &error_సంకేతం);
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~UCharsTrieBuilder();
+    మాయా ~UCharsTrieBuilder();
 
     /**
      * Adds a (string, value) pair.
@@ -69,9 +69,9 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder& add(const UnicodeString& s,
-                           int32_t value,
-                           UErrorCode& errorCode) U_LIFETIME_BOUND;
+    UCharsTrieBuilder& కూడు(స్థిరరాశి UnicodeString& s,
+                           int32_t విలువ_2,
+                           UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
 
     /**
      * Builds a UCharsTrie for the add()ed data.
@@ -91,7 +91,7 @@ public:
      * @return A new UCharsTrie for the add()ed data.
      * @stable ICU 4.8
      */
-    UCharsTrie *build(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    UCharsTrie *build(UStringTrieBuildOption buildOption, UError_సంకేతం &error_సంకేతం);
 
     /**
      * Builds a UCharsTrie for the add()ed data and char16_t-serializes it.
@@ -119,8 +119,8 @@ public:
      * @stable ICU 4.8
      */
     UnicodeString& buildUnicodeString(UStringTrieBuildOption buildOption,
-                                      UnicodeString& result U_LIFETIME_BOUND,
-                                      UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                      UnicodeString& ఫలితం U_LIFETIME_BOUND,
+                                      UError_సంకేతం& error_సంకేతం) U_LIFETIME_BOUND;
 
     /**
      * Removes all (string, value) pairs.
@@ -129,68 +129,68 @@ public:
      * @stable ICU 4.8
      */
     UCharsTrieBuilder& clear() U_LIFETIME_BOUND {
-        strings.remove();
-        elementsLength=0;
-        ucharsLength=0;
-        return *this;
+        అక్షరశ్రేణులు.remove();
+        elements_నిడివి=0;
+        uchars_నిడివి=0;
+        తిరిగి *this;
     }
 
-private:
-    UCharsTrieBuilder(const UCharsTrieBuilder &other) = delete;  // no copy constructor
-    UCharsTrieBuilder &operator=(const UCharsTrieBuilder &other) = delete;  // no assignment operator
+అంతరంగ:
+    UCharsTrieBuilder(స్థిరరాశి UCharsTrieBuilder &other) = delete;  // no copy constructor
+    UCharsTrieBuilder &క్రియాకారకం=(స్థిరరాశి UCharsTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    శూన్య buildUChars(UStringTrieBuildOption buildOption, UError_సంకేతం &error_సంకేతం);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    మాయా int32_t get_Element_String_నిడివి(int32_t i) స్థిరరాశి override;
+    మాయా char16_t getElementUnit(int32_t i, int32_t unit_సూచీ) స్థిరరాశి override;
+    మాయా int32_t get_Element_విలువ(int32_t i) స్థిరరాశి override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
+    మాయా int32_t get_హద్దు_యొక్క_రేఖీయ_సరిపోలిక(int32_t మొదటి, int32_t చివరి, int32_t unit_సూచీ) స్థిరరాశి override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
+    మాయా int32_t లెక్క_Element_Units(int32_t ప్రారంభం, int32_t హద్దు, int32_t unit_సూచీ) స్థిరరాశి override;
+    మాయా int32_t skipElementsBySomeUnits(int32_t i, int32_t unit_సూచీ, int32_t లెక్క) స్థిరరాశి override;
+    మాయా int32_t సూచీ_యొక్క_Element_With_తదుపరి_Unit(int32_t i, int32_t unit_సూచీ, char16_t unit) స్థిరరాశి override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    మాయా UBool సరిపోలిక_Nodes_Can_Have_విలువలు() స్థిరరాశి override { తిరిగి true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    మాయా int32_t get_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి() స్థిరరాశి override { తిరిగి UCharsTrie::k_Max_Branch_రేఖీయ_Sub_కణుపు_నిడివి; }
+    మాయా int32_t get_Min_రేఖీయ_సరిపోలిక() స్థిరరాశి override { తిరిగి UCharsTrie::k_Min_రేఖీయ_సరిపోలిక; }
+    మాయా int32_t get_Max_రేఖీయ_సరిపోలిక_నిడివి() స్థిరరాశి override { తిరిగి UCharsTrie::k_Max_రేఖీయ_సరిపోలిక_నిడివి; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
-    public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char16_t *s;
+    class UCTLinear_సరిపోలిక_కణుపు : బహిరంగ రేఖీయ_సరిపోలిక_కణుపు {
+    బహిరంగ:
+        UCTLinear_సరిపోలిక_కణుపు(స్థిరరాశి char16_t *units, int32_t len, కణుపు_2 *తదుపరి_కణుపు);
+        మాయా bool క్రియాకారకం==(స్థిరరాశి కణుపు_2 &other) స్థిరరాశి override;
+        మాయా శూన్య లిఖ(StringTrieBuilder &builder) override;
+    అంతరంగ:
+        స్థిరరాశి char16_t *s;
     };
 
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+    మాయా కణుపు_2 *create_రేఖీయ_సరిపోలిక_కణుపు(int32_t i, int32_t unit_సూచీ, int32_t నిడివి,
+                                        కణుపు_2 *తదుపరి_కణుపు) స్థిరరాశి override;
 
-    UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t unit) override;
-    int32_t write(const char16_t *s, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
+    UBool ensure_సామర్థ్యం(int32_t నిడివి);
+    మాయా int32_t లిఖ(int32_t unit) override;
+    int32_t లిఖ(స్థిరరాశి char16_t *s, int32_t నిడివి);
+    మాయా int32_t writeElementUnits(int32_t i, int32_t unit_సూచీ, int32_t నిడివి) override;
+    మాయా int32_t write_విలువ_And_Final(int32_t i, UBool isFinal) override;
+    మాయా int32_t write_విలువ_And_Type(UBool has_విలువ, int32_t విలువ_2, int32_t కణుపు) override;
+    మాయా int32_t write_Delta_గమ్యం(int32_t jump_లక్ష్యం) override;
 
-    UnicodeString strings;
+    UnicodeString అక్షరశ్రేణులు;
     UCharsTrieElement *elements;
-    int32_t elementsCapacity;
-    int32_t elementsLength;
+    int32_t elements_సామర్థ్యం;
+    int32_t elements_నిడివి;
 
     // char16_t serialization of the trie.
     // Grows from the back: ucharsLength measures from the end of the buffer!
     char16_t *uchars;
-    int32_t ucharsCapacity;
-    int32_t ucharsLength;
+    int32_t uchars_సామర్థ్యం;
+    int32_t uchars_నిడివి;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __UCHARSTRIEBUILDER_H__
+#అయితే_ముగింపు  // __UCHARSTRIEBUILDER_H__

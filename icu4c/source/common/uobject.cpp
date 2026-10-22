@@ -16,12 +16,12 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#ఒకవేళ U_OVERRIDE_CXX_కేటాయింపు
 
 /*
  * Default implementation of UMemory::new/delete
@@ -58,48 +58,48 @@ U_NAMESPACE_BEGIN
  * and replace with uprv_malloc/uprv_free.
  */
 
-void * U_EXPORT2 UMemory::operator new(size_t size) noexcept {
-    return uprv_malloc(size);
+శూన్య * U_EXPORT2 UMemory::క్రియాకారకం కొత్త(size_t size) noexcept {
+    తిరిగి uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void *p) noexcept {
-    if(p!=nullptr) {
+శూన్య U_EXPORT2 UMemory::క్రియాకారకం తొలగించు(శూన్య *p) noexcept {
+    ఒకవేళ(p!=శూన్యసూచిక) {
         uprv_free(p);
     }
 }
 
-void * U_EXPORT2 UMemory::operator new[](size_t size) noexcept {
-    return uprv_malloc(size);
+శూన్య * U_EXPORT2 UMemory::క్రియాకారకం కొత్త[](size_t size) noexcept {
+    తిరిగి uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete[](void *p) noexcept {
-    if(p!=nullptr) {
+శూన్య U_EXPORT2 UMemory::క్రియాకారకం తొలగించు[](శూన్య *p) noexcept {
+    ఒకవేళ(p!=శూన్యసూచిక) {
         uprv_free(p);
     }
 }
 
-#if U_HAVE_DEBUG_LOCATION_NEW
-void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*line*/) noexcept {
-    return UMemory::operator new(size);
+#ఒకవేళ U_HAVE_DEBUG_LOCATION_NEW
+శూన్య * U_EXPORT2 UMemory::క్రియాకారకం కొత్త(size_t size, స్థిరరాశి అక్షరం* /*file*/, పూర్ణాంకం /*పంక్తి*/) noexcept {
+    తిరిగి UMemory::క్రియాకారకం కొత్త(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*line*/) noexcept {
-    UMemory::operator delete(p);
+శూన్య U_EXPORT2 UMemory::క్రియాకారకం తొలగించు(శూన్య* p, స్థిరరాశి అక్షరం* /*file*/, పూర్ణాంకం /*పంక్తి*/) noexcept {
+    UMemory::క్రియాకారకం తొలగించు(p);
 }
-#endif /* U_HAVE_DEBUG_LOCATION_NEW */
+#అయితే_ముగింపు /* U_HAVE_DEBUG_LOCATION_NEW */
 
 
-#endif
+#అయితే_ముగింపు
 
 UObject::~UObject() {}
 
-UClassID UObject::getDynamicClassID() const { return nullptr; }
+UClassID UObject::getDynamicClassID() స్థిరరాశి { తిరిగి శూన్యసూచిక; }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 U_NAMESPACE_USE
 
-U_CAPI void U_EXPORT2
-uprv_deleteUObject(void *obj) {
-    delete static_cast<UObject *>(obj);
+U_CAPI శూన్య U_EXPORT2
+uprv_deleteUObject(శూన్య *obj) {
+    తొలగించు static_cast<UObject *>(obj);
 }

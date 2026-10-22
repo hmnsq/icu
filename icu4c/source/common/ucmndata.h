@@ -24,40 +24,40 @@
  *                 are not intended to be used directly by applications.
  */
 
-#ifndef __UCMNDATA_H__
-#define __UCMNDATA_H__
+#నిర్వచితం_కాకపోతే __UCMNDATA_H__
+#నిర్వచించు __UCMNDATA_H__
 
-#include "unicode/udata.h"
-#include "umapfile.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "umapfile.h"
 
 
-#define COMMON_DATA_NAME U_ICUDATA_NAME
+#నిర్వచించు COMMON_దత్తాంశం_NAME U_ICUDATA_NAME
 
-typedef struct  {
-    uint16_t    headerSize;
+రకనిర్వచనం నిర్మాణం  {
+    uint16_t    శీర్షిక_కొలత;
     uint8_t     magic1;
     uint8_t     magic2;
-} MappedData;
+} Mapped_దత్తాంశం;
 
 
-typedef struct  {
-    MappedData  dataHeader;
+రకనిర్వచనం నిర్మాణం  {
+    Mapped_దత్తాంశం  దత్తాంశం_శీర్షిక_2;
     UDataInfo   info;
-} DataHeader;
+} దత్తాంశం_శీర్షిక;
 
-typedef struct {
-    uint32_t nameOffset;
-    uint32_t dataOffset;
-} UDataOffsetTOCEntry;
+రకనిర్వచనం నిర్మాణం {
+    uint32_t name_స్థానభ్రంశం;
+    uint32_t దత్తాంశం_స్థానభ్రంశం;
+} UData_స్థానభ్రంశం_TOCEntry;
 
-typedef struct {
-    uint32_t count;
+రకనిర్వచనం నిర్మాణం {
+    uint32_t లెక్క;
     /**
      * Variable-length array declared with length 1 to disable bounds checkers.
      * The actual array length is in the count field.
      */
-    UDataOffsetTOCEntry entry[1];
-} UDataOffsetTOC;
+    UData_స్థానభ్రంశం_TOCEntry నమోదు_2[1];
+} UData_స్థానభ్రంశం_TOC;
 
 /**
  * Get the header size from a const DataHeader *udh.
@@ -66,7 +66,7 @@ typedef struct {
  * @internal
  */
 U_CFUNC uint16_t
-udata_getHeaderSize(const DataHeader *udh);
+udata_get_శీర్షిక_కొలత(స్థిరరాశి దత్తాంశం_శీర్షిక *udh);
 
 /**
  * Get the UDataInfo.size from a const UDataInfo *info.
@@ -75,7 +75,7 @@ udata_getHeaderSize(const DataHeader *udh);
  * @internal
  */
 U_CFUNC uint16_t
-udata_getInfoSize(const UDataInfo *info);
+udata_get_Info_కొలత(స్థిరరాశి UDataInfo *info);
 
 U_CDECL_BEGIN
 /*
@@ -85,21 +85,21 @@ U_CDECL_BEGIN
  *          (I sure do wish this was written in C++, not C)
  */
 
-typedef const DataHeader *
-(U_CALLCONV * LookupFn)(const UDataMemory *pData,
-                        const char *tocEntryName,
-                        int32_t *pLength,
-                        UErrorCode *pErrorCode);
+రకనిర్వచనం స్థిరరాశి దత్తాంశం_శీర్షిక *
+(U_CALLCONV * LookupFn)(స్థిరరాశి UData_జ్ఞాపకం *p_దత్తాంశం,
+                        స్థిరరాశి అక్షరం *toc_నమోదు_Name,
+                        int32_t *p_నిడివి,
+                        UError_సంకేతం *p_Error_సంకేతం);
 
-typedef uint32_t
-(U_CALLCONV * NumEntriesFn)(const UDataMemory *pData);
+రకనిర్వచనం uint32_t
+(U_CALLCONV * అంకె_Entries_Fn)(స్థిరరాశి UData_జ్ఞాపకం *p_దత్తాంశం);
 
-U_CDECL_END
+U_CDECL_చివర
 
-typedef struct {
+రకనిర్వచనం నిర్మాణం {
     LookupFn      Lookup;
-    NumEntriesFn  NumEntries; 
-} commonDataFuncs;
+    అంకె_Entries_Fn  అంకె_Entries; 
+} common_దత్తాంశం_Funcs;
 
 
 /*
@@ -112,6 +112,6 @@ typedef struct {
  *     otherwise
  *         set an errorcode.
  */
-U_CFUNC void udata_checkCommonData(UDataMemory *pData, UErrorCode *pErrorCode);
+U_CFUNC శూన్య udata_check_Common_దత్తాంశం(UData_జ్ఞాపకం *p_దత్తాంశం, UError_సంకేతం *p_Error_సంకేతం);
 
-#endif
+#అయితే_ముగింపు

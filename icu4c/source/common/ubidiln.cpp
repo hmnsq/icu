@@ -16,13 +16,13 @@
 *   created by: Markus W. Scherer, updated by Matitiahu Allouche
 */
 
-#include "cmemory.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/ubidi.h"
-#include "ubidiimp.h"
-#include "uassert.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/ubidi.h"
+#అన్తర్భావ "ubidiimp.h"
+#అన్తర్భావ "uassert.h"
 
 /*
  * General remarks about the functions in this file:
@@ -88,13 +88,13 @@
  * This function is called only from ubidi_setLine(), so pBiDi->paraLevel is
  * set correctly for the line even when contextual multiple paragraphs.
  */
-static void
-setTrailingWSStart(UBiDi *pBiDi) {
+స్థిర శూన్య
+సమితి_Trailing_WSStart(UBiDi *pBiDi) {
     /* pBiDi->direction!=UBIDI_MIXED */
 
-    const DirProp *dirProps=pBiDi->dirProps;
-    UBiDiLevel *levels=pBiDi->levels;
-    int32_t start=pBiDi->length;
+    స్థిరరాశి DirProp *dirProps=pBiDi->dirProps;
+    UBiDiLevel *స్థాయిలు=pBiDi->స్థాయిలు;
+    int32_t ప్రారంభం=pBiDi->length;
     UBiDiLevel paraLevel=pBiDi->paraLevel;
 
     /* If the line is terminated by a block separator, all preceding WS etc...
@@ -103,174 +103,174 @@ setTrailingWSStart(UBiDi *pBiDi) {
        level of B chars from 0 to paraLevel in ubidi_getLevels when
        orderParagraphsLTR==true.
      */
-    if(dirProps[start-1]==B) {
-        pBiDi->trailingWSStart=start;   /* currently == pBiDi->length */
-        return;
+    ఒకవేళ(dirProps[ప్రారంభం-1]==B) {
+        pBiDi->trailingWSStart=ప్రారంభం;   /* currently == pBiDi->length */
+        తిరిగి;
     }
     /* go backwards across all WS, BN, explicit codes */
-    while(start>0 && DIRPROP_FLAG(dirProps[start-1])&MASK_WS) {
-        --start;
+    అయితే(ప్రారంభం>0 && DIRPROP_FLAG(dirProps[ప్రారంభం-1])&ముసుగు_WS) {
+        --ప్రారంభం;
     }
 
     /* if the WS run can be merged with the previous run then do so here */
-    while(start>0 && levels[start-1]==paraLevel) {
-        --start;
+    అయితే(ప్రారంభం>0 && స్థాయిలు[ప్రారంభం-1]==paraLevel) {
+        --ప్రారంభం;
     }
 
-    pBiDi->trailingWSStart=start;
+    pBiDi->trailingWSStart=ప్రారంభం;
 }
 
 /* ubidi_setLine ------------------------------------------------------------ */
 
-U_CAPI void U_EXPORT2
-ubidi_setLine(const UBiDi *pParaBiDi,
-              int32_t start, int32_t limit,
-              UBiDi *pLineBiDi,
-              UErrorCode *pErrorCode) {
+U_CAPI శూన్య U_EXPORT2
+ubidi_సమితి_పంక్తి(స్థిరరాశి UBiDi *pParaBiDi,
+              int32_t ప్రారంభం, int32_t హద్దు,
+              UBiDi *p_పంక్తి_Bi_Di,
+              UError_సంకేతం *p_Error_సంకేతం) {
     int32_t length;
 
     /* check the argument values */
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    RETURN_VOID_IF_NOT_VALID_PARA(pParaBiDi, *pErrorCode);
-    RETURN_VOID_IF_BAD_RANGE(start, 0, limit, *pErrorCode);
-    RETURN_VOID_IF_BAD_RANGE(limit, 0, pParaBiDi->length+1, *pErrorCode);
-    if(pLineBiDi==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం);
+    RETURN_VOID_IF_NOT_VALID_PARA(pParaBiDi, *p_Error_సంకేతం);
+    RETURN_VOID_IF_BAD_RANGE(ప్రారంభం, 0, హద్దు, *p_Error_సంకేతం);
+    RETURN_VOID_IF_BAD_RANGE(హద్దు, 0, pParaBiDi->length+1, *p_Error_సంకేతం);
+    ఒకవేళ(p_పంక్తి_Bi_Di==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    if(ubidi_getParagraph(pParaBiDi, start, nullptr, nullptr, nullptr, pErrorCode) !=
-       ubidi_getParagraph(pParaBiDi, limit-1, nullptr, nullptr, nullptr, pErrorCode)) {
+    ఒకవేళ(ubidi_getParagraph(pParaBiDi, ప్రారంభం, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, p_Error_సంకేతం) !=
+       ubidi_getParagraph(pParaBiDi, హద్దు-1, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, p_Error_సంకేతం)) {
         /* the line crosses a paragraph boundary */
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
     /* set the values in pLineBiDi from its pParaBiDi parent */
-    pLineBiDi->pParaBiDi=nullptr;          /* mark unfinished setLine */
-    pLineBiDi->text=pParaBiDi->text+start;
-    length=pLineBiDi->length=limit-start;
-    pLineBiDi->resultLength=pLineBiDi->originalLength=length;
-    pLineBiDi->paraLevel=GET_PARALEVEL(pParaBiDi, start);
-    pLineBiDi->paraCount=pParaBiDi->paraCount;
-    pLineBiDi->runs=nullptr;
-    pLineBiDi->flags=0;
-    pLineBiDi->reorderingMode=pParaBiDi->reorderingMode;
-    pLineBiDi->reorderingOptions=pParaBiDi->reorderingOptions;
-    pLineBiDi->controlCount=0;
-    if(pParaBiDi->controlCount>0) {
+    p_పంక్తి_Bi_Di->pParaBiDi=శూన్యసూచిక;          /* mark unfinished setLine */
+    p_పంక్తి_Bi_Di->పాఠ్యం=pParaBiDi->పాఠ్యం+ప్రారంభం;
+    length=p_పంక్తి_Bi_Di->length=హద్దు-ప్రారంభం;
+    p_పంక్తి_Bi_Di->ఫలితం_నిడివి=p_పంక్తి_Bi_Di->original_నిడివి=length;
+    p_పంక్తి_Bi_Di->paraLevel=GET_PARALEVEL(pParaBiDi, ప్రారంభం);
+    p_పంక్తి_Bi_Di->para_లెక్క=pParaBiDi->para_లెక్క;
+    p_పంక్తి_Bi_Di->runs=శూన్యసూచిక;
+    p_పంక్తి_Bi_Di->flags=0;
+    p_పంక్తి_Bi_Di->reordering_బహుళకం=pParaBiDi->reordering_బహుళకం;
+    p_పంక్తి_Bi_Di->reorderingOptions=pParaBiDi->reorderingOptions;
+    p_పంక్తి_Bi_Di->control_లెక్క=0;
+    ఒకవేళ(pParaBiDi->control_లెక్క>0) {
         int32_t j;
-        for(j=start; j<limit; j++) {
-            if(IS_BIDI_CONTROL_CHAR(pParaBiDi->text[j])) {
-                pLineBiDi->controlCount++;
+        కొరకు(j=ప్రారంభం; j<హద్దు; j++) {
+            ఒకవేళ(IS_BIDI_CONTROL_CHAR(pParaBiDi->పాఠ్యం[j])) {
+                p_పంక్తి_Bi_Di->control_లెక్క++;
             }
         }
-        pLineBiDi->resultLength-=pLineBiDi->controlCount;
+        p_పంక్తి_Bi_Di->ఫలితం_నిడివి-=p_పంక్తి_Bi_Di->control_లెక్క;
     }
 
-    pLineBiDi->dirProps=pParaBiDi->dirProps+start;
-    pLineBiDi->levels=pParaBiDi->levels+start;
-    pLineBiDi->runCount=-1;
+    p_పంక్తి_Bi_Di->dirProps=pParaBiDi->dirProps+ప్రారంభం;
+    p_పంక్తి_Bi_Di->స్థాయిలు=pParaBiDi->స్థాయిలు+ప్రారంభం;
+    p_పంక్తి_Bi_Di->నిరంతరం_లెక్క=-1;
 
-    if(pParaBiDi->direction!=UBIDI_MIXED) {
+    ఒకవేళ(pParaBiDi->direction!=UBIDI_MIXED) {
         /* the parent is already trivial */
-        pLineBiDi->direction=pParaBiDi->direction;
+        p_పంక్తి_Bi_Di->direction=pParaBiDi->direction;
 
         /*
          * The parent's levels are all either
          * implicitly or explicitly ==paraLevel;
          * do the same here.
          */
-        if(pParaBiDi->trailingWSStart<=start) {
-            pLineBiDi->trailingWSStart=0;
-        } else if(pParaBiDi->trailingWSStart<limit) {
-            pLineBiDi->trailingWSStart=pParaBiDi->trailingWSStart-start;
-        } else {
-            pLineBiDi->trailingWSStart=length;
+        ఒకవేళ(pParaBiDi->trailingWSStart<=ప్రారంభం) {
+            p_పంక్తి_Bi_Di->trailingWSStart=0;
+        } లేకపోతే ఒకవేళ(pParaBiDi->trailingWSStart<హద్దు) {
+            p_పంక్తి_Bi_Di->trailingWSStart=pParaBiDi->trailingWSStart-ప్రారంభం;
+        } లేకపోతే {
+            p_పంక్తి_Bi_Di->trailingWSStart=length;
         }
-    } else {
-        const UBiDiLevel *levels=pLineBiDi->levels;
+    } లేకపోతే {
+        స్థిరరాశి UBiDiLevel *స్థాయిలు=p_పంక్తి_Bi_Di->స్థాయిలు;
         int32_t i, trailingWSStart;
         UBiDiLevel level;
 
-        setTrailingWSStart(pLineBiDi);
-        trailingWSStart=pLineBiDi->trailingWSStart;
+        సమితి_Trailing_WSStart(p_పంక్తి_Bi_Di);
+        trailingWSStart=p_పంక్తి_Bi_Di->trailingWSStart;
 
         /* recalculate pLineBiDi->direction */
-        if(trailingWSStart==0) {
+        ఒకవేళ(trailingWSStart==0) {
             /* all levels are at paraLevel */
-            pLineBiDi->direction=(UBiDiDirection)(pLineBiDi->paraLevel&1);
-        } else {
+            p_పంక్తి_Bi_Di->direction=(UBiDiDirection)(p_పంక్తి_Bi_Di->paraLevel&1);
+        } లేకపోతే {
             /* get the level of the first character */
-            level=(UBiDiLevel)(levels[0]&1);
+            level=(UBiDiLevel)(స్థాయిలు[0]&1);
 
             /* if there is anything of a different level, then the line is mixed */
-            if(trailingWSStart<length && (pLineBiDi->paraLevel&1)!=level) {
+            ఒకవేళ(trailingWSStart<length && (p_పంక్తి_Bi_Di->paraLevel&1)!=level) {
                 /* the trailing WS is at paraLevel, which differs from levels[0] */
-                pLineBiDi->direction=UBIDI_MIXED;
-            } else {
+                p_పంక్తి_Bi_Di->direction=UBIDI_MIXED;
+            } లేకపోతే {
                 /* see if levels[1..trailingWSStart-1] have the same direction as levels[0] and paraLevel */
                 i=1;
-                for(;;) {
-                    if(i==trailingWSStart) {
+                కొరకు(;;) {
+                    ఒకవేళ(i==trailingWSStart) {
                         /* the direction values match those in level */
-                        pLineBiDi->direction=(UBiDiDirection)level;
-                        break;
-                    } else if((levels[i]&1)!=level) {
-                        pLineBiDi->direction=UBIDI_MIXED;
-                        break;
+                        p_పంక్తి_Bi_Di->direction=(UBiDiDirection)level;
+                        ఆపు;
+                    } లేకపోతే ఒకవేళ((స్థాయిలు[i]&1)!=level) {
+                        p_పంక్తి_Bi_Di->direction=UBIDI_MIXED;
+                        ఆపు;
                     }
                     ++i;
                 }
             }
         }
 
-        switch(pLineBiDi->direction) {
-        case UBIDI_LTR:
+        ఎంపిక(p_పంక్తి_Bi_Di->direction) {
+        స్థితి UBIDI_LTR:
             /* make sure paraLevel is even */
-            pLineBiDi->paraLevel=(UBiDiLevel)((pLineBiDi->paraLevel+1)&~1);
+            p_పంక్తి_Bi_Di->paraLevel=(UBiDiLevel)((p_పంక్తి_Bi_Di->paraLevel+1)&~1);
 
             /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
-            pLineBiDi->trailingWSStart=0;
-            break;
-        case UBIDI_RTL:
+            p_పంక్తి_Bi_Di->trailingWSStart=0;
+            ఆపు;
+        స్థితి UBIDI_RTL:
             /* make sure paraLevel is odd */
-            pLineBiDi->paraLevel|=1;
+            p_పంక్తి_Bi_Di->paraLevel|=1;
 
             /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
-            pLineBiDi->trailingWSStart=0;
-            break;
-        default:
-            break;
+            p_పంక్తి_Bi_Di->trailingWSStart=0;
+            ఆపు;
+        అప్రమేయ:
+            ఆపు;
         }
     }
-    pLineBiDi->pParaBiDi=pParaBiDi;     /* mark successful setLine */
+    p_పంక్తి_Bi_Di->pParaBiDi=pParaBiDi;     /* mark successful setLine */
 }
 
 U_CAPI UBiDiLevel U_EXPORT2
-ubidi_getLevelAt(const UBiDi *pBiDi, int32_t charIndex) {
+ubidi_getLevelAt(స్థిరరాశి UBiDi *pBiDi, int32_t char_సూచీ) {
     /* return paraLevel if in the trailing WS run, otherwise the real level */
-    if(!IS_VALID_PARA_OR_LINE(pBiDi) || charIndex<0 || pBiDi->length<=charIndex) {
-        return 0;
-    } else if(pBiDi->direction!=UBIDI_MIXED || charIndex>=pBiDi->trailingWSStart) {
-        return GET_PARALEVEL(pBiDi, charIndex);
-    } else {
-        return pBiDi->levels[charIndex];
+    ఒకవేళ(!IS_VALID_PARA_OR_పంక్తి(pBiDi) || char_సూచీ<0 || pBiDi->length<=char_సూచీ) {
+        తిరిగి 0;
+    } లేకపోతే ఒకవేళ(pBiDi->direction!=UBIDI_MIXED || char_సూచీ>=pBiDi->trailingWSStart) {
+        తిరిగి GET_PARALEVEL(pBiDi, char_సూచీ);
+    } లేకపోతే {
+        తిరిగి pBiDi->స్థాయిలు[char_సూచీ];
     }
 }
 
-U_CAPI const UBiDiLevel* U_EXPORT2
-ubidi_getLevels(UBiDi* pBiDi, UErrorCode* pErrorCode) {
-    int32_t start, length;
+U_CAPI స్థిరరాశి UBiDiLevel* U_EXPORT2
+ubidi_get_స్థాయిలు(UBiDi* pBiDi, UError_సంకేతం* p_Error_సంకేతం) {
+    int32_t ప్రారంభం, length;
 
-    RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, nullptr);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, nullptr);
-    if((length=pBiDi->length)<=0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    RETURN_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం, శూన్యసూచిక);
+    RETURN_IF_NOT_VALID_PARA_OR_పంక్తి(pBiDi, *p_Error_సంకేతం, శూన్యసూచిక);
+    ఒకవేళ((length=pBiDi->length)<=0) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    if((start=pBiDi->trailingWSStart)==length) {
+    ఒకవేళ((ప్రారంభం=pBiDi->trailingWSStart)==length) {
         /* the current levels array reflects the WS run */
-        return pBiDi->levels;
+        తిరిగి pBiDi->స్థాయిలు;
     }
 
     /*
@@ -280,67 +280,67 @@ ubidi_getLevels(UBiDi* pBiDi, UErrorCode* pErrorCode) {
      * This must be a UBiDi object for a line, and
      * we need to create a new levels array.
      */
-    if(getLevelsMemory(pBiDi, length)) {
-        UBiDiLevel *levels=pBiDi->levelsMemory;
+    ఒకవేళ(get_స్థాయిలు_జ్ఞాపకం(pBiDi, length)) {
+        UBiDiLevel *స్థాయిలు=pBiDi->స్థాయిలు_జ్ఞాపకం;
 
-        if(start>0 && levels!=pBiDi->levels) {
-            uprv_memcpy(levels, pBiDi->levels, start);
+        ఒకవేళ(ప్రారంభం>0 && స్థాయిలు!=pBiDi->స్థాయిలు) {
+            uprv_memcpy(స్థాయిలు, pBiDi->స్థాయిలు, ప్రారంభం);
         }
         /* pBiDi->paraLevel is ok even if contextual multiple paragraphs,
            since pBidi is a line object                                     */
-        uprv_memset(levels+start, pBiDi->paraLevel, length-start);
+        uprv_memset(స్థాయిలు+ప్రారంభం, pBiDi->paraLevel, length-ప్రారంభం);
 
         /* this new levels array is set for the line and reflects the WS run */
         pBiDi->trailingWSStart=length;
-        return pBiDi->levels=levels;
-    } else {
+        తిరిగి pBiDi->స్థాయిలు=స్థాయిలు;
+    } లేకపోతే {
         /* out of memory */
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
-                    int32_t *pLogicalLimit, UBiDiLevel *pLevel) {
-    UErrorCode errorCode;
-    int32_t runCount, visualStart, logicalLimit, logicalFirst, i;
-    Run iRun;
+U_CAPI శూన్య U_EXPORT2
+ubidi_get_Logical_నిరంతరం(స్థిరరాశి UBiDi *pBiDi, int32_t logicalPosition,
+                    int32_t *p_Logical_హద్దు, UBiDiLevel *pLevel) {
+    UError_సంకేతం error_సంకేతం;
+    int32_t నిరంతరం_లెక్క, visual_ప్రారంభం, logical_హద్దు, logical_మొదటి, i;
+    నిరంతరం i_నిరంతరం;
 
-    errorCode=U_ZERO_ERROR;
-    RETURN_VOID_IF_BAD_RANGE(logicalPosition, 0, pBiDi->length, errorCode);
+    error_సంకేతం=U_ZERO_ERROR;
+    RETURN_VOID_IF_BAD_RANGE(logicalPosition, 0, pBiDi->length, error_సంకేతం);
     /* ubidi_countRuns will check VALID_PARA_OR_LINE */
-    runCount=ubidi_countRuns((UBiDi *)pBiDi, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    నిరంతరం_లెక్క=ubidi_లెక్క_Runs((UBiDi *)pBiDi, &error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
     /* this is done based on runs rather than on levels since levels have
        a special interpretation when UBIDI_REORDER_RUNS_ONLY
      */
-    visualStart=logicalLimit=0;
-    iRun=pBiDi->runs[0];
+    visual_ప్రారంభం=logical_హద్దు=0;
+    i_నిరంతరం=pBiDi->runs[0];
 
-    for(i=0; i<runCount; i++) {
-        iRun = pBiDi->runs[i];
-        logicalFirst=GET_INDEX(iRun.logicalStart);
-        logicalLimit=logicalFirst+iRun.visualLimit-visualStart;
-        if((logicalPosition>=logicalFirst) &&
-           (logicalPosition<logicalLimit)) {
-            break;
+    కొరకు(i=0; i<నిరంతరం_లెక్క; i++) {
+        i_నిరంతరం = pBiDi->runs[i];
+        logical_మొదటి=GET_సూచీ(i_నిరంతరం.logical_ప్రారంభం);
+        logical_హద్దు=logical_మొదటి+i_నిరంతరం.visual_హద్దు-visual_ప్రారంభం;
+        ఒకవేళ((logicalPosition>=logical_మొదటి) &&
+           (logicalPosition<logical_హద్దు)) {
+            ఆపు;
         }
-        visualStart = iRun.visualLimit;
+        visual_ప్రారంభం = i_నిరంతరం.visual_హద్దు;
     }
-    if(pLogicalLimit) {
-        *pLogicalLimit=logicalLimit;
+    ఒకవేళ(p_Logical_హద్దు) {
+        *p_Logical_హద్దు=logical_హద్దు;
     }
-    if(pLevel) {
-        if(pBiDi->reorderingMode==UBIDI_REORDER_RUNS_ONLY) {
-            *pLevel=(UBiDiLevel)GET_ODD_BIT(iRun.logicalStart);
+    ఒకవేళ(pLevel) {
+        ఒకవేళ(pBiDi->reordering_బహుళకం==UBIDI_REORDER_RUNS_ONLY) {
+            *pLevel=(UBiDiLevel)GET_ODD_బిట్టు(i_నిరంతరం.logical_ప్రారంభం);
         }
-        else if(pBiDi->direction!=UBIDI_MIXED || logicalPosition>=pBiDi->trailingWSStart) {
+        లేకపోతే ఒకవేళ(pBiDi->direction!=UBIDI_MIXED || logicalPosition>=pBiDi->trailingWSStart) {
             *pLevel=GET_PARALEVEL(pBiDi, logicalPosition);
-        } else {
-        *pLevel=pBiDi->levels[logicalPosition];
+        } లేకపోతే {
+        *pLevel=pBiDi->స్థాయిలు[logicalPosition];
         }
     }
 }
@@ -348,55 +348,55 @@ ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
 /* runs API functions ------------------------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-ubidi_countRuns(UBiDi *pBiDi, UErrorCode *pErrorCode) {
-    RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
-    ubidi_getRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return -1;
+ubidi_లెక్క_Runs(UBiDi *pBiDi, UError_సంకేతం *p_Error_సంకేతం) {
+    RETURN_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం, -1);
+    RETURN_IF_NOT_VALID_PARA_OR_పంక్తి(pBiDi, *p_Error_సంకేతం, -1);
+    ubidi_getRuns(pBiDi, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి -1;
     }
-    return pBiDi->runCount;
+    తిరిగి pBiDi->నిరంతరం_లెక్క;
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
-ubidi_getVisualRun(UBiDi *pBiDi, int32_t runIndex,
-                   int32_t *pLogicalStart, int32_t *pLength)
+ubidi_get_Visual_నిరంతరం(UBiDi *pBiDi, int32_t నిరంతరం_సూచీ,
+                   int32_t *p_Logical_ప్రారంభం, int32_t *p_నిడివి)
 {
-    int32_t start;
-    UErrorCode errorCode = U_ZERO_ERROR;
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, errorCode, UBIDI_LTR);
-    ubidi_getRuns(pBiDi, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return UBIDI_LTR;
+    int32_t ప్రారంభం;
+    UError_సంకేతం error_సంకేతం = U_ZERO_ERROR;
+    RETURN_IF_NOT_VALID_PARA_OR_పంక్తి(pBiDi, error_సంకేతం, UBIDI_LTR);
+    ubidi_getRuns(pBiDi, &error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి UBIDI_LTR;
     }
-    RETURN_IF_BAD_RANGE(runIndex, 0, pBiDi->runCount, errorCode, UBIDI_LTR);
+    RETURN_IF_BAD_RANGE(నిరంతరం_సూచీ, 0, pBiDi->నిరంతరం_లెక్క, error_సంకేతం, UBIDI_LTR);
 
-    start=pBiDi->runs[runIndex].logicalStart;
-    if(pLogicalStart!=nullptr) {
-        *pLogicalStart=GET_INDEX(start);
+    ప్రారంభం=pBiDi->runs[నిరంతరం_సూచీ].logical_ప్రారంభం;
+    ఒకవేళ(p_Logical_ప్రారంభం!=శూన్యసూచిక) {
+        *p_Logical_ప్రారంభం=GET_సూచీ(ప్రారంభం);
     }
-    if(pLength!=nullptr) {
-        if(runIndex>0) {
-            *pLength=pBiDi->runs[runIndex].visualLimit-
-                     pBiDi->runs[runIndex-1].visualLimit;
-        } else {
-            *pLength=pBiDi->runs[0].visualLimit;
+    ఒకవేళ(p_నిడివి!=శూన్యసూచిక) {
+        ఒకవేళ(నిరంతరం_సూచీ>0) {
+            *p_నిడివి=pBiDi->runs[నిరంతరం_సూచీ].visual_హద్దు-
+                     pBiDi->runs[నిరంతరం_సూచీ-1].visual_హద్దు;
+        } లేకపోతే {
+            *p_నిడివి=pBiDi->runs[0].visual_హద్దు;
         }
     }
-    return (UBiDiDirection)GET_ODD_BIT(start);
+    తిరిగి (UBiDiDirection)GET_ODD_బిట్టు(ప్రారంభం);
 }
 
 /* in trivial cases there is only one trivial run; called by ubidi_getRuns() */
-static void
-getSingleRun(UBiDi *pBiDi, UBiDiLevel level) {
+స్థిర శూన్య
+get_Single_నిరంతరం(UBiDi *pBiDi, UBiDiLevel level) {
     /* simple, single-run case */
     pBiDi->runs=pBiDi->simpleRuns;
-    pBiDi->runCount=1;
+    pBiDi->నిరంతరం_లెక్క=1;
 
     /* fill and reorder the single run */
-    pBiDi->runs[0].logicalStart=MAKE_INDEX_ODD_PAIR(0, level);
-    pBiDi->runs[0].visualLimit=pBiDi->length;
-    pBiDi->runs[0].insertRemove=0;
+    pBiDi->runs[0].logical_ప్రారంభం=MAKE_సూచీ_ODD_PAIR(0, level);
+    pBiDi->runs[0].visual_హద్దు=pBiDi->length;
+    pBiDi->runs[0].చొప్పించు_Remove=0;
 }
 
 /* reorder the runs array (L2) ---------------------------------------------- */
@@ -432,15 +432,15 @@ getSingleRun(UBiDi *pBiDi, UBiDiLevel level) {
  * this run and can --runCount. If it is later part of the all-runs
  * reordering, then runCount is adjusted accordingly.
  */
-static void
-reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
-    Run *runs, tempRun;
-    UBiDiLevel *levels;
-    int32_t firstRun, endRun, limitRun, runCount;
+స్థిర శూన్య
+reorder_పంక్తి(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
+    నిరంతరం *runs, తాత్కాలిక_నిరంతరం;
+    UBiDiLevel *స్థాయిలు;
+    int32_t మొదటి_నిరంతరం, చివర_నిరంతరం, హద్దు_నిరంతరం, నిరంతరం_లెక్క;
 
     /* nothing to do? */
-    if(maxLevel<=(minLevel|1)) {
-        return;
+    ఒకవేళ(maxLevel<=(minLevel|1)) {
+        తిరిగి;
     }
 
     /*
@@ -451,82 +451,82 @@ reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
     ++minLevel;
 
     runs=pBiDi->runs;
-    levels=pBiDi->levels;
-    runCount=pBiDi->runCount;
+    స్థాయిలు=pBiDi->స్థాయిలు;
+    నిరంతరం_లెక్క=pBiDi->నిరంతరం_లెక్క;
 
     /* do not include the WS run at paraLevel<=old minLevel except in the simple loop */
-    if(pBiDi->trailingWSStart<pBiDi->length) {
-        --runCount;
+    ఒకవేళ(pBiDi->trailingWSStart<pBiDi->length) {
+        --నిరంతరం_లెక్క;
     }
 
-    while(--maxLevel>=minLevel) {
-        firstRun=0;
+    అయితే(--maxLevel>=minLevel) {
+        మొదటి_నిరంతరం=0;
 
         /* loop for all sequences of runs */
-        for(;;) {
+        కొరకు(;;) {
             /* look for a sequence of runs that are all at >=maxLevel */
             /* look for the first run of such a sequence */
-            while(firstRun<runCount && levels[runs[firstRun].logicalStart]<maxLevel) {
-                ++firstRun;
+            అయితే(మొదటి_నిరంతరం<నిరంతరం_లెక్క && స్థాయిలు[runs[మొదటి_నిరంతరం].logical_ప్రారంభం]<maxLevel) {
+                ++మొదటి_నిరంతరం;
             }
-            if(firstRun>=runCount) {
-                break;  /* no more such runs */
+            ఒకవేళ(మొదటి_నిరంతరం>=నిరంతరం_లెక్క) {
+                ఆపు;  /* no more such runs */
             }
 
             /* look for the limit run of such a sequence (the run behind it) */
-            for(limitRun=firstRun; ++limitRun<runCount && levels[runs[limitRun].logicalStart]>=maxLevel;) {}
+            కొరకు(హద్దు_నిరంతరం=మొదటి_నిరంతరం; ++హద్దు_నిరంతరం<నిరంతరం_లెక్క && స్థాయిలు[runs[హద్దు_నిరంతరం].logical_ప్రారంభం]>=maxLevel;) {}
 
             /* Swap the entire sequence of runs from firstRun to limitRun-1. */
-            endRun=limitRun-1;
-            while(firstRun<endRun) {
-                tempRun = runs[firstRun];
-                runs[firstRun]=runs[endRun];
-                runs[endRun]=tempRun;
-                ++firstRun;
-                --endRun;
+            చివర_నిరంతరం=హద్దు_నిరంతరం-1;
+            అయితే(మొదటి_నిరంతరం<చివర_నిరంతరం) {
+                తాత్కాలిక_నిరంతరం = runs[మొదటి_నిరంతరం];
+                runs[మొదటి_నిరంతరం]=runs[చివర_నిరంతరం];
+                runs[చివర_నిరంతరం]=తాత్కాలిక_నిరంతరం;
+                ++మొదటి_నిరంతరం;
+                --చివర_నిరంతరం;
             }
 
-            if(limitRun==runCount) {
-                break;  /* no more such runs */
-            } else {
-                firstRun=limitRun+1;
+            ఒకవేళ(హద్దు_నిరంతరం==నిరంతరం_లెక్క) {
+                ఆపు;  /* no more such runs */
+            } లేకపోతే {
+                మొదటి_నిరంతరం=హద్దు_నిరంతరం+1;
             }
         }
     }
 
     /* now do maxLevel==old minLevel (==odd!), see above */
-    if(!(minLevel&1)) {
-        firstRun=0;
+    ఒకవేళ(!(minLevel&1)) {
+        మొదటి_నిరంతరం=0;
 
         /* include the trailing WS run in this complete reordering */
-        if(pBiDi->trailingWSStart==pBiDi->length) {
-            --runCount;
+        ఒకవేళ(pBiDi->trailingWSStart==pBiDi->length) {
+            --నిరంతరం_లెక్క;
         }
 
         /* Swap the entire sequence of all runs. (endRun==runCount) */
-        while(firstRun<runCount) {
-            tempRun=runs[firstRun];
-            runs[firstRun]=runs[runCount];
-            runs[runCount]=tempRun;
-            ++firstRun;
-            --runCount;
+        అయితే(మొదటి_నిరంతరం<నిరంతరం_లెక్క) {
+            తాత్కాలిక_నిరంతరం=runs[మొదటి_నిరంతరం];
+            runs[మొదటి_నిరంతరం]=runs[నిరంతరం_లెక్క];
+            runs[నిరంతరం_లెక్క]=తాత్కాలిక_నిరంతరం;
+            ++మొదటి_నిరంతరం;
+            --నిరంతరం_లెక్క;
         }
     }
 }
 
 /* compute the runs array --------------------------------------------------- */
 
-static int32_t getRunFromLogicalIndex(UBiDi *pBiDi, int32_t logicalIndex) {
-    Run *runs=pBiDi->runs;
-    int32_t runCount=pBiDi->runCount, visualStart=0, i, length, logicalStart;
+స్థిర int32_t get_నిరంతరం_From_Logical_సూచీ(UBiDi *pBiDi, int32_t logical_సూచీ) {
+    నిరంతరం *runs=pBiDi->runs;
+    int32_t నిరంతరం_లెక్క=pBiDi->నిరంతరం_లెక్క, visual_ప్రారంభం=0, i, length, logical_ప్రారంభం;
 
-    for(i=0; i<runCount; i++) {
-        length=runs[i].visualLimit-visualStart;
-        logicalStart=GET_INDEX(runs[i].logicalStart);
-        if((logicalIndex>=logicalStart) && (logicalIndex<(logicalStart+length))) {
-            return i;
+    కొరకు(i=0; i<నిరంతరం_లెక్క; i++) {
+        length=runs[i].visual_హద్దు-visual_ప్రారంభం;
+        logical_ప్రారంభం=GET_సూచీ(runs[i].logical_ప్రారంభం);
+        ఒకవేళ((logical_సూచీ>=logical_ప్రారంభం) && (logical_సూచీ<(logical_ప్రారంభం+length))) {
+            తిరిగి i;
         }
-        visualStart+=length;
+        visual_ప్రారంభం+=length;
     }
     /* we should never get here */
     UPRV_UNREACHABLE_EXIT;
@@ -544,24 +544,24 @@ static int32_t getRunFromLogicalIndex(UBiDi *pBiDi, int32_t logicalIndex) {
  * negative number of BiDi control characters within this run.
  */
 U_CFUNC UBool
-ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
+ubidi_getRuns(UBiDi *pBiDi, UError_సంకేతం* p_Error_సంకేతం) {
     /*
      * This method returns immediately if the runs are already set. This
      * includes the case of length==0 (handled in setPara)..
      */
-    if (pBiDi->runCount>=0) {
-        return true;
+    ఒకవేళ (pBiDi->నిరంతరం_లెక్క>=0) {
+        తిరిగి నిజం;
     }
 
-    if(pBiDi->direction!=UBIDI_MIXED) {
+    ఒకవేళ(pBiDi->direction!=UBIDI_MIXED) {
         /* simple, single-run case - this covers length==0 */
         /* pBiDi->paraLevel is ok even for contextual multiple paragraphs */
-        getSingleRun(pBiDi, pBiDi->paraLevel);
-    } else /* UBIDI_MIXED, length>0 */ {
+        get_Single_నిరంతరం(pBiDi, pBiDi->paraLevel);
+    } లేకపోతే /* UBIDI_MIXED, length>0 */ {
         /* mixed directionality */
-        int32_t length=pBiDi->length, limit;
-        UBiDiLevel *levels=pBiDi->levels;
-        int32_t i, runCount;
+        int32_t length=pBiDi->length, హద్దు;
+        UBiDiLevel *స్థాయిలు=pBiDi->స్థాయిలు;
+        int32_t i, నిరంతరం_లెక్క;
         UBiDiLevel level=UBIDI_DEFAULT_LTR;   /* initialize with no valid level */
         /*
          * If there are WS characters at the end of the line
@@ -574,14 +574,14 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
          * In other words, for the trailing WS, it may be
          * levels[]!=paraLevel but we have to treat it like it were so.
          */
-        limit=pBiDi->trailingWSStart;
+        హద్దు=pBiDi->trailingWSStart;
         /* count the runs, there is at least one non-WS run, and limit>0 */
-        runCount=0;
-        for(i=0; i<limit; ++i) {
+        నిరంతరం_లెక్క=0;
+        కొరకు(i=0; i<హద్దు; ++i) {
             /* increment runCount at the start of each run */
-            if(levels[i]!=level) {
-                ++runCount;
-                level=levels[i];
+            ఒకవేళ(స్థాయిలు[i]!=level) {
+                ++నిరంతరం_లెక్క;
+                level=స్థాయిలు[i];
             }
         }
 
@@ -589,26 +589,26 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
          * We don't need to see if the last run can be merged with a trailing
          * WS run because setTrailingWSStart() would have done that.
          */
-        if(runCount==1 && limit==length) {
+        ఒకవేళ(నిరంతరం_లెక్క==1 && హద్దు==length) {
             /* There is only one non-WS run and no trailing WS-run. */
-            getSingleRun(pBiDi, levels[0]);
-        } else /* runCount>1 || limit<length */ {
+            get_Single_నిరంతరం(pBiDi, స్థాయిలు[0]);
+        } లేకపోతే /* runCount>1 || limit<length */ {
             /* allocate and set the runs */
-            Run *runs;
-            int32_t runIndex, start;
+            నిరంతరం *runs;
+            int32_t నిరంతరం_సూచీ, ప్రారంభం;
             UBiDiLevel minLevel=UBIDI_MAX_EXPLICIT_LEVEL+1, maxLevel=0;
 
             /* now, count a (non-mergeable) WS run */
-            if(limit<length) {
-                ++runCount;
+            ఒకవేళ(హద్దు<length) {
+                ++నిరంతరం_లెక్క;
             }
 
             /* runCount>1 */
-            if(getRunsMemory(pBiDi, runCount)) {
-                runs=pBiDi->runsMemory;
-            } else {
-                *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                return false;
+            ఒకవేళ(get_Runs_జ్ఞాపకం(pBiDi, నిరంతరం_లెక్క)) {
+                runs=pBiDi->runs_జ్ఞాపకం;
+            } లేకపోతే {
+                *p_Error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి అబద్ధం;
             }
 
             /* set the runs */
@@ -617,118 +617,118 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
              * However, that would take longer. Check also how it would
              * interact with BiDi control removal and inserting Marks.
              */
-            runIndex=0;
+            నిరంతరం_సూచీ=0;
 
             /* search for the run limits and initialize visualLimit values with the run lengths */
             i=0;
-            do {
+            చేయి {
                 /* prepare this run */
-                start=i;
-                level=levels[i];
-                if(level<minLevel) {
+                ప్రారంభం=i;
+                level=స్థాయిలు[i];
+                ఒకవేళ(level<minLevel) {
                     minLevel=level;
                 }
-                if(level>maxLevel) {
+                ఒకవేళ(level>maxLevel) {
                     maxLevel=level;
                 }
 
                 /* look for the run limit */
-                while(++i<limit && levels[i]==level) {}
+                అయితే(++i<హద్దు && స్థాయిలు[i]==level) {}
 
                 /* i is another run limit */
-                runs[runIndex].logicalStart=start;
-                runs[runIndex].visualLimit=i-start;
-                runs[runIndex].insertRemove=0;
-                ++runIndex;
-            } while(i<limit);
+                runs[నిరంతరం_సూచీ].logical_ప్రారంభం=ప్రారంభం;
+                runs[నిరంతరం_సూచీ].visual_హద్దు=i-ప్రారంభం;
+                runs[నిరంతరం_సూచీ].చొప్పించు_Remove=0;
+                ++నిరంతరం_సూచీ;
+            } అయితే(i<హద్దు);
 
-            if(limit<length) {
+            ఒకవేళ(హద్దు<length) {
                 /* there is a separate WS run */
-                runs[runIndex].logicalStart=limit;
-                runs[runIndex].visualLimit=length-limit;
+                runs[నిరంతరం_సూచీ].logical_ప్రారంభం=హద్దు;
+                runs[నిరంతరం_సూచీ].visual_హద్దు=length-హద్దు;
                 /* For the trailing WS run, pBiDi->paraLevel is ok even
                    if contextual multiple paragraphs.                   */
-                if(pBiDi->paraLevel<minLevel) {
+                ఒకవేళ(pBiDi->paraLevel<minLevel) {
                     minLevel=pBiDi->paraLevel;
                 }
             }
 
             /* set the object fields */
             pBiDi->runs=runs;
-            pBiDi->runCount=runCount;
+            pBiDi->నిరంతరం_లెక్క=నిరంతరం_లెక్క;
 
-            reorderLine(pBiDi, minLevel, maxLevel);
+            reorder_పంక్తి(pBiDi, minLevel, maxLevel);
 
             /* now add the direction flags and adjust the visualLimit's to be just that */
             /* this loop will also handle the trailing WS run */
-            limit=0;
-            for(i=0; i<runCount; ++i) {
-                ADD_ODD_BIT_FROM_LEVEL(runs[i].logicalStart, levels[runs[i].logicalStart]);
-                limit+=runs[i].visualLimit;
-                runs[i].visualLimit=limit;
+            హద్దు=0;
+            కొరకు(i=0; i<నిరంతరం_లెక్క; ++i) {
+                కూడు_ODD_బిట్టు_FROM_LEVEL(runs[i].logical_ప్రారంభం, స్థాయిలు[runs[i].logical_ప్రారంభం]);
+                హద్దు+=runs[i].visual_హద్దు;
+                runs[i].visual_హద్దు=హద్దు;
             }
 
             /* Set the "odd" bit for the trailing WS run. */
             /* For a RTL paragraph, it will be the *first* run in visual order. */
             /* For the trailing WS run, pBiDi->paraLevel is ok even if
                contextual multiple paragraphs.                          */
-            if(runIndex<runCount) {
-                int32_t trailingRun = ((pBiDi->paraLevel & 1) != 0)? 0 : runIndex;
+            ఒకవేళ(నిరంతరం_సూచీ<నిరంతరం_లెక్క) {
+                int32_t trailing_నిరంతరం = ((pBiDi->paraLevel & 1) != 0)? 0 : నిరంతరం_సూచీ;
 
-                ADD_ODD_BIT_FROM_LEVEL(runs[trailingRun].logicalStart, pBiDi->paraLevel);
+                కూడు_ODD_బిట్టు_FROM_LEVEL(runs[trailing_నిరంతరం].logical_ప్రారంభం, pBiDi->paraLevel);
             }
         }
     }
 
     /* handle insert LRM/RLM BEFORE/AFTER run */
-    if(pBiDi->insertPoints.size>0) {
-        Point *point, *start=pBiDi->insertPoints.points,
-                      *limit=start+pBiDi->insertPoints.size;
-        int32_t runIndex;
-        for(point=start; point<limit; point++) {
-            runIndex=getRunFromLogicalIndex(pBiDi, point->pos);
-            pBiDi->runs[runIndex].insertRemove|=point->flag;
+    ఒకవేళ(pBiDi->చొప్పించు_Points.size>0) {
+        బిందువు *బిందువు_2, *ప్రారంభం=pBiDi->చొప్పించు_Points.points,
+                      *హద్దు=ప్రారంభం+pBiDi->చొప్పించు_Points.size;
+        int32_t నిరంతరం_సూచీ;
+        కొరకు(బిందువు_2=ప్రారంభం; బిందువు_2<హద్దు; బిందువు_2++) {
+            నిరంతరం_సూచీ=get_నిరంతరం_From_Logical_సూచీ(pBiDi, బిందువు_2->pos);
+            pBiDi->runs[నిరంతరం_సూచీ].చొప్పించు_Remove|=బిందువు_2->flag;
         }
     }
 
     /* handle remove BiDi control characters */
-    if(pBiDi->controlCount>0) {
-        int32_t runIndex;
-        const char16_t *start=pBiDi->text, *limit=start+pBiDi->length, *pu;
-        for(pu=start; pu<limit; pu++) {
-            if(IS_BIDI_CONTROL_CHAR(*pu)) {
-                runIndex=getRunFromLogicalIndex(pBiDi, (int32_t)(pu-start));
-                pBiDi->runs[runIndex].insertRemove--;
+    ఒకవేళ(pBiDi->control_లెక్క>0) {
+        int32_t నిరంతరం_సూచీ;
+        స్థిరరాశి char16_t *ప్రారంభం=pBiDi->పాఠ్యం, *హద్దు=ప్రారంభం+pBiDi->length, *pu;
+        కొరకు(pu=ప్రారంభం; pu<హద్దు; pu++) {
+            ఒకవేళ(IS_BIDI_CONTROL_CHAR(*pu)) {
+                నిరంతరం_సూచీ=get_నిరంతరం_From_Logical_సూచీ(pBiDi, (int32_t)(pu-ప్రారంభం));
+                pBiDi->runs[నిరంతరం_సూచీ].చొప్పించు_Remove--;
             }
         }
     }
 
-    return true;
+    తిరిగి నిజం;
 }
 
-static UBool
-prepareReorder(const UBiDiLevel *levels, int32_t length,
-               int32_t *indexMap,
+స్థిర UBool
+prepareReorder(స్థిరరాశి UBiDiLevel *స్థాయిలు, int32_t length,
+               int32_t *సూచీ_Map,
                UBiDiLevel *pMinLevel, UBiDiLevel *pMaxLevel) {
-    int32_t start;
+    int32_t ప్రారంభం;
     UBiDiLevel level, minLevel, maxLevel;
 
-    if(levels==nullptr || length<=0) {
-        return false;
+    ఒకవేళ(స్థాయిలు==శూన్యసూచిక || length<=0) {
+        తిరిగి అబద్ధం;
     }
 
     /* determine minLevel and maxLevel */
     minLevel=UBIDI_MAX_EXPLICIT_LEVEL+1;
     maxLevel=0;
-    for(start=length; start>0;) {
-        level=levels[--start];
-        if(level>UBIDI_MAX_EXPLICIT_LEVEL+1) {
-            return false;
+    కొరకు(ప్రారంభం=length; ప్రారంభం>0;) {
+        level=స్థాయిలు[--ప్రారంభం];
+        ఒకవేళ(level>UBIDI_MAX_EXPLICIT_LEVEL+1) {
+            తిరిగి అబద్ధం;
         }
-        if(level<minLevel) {
+        ఒకవేళ(level<minLevel) {
             minLevel=level;
         }
-        if(level>maxLevel) {
+        ఒకవేళ(level>maxLevel) {
             maxLevel=level;
         }
     }
@@ -736,50 +736,50 @@ prepareReorder(const UBiDiLevel *levels, int32_t length,
     *pMaxLevel=maxLevel;
 
     /* initialize the index map */
-    for(start=length; start>0;) {
-        --start;
-        indexMap[start]=start;
+    కొరకు(ప్రారంభం=length; ప్రారంభం>0;) {
+        --ప్రారంభం;
+        సూచీ_Map[ప్రారంభం]=ప్రారంభం;
     }
 
-    return true;
+    తిరిగి నిజం;
 }
 
 /* reorder a line based on a levels array (L2) ------------------------------ */
 
-U_CAPI void U_EXPORT2
-ubidi_reorderLogical(const UBiDiLevel *levels, int32_t length, int32_t *indexMap) {
-    int32_t start, limit, sumOfSosEos;
+U_CAPI శూన్య U_EXPORT2
+ubidi_reorderLogical(స్థిరరాశి UBiDiLevel *స్థాయిలు, int32_t length, int32_t *సూచీ_Map) {
+    int32_t ప్రారంభం, హద్దు, కూడిక_యొక్క_Sos_Eos;
     UBiDiLevel minLevel = 0, maxLevel = 0;
 
-    if(indexMap==nullptr || !prepareReorder(levels, length, indexMap, &minLevel, &maxLevel)) {
-        return;
+    ఒకవేళ(సూచీ_Map==శూన్యసూచిక || !prepareReorder(స్థాయిలు, length, సూచీ_Map, &minLevel, &maxLevel)) {
+        తిరిగి;
     }
 
     /* nothing to do? */
-    if(minLevel==maxLevel && (minLevel&1)==0) {
-        return;
+    ఒకవేళ(minLevel==maxLevel && (minLevel&1)==0) {
+        తిరిగి;
     }
 
     /* reorder only down to the lowest odd level */
     minLevel|=1;
 
     /* loop maxLevel..minLevel */
-    do {
-        start=0;
+    చేయి {
+        ప్రారంభం=0;
 
         /* loop for all sequences of levels to reorder at the current maxLevel */
-        for(;;) {
+        కొరకు(;;) {
             /* look for a sequence of levels that are all at >=maxLevel */
             /* look for the first index of such a sequence */
-            while(start<length && levels[start]<maxLevel) {
-                ++start;
+            అయితే(ప్రారంభం<length && స్థాయిలు[ప్రారంభం]<maxLevel) {
+                ++ప్రారంభం;
             }
-            if(start>=length) {
-                break;  /* no more such sequences */
+            ఒకవేళ(ప్రారంభం>=length) {
+                ఆపు;  /* no more such sequences */
             }
 
             /* look for the limit of such a sequence (the index behind it) */
-            for(limit=start; ++limit<length && levels[limit]>=maxLevel;) {}
+            కొరకు(హద్దు=ప్రారంభం; ++హద్దు<length && స్థాయిలు[హద్దు]>=maxLevel;) {}
 
             /*
              * sos=start of sequence, eos=end of sequence
@@ -792,57 +792,57 @@ ubidi_reorderLogical(const UBiDiLevel *levels, int32_t length, int32_t *indexMap
              * we pre-add sos+eos into sumOfSosEos ->
              * new visual index=sumOfSosEos-old visual index;
              */
-            sumOfSosEos=start+limit-1;
+            కూడిక_యొక్క_Sos_Eos=ప్రారంభం+హద్దు-1;
 
             /* reorder each index in the sequence */
-            do {
-                indexMap[start]=sumOfSosEos-indexMap[start];
-            } while(++start<limit);
+            చేయి {
+                సూచీ_Map[ప్రారంభం]=కూడిక_యొక్క_Sos_Eos-సూచీ_Map[ప్రారంభం];
+            } అయితే(++ప్రారంభం<హద్దు);
 
             /* start==limit */
-            if(limit==length) {
-                break;  /* no more such sequences */
-            } else {
-                start=limit+1;
+            ఒకవేళ(హద్దు==length) {
+                ఆపు;  /* no more such sequences */
+            } లేకపోతే {
+                ప్రారంభం=హద్దు+1;
             }
         }
-    } while(--maxLevel>=minLevel);
+    } అయితే(--maxLevel>=minLevel);
 }
 
-U_CAPI void U_EXPORT2
-ubidi_reorderVisual(const UBiDiLevel *levels, int32_t length, int32_t *indexMap) {
-    int32_t start, end, limit, temp;
+U_CAPI శూన్య U_EXPORT2
+ubidi_reorderVisual(స్థిరరాశి UBiDiLevel *స్థాయిలు, int32_t length, int32_t *సూచీ_Map) {
+    int32_t ప్రారంభం, చివర, హద్దు, తాత్కాలిక;
     UBiDiLevel minLevel = 0, maxLevel = 0;
 
-    if(indexMap==nullptr || !prepareReorder(levels, length, indexMap, &minLevel, &maxLevel)) {
-        return;
+    ఒకవేళ(సూచీ_Map==శూన్యసూచిక || !prepareReorder(స్థాయిలు, length, సూచీ_Map, &minLevel, &maxLevel)) {
+        తిరిగి;
     }
 
     /* nothing to do? */
-    if(minLevel==maxLevel && (minLevel&1)==0) {
-        return;
+    ఒకవేళ(minLevel==maxLevel && (minLevel&1)==0) {
+        తిరిగి;
     }
 
     /* reorder only down to the lowest odd level */
     minLevel|=1;
 
     /* loop maxLevel..minLevel */
-    do {
-        start=0;
+    చేయి {
+        ప్రారంభం=0;
 
         /* loop for all sequences of levels to reorder at the current maxLevel */
-        for(;;) {
+        కొరకు(;;) {
             /* look for a sequence of levels that are all at >=maxLevel */
             /* look for the first index of such a sequence */
-            while(start<length && levels[start]<maxLevel) {
-                ++start;
+            అయితే(ప్రారంభం<length && స్థాయిలు[ప్రారంభం]<maxLevel) {
+                ++ప్రారంభం;
             }
-            if(start>=length) {
-                break;  /* no more such runs */
+            ఒకవేళ(ప్రారంభం>=length) {
+                ఆపు;  /* no more such runs */
             }
 
             /* look for the limit of such a sequence (the index behind it) */
-            for(limit=start; ++limit<length && levels[limit]>=maxLevel;) {}
+            కొరకు(హద్దు=ప్రారంభం; ++హద్దు<length && స్థాయిలు[హద్దు]>=maxLevel;) {}
 
             /*
              * Swap the entire interval of indexes from start to limit-1.
@@ -850,464 +850,464 @@ ubidi_reorderVisual(const UBiDiLevel *levels, int32_t length, int32_t *indexMap)
              * algorithm: the sequence of levels that we look at does not
              * move anyway.
              */
-            end=limit-1;
-            while(start<end) {
-                temp=indexMap[start];
-                indexMap[start]=indexMap[end];
-                indexMap[end]=temp;
+            చివర=హద్దు-1;
+            అయితే(ప్రారంభం<చివర) {
+                తాత్కాలిక=సూచీ_Map[ప్రారంభం];
+                సూచీ_Map[ప్రారంభం]=సూచీ_Map[చివర];
+                సూచీ_Map[చివర]=తాత్కాలిక;
 
-                ++start;
-                --end;
+                ++ప్రారంభం;
+                --చివర;
             }
 
-            if(limit==length) {
-                break;  /* no more such sequences */
-            } else {
-                start=limit+1;
+            ఒకవేళ(హద్దు==length) {
+                ఆపు;  /* no more such sequences */
+            } లేకపోతే {
+                ప్రారంభం=హద్దు+1;
             }
         }
-    } while(--maxLevel>=minLevel);
+    } అయితే(--maxLevel>=minLevel);
 }
 
 /* API functions for logical<->visual mapping ------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getVisualIndex(UBiDi *pBiDi, int32_t logicalIndex, UErrorCode *pErrorCode) {
-    int32_t visualIndex=UBIDI_MAP_NOWHERE;
-    RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
-    RETURN_IF_BAD_RANGE(logicalIndex, 0, pBiDi->length, *pErrorCode, -1);
+ubidi_get_Visual_సూచీ(UBiDi *pBiDi, int32_t logical_సూచీ, UError_సంకేతం *p_Error_సంకేతం) {
+    int32_t visual_సూచీ=UBIDI_MAP_NOWHERE;
+    RETURN_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం, -1);
+    RETURN_IF_NOT_VALID_PARA_OR_పంక్తి(pBiDi, *p_Error_సంకేతం, -1);
+    RETURN_IF_BAD_RANGE(logical_సూచీ, 0, pBiDi->length, *p_Error_సంకేతం, -1);
 
     /* we can do the trivial cases without the runs array */
-    switch(pBiDi->direction) {
-    case UBIDI_LTR:
-        visualIndex=logicalIndex;
-        break;
-    case UBIDI_RTL:
-        visualIndex=pBiDi->length-logicalIndex-1;
-        break;
-    default:
-        if(!ubidi_getRuns(pBiDi, pErrorCode)) {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return -1;
-        } else {
-            Run *runs=pBiDi->runs;
-            int32_t i, visualStart=0, offset, length;
+    ఎంపిక(pBiDi->direction) {
+    స్థితి UBIDI_LTR:
+        visual_సూచీ=logical_సూచీ;
+        ఆపు;
+    స్థితి UBIDI_RTL:
+        visual_సూచీ=pBiDi->length-logical_సూచీ-1;
+        ఆపు;
+    అప్రమేయ:
+        ఒకవేళ(!ubidi_getRuns(pBiDi, p_Error_సంకేతం)) {
+            *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి -1;
+        } లేకపోతే {
+            నిరంతరం *runs=pBiDi->runs;
+            int32_t i, visual_ప్రారంభం=0, స్థానభ్రంశం, length;
 
             /* linear search for the run, search on the visual runs */
-            for(i=0; i<pBiDi->runCount; ++i) {
-                length=runs[i].visualLimit-visualStart;
-                offset=logicalIndex-GET_INDEX(runs[i].logicalStart);
-                if(offset>=0 && offset<length) {
-                    if(IS_EVEN_RUN(runs[i].logicalStart)) {
+            కొరకు(i=0; i<pBiDi->నిరంతరం_లెక్క; ++i) {
+                length=runs[i].visual_హద్దు-visual_ప్రారంభం;
+                స్థానభ్రంశం=logical_సూచీ-GET_సూచీ(runs[i].logical_ప్రారంభం);
+                ఒకవేళ(స్థానభ్రంశం>=0 && స్థానభ్రంశం<length) {
+                    ఒకవేళ(IS_EVEN_నిరంతరం(runs[i].logical_ప్రారంభం)) {
                         /* LTR */
-                        visualIndex=visualStart+offset;
-                    } else {
+                        visual_సూచీ=visual_ప్రారంభం+స్థానభ్రంశం;
+                    } లేకపోతే {
                         /* RTL */
-                        visualIndex=visualStart+length-offset-1;
+                        visual_సూచీ=visual_ప్రారంభం+length-స్థానభ్రంశం-1;
                     }
-                    break;          /* exit for loop */
+                    ఆపు;          /* exit for loop */
                 }
-                visualStart+=length;
+                visual_ప్రారంభం+=length;
             }
-            if(i>=pBiDi->runCount) {
-                return UBIDI_MAP_NOWHERE;
+            ఒకవేళ(i>=pBiDi->నిరంతరం_లెక్క) {
+                తిరిగి UBIDI_MAP_NOWHERE;
             }
         }
     }
 
-    if(pBiDi->insertPoints.size>0) {
+    ఒకవేళ(pBiDi->చొప్పించు_Points.size>0) {
         /* add the number of added marks until the calculated visual index */
-        Run *runs=pBiDi->runs;
-        int32_t i, length, insertRemove;
-        int32_t visualStart=0, markFound=0;
-        for(i=0; ; i++, visualStart+=length) {
-            length=runs[i].visualLimit-visualStart;
-            insertRemove=runs[i].insertRemove;
-            if(insertRemove & (LRM_BEFORE|RLM_BEFORE)) {
-                markFound++;
+        నిరంతరం *runs=pBiDi->runs;
+        int32_t i, length, చొప్పించు_Remove;
+        int32_t visual_ప్రారంభం=0, mark_దొరికింది=0;
+        కొరకు(i=0; ; i++, visual_ప్రారంభం+=length) {
+            length=runs[i].visual_హద్దు-visual_ప్రారంభం;
+            చొప్పించు_Remove=runs[i].చొప్పించు_Remove;
+            ఒకవేళ(చొప్పించు_Remove & (LRM_BEFORE|RLM_BEFORE)) {
+                mark_దొరికింది++;
             }
             /* is it the run containing the visual index? */
-            if(visualIndex<runs[i].visualLimit) {
-                return visualIndex+markFound;
+            ఒకవేళ(visual_సూచీ<runs[i].visual_హద్దు) {
+                తిరిగి visual_సూచీ+mark_దొరికింది;
             }
-            if(insertRemove & (LRM_AFTER|RLM_AFTER)) {
-                markFound++;
+            ఒకవేళ(చొప్పించు_Remove & (LRM_AFTER|RLM_AFTER)) {
+                mark_దొరికింది++;
             }
         }
     }
-    else if(pBiDi->controlCount>0) {
+    లేకపోతే ఒకవేళ(pBiDi->control_లెక్క>0) {
         /* subtract the number of controls until the calculated visual index */
-        Run *runs=pBiDi->runs;
-        int32_t i, j, start, limit, length, insertRemove;
-        int32_t visualStart=0, controlFound=0;
-        char16_t uchar=pBiDi->text[logicalIndex];
+        నిరంతరం *runs=pBiDi->runs;
+        int32_t i, j, ప్రారంభం, హద్దు, length, చొప్పించు_Remove;
+        int32_t visual_ప్రారంభం=0, control_దొరికింది=0;
+        char16_t uchar=pBiDi->పాఠ్యం[logical_సూచీ];
         /* is the logical index pointing to a control ? */
-        if(IS_BIDI_CONTROL_CHAR(uchar)) {
-            return UBIDI_MAP_NOWHERE;
+        ఒకవేళ(IS_BIDI_CONTROL_CHAR(uchar)) {
+            తిరిగి UBIDI_MAP_NOWHERE;
         }
         /* loop on runs */
-        for(i=0; ; i++, visualStart+=length) {
-            length=runs[i].visualLimit-visualStart;
-            insertRemove=runs[i].insertRemove;
+        కొరకు(i=0; ; i++, visual_ప్రారంభం+=length) {
+            length=runs[i].visual_హద్దు-visual_ప్రారంభం;
+            చొప్పించు_Remove=runs[i].చొప్పించు_Remove;
             /* calculated visual index is beyond this run? */
-            if(visualIndex>=runs[i].visualLimit) {
-                controlFound-=insertRemove;
-                continue;
+            ఒకవేళ(visual_సూచీ>=runs[i].visual_హద్దు) {
+                control_దొరికింది-=చొప్పించు_Remove;
+                కొనసాగు;
             }
             /* calculated visual index must be within current run */
-            if(insertRemove==0) {
-                return visualIndex-controlFound;
+            ఒకవేళ(చొప్పించు_Remove==0) {
+                తిరిగి visual_సూచీ-control_దొరికింది;
             }
-            if(IS_EVEN_RUN(runs[i].logicalStart)) {
+            ఒకవేళ(IS_EVEN_నిరంతరం(runs[i].logical_ప్రారంభం)) {
                 /* LTR: check from run start to logical index */
-                start=runs[i].logicalStart;
-                limit=logicalIndex;
-            } else {
+                ప్రారంభం=runs[i].logical_ప్రారంభం;
+                హద్దు=logical_సూచీ;
+            } లేకపోతే {
                 /* RTL: check from logical index to run end */
-                start=logicalIndex+1;
-                limit=GET_INDEX(runs[i].logicalStart)+length;
+                ప్రారంభం=logical_సూచీ+1;
+                హద్దు=GET_సూచీ(runs[i].logical_ప్రారంభం)+length;
             }
-            for(j=start; j<limit; j++) {
-                uchar=pBiDi->text[j];
-                if(IS_BIDI_CONTROL_CHAR(uchar)) {
-                    controlFound++;
+            కొరకు(j=ప్రారంభం; j<హద్దు; j++) {
+                uchar=pBiDi->పాఠ్యం[j];
+                ఒకవేళ(IS_BIDI_CONTROL_CHAR(uchar)) {
+                    control_దొరికింది++;
                 }
             }
-            return visualIndex-controlFound;
+            తిరిగి visual_సూచీ-control_దొరికింది;
         }
     }
 
-    return visualIndex;
+    తిరిగి visual_సూచీ;
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getLogicalIndex(UBiDi *pBiDi, int32_t visualIndex, UErrorCode *pErrorCode) {
-    Run *runs;
-    int32_t i, runCount, start;
-    RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
-    RETURN_IF_BAD_RANGE(visualIndex, 0, pBiDi->resultLength, *pErrorCode, -1);
+ubidi_get_Logical_సూచీ(UBiDi *pBiDi, int32_t visual_సూచీ, UError_సంకేతం *p_Error_సంకేతం) {
+    నిరంతరం *runs;
+    int32_t i, నిరంతరం_లెక్క, ప్రారంభం;
+    RETURN_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం, -1);
+    RETURN_IF_NOT_VALID_PARA_OR_పంక్తి(pBiDi, *p_Error_సంకేతం, -1);
+    RETURN_IF_BAD_RANGE(visual_సూచీ, 0, pBiDi->ఫలితం_నిడివి, *p_Error_సంకేతం, -1);
     /* we can do the trivial cases without the runs array */
-    if(pBiDi->insertPoints.size==0 && pBiDi->controlCount==0) {
-        if(pBiDi->direction==UBIDI_LTR) {
-            return visualIndex;
+    ఒకవేళ(pBiDi->చొప్పించు_Points.size==0 && pBiDi->control_లెక్క==0) {
+        ఒకవేళ(pBiDi->direction==UBIDI_LTR) {
+            తిరిగి visual_సూచీ;
         }
-        else if(pBiDi->direction==UBIDI_RTL) {
-            return pBiDi->length-visualIndex-1;
+        లేకపోతే ఒకవేళ(pBiDi->direction==UBIDI_RTL) {
+            తిరిగి pBiDi->length-visual_సూచీ-1;
         }
     }
-    if(!ubidi_getRuns(pBiDi, pErrorCode)) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return -1;
+    ఒకవేళ(!ubidi_getRuns(pBiDi, p_Error_సంకేతం)) {
+        *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి -1;
     }
 
     runs=pBiDi->runs;
-    runCount=pBiDi->runCount;
-    if(pBiDi->insertPoints.size>0) {
+    నిరంతరం_లెక్క=pBiDi->నిరంతరం_లెక్క;
+    ఒకవేళ(pBiDi->చొప్పించు_Points.size>0) {
         /* handle inserted LRM/RLM */
-        int32_t markFound=0, insertRemove;
-        int32_t visualStart=0, length;
+        int32_t mark_దొరికింది=0, చొప్పించు_Remove;
+        int32_t visual_ప్రారంభం=0, length;
         runs=pBiDi->runs;
         /* subtract number of marks until visual index */
-        for(i=0; ; i++, visualStart+=length) {
-            length=runs[i].visualLimit-visualStart;
-            insertRemove=runs[i].insertRemove;
-            if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
-                if(visualIndex<=(visualStart+markFound)) {
-                    return UBIDI_MAP_NOWHERE;
+        కొరకు(i=0; ; i++, visual_ప్రారంభం+=length) {
+            length=runs[i].visual_హద్దు-visual_ప్రారంభం;
+            చొప్పించు_Remove=runs[i].చొప్పించు_Remove;
+            ఒకవేళ(చొప్పించు_Remove&(LRM_BEFORE|RLM_BEFORE)) {
+                ఒకవేళ(visual_సూచీ<=(visual_ప్రారంభం+mark_దొరికింది)) {
+                    తిరిగి UBIDI_MAP_NOWHERE;
                 }
-                markFound++;
+                mark_దొరికింది++;
             }
             /* is adjusted visual index within this run? */
-            if(visualIndex<(runs[i].visualLimit+markFound)) {
-                visualIndex-=markFound;
-                break;
+            ఒకవేళ(visual_సూచీ<(runs[i].visual_హద్దు+mark_దొరికింది)) {
+                visual_సూచీ-=mark_దొరికింది;
+                ఆపు;
             }
-            if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
-                if(visualIndex==(visualStart+length+markFound)) {
-                    return UBIDI_MAP_NOWHERE;
+            ఒకవేళ(చొప్పించు_Remove&(LRM_AFTER|RLM_AFTER)) {
+                ఒకవేళ(visual_సూచీ==(visual_ప్రారంభం+length+mark_దొరికింది)) {
+                    తిరిగి UBIDI_MAP_NOWHERE;
                 }
-                markFound++;
+                mark_దొరికింది++;
             }
         }
     }
-    else if(pBiDi->controlCount>0) {
+    లేకపోతే ఒకవేళ(pBiDi->control_లెక్క>0) {
         /* handle removed BiDi control characters */
-        int32_t controlFound=0, insertRemove, length;
-        int32_t logicalStart, logicalEnd, visualStart=0, j, k;
+        int32_t control_దొరికింది=0, చొప్పించు_Remove, length;
+        int32_t logical_ప్రారంభం, logical_చివర, visual_ప్రారంభం=0, j, k;
         char16_t uchar;
-        UBool evenRun;
+        UBool even_నిరంతరం;
         /* add number of controls until visual index */
-        for(i=0; ; i++, visualStart+=length) {
-            length=runs[i].visualLimit-visualStart;
-            insertRemove=runs[i].insertRemove;
+        కొరకు(i=0; ; i++, visual_ప్రారంభం+=length) {
+            length=runs[i].visual_హద్దు-visual_ప్రారంభం;
+            చొప్పించు_Remove=runs[i].చొప్పించు_Remove;
             /* is adjusted visual index beyond current run? */
-            if(visualIndex>=(runs[i].visualLimit-controlFound+insertRemove)) {
-                controlFound-=insertRemove;
-                continue;
+            ఒకవేళ(visual_సూచీ>=(runs[i].visual_హద్దు-control_దొరికింది+చొప్పించు_Remove)) {
+                control_దొరికింది-=చొప్పించు_Remove;
+                కొనసాగు;
             }
             /* adjusted visual index is within current run */
-            if(insertRemove==0) {
-                visualIndex+=controlFound;
-                break;
+            ఒకవేళ(చొప్పించు_Remove==0) {
+                visual_సూచీ+=control_దొరికింది;
+                ఆపు;
             }
             /* count non-control chars until visualIndex */
-            logicalStart=runs[i].logicalStart;
-            evenRun=IS_EVEN_RUN(logicalStart);
-            REMOVE_ODD_BIT(logicalStart);
-            logicalEnd=logicalStart+length-1;
-            for(j=0; j<length; j++) {
-                k= evenRun ? logicalStart+j : logicalEnd-j;
-                uchar=pBiDi->text[k];
-                if(IS_BIDI_CONTROL_CHAR(uchar)) {
-                    controlFound++;
+            logical_ప్రారంభం=runs[i].logical_ప్రారంభం;
+            even_నిరంతరం=IS_EVEN_నిరంతరం(logical_ప్రారంభం);
+            REMOVE_ODD_బిట్టు(logical_ప్రారంభం);
+            logical_చివర=logical_ప్రారంభం+length-1;
+            కొరకు(j=0; j<length; j++) {
+                k= even_నిరంతరం ? logical_ప్రారంభం+j : logical_చివర-j;
+                uchar=pBiDi->పాఠ్యం[k];
+                ఒకవేళ(IS_BIDI_CONTROL_CHAR(uchar)) {
+                    control_దొరికింది++;
                 }
-                if((visualIndex+controlFound)==(visualStart+j)) {
-                    break;
+                ఒకవేళ((visual_సూచీ+control_దొరికింది)==(visual_ప్రారంభం+j)) {
+                    ఆపు;
                 }
             }
-            visualIndex+=controlFound;
-            break;
+            visual_సూచీ+=control_దొరికింది;
+            ఆపు;
         }
     }
     /* handle all cases */
-    if(runCount<=10) {
+    ఒకవేళ(నిరంతరం_లెక్క<=10) {
         /* linear search for the run */
-        for(i=0; visualIndex>=runs[i].visualLimit; ++i) {}
-    } else {
+        కొరకు(i=0; visual_సూచీ>=runs[i].visual_హద్దు; ++i) {}
+    } లేకపోతే {
         /* binary search for the run */
-        int32_t begin=0, limit=runCount;
+        int32_t begin=0, హద్దు=నిరంతరం_లెక్క;
 
         /* the middle if() is guaranteed to find the run, we don't need a loop limit */
-        for(;;) {
-            i=(begin+limit)/2;
-            if(visualIndex>=runs[i].visualLimit) {
+        కొరకు(;;) {
+            i=(begin+హద్దు)/2;
+            ఒకవేళ(visual_సూచీ>=runs[i].visual_హద్దు) {
                 begin=i+1;
-            } else if(i==0 || visualIndex>=runs[i-1].visualLimit) {
-                break;
-            } else {
-                limit=i;
+            } లేకపోతే ఒకవేళ(i==0 || visual_సూచీ>=runs[i-1].visual_హద్దు) {
+                ఆపు;
+            } లేకపోతే {
+                హద్దు=i;
             }
         }
     }
 
-    start=runs[i].logicalStart;
-    if(IS_EVEN_RUN(start)) {
+    ప్రారంభం=runs[i].logical_ప్రారంభం;
+    ఒకవేళ(IS_EVEN_నిరంతరం(ప్రారంభం)) {
         /* LTR */
         /* the offset in runs[i] is visualIndex-runs[i-1].visualLimit */
-        if(i>0) {
-            visualIndex-=runs[i-1].visualLimit;
+        ఒకవేళ(i>0) {
+            visual_సూచీ-=runs[i-1].visual_హద్దు;
         }
-        return start+visualIndex;
-    } else {
+        తిరిగి ప్రారంభం+visual_సూచీ;
+    } లేకపోతే {
         /* RTL */
-        return GET_INDEX(start)+runs[i].visualLimit-visualIndex-1;
+        తిరిగి GET_సూచీ(ప్రారంభం)+runs[i].visual_హద్దు-visual_సూచీ-1;
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
+U_CAPI శూన్య U_EXPORT2
+ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *సూచీ_Map, UError_సంకేతం *p_Error_సంకేతం) {
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం);
     /* ubidi_countRuns() checks for VALID_PARA_OR_LINE */
-    ubidi_countRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    ubidi_లెక్క_Runs(pBiDi, p_Error_సంకేతం);
+    ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
         /* no op */
-    } else if(indexMap==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else {
+    } లేకపోతే ఒకవేళ(సూచీ_Map==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+    } లేకపోతే {
         /* fill a logical-to-visual index map using the runs[] */
-        int32_t visualStart, visualLimit, i, j, k;
-        int32_t logicalStart, logicalLimit;
-        Run *runs=pBiDi->runs;
-        if (pBiDi->length<=0) {
-            return;
+        int32_t visual_ప్రారంభం, visual_హద్దు, i, j, k;
+        int32_t logical_ప్రారంభం, logical_హద్దు;
+        నిరంతరం *runs=pBiDi->runs;
+        ఒకవేళ (pBiDi->length<=0) {
+            తిరిగి;
         }
-        if (pBiDi->length>pBiDi->resultLength) {
-            uprv_memset(indexMap, 0xFF, pBiDi->length*sizeof(int32_t));
+        ఒకవేళ (pBiDi->length>pBiDi->ఫలితం_నిడివి) {
+            uprv_memset(సూచీ_Map, 0xFF, pBiDi->length*పరిమాణం(int32_t));
         }
 
-        visualStart=0;
-        for(j=0; j<pBiDi->runCount; ++j) {
-            logicalStart=GET_INDEX(runs[j].logicalStart);
-            visualLimit=runs[j].visualLimit;
-            if(IS_EVEN_RUN(runs[j].logicalStart)) {
-                do { /* LTR */
-                    indexMap[logicalStart++]=visualStart++;
-                } while(visualStart<visualLimit);
-            } else {
-                logicalStart+=visualLimit-visualStart;  /* logicalLimit */
-                do { /* RTL */
-                    indexMap[--logicalStart]=visualStart++;
-                } while(visualStart<visualLimit);
+        visual_ప్రారంభం=0;
+        కొరకు(j=0; j<pBiDi->నిరంతరం_లెక్క; ++j) {
+            logical_ప్రారంభం=GET_సూచీ(runs[j].logical_ప్రారంభం);
+            visual_హద్దు=runs[j].visual_హద్దు;
+            ఒకవేళ(IS_EVEN_నిరంతరం(runs[j].logical_ప్రారంభం)) {
+                చేయి { /* LTR */
+                    సూచీ_Map[logical_ప్రారంభం++]=visual_ప్రారంభం++;
+                } అయితే(visual_ప్రారంభం<visual_హద్దు);
+            } లేకపోతే {
+                logical_ప్రారంభం+=visual_హద్దు-visual_ప్రారంభం;  /* logicalLimit */
+                చేయి { /* RTL */
+                    సూచీ_Map[--logical_ప్రారంభం]=visual_ప్రారంభం++;
+                } అయితే(visual_ప్రారంభం<visual_హద్దు);
             }
             /* visualStart==visualLimit; */
         }
 
-        if(pBiDi->insertPoints.size>0) {
-            int32_t markFound=0, runCount=pBiDi->runCount;
-            int32_t length, insertRemove;
-            visualStart=0;
+        ఒకవేళ(pBiDi->చొప్పించు_Points.size>0) {
+            int32_t mark_దొరికింది=0, నిరంతరం_లెక్క=pBiDi->నిరంతరం_లెక్క;
+            int32_t length, చొప్పించు_Remove;
+            visual_ప్రారంభం=0;
             /* add number of marks found until each index */
-            for(i=0; i<runCount; i++, visualStart+=length) {
-                length=runs[i].visualLimit-visualStart;
-                insertRemove=runs[i].insertRemove;
-                if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
-                    markFound++;
+            కొరకు(i=0; i<నిరంతరం_లెక్క; i++, visual_ప్రారంభం+=length) {
+                length=runs[i].visual_హద్దు-visual_ప్రారంభం;
+                చొప్పించు_Remove=runs[i].చొప్పించు_Remove;
+                ఒకవేళ(చొప్పించు_Remove&(LRM_BEFORE|RLM_BEFORE)) {
+                    mark_దొరికింది++;
                 }
-                if(markFound>0) {
-                    logicalStart=GET_INDEX(runs[i].logicalStart);
-                    logicalLimit=logicalStart+length;
-                    for(j=logicalStart; j<logicalLimit; j++) {
-                        indexMap[j]+=markFound;
+                ఒకవేళ(mark_దొరికింది>0) {
+                    logical_ప్రారంభం=GET_సూచీ(runs[i].logical_ప్రారంభం);
+                    logical_హద్దు=logical_ప్రారంభం+length;
+                    కొరకు(j=logical_ప్రారంభం; j<logical_హద్దు; j++) {
+                        సూచీ_Map[j]+=mark_దొరికింది;
                     }
                 }
-                if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
-                    markFound++;
+                ఒకవేళ(చొప్పించు_Remove&(LRM_AFTER|RLM_AFTER)) {
+                    mark_దొరికింది++;
                 }
             }
         }
-        else if(pBiDi->controlCount>0) {
-            int32_t controlFound=0, runCount=pBiDi->runCount;
-            int32_t length, insertRemove;
-            UBool evenRun;
+        లేకపోతే ఒకవేళ(pBiDi->control_లెక్క>0) {
+            int32_t control_దొరికింది=0, నిరంతరం_లెక్క=pBiDi->నిరంతరం_లెక్క;
+            int32_t length, చొప్పించు_Remove;
+            UBool even_నిరంతరం;
             char16_t uchar;
-            visualStart=0;
+            visual_ప్రారంభం=0;
             /* subtract number of controls found until each index */
-            for(i=0; i<runCount; i++, visualStart+=length) {
-                length=runs[i].visualLimit-visualStart;
-                insertRemove=runs[i].insertRemove;
+            కొరకు(i=0; i<నిరంతరం_లెక్క; i++, visual_ప్రారంభం+=length) {
+                length=runs[i].visual_హద్దు-visual_ప్రారంభం;
+                చొప్పించు_Remove=runs[i].చొప్పించు_Remove;
                 /* no control found within previous runs nor within this run */
-                if((controlFound-insertRemove)==0) {
-                    continue;
+                ఒకవేళ((control_దొరికింది-చొప్పించు_Remove)==0) {
+                    కొనసాగు;
                 }
-                logicalStart=runs[i].logicalStart;
-                evenRun=IS_EVEN_RUN(logicalStart);
-                REMOVE_ODD_BIT(logicalStart);
-                logicalLimit=logicalStart+length;
+                logical_ప్రారంభం=runs[i].logical_ప్రారంభం;
+                even_నిరంతరం=IS_EVEN_నిరంతరం(logical_ప్రారంభం);
+                REMOVE_ODD_బిట్టు(logical_ప్రారంభం);
+                logical_హద్దు=logical_ప్రారంభం+length;
                 /* if no control within this run */
-                if(insertRemove==0) {
-                    for(j=logicalStart; j<logicalLimit; j++) {
-                        indexMap[j]-=controlFound;
+                ఒకవేళ(చొప్పించు_Remove==0) {
+                    కొరకు(j=logical_ప్రారంభం; j<logical_హద్దు; j++) {
+                        సూచీ_Map[j]-=control_దొరికింది;
                     }
-                    continue;
+                    కొనసాగు;
                 }
-                for(j=0; j<length; j++) {
-                    k= evenRun ? logicalStart+j : logicalLimit-j-1;
-                    uchar=pBiDi->text[k];
-                    if(IS_BIDI_CONTROL_CHAR(uchar)) {
-                        controlFound++;
-                        indexMap[k]=UBIDI_MAP_NOWHERE;
-                        continue;
+                కొరకు(j=0; j<length; j++) {
+                    k= even_నిరంతరం ? logical_ప్రారంభం+j : logical_హద్దు-j-1;
+                    uchar=pBiDi->పాఠ్యం[k];
+                    ఒకవేళ(IS_BIDI_CONTROL_CHAR(uchar)) {
+                        control_దొరికింది++;
+                        సూచీ_Map[k]=UBIDI_MAP_NOWHERE;
+                        కొనసాగు;
                     }
-                    indexMap[k]-=controlFound;
+                    సూచీ_Map[k]-=control_దొరికింది;
                 }
             }
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(indexMap==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI శూన్య U_EXPORT2
+ubidi_getVisualMap(UBiDi *pBiDi, int32_t *సూచీ_Map, UError_సంకేతం *p_Error_సంకేతం) {
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_సంకేతం);
+    ఒకవేళ(సూచీ_Map==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
     /* ubidi_countRuns() checks for VALID_PARA_OR_LINE */
-    ubidi_countRuns(pBiDi, pErrorCode);
-    if(U_SUCCESS(*pErrorCode)) {
+    ubidi_లెక్క_Runs(pBiDi, p_Error_సంకేతం);
+    ఒకవేళ(U_SUCCESS(*p_Error_సంకేతం)) {
         /* fill a visual-to-logical index map using the runs[] */
-        Run *runs=pBiDi->runs, *runsLimit=runs+pBiDi->runCount;
-        int32_t logicalStart, visualStart, visualLimit, *pi=indexMap;
+        నిరంతరం *runs=pBiDi->runs, *runs_హద్దు=runs+pBiDi->నిరంతరం_లెక్క;
+        int32_t logical_ప్రారంభం, visual_ప్రారంభం, visual_హద్దు, *pi=సూచీ_Map;
 
-        if (pBiDi->resultLength<=0) {
-            return;
+        ఒకవేళ (pBiDi->ఫలితం_నిడివి<=0) {
+            తిరిగి;
         }
-        visualStart=0;
-        for(; runs<runsLimit; ++runs) {
-            logicalStart=runs->logicalStart;
-            visualLimit=runs->visualLimit;
-            if(IS_EVEN_RUN(logicalStart)) {
-                do { /* LTR */
-                    *pi++ = logicalStart++;
-                } while(++visualStart<visualLimit);
-            } else {
-                REMOVE_ODD_BIT(logicalStart);
-                logicalStart+=visualLimit-visualStart;  /* logicalLimit */
-                do { /* RTL */
-                    *pi++ = --logicalStart;
-                } while(++visualStart<visualLimit);
+        visual_ప్రారంభం=0;
+        కొరకు(; runs<runs_హద్దు; ++runs) {
+            logical_ప్రారంభం=runs->logical_ప్రారంభం;
+            visual_హద్దు=runs->visual_హద్దు;
+            ఒకవేళ(IS_EVEN_నిరంతరం(logical_ప్రారంభం)) {
+                చేయి { /* LTR */
+                    *pi++ = logical_ప్రారంభం++;
+                } అయితే(++visual_ప్రారంభం<visual_హద్దు);
+            } లేకపోతే {
+                REMOVE_ODD_బిట్టు(logical_ప్రారంభం);
+                logical_ప్రారంభం+=visual_హద్దు-visual_ప్రారంభం;  /* logicalLimit */
+                చేయి { /* RTL */
+                    *pi++ = --logical_ప్రారంభం;
+                } అయితే(++visual_ప్రారంభం<visual_హద్దు);
             }
             /* visualStart==visualLimit; */
         }
 
-        if(pBiDi->insertPoints.size>0) {
-            int32_t markFound=0, runCount=pBiDi->runCount;
-            int32_t insertRemove, i, j, k;
+        ఒకవేళ(pBiDi->చొప్పించు_Points.size>0) {
+            int32_t mark_దొరికింది=0, నిరంతరం_లెక్క=pBiDi->నిరంతరం_లెక్క;
+            int32_t చొప్పించు_Remove, i, j, k;
             runs=pBiDi->runs;
             /* count all inserted marks */
-            for(i=0; i<runCount; i++) {
-                insertRemove=runs[i].insertRemove;
-                if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
-                    markFound++;
+            కొరకు(i=0; i<నిరంతరం_లెక్క; i++) {
+                చొప్పించు_Remove=runs[i].చొప్పించు_Remove;
+                ఒకవేళ(చొప్పించు_Remove&(LRM_BEFORE|RLM_BEFORE)) {
+                    mark_దొరికింది++;
                 }
-                if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
-                    markFound++;
+                ఒకవేళ(చొప్పించు_Remove&(LRM_AFTER|RLM_AFTER)) {
+                    mark_దొరికింది++;
                 }
             }
             /* move back indexes by number of preceding marks */
-            k=pBiDi->resultLength;
-            for(i=runCount-1; i>=0 && markFound>0; i--) {
-                insertRemove=runs[i].insertRemove;
-                if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
-                    indexMap[--k]= UBIDI_MAP_NOWHERE;
-                    markFound--;
+            k=pBiDi->ఫలితం_నిడివి;
+            కొరకు(i=నిరంతరం_లెక్క-1; i>=0 && mark_దొరికింది>0; i--) {
+                చొప్పించు_Remove=runs[i].చొప్పించు_Remove;
+                ఒకవేళ(చొప్పించు_Remove&(LRM_AFTER|RLM_AFTER)) {
+                    సూచీ_Map[--k]= UBIDI_MAP_NOWHERE;
+                    mark_దొరికింది--;
                 }
-                visualStart= i>0 ? runs[i-1].visualLimit : 0;
-                for(j=runs[i].visualLimit-1; j>=visualStart && markFound>0; j--) {
-                    indexMap[--k]=indexMap[j];
+                visual_ప్రారంభం= i>0 ? runs[i-1].visual_హద్దు : 0;
+                కొరకు(j=runs[i].visual_హద్దు-1; j>=visual_ప్రారంభం && mark_దొరికింది>0; j--) {
+                    సూచీ_Map[--k]=సూచీ_Map[j];
                 }
-                if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
-                    indexMap[--k]= UBIDI_MAP_NOWHERE;
-                    markFound--;
+                ఒకవేళ(చొప్పించు_Remove&(LRM_BEFORE|RLM_BEFORE)) {
+                    సూచీ_Map[--k]= UBIDI_MAP_NOWHERE;
+                    mark_దొరికింది--;
                 }
             }
         }
-        else if(pBiDi->controlCount>0) {
-            int32_t runCount=pBiDi->runCount, logicalEnd;
-            int32_t insertRemove, length, i, j, k, m;
+        లేకపోతే ఒకవేళ(pBiDi->control_లెక్క>0) {
+            int32_t నిరంతరం_లెక్క=pBiDi->నిరంతరం_లెక్క, logical_చివర;
+            int32_t చొప్పించు_Remove, length, i, j, k, m;
             char16_t uchar;
-            UBool evenRun;
+            UBool even_నిరంతరం;
             runs=pBiDi->runs;
-            visualStart=0;
+            visual_ప్రారంభం=0;
             /* move forward indexes by number of preceding controls */
             k=0;
-            for(i=0; i<runCount; i++, visualStart+=length) {
-                length=runs[i].visualLimit-visualStart;
-                insertRemove=runs[i].insertRemove;
+            కొరకు(i=0; i<నిరంతరం_లెక్క; i++, visual_ప్రారంభం+=length) {
+                length=runs[i].visual_హద్దు-visual_ప్రారంభం;
+                చొప్పించు_Remove=runs[i].చొప్పించు_Remove;
                 /* if no control found yet, nothing to do in this run */
-                if((insertRemove==0)&&(k==visualStart)) {
+                ఒకవేళ((చొప్పించు_Remove==0)&&(k==visual_ప్రారంభం)) {
                     k+=length;
-                    continue;
+                    కొనసాగు;
                 }
                 /* if no control in this run */
-                if(insertRemove==0) {
-                    visualLimit=runs[i].visualLimit;
-                    for(j=visualStart; j<visualLimit; j++) {
-                        indexMap[k++]=indexMap[j];
+                ఒకవేళ(చొప్పించు_Remove==0) {
+                    visual_హద్దు=runs[i].visual_హద్దు;
+                    కొరకు(j=visual_ప్రారంభం; j<visual_హద్దు; j++) {
+                        సూచీ_Map[k++]=సూచీ_Map[j];
                     }
-                    continue;
+                    కొనసాగు;
                 }
-                logicalStart=runs[i].logicalStart;
-                evenRun=IS_EVEN_RUN(logicalStart);
-                REMOVE_ODD_BIT(logicalStart);
-                logicalEnd=logicalStart+length-1;
-                for(j=0; j<length; j++) {
-                    m= evenRun ? logicalStart+j : logicalEnd-j;
-                    uchar=pBiDi->text[m];
-                    if(!IS_BIDI_CONTROL_CHAR(uchar)) {
-                        indexMap[k++]=m;
+                logical_ప్రారంభం=runs[i].logical_ప్రారంభం;
+                even_నిరంతరం=IS_EVEN_నిరంతరం(logical_ప్రారంభం);
+                REMOVE_ODD_బిట్టు(logical_ప్రారంభం);
+                logical_చివర=logical_ప్రారంభం+length-1;
+                కొరకు(j=0; j<length; j++) {
+                    m= even_నిరంతరం ? logical_ప్రారంభం+j : logical_చివర-j;
+                    uchar=pBiDi->పాఠ్యం[m];
+                    ఒకవేళ(!IS_BIDI_CONTROL_CHAR(uchar)) {
+                        సూచీ_Map[k++]=m;
                     }
                 }
             }
@@ -1315,31 +1315,31 @@ ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_invertMap(const int32_t *srcMap, int32_t *destMap, int32_t length) {
-    if(srcMap!=nullptr && destMap!=nullptr && length>0) {
-        const int32_t *pi;
-        int32_t destLength=-1, count=0;
+U_CAPI శూన్య U_EXPORT2
+ubidi_invertMap(స్థిరరాశి int32_t *srcMap, int32_t *destMap, int32_t length) {
+    ఒకవేళ(srcMap!=శూన్యసూచిక && destMap!=శూన్యసూచిక && length>0) {
+        స్థిరరాశి int32_t *pi;
+        int32_t dest_నిడివి=-1, count=0;
         /* find highest value and count positive indexes in srcMap */
         pi=srcMap+length;
-        while(pi>srcMap) {
-            if(*--pi>destLength) {
-                destLength=*pi;
+        అయితే(pi>srcMap) {
+            ఒకవేళ(*--pi>dest_నిడివి) {
+                dest_నిడివి=*pi;
             }
-            if(*pi>=0) {
+            ఒకవేళ(*pi>=0) {
                 count++;
             }
         }
-        destLength++;           /* add 1 for origin 0 */
-        if(count<destLength) {
+        dest_నిడివి++;           /* add 1 for origin 0 */
+        ఒకవేళ(count<dest_నిడివి) {
             /* we must fill unmatched destMap entries with -1 */
-            uprv_memset(destMap, 0xFF, destLength*sizeof(int32_t));
+            uprv_memset(destMap, 0xFF, dest_నిడివి*పరిమాణం(int32_t));
         }
         pi=srcMap+length;
-        while(length>0) {
-            if(*--pi>=0) {
+        అయితే(length>0) {
+            ఒకవేళ(*--pi>=0) {
                 destMap[*pi]=--length;
-            } else {
+            } లేకపోతే {
                 --length;
             }
         }

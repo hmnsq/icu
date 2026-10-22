@@ -16,19 +16,19 @@
  *   created by: Ram Viswanadha
  */
 
-#ifndef __UIDNA_H__
-#define __UIDNA_H__
+#నిర్వచితం_కాకపోతే __UIDNA_H__
+#నిర్వచించు __UIDNA_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#ఒకవేళ !UCONFIG_NO_IDNA
 
-#include <stdbool.h>
-#include "unicode/parseerr.h"
+#అన్తర్భావ <stdbool.h>
+#అన్తర్భావ "unicode/parseerr.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+#అన్తర్భావ "unicode/localpointer.h"
+#అయితే_ముగింపు   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -47,7 +47,7 @@
 /*
  * IDNA option bit set values.
  */
-enum {
+గణన {
     /**
      * Default options value: UTS #46 nontransitional processing.
      * For use in static worker and factory methods.
@@ -62,7 +62,7 @@ enum {
      * @stable ICU 2.6
      */
     UIDNA_DEFAULT=0x30,
-#ifndef U_HIDE_DEPRECATED_API
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
     /**
      * Option to allow unassigned code points in domain names and labels.
      * For use in static worker and factory methods.
@@ -71,7 +71,7 @@ enum {
      * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
      */
     UIDNA_ALLOW_UNASSIGNED=1,
-#endif  /* U_HIDE_DEPRECATED_API */
+#అయితే_ముగింపు  /* U_HIDE_DEPRECATED_API */
     /**
      * Option to check whether the input conforms to the STD3 ASCII rules,
      * for example the restriction of labels to LDH characters
@@ -79,7 +79,7 @@ enum {
      * For use in static worker and factory methods.
      * @stable ICU 2.6
      */
-    UIDNA_USE_STD3_RULES=2,
+    UIDNA_USE_STD3_నియమాలు=2,
     /**
      * IDNA option to check for whether the input conforms to the BiDi rules.
      * For use in static worker and factory methods.
@@ -108,7 +108,7 @@ enum {
      * @stable ICU 4.6
      * @see UIDNA_DEFAULT
      */
-    UIDNA_NONTRANSITIONAL_TO_ASCII=0x10,
+    UIDNA_NONTRANSITIONAL_గమ్యం_ASCII=0x10,
     /**
      * IDNA option for nontransitional processing in ToUnicode().
      * For use in static worker and factory methods.
@@ -121,7 +121,7 @@ enum {
      * @stable ICU 4.6
      * @see UIDNA_DEFAULT
      */
-    UIDNA_NONTRANSITIONAL_TO_UNICODE=0x20,
+    UIDNA_NONTRANSITIONAL_గమ్యం_UNICODE=0x20,
     /**
      * IDNA option to check for whether the input conforms to the CONTEXTO rules.
      * For use in static worker and factory methods.
@@ -138,8 +138,8 @@ enum {
  * Opaque C service object type for the new IDNA API.
  * @stable ICU 4.6
  */
-struct UIDNA;
-typedef struct UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
+నిర్మాణం UIDNA;
+రకనిర్వచనం నిర్మాణం UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
 
 /**
  * Returns a UIDNA instance which implements UTS #46.
@@ -161,17 +161,17 @@ typedef struct UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
  * @stable ICU 4.6
  */
 U_CAPI UIDNA * U_EXPORT2
-uidna_openUTS46(uint32_t options, UErrorCode *pErrorCode);
+uidna_openUTS46(uint32_t options, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Closes a UIDNA instance.
  * @param idna UIDNA instance to be closed
  * @stable ICU 4.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 uidna_close(UIDNA *idna);
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -184,11 +184,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.6
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUIDNAPointer, UIDNA, uidna_close);
+U_DEFINE_LOCAL_OPEN_సూచిక(LocalUIDNAPointer, UIDNA, uidna_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 
 /**
  * Output container for IDNA processing errors.
@@ -200,9 +200,9 @@ U_NAMESPACE_END
  * \endcode
  * @stable ICU 4.6
  */
-typedef struct UIDNAInfo {
+రకనిర్వచనం నిర్మాణం UIDNAInfo {
     /** sizeof(UIDNAInfo) @stable ICU 4.6 */
-    int16_t size;
+    int16_t కొలత_2;
     /**
      * Set to true if transitional and nontransitional processing produce different results.
      * For details see C++ IDNAInfo::isTransitionalDifferent().
@@ -224,8 +224,8 @@ typedef struct UIDNAInfo {
  * Static initializer for a UIDNAInfo struct.
  * @stable ICU 4.6
  */
-#define UIDNA_INFO_INITIALIZER { \
-    (int16_t)sizeof(UIDNAInfo), \
+#నిర్వచించు UIDNA_INFO_INITIALIZER { \
+    (int16_t)పరిమాణం(UIDNAInfo), \
     false, false, \
     0, 0, 0 }
 
@@ -253,10 +253,10 @@ typedef struct UIDNAInfo {
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII(const UIDNA *idna,
-                   const UChar *label, int32_t length,
-                   UChar *dest, int32_t capacity,
-                   UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_label_గమ్యం_ASCII(స్థిరరాశి UIDNA *idna,
+                   స్థిరరాశి UChar *label, int32_t నిడివి,
+                   UChar *dest, int32_t సామర్థ్యం,
+                   UIDNAInfo *pInfo, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Converts a single domain name label into its Unicode form for human-readable display.
@@ -280,10 +280,10 @@ uidna_labelToASCII(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicode(const UIDNA *idna,
-                     const UChar *label, int32_t length,
-                     UChar *dest, int32_t capacity,
-                     UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_label_గమ్యం_Unicode(స్థిరరాశి UIDNA *idna,
+                     స్థిరరాశి UChar *label, int32_t నిడివి,
+                     UChar *dest, int32_t సామర్థ్యం,
+                     UIDNAInfo *pInfo, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -309,10 +309,10 @@ uidna_labelToUnicode(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII(const UIDNA *idna,
-                  const UChar *name, int32_t length,
-                  UChar *dest, int32_t capacity,
-                  UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_name_గమ్యం_ASCII(స్థిరరాశి UIDNA *idna,
+                  స్థిరరాశి UChar *name, int32_t నిడివి,
+                  UChar *dest, int32_t సామర్థ్యం,
+                  UIDNAInfo *pInfo, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Converts a whole domain name into its Unicode form for human-readable display.
@@ -336,10 +336,10 @@ uidna_nameToASCII(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicode(const UIDNA *idna,
-                    const UChar *name, int32_t length,
-                    UChar *dest, int32_t capacity,
-                    UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_name_గమ్యం_Unicode(స్థిరరాశి UIDNA *idna,
+                    స్థిరరాశి UChar *name, int32_t నిడివి,
+                    UChar *dest, int32_t సామర్థ్యం,
+                    UIDNAInfo *pInfo, UError_సంకేతం *p_Error_సంకేతం);
 
 /* UTF-8 versions of the processing methods --------------------------------- */
 
@@ -361,10 +361,10 @@ uidna_nameToUnicode(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII_UTF8(const UIDNA *idna,
-                        const char *label, int32_t length,
-                        char *dest, int32_t capacity,
-                        UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_label_గమ్యం_ASCII_UTF8(స్థిరరాశి UIDNA *idna,
+                        స్థిరరాశి అక్షరం *label, int32_t నిడివి,
+                        అక్షరం *dest, int32_t సామర్థ్యం,
+                        UIDNAInfo *pInfo, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Converts a single domain name label into its Unicode form for human-readable display.
@@ -384,10 +384,10 @@ uidna_labelToASCII_UTF8(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicodeUTF8(const UIDNA *idna,
-                         const char *label, int32_t length,
-                         char *dest, int32_t capacity,
-                         UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_label_గమ్యం_Unicode_UTF8(స్థిరరాశి UIDNA *idna,
+                         స్థిరరాశి అక్షరం *label, int32_t నిడివి,
+                         అక్షరం *dest, int32_t సామర్థ్యం,
+                         UIDNAInfo *pInfo, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -407,10 +407,10 @@ uidna_labelToUnicodeUTF8(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII_UTF8(const UIDNA *idna,
-                       const char *name, int32_t length,
-                       char *dest, int32_t capacity,
-                       UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_name_గమ్యం_ASCII_UTF8(స్థిరరాశి UIDNA *idna,
+                       స్థిరరాశి అక్షరం *name, int32_t నిడివి,
+                       అక్షరం *dest, int32_t సామర్థ్యం,
+                       UIDNAInfo *pInfo, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Converts a whole domain name into its Unicode form for human-readable display.
@@ -430,22 +430,22 @@ uidna_nameToASCII_UTF8(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicodeUTF8(const UIDNA *idna,
-                        const char *name, int32_t length,
-                        char *dest, int32_t capacity,
-                        UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_name_గమ్యం_Unicode_UTF8(స్థిరరాశి UIDNA *idna,
+                        స్థిరరాశి అక్షరం *name, int32_t నిడివి,
+                        అక్షరం *dest, int32_t సామర్థ్యం,
+                        UIDNAInfo *pInfo, UError_సంకేతం *p_Error_సంకేతం);
 
 /*
  * IDNA error bit set values.
  * When a domain name or label fails a processing step or does not meet the
  * validity criteria, then one or more of these error bits are set.
  */
-enum {
+గణన {
     /**
      * A non-final domain name label (or the whole domain name) is empty.
      * @stable ICU 4.6
      */
-    UIDNA_ERROR_EMPTY_LABEL=1,
+    UIDNA_ERROR_ఖాళీలు_LABEL=1,
     /**
      * A domain name label is longer than 63 bytes.
      * (See STD13/RFC1034 3.1. Name space specifications and terminology.)
@@ -531,7 +531,7 @@ enum {
     UIDNA_ERROR_CONTEXTO_DIGITS=0x4000
 };
 
-#ifndef U_HIDE_DEPRECATED_API
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
 
 /* IDNA2003 API ------------------------------------------------------------- */
 
@@ -595,11 +595,11 @@ enum {
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_toASCII(const UChar* src, int32_t srcLength, 
-              UChar* dest, int32_t destCapacity,
+uidna_గమ్యం_ASCII(స్థిరరాశి UChar* src, int32_t src_నిడివి, 
+              UChar* dest, int32_t dest_సామర్థ్యం,
               int32_t options,
               UParseError* parseError,
-              UErrorCode* status);
+              UError_సంకేతం* స్థితి_2);
 
 
 /**
@@ -643,11 +643,11 @@ uidna_toASCII(const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_toUnicode(const UChar* src, int32_t srcLength,
-                UChar* dest, int32_t destCapacity,
+uidna_గమ్యం_Unicode(స్థిరరాశి UChar* src, int32_t src_నిడివి,
+                UChar* dest, int32_t dest_సామర్థ్యం,
                 int32_t options,
                 UParseError* parseError,
-                UErrorCode* status);
+                UError_సంకేతం* స్థితి_2);
 
 
 /**
@@ -694,11 +694,11 @@ uidna_toUnicode(const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_IDNToASCII(  const UChar* src, int32_t srcLength,
-                   UChar* dest, int32_t destCapacity,
+uidna_IDNToASCII(  స్థిరరాశి UChar* src, int32_t src_నిడివి,
+                   UChar* dest, int32_t dest_సామర్థ్యం,
                    int32_t options,
                    UParseError* parseError,
-                   UErrorCode* status);
+                   UError_సంకేతం* స్థితి_2);
 
 /**
  * IDNA2003: Convenience function that implements the IDNToUnicode operation as defined in the IDNA RFC.
@@ -741,11 +741,11 @@ uidna_IDNToASCII(  const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_IDNToUnicode(  const UChar* src, int32_t srcLength,
-                     UChar* dest, int32_t destCapacity,
+uidna_IDNToUnicode(  స్థిరరాశి UChar* src, int32_t src_నిడివి,
+                     UChar* dest, int32_t dest_సామర్థ్యం,
                      int32_t options,
                      UParseError* parseError,
-                     UErrorCode* status);
+                     UError_సంకేతం* స్థితి_2);
 
 /**
  * IDNA2003: Compare two IDN strings for equivalence.
@@ -782,13 +782,13 @@ uidna_IDNToUnicode(  const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_compare(  const UChar *s1, int32_t length1,
-                const UChar *s2, int32_t length2,
+uidna_compare(  స్థిరరాశి UChar *s1, int32_t length1,
+                స్థిరరాశి UChar *s2, int32_t length2,
                 int32_t options,
-                UErrorCode* status);
+                UError_సంకేతం* స్థితి_2);
 
-#endif  /* U_HIDE_DEPRECATED_API */
+#అయితే_ముగింపు  /* U_HIDE_DEPRECATED_API */
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_IDNA */
 
-#endif
+#అయితే_ముగింపు

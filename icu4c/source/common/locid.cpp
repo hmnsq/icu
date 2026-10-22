@@ -31,61 +31,61 @@
 ******************************************************************************
 */
 
-#include <cstddef>
-#include <optional>
-#include <string_view>
-#include <type_traits>
-#include <utility>
+#అన్తర్భావ <cstddef>
+#అన్తర్భావ <optional>
+#అన్తర్భావ <string_view>
+#అన్తర్భావ <type_traits>
+#అన్తర్భావ <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/locid.h"
-#include "unicode/localebuilder.h"
-#include "unicode/localpointer.h"
-#include "unicode/strenum.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
+#అన్తర్భావ "unicode/bytestream.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/localebuilder.h"
+#అన్తర్భావ "unicode/localpointer.h"
+#అన్తర్భావ "unicode/strenum.h"
+#అన్తర్భావ "unicode/stringpiece.h"
+#అన్తర్భావ "unicode/uloc.h"
+#అన్తర్భావ "unicode/ures.h"
 
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "charstrmap.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "mutex.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "uniquecharstr.h"
-#include "ustr_imp.h"
-#include "uvector.h"
+#అన్తర్భావ "bytesinkutil.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "charstrmap.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "fixedstring.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "ulocimp.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "uniquecharstr.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "uvector.h"
 
-#if UPRV_HAS_FEATURE(memory_sanitizer)
-#include <sanitizer/msan_interface.h>
-#endif
+#ఒకవేళ UPRV_HAS_FEATURE(జ్ఞాపకం_sanitizer)
+#అన్తర్భావ <sanitizer/msan_interface.h>
+#అయితే_ముగింపు
 
 U_NAMESPACE_BEGIN
 
-static Locale   *gLocaleCache = nullptr;
-static UInitOnce gLocaleCacheInitOnce {};
+స్థిర Locale   *gLocaleCache = శూన్యసూచిక;
+స్థిర UInitOnce gLocaleCacheInitOnce {};
 
 // gDefaultLocaleMutex protects all access to gDefaultLocalesHashT and gDefaultLocale.
-static UMutex gDefaultLocaleMutex;
-static UHashtable *gDefaultLocalesHashT = nullptr;
-static Locale *gDefaultLocale = nullptr;
+స్థిర UMutex gDefaultLocaleMutex;
+స్థిర UHashtable *gDefaultLocalesHashT = శూన్యసూచిక;
+స్థిర Locale *gDefaultLocale = శూన్యసూచిక;
 
 /**
  * \def ULOC_STRING_LIMIT
  * strings beyond this value crash in CharString
  */
-#define ULOC_STRING_LIMIT 357913941
+#నిర్వచించు ULOC_STRING_హద్దు 357913941
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-typedef enum ELocalePos {
+రకనిర్వచనం గణన ELocalePos {
     eENGLISH,
     eFRENCH,
     eGERMAN,
@@ -105,50 +105,50 @@ typedef enum ELocalePos {
     eUS,
     eCANADA,
     eCANADA_FRENCH,
-    eROOT,
+    e_మూలం,
 
 
     //eDEFAULT,
     eMAX_LOCALES
 } ELocalePos;
 
-namespace {
+నామాకాశ {
 
 //
 // Deleter function for Locales owned by the default Locale hash table/
 //
-void U_CALLCONV
-deleteLocale(void *obj) {
-    delete static_cast<icu::Locale*>(obj);
+శూన్య U_CALLCONV
+deleteLocale(శూన్య *obj) {
+    తొలగించు static_cast<icu::Locale*>(obj);
 }
 
 UBool U_CALLCONV locale_cleanup()
 {
     U_NAMESPACE_USE
 
-    delete [] gLocaleCache;
-    gLocaleCache = nullptr;
+    తొలగించు [] gLocaleCache;
+    gLocaleCache = శూన్యసూచిక;
     gLocaleCacheInitOnce.reset();
 
-    if (gDefaultLocalesHashT) {
+    ఒకవేళ (gDefaultLocalesHashT) {
         uhash_close(gDefaultLocalesHashT);   // Automatically deletes all elements, using deleter func.
-        gDefaultLocalesHashT = nullptr;
+        gDefaultLocalesHashT = శూన్యసూచిక;
     }
-    gDefaultLocale = nullptr;
-    return true;
+    gDefaultLocale = శూన్యసూచిక;
+    తిరిగి నిజం;
 }
 
-void U_CALLCONV locale_init(UErrorCode &status) {
+శూన్య U_CALLCONV locale_init(UError_సంకేతం &స్థితి_2) {
     U_NAMESPACE_USE
 
-    U_ASSERT(gLocaleCache == nullptr);
-    gLocaleCache = new Locale[static_cast<int>(eMAX_LOCALES)];
-    if (gLocaleCache == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    U_ASSERT(gLocaleCache == శూన్యసూచిక);
+    gLocaleCache = కొత్త Locale[static_cast<పూర్ణాంకం>(eMAX_LOCALES)];
+    ఒకవేళ (gLocaleCache == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE, locale_cleanup);
-    gLocaleCache[eROOT]          = Locale("");
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_LOCALE, locale_cleanup);
+    gLocaleCache[e_మూలం]          = Locale("");
     gLocaleCache[eENGLISH]       = Locale("en");
     gLocaleCache[eFRENCH]        = Locale("fr");
     gLocaleCache[eGERMAN]        = Locale("de");
@@ -173,151 +173,151 @@ void U_CALLCONV locale_init(UErrorCode &status) {
 
 U_NAMESPACE_BEGIN
 
-Locale *locale_set_default_internal(const char *id, UErrorCode& status) {
+Locale *locale_సమితి_default_అంతర్గత(స్థిరరాశి అక్షరం *id, UError_సంకేతం& స్థితి_2) {
     // Synchronize this entire function.
-    Mutex lock(&gDefaultLocaleMutex);
+    Mutex తాళం(&gDefaultLocaleMutex);
 
-    UBool canonicalize = false;
+    UBool canonicalize = అబద్ధం;
 
     // If given a nullptr string for the locale id, grab the default
     //   name from the system.
     //   (Different from most other locale APIs, where a null name means use
     //    the current ICU default locale.)
-    if (id == nullptr) {
+    ఒకవేళ (id == శూన్యసూచిక) {
         id = uprv_getDefaultLocaleID();   // This function not thread safe? TODO: verify.
-        canonicalize = true; // always canonicalize host ID
+        canonicalize = నిజం; // always canonicalize host ID
     }
 
     CharString localeNameBuf =
-        canonicalize ? ulocimp_canonicalize(id, status) : ulocimp_getName(id, status);
+        canonicalize ? ulocimp_canonicalize(id, స్థితి_2) : ulocimp_getName(id, స్థితి_2);
 
-    if (U_FAILURE(status)) {
-        return gDefaultLocale;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి gDefaultLocale;
     }
 
-    if (gDefaultLocalesHashT == nullptr) {
-        gDefaultLocalesHashT = uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &status);
-        if (U_FAILURE(status)) {
-            return gDefaultLocale;
+    ఒకవేళ (gDefaultLocalesHashT == శూన్యసూచిక) {
+        gDefaultLocalesHashT = uhash_open(uhash_hashChars, uhash_compareChars, శూన్యసూచిక, &స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి gDefaultLocale;
         }
-        uhash_setValueDeleter(gDefaultLocalesHashT, deleteLocale);
-        ucln_common_registerCleanup(UCLN_COMMON_LOCALE, locale_cleanup);
+        uhash_సమితి_విలువ_Deleter(gDefaultLocalesHashT, deleteLocale);
+        ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_LOCALE, locale_cleanup);
     }
 
-    Locale* newDefault = static_cast<Locale*>(uhash_get(gDefaultLocalesHashT, localeNameBuf.data()));
-    if (newDefault == nullptr) {
-        newDefault = new Locale(Locale::eBOGUS);
-        if (newDefault == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return gDefaultLocale;
+    Locale* newDefault = static_cast<Locale*>(uhash_get(gDefaultLocalesHashT, localeNameBuf.దత్తాంశం()));
+    ఒకవేళ (newDefault == శూన్యసూచిక) {
+        newDefault = కొత్త Locale(Locale::eBOGUS);
+        ఒకవేళ (newDefault == శూన్యసూచిక) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి gDefaultLocale;
         }
-        newDefault->init(localeNameBuf.data(), false);
-        uhash_put(gDefaultLocalesHashT, const_cast<char*>(newDefault->getName()), newDefault, &status);
-        if (U_FAILURE(status)) {
-            return gDefaultLocale;
+        newDefault->init(localeNameBuf.దత్తాంశం(), అబద్ధం);
+        uhash_put(gDefaultLocalesHashT, const_cast<అక్షరం*>(newDefault->getName()), newDefault, &స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి gDefaultLocale;
         }
     }
     gDefaultLocale = newDefault;
-    return gDefaultLocale;
+    తిరిగి gDefaultLocale;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* sfb 07/21/99 */
-U_CFUNC void
-locale_set_default(const char *id)
+U_CFUNC శూన్య
+locale_సమితి_default(స్థిరరాశి అక్షరం *id)
 {
     U_NAMESPACE_USE
-    UErrorCode status = U_ZERO_ERROR;
-    locale_set_default_internal(id, status);
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    locale_సమితి_default_అంతర్గత(id, స్థితి_2);
 }
-/* end */
+/*చివర*/
 
-U_CFUNC const char *
+U_CFUNC స్థిరరాశి అక్షరం *
 locale_get_default()
 {
     U_NAMESPACE_USE
-    return Locale::getDefault().getName();
+    తిరిగి Locale::getDefault().getName();
 }
 
-namespace {
+నామాకాశ {
 
-template <auto FIELD, typename T>
-void copyToArray(std::string_view sv, T* that) {
-    auto& field = that->*FIELD;
-    constexpr size_t capacity = std::extent_v<std::remove_reference_t<decltype(field)>>;
+మూస <స్వయంచాలక క్షేత్రం, రకం_పేరు T>
+శూన్య copy_గమ్యం_Array(std::string_view sv, T* that) {
+    స్వయంచాలక& క్షేత్రం_2 = that->*క్షేత్రం;
+    constexpr size_t capacity = std::extent_v<std::remove_reference_t<decltype(క్షేత్రం_2)>>;
     static_assert(capacity > 0);
-    if (!sv.empty()) {
+    ఒకవేళ (!sv.empty()) {
         U_ASSERT(sv.size() < capacity);
-        uprv_memcpy(field, sv.data(), sv.size());
+        uprv_memcpy(క్షేత్రం_2, sv.దత్తాంశం(), sv.size());
     }
-    field[sv.size()] = '\0';
+    క్షేత్రం_2[sv.size()] = '\0';
 }
 
 } // namespace
 
 U_NAMESPACE_BEGIN
 
-void Locale::Nest::init(std::string_view language,
+శూన్య Locale::Nest::init(std::string_view language,
                         std::string_view script,
                         std::string_view region,
                         uint8_t variantBegin) {
-    copyToArray<&Nest::language>(language, this);
-    copyToArray<&Nest::script>(script, this);
-    copyToArray<&Nest::region>(region, this);
-    this->variantBegin = variantBegin;
+    copy_గమ్యం_Array<&Nest::language>(language, ఇది);
+    copy_గమ్యం_Array<&Nest::script>(script, ఇది);
+    copy_గమ్యం_Array<&Nest::region>(region, ఇది);
+    ఇది->variantBegin = variantBegin;
 }
 
-Locale::Nest::Nest(Heap&& heap, uint8_t variantBegin) {
+Locale::Nest::Nest(కుప్ప&& కుప్ప_2, uint8_t variantBegin) {
     // When moving from Heap to Nest the language field can be left untouched
     // (as it has the same offset in both) and only the script and region fields
     // need to be copied to their new locations, which is safe to do because the
     // new locations come before the old locations in memory and don't overlap.
-    static_assert(offsetof(Nest, region) <= offsetof(Heap, script));
-    static_assert(offsetof(Nest, variantBegin) <= offsetof(Heap, region));
-    U_ASSERT(this == reinterpret_cast<Nest*>(&heap));
-#if UPRV_HAS_FEATURE(memory_sanitizer)
+    static_assert(offsetof(Nest, region) <= offsetof(కుప్ప, script));
+    static_assert(offsetof(Nest, variantBegin) <= offsetof(కుప్ప, region));
+    U_ASSERT(ఇది == reinterpret_cast<Nest*>(&కుప్ప_2));
+#ఒకవేళ UPRV_HAS_FEATURE(జ్ఞాపకం_sanitizer)
     // Tell the sanitizer that we know that this memory really is OK to access.
-    __msan_unpoison(&heap, sizeof(Heap));
-#endif
-    copyToArray<&Nest::script>(heap.script, this);
-    copyToArray<&Nest::region>(heap.region, this);
-    this->variantBegin = variantBegin;
-    *this->baseName = '\0';
+    __msan_unpoison(&కుప్ప_2, పరిమాణం(కుప్ప));
+#అయితే_ముగింపు
+    copy_గమ్యం_Array<&Nest::script>(కుప్ప_2.script, ఇది);
+    copy_గమ్యం_Array<&Nest::region>(కుప్ప_2.region, ఇది);
+    ఇది->variantBegin = variantBegin;
+    *ఇది->పునాది_Name = '\0';
 }
 
-struct Locale::Heap::Alloc : public UMemory {
-    FixedString fullName;
-    FixedString baseName;
+నిర్మాణం Locale::కుప్ప::Alloc : బహిరంగ UMemory {
+    FixedString నిండిన_Name;
+    FixedString పునాది_Name;
     int32_t variantBegin;
 
-    const char* getVariant() const U_LIFETIME_BOUND {
-        return variantBegin == 0 ? "" : getBaseName() + variantBegin;
+    స్థిరరాశి అక్షరం* getVariant() స్థిరరాశి U_LIFETIME_BOUND {
+        తిరిగి variantBegin == 0 ? "" : get_పునాది_Name() + variantBegin;
     }
-    const char* getFullName() const U_LIFETIME_BOUND { return fullName.data(); }
-    const char* getBaseName() const U_LIFETIME_BOUND {
-        if (baseName.isEmpty()) {
-            if (const char* name = fullName.data(); *name != '@') {
-                return name;
+    స్థిరరాశి అక్షరం* get_నిండిన_Name() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి నిండిన_Name.దత్తాంశం(); }
+    స్థిరరాశి అక్షరం* get_పునాది_Name() స్థిరరాశి U_LIFETIME_BOUND {
+        ఒకవేళ (పునాది_Name.is_ఖాళీలు()) {
+            ఒకవేళ (స్థిరరాశి అక్షరం* name = నిండిన_Name.దత్తాంశం(); *name != '@') {
+                తిరిగి name;
             }
         }
-        return baseName.data();
+        తిరిగి పునాది_Name.దత్తాంశం();
     }
 
-    Alloc(int32_t variantBegin) : fullName(), baseName(), variantBegin(variantBegin) {}
+    Alloc(int32_t variantBegin) : నిండిన_Name(), పునాది_Name(), variantBegin(variantBegin) {}
 
-    Alloc(const Alloc& other, UErrorCode& status)
-        : fullName(), baseName(), variantBegin(other.variantBegin) {
-        if (U_SUCCESS(status)) {
-            if (!other.fullName.isEmpty()) {
-                fullName = other.fullName;
-                if (fullName.isEmpty()) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                } else {
-                    if (!other.baseName.isEmpty()) {
-                        baseName = other.baseName;
-                        if (baseName.isEmpty()) {
-                            status = U_MEMORY_ALLOCATION_ERROR;
+    Alloc(స్థిరరాశి Alloc& other, UError_సంకేతం& స్థితి_2)
+        : నిండిన_Name(), పునాది_Name(), variantBegin(other.variantBegin) {
+        ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+            ఒకవేళ (!other.నిండిన_Name.is_ఖాళీలు()) {
+                నిండిన_Name = other.నిండిన_Name;
+                ఒకవేళ (నిండిన_Name.is_ఖాళీలు()) {
+                    స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                } లేకపోతే {
+                    ఒకవేళ (!other.పునాది_Name.is_ఖాళీలు()) {
+                        పునాది_Name = other.పునాది_Name;
+                        ఒకవేళ (పునాది_Name.is_ఖాళీలు()) {
+                            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
                         }
                     }
                 }
@@ -326,136 +326,136 @@ struct Locale::Heap::Alloc : public UMemory {
     }
 
     // Move should be done on the owner of the pointer to this object.
-    Alloc(Alloc&&) noexcept = delete;
+    Alloc(Alloc&&) noexcept = తొలగించు;
 
-    ~Alloc() = default;
+    ~Alloc() = అప్రమేయ;
 };
 
-const char* Locale::Heap::getVariant() const U_LIFETIME_BOUND { return ptr->getVariant(); }
-const char* Locale::Heap::getFullName() const U_LIFETIME_BOUND { return ptr->getFullName(); }
-const char* Locale::Heap::getBaseName() const U_LIFETIME_BOUND { return ptr->getBaseName(); }
+స్థిరరాశి అక్షరం* Locale::కుప్ప::getVariant() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి ptr->getVariant(); }
+స్థిరరాశి అక్షరం* Locale::కుప్ప::get_నిండిన_Name() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి ptr->get_నిండిన_Name(); }
+స్థిరరాశి అక్షరం* Locale::కుప్ప::get_పునాది_Name() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి ptr->get_పునాది_Name(); }
 
-Locale::Heap::Heap(std::string_view language,
+Locale::కుప్ప::కుప్ప(std::string_view language,
                    std::string_view script,
                    std::string_view region,
                    int32_t variantBegin) {
-    ptr = new Alloc(variantBegin);
-    if (ptr == nullptr) {
+    ptr = కొత్త Alloc(variantBegin);
+    ఒకవేళ (ptr == శూన్యసూచిక) {
         type = eBOGUS;
-    } else {
-        type = eHEAP;
-        copyToArray<&Heap::language>(language, this);
-        copyToArray<&Heap::script>(script, this);
-        copyToArray<&Heap::region>(region, this);
+    } లేకపోతే {
+        type = e_కుప్ప;
+        copy_గమ్యం_Array<&కుప్ప::language>(language, ఇది);
+        copy_గమ్యం_Array<&కుప్ప::script>(script, ఇది);
+        copy_గమ్యం_Array<&కుప్ప::region>(region, ఇది);
     }
 }
 
-Locale::Heap::~Heap() {
-    U_ASSERT(type == eHEAP);
-    delete ptr;
+Locale::కుప్ప::~కుప్ప() {
+    U_ASSERT(type == e_కుప్ప);
+    తొలగించు ptr;
 }
 
-Locale::Heap& Locale::Heap::operator=(const Heap& other) U_LIFETIME_BOUND {
+Locale::కుప్ప& Locale::కుప్ప::క్రియాకారకం=(స్థిరరాశి కుప్ప& other) U_LIFETIME_BOUND {
     U_ASSERT(type == eBOGUS);
-    UErrorCode status = U_ZERO_ERROR;
-    ptr = new Alloc(*other.ptr, status);
-    if (ptr == nullptr || U_FAILURE(status)) {
-        delete ptr;
-    } else {
-        type = eHEAP;
-        uprv_memcpy(language, other.language, sizeof language);
-        uprv_memcpy(script, other.script, sizeof script);
-        uprv_memcpy(region, other.region, sizeof region);
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    ptr = కొత్త Alloc(*other.ptr, స్థితి_2);
+    ఒకవేళ (ptr == శూన్యసూచిక || U_FAILURE(స్థితి_2)) {
+        తొలగించు ptr;
+    } లేకపోతే {
+        type = e_కుప్ప;
+        uprv_memcpy(language, other.language, పరిమాణం language);
+        uprv_memcpy(script, other.script, పరిమాణం script);
+        uprv_memcpy(region, other.region, పరిమాణం region);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-Locale::Heap& Locale::Heap::operator=(Heap&& other) noexcept U_LIFETIME_BOUND {
+Locale::కుప్ప& Locale::కుప్ప::క్రియాకారకం=(కుప్ప&& other) noexcept U_LIFETIME_BOUND {
     U_ASSERT(type == eBOGUS);
     ptr = other.ptr;
-    type = eHEAP;
+    type = e_కుప్ప;
     other.type = eBOGUS;
-    uprv_memcpy(language, other.language, sizeof language);
-    uprv_memcpy(script, other.script, sizeof script);
-    uprv_memcpy(region, other.region, sizeof region);
-    return *this;
+    uprv_memcpy(language, other.language, పరిమాణం language);
+    uprv_memcpy(script, other.script, పరిమాణం script);
+    uprv_memcpy(region, other.region, పరిమాణం region);
+    తిరిగి *ఇది;
 }
 
-template <typename BogusFn, typename NestFn, typename HeapFn, typename... Args>
-auto Locale::Payload::visit(BogusFn bogusFn, NestFn nestFn, HeapFn heapFn, Args... args) const {
-    switch (type) {
-        case eBOGUS:
-            return bogusFn(args...);
-        case eNEST:
-            return nestFn(nest, args...);
-        case eHEAP:
-            return heapFn(heap, args...);
-        default:
+మూస <రకం_పేరు BogusFn, రకం_పేరు NestFn, రకం_పేరు కుప్ప_Fn, రకం_పేరు... వాదనలు>
+స్వయంచాలక Locale::Payload::సందర్శించు(BogusFn bogusFn, NestFn nestFn, కుప్ప_Fn కుప్ప_Fn_2, వాదనలు... వాదనలు_2) స్థిరరాశి {
+    ఎంపిక (type) {
+        స్థితి eBOGUS:
+            తిరిగి bogusFn(వాదనలు_2...);
+        స్థితి eNEST:
+            తిరిగి nestFn(nest, వాదనలు_2...);
+        స్థితి e_కుప్ప:
+            తిరిగి కుప్ప_Fn_2(కుప్ప_2, వాదనలు_2...);
+        అప్రమేయ:
             UPRV_UNREACHABLE_EXIT;
     };
 }
 
-void Locale::Payload::copy(const Payload& other) {
-    other.visit([](Payload*) {},
-                [](const Nest& nest, Payload* dst) { dst->nest = nest; },
-                [](const Heap& heap, Payload* dst) { dst->heap = heap; },
-                this);
+శూన్య Locale::Payload::copy(స్థిరరాశి Payload& other) {
+    other.సందర్శించు([](Payload*) {},
+                [](స్థిరరాశి Nest& nest, Payload* dst) { dst->nest = nest; },
+                [](స్థిరరాశి కుప్ప& కుప్ప_2, Payload* dst) { dst->కుప్ప_2 = కుప్ప_2; },
+                ఇది);
 }
 
-void Locale::Payload::move(Payload&& other) noexcept {
-    other.visit(
+శూన్య Locale::Payload::move(Payload&& other) noexcept {
+    other.సందర్శించు(
         [](Payload*) {},
-        [](const Nest& nest, Payload* dst) { dst->nest = nest; },
-        [](const Heap& heap, Payload* dst) { dst->heap = std::move(const_cast<Heap&>(heap)); },
-        this);
+        [](స్థిరరాశి Nest& nest, Payload* dst) { dst->nest = nest; },
+        [](స్థిరరాశి కుప్ప& కుప్ప_2, Payload* dst) { dst->కుప్ప_2 = std::move(const_cast<కుప్ప&>(కుప్ప_2)); },
+        ఇది);
 }
 
 Locale::Payload::~Payload() {
-    if (type == eHEAP) { heap.~Heap(); }
+    ఒకవేళ (type == e_కుప్ప) { కుప్ప_2.~కుప్ప(); }
 }
 
-Locale::Payload::Payload(const Payload& other) : type{eBOGUS} { copy(other); }
+Locale::Payload::Payload(స్థిరరాశి Payload& other) : type{eBOGUS} { copy(other); }
 Locale::Payload::Payload(Payload&& other) noexcept : type{eBOGUS} { move(std::move(other)); }
 
-Locale::Payload& Locale::Payload::operator=(const Payload& other) U_LIFETIME_BOUND {
-    if (this != &other) {
-        setToBogus();
+Locale::Payload& Locale::Payload::క్రియాకారకం=(స్థిరరాశి Payload& other) U_LIFETIME_BOUND {
+    ఒకవేళ (ఇది != &other) {
+        సమితి_గమ్యం_Bogus();
         copy(other);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-Locale::Payload& Locale::Payload::operator=(Payload&& other) noexcept U_LIFETIME_BOUND {
-    if (this != &other) {
-        setToBogus();
+Locale::Payload& Locale::Payload::క్రియాకారకం=(Payload&& other) noexcept U_LIFETIME_BOUND {
+    ఒకవేళ (ఇది != &other) {
+        సమితి_గమ్యం_Bogus();
         move(std::move(other));
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-void Locale::Payload::setToBogus() {
-    this->~Payload();
+శూన్య Locale::Payload::సమితి_గమ్యం_Bogus() {
+    ఇది->~Payload();
     type = eBOGUS;
 }
 
-template <typename T, typename... Args> T& Locale::Payload::emplace(Args&&... args) U_LIFETIME_BOUND {
-    if constexpr (std::is_same_v<T, Nest>) {
-        this->~Payload();
-        ::new (&nest) Nest(std::forward<Args>(args)...);
-        return nest;
+మూస <రకం_పేరు T, రకం_పేరు... వాదనలు> T& Locale::Payload::emplace(వాదనలు&&... వాదనలు_2) U_LIFETIME_BOUND {
+    ఒకవేళ constexpr (std::is_same_v<T, Nest>) {
+        ఇది->~Payload();
+        ::కొత్త (&nest) Nest(std::forward<వాదనలు>(వాదనలు_2)...);
+        తిరిగి nest;
     }
-    if constexpr (std::is_same_v<T, Heap>) {
-        U_ASSERT(type != eHEAP);
-        ::new (&heap) Heap(std::forward<Args>(args)...);
-        return heap;
+    ఒకవేళ constexpr (std::is_same_v<T, కుప్ప>) {
+        U_ASSERT(type != e_కుప్ప);
+        ::కొత్త (&కుప్ప_2) కుప్ప(std::forward<వాదనలు>(వాదనలు_2)...);
+        తిరిగి కుప్ప_2;
     }
 }
 
-template <> Locale::Nest* Locale::Payload::get() U_LIFETIME_BOUND {
-    return type == eNEST ? &nest : nullptr;
+మూస <> Locale::Nest* Locale::Payload::get() U_LIFETIME_BOUND {
+    తిరిగి type == eNEST ? &nest : శూన్యసూచిక;
 }
-template <> Locale::Heap* Locale::Payload::get() U_LIFETIME_BOUND {
-    return type == eHEAP ? &heap : nullptr;
+మూస <> Locale::కుప్ప* Locale::Payload::get() U_LIFETIME_BOUND {
+    తిరిగి type == e_కుప్ప ? &కుప్ప_2 : శూన్యసూచిక;
 }
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale)
@@ -463,15 +463,15 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale)
 /*Character separating the posix id fields*/
 // '_'
 // In the platform codepage.
-#define SEP_CHAR '_'
-#define NULL_CHAR '\0'
+#నిర్వచించు SEP_CHAR '_'
+#నిర్వచించు NULL_CHAR '\0'
 
-Locale::~Locale() = default;
+Locale::~Locale() = అప్రమేయ;
 
 Locale::Locale()
     : UObject(), payload()
 {
-    init(nullptr, false);
+    init(శూన్యసూచిక, అబద్ధం);
 }
 
 /*
@@ -485,19 +485,19 @@ Locale::Locale(Locale::ELocaleType)
 }
 
 
-Locale::Locale( const   char * newLanguage,
-                const   char * newCountry,
-                const   char * newVariant,
-                const   char * newKeywords)
+Locale::Locale( స్థిరరాశి   అక్షరం * newLanguage,
+                స్థిరరాశి   అక్షరం * newCountry,
+                స్థిరరాశి   అక్షరం * newVariant,
+                స్థిరరాశి   అక్షరం * newKeywords)
     : UObject(), payload()
 {
-    if( (newLanguage==nullptr) && (newCountry == nullptr) && (newVariant == nullptr) )
+    ఒకవేళ( (newLanguage==శూన్యసూచిక) && (newCountry == శూన్యసూచిక) && (newVariant == శూన్యసూచిక) )
     {
-        init(nullptr, false); /* shortcut */
+        init(శూన్యసూచిక, అబద్ధం); /* shortcut */
     }
-    else
+    లేకపోతే
     {
-        UErrorCode status = U_ZERO_ERROR;
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
         int32_t lsize = 0;
         int32_t csize = 0;
         int32_t vsize = 0;
@@ -506,50 +506,50 @@ Locale::Locale( const   char * newLanguage,
         // Check the sizes of the input strings.
 
         // Language
-        if ( newLanguage != nullptr )
+        ఒకవేళ ( newLanguage != శూన్యసూచిక )
         {
             lsize = static_cast<int32_t>(uprv_strlen(newLanguage));
-            if ( lsize < 0 || lsize > ULOC_STRING_LIMIT ) { // int32 wrap
-                return;
+            ఒకవేళ ( lsize < 0 || lsize > ULOC_STRING_హద్దు ) { // int32 wrap
+                తిరిగి;
             }
         }
 
-        CharString togo(newLanguage, lsize, status); // start with newLanguage
+        CharString togo(newLanguage, lsize, స్థితి_2); // start with newLanguage
 
         // _Country
-        if ( newCountry != nullptr )
+        ఒకవేళ ( newCountry != శూన్యసూచిక )
         {
             csize = static_cast<int32_t>(uprv_strlen(newCountry));
-            if ( csize < 0 || csize > ULOC_STRING_LIMIT ) { // int32 wrap
-                return;
+            ఒకవేళ ( csize < 0 || csize > ULOC_STRING_హద్దు ) { // int32 wrap
+                తిరిగి;
             }
         }
 
         // _Variant
-        if ( newVariant != nullptr )
+        ఒకవేళ ( newVariant != శూన్యసూచిక )
         {
             // remove leading _'s
-            while(newVariant[0] == SEP_CHAR)
+            అయితే(newVariant[0] == SEP_CHAR)
             {
                 newVariant++;
             }
 
             // remove trailing _'s
             vsize = static_cast<int32_t>(uprv_strlen(newVariant));
-            if ( vsize < 0 || vsize > ULOC_STRING_LIMIT ) { // int32 wrap
-                return;
+            ఒకవేళ ( vsize < 0 || vsize > ULOC_STRING_హద్దు ) { // int32 wrap
+                తిరిగి;
             }
-            while( (vsize>1) && (newVariant[vsize-1] == SEP_CHAR) )
+            అయితే( (vsize>1) && (newVariant[vsize-1] == SEP_CHAR) )
             {
                 vsize--;
             }
         }
 
-        if ( newKeywords != nullptr)
+        ఒకవేళ ( newKeywords != శూన్యసూచిక)
         {
             ksize = static_cast<int32_t>(uprv_strlen(newKeywords));
-            if ( ksize < 0 || ksize > ULOC_STRING_LIMIT ) {
-              return;
+            ఒకవేళ ( ksize < 0 || ksize > ULOC_STRING_హద్దు ) {
+              తిరిగి;
             }
         }
 
@@ -557,69 +557,69 @@ Locale::Locale( const   char * newLanguage,
 
         // newLanguage is already copied
 
-        if ( ( vsize != 0 ) || (csize != 0) )  // at least:  __v
+        ఒకవేళ ( ( vsize != 0 ) || (csize != 0) )  // at least:  __v
         {                                      //            ^
-            togo.append(SEP_CHAR, status);
+            togo.append(SEP_CHAR, స్థితి_2);
         }
 
-        if ( csize != 0 )
+        ఒకవేళ ( csize != 0 )
         {
-            togo.append(newCountry, status);
+            togo.append(newCountry, స్థితి_2);
         }
 
-        if ( vsize != 0)
+        ఒకవేళ ( vsize != 0)
         {
-            togo.append(SEP_CHAR, status)
-                .append(newVariant, vsize, status);
+            togo.append(SEP_CHAR, స్థితి_2)
+                .append(newVariant, vsize, స్థితి_2);
         }
 
-        if ( ksize != 0)
+        ఒకవేళ ( ksize != 0)
         {
-            if (uprv_strchr(newKeywords, '=')) {
-                togo.append('@', status); /* keyword parsing */
+            ఒకవేళ (uprv_strchr(newKeywords, '=')) {
+                togo.append('@', స్థితి_2); /* keyword parsing */
             }
-            else {
-                togo.append('_', status); /* Variant parsing with a script */
-                if ( vsize == 0) {
-                    togo.append('_', status); /* No country found */
+            లేకపోతే {
+                togo.append('_', స్థితి_2); /* Variant parsing with a script */
+                ఒకవేళ ( vsize == 0) {
+                    togo.append('_', స్థితి_2); /* No country found */
                 }
             }
-            togo.append(newKeywords, status);
+            togo.append(newKeywords, స్థితి_2);
         }
 
-        if (U_FAILURE(status)) {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
             // Something went wrong with appending, etc.
-            return;
+            తిరిగి;
         }
         // Parse it, because for example 'language' might really be a complete
         // string.
-        init(togo.data(), false);
+        init(togo.దత్తాంశం(), అబద్ధం);
     }
 }
 
-Locale::Locale(const Locale&) = default;
-Locale::Locale(Locale&&) noexcept = default;
+Locale::Locale(స్థిరరాశి Locale&) = అప్రమేయ;
+Locale::Locale(Locale&&) noexcept = అప్రమేయ;
 
-Locale& Locale::operator=(const Locale&) U_LIFETIME_BOUND = default;
-Locale& Locale::operator=(Locale&&) noexcept U_LIFETIME_BOUND = default;
+Locale& Locale::క్రియాకారకం=(స్థిరరాశి Locale&) U_LIFETIME_BOUND = అప్రమేయ;
+Locale& Locale::క్రియాకారకం=(Locale&&) noexcept U_LIFETIME_BOUND = అప్రమేయ;
 
 Locale *
-Locale::clone() const {
-    return new Locale(*this);
+Locale::clone() స్థిరరాశి {
+    తిరిగి కొత్త Locale(*ఇది);
 }
 
-bool
-Locale::operator==( const   Locale& other) const
+తార్కిక
+Locale::క్రియాకారకం==( స్థిరరాశి   Locale& other) స్థిరరాశి
 {
-    return uprv_strcmp(other.getName(), getName()) == 0;
+    తిరిగి uprv_strcmp(other.getName(), getName()) == 0;
 }
 
-namespace {
+నామాకాశ {
 
-UInitOnce gKnownCanonicalizedInitOnce {};
-UHashtable *gKnownCanonicalized = nullptr;
+UInitOnce g_తెలిసిన_Canonicalized_Init_Once {};
+UHashtable *g_తెలిసిన_Canonicalized = శూన్యసూచిక;
 
-constexpr const char* KNOWN_CANONICALIZED[] = {
+constexpr స్థిరరాశి అక్షరం* తెలిసిన_CANONICALIZED[] = {
     "c",
     // Commonly used locales known are already canonicalized
     "af", "af_ZA", "am", "am_ET", "ar", "ar_001", "as", "as_IN", "az", "az_AZ",
@@ -643,53 +643,53 @@ constexpr const char* KNOWN_CANONICALIZED[] = {
     "zh_Hant_TW", "zh_TW", "zu", "zu_ZA"
 };
 
-UBool U_CALLCONV cleanupKnownCanonicalized() {
-    gKnownCanonicalizedInitOnce.reset();
-    if (gKnownCanonicalized) { uhash_close(gKnownCanonicalized); }
-    return true;
+UBool U_CALLCONV cleanup_తెలిసిన_Canonicalized() {
+    g_తెలిసిన_Canonicalized_Init_Once.reset();
+    ఒకవేళ (g_తెలిసిన_Canonicalized) { uhash_close(g_తెలిసిన_Canonicalized); }
+    తిరిగి నిజం;
 }
 
-void U_CALLCONV loadKnownCanonicalized(UErrorCode &status) {
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_KNOWN_CANONICALIZED,
-                                cleanupKnownCanonicalized);
-    LocalUHashtablePointer newKnownCanonicalizedMap(
-        uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &status));
-    for (int32_t i = 0;
-            U_SUCCESS(status) && i < UPRV_LENGTHOF(KNOWN_CANONICALIZED);
+శూన్య U_CALLCONV ఎక్కించు_తెలిసిన_Canonicalized(UError_సంకేతం &స్థితి_2) {
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_LOCALE_తెలిసిన_CANONICALIZED,
+                                cleanup_తెలిసిన_Canonicalized);
+    Local_UHashtable_సూచిక new_తెలిసిన_Canonicalized_Map(
+        uhash_open(uhash_hashChars, uhash_compareChars, శూన్యసూచిక, &స్థితి_2));
+    కొరకు (int32_t i = 0;
+            U_SUCCESS(స్థితి_2) && i < UPRV_LENGTHOF(తెలిసిన_CANONICALIZED);
             i++) {
-        uhash_puti(newKnownCanonicalizedMap.getAlias(),
-                   (void*)KNOWN_CANONICALIZED[i],
-                   1, &status);
+        uhash_puti(new_తెలిసిన_Canonicalized_Map.getAlias(),
+                   (శూన్య*)తెలిసిన_CANONICALIZED[i],
+                   1, &స్థితి_2);
     }
-    if (U_FAILURE(status)) {
-        return;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
-    gKnownCanonicalized = newKnownCanonicalizedMap.orphan();
+    g_తెలిసిన_Canonicalized = new_తెలిసిన_Canonicalized_Map.orphan();
 }
 
-class AliasData;
+తరగతి Alias_దత్తాంశం;
 
 /**
  * A Builder class to build the alias data.
  */
-class AliasDataBuilder {
-public:
-    AliasDataBuilder() {
+తరగతి Alias_దత్తాంశం_Builder {
+బహిరంగ:
+    Alias_దత్తాంశం_Builder() {
     }
 
     // Build the AliasData from resource.
-    AliasData* build(UErrorCode &status);
+    Alias_దత్తాంశం* build(UError_సంకేతం &స్థితి_2);
 
-private:
-    void readAlias(UResourceBundle* alias,
-                   UniqueCharStrings* strings,
-                   LocalMemory<const char*>& types,
-                   LocalMemory<int32_t>& replacementIndexes,
+అంతరంగ:
+    శూన్య readAlias(UResourceBundle* alias,
+                   Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+                   Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+                   Local_జ్ఞాపకం<int32_t>& replacementIndexes,
                    int32_t &length,
-                   void (*checkType)(const char* type),
-                   void (*checkReplacement)(const UChar* replacement),
-                   UErrorCode &status);
+                   శూన్య (*checkType)(స్థిరరాశి అక్షరం* type),
+                   శూన్య (*checkReplacement)(స్థిరరాశి UChar* replacement),
+                   UError_సంకేతం &స్థితి_2);
 
     // Read the languageAlias data from alias to
     // strings+types+replacementIndexes
@@ -697,163 +697,163 @@ private:
     // Allocate length items for types, to store the type field.
     // Allocate length items for replacementIndexes,
     // to store the index in the strings for the replacement script.
-    void readLanguageAlias(UResourceBundle* alias,
-                           UniqueCharStrings* strings,
-                           LocalMemory<const char*>& types,
-                           LocalMemory<int32_t>& replacementIndexes,
+    శూన్య readLanguageAlias(UResourceBundle* alias,
+                           Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+                           Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+                           Local_జ్ఞాపకం<int32_t>& replacementIndexes,
                            int32_t &length,
-                           UErrorCode &status);
+                           UError_సంకేతం &స్థితి_2);
 
     // Read the scriptAlias data from alias to
     // strings+types+replacementIndexes
     // Allocate length items for types, to store the type field.
     // Allocate length items for replacementIndexes,
     // to store the index in the strings for the replacement script.
-    void readScriptAlias(UResourceBundle* alias,
-                         UniqueCharStrings* strings,
-                         LocalMemory<const char*>& types,
-                         LocalMemory<int32_t>& replacementIndexes,
-                         int32_t &length, UErrorCode &status);
+    శూన్య readScriptAlias(UResourceBundle* alias,
+                         Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+                         Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+                         Local_జ్ఞాపకం<int32_t>& replacementIndexes,
+                         int32_t &length, UError_సంకేతం &స్థితి_2);
 
     // Read the territoryAlias data from alias to
     // strings+types+replacementIndexes
     // Allocate length items for types, to store the type field.
     // Allocate length items for replacementIndexes,
     // to store the index in the strings for the replacement script.
-    void readTerritoryAlias(UResourceBundle* alias,
-                            UniqueCharStrings* strings,
-                            LocalMemory<const char*>& types,
-                            LocalMemory<int32_t>& replacementIndexes,
-                            int32_t &length, UErrorCode &status);
+    శూన్య readTerritoryAlias(UResourceBundle* alias,
+                            Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+                            Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+                            Local_జ్ఞాపకం<int32_t>& replacementIndexes,
+                            int32_t &length, UError_సంకేతం &స్థితి_2);
 
     // Read the variantAlias data from alias to
     // strings+types+replacementIndexes
     // Allocate length items for types, to store the type field.
     // Allocate length items for replacementIndexes,
     // to store the index in the strings for the replacement variant.
-    void readVariantAlias(UResourceBundle* alias,
-                          UniqueCharStrings* strings,
-                          LocalMemory<const char*>& types,
-                          LocalMemory<int32_t>& replacementIndexes,
-                          int32_t &length, UErrorCode &status);
+    శూన్య readVariantAlias(UResourceBundle* alias,
+                          Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+                          Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+                          Local_జ్ఞాపకం<int32_t>& replacementIndexes,
+                          int32_t &length, UError_సంకేతం &స్థితి_2);
 
     // Read the subdivisionAlias data from alias to
     // strings+types+replacementIndexes
     // Allocate length items for types, to store the type field.
     // Allocate length items for replacementIndexes,
     // to store the index in the strings for the replacement variant.
-    void readSubdivisionAlias(UResourceBundle* alias,
-                          UniqueCharStrings* strings,
-                          LocalMemory<const char*>& types,
-                          LocalMemory<int32_t>& replacementIndexes,
-                          int32_t &length, UErrorCode &status);
+    శూన్య readSubdivisionAlias(UResourceBundle* alias,
+                          Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+                          Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+                          Local_జ్ఞాపకం<int32_t>& replacementIndexes,
+                          int32_t &length, UError_సంకేతం &స్థితి_2);
 };
 
 /**
  * A class to hold the Alias Data.
  */
-class AliasData : public UMemory {
-public:
-    static const AliasData* singleton(UErrorCode& status) {
-        if (U_FAILURE(status)) {
+తరగతి Alias_దత్తాంశం : బహిరంగ UMemory {
+బహిరంగ:
+    స్థిర స్థిరరాశి Alias_దత్తాంశం* singleton(UError_సంకేతం& స్థితి_2) {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
             // Do not get into loadData if the status already has error.
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
-        umtx_initOnce(AliasData::gInitOnce, &AliasData::loadData, status);
-        return gSingleton;
+        umtx_initOnce(Alias_దత్తాంశం::gInitOnce, &Alias_దత్తాంశం::ఎక్కించు_దత్తాంశం, స్థితి_2);
+        తిరిగి gSingleton;
     }
 
-    const CharStringMap& languageMap() const U_LIFETIME_BOUND { return language; }
-    const CharStringMap& scriptMap() const U_LIFETIME_BOUND { return script; }
-    const CharStringMap& territoryMap() const U_LIFETIME_BOUND { return territory; }
-    const CharStringMap& variantMap() const U_LIFETIME_BOUND { return variant; }
-    const CharStringMap& subdivisionMap() const U_LIFETIME_BOUND { return subdivision; }
+    స్థిరరాశి CharStringMap& languageMap() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి language; }
+    స్థిరరాశి CharStringMap& scriptMap() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి script; }
+    స్థిరరాశి CharStringMap& territoryMap() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి territory; }
+    స్థిరరాశి CharStringMap& variantMap() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి variant; }
+    స్థిరరాశి CharStringMap& subdivisionMap() స్థిరరాశి U_LIFETIME_BOUND { తిరిగి subdivision; }
 
-    static void U_CALLCONV loadData(UErrorCode &status);
-    static UBool U_CALLCONV cleanup();
+    స్థిర శూన్య U_CALLCONV ఎక్కించు_దత్తాంశం(UError_సంకేతం &స్థితి_2);
+    స్థిర UBool U_CALLCONV cleanup();
 
-    static UInitOnce gInitOnce;
+    స్థిర UInitOnce gInitOnce;
 
-private:
-    AliasData(CharStringMap languageMap,
+అంతరంగ:
+    Alias_దత్తాంశం(CharStringMap languageMap,
               CharStringMap scriptMap,
               CharStringMap territoryMap,
               CharStringMap variantMap,
               CharStringMap subdivisionMap,
-              CharString* strings)
+              CharString* అక్షరశ్రేణులు)
         : language(std::move(languageMap)),
           script(std::move(scriptMap)),
           territory(std::move(territoryMap)),
           variant(std::move(variantMap)),
           subdivision(std::move(subdivisionMap)),
-          strings(strings) {
+          అక్షరశ్రేణులు(అక్షరశ్రేణులు) {
     }
 
-    ~AliasData() {
-        delete strings;
+    ~Alias_దత్తాంశం() {
+        తొలగించు అక్షరశ్రేణులు;
     }
 
-    static const AliasData* gSingleton;
+    స్థిర స్థిరరాశి Alias_దత్తాంశం* gSingleton;
 
     CharStringMap language;
     CharStringMap script;
     CharStringMap territory;
     CharStringMap variant;
     CharStringMap subdivision;
-    CharString* strings;
+    CharString* అక్షరశ్రేణులు;
 
-    friend class AliasDataBuilder;
+    మిత్ర తరగతి Alias_దత్తాంశం_Builder;
 };
 
 
-const AliasData* AliasData::gSingleton = nullptr;
-UInitOnce AliasData::gInitOnce {};
+స్థిరరాశి Alias_దత్తాంశం* Alias_దత్తాంశం::gSingleton = శూన్యసూచిక;
+UInitOnce Alias_దత్తాంశం::gInitOnce {};
 
 UBool U_CALLCONV
-AliasData::cleanup()
+Alias_దత్తాంశం::cleanup()
 {
     gInitOnce.reset();
-    delete gSingleton;
-    return true;
+    తొలగించు gSingleton;
+    తిరిగి నిజం;
 }
 
-void
-AliasDataBuilder::readAlias(
+శూన్య
+Alias_దత్తాంశం_Builder::readAlias(
         UResourceBundle* alias,
-        UniqueCharStrings* strings,
-        LocalMemory<const char*>& types,
-        LocalMemory<int32_t>& replacementIndexes,
+        Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+        Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+        Local_జ్ఞాపకం<int32_t>& replacementIndexes,
         int32_t &length,
-        void (*checkType)(const char* type),
-        void (*checkReplacement)(const UChar* replacement),
-        UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+        శూన్య (*checkType)(స్థిరరాశి అక్షరం* type),
+        శూన్య (*checkReplacement)(స్థిరరాశి UChar* replacement),
+        UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    length = ures_getSize(alias);
-    const char** rawTypes = types.allocateInsteadAndCopy(length);
-    if (rawTypes == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    length = ures_get_కొలత(alias);
+    స్థిరరాశి అక్షరం** rawTypes = types.allocateInsteadAndCopy(length);
+    ఒకవేళ (rawTypes == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
     int32_t* rawIndexes = replacementIndexes.allocateInsteadAndCopy(length);
-    if (rawIndexes == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    ఒకవేళ (rawIndexes == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    for (int i = 0; U_SUCCESS(status) && ures_hasNext(alias); i++) {
-        LocalUResourceBundlePointer res(
-            ures_getNextResource(alias, nullptr, &status));
-        const char* aliasFrom = ures_getKey(res.getAlias());
-        const UChar* aliasTo =
-            ures_getStringByKey(res.getAlias(), "replacement", nullptr, &status);
-        if (U_FAILURE(status)) return;
+    కొరకు (పూర్ణాంకం i = 0; U_SUCCESS(స్థితి_2) && ures_has_తదుపరి(alias); i++) {
+        Local_UResource_Bundle_సూచిక res(
+            ures_get_తదుపరి_Resource(alias, శూన్యసూచిక, &స్థితి_2));
+        స్థిరరాశి అక్షరం* aliasFrom = ures_get_కీలకం(res.getAlias());
+        స్థిరరాశి UChar* alias_గమ్యం =
+            ures_get_String_By_కీలకం(res.getAlias(), "replacement", శూన్యసూచిక, &స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) తిరిగి;
 
         checkType(aliasFrom);
-        checkReplacement(aliasTo);
+        checkReplacement(alias_గమ్యం);
 
         rawTypes[i] = aliasFrom;
-        rawIndexes[i] = strings->add(aliasTo, status);
+        rawIndexes[i] = అక్షరశ్రేణులు->కూడు(alias_గమ్యం, స్థితి_2);
     }
 }
 
@@ -863,19 +863,19 @@ AliasDataBuilder::readAlias(
  * items for replacementIndexes, to store the index in the strings for the
  * replacement language.
  */
-void
-AliasDataBuilder::readLanguageAlias(
+శూన్య
+Alias_దత్తాంశం_Builder::readLanguageAlias(
         UResourceBundle* alias,
-        UniqueCharStrings* strings,
-        LocalMemory<const char*>& types,
-        LocalMemory<int32_t>& replacementIndexes,
+        Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+        Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+        Local_జ్ఞాపకం<int32_t>& replacementIndexes,
         int32_t &length,
-        UErrorCode &status)
+        UError_సంకేతం &స్థితి_2)
 {
-    return readAlias(
-        alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
-        [](const char* type) {
+    తిరిగి readAlias(
+        alias, అక్షరశ్రేణులు, types, replacementIndexes, length,
+#ఒకవేళ U_DEBUG
+        [](స్థిరరాశి అక్షరం* type) {
             // Assert the aliasFrom only contains the following possibilities
             // language_REGION_variant
             // language_REGION
@@ -888,10 +888,10 @@ AliasDataBuilder::readLanguageAlias(
             // Assert when language is und, no REGION in aliasFrom.
             U_ASSERT(test.getLanguage()[0] != '\0' || test.getCountry()[0] == '\0');
         },
-#else
-        [](const char*) {},
-#endif
-        [](const UChar*) {}, status);
+#లేకపోతే
+        [](స్థిరరాశి అక్షరం*) {},
+#అయితే_ముగింపు
+        [](స్థిరరాశి UChar*) {}, స్థితి_2);
 }
 
 /**
@@ -900,29 +900,29 @@ AliasDataBuilder::readLanguageAlias(
  * items for replacementIndexes, to store the index in the strings for the
  * replacement script.
  */
-void
-AliasDataBuilder::readScriptAlias(
+శూన్య
+Alias_దత్తాంశం_Builder::readScriptAlias(
         UResourceBundle* alias,
-        UniqueCharStrings* strings,
-        LocalMemory<const char*>& types,
-        LocalMemory<int32_t>& replacementIndexes,
+        Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+        Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+        Local_జ్ఞాపకం<int32_t>& replacementIndexes,
         int32_t &length,
-        UErrorCode &status)
+        UError_సంకేతం &స్థితి_2)
 {
-    return readAlias(
-        alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
-        [](const char* type) {
+    తిరిగి readAlias(
+        alias, అక్షరశ్రేణులు, types, replacementIndexes, length,
+#ఒకవేళ U_DEBUG
+        [](స్థిరరాశి అక్షరం* type) {
             U_ASSERT(uprv_strlen(type) == 4);
         },
-        [](const UChar* replacement) {
+        [](స్థిరరాశి UChar* replacement) {
             U_ASSERT(u_strlen(replacement) == 4);
         },
-#else
-        [](const char*) {},
-        [](const UChar*) { },
-#endif
-        status);
+#లేకపోతే
+        [](స్థిరరాశి అక్షరం*) {},
+        [](స్థిరరాశి UChar*) { },
+#అయితే_ముగింపు
+        స్థితి_2);
 }
 
 /**
@@ -931,26 +931,26 @@ AliasDataBuilder::readScriptAlias(
  * items for replacementIndexes, to store the index in the strings for the
  * replacement regions.
  */
-void
-AliasDataBuilder::readTerritoryAlias(
+శూన్య
+Alias_దత్తాంశం_Builder::readTerritoryAlias(
         UResourceBundle* alias,
-        UniqueCharStrings* strings,
-        LocalMemory<const char*>& types,
-        LocalMemory<int32_t>& replacementIndexes,
+        Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+        Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+        Local_జ్ఞాపకం<int32_t>& replacementIndexes,
         int32_t &length,
-        UErrorCode &status)
+        UError_సంకేతం &స్థితి_2)
 {
-    return readAlias(
-        alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
-        [](const char* type) {
+    తిరిగి readAlias(
+        alias, అక్షరశ్రేణులు, types, replacementIndexes, length,
+#ఒకవేళ U_DEBUG
+        [](స్థిరరాశి అక్షరం* type) {
             U_ASSERT(uprv_strlen(type) == 2 || uprv_strlen(type) == 3);
         },
-#else
-        [](const char*) {},
-#endif
-        [](const UChar*) { },
-        status);
+#లేకపోతే
+        [](స్థిరరాశి అక్షరం*) {},
+#అయితే_ముగింపు
+        [](స్థిరరాశి UChar*) { },
+        స్థితి_2);
 }
 
 /**
@@ -959,35 +959,35 @@ AliasDataBuilder::readTerritoryAlias(
  * items for replacementIndexes, to store the index in the strings for the
  * replacement variant.
  */
-void
-AliasDataBuilder::readVariantAlias(
+శూన్య
+Alias_దత్తాంశం_Builder::readVariantAlias(
         UResourceBundle* alias,
-        UniqueCharStrings* strings,
-        LocalMemory<const char*>& types,
-        LocalMemory<int32_t>& replacementIndexes,
+        Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+        Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+        Local_జ్ఞాపకం<int32_t>& replacementIndexes,
         int32_t &length,
-        UErrorCode &status)
+        UError_సంకేతం &స్థితి_2)
 {
-    return readAlias(
-        alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
-        [](const char* type) {
+    తిరిగి readAlias(
+        alias, అక్షరశ్రేణులు, types, replacementIndexes, length,
+#ఒకవేళ U_DEBUG
+        [](స్థిరరాశి అక్షరం* type) {
             U_ASSERT(uprv_strlen(type) >= 4 && uprv_strlen(type) <= 8);
             U_ASSERT(uprv_strlen(type) != 4 ||
                      (type[0] >= '0' && type[0] <= '9'));
         },
-        [](const UChar* replacement) {
+        [](స్థిరరాశి UChar* replacement) {
             int32_t len = u_strlen(replacement);
             U_ASSERT(len >= 4 && len <= 8);
             U_ASSERT(len != 4 ||
                      (*replacement >= u'0' &&
                       *replacement <= u'9'));
         },
-#else
-        [](const char*) {},
-        [](const UChar*) { },
-#endif
-        status);
+#లేకపోతే
+        [](స్థిరరాశి అక్షరం*) {},
+        [](స్థిరరాశి UChar*) { },
+#అయితే_ముగింపు
+        స్థితి_2);
 }
 
 /**
@@ -996,26 +996,26 @@ AliasDataBuilder::readVariantAlias(
  * items for replacementIndexes, to store the index in the strings for the
  * replacement regions.
  */
-void
-AliasDataBuilder::readSubdivisionAlias(
+శూన్య
+Alias_దత్తాంశం_Builder::readSubdivisionAlias(
         UResourceBundle* alias,
-        UniqueCharStrings* strings,
-        LocalMemory<const char*>& types,
-        LocalMemory<int32_t>& replacementIndexes,
+        Unique_Char_అక్షరశ్రేణులు* అక్షరశ్రేణులు,
+        Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*>& types,
+        Local_జ్ఞాపకం<int32_t>& replacementIndexes,
         int32_t &length,
-        UErrorCode &status)
+        UError_సంకేతం &స్థితి_2)
 {
-    return readAlias(
-        alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
-        [](const char* type) {
+    తిరిగి readAlias(
+        alias, అక్షరశ్రేణులు, types, replacementIndexes, length,
+#ఒకవేళ U_DEBUG
+        [](స్థిరరాశి అక్షరం* type) {
             U_ASSERT(uprv_strlen(type) >= 3 && uprv_strlen(type) <= 8);
         },
-#else
-        [](const char*) {},
-#endif
-        [](const UChar*) { },
-        status);
+#లేకపోతే
+        [](స్థిరరాశి అక్షరం*) {},
+#అయితే_ముగింపు
+        [](స్థిరరాశి UChar*) { },
+        స్థితి_2);
 }
 
 /**
@@ -1025,183 +1025,183 @@ AliasDataBuilder::readSubdivisionAlias(
  * If the alias data has already loaded, then this method simply returns without
  * doing anything meaningful.
  */
-void U_CALLCONV
-AliasData::loadData(UErrorCode &status)
+శూన్య U_CALLCONV
+Alias_దత్తాంశం::ఎక్కించు_దత్తాంశం(UError_సంకేతం &స్థితి_2)
 {
-#ifdef LOCALE_CANONICALIZATION_DEBUG
-    UDate start = uprv_getRawUTCtime();
-#endif  // LOCALE_CANONICALIZATION_DEBUG
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_ALIAS, cleanup);
-    AliasDataBuilder builder;
-    gSingleton = builder.build(status);
-#ifdef LOCALE_CANONICALIZATION_DEBUG
-    UDate end = uprv_getRawUTCtime();
-    printf("AliasData::loadData took total %f ms\n", end - start);
-#endif  // LOCALE_CANONICALIZATION_DEBUG
+#నిర్వచితమైతే LOCALE_CANONICALIZATION_DEBUG
+    UDate ప్రారంభం = uprv_getRawUTCtime();
+#అయితే_ముగింపు  // LOCALE_CANONICALIZATION_DEBUG
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_LOCALE_ALIAS, cleanup);
+    Alias_దత్తాంశం_Builder builder;
+    gSingleton = builder.build(స్థితి_2);
+#నిర్వచితమైతే LOCALE_CANONICALIZATION_DEBUG
+    UDate చివర = uprv_getRawUTCtime();
+    రాయి("AliasData::loadData took total %f ms\n", చివర - ప్రారంభం);
+#అయితే_ముగింపు  // LOCALE_CANONICALIZATION_DEBUG
 }
 
 /**
  * Build the alias data from resources.
  */
-AliasData*
-AliasDataBuilder::build(UErrorCode &status) {
-    if (U_FAILURE(status)) { return nullptr; }
+Alias_దత్తాంశం*
+Alias_దత్తాంశం_Builder::build(UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి శూన్యసూచిక; }
 
-    LocalUResourceBundlePointer metadata(
-        ures_openDirect(nullptr, "metadata", &status));
-    LocalUResourceBundlePointer metadataAlias(
-        ures_getByKey(metadata.getAlias(), "alias", nullptr, &status));
-    LocalUResourceBundlePointer languageAlias(
-        ures_getByKey(metadataAlias.getAlias(), "language", nullptr, &status));
-    LocalUResourceBundlePointer scriptAlias(
-        ures_getByKey(metadataAlias.getAlias(), "script", nullptr, &status));
-    LocalUResourceBundlePointer territoryAlias(
-        ures_getByKey(metadataAlias.getAlias(), "territory", nullptr, &status));
-    LocalUResourceBundlePointer variantAlias(
-        ures_getByKey(metadataAlias.getAlias(), "variant", nullptr, &status));
-    LocalUResourceBundlePointer subdivisionAlias(
-        ures_getByKey(metadataAlias.getAlias(), "subdivision", nullptr, &status));
+    Local_UResource_Bundle_సూచిక metadata(
+        ures_open_ప్రత్యక్ష(శూన్యసూచిక, "metadata", &స్థితి_2));
+    Local_UResource_Bundle_సూచిక metadataAlias(
+        ures_get_By_కీలకం(metadata.getAlias(), "alias", శూన్యసూచిక, &స్థితి_2));
+    Local_UResource_Bundle_సూచిక languageAlias(
+        ures_get_By_కీలకం(metadataAlias.getAlias(), "language", శూన్యసూచిక, &స్థితి_2));
+    Local_UResource_Bundle_సూచిక scriptAlias(
+        ures_get_By_కీలకం(metadataAlias.getAlias(), "script", శూన్యసూచిక, &స్థితి_2));
+    Local_UResource_Bundle_సూచిక territoryAlias(
+        ures_get_By_కీలకం(metadataAlias.getAlias(), "territory", శూన్యసూచిక, &స్థితి_2));
+    Local_UResource_Bundle_సూచిక variantAlias(
+        ures_get_By_కీలకం(metadataAlias.getAlias(), "variant", శూన్యసూచిక, &స్థితి_2));
+    Local_UResource_Bundle_సూచిక subdivisionAlias(
+        ures_get_By_కీలకం(metadataAlias.getAlias(), "subdivision", శూన్యసూచిక, &స్థితి_2));
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
-    int32_t languagesLength = 0, scriptLength = 0, territoryLength = 0,
-            variantLength = 0, subdivisionLength = 0;
+    int32_t languages_నిడివి = 0, script_నిడివి = 0, territory_నిడివి = 0,
+            variant_నిడివి = 0, subdivision_నిడివి = 0;
 
     // Read the languageAlias into languageTypes, languageReplacementIndexes
     // and strings
-    UniqueCharStrings strings(status);
-    LocalMemory<const char*> languageTypes;
-    LocalMemory<int32_t> languageReplacementIndexes;
+    Unique_Char_అక్షరశ్రేణులు అక్షరశ్రేణులు(స్థితి_2);
+    Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*> languageTypes;
+    Local_జ్ఞాపకం<int32_t> languageReplacementIndexes;
     readLanguageAlias(languageAlias.getAlias(),
-                      &strings,
+                      &అక్షరశ్రేణులు,
                       languageTypes,
                       languageReplacementIndexes,
-                      languagesLength,
-                      status);
+                      languages_నిడివి,
+                      స్థితి_2);
 
     // Read the scriptAlias into scriptTypes, scriptReplacementIndexes
     // and strings
-    LocalMemory<const char*> scriptTypes;
-    LocalMemory<int32_t> scriptReplacementIndexes;
+    Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*> scriptTypes;
+    Local_జ్ఞాపకం<int32_t> scriptReplacementIndexes;
     readScriptAlias(scriptAlias.getAlias(),
-                    &strings,
+                    &అక్షరశ్రేణులు,
                     scriptTypes,
                     scriptReplacementIndexes,
-                    scriptLength,
-                    status);
+                    script_నిడివి,
+                    స్థితి_2);
 
     // Read the territoryAlias into territoryTypes, territoryReplacementIndexes
     // and strings
-    LocalMemory<const char*> territoryTypes;
-    LocalMemory<int32_t> territoryReplacementIndexes;
+    Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*> territoryTypes;
+    Local_జ్ఞాపకం<int32_t> territoryReplacementIndexes;
     readTerritoryAlias(territoryAlias.getAlias(),
-                       &strings,
+                       &అక్షరశ్రేణులు,
                        territoryTypes,
                        territoryReplacementIndexes,
-                       territoryLength, status);
+                       territory_నిడివి, స్థితి_2);
 
     // Read the variantAlias into variantTypes, variantReplacementIndexes
     // and strings
-    LocalMemory<const char*> variantTypes;
-    LocalMemory<int32_t> variantReplacementIndexes;
+    Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*> variantTypes;
+    Local_జ్ఞాపకం<int32_t> variantReplacementIndexes;
     readVariantAlias(variantAlias.getAlias(),
-                     &strings,
+                     &అక్షరశ్రేణులు,
                      variantTypes,
                      variantReplacementIndexes,
-                     variantLength, status);
+                     variant_నిడివి, స్థితి_2);
 
     // Read the subdivisionAlias into subdivisionTypes, subdivisionReplacementIndexes
     // and strings
-    LocalMemory<const char*> subdivisionTypes;
-    LocalMemory<int32_t> subdivisionReplacementIndexes;
+    Local_జ్ఞాపకం<స్థిరరాశి అక్షరం*> subdivisionTypes;
+    Local_జ్ఞాపకం<int32_t> subdivisionReplacementIndexes;
     readSubdivisionAlias(subdivisionAlias.getAlias(),
-                         &strings,
+                         &అక్షరశ్రేణులు,
                          subdivisionTypes,
                          subdivisionReplacementIndexes,
-                         subdivisionLength, status);
+                         subdivision_నిడివి, స్థితి_2);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     // We can only use strings after freeze it.
-    strings.freeze();
+    అక్షరశ్రేణులు.freeze();
 
     // Build the languageMap from languageTypes & languageReplacementIndexes
-    CharStringMap languageMap(490, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < languagesLength; i++) {
+    CharStringMap languageMap(490, స్థితి_2);
+    కొరకు (int32_t i = 0; U_SUCCESS(స్థితి_2) && i < languages_నిడివి; i++) {
         languageMap.put(languageTypes[i],
-                        strings.get(languageReplacementIndexes[i]),
-                        status);
+                        అక్షరశ్రేణులు.get(languageReplacementIndexes[i]),
+                        స్థితి_2);
     }
 
     // Build the scriptMap from scriptTypes & scriptReplacementIndexes
-    CharStringMap scriptMap(1, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < scriptLength; i++) {
+    CharStringMap scriptMap(1, స్థితి_2);
+    కొరకు (int32_t i = 0; U_SUCCESS(స్థితి_2) && i < script_నిడివి; i++) {
         scriptMap.put(scriptTypes[i],
-                      strings.get(scriptReplacementIndexes[i]),
-                      status);
+                      అక్షరశ్రేణులు.get(scriptReplacementIndexes[i]),
+                      స్థితి_2);
     }
 
     // Build the territoryMap from territoryTypes & territoryReplacementIndexes
-    CharStringMap territoryMap(650, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < territoryLength; i++) {
+    CharStringMap territoryMap(650, స్థితి_2);
+    కొరకు (int32_t i = 0; U_SUCCESS(స్థితి_2) && i < territory_నిడివి; i++) {
         territoryMap.put(territoryTypes[i],
-                         strings.get(territoryReplacementIndexes[i]),
-                         status);
+                         అక్షరశ్రేణులు.get(territoryReplacementIndexes[i]),
+                         స్థితి_2);
     }
 
     // Build the variantMap from variantTypes & variantReplacementIndexes.
-    CharStringMap variantMap(2, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < variantLength; i++) {
+    CharStringMap variantMap(2, స్థితి_2);
+    కొరకు (int32_t i = 0; U_SUCCESS(స్థితి_2) && i < variant_నిడివి; i++) {
         variantMap.put(variantTypes[i],
-                       strings.get(variantReplacementIndexes[i]),
-                       status);
+                       అక్షరశ్రేణులు.get(variantReplacementIndexes[i]),
+                       స్థితి_2);
     }
 
     // Build the subdivisionMap from subdivisionTypes & subdivisionReplacementIndexes.
-    CharStringMap subdivisionMap(2, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < subdivisionLength; i++) {
+    CharStringMap subdivisionMap(2, స్థితి_2);
+    కొరకు (int32_t i = 0; U_SUCCESS(స్థితి_2) && i < subdivision_నిడివి; i++) {
         subdivisionMap.put(subdivisionTypes[i],
-                       strings.get(subdivisionReplacementIndexes[i]),
-                       status);
+                       అక్షరశ్రేణులు.get(subdivisionReplacementIndexes[i]),
+                       స్థితి_2);
     }
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి శూన్యసూచిక;
     }
 
     // copy hashtables
-    auto *data = new AliasData(
+    స్వయంచాలక *దత్తాంశం = కొత్త Alias_దత్తాంశం(
         std::move(languageMap),
         std::move(scriptMap),
         std::move(territoryMap),
         std::move(variantMap),
         std::move(subdivisionMap),
-        strings.orphanCharStrings());
+        అక్షరశ్రేణులు.orphan_Char_అక్షరశ్రేణులు());
 
-    if (data == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
+    ఒకవేళ (దత్తాంశం == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
-    return data;
+    తిరిగి దత్తాంశం;
 }
 
 /**
  * A class that find the replacement values of locale fields by using AliasData.
  */
-class AliasReplacer {
-public:
-    AliasReplacer(UErrorCode& status) :
-            language(nullptr), script(nullptr), region(nullptr),
-            extensions(nullptr),
+తరగతి AliasReplacer {
+బహిరంగ:
+    AliasReplacer(UError_సంకేతం& స్థితి_2) :
+            language(శూన్యసూచిక), script(శూన్యసూచిక), region(శూన్యసూచిక),
+            extensions(శూన్యసూచిక),
             // store value in variants only once
-            variants(nullptr,
+            variants(శూన్యసూచిక,
                      ([](UElement e1, UElement e2) -> UBool {
-                       return 0==uprv_strcmp((const char*)e1.pointer,
-                                             (const char*)e2.pointer);}),
-                     status),
-            data(nullptr) {
+                       తిరిగి 0==uprv_strcmp((స్థిరరాశి అక్షరం*)e1.సూచిక,
+                                             (స్థిరరాశి అక్షరం*)e2.సూచిక);}),
+                     స్థితి_2),
+            దత్తాంశం(శూన్యసూచిక) {
     }
     ~AliasReplacer() {
     }
@@ -1209,20 +1209,20 @@ public:
     // Check the fields inside locale, if need to replace fields,
     // place the replaced locale ID in out and return true.
     // Otherwise return false for no replacement or error.
-    bool replace(
-        const Locale& locale, CharString& out, UErrorCode& status);
+    తార్కిక replace(
+        స్థిరరాశి Locale& locale, CharString& out, UError_సంకేతం& స్థితి_2);
 
-private:
-    const char* language;
-    const char* script;
-    const char* region;
-    const char* extensions;
+అంతరంగ:
+    స్థిరరాశి అక్షరం* language;
+    స్థిరరాశి అక్షరం* script;
+    స్థిరరాశి అక్షరం* region;
+    స్థిరరాశి అక్షరం* extensions;
     UVector variants;
 
-    const AliasData* data;
+    స్థిరరాశి Alias_దత్తాంశం* దత్తాంశం;
 
-    inline bool notEmpty(const char* str) {
-        return str && str[0] != NULL_CHAR;
+    అంతఃవరుస తార్కిక not_ఖాళీలు(స్థిరరాశి అక్షరం* str) {
+        తిరిగి str && str[0] != NULL_CHAR;
     }
 
     /**
@@ -1238,249 +1238,249 @@ private:
      *    nullptr || ""   CCC        nullptr     CCC
      *    nullptr || ""   *          DDD         nullptr
      */
-    inline const char* deleteOrReplace(const char* input U_LIFETIME_BOUND,
-                                       const char* type,
-                                       const char* replacement U_LIFETIME_BOUND) {
-        return notEmpty(replacement) ?
-            ((input == nullptr) ?  replacement : input) :
-            ((type == nullptr) ? input  : nullptr);
+    అంతఃవరుస స్థిరరాశి అక్షరం* deleteOrReplace(స్థిరరాశి అక్షరం* input U_LIFETIME_BOUND,
+                                       స్థిరరాశి అక్షరం* type,
+                                       స్థిరరాశి అక్షరం* replacement U_LIFETIME_BOUND) {
+        తిరిగి not_ఖాళీలు(replacement) ?
+            ((input == శూన్యసూచిక) ?  replacement : input) :
+            ((type == శూన్యసూచిక) ? input  : శూన్యసూచిక);
     }
 
-    inline bool same(const char* a, const char* b) {
-        if (a == nullptr && b == nullptr) {
-            return true;
+    అంతఃవరుస తార్కిక same(స్థిరరాశి అక్షరం* a, స్థిరరాశి అక్షరం* b) {
+        ఒకవేళ (a == శూన్యసూచిక && b == శూన్యసూచిక) {
+            తిరిగి నిజం;
         }
-        if ((a == nullptr && b != nullptr) ||
-            (a != nullptr && b == nullptr)) {
-          return false;
+        ఒకవేళ ((a == శూన్యసూచిక && b != శూన్యసూచిక) ||
+            (a != శూన్యసూచిక && b == శూన్యసూచిక)) {
+          తిరిగి అబద్ధం;
         }
-        return uprv_strcmp(a, b) == 0;
+        తిరిగి uprv_strcmp(a, b) == 0;
     }
 
     // Gather fields and generate locale ID into out.
-    CharString& outputToString(CharString& out U_LIFETIME_BOUND, UErrorCode& status);
+    CharString& output_గమ్యం_String(CharString& out U_LIFETIME_BOUND, UError_సంకేతం& స్థితి_2);
 
     // Generate the lookup key.
-    CharString& generateKey(const char* language, const char* region,
-                            const char* variant, CharString& out U_LIFETIME_BOUND,
-                            UErrorCode& status);
+    CharString& generate_కీలకం(స్థిరరాశి అక్షరం* language, స్థిరరాశి అక్షరం* region,
+                            స్థిరరాశి అక్షరం* variant, CharString& out U_LIFETIME_BOUND,
+                            UError_సంకేతం& స్థితి_2);
 
-    void parseLanguageReplacement(const char* replacement,
-                                  const char*& replaceLanguage,
-                                  const char*& replaceScript,
-                                  const char*& replaceRegion,
-                                  const char*& replaceVariant,
-                                  const char*& replaceExtensions,
-                                  UVector& toBeFreed,
-                                  UErrorCode& status);
+    శూన్య parseLanguageReplacement(స్థిరరాశి అక్షరం* replacement,
+                                  స్థిరరాశి అక్షరం*& replaceLanguage,
+                                  స్థిరరాశి అక్షరం*& replaceScript,
+                                  స్థిరరాశి అక్షరం*& replaceRegion,
+                                  స్థిరరాశి అక్షరం*& replaceVariant,
+                                  స్థిరరాశి అక్షరం*& replaceExtensions,
+                                  UVector& గమ్యం_Be_Freed,
+                                  UError_సంకేతం& స్థితి_2);
 
     // Replace by using languageAlias.
-    bool replaceLanguage(bool checkLanguage, bool checkRegion,
-                         bool checkVariants, UVector& toBeFreed,
-                         UErrorCode& status);
+    తార్కిక replaceLanguage(తార్కిక checkLanguage, తార్కిక checkRegion,
+                         తార్కిక checkVariants, UVector& గమ్యం_Be_Freed,
+                         UError_సంకేతం& స్థితి_2);
 
     // Replace by using territoryAlias.
-    bool replaceTerritory(UVector& toBeFreed, UErrorCode& status);
+    తార్కిక replaceTerritory(UVector& గమ్యం_Be_Freed, UError_సంకేతం& స్థితి_2);
 
     // Replace by using scriptAlias.
-    bool replaceScript(UErrorCode& status);
+    తార్కిక replaceScript(UError_సంకేతం& స్థితి_2);
 
     // Replace by using variantAlias.
-    bool replaceVariant(UErrorCode& status);
+    తార్కిక replaceVariant(UError_సంకేతం& స్థితి_2);
 
     // Replace by using subdivisionAlias.
-    bool replaceSubdivision(StringPiece subdivision,
-                            CharString& output, UErrorCode& status);
+    తార్కిక replaceSubdivision(StringPiece subdivision,
+                            CharString& output, UError_సంకేతం& స్థితి_2);
 
     // Replace transformed extensions.
-    bool replaceTransformedExtensions(
-        CharString& transformedExtensions, CharString& output, UErrorCode& status);
+    తార్కిక replaceTransformedExtensions(
+        CharString& transformedExtensions, CharString& output, UError_సంకేతం& స్థితి_2);
 };
 
 CharString&
-AliasReplacer::generateKey(
-        const char* language, const char* region, const char* variant,
-        CharString& out U_LIFETIME_BOUND, UErrorCode& status)
+AliasReplacer::generate_కీలకం(
+        స్థిరరాశి అక్షరం* language, స్థిరరాశి అక్షరం* region, స్థిరరాశి అక్షరం* variant,
+        CharString& out U_LIFETIME_BOUND, UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) { return out; }
-    out.append(language, status);
-    if (notEmpty(region)) {
-        out.append(SEP_CHAR, status)
-            .append(region, status);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి out; }
+    out.append(language, స్థితి_2);
+    ఒకవేళ (not_ఖాళీలు(region)) {
+        out.append(SEP_CHAR, స్థితి_2)
+            .append(region, స్థితి_2);
     }
-    if (notEmpty(variant)) {
-       out.append(SEP_CHAR, status)
-           .append(variant, status);
+    ఒకవేళ (not_ఖాళీలు(variant)) {
+       out.append(SEP_CHAR, స్థితి_2)
+           .append(variant, స్థితి_2);
     }
-    return out;
+    తిరిగి out;
 }
 
-void
+శూన్య
 AliasReplacer::parseLanguageReplacement(
-    const char* replacement,
-    const char*& replacedLanguage,
-    const char*& replacedScript,
-    const char*& replacedRegion,
-    const char*& replacedVariant,
-    const char*& replacedExtensions,
-    UVector& toBeFreed,
-    UErrorCode& status)
+    స్థిరరాశి అక్షరం* replacement,
+    స్థిరరాశి అక్షరం*& replacedLanguage,
+    స్థిరరాశి అక్షరం*& replacedScript,
+    స్థిరరాశి అక్షరం*& replacedRegion,
+    స్థిరరాశి అక్షరం*& replacedVariant,
+    స్థిరరాశి అక్షరం*& replacedExtensions,
+    UVector& గమ్యం_Be_Freed,
+    UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) {
-        return;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
     replacedScript = replacedRegion = replacedVariant
-        = replacedExtensions = nullptr;
-    if (uprv_strchr(replacement, '_') == nullptr) {
+        = replacedExtensions = శూన్యసూచిక;
+    ఒకవేళ (uprv_strchr(replacement, '_') == శూన్యసూచిక) {
         replacedLanguage = replacement;
         // reach the end, just return it.
-        return;
+        తిరిగి;
     }
     // We have multiple field so we have to allocate and parse
-    auto str = prv::make_unique<CharString>(
-        replacement, static_cast<int32_t>(uprv_strlen(replacement)), status, status);
-    char* data = str->data();
-    toBeFreed.adoptElement(str.release(), status);
-    if (U_FAILURE(status)) {
-        return;
+    స్వయంచాలక str = prv::make_unique<CharString>(
+        replacement, static_cast<int32_t>(uprv_strlen(replacement)), స్థితి_2, స్థితి_2);
+    అక్షరం* దత్తాంశం = str->దత్తాంశం();
+    గమ్యం_Be_Freed.adoptElement(str.release(), స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    replacedLanguage = (const char*) data;
-    char* endOfField = uprv_strchr(data, '_');
-    *endOfField = '\0'; // null terminiate it.
-    endOfField++;
-    const char* start = endOfField;
-    endOfField = const_cast<char*>(uprv_strchr(start, '_'));
+    replacedLanguage = (స్థిరరాశి అక్షరం*) దత్తాంశం;
+    అక్షరం* చివర_యొక్క_క్షేత్రం = uprv_strchr(దత్తాంశం, '_');
+    *చివర_యొక్క_క్షేత్రం = '\0'; // null terminiate it.
+    చివర_యొక్క_క్షేత్రం++;
+    స్థిరరాశి అక్షరం* ప్రారంభం = చివర_యొక్క_క్షేత్రం;
+    చివర_యొక్క_క్షేత్రం = const_cast<అక్షరం*>(uprv_strchr(ప్రారంభం, '_'));
     size_t len = 0;
-    if (endOfField == nullptr) {
-        len = uprv_strlen(start);
-    } else {
-        len = endOfField - start;
-        *endOfField = '\0'; // null terminiate it.
+    ఒకవేళ (చివర_యొక్క_క్షేత్రం == శూన్యసూచిక) {
+        len = uprv_strlen(ప్రారంభం);
+    } లేకపోతే {
+        len = చివర_యొక్క_క్షేత్రం - ప్రారంభం;
+        *చివర_యొక్క_క్షేత్రం = '\0'; // null terminiate it.
     }
-    if (len == 4 && uprv_isASCIILetter(*start)) {
+    ఒకవేళ (len == 4 && uprv_isASCIILetter(*ప్రారంభం)) {
         // Got a script
-        replacedScript = start;
-        if (endOfField == nullptr) {
-            return;
+        replacedScript = ప్రారంభం;
+        ఒకవేళ (చివర_యొక్క_క్షేత్రం == శూన్యసూచిక) {
+            తిరిగి;
         }
-        start = endOfField++;
-        endOfField = const_cast<char*>(uprv_strchr(start, '_'));
-        if (endOfField == nullptr) {
-            len = uprv_strlen(start);
-        } else {
-            len = endOfField - start;
-            *endOfField = '\0'; // null terminiate it.
+        ప్రారంభం = చివర_యొక్క_క్షేత్రం++;
+        చివర_యొక్క_క్షేత్రం = const_cast<అక్షరం*>(uprv_strchr(ప్రారంభం, '_'));
+        ఒకవేళ (చివర_యొక్క_క్షేత్రం == శూన్యసూచిక) {
+            len = uprv_strlen(ప్రారంభం);
+        } లేకపోతే {
+            len = చివర_యొక్క_క్షేత్రం - ప్రారంభం;
+            *చివర_యొక్క_క్షేత్రం = '\0'; // null terminiate it.
         }
     }
-    if (len >= 2 && len <= 3) {
+    ఒకవేళ (len >= 2 && len <= 3) {
         // Got a region
-        replacedRegion = start;
-        if (endOfField == nullptr) {
-            return;
+        replacedRegion = ప్రారంభం;
+        ఒకవేళ (చివర_యొక్క_క్షేత్రం == శూన్యసూచిక) {
+            తిరిగి;
         }
-        start = endOfField++;
-        endOfField = const_cast<char*>(uprv_strchr(start, '_'));
-        if (endOfField == nullptr) {
-            len = uprv_strlen(start);
-        } else {
-            len = endOfField - start;
-            *endOfField = '\0'; // null terminiate it.
+        ప్రారంభం = చివర_యొక్క_క్షేత్రం++;
+        చివర_యొక్క_క్షేత్రం = const_cast<అక్షరం*>(uprv_strchr(ప్రారంభం, '_'));
+        ఒకవేళ (చివర_యొక్క_క్షేత్రం == శూన్యసూచిక) {
+            len = uprv_strlen(ప్రారంభం);
+        } లేకపోతే {
+            len = చివర_యొక్క_క్షేత్రం - ప్రారంభం;
+            *చివర_యొక్క_క్షేత్రం = '\0'; // null terminiate it.
         }
     }
-    if (len >= 4) {
+    ఒకవేళ (len >= 4) {
         // Got a variant
-        replacedVariant = start;
-        if (endOfField == nullptr) {
-            return;
+        replacedVariant = ప్రారంభం;
+        ఒకవేళ (చివర_యొక్క_క్షేత్రం == శూన్యసూచిక) {
+            తిరిగి;
         }
-        start = endOfField++;
+        ప్రారంభం = చివర_యొక్క_క్షేత్రం++;
     }
-    replacedExtensions = start;
+    replacedExtensions = ప్రారంభం;
 }
 
-bool
+తార్కిక
 AliasReplacer::replaceLanguage(
-        bool checkLanguage, bool checkRegion,
-        bool checkVariants, UVector& toBeFreed, UErrorCode& status)
+        తార్కిక checkLanguage, తార్కిక checkRegion,
+        తార్కిక checkVariants, UVector& గమ్యం_Be_Freed, UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    if (    (checkRegion && region == nullptr) ||
+    ఒకవేళ (    (checkRegion && region == శూన్యసూచిక) ||
             (checkVariants && variants.size() == 0)) {
         // Nothing to search.
-        return false;
+        తిరిగి అబద్ధం;
     }
-    int32_t variant_size = checkVariants ? variants.size() : 1;
+    int32_t variant_కొలత = checkVariants ? variants.size() : 1;
     // Since we may have more than one variant, we need to loop through them.
-    const char* searchLanguage = checkLanguage ? language : "und";
-    const char* searchRegion = checkRegion ? region : nullptr;
-    const char* searchVariant = nullptr;
-    for (int32_t variant_index = 0;
-            variant_index < variant_size;
-            variant_index++) {
-        if (checkVariants) {
-            U_ASSERT(variant_index < variant_size);
-            searchVariant = static_cast<const char*>(variants.elementAt(variant_index));
+    స్థిరరాశి అక్షరం* శోధన_Language = checkLanguage ? language : "und";
+    స్థిరరాశి అక్షరం* శోధన_Region = checkRegion ? region : శూన్యసూచిక;
+    స్థిరరాశి అక్షరం* శోధన_Variant = శూన్యసూచిక;
+    కొరకు (int32_t variant_సూచీ = 0;
+            variant_సూచీ < variant_కొలత;
+            variant_సూచీ++) {
+        ఒకవేళ (checkVariants) {
+            U_ASSERT(variant_సూచీ < variant_కొలత);
+            శోధన_Variant = static_cast<స్థిరరాశి అక్షరం*>(variants.elementAt(variant_సూచీ));
         }
 
-        if (searchVariant != nullptr && uprv_strlen(searchVariant) < 4) {
+        ఒకవేళ (శోధన_Variant != శూన్యసూచిక && uprv_strlen(శోధన_Variant) < 4) {
             // Do not consider  ill-formed variant subtag.
-            searchVariant = nullptr;
+            శోధన_Variant = శూన్యసూచిక;
         }
-        CharString typeKey;
-        generateKey(searchLanguage, searchRegion, searchVariant, typeKey,
-                    status);
-        if (U_FAILURE(status)) {
-            return false;
+        CharString type_కీలకం;
+        generate_కీలకం(శోధన_Language, శోధన_Region, శోధన_Variant, type_కీలకం,
+                    స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి అబద్ధం;
         }
-        const char *replacement = data->languageMap().get(typeKey.data());
-        if (replacement == nullptr) {
+        స్థిరరాశి అక్షరం *replacement = దత్తాంశం->languageMap().get(type_కీలకం.దత్తాంశం());
+        ఒకవేళ (replacement == శూన్యసూచిక) {
             // Found no replacement data.
-            continue;
+            కొనసాగు;
         }
 
-        const char* replacedLanguage = nullptr;
-        const char* replacedScript = nullptr;
-        const char* replacedRegion = nullptr;
-        const char* replacedVariant = nullptr;
-        const char* replacedExtensions = nullptr;
+        స్థిరరాశి అక్షరం* replacedLanguage = శూన్యసూచిక;
+        స్థిరరాశి అక్షరం* replacedScript = శూన్యసూచిక;
+        స్థిరరాశి అక్షరం* replacedRegion = శూన్యసూచిక;
+        స్థిరరాశి అక్షరం* replacedVariant = శూన్యసూచిక;
+        స్థిరరాశి అక్షరం* replacedExtensions = శూన్యసూచిక;
         parseLanguageReplacement(replacement,
                                  replacedLanguage,
                                  replacedScript,
                                  replacedRegion,
                                  replacedVariant,
                                  replacedExtensions,
-                                 toBeFreed,
-                                 status);
+                                 గమ్యం_Be_Freed,
+                                 స్థితి_2);
         replacedLanguage =
-            (replacedLanguage != nullptr && uprv_strcmp(replacedLanguage, "und") == 0) ?
+            (replacedLanguage != శూన్యసూచిక && uprv_strcmp(replacedLanguage, "und") == 0) ?
             language : replacedLanguage;
-        replacedScript = deleteOrReplace(script, nullptr, replacedScript);
-        replacedRegion = deleteOrReplace(region, searchRegion, replacedRegion);
+        replacedScript = deleteOrReplace(script, శూన్యసూచిక, replacedScript);
+        replacedRegion = deleteOrReplace(region, శోధన_Region, replacedRegion);
         replacedVariant = deleteOrReplace(
-            searchVariant, searchVariant, replacedVariant);
+            శోధన_Variant, శోధన_Variant, replacedVariant);
 
-        if (    same(language, replacedLanguage) &&
+        ఒకవేళ (    same(language, replacedLanguage) &&
                 same(script, replacedScript) &&
                 same(region, replacedRegion) &&
-                same(searchVariant, replacedVariant) &&
-                replacedExtensions == nullptr) {
+                same(శోధన_Variant, replacedVariant) &&
+                replacedExtensions == శూన్యసూచిక) {
             // Replacement produce no changes.
-            continue;
+            కొనసాగు;
         }
 
         language = replacedLanguage;
         region = replacedRegion;
         script = replacedScript;
-        if (searchVariant != nullptr) {
-            if (notEmpty(replacedVariant)) {
-                variants.setElementAt((void*)replacedVariant, variant_index);
-            } else {
-                variants.removeElementAt(variant_index);
+        ఒకవేళ (శోధన_Variant != శూన్యసూచిక) {
+            ఒకవేళ (not_ఖాళీలు(replacedVariant)) {
+                variants.సమితి_Element_At((శూన్య*)replacedVariant, variant_సూచీ);
+            } లేకపోతే {
+                variants.removeElementAt(variant_సూచీ);
             }
         }
-        if (replacedExtensions != nullptr) {
+        ఒకవేళ (replacedExtensions != శూన్యసూచిక) {
             // DO NOTHING
             // UTS35 does not specify what should we do if we have extensions in the
             // replacement. Currently we know only the following 4 "BCP47 LegacyRules" have
@@ -1494,328 +1494,328 @@ AliasReplacer::replaceLanguage(
         }
 
         // Something changed by language alias data.
-        return true;
+        తిరిగి నిజం;
     }
     // Nothing changed by language alias data.
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-bool
-AliasReplacer::replaceTerritory(UVector& toBeFreed, UErrorCode& status)
+తార్కిక
+AliasReplacer::replaceTerritory(UVector& గమ్యం_Be_Freed, UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    if (region == nullptr) {
+    ఒకవేళ (region == శూన్యసూచిక) {
         // No region to search.
-        return false;
+        తిరిగి అబద్ధం;
     }
-    const char *replacement = data->territoryMap().get(region);
-    if (replacement == nullptr) {
+    స్థిరరాశి అక్షరం *replacement = దత్తాంశం->territoryMap().get(region);
+    ఒకవేళ (replacement == శూన్యసూచిక) {
         // Found no replacement data for this region.
-        return false;
+        తిరిగి అబద్ధం;
     }
-    const char* replacedRegion = replacement;
-    const char* firstSpace = uprv_strchr(replacement, ' ');
-    if (firstSpace != nullptr) {
+    స్థిరరాశి అక్షరం* replacedRegion = replacement;
+    స్థిరరాశి అక్షరం* మొదటి_Space = uprv_strchr(replacement, ' ');
+    ఒకవేళ (మొదటి_Space != శూన్యసూచిక) {
         // If there are are more than one region in the replacement.
         // We need to check which one match based on the language.
         // Cannot use nullptr for language because that will construct
         // the default locale, in that case, use "und" to get the correct
         // locale.
         Locale l = LocaleBuilder()
-            .setLanguage(language == nullptr ? "und" : language)
-            .setScript(script)
-            .build(status);
-        l.addLikelySubtags(status);
-        const char* likelyRegion = l.getCountry();
-        prv::unique_ptr<CharString> item;
-        if (likelyRegion != nullptr && uprv_strlen(likelyRegion) > 0) {
+            .సమితి_Language(language == శూన్యసూచిక ? "und" : language)
+            .సమితి_Script(script)
+            .build(స్థితి_2);
+        l.కూడు_Likely_Subtags(స్థితి_2);
+        స్థిరరాశి అక్షరం* likelyRegion = l.getCountry();
+        prv::unique_ptr<CharString> అంశం;
+        ఒకవేళ (likelyRegion != శూన్యసూచిక && uprv_strlen(likelyRegion) > 0) {
             size_t len = uprv_strlen(likelyRegion);
-            const char* foundInReplacement = uprv_strstr(replacement,
+            స్థిరరాశి అక్షరం* దొరికింది_లోపల_Replacement = uprv_strstr(replacement,
                                                          likelyRegion);
-            if (foundInReplacement != nullptr) {
+            ఒకవేళ (దొరికింది_లోపల_Replacement != శూన్యసూచిక) {
                 // Assuming the case there are no three letter region code in
                 // the replacement of territoryAlias
-                U_ASSERT(foundInReplacement == replacement ||
-                         *(foundInReplacement-1) == ' ');
-                U_ASSERT(foundInReplacement[len] == ' ' ||
-                         foundInReplacement[len] == '\0');
-                item = prv::make_unique<CharString>(
-                    foundInReplacement, static_cast<int32_t>(len), status, status);
+                U_ASSERT(దొరికింది_లోపల_Replacement == replacement ||
+                         *(దొరికింది_లోపల_Replacement-1) == ' ');
+                U_ASSERT(దొరికింది_లోపల_Replacement[len] == ' ' ||
+                         దొరికింది_లోపల_Replacement[len] == '\0');
+                అంశం = prv::make_unique<CharString>(
+                    దొరికింది_లోపల_Replacement, static_cast<int32_t>(len), స్థితి_2, స్థితి_2);
             }
         }
-        if (!item && U_SUCCESS(status)) {
-            item = prv::make_unique<CharString>(
-                replacement, static_cast<int32_t>(firstSpace - replacement), status, status);
+        ఒకవేళ (!అంశం && U_SUCCESS(స్థితి_2)) {
+            అంశం = prv::make_unique<CharString>(
+                replacement, static_cast<int32_t>(మొదటి_Space - replacement), స్థితి_2, స్థితి_2);
         }
-        if (U_FAILURE(status)) { return false; }
-        replacedRegion = item->data();
-        toBeFreed.adoptElement(item.release(), status);
-        if (U_FAILURE(status)) { return false; }
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి అబద్ధం; }
+        replacedRegion = అంశం->దత్తాంశం();
+        గమ్యం_Be_Freed.adoptElement(అంశం.release(), స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి అబద్ధం; }
     }
     U_ASSERT(!same(region, replacedRegion));
     region = replacedRegion;
     // The region is changed by data in territory alias.
-    return true;
+    తిరిగి నిజం;
 }
 
-bool
-AliasReplacer::replaceScript(UErrorCode& status)
+తార్కిక
+AliasReplacer::replaceScript(UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    if (script == nullptr) {
+    ఒకవేళ (script == శూన్యసూచిక) {
         // No script to search.
-        return false;
+        తిరిగి అబద్ధం;
     }
-    const char *replacement = data->scriptMap().get(script);
-    if (replacement == nullptr) {
+    స్థిరరాశి అక్షరం *replacement = దత్తాంశం->scriptMap().get(script);
+    ఒకవేళ (replacement == శూన్యసూచిక) {
         // Found no replacement data for this script.
-        return false;
+        తిరిగి అబద్ధం;
     }
     U_ASSERT(!same(script, replacement));
     script = replacement;
     // The script is changed by data in script alias.
-    return true;
+    తిరిగి నిజం;
 }
 
-bool
-AliasReplacer::replaceVariant(UErrorCode& status)
+తార్కిక
+AliasReplacer::replaceVariant(UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
     // Since we may have more than one variant, we need to loop through them.
-    for (int32_t i = 0; i < variants.size(); i++) {
-        const char* variant = static_cast<const char*>(variants.elementAt(i));
-        const char *replacement = data->variantMap().get(variant);
-        if (replacement == nullptr) {
+    కొరకు (int32_t i = 0; i < variants.size(); i++) {
+        స్థిరరాశి అక్షరం* variant = static_cast<స్థిరరాశి అక్షరం*>(variants.elementAt(i));
+        స్థిరరాశి అక్షరం *replacement = దత్తాంశం->variantMap().get(variant);
+        ఒకవేళ (replacement == శూన్యసూచిక) {
             // Found no replacement data for this variant.
-            continue;
+            కొనసాగు;
         }
         U_ASSERT((uprv_strlen(replacement) >= 5  &&
                   uprv_strlen(replacement) <= 8) ||
                  (uprv_strlen(replacement) == 4 &&
                   replacement[0] >= '0' &&
                   replacement[0] <= '9'));
-        if (!same(variant, replacement)) {
-            variants.setElementAt((void*)replacement, i);
+        ఒకవేళ (!same(variant, replacement)) {
+            variants.సమితి_Element_At((శూన్య*)replacement, i);
             // Special hack to handle hepburn-heploc => alalc97
-            if (uprv_strcmp(variant, "heploc") == 0) {
-                for (int32_t j = 0; j < variants.size(); j++) {
-                     if (uprv_strcmp((const char*)(variants.elementAt(j)),
+            ఒకవేళ (uprv_strcmp(variant, "heploc") == 0) {
+                కొరకు (int32_t j = 0; j < variants.size(); j++) {
+                     ఒకవేళ (uprv_strcmp((స్థిరరాశి అక్షరం*)(variants.elementAt(j)),
                                      "hepburn") == 0) {
                          variants.removeElementAt(j);
                      }
                 }
             }
-            return true;
+            తిరిగి నిజం;
         }
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-bool
+తార్కిక
 AliasReplacer::replaceSubdivision(
-    StringPiece subdivision, CharString& output, UErrorCode& status)
+    StringPiece subdivision, CharString& output, UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    const char *replacement = data->subdivisionMap().get(subdivision.data());
-    if (replacement != nullptr) {
-        const char* firstSpace = uprv_strchr(replacement, ' ');
+    స్థిరరాశి అక్షరం *replacement = దత్తాంశం->subdivisionMap().get(subdivision.దత్తాంశం());
+    ఒకవేళ (replacement != శూన్యసూచిక) {
+        స్థిరరాశి అక్షరం* మొదటి_Space = uprv_strchr(replacement, ' ');
         // Found replacement data for this subdivision.
-        size_t len = (firstSpace != nullptr) ?
-            (firstSpace - replacement) : uprv_strlen(replacement);
-        if (2 <= len && len <= 8) {
-            output.append(replacement, static_cast<int32_t>(len), status);
-            if (2 == len) {
+        size_t len = (మొదటి_Space != శూన్యసూచిక) ?
+            (మొదటి_Space - replacement) : uprv_strlen(replacement);
+        ఒకవేళ (2 <= len && len <= 8) {
+            output.append(replacement, static_cast<int32_t>(len), స్థితి_2);
+            ఒకవేళ (2 == len) {
                 // Add 'zzzz' based on changes to UTS #35 for CLDR-14312.
-                output.append("zzzz", 4, status);
+                output.append("zzzz", 4, స్థితి_2);
             }
         }
-        return true;
+        తిరిగి నిజం;
     }
-    return false;
+    తిరిగి అబద్ధం;
 }
 
-bool
+తార్కిక
 AliasReplacer::replaceTransformedExtensions(
-    CharString& transformedExtensions, CharString& output, UErrorCode& status)
+    CharString& transformedExtensions, CharString& output, UError_సంకేతం& స్థితి_2)
 {
     // The content of the transformedExtensions will be modified in this
     // function to NUL-terminating (tkey-tvalue) pairs.
-    if (U_FAILURE(status)) {
-        return false;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
     int32_t len = transformedExtensions.length();
-    const char* str = transformedExtensions.data();
-    const char* tkey = ultag_getTKeyStart(str);
+    స్థిరరాశి అక్షరం* str = transformedExtensions.దత్తాంశం();
+    స్థిరరాశి అక్షరం* tkey = ultag_get_TKey_ప్రారంభం(str);
     int32_t tlangLen = (tkey == str) ? 0 :
-        ((tkey == nullptr) ? len : static_cast<int32_t>((tkey - str - 1)));
-    if (tlangLen > 0) {
+        ((tkey == శూన్యసూచిక) ? len : static_cast<int32_t>((tkey - str - 1)));
+    ఒకవేళ (tlangLen > 0) {
         Locale tlang = LocaleBuilder()
-            .setLanguageTag(StringPiece(str, tlangLen))
-            .build(status);
-        tlang.canonicalize(status);
-        output = tlang.toLanguageTag<CharString>(status);
-        if (U_FAILURE(status)) {
-            return false;
+            .సమితి_Language_ట్యాగ్(StringPiece(str, tlangLen))
+            .build(స్థితి_2);
+        tlang.canonicalize(స్థితి_2);
+        output = tlang.గమ్యం_Language_ట్యాగ్<CharString>(స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి అబద్ధం;
         }
-        T_CString_toLowerCase(output.data());
+        T_CString_గమ్యం_క్రింది_Case(output.దత్తాంశం());
     }
-    if (tkey != nullptr) {
+    ఒకవేళ (tkey != శూన్యసూచిక) {
         // We need to sort the tfields by tkey
-        UVector tfields(status);
-        if (U_FAILURE(status)) {
-            return false;
+        UVector tfields(స్థితి_2);
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            తిరిగి అబద్ధం;
         }
-        do {
-            const char* tvalue = uprv_strchr(tkey, '-');
-            if (tvalue == nullptr) {
-                status = U_ILLEGAL_ARGUMENT_ERROR;
-                return false;
+        చేయి {
+            స్థిరరాశి అక్షరం* tvalue = uprv_strchr(tkey, '-');
+            ఒకవేళ (tvalue == శూన్యసూచిక) {
+                స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+                తిరిగి అబద్ధం;
             }
-            const char* nextTKey = ultag_getTKeyStart(tvalue);
-            if (nextTKey != nullptr) {
-                *const_cast<char*>(nextTKey - 1) = '\0'; // NUL terminate tvalue
+            స్థిరరాశి అక్షరం* తదుపరి_TKey = ultag_get_TKey_ప్రారంభం(tvalue);
+            ఒకవేళ (తదుపరి_TKey != శూన్యసూచిక) {
+                *const_cast<అక్షరం*>(తదుపరి_TKey - 1) = '\0'; // NUL terminate tvalue
             }
-            tfields.insertElementAt((void*)tkey, tfields.size(), status);
-            if (U_FAILURE(status)) {
-                return false;
+            tfields.చొప్పించు_Element_At((శూన్య*)tkey, tfields.size(), స్థితి_2);
+            ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తిరిగి అబద్ధం;
             }
-            tkey = nextTKey;
-        } while (tkey != nullptr);
+            tkey = తదుపరి_TKey;
+        } అయితే (tkey != శూన్యసూచిక);
         tfields.sort([](UElement e1, UElement e2) -> int32_t {
-            return uprv_strcmp((const char*)e1.pointer, (const char*)e2.pointer);
-        }, status);
-        for (int32_t i = 0; i < tfields.size(); i++) {
-             if (output.length() > 0) {
-                 output.append('-', status);
+            తిరిగి uprv_strcmp((స్థిరరాశి అక్షరం*)e1.సూచిక, (స్థిరరాశి అక్షరం*)e2.సూచిక);
+        }, స్థితి_2);
+        కొరకు (int32_t i = 0; i < tfields.size(); i++) {
+             ఒకవేళ (output.length() > 0) {
+                 output.append('-', స్థితి_2);
              }
-             const char* tfield = static_cast<const char*>(tfields.elementAt(i));
-             const char* tvalue = uprv_strchr(tfield, '-');
-             if (tvalue == nullptr) {
-                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                 return false;
+             స్థిరరాశి అక్షరం* tfield = static_cast<స్థిరరాశి అక్షరం*>(tfields.elementAt(i));
+             స్థిరరాశి అక్షరం* tvalue = uprv_strchr(tfield, '-');
+             ఒకవేళ (tvalue == శూన్యసూచిక) {
+                 స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+                 తిరిగి అబద్ధం;
              }
              // Split the "tkey-tvalue" pair string so that we can canonicalize the tvalue.
-             *const_cast<char*>(tvalue++) = '\0'; // NUL terminate tkey
-             output.append(tfield, status).append('-', status);
-             std::optional<std::string_view> bcpTValue = ulocimp_toBcpType(tfield, tvalue);
-             output.append(bcpTValue.has_value() ? *bcpTValue : tvalue, status);
+             *const_cast<అక్షరం*>(tvalue++) = '\0'; // NUL terminate tkey
+             output.append(tfield, స్థితి_2).append('-', స్థితి_2);
+             std::optional<std::string_view> bcpTValue = ulocimp_గమ్యం_Bcp_Type(tfield, tvalue);
+             output.append(bcpTValue.has_value() ? *bcpTValue : tvalue, స్థితి_2);
         }
     }
-    if (U_FAILURE(status)) {
-        return false;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 CharString&
-AliasReplacer::outputToString(
-    CharString& out U_LIFETIME_BOUND, UErrorCode& status)
+AliasReplacer::output_గమ్యం_String(
+    CharString& out U_LIFETIME_BOUND, UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) { return out; }
-    out.append(language, status);
-    if (notEmpty(script)) {
-        out.append(SEP_CHAR, status)
-            .append(script, status);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి out; }
+    out.append(language, స్థితి_2);
+    ఒకవేళ (not_ఖాళీలు(script)) {
+        out.append(SEP_CHAR, స్థితి_2)
+            .append(script, స్థితి_2);
     }
-    if (notEmpty(region)) {
-        out.append(SEP_CHAR, status)
-            .append(region, status);
+    ఒకవేళ (not_ఖాళీలు(region)) {
+        out.append(SEP_CHAR, స్థితి_2)
+            .append(region, స్థితి_2);
     }
-    if (variants.size() > 0) {
-        if (!notEmpty(script) && !notEmpty(region)) {
-          out.append(SEP_CHAR, status);
+    ఒకవేళ (variants.size() > 0) {
+        ఒకవేళ (!not_ఖాళీలు(script) && !not_ఖాళీలు(region)) {
+          out.append(SEP_CHAR, స్థితి_2);
         }
         variants.sort([](UElement e1, UElement e2) -> int32_t {
-            return uprv_strcmp((const char*)e1.pointer, (const char*)e2.pointer);
-        }, status);
-        int32_t variantsStart = out.length();
-        for (int32_t i = 0; i < variants.size(); i++) {
-             out.append(SEP_CHAR, status)
-                 .append(static_cast<const char*>(variants.elementAt(i)),
-                         status);
+            తిరిగి uprv_strcmp((స్థిరరాశి అక్షరం*)e1.సూచిక, (స్థిరరాశి అక్షరం*)e2.సూచిక);
+        }, స్థితి_2);
+        int32_t variants_ప్రారంభం = out.length();
+        కొరకు (int32_t i = 0; i < variants.size(); i++) {
+             out.append(SEP_CHAR, స్థితి_2)
+                 .append(static_cast<స్థిరరాశి అక్షరం*>(variants.elementAt(i)),
+                         స్థితి_2);
         }
-        T_CString_toUpperCase(out.data() + variantsStart);
+        T_CString_గమ్యం_పై_Case(out.దత్తాంశం() + variants_ప్రారంభం);
     }
-    if (notEmpty(extensions)) {
-        CharString tmp("und_", status);
-        tmp.append(extensions, status);
-        Locale tmpLocale(tmp.data());
+    ఒకవేళ (not_ఖాళీలు(extensions)) {
+        CharString tmp("und_", స్థితి_2);
+        tmp.append(extensions, స్థితి_2);
+        Locale tmpLocale(tmp.దత్తాంశం());
         // only support x extension inside CLDR for now.
         U_ASSERT(extensions[0] == 'x');
-        out.append(tmpLocale.getName() + 1, status);
+        out.append(tmpLocale.getName() + 1, స్థితి_2);
     }
-    return out;
+    తిరిగి out;
 }
 
-bool
-AliasReplacer::replace(const Locale& locale, CharString& out, UErrorCode& status)
+తార్కిక
+AliasReplacer::replace(స్థిరరాశి Locale& locale, CharString& out, UError_సంకేతం& స్థితి_2)
 {
-    data = AliasData::singleton(status);
-    if (U_FAILURE(status)) {
-        return false;
+    దత్తాంశం = Alias_దత్తాంశం::singleton(స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    U_ASSERT(data != nullptr);
+    U_ASSERT(దత్తాంశం != శూన్యసూచిక);
     out.clear();
     language = locale.getLanguage();
-    if (!notEmpty(language)) {
-        language = nullptr;
+    ఒకవేళ (!not_ఖాళీలు(language)) {
+        language = శూన్యసూచిక;
     }
     script = locale.getScript();
-    if (!notEmpty(script)) {
-        script = nullptr;
+    ఒకవేళ (!not_ఖాళీలు(script)) {
+        script = శూన్యసూచిక;
     }
     region = locale.getCountry();
-    if (!notEmpty(region)) {
-        region = nullptr;
+    ఒకవేళ (!not_ఖాళీలు(region)) {
+        region = శూన్యసూచిక;
     }
-    const char* variantsStr = locale.getVariant();
-    CharString variantsBuff(variantsStr, -1, status);
-    if (!variantsBuff.isEmpty()) {
-        if (U_FAILURE(status)) { return false; }
-        char* start = variantsBuff.data();
-        T_CString_toLowerCase(start);
-        char* end;
-        while ((end = uprv_strchr(start, SEP_CHAR)) != nullptr &&
-               U_SUCCESS(status)) {
-            *end = NULL_CHAR;  // null terminate inside variantsBuff
+    స్థిరరాశి అక్షరం* variantsStr = locale.getVariant();
+    CharString variantsBuff(variantsStr, -1, స్థితి_2);
+    ఒకవేళ (!variantsBuff.is_ఖాళీలు()) {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి అబద్ధం; }
+        అక్షరం* ప్రారంభం = variantsBuff.దత్తాంశం();
+        T_CString_గమ్యం_క్రింది_Case(ప్రారంభం);
+        అక్షరం* చివర;
+        అయితే ((చివర = uprv_strchr(ప్రారంభం, SEP_CHAR)) != శూన్యసూచిక &&
+               U_SUCCESS(స్థితి_2)) {
+            *చివర = NULL_CHAR;  // null terminate inside variantsBuff
             // do not add "" or duplicate data to variants
-            if (*start && !variants.contains(start)) {
-                variants.addElement(start, status);
+            ఒకవేళ (*ప్రారంభం && !variants.కలిగియుంది(ప్రారంభం)) {
+                variants.కూడు_Element(ప్రారంభం, స్థితి_2);
             }
-            start = end + 1;
+            ప్రారంభం = చివర + 1;
         }
         // do not add "" or duplicate data to variants
-        if (*start && !variants.contains(start)) {
-            variants.addElement(start, status);
+        ఒకవేళ (*ప్రారంభం && !variants.కలిగియుంది(ప్రారంభం)) {
+            variants.కూడు_Element(ప్రారంభం, స్థితి_2);
         }
     }
-    if (U_FAILURE(status)) { return false; }
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి అబద్ధం; }
 
     // Sort the variants
     variants.sort([](UElement e1, UElement e2) -> int32_t {
-        return uprv_strcmp((const char*)e1.pointer, (const char*)e2.pointer);
-    }, status);
+        తిరిగి uprv_strcmp((స్థిరరాశి అక్షరం*)e1.సూచిక, (స్థిరరాశి అక్షరం*)e2.సూచిక);
+    }, స్థితి_2);
 
     // A changed count to assert when loop too many times.
-    int32_t changed = 0;
-    const int32_t maxChanged = 4 + variants.size();
-    (void)maxChanged; // avoid unused-variable warning when U_ASSERT is a no-op
+    int32_t మారింది = 0;
+    స్థిరరాశి int32_t max_మారింది = 4 + variants.size();
+    (శూన్య)max_మారింది; // avoid unused-variable warning when U_ASSERT is a no-op
     // A UVector to to hold CharString allocated by the replace* method
     // and freed when out of scope from his function.
-    UVector stringsToBeFreed([](void *obj) { delete static_cast<CharString*>(obj); },
-                             nullptr, 10, status);
-    while (U_SUCCESS(status)) {
+    UVector అక్షరశ్రేణులు_గమ్యం_Be_Freed([](శూన్య *obj) { తొలగించు static_cast<CharString*>(obj); },
+                             శూన్యసూచిక, 10, స్థితి_2);
+    అయితే (U_SUCCESS(స్థితి_2)) {
         // Something wrong with the data cause looping here more than maxChanged
         // times already.
-        U_ASSERT(changed <= maxChanged);
+        U_ASSERT(మారింది <= max_మారింది);
         // From observation of key in data/misc/metadata.txt
         // we know currently we only need to search in the following combination
         // of fields for type in languageAlias:
@@ -1827,145 +1827,145 @@ AliasReplacer::replace(const Locale& locale, CharString& out, UErrorCode& status
         // This assumption is ensured by the U_ASSERT in readLanguageAlias
         //
         //                      lang  REGION variant
-        if (    replaceLanguage(true, true,  true,  stringsToBeFreed, status) ||
-                replaceLanguage(true, true,  false, stringsToBeFreed, status) ||
-                replaceLanguage(true, false, true,  stringsToBeFreed, status) ||
-                replaceLanguage(true, false, false, stringsToBeFreed, status) ||
-                replaceLanguage(false,false, true,  stringsToBeFreed, status) ||
-                replaceTerritory(stringsToBeFreed, status) ||
-                replaceScript(status) ||
-                replaceVariant(status)) {
+        ఒకవేళ (    replaceLanguage(నిజం, నిజం,  నిజం,  అక్షరశ్రేణులు_గమ్యం_Be_Freed, స్థితి_2) ||
+                replaceLanguage(నిజం, నిజం,  అబద్ధం, అక్షరశ్రేణులు_గమ్యం_Be_Freed, స్థితి_2) ||
+                replaceLanguage(నిజం, అబద్ధం, నిజం,  అక్షరశ్రేణులు_గమ్యం_Be_Freed, స్థితి_2) ||
+                replaceLanguage(నిజం, అబద్ధం, అబద్ధం, అక్షరశ్రేణులు_గమ్యం_Be_Freed, స్థితి_2) ||
+                replaceLanguage(అబద్ధం,అబద్ధం, నిజం,  అక్షరశ్రేణులు_గమ్యం_Be_Freed, స్థితి_2) ||
+                replaceTerritory(అక్షరశ్రేణులు_గమ్యం_Be_Freed, స్థితి_2) ||
+                replaceScript(స్థితి_2) ||
+                replaceVariant(స్థితి_2)) {
             // Some values in data is changed, try to match from the beginning
             // again.
-            changed++;
-            continue;
+            మారింది++;
+            కొనసాగు;
         }
         // Nothing changed. Break out.
-        break;
+        ఆపు;
     }  // while(1)
 
-    if (U_FAILURE(status)) { return false; }
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి అబద్ధం; }
     // Nothing changed and we know the order of the variants are not change
     // because we have no variant or only one.
-    const char* extensionsStr = locale_getKeywordsStart(locale.getName());
-    if (changed == 0 && variants.size() <= 1 && extensionsStr == nullptr) {
-        return false;
+    స్థిరరాశి అక్షరం* extensionsStr = locale_get_Keywords_ప్రారంభం(locale.getName());
+    ఒకవేళ (మారింది == 0 && variants.size() <= 1 && extensionsStr == శూన్యసూచిక) {
+        తిరిగి అబద్ధం;
     }
-    outputToString(out, status);
-    if (U_FAILURE(status)) {
-        return false;
+    output_గమ్యం_String(out, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    if (extensionsStr != nullptr) {
-        changed = 0;
-        Locale temp(locale);
-        LocalPointer<icu::StringEnumeration> iter(locale.createKeywords(status));
-        if (U_SUCCESS(status) && !iter.isNull()) {
-            const char* key;
-            while ((key = iter->next(nullptr, status)) != nullptr) {
-                if (uprv_strcmp("sd", key) == 0 || uprv_strcmp("rg", key) == 0 ||
-                        uprv_strcmp("t", key) == 0) {
-                    auto value = locale.getKeywordValue<CharString>(key, status);
-                    if (U_FAILURE(status)) {
-                        status = U_ZERO_ERROR;
-                        continue;
+    ఒకవేళ (extensionsStr != శూన్యసూచిక) {
+        మారింది = 0;
+        Locale తాత్కాలిక(locale);
+        Local_సూచిక<icu::StringEnumeration> iter(locale.createKeywords(స్థితి_2));
+        ఒకవేళ (U_SUCCESS(స్థితి_2) && !iter.isNull()) {
+            స్థిరరాశి అక్షరం* కీలకం;
+            అయితే ((కీలకం = iter->next(శూన్యసూచిక, స్థితి_2)) != శూన్యసూచిక) {
+                ఒకవేళ (uprv_strcmp("sd", కీలకం) == 0 || uprv_strcmp("rg", కీలకం) == 0 ||
+                        uprv_strcmp("t", కీలకం) == 0) {
+                    స్వయంచాలక value = locale.get_Keyword_విలువ<CharString>(కీలకం, స్థితి_2);
+                    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                        స్థితి_2 = U_ZERO_ERROR;
+                        కొనసాగు;
                     }
                     CharString replacement;
-                    if (uprv_strlen(key) == 2) {
-                        if (replaceSubdivision(value.toStringPiece(), replacement, status)) {
-                            changed++;
-                            temp.setKeywordValue(key, replacement.data(), status);
+                    ఒకవేళ (uprv_strlen(కీలకం) == 2) {
+                        ఒకవేళ (replaceSubdivision(value.గమ్యం_String_Piece(), replacement, స్థితి_2)) {
+                            మారింది++;
+                            తాత్కాలిక.సమితి_Keyword_విలువ(కీలకం, replacement.దత్తాంశం(), స్థితి_2);
                         }
-                    } else {
-                        U_ASSERT(uprv_strcmp(key, "t") == 0);
-                        if (replaceTransformedExtensions(value, replacement, status)) {
-                            changed++;
-                            temp.setKeywordValue(key, replacement.data(), status);
+                    } లేకపోతే {
+                        U_ASSERT(uprv_strcmp(కీలకం, "t") == 0);
+                        ఒకవేళ (replaceTransformedExtensions(value, replacement, స్థితి_2)) {
+                            మారింది++;
+                            తాత్కాలిక.సమితి_Keyword_విలువ(కీలకం, replacement.దత్తాంశం(), స్థితి_2);
                         }
                     }
-                    if (U_FAILURE(status)) {
-                        return false;
+                    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                        తిరిగి అబద్ధం;
                     }
                 }
             }
         }
-        if (changed != 0) {
-            extensionsStr = locale_getKeywordsStart(temp.getName());
+        ఒకవేళ (మారింది != 0) {
+            extensionsStr = locale_get_Keywords_ప్రారంభం(తాత్కాలిక.getName());
         }
-        out.append(extensionsStr, status);
+        out.append(extensionsStr, స్థితి_2);
     }
-    if (U_FAILURE(status)) {
-        return false;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
     // If the tag is not changed, return.
-    if (uprv_strcmp(out.data(), locale.getName()) == 0) {
+    ఒకవేళ (uprv_strcmp(out.దత్తాంశం(), locale.getName()) == 0) {
         out.clear();
-        return false;
+        తిరిగి అబద్ధం;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 // Return true if the locale is changed during canonicalization.
 // The replaced value then will be put into out.
-bool
-canonicalizeLocale(const Locale& locale, CharString& out, UErrorCode& status)
+తార్కిక
+canonicalizeLocale(స్థిరరాశి Locale& locale, CharString& out, UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) { return false; }
-    AliasReplacer replacer(status);
-    return replacer.replace(locale, out, status);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి అబద్ధం; }
+    AliasReplacer replacer(స్థితి_2);
+    తిరిగి replacer.replace(locale, out, స్థితి_2);
 }
 
 // Function to optimize for known cases without so we can skip the loading
 // of resources in the startup time until we really need it.
-bool
-isKnownCanonicalizedLocale(const char* locale, UErrorCode& status)
+తార్కిక
+is_తెలిసిన_Canonicalized_Locale(స్థిరరాశి అక్షరం* locale, UError_సంకేతం& స్థితి_2)
 {
-    if (U_FAILURE(status)) { return false; }
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి అబద్ధం; }
 
-    if (    uprv_strcmp(locale, "c") == 0 ||
+    ఒకవేళ (    uprv_strcmp(locale, "c") == 0 ||
             uprv_strcmp(locale, "en") == 0 ||
             uprv_strcmp(locale, "en_US") == 0) {
-        return true;
+        తిరిగి నిజం;
     }
 
     // common well-known Canonicalized.
-    umtx_initOnce(gKnownCanonicalizedInitOnce,
-                  &loadKnownCanonicalized, status);
-    if (U_FAILURE(status)) {
-        return false;
+    umtx_initOnce(g_తెలిసిన_Canonicalized_Init_Once,
+                  &ఎక్కించు_తెలిసిన_Canonicalized, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి అబద్ధం;
     }
-    U_ASSERT(gKnownCanonicalized != nullptr);
-    return uhash_geti(gKnownCanonicalized, locale) != 0;
+    U_ASSERT(g_తెలిసిన_Canonicalized != శూన్యసూచిక);
+    తిరిగి uhash_geti(g_తెలిసిన_Canonicalized, locale) != 0;
 }
 
 }  // namespace
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 // Function for testing.
-U_EXPORT const char* const*
-ulocimp_getKnownCanonicalizedLocaleForTest(int32_t& length)
+U_EXPORT స్థిరరాశి అక్షరం* స్థిరరాశి*
+ulocimp_get_తెలిసిన_Canonicalized_Locale_For_Test(int32_t& length)
 {
     U_NAMESPACE_USE
-    length = UPRV_LENGTHOF(KNOWN_CANONICALIZED);
-    return KNOWN_CANONICALIZED;
+    length = UPRV_LENGTHOF(తెలిసిన_CANONICALIZED);
+    తిరిగి తెలిసిన_CANONICALIZED;
 }
 
 // Function for testing.
-U_EXPORT bool
-ulocimp_isCanonicalizedLocaleForTest(const char* localeName)
+U_EXPORT తార్కిక
+ulocimp_isCanonicalizedLocaleForTest(స్థిరరాశి అక్షరం* localeName)
 {
     U_NAMESPACE_USE
     Locale l(localeName);
-    UErrorCode status = U_ZERO_ERROR;
-    CharString temp;
-    return !canonicalizeLocale(l, temp, status) && U_SUCCESS(status);
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    CharString తాత్కాలిక;
+    తిరిగి !canonicalizeLocale(l, తాత్కాలిక, స్థితి_2) && U_SUCCESS(స్థితి_2);
 }
 
 U_NAMESPACE_BEGIN
 
-Locale& Locale::init(const char* localeID, UBool canonicalize) U_LIFETIME_BOUND
+Locale& Locale::init(స్థిరరాశి అక్షరం* localeID, UBool canonicalize) U_LIFETIME_BOUND
 {
-    return localeID == nullptr ? *this = getDefault() : init(StringPiece{localeID}, canonicalize);
+    తిరిగి localeID == శూన్యసూచిక ? *ఇది = getDefault() : init(StringPiece{localeID}, canonicalize);
 }
 
 /*This function initializes a Locale from a C locale ID*/
@@ -1977,49 +1977,49 @@ Locale& Locale::init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND
     // not a loop:
     // just an easy way to have a common error-exit
     // without goto and without another function
-    do {
-        char *separator;
-        char *field[5] = {nullptr};
-        int32_t fieldLen[5] = {0};
-        int32_t fieldIdx;
-        int32_t variantField;
+    చేయి {
+        అక్షరం *separator;
+        అక్షరం *క్షేత్రం_2[5] = {శూన్యసూచిక};
+        int32_t క్షేత్రం_Len[5] = {0};
+        int32_t క్షేత్రం_Idx;
+        int32_t variant_క్షేత్రం;
         int32_t length;
-        UErrorCode err;
+        UError_సంకేతం err;
 
-        const auto parse = [canonicalize](std::string_view localeID,
-                                          char* name,
-                                          int32_t nameCapacity,
-                                          UErrorCode& status) {
-            return ByteSinkUtil::viaByteSinkToTerminatedChars(
-                name, nameCapacity,
-                [&](ByteSink& sink, UErrorCode& status) {
-                    if (canonicalize) {
-                        ulocimp_canonicalize(localeID, sink, status);
-                    } else {
-                        ulocimp_getName(localeID, sink, status);
+        స్థిరరాశి స్వయంచాలక parse = [canonicalize](std::string_view localeID,
+                                          అక్షరం* name,
+                                          int32_t name_సామర్థ్యం,
+                                          UError_సంకేతం& స్థితి_2) {
+            తిరిగి ByteSinkUtil::ద్వారా_Byte_Sink_గమ్యం_Terminated_Chars(
+                name, name_సామర్థ్యం,
+                [&](ByteSink& sink, UError_సంకేతం& స్థితి_2) {
+                    ఒకవేళ (canonicalize) {
+                        ulocimp_canonicalize(localeID, sink, స్థితి_2);
+                    } లేకపోతే {
+                        ulocimp_getName(localeID, sink, స్థితి_2);
                     }
                 },
-                status);
+                స్థితి_2);
         };
 
         // "canonicalize" the locale ID to ICU/Java format
-        char* fullName = nest.baseName;
+        అక్షరం* నిండిన_Name = nest.పునాది_Name;
         err = U_ZERO_ERROR;
-        length = parse(localeID, fullName, sizeof Nest::baseName, err);
+        length = parse(localeID, నిండిన_Name, పరిమాణం Nest::పునాది_Name, err);
 
-        FixedString fullNameBuffer;
-        if (err == U_BUFFER_OVERFLOW_ERROR || length >= static_cast<int32_t>(sizeof Nest::baseName)) {
+        FixedString నిండిన_Name_బఫరు;
+        ఒకవేళ (err == U_బఫరు_అధికప్రవాహం_ERROR || length >= static_cast<int32_t>(పరిమాణం Nest::పునాది_Name)) {
             /*Go to heap for the fullName if necessary*/
-            if (!fullNameBuffer.reserve(length + 1)) {
-                break; // error: out of memory
+            ఒకవేళ (!నిండిన_Name_బఫరు.reserve(length + 1)) {
+                ఆపు; // error: out of memory
             }
-            fullName = fullNameBuffer.getAlias();
+            నిండిన_Name = నిండిన_Name_బఫరు.getAlias();
             err = U_ZERO_ERROR;
-            length = parse(localeID, fullName, length + 1, err);
+            length = parse(localeID, నిండిన_Name, length + 1, err);
         }
-        if(U_FAILURE(err) || err == U_STRING_NOT_TERMINATED_WARNING) {
+        ఒకవేళ(U_FAILURE(err) || err == U_STRING_NOT_TERMINATED_WARNING) {
             /* should never occur */
-            break;
+            ఆపు;
         }
 
         std::string_view language;
@@ -2029,244 +2029,244 @@ Locale& Locale::init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND
 
         /* after uloc_getName/canonicalize() we know that only '_' are separators */
         /* But _ could also appeared in timezone such as "en@timezone=America/Los_Angeles" */
-        separator = field[0] = fullName;
-        fieldIdx = 1;
-        char* at = uprv_strchr(fullName, '@');
-        while ((separator = uprv_strchr(field[fieldIdx-1], SEP_CHAR)) != nullptr &&
-               fieldIdx < UPRV_LENGTHOF(field)-1 &&
-               (at == nullptr || separator < at)) {
-            field[fieldIdx] = separator + 1;
-            fieldLen[fieldIdx - 1] = static_cast<int32_t>(separator - field[fieldIdx - 1]);
-            fieldIdx++;
+        separator = క్షేత్రం_2[0] = నిండిన_Name;
+        క్షేత్రం_Idx = 1;
+        అక్షరం* at = uprv_strchr(నిండిన_Name, '@');
+        అయితే ((separator = uprv_strchr(క్షేత్రం_2[క్షేత్రం_Idx-1], SEP_CHAR)) != శూన్యసూచిక &&
+               క్షేత్రం_Idx < UPRV_LENGTHOF(క్షేత్రం_2)-1 &&
+               (at == శూన్యసూచిక || separator < at)) {
+            క్షేత్రం_2[క్షేత్రం_Idx] = separator + 1;
+            క్షేత్రం_Len[క్షేత్రం_Idx - 1] = static_cast<int32_t>(separator - క్షేత్రం_2[క్షేత్రం_Idx - 1]);
+            క్షేత్రం_Idx++;
         }
         // variant may contain @foo or .foo POSIX cruft; remove it
-        separator = uprv_strchr(field[fieldIdx-1], '@');
-        char* sep2 = uprv_strchr(field[fieldIdx-1], '.');
-        if (separator!=nullptr || sep2!=nullptr) {
-            if (separator==nullptr || (sep2!=nullptr && separator > sep2)) {
+        separator = uprv_strchr(క్షేత్రం_2[క్షేత్రం_Idx-1], '@');
+        అక్షరం* sep2 = uprv_strchr(క్షేత్రం_2[క్షేత్రం_Idx-1], '.');
+        ఒకవేళ (separator!=శూన్యసూచిక || sep2!=శూన్యసూచిక) {
+            ఒకవేళ (separator==శూన్యసూచిక || (sep2!=శూన్యసూచిక && separator > sep2)) {
                 separator = sep2;
             }
-            fieldLen[fieldIdx - 1] = static_cast<int32_t>(separator - field[fieldIdx - 1]);
-        } else {
-            fieldLen[fieldIdx - 1] = length - static_cast<int32_t>(field[fieldIdx - 1] - fullName);
+            క్షేత్రం_Len[క్షేత్రం_Idx - 1] = static_cast<int32_t>(separator - క్షేత్రం_2[క్షేత్రం_Idx - 1]);
+        } లేకపోతే {
+            క్షేత్రం_Len[క్షేత్రం_Idx - 1] = length - static_cast<int32_t>(క్షేత్రం_2[క్షేత్రం_Idx - 1] - నిండిన_Name);
         }
-        bool hasKeywords = at != nullptr && uprv_strchr(at + 1, '=') != nullptr;
+        తార్కిక hasKeywords = at != శూన్యసూచిక && uprv_strchr(at + 1, '=') != శూన్యసూచిక;
 
-        if (fieldLen[0] >= ULOC_LANG_CAPACITY)
+        ఒకవేళ (క్షేత్రం_Len[0] >= ULOC_LANG_సామర్థ్యం)
         {
-            break; // error: the language field is too long
+            ఆపు; // error: the language field is too long
         }
 
-        variantField = 1; /* Usually the 2nd one, except when a script or country is also used. */
-        if (fieldLen[0] > 0) {
+        variant_క్షేత్రం = 1; /* Usually the 2nd one, except when a script or country is also used. */
+        ఒకవేళ (క్షేత్రం_Len[0] > 0) {
             /* We have a language */
-            language = {fullName, static_cast<std::string_view::size_type>(fieldLen[0])};
+            language = {నిండిన_Name, static_cast<std::string_view::size_type>(క్షేత్రం_Len[0])};
         }
-        if (fieldLen[1] == 4 && uprv_isASCIILetter(field[1][0]) &&
-                uprv_isASCIILetter(field[1][1]) && uprv_isASCIILetter(field[1][2]) &&
-                uprv_isASCIILetter(field[1][3])) {
+        ఒకవేళ (క్షేత్రం_Len[1] == 4 && uprv_isASCIILetter(క్షేత్రం_2[1][0]) &&
+                uprv_isASCIILetter(క్షేత్రం_2[1][1]) && uprv_isASCIILetter(క్షేత్రం_2[1][2]) &&
+                uprv_isASCIILetter(క్షేత్రం_2[1][3])) {
             /* We have at least a script */
-            script = {field[1], static_cast<std::string_view::size_type>(fieldLen[1])};
-            variantField++;
+            script = {క్షేత్రం_2[1], static_cast<std::string_view::size_type>(క్షేత్రం_Len[1])};
+            variant_క్షేత్రం++;
         }
 
-        if (fieldLen[variantField] == 2 || fieldLen[variantField] == 3) {
+        ఒకవేళ (క్షేత్రం_Len[variant_క్షేత్రం] == 2 || క్షేత్రం_Len[variant_క్షేత్రం] == 3) {
             /* We have a country */
-            region = {field[variantField], static_cast<std::string_view::size_type>(fieldLen[variantField])};
-            variantField++;
-        } else if (fieldLen[variantField] == 0) {
-            variantField++; /* script or country empty but variant in next field (i.e. en__POSIX) */
+            region = {క్షేత్రం_2[variant_క్షేత్రం], static_cast<std::string_view::size_type>(క్షేత్రం_Len[variant_క్షేత్రం])};
+            variant_క్షేత్రం++;
+        } లేకపోతే ఒకవేళ (క్షేత్రం_Len[variant_క్షేత్రం] == 0) {
+            variant_క్షేత్రం++; /* script or country empty but variant in next field (i.e. en__POSIX) */
         }
 
-        if (fieldLen[variantField] > 0) {
+        ఒకవేళ (క్షేత్రం_Len[variant_క్షేత్రం] > 0) {
             /* We have a variant */
-            variantBegin = static_cast<int32_t>(field[variantField] - fullName);
-        } else if (hasKeywords) {
+            variantBegin = static_cast<int32_t>(క్షేత్రం_2[variant_క్షేత్రం] - నిండిన_Name);
+        } లేకపోతే ఒకవేళ (hasKeywords) {
             // The original computation of variantBegin leaves it equal to the length
             // of fullName if there is no variant.  It should instead be
             // the length of the baseName.
-            variantBegin = static_cast<int32_t>(at - fullName);
+            variantBegin = static_cast<int32_t>(at - నిండిన_Name);
         }
 
-        if (!hasKeywords && Nest::fits(length, language, script, region)) {
-            U_ASSERT(fullName == nest.baseName);
-            U_ASSERT(fullNameBuffer.isEmpty());
+        ఒకవేళ (!hasKeywords && Nest::సరిపోతుంది(length, language, script, region)) {
+            U_ASSERT(నిండిన_Name == nest.పునాది_Name);
+            U_ASSERT(నిండిన_Name_బఫరు.is_ఖాళీలు());
             nest.init(language, script, region, variantBegin);
-        } else {
-            if (fullName == nest.baseName) {
-                U_ASSERT(fullNameBuffer.isEmpty());
-                fullNameBuffer = {fullName, static_cast<std::string_view::size_type>(length)};
-                if (fullNameBuffer.isEmpty()) {
-                    break; // error: out of memory
+        } లేకపోతే {
+            ఒకవేళ (నిండిన_Name == nest.పునాది_Name) {
+                U_ASSERT(నిండిన_Name_బఫరు.is_ఖాళీలు());
+                నిండిన_Name_బఫరు = {నిండిన_Name, static_cast<std::string_view::size_type>(length)};
+                ఒకవేళ (నిండిన_Name_బఫరు.is_ఖాళీలు()) {
+                    ఆపు; // error: out of memory
                 }
-                if (!language.empty()) {
-                    language = {fullNameBuffer.data(), language.size()};
+                ఒకవేళ (!language.empty()) {
+                    language = {నిండిన_Name_బఫరు.దత్తాంశం(), language.size()};
                 }
-                if (!script.empty()) {
-                    script = {fullNameBuffer.data() + (script.data() - fullName), script.size()};
+                ఒకవేళ (!script.empty()) {
+                    script = {నిండిన_Name_బఫరు.దత్తాంశం() + (script.దత్తాంశం() - నిండిన_Name), script.size()};
                 }
-                if (!region.empty()) {
-                    region = {fullNameBuffer.data() + (region.data() - fullName), region.size()};
+                ఒకవేళ (!region.empty()) {
+                    region = {నిండిన_Name_బఫరు.దత్తాంశం() + (region.దత్తాంశం() - నిండిన_Name), region.size()};
                 }
             }
-            Heap& heap = payload.emplace<Heap>(language, script, region, variantBegin);
-            if (isBogus()) {
-                break; // error: out of memory
+            కుప్ప& కుప్ప_2 = payload.emplace<కుప్ప>(language, script, region, variantBegin);
+            ఒకవేళ (isBogus()) {
+                ఆపు; // error: out of memory
             }
-            U_ASSERT(!fullNameBuffer.isEmpty());
-            heap.ptr->fullName = std::move(fullNameBuffer);
-            if (hasKeywords) {
-                if (std::string_view::size_type baseNameLength = at - fullName; baseNameLength > 0) {
-                    heap.ptr->baseName = {heap.ptr->fullName.data(), baseNameLength};
-                    if (heap.ptr->baseName.isEmpty()) {
-                        break; // error: out of memory
+            U_ASSERT(!నిండిన_Name_బఫరు.is_ఖాళీలు());
+            కుప్ప_2.ptr->నిండిన_Name = std::move(నిండిన_Name_బఫరు);
+            ఒకవేళ (hasKeywords) {
+                ఒకవేళ (std::string_view::size_type పునాది_Name_నిడివి = at - నిండిన_Name; పునాది_Name_నిడివి > 0) {
+                    కుప్ప_2.ptr->పునాది_Name = {కుప్ప_2.ptr->నిండిన_Name.దత్తాంశం(), పునాది_Name_నిడివి};
+                    ఒకవేళ (కుప్ప_2.ptr->పునాది_Name.is_ఖాళీలు()) {
+                        ఆపు; // error: out of memory
                     }
                 }
             }
         }
 
-        if (canonicalize) {
-            if (!isKnownCanonicalizedLocale(getName(), err)) {
+        ఒకవేళ (canonicalize) {
+            ఒకవేళ (!is_తెలిసిన_Canonicalized_Locale(getName(), err)) {
                 CharString replaced;
                 // Not sure it is already canonicalized
-                if (canonicalizeLocale(*this, replaced, err)) {
+                ఒకవేళ (canonicalizeLocale(*ఇది, replaced, err)) {
                     U_ASSERT(U_SUCCESS(err));
                     // If need replacement, call init again.
-                    init(replaced.data(), false);
+                    init(replaced.దత్తాంశం(), అబద్ధం);
                 }
-                if (U_FAILURE(err)) {
-                    break;
+                ఒకవేళ (U_FAILURE(err)) {
+                    ఆపు;
                 }
             }
         }   // if (canonicalize) {
 
         // successful end of init()
-        return *this;
-    } while(0); /*loop doesn't iterate*/
+        తిరిగి *ఇది;
+    } అయితే(0); /*loop doesn't iterate*/
 
     // when an error occurs, then set this object to "bogus" (there is no UErrorCode here)
-    setToBogus();
+    సమితి_గమ్యం_Bogus();
 
-    return *this;
+    తిరిగి *ఇది;
 }
 
 int32_t
-Locale::hashCode() const
+Locale::hash_సంకేతం() స్థిరరాశి
 {
-    return ustr_hashCharsN(getName(), static_cast<int32_t>(uprv_strlen(getName())));
+    తిరిగి ustr_hashCharsN(getName(), static_cast<int32_t>(uprv_strlen(getName())));
 }
 
-void
-Locale::setToBogus() {
+శూన్య
+Locale::సమితి_గమ్యం_Bogus() {
     /* Free our current storage */
-    payload.setToBogus();
+    payload.సమితి_గమ్యం_Bogus();
 }
 
-const Locale& U_EXPORT2
+స్థిరరాశి Locale& U_EXPORT2
 Locale::getDefault()
 {
     {
-        Mutex lock(&gDefaultLocaleMutex);
-        if (gDefaultLocale != nullptr) {
-            return *gDefaultLocale;
+        Mutex తాళం(&gDefaultLocaleMutex);
+        ఒకవేళ (gDefaultLocale != శూన్యసూచిక) {
+            తిరిగి *gDefaultLocale;
         }
     }
-    UErrorCode status = U_ZERO_ERROR;
-    return *locale_set_default_internal(nullptr, status);
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    తిరిగి *locale_సమితి_default_అంతర్గత(శూన్యసూచిక, స్థితి_2);
 }
 
 
 
-void U_EXPORT2
-Locale::setDefault( const   Locale&     newLocale,
-                            UErrorCode&  status)
+శూన్య U_EXPORT2
+Locale::సమితి_Default( స్థిరరాశి   Locale&     newLocale,
+                            UError_సంకేతం&  స్థితి_2)
 {
-    if (U_FAILURE(status)) {
-        return;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
     /* Set the default from the full name string of the supplied locale.
      * This is a convenient way to access the default locale caching mechanisms.
      */
-    const char *localeID = newLocale.getName();
-    locale_set_default_internal(localeID, status);
+    స్థిరరాశి అక్షరం *localeID = newLocale.getName();
+    locale_సమితి_default_అంతర్గత(localeID, స్థితి_2);
 }
 
-void
-Locale::addLikelySubtags(UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య
+Locale::కూడు_Likely_Subtags(UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
-    CharString maximizedLocaleID = ulocimp_addLikelySubtags(getName(), status);
+    CharString maximizedLocaleID = ulocimp_కూడు_Likely_Subtags(getName(), స్థితి_2);
 
-    if (U_FAILURE(status)) {
-        if (status == U_MEMORY_ALLOCATION_ERROR) {
-            setToBogus();
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        ఒకవేళ (స్థితి_2 == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+            సమితి_గమ్యం_Bogus();
         }
-        return;
+        తిరిగి;
     }
 
-    init(maximizedLocaleID.data(), /*canonicalize=*/false);
-    if (isBogus()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
+    init(maximizedLocaleID.దత్తాంశం(), /*canonicalize=*/అబద్ధం);
+    ఒకవేళ (isBogus()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
     }
 }
 
-void
-Locale::minimizeSubtags(UErrorCode& status) {
-    Locale::minimizeSubtags(false, status);
+శూన్య
+Locale::minimizeSubtags(UError_సంకేతం& స్థితి_2) {
+    Locale::minimizeSubtags(అబద్ధం, స్థితి_2);
 }
-void
-Locale::minimizeSubtags(bool favorScript, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య
+Locale::minimizeSubtags(తార్కిక favorScript, UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
-    CharString minimizedLocaleID = ulocimp_minimizeSubtags(getName(), favorScript, status);
+    CharString minimizedLocaleID = ulocimp_minimizeSubtags(getName(), favorScript, స్థితి_2);
 
-    if (U_FAILURE(status)) {
-        if (status == U_MEMORY_ALLOCATION_ERROR) {
-            setToBogus();
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        ఒకవేళ (స్థితి_2 == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+            సమితి_గమ్యం_Bogus();
         }
-        return;
+        తిరిగి;
     }
 
-    init(minimizedLocaleID.data(), /*canonicalize=*/false);
-    if (isBogus()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
+    init(minimizedLocaleID.దత్తాంశం(), /*canonicalize=*/అబద్ధం);
+    ఒకవేళ (isBogus()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
     }
 }
 
-void
-Locale::canonicalize(UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య
+Locale::canonicalize(UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
-    if (isBogus()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (isBogus()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    CharString uncanonicalized(getName(), status);
-    if (U_FAILURE(status)) {
-        if (status == U_MEMORY_ALLOCATION_ERROR) {
-            setToBogus();
+    CharString uncanonicalized(getName(), స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        ఒకవేళ (స్థితి_2 == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+            సమితి_గమ్యం_Bogus();
         }
-        return;
+        తిరిగి;
     }
-    init(uncanonicalized.data(), /*canonicalize=*/true);
-    if (isBogus()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
+    init(uncanonicalized.దత్తాంశం(), /*canonicalize=*/నిజం);
+    ఒకవేళ (isBogus()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
     }
 }
 
 Locale U_EXPORT2
-Locale::forLanguageTag(StringPiece tag, UErrorCode& status)
+Locale::for_Language_ట్యాగ్(StringPiece ట్యాగ్, UError_సంకేతం& స్థితి_2)
 {
-    Locale result(Locale::eBOGUS);
+    Locale ఫలితం(Locale::eBOGUS);
 
-    if (U_FAILURE(status)) {
-        return result;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి ఫలితం;
     }
 
     // If a BCP 47 language tag is passed as the language parameter to the
@@ -2280,82 +2280,82 @@ Locale::forLanguageTag(StringPiece tag, UErrorCode& status)
     // parsing. Therefore the code here explicitly calls uloc_forLanguageTag()
     // and then Locale::init(), instead of just calling the normal constructor.
 
-    int32_t parsedLength;
-    CharString localeID = ulocimp_forLanguageTag(
-            tag.data(),
-            tag.length(),
-            &parsedLength,
-            status);
+    int32_t parsed_నిడివి;
+    CharString localeID = ulocimp_for_Language_ట్యాగ్(
+            ట్యాగ్.దత్తాంశం(),
+            ట్యాగ్.length(),
+            &parsed_నిడివి,
+            స్థితి_2);
 
-    if (U_FAILURE(status)) {
-        return result;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి ఫలితం;
     }
 
-    if (parsedLength != tag.size()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return result;
+    ఒకవేళ (parsed_నిడివి != ట్యాగ్.size()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి ఫలితం;
     }
 
-    result.init(localeID.data(), /*canonicalize=*/false);
-    if (result.isBogus()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
+    ఫలితం.init(localeID.దత్తాంశం(), /*canonicalize=*/అబద్ధం);
+    ఒకవేళ (ఫలితం.isBogus()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-void
-Locale::toLanguageTag(ByteSink& sink, UErrorCode& status) const
+శూన్య
+Locale::గమ్యం_Language_ట్యాగ్(ByteSink& sink, UError_సంకేతం& స్థితి_2) స్థిరరాశి
 {
-    if (U_FAILURE(status)) {
-        return;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
-    if (isBogus()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (isBogus()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    ulocimp_toLanguageTag(getName(), sink, /*strict=*/false, status);
+    ulocimp_గమ్యం_Language_ట్యాగ్(getName(), sink, /*strict=*/అబద్ధం, స్థితి_2);
 }
 
 Locale U_EXPORT2
-Locale::createFromName (const char *name)
+Locale::createFromName (స్థిరరాశి అక్షరం *name)
 {
-    if (name) {
+    ఒకవేళ (name) {
         Locale l("");
-        l.init(name, false);
-        return l;
+        l.init(name, అబద్ధం);
+        తిరిగి l;
     }
-    else {
-        return getDefault();
+    లేకపోతే {
+        తిరిగి getDefault();
     }
 }
 
 Locale U_EXPORT2
 Locale::createFromName(StringPiece name) {
     Locale loc("");
-    loc.init(name, false);
-    return loc;
+    loc.init(name, అబద్ధం);
+    తిరిగి loc;
 }
 
 Locale U_EXPORT2
-Locale::createCanonical(const char* name) {
+Locale::createCanonical(స్థిరరాశి అక్షరం* name) {
     Locale loc("");
-    loc.init(name, true);
-    return loc;
+    loc.init(name, నిజం);
+    తిరిగి loc;
 }
 
-const char *
-Locale::getISO3Language() const
+స్థిరరాశి అక్షరం *
+Locale::getISO3Language() స్థిరరాశి
 {
-    return uloc_getISO3Language(getName());
+    తిరిగి uloc_getISO3Language(getName());
 }
 
 
-const char *
-Locale::getISO3Country() const
+స్థిరరాశి అక్షరం *
+Locale::getISO3Country() స్థిరరాశి
 {
-    return uloc_getISO3Country(getName());
+    తిరిగి uloc_getISO3Country(getName());
 }
 
 /**
@@ -2366,171 +2366,171 @@ Locale::getISO3Country() const
  * Windows (it is an LCID), but is available on all platforms.
  */
 uint32_t
-Locale::getLCID() const
+Locale::getLCID() స్థిరరాశి
 {
-    return uloc_getLCID(getName());
+    తిరిగి uloc_getLCID(getName());
 }
 
-const char* const* U_EXPORT2 Locale::getISOCountries()
+స్థిరరాశి అక్షరం* స్థిరరాశి* U_EXPORT2 Locale::getISOCountries()
 {
-    return uloc_getISOCountries();
+    తిరిగి uloc_getISOCountries();
 }
 
-const char* const* U_EXPORT2 Locale::getISOLanguages()
+స్థిరరాశి అక్షరం* స్థిరరాశి* U_EXPORT2 Locale::getISOLanguages()
 {
-    return uloc_getISOLanguages();
+    తిరిగి uloc_getISOLanguages();
 }
 
 // Set the locale's data based on a posix id.
-void Locale::setFromPOSIXID(const char *posixID)
+శూన్య Locale::సమితి_From_POSIXID(స్థిరరాశి అక్షరం *posixID)
 {
-    init(posixID, true);
+    init(posixID, నిజం);
 }
 
-const Locale & U_EXPORT2
-Locale::getRoot()
+స్థిరరాశి Locale & U_EXPORT2
+Locale::get_మూలం()
 {
-    return getLocale(eROOT);
+    తిరిగి getLocale(e_మూలం);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getEnglish()
 {
-    return getLocale(eENGLISH);
+    తిరిగి getLocale(eENGLISH);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getFrench()
 {
-    return getLocale(eFRENCH);
+    తిరిగి getLocale(eFRENCH);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getGerman()
 {
-    return getLocale(eGERMAN);
+    తిరిగి getLocale(eGERMAN);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getItalian()
 {
-    return getLocale(eITALIAN);
+    తిరిగి getLocale(eITALIAN);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getJapanese()
 {
-    return getLocale(eJAPANESE);
+    తిరిగి getLocale(eJAPANESE);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getKorean()
 {
-    return getLocale(eKOREAN);
+    తిరిగి getLocale(eKOREAN);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getChinese()
 {
-    return getLocale(eCHINESE);
+    తిరిగి getLocale(eCHINESE);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getSimplifiedChinese()
 {
-    return getLocale(eCHINA);
+    తిరిగి getLocale(eCHINA);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getTraditionalChinese()
 {
-    return getLocale(eTAIWAN);
+    తిరిగి getLocale(eTAIWAN);
 }
 
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getFrance()
 {
-    return getLocale(eFRANCE);
+    తిరిగి getLocale(eFRANCE);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getGermany()
 {
-    return getLocale(eGERMANY);
+    తిరిగి getLocale(eGERMANY);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getItaly()
 {
-    return getLocale(eITALY);
+    తిరిగి getLocale(eITALY);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getJapan()
 {
-    return getLocale(eJAPAN);
+    తిరిగి getLocale(eJAPAN);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getKorea()
 {
-    return getLocale(eKOREA);
+    తిరిగి getLocale(eKOREA);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getChina()
 {
-    return getLocale(eCHINA);
+    తిరిగి getLocale(eCHINA);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getPRC()
 {
-    return getLocale(eCHINA);
+    తిరిగి getLocale(eCHINA);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getTaiwan()
 {
-    return getLocale(eTAIWAN);
+    తిరిగి getLocale(eTAIWAN);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getUK()
 {
-    return getLocale(eUK);
+    తిరిగి getLocale(eUK);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getUS()
 {
-    return getLocale(eUS);
+    తిరిగి getLocale(eUS);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getCanada()
 {
-    return getLocale(eCANADA);
+    తిరిగి getLocale(eCANADA);
 }
 
-const Locale & U_EXPORT2
+స్థిరరాశి Locale & U_EXPORT2
 Locale::getCanadaFrench()
 {
-    return getLocale(eCANADA_FRENCH);
+    తిరిగి getLocale(eCANADA_FRENCH);
 }
 
-const Locale &
-Locale::getLocale(int locid)
+స్థిరరాశి Locale &
+Locale::getLocale(పూర్ణాంకం locid)
 {
     Locale *localeCache = getLocaleCache();
     U_ASSERT((locid < eMAX_LOCALES)&&(locid>=0));
-    if (localeCache == nullptr) {
+    ఒకవేళ (localeCache == శూన్యసూచిక) {
         // Failure allocating the locale cache.
         //   The best we can do is return a nullptr reference.
         locid = 0;
     }
-    return localeCache[locid]; /*operating on nullptr*/
+    తిరిగి localeCache[locid]; /*operating on nullptr*/
 }
 
 /*
@@ -2540,396 +2540,396 @@ initialization and static destruction.
 Locale *
 Locale::getLocaleCache()
 {
-    UErrorCode status = U_ZERO_ERROR;
-    umtx_initOnce(gLocaleCacheInitOnce, locale_init, status);
-    return gLocaleCache;
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    umtx_initOnce(gLocaleCacheInitOnce, locale_init, స్థితి_2);
+    తిరిగి gLocaleCache;
 }
 
-class KeywordEnumeration : public StringEnumeration {
-protected:
+తరగతి KeywordEnumeration : బహిరంగ StringEnumeration {
+రక్షిత:
     FixedString keywords;
-private:
+అంతరంగ:
     int32_t length;
-    const char *current;
-    static const char fgClassID;
+    స్థిరరాశి అక్షరం *current;
+    స్థిర స్థిరరాశి అక్షరం fgClassID;
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID() { return (UClassID)&fgClassID; }
-    virtual UClassID getDynamicClassID() const override { return getStaticClassID(); }
-public:
-    KeywordEnumeration(const char *keys, int32_t keywordLen, int32_t currentIndex, UErrorCode &status)
-        : keywords(), length(keywordLen), current(nullptr) {
-        if(U_SUCCESS(status) && keywordLen != 0) {
-            if(keys == nullptr || keywordLen < 0) {
-                status = U_ILLEGAL_ARGUMENT_ERROR;
-            } else {
-                keywords = {keys, static_cast<std::string_view::size_type>(length)};
-                if (keywords.isEmpty()) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                } else {
-                    current = keywords.data() + currentIndex;
+బహిరంగ:
+    స్థిర UClassID U_EXPORT2 getStaticClassID() { తిరిగి (UClassID)&fgClassID; }
+    మాయా UClassID getDynamicClassID() స్థిరరాశి override { తిరిగి getStaticClassID(); }
+బహిరంగ:
+    KeywordEnumeration(స్థిరరాశి అక్షరం *కీలకాలు, int32_t keywordLen, int32_t current_సూచీ, UError_సంకేతం &స్థితి_2)
+        : keywords(), length(keywordLen), current(శూన్యసూచిక) {
+        ఒకవేళ(U_SUCCESS(స్థితి_2) && keywordLen != 0) {
+            ఒకవేళ(కీలకాలు == శూన్యసూచిక || keywordLen < 0) {
+                స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+            } లేకపోతే {
+                keywords = {కీలకాలు, static_cast<std::string_view::size_type>(length)};
+                ఒకవేళ (keywords.is_ఖాళీలు()) {
+                    స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                } లేకపోతే {
+                    current = keywords.దత్తాంశం() + current_సూచీ;
                 }
             }
         }
     }
 
-    virtual ~KeywordEnumeration();
+    మాయా ~KeywordEnumeration();
 
-    virtual StringEnumeration * clone() const override
+    మాయా StringEnumeration * clone() స్థిరరాశి override
     {
-        UErrorCode status = U_ZERO_ERROR;
-        return new KeywordEnumeration(
-                keywords.data(), length,
-                static_cast<int32_t>(current - keywords.data()), status);
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+        తిరిగి కొత్త KeywordEnumeration(
+                keywords.దత్తాంశం(), length,
+                static_cast<int32_t>(current - keywords.దత్తాంశం()), స్థితి_2);
     }
 
-    virtual int32_t count(UErrorCode& status) const override {
-        if (U_FAILURE(status)) { return 0; }
-        const char *kw = keywords.data();
-        int32_t result = 0;
-        while(*kw) {
-            result++;
+    మాయా int32_t count(UError_సంకేతం& స్థితి_2) స్థిరరాశి override {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి 0; }
+        స్థిరరాశి అక్షరం *kw = keywords.దత్తాంశం();
+        int32_t ఫలితం = 0;
+        అయితే(*kw) {
+            ఫలితం++;
             kw += uprv_strlen(kw)+1;
         }
-        return result;
+        తిరిగి ఫలితం;
     }
 
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
-        const char* result;
+    మాయా స్థిరరాశి అక్షరం* next(int32_t* ఫలితం_నిడివి, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND override {
+        స్థిరరాశి అక్షరం* ఫలితం;
         int32_t len;
-        if(U_SUCCESS(status) && *current != 0) {
-            result = current;
+        ఒకవేళ(U_SUCCESS(స్థితి_2) && *current != 0) {
+            ఫలితం = current;
             len = static_cast<int32_t>(uprv_strlen(current));
             current += len+1;
-            if(resultLength != nullptr) {
-                *resultLength = len;
+            ఒకవేళ(ఫలితం_నిడివి != శూన్యసూచిక) {
+                *ఫలితం_నిడివి = len;
             }
-        } else {
-            if(resultLength != nullptr) {
-                *resultLength = 0;
+        } లేకపోతే {
+            ఒకవేళ(ఫలితం_నిడివి != శూన్యసూచిక) {
+                *ఫలితం_నిడివి = 0;
             }
-            result = nullptr;
+            ఫలితం = శూన్యసూచిక;
         }
-        return result;
+        తిరిగి ఫలితం;
     }
 
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override {
-        if (U_FAILURE(status)) { return nullptr; }
-        int32_t resultLength = 0;
-        const char *s = next(&resultLength, status);
-        return setChars(s, resultLength, status);
+    మాయా స్థిరరాశి UnicodeString* snext(UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND override {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి శూన్యసూచిక; }
+        int32_t ఫలితం_నిడివి = 0;
+        స్థిరరాశి అక్షరం *s = next(&ఫలితం_నిడివి, స్థితి_2);
+        తిరిగి సమితి_Chars(s, ఫలితం_నిడివి, స్థితి_2);
     }
 
-    virtual void reset(UErrorCode& status) override {
-        if (U_FAILURE(status)) { return; }
-        current = keywords.data();
+    మాయా శూన్య reset(UError_సంకేతం& స్థితి_2) override {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+        current = keywords.దత్తాంశం();
     }
 };
 
-const char KeywordEnumeration::fgClassID = '\0';
+స్థిరరాశి అక్షరం KeywordEnumeration::fgClassID = '\0';
 
 // Out-of-line virtual destructor to serve as the "key function".
-KeywordEnumeration::~KeywordEnumeration() = default;
+KeywordEnumeration::~KeywordEnumeration() = అప్రమేయ;
 
 // A wrapper around KeywordEnumeration that calls uloc_toUnicodeLocaleKey() in
 // the next() method for each keyword before returning it.
-class UnicodeKeywordEnumeration : public KeywordEnumeration {
-public:
-    using KeywordEnumeration::KeywordEnumeration;
-    virtual ~UnicodeKeywordEnumeration();
+తరగతి UnicodeKeywordEnumeration : బహిరంగ KeywordEnumeration {
+బహిరంగ:
+    ఉపయోగించి KeywordEnumeration::KeywordEnumeration;
+    మాయా ~UnicodeKeywordEnumeration();
 
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
-        const char* legacy_key = KeywordEnumeration::next(nullptr, status);
-        while (U_SUCCESS(status) && legacy_key != nullptr) {
-            const char* key = uloc_toUnicodeLocaleKey(legacy_key);
-            if (key != nullptr) {
-                if (resultLength != nullptr) {
-                    *resultLength = static_cast<int32_t>(uprv_strlen(key));
+    మాయా స్థిరరాశి అక్షరం* next(int32_t* ఫలితం_నిడివి, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND override {
+        స్థిరరాశి అక్షరం* legacy_కీలకం = KeywordEnumeration::next(శూన్యసూచిక, స్థితి_2);
+        అయితే (U_SUCCESS(స్థితి_2) && legacy_కీలకం != శూన్యసూచిక) {
+            స్థిరరాశి అక్షరం* కీలకం = uloc_గమ్యం_Unicode_Locale_కీలకం(legacy_కీలకం);
+            ఒకవేళ (కీలకం != శూన్యసూచిక) {
+                ఒకవేళ (ఫలితం_నిడివి != శూన్యసూచిక) {
+                    *ఫలితం_నిడివి = static_cast<int32_t>(uprv_strlen(కీలకం));
                 }
-                return key;
+                తిరిగి కీలకం;
             }
             // Not a Unicode keyword, could be a t, x or other, continue to look at the next one.
-            legacy_key = KeywordEnumeration::next(nullptr, status);
+            legacy_కీలకం = KeywordEnumeration::next(శూన్యసూచిక, స్థితి_2);
         }
-        if (resultLength != nullptr) *resultLength = 0;
-        return nullptr;
+        ఒకవేళ (ఫలితం_నిడివి != శూన్యసూచిక) *ఫలితం_నిడివి = 0;
+        తిరిగి శూన్యసూచిక;
     }
-    virtual int32_t count(UErrorCode& status) const override {
-        if (U_FAILURE(status)) { return 0; }
-        const char *kw = keywords.data();
-        int32_t result = 0;
-        while(*kw) {
-            if (uloc_toUnicodeLocaleKey(kw) != nullptr) {
-                result++;
+    మాయా int32_t count(UError_సంకేతం& స్థితి_2) స్థిరరాశి override {
+        ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి 0; }
+        స్థిరరాశి అక్షరం *kw = keywords.దత్తాంశం();
+        int32_t ఫలితం = 0;
+        అయితే(*kw) {
+            ఒకవేళ (uloc_గమ్యం_Unicode_Locale_కీలకం(kw) != శూన్యసూచిక) {
+                ఫలితం++;
             }
             kw += uprv_strlen(kw)+1;
         }
-        return result;
+        తిరిగి ఫలితం;
     }
 };
 
 // Out-of-line virtual destructor to serve as the "key function".
-UnicodeKeywordEnumeration::~UnicodeKeywordEnumeration() = default;
+UnicodeKeywordEnumeration::~UnicodeKeywordEnumeration() = అప్రమేయ;
 
 StringEnumeration *
-Locale::createKeywords(UErrorCode &status) const
+Locale::createKeywords(UError_సంకేతం &స్థితి_2) స్థిరరాశి
 {
-    StringEnumeration *result = nullptr;
+    StringEnumeration *ఫలితం = శూన్యసూచిక;
 
-    if (U_FAILURE(status)) {
-        return result;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి ఫలితం;
     }
 
-    const char* variantStart = uprv_strchr(getName(), '@');
-    const char* assignment = uprv_strchr(getName(), '=');
-    if(variantStart) {
-        if(assignment > variantStart) {
-            CharString keywords = ulocimp_getKeywords(variantStart + 1, '@', false, status);
-            if (U_SUCCESS(status) && !keywords.isEmpty()) {
-                result = new KeywordEnumeration(keywords.data(), keywords.length(), 0, status);
-                if (!result) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
+    స్థిరరాశి అక్షరం* variant_ప్రారంభం = uprv_strchr(getName(), '@');
+    స్థిరరాశి అక్షరం* assignment = uprv_strchr(getName(), '=');
+    ఒకవేళ(variant_ప్రారంభం) {
+        ఒకవేళ(assignment > variant_ప్రారంభం) {
+            CharString keywords = ulocimp_getKeywords(variant_ప్రారంభం + 1, '@', అబద్ధం, స్థితి_2);
+            ఒకవేళ (U_SUCCESS(స్థితి_2) && !keywords.is_ఖాళీలు()) {
+                ఫలితం = కొత్త KeywordEnumeration(keywords.దత్తాంశం(), keywords.length(), 0, స్థితి_2);
+                ఒకవేళ (!ఫలితం) {
+                    స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
                 }
             }
-        } else {
-            status = U_INVALID_FORMAT_ERROR;
+        } లేకపోతే {
+            స్థితి_2 = U_INVALID_FORMAT_ERROR;
         }
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 StringEnumeration *
-Locale::createUnicodeKeywords(UErrorCode &status) const
+Locale::createUnicodeKeywords(UError_సంకేతం &స్థితి_2) స్థిరరాశి
 {
-    StringEnumeration *result = nullptr;
+    StringEnumeration *ఫలితం = శూన్యసూచిక;
 
-    if (U_FAILURE(status)) {
-        return result;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి ఫలితం;
     }
 
-    const char* variantStart = uprv_strchr(getName(), '@');
-    const char* assignment = uprv_strchr(getName(), '=');
-    if(variantStart) {
-        if(assignment > variantStart) {
-            CharString keywords = ulocimp_getKeywords(variantStart + 1, '@', false, status);
-            if (U_SUCCESS(status) && !keywords.isEmpty()) {
-                result = new UnicodeKeywordEnumeration(keywords.data(), keywords.length(), 0, status);
-                if (!result) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
+    స్థిరరాశి అక్షరం* variant_ప్రారంభం = uprv_strchr(getName(), '@');
+    స్థిరరాశి అక్షరం* assignment = uprv_strchr(getName(), '=');
+    ఒకవేళ(variant_ప్రారంభం) {
+        ఒకవేళ(assignment > variant_ప్రారంభం) {
+            CharString keywords = ulocimp_getKeywords(variant_ప్రారంభం + 1, '@', అబద్ధం, స్థితి_2);
+            ఒకవేళ (U_SUCCESS(స్థితి_2) && !keywords.is_ఖాళీలు()) {
+                ఫలితం = కొత్త UnicodeKeywordEnumeration(keywords.దత్తాంశం(), keywords.length(), 0, స్థితి_2);
+                ఒకవేళ (!ఫలితం) {
+                    స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
                 }
             }
-        } else {
-            status = U_INVALID_FORMAT_ERROR;
+        } లేకపోతే {
+            స్థితి_2 = U_INVALID_FORMAT_ERROR;
         }
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 int32_t
-Locale::getKeywordValue(const char* keywordName, char *buffer, int32_t bufLen, UErrorCode &status) const
+Locale::get_Keyword_విలువ(స్థిరరాశి అక్షరం* keywordName, అక్షరం *బఫరు, int32_t bufLen, UError_సంకేతం &స్థితి_2) స్థిరరాశి
 {
-    return uloc_getKeywordValue(getName(), keywordName, buffer, bufLen, &status);
+    తిరిగి uloc_get_Keyword_విలువ(getName(), keywordName, బఫరు, bufLen, &స్థితి_2);
 }
 
-void
-Locale::getKeywordValue(StringPiece keywordName, ByteSink& sink, UErrorCode& status) const {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య
+Locale::get_Keyword_విలువ(StringPiece keywordName, ByteSink& sink, UError_సంకేతం& స్థితి_2) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
-    if (isBogus()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (isBogus()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    ulocimp_getKeywordValue(getName(), keywordName, sink, status);
+    ulocimp_get_Keyword_విలువ(getName(), keywordName, sink, స్థితి_2);
 }
 
-void
-Locale::getUnicodeKeywordValue(StringPiece keywordName,
+శూన్య
+Locale::get_Unicode_Keyword_విలువ(StringPiece keywordName,
                                ByteSink& sink,
-                               UErrorCode& status) const {
-    if (U_FAILURE(status)) {
-        return;
+                               UError_సంకేతం& స్థితి_2) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
-    std::optional<std::string_view> legacy_key = ulocimp_toLegacyKeyWithFallback(keywordName);
-    if (!legacy_key.has_value()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    std::optional<std::string_view> legacy_కీలకం = ulocimp_గమ్యం_Legacy_కీలకం_With_Fallback(keywordName);
+    ఒకవేళ (!legacy_కీలకం.has_value()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    auto legacy_value = getKeywordValue<CharString>(*legacy_key, status);
+    స్వయంచాలక legacy_విలువ = get_Keyword_విలువ<CharString>(*legacy_కీలకం, స్థితి_2);
 
-    if (U_FAILURE(status)) {
-        return;
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
-    std::optional<std::string_view> unicode_value =
-        ulocimp_toBcpTypeWithFallback(keywordName, legacy_value.toStringPiece());
-    if (!unicode_value.has_value()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    std::optional<std::string_view> unicode_విలువ =
+        ulocimp_గమ్యం_Bcp_Type_With_Fallback(keywordName, legacy_విలువ.గమ్యం_String_Piece());
+    ఒకవేళ (!unicode_విలువ.has_value()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
-    sink.Append(unicode_value->data(), static_cast<int32_t>(unicode_value->size()));
+    sink.Append(unicode_విలువ->దత్తాంశం(), static_cast<int32_t>(unicode_విలువ->size()));
 }
 
-void
-Locale::setKeywordValue(StringPiece keywordName,
-                        StringPiece keywordValue,
-                        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
-    if (keywordName.empty()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+శూన్య
+Locale::సమితి_Keyword_విలువ(StringPiece keywordName,
+                        StringPiece keyword_విలువ,
+                        UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) { తిరిగి; }
+    ఒకవేళ (keywordName.empty()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    if (status == U_STRING_NOT_TERMINATED_WARNING) {
-        status = U_ZERO_ERROR;
+    ఒకవేళ (స్థితి_2 == U_STRING_NOT_TERMINATED_WARNING) {
+        స్థితి_2 = U_ZERO_ERROR;
     }
 
-    CharString localeID(getName(), -1, status);
-    ulocimp_setKeywordValue(keywordName, keywordValue, localeID, status);
-    if (U_FAILURE(status)) {
-        if (status == U_MEMORY_ALLOCATION_ERROR) {
-            setToBogus();
+    CharString localeID(getName(), -1, స్థితి_2);
+    ulocimp_సమితి_Keyword_విలువ(keywordName, keyword_విలువ, localeID, స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        ఒకవేళ (స్థితి_2 == U_జ్ఞాపకం_కేటాయింపు_ERROR) {
+            సమితి_గమ్యం_Bogus();
         }
-        return;
+        తిరిగి;
     }
 
-    const char* at = locale_getKeywordsStart(localeID.toStringPiece());
-    bool hasKeywords = at != nullptr && uprv_strchr(at + 1, '=') != nullptr;
+    స్థిరరాశి అక్షరం* at = locale_get_Keywords_ప్రారంభం(localeID.గమ్యం_String_Piece());
+    తార్కిక hasKeywords = at != శూన్యసూచిక && uprv_strchr(at + 1, '=') != శూన్యసూచిక;
 
     Nest* nest = payload.get<Nest>();
-    if (!hasKeywords) {
-        if (nest == nullptr) {
+    ఒకవేళ (!hasKeywords) {
+        ఒకవేళ (nest == శూన్యసూచిక) {
             // There are no longer any keywords left, so it might now be
             // possible to move the payload from Heap to Nest.
-            Heap* heap = payload.get<Heap>();
-            U_ASSERT(heap != nullptr);
-            if (Nest::fits(localeID.length(), heap->language, heap->script, heap->region)) {
-                int32_t variantBegin = heap->ptr->variantBegin;
+            కుప్ప* కుప్ప_2 = payload.get<కుప్ప>();
+            U_ASSERT(కుప్ప_2 != శూన్యసూచిక);
+            ఒకవేళ (Nest::సరిపోతుంది(localeID.length(), కుప్ప_2->language, కుప్ప_2->script, కుప్ప_2->region)) {
+                int32_t variantBegin = కుప్ప_2->ptr->variantBegin;
                 U_ASSERT(variantBegin >= 0);
-                U_ASSERT(static_cast<size_t>(variantBegin) < sizeof Nest::baseName);
-                nest = &payload.emplace<Nest>(std::move(*heap), static_cast<uint8_t>(variantBegin));
-                localeID.extract(nest->baseName, sizeof Nest::baseName, status);
-            } else {
-                heap->ptr->baseName.clear();
-                heap->ptr->fullName = localeID.toStringPiece();
-                if (heap->ptr->fullName.isEmpty()) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                    setToBogus();
-                    return;
+                U_ASSERT(static_cast<size_t>(variantBegin) < పరిమాణం Nest::పునాది_Name);
+                nest = &payload.emplace<Nest>(std::move(*కుప్ప_2), static_cast<uint8_t>(variantBegin));
+                localeID.extract(nest->పునాది_Name, పరిమాణం Nest::పునాది_Name, స్థితి_2);
+            } లేకపోతే {
+                కుప్ప_2->ptr->పునాది_Name.clear();
+                కుప్ప_2->ptr->నిండిన_Name = localeID.గమ్యం_String_Piece();
+                ఒకవేళ (కుప్ప_2->ptr->నిండిన_Name.is_ఖాళీలు()) {
+                    స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    సమితి_గమ్యం_Bogus();
+                    తిరిగి;
                 }
             }
         }
-    } else {
-        Heap* heap = nullptr;
-        if (nest != nullptr) {
+    } లేకపోతే {
+        కుప్ప* కుప్ప_2 = శూన్యసూచిక;
+        ఒకవేళ (nest != శూన్యసూచిక) {
             // A keyword has been added, so the payload now needs to be moved
             // from Nest to Heap so that it can get a baseName.
             Nest copy(*nest);
-            heap = &payload.emplace<Heap>(copy.language,
+            కుప్ప_2 = &payload.emplace<కుప్ప>(copy.language,
                                           copy.script,
                                           copy.region,
                                           copy.variantBegin);
-            if (isBogus()) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            ఒకవేళ (isBogus()) {
+                స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                తిరిగి;
             }
-        } else {
-            heap = payload.get<Heap>();
+        } లేకపోతే {
+            కుప్ప_2 = payload.get<కుప్ప>();
         }
-        U_ASSERT(heap != nullptr);
-        heap->ptr->fullName = localeID.toStringPiece();
-        if (heap->ptr->fullName.isEmpty()) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            setToBogus();
-            return;
+        U_ASSERT(కుప్ప_2 != శూన్యసూచిక);
+        కుప్ప_2->ptr->నిండిన_Name = localeID.గమ్యం_String_Piece();
+        ఒకవేళ (కుప్ప_2->ptr->నిండిన_Name.is_ఖాళీలు()) {
+            స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            సమితి_గమ్యం_Bogus();
+            తిరిగి;
         }
 
-        if (heap->ptr->baseName.isEmpty()) {
+        ఒకవేళ (కుప్ప_2->ptr->పునాది_Name.is_ఖాళీలు()) {
             // Has added the first keyword, meaning that the fullName is no longer also the baseName.
-            if (std::string_view::size_type baseNameLength = at - localeID.data(); baseNameLength > 0) {
-                heap->ptr->baseName = {heap->ptr->fullName.data(), baseNameLength};
-                if (heap->ptr->baseName.isEmpty()) {
-                    status = U_MEMORY_ALLOCATION_ERROR;
-                    setToBogus();
-                    return;
+            ఒకవేళ (std::string_view::size_type పునాది_Name_నిడివి = at - localeID.దత్తాంశం(); పునాది_Name_నిడివి > 0) {
+                కుప్ప_2->ptr->పునాది_Name = {కుప్ప_2->ptr->నిండిన_Name.దత్తాంశం(), పునాది_Name_నిడివి};
+                ఒకవేళ (కుప్ప_2->ptr->పునాది_Name.is_ఖాళీలు()) {
+                    స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    సమితి_గమ్యం_Bogus();
+                    తిరిగి;
                 }
             }
         }
     }
 }
 
-void
-Locale::setUnicodeKeywordValue(StringPiece keywordName,
-                               StringPiece keywordValue,
-                               UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+శూన్య
+Locale::సమితి_Unicode_Keyword_విలువ(StringPiece keywordName,
+                               StringPiece keyword_విలువ,
+                               UError_సంకేతం& స్థితి_2) {
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తిరిగి;
     }
 
-    std::optional<std::string_view> legacy_key = ulocimp_toLegacyKeyWithFallback(keywordName);
-    if (!legacy_key.has_value()) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    std::optional<std::string_view> legacy_కీలకం = ulocimp_గమ్యం_Legacy_కీలకం_With_Fallback(keywordName);
+    ఒకవేళ (!legacy_కీలకం.has_value()) {
+        స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
 
     std::string_view value;
 
-    if (!keywordValue.empty()) {
-        std::optional<std::string_view> legacy_value =
-            ulocimp_toLegacyTypeWithFallback(keywordName, keywordValue);
-        if (!legacy_value.has_value()) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+    ఒకవేళ (!keyword_విలువ.empty()) {
+        std::optional<std::string_view> legacy_విలువ =
+            ulocimp_గమ్యం_Legacy_Type_With_Fallback(keywordName, keyword_విలువ);
+        ఒకవేళ (!legacy_విలువ.has_value()) {
+            స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
-        value = *legacy_value;
+        value = *legacy_విలువ;
     }
 
-    setKeywordValue(*legacy_key, value, status);
+    సమితి_Keyword_విలువ(*legacy_కీలకం, value, స్థితి_2);
 }
 
-const char*
-Locale::getCountry() const U_LIFETIME_BOUND {
-    return getField<&Nest::getRegion, &Heap::getRegion>();
+స్థిరరాశి అక్షరం*
+Locale::getCountry() స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి get_క్షేత్రం<&Nest::getRegion, &కుప్ప::getRegion>();
 }
 
-const char*
-Locale::getLanguage() const U_LIFETIME_BOUND {
-    return getField<&Nest::getLanguage, &Heap::getLanguage>();
+స్థిరరాశి అక్షరం*
+Locale::getLanguage() స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి get_క్షేత్రం<&Nest::getLanguage, &కుప్ప::getLanguage>();
 }
 
-const char*
-Locale::getScript() const U_LIFETIME_BOUND {
-    return getField<&Nest::getScript, &Heap::getScript>();
+స్థిరరాశి అక్షరం*
+Locale::getScript() స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి get_క్షేత్రం<&Nest::getScript, &కుప్ప::getScript>();
 }
 
-const char*
-Locale::getVariant() const U_LIFETIME_BOUND {
-    return getField<&Nest::getVariant, &Heap::getVariant>();
+స్థిరరాశి అక్షరం*
+Locale::getVariant() స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి get_క్షేత్రం<&Nest::getVariant, &కుప్ప::getVariant>();
 }
 
-const char*
-Locale::getName() const U_LIFETIME_BOUND {
-    return getField<&Nest::getBaseName, &Heap::getFullName>();
+స్థిరరాశి అక్షరం*
+Locale::getName() స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి get_క్షేత్రం<&Nest::get_పునాది_Name, &కుప్ప::get_నిండిన_Name>();
 }
 
-const char*
-Locale::getBaseName() const U_LIFETIME_BOUND {
-    return getField<&Nest::getBaseName, &Heap::getBaseName>();
+స్థిరరాశి అక్షరం*
+Locale::get_పునాది_Name() స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి get_క్షేత్రం<&Nest::get_పునాది_Name, &కుప్ప::get_పునాది_Name>();
 }
 
-template <const char* (Locale::Nest::*const NEST)() const,
-          const char* (Locale::Heap::*const HEAP)() const>
-const char* Locale::getField() const U_LIFETIME_BOUND {
-    return payload.visit([] { return ""; },
-                         [](const Nest& nest) { return (nest.*NEST)(); },
-                         [](const Heap& heap) { return (heap.*HEAP)(); });
+మూస <స్థిరరాశి అక్షరం* (Locale::Nest::*స్థిరరాశి NEST)() స్థిరరాశి,
+          స్థిరరాశి అక్షరం* (Locale::కుప్ప::*స్థిరరాశి కుప్ప_3)() స్థిరరాశి>
+స్థిరరాశి అక్షరం* Locale::get_క్షేత్రం() స్థిరరాశి U_LIFETIME_BOUND {
+    తిరిగి payload.సందర్శించు([] { తిరిగి ""; },
+                         [](స్థిరరాశి Nest& nest) { తిరిగి (nest.*NEST)(); },
+                         [](స్థిరరాశి కుప్ప& కుప్ప_2) { తిరిగి (కుప్ప_2.*కుప్ప_3)(); });
 }
 
-Locale::Iterator::~Iterator() = default;
+Locale::Iterator::~Iterator() = అప్రమేయ;
 
 //eof
-U_NAMESPACE_END
+U_NAMESPACE_చివర

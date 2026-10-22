@@ -1,35 +1,35 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#అన్తర్భావ <optional>
+#అన్తర్భావ <string_view>
+#అన్తర్భావ <utility>
 
-#include "bytesinkutil.h"  // StringByteSink<CharString>
-#include "charstr.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "ulocimp.h"
-#include "unicode/localebuilder.h"
-#include "unicode/locid.h"
+#అన్తర్భావ "bytesinkutil.h"  // StringByteSink<CharString>
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "fixedstring.h"
+#అన్తర్భావ "ulocimp.h"
+#అన్తర్భావ "unicode/localebuilder.h"
+#అన్తర్భావ "unicode/locid.h"
 
-namespace {
+నామాకాశ {
 
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+అంతఃవరుస తార్కిక UPRV_ISDIGIT(అక్షరం c) { తిరిగి c >= '0' && c <= '9'; }
+అంతఃవరుస తార్కిక UPRV_ISALPHANUM(అక్షరం c) { తిరిగి uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 
-constexpr const char* kAttributeKey = "attribute";
+constexpr స్థిరరాశి అక్షరం* k_Attribute_కీలకం = "attribute";
 
-bool _isExtensionSubtags(char key, const char* s, int32_t len) {
-    switch (uprv_tolower(key)) {
-        case 'u':
-            return ultag_isUnicodeExtensionSubtags(s, len);
-        case 't':
-            return ultag_isTransformedExtensionSubtags(s, len);
-        case 'x':
-            return ultag_isPrivateuseValueSubtags(s, len);
-        default:
-            return ultag_isExtensionSubtags(s, len);
+తార్కిక _isExtensionSubtags(అక్షరం కీలకం, స్థిరరాశి అక్షరం* s, int32_t len) {
+    ఎంపిక (uprv_tolower(కీలకం)) {
+        స్థితి 'u':
+            తిరిగి ultag_isUnicodeExtensionSubtags(s, len);
+        స్థితి 't':
+            తిరిగి ultag_isTransformedExtensionSubtags(s, len);
+        స్థితి 'x':
+            తిరిగి ultag_is_Privateuse_విలువ_Subtags(s, len);
+        అప్రమేయ:
+            తిరిగి ultag_isExtensionSubtags(s, len);
     }
 }
 
@@ -37,8 +37,8 @@ bool _isExtensionSubtags(char key, const char* s, int32_t len) {
 
 U_NAMESPACE_BEGIN
 
-LocaleBuilder::LocaleBuilder() : UObject(), status_(U_ZERO_ERROR), language_(),
-    script_(), region_(), variant_(nullptr), extensions_(nullptr)
+LocaleBuilder::LocaleBuilder() : UObject(), స్థితి_3(U_ZERO_ERROR), language_(),
+    script_(), region_(), variant_(శూన్యసూచిక), extensions_(శూన్యసూచిక)
 {
     language_[0] = 0;
     script_[0] = 0;
@@ -47,437 +47,437 @@ LocaleBuilder::LocaleBuilder() : UObject(), status_(U_ZERO_ERROR), language_(),
 
 LocaleBuilder::~LocaleBuilder()
 {
-    delete variant_;
-    delete extensions_;
+    తొలగించు variant_;
+    తొలగించు extensions_;
 }
 
-LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::సమితి_Locale(స్థిరరాశి Locale& locale) U_LIFETIME_BOUND
 {
     clear();
-    setLanguage(locale.getLanguage());
-    setScript(locale.getScript());
-    setRegion(locale.getCountry());
-    setVariant(locale.getVariant());
+    సమితి_Language(locale.getLanguage());
+    సమితి_Script(locale.getScript());
+    సమితి_Region(locale.getCountry());
+    సమితి_Variant(locale.getVariant());
     extensions_ = locale.clone();
-    if (extensions_ == nullptr) {
-        status_ = U_MEMORY_ALLOCATION_ERROR;
+    ఒకవేళ (extensions_ == శూన్యసూచిక) {
+        స్థితి_3 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-LocaleBuilder& LocaleBuilder::setLanguageTag(StringPiece tag) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::సమితి_Language_ట్యాగ్(StringPiece ట్యాగ్) U_LIFETIME_BOUND
 {
-    Locale l = Locale::forLanguageTag(tag, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    Locale l = Locale::for_Language_ట్యాగ్(ట్యాగ్, స్థితి_3);
+    ఒకవేళ (U_FAILURE(స్థితి_3)) { తిరిగి *ఇది; }
     // Because setLocale will reset status_ we need to return
     // first if we have error in forLanguageTag.
-    setLocale(l);
-    return *this;
+    సమితి_Locale(l);
+    తిరిగి *ఇది;
 }
 
-namespace {
+నామాకాశ {
 
-void setField(StringPiece input, char* dest, UErrorCode& errorCode,
-              bool (*test)(const char*, int32_t)) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (input.empty()) {
+శూన్య సమితి_క్షేత్రం(StringPiece input, అక్షరం* dest, UError_సంకేతం& error_సంకేతం,
+              తార్కిక (*test)(స్థిరరాశి అక్షరం*, int32_t)) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+    ఒకవేళ (input.empty()) {
         dest[0] = '\0';
-    } else if (test(input.data(), input.length())) {
-        uprv_memcpy(dest, input.data(), input.length());
+    } లేకపోతే ఒకవేళ (test(input.దత్తాంశం(), input.length())) {
+        uprv_memcpy(dest, input.దత్తాంశం(), input.length());
         dest[input.length()] = '\0';
-    } else {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
+    } లేకపోతే {
+        error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
     }
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setLanguage(StringPiece language) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::సమితి_Language(StringPiece language) U_LIFETIME_BOUND
 {
-    setField(language, language_, status_, &ultag_isLanguageSubtag);
-    return *this;
+    సమితి_క్షేత్రం(language, language_, స్థితి_3, &ultag_isLanguageSubtag);
+    తిరిగి *ఇది;
 }
 
-LocaleBuilder& LocaleBuilder::setScript(StringPiece script) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::సమితి_Script(StringPiece script) U_LIFETIME_BOUND
 {
-    setField(script, script_, status_, &ultag_isScriptSubtag);
-    return *this;
+    సమితి_క్షేత్రం(script, script_, స్థితి_3, &ultag_isScriptSubtag);
+    తిరిగి *ఇది;
 }
 
-LocaleBuilder& LocaleBuilder::setRegion(StringPiece region) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::సమితి_Region(StringPiece region) U_LIFETIME_BOUND
 {
-    setField(region, region_, status_, &ultag_isRegionSubtag);
-    return *this;
+    సమితి_క్షేత్రం(region, region_, స్థితి_3, &ultag_isRegionSubtag);
+    తిరిగి *ఇది;
 }
 
-namespace {
+నామాకాశ {
 
-void transform(char* data, int32_t len) {
-    for (int32_t i = 0; i < len; i++, data++) {
-        if (*data == '_') {
-            *data = '-';
-        } else {
-            *data = uprv_tolower(*data);
+శూన్య transform(అక్షరం* దత్తాంశం, int32_t len) {
+    కొరకు (int32_t i = 0; i < len; i++, దత్తాంశం++) {
+        ఒకవేళ (*దత్తాంశం == '_') {
+            *దత్తాంశం = '-';
+        } లేకపోతే {
+            *దత్తాంశం = uprv_tolower(*దత్తాంశం);
         }
     }
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setVariant(StringPiece variant) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::సమితి_Variant(StringPiece variant) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (variant.empty()) {
-        delete variant_;
-        variant_ = nullptr;
-        return *this;
+    ఒకవేళ (U_FAILURE(స్థితి_3)) { తిరిగి *ఇది; }
+    ఒకవేళ (variant.empty()) {
+        తొలగించు variant_;
+        variant_ = శూన్యసూచిక;
+        తిరిగి *ఇది;
     }
-    FixedString* new_variant = new FixedString(variant);
-    if (new_variant == nullptr || new_variant->isEmpty()) {
-        status_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+    FixedString* new_variant = కొత్త FixedString(variant);
+    ఒకవేళ (new_variant == శూన్యసూచిక || new_variant->is_ఖాళీలు()) {
+        స్థితి_3 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి *ఇది;
     }
     transform(new_variant->getAlias(), variant.length());
-    if (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
-        delete new_variant;
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    ఒకవేళ (!ultag_isVariantSubtags(new_variant->దత్తాంశం(), variant.length())) {
+        తొలగించు new_variant;
+        స్థితి_3 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి *ఇది;
     }
-    delete variant_;
+    తొలగించు variant_;
     variant_ = new_variant;
-    return *this;
+    తిరిగి *ఇది;
 }
 
-namespace {
+నామాకాశ {
 
-bool
-_isKeywordValue(const char* key, const char* value, int32_t value_len)
+తార్కిక
+is_Keyword_విలువ(స్థిరరాశి అక్షరం* కీలకం, స్థిరరాశి అక్షరం* value, int32_t విలువ_len)
 {
-    if (key[1] == '\0') {
+    ఒకవేళ (కీలకం[1] == '\0') {
         // one char key
-        return (UPRV_ISALPHANUM(uprv_tolower(key[0])) &&
-                _isExtensionSubtags(key[0], value, value_len));
-    } else if (uprv_strcmp(key, kAttributeKey) == 0) {
+        తిరిగి (UPRV_ISALPHANUM(uprv_tolower(కీలకం[0])) &&
+                _isExtensionSubtags(కీలకం[0], value, విలువ_len));
+    } లేకపోతే ఒకవేళ (uprv_strcmp(కీలకం, k_Attribute_కీలకం) == 0) {
         // unicode attributes
-        return ultag_isUnicodeLocaleAttributes(value, value_len);
+        తిరిగి ultag_is_Unicode_Locale_లక్షణాలు(value, విలువ_len);
     }
     // otherwise: unicode extension value
     // We need to convert from legacy key/value to unicode
     // key/value
-    std::optional<std::string_view> unicode_locale_key = ulocimp_toBcpKeyWithFallback(key);
-    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(key, value);
+    std::optional<std::string_view> unicode_locale_కీలకం = ulocimp_గమ్యం_Bcp_కీలకం_With_Fallback(కీలకం);
+    std::optional<std::string_view> unicode_locale_type = ulocimp_గమ్యం_Bcp_Type_With_Fallback(కీలకం, value);
 
-    return unicode_locale_key.has_value() &&
+    తిరిగి unicode_locale_కీలకం.has_value() &&
            unicode_locale_type.has_value() &&
-           ultag_isUnicodeLocaleKey(unicode_locale_key->data(),
-                                    static_cast<int32_t>(unicode_locale_key->size())) &&
-           ultag_isUnicodeLocaleType(unicode_locale_type->data(),
+           ultag_is_Unicode_Locale_కీలకం(unicode_locale_కీలకం->దత్తాంశం(),
+                                    static_cast<int32_t>(unicode_locale_కీలకం->size())) &&
+           ultag_isUnicodeLocaleType(unicode_locale_type->దత్తాంశం(),
                                      static_cast<int32_t>(unicode_locale_type->size()));
 }
 
-void
-_copyExtensions(const Locale& from, icu::StringEnumeration *keywords,
-                Locale& to, bool validate, UErrorCode& errorCode)
+శూన్య
+_copyExtensions(స్థిరరాశి Locale& from, icu::StringEnumeration *keywords,
+                Locale& గమ్యం, తార్కిక validate, UError_సంకేతం& error_సంకేతం)
 {
-    if (U_FAILURE(errorCode)) { return; }
-    LocalPointer<icu::StringEnumeration> ownedKeywords;
-    if (keywords == nullptr) {
-        ownedKeywords.adoptInstead(from.createKeywords(errorCode));
-        if (U_FAILURE(errorCode) || ownedKeywords.isNull()) { return; }
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+    Local_సూచిక<icu::StringEnumeration> ownedKeywords;
+    ఒకవేళ (keywords == శూన్యసూచిక) {
+        ownedKeywords.adoptInstead(from.createKeywords(error_సంకేతం));
+        ఒకవేళ (U_FAILURE(error_సంకేతం) || ownedKeywords.isNull()) { తిరిగి; }
         keywords = ownedKeywords.getAlias();
     }
-    const char* key;
-    while ((key = keywords->next(nullptr, errorCode)) != nullptr) {
-        auto value = from.getKeywordValue<CharString>(key, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        if (uprv_strcmp(key, kAttributeKey) == 0) {
-            transform(value.data(), value.length());
+    స్థిరరాశి అక్షరం* కీలకం;
+    అయితే ((కీలకం = keywords->next(శూన్యసూచిక, error_సంకేతం)) != శూన్యసూచిక) {
+        స్వయంచాలక value = from.get_Keyword_విలువ<CharString>(కీలకం, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+        ఒకవేళ (uprv_strcmp(కీలకం, k_Attribute_కీలకం) == 0) {
+            transform(value.దత్తాంశం(), value.length());
         }
-        if (validate &&
-            !_isKeywordValue(key, value.data(), value.length())) {
-            errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+        ఒకవేళ (validate &&
+            !is_Keyword_విలువ(కీలకం, value.దత్తాంశం(), value.length())) {
+            error_సంకేతం = U_ILLEGAL_వాదం_ERROR;
+            తిరిగి;
         }
-        to.setKeywordValue(key, value.data(), errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        గమ్యం.సమితి_Keyword_విలువ(కీలకం, value.దత్తాంశం(), error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
     }
 }
 
-void
-_clearUAttributesAndKeyType(Locale& locale, UErrorCode& errorCode)
+శూన్య
+clear_UAttributes_And_కీలకం_Type(Locale& locale, UError_సంకేతం& error_సంకేతం)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
     // Clear Unicode attributes
-    locale.setKeywordValue(kAttributeKey, "", errorCode);
+    locale.సమితి_Keyword_విలువ(k_Attribute_కీలకం, "", error_సంకేతం);
 
     // Clear all Unicode keyword values
-    LocalPointer<icu::StringEnumeration> iter(locale.createUnicodeKeywords(errorCode));
-    if (U_FAILURE(errorCode) || iter.isNull()) { return; }
-    const char* key;
-    while ((key = iter->next(nullptr, errorCode)) != nullptr) {
-        locale.setUnicodeKeywordValue(key, nullptr, errorCode);
+    Local_సూచిక<icu::StringEnumeration> iter(locale.createUnicodeKeywords(error_సంకేతం));
+    ఒకవేళ (U_FAILURE(error_సంకేతం) || iter.isNull()) { తిరిగి; }
+    స్థిరరాశి అక్షరం* కీలకం;
+    అయితే ((కీలకం = iter->next(శూన్యసూచిక, error_సంకేతం)) != శూన్యసూచిక) {
+        locale.సమితి_Unicode_Keyword_విలువ(కీలకం, శూన్యసూచిక, error_సంకేతం);
     }
 }
 
-void
-_setUnicodeExtensions(Locale& locale, const CharString& value, UErrorCode& errorCode)
+శూన్య
+సమితి_Unicode_Extensions(Locale& locale, స్థిరరాశి CharString& value, UError_సంకేతం& error_సంకేతం)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
     // Add the unicode extensions to extensions_
-    CharString locale_str("und-u-", errorCode);
-    locale_str.append(value, errorCode);
+    CharString locale_str("und-u-", error_సంకేతం);
+    locale_str.append(value, error_సంకేతం);
     _copyExtensions(
-        Locale::forLanguageTag(locale_str.data(), errorCode), nullptr,
-        locale, false, errorCode);
+        Locale::for_Language_ట్యాగ్(locale_str.దత్తాంశం(), error_సంకేతం), శూన్యసూచిక,
+        locale, అబద్ధం, error_సంకేతం);
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setExtension(char key, StringPiece value) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::సమితి_Extension(అక్షరం కీలకం, StringPiece value) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!UPRV_ISALPHANUM(key)) {
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    ఒకవేళ (U_FAILURE(స్థితి_3)) { తిరిగి *ఇది; }
+    ఒకవేళ (!UPRV_ISALPHANUM(కీలకం)) {
+        స్థితి_3 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి *ఇది;
     }
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!value_str.isEmpty() &&
-            !_isExtensionSubtags(key, value_str.data(), value_str.length())) {
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    CharString విలువ_str(value, స్థితి_3);
+    ఒకవేళ (U_FAILURE(స్థితి_3)) { తిరిగి *ఇది; }
+    transform(విలువ_str.దత్తాంశం(), విలువ_str.length());
+    ఒకవేళ (!విలువ_str.is_ఖాళీలు() &&
+            !_isExtensionSubtags(కీలకం, విలువ_str.దత్తాంశం(), విలువ_str.length())) {
+        స్థితి_3 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి *ఇది;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
-            status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+    ఒకవేళ (extensions_ == శూన్యసూచిక) {
+        extensions_ = Locale::get_మూలం().clone();
+        ఒకవేళ (extensions_ == శూన్యసూచిక) {
+            స్థితి_3 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి *ఇది;
         }
     }
-    if (uprv_tolower(key) != 'u') {
+    ఒకవేళ (uprv_tolower(కీలకం) != 'u') {
         // for t, x and others extension.
-        extensions_->setKeywordValue(StringPiece(&key, 1), value_str.data(),
-                                     status_);
-        return *this;
+        extensions_->సమితి_Keyword_విలువ(StringPiece(&కీలకం, 1), విలువ_str.దత్తాంశం(),
+                                     స్థితి_3);
+        తిరిగి *ఇది;
     }
-    _clearUAttributesAndKeyType(*extensions_, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    if (!value.empty()) {
-        _setUnicodeExtensions(*extensions_, value_str, status_);
+    clear_UAttributes_And_కీలకం_Type(*extensions_, స్థితి_3);
+    ఒకవేళ (U_FAILURE(స్థితి_3)) { తిరిగి *ఇది; }
+    ఒకవేళ (!value.empty()) {
+        సమితి_Unicode_Extensions(*extensions_, విలువ_str, స్థితి_3);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
-LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece key,
+LocaleBuilder& LocaleBuilder::సమితి_Unicode_Locale_Keyword(StringPiece కీలకం,
                                                       StringPiece type) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!ultag_isUnicodeLocaleKey(key.data(), key.length()) ||
+    ఒకవేళ (U_FAILURE(స్థితి_3)) { తిరిగి *ఇది; }
+    ఒకవేళ (!ultag_is_Unicode_Locale_కీలకం(కీలకం.దత్తాంశం(), కీలకం.length()) ||
             (!type.empty() &&
-                 !ultag_isUnicodeLocaleType(type.data(), type.length()))) {
-      status_ = U_ILLEGAL_ARGUMENT_ERROR;
-      return *this;
+                 !ultag_isUnicodeLocaleType(type.దత్తాంశం(), type.length()))) {
+      స్థితి_3 = U_ILLEGAL_వాదం_ERROR;
+      తిరిగి *ఇది;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
-            status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+    ఒకవేళ (extensions_ == శూన్యసూచిక) {
+        extensions_ = Locale::get_మూలం().clone();
+        ఒకవేళ (extensions_ == శూన్యసూచిక) {
+            స్థితి_3 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి *ఇది;
         }
     }
-    extensions_->setUnicodeKeywordValue(key, type, status_);
-    return *this;
+    extensions_->సమితి_Unicode_Keyword_విలువ(కీలకం, type, స్థితి_3);
+    తిరిగి *ఇది;
 }
 
-LocaleBuilder& LocaleBuilder::addUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::కూడు_Unicode_Locale_Attribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    CharString విలువ_str(value, స్థితి_3);
+    ఒకవేళ (U_FAILURE(స్థితి_3)) { తిరిగి *ఇది; }
+    transform(విలువ_str.దత్తాంశం(), విలువ_str.length());
+    ఒకవేళ (!ultag_isUnicodeLocaleAttribute(విలువ_str.దత్తాంశం(), విలువ_str.length())) {
+        స్థితి_3 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి *ఇది;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
-            status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+    ఒకవేళ (extensions_ == శూన్యసూచిక) {
+        extensions_ = Locale::get_మూలం().clone();
+        ఒకవేళ (extensions_ == శూన్యసూచిక) {
+            స్థితి_3 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి *ఇది;
         }
-        extensions_->setKeywordValue(kAttributeKey, value_str.data(), status_);
-        return *this;
+        extensions_->సమితి_Keyword_విలువ(k_Attribute_కీలకం, విలువ_str.దత్తాంశం(), స్థితి_3);
+        తిరిగి *ఇది;
     }
 
-    UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
-    if (U_FAILURE(localErrorCode)) {
-        CharString new_attributes(value_str.data(), status_);
+    UError_సంకేతం local_Error_సంకేతం = U_ZERO_ERROR;
+    స్వయంచాలక లక్షణాలు = extensions_->get_Keyword_విలువ<CharString>(k_Attribute_కీలకం, local_Error_సంకేతం);
+    ఒకవేళ (U_FAILURE(local_Error_సంకేతం)) {
+        CharString new_లక్షణాలు(విలువ_str.దత్తాంశం(), స్థితి_3);
         // No attributes, set the attribute.
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-        return *this;
+        extensions_->సమితి_Keyword_విలువ(k_Attribute_కీలకం, new_లక్షణాలు.దత్తాంశం(), స్థితి_3);
+        తిరిగి *ఇది;
     }
 
-    transform(attributes.data(),attributes.length());
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
-    CharString new_attributes;
-    bool inserted = false;
-    while (start < limit) {
-        if (!inserted) {
-            int cmp = uprv_strcmp(start, value_str.data());
-            if (cmp == 0) { return *this; }  // Found it in attributes: Just return
-            if (cmp > 0) {
-                if (!new_attributes.isEmpty()) new_attributes.append('_', status_);
-                new_attributes.append(value_str.data(), status_);
-                inserted = true;
+    transform(లక్షణాలు.దత్తాంశం(),లక్షణాలు.length());
+    స్థిరరాశి అక్షరం* ప్రారంభం = లక్షణాలు.దత్తాంశం();
+    స్థిరరాశి అక్షరం* హద్దు = లక్షణాలు.దత్తాంశం() + లక్షణాలు.length();
+    CharString new_లక్షణాలు;
+    తార్కిక inserted = అబద్ధం;
+    అయితే (ప్రారంభం < హద్దు) {
+        ఒకవేళ (!inserted) {
+            పూర్ణాంకం cmp = uprv_strcmp(ప్రారంభం, విలువ_str.దత్తాంశం());
+            ఒకవేళ (cmp == 0) { తిరిగి *ఇది; }  // Found it in attributes: Just return
+            ఒకవేళ (cmp > 0) {
+                ఒకవేళ (!new_లక్షణాలు.is_ఖాళీలు()) new_లక్షణాలు.append('_', స్థితి_3);
+                new_లక్షణాలు.append(విలువ_str.దత్తాంశం(), స్థితి_3);
+                inserted = నిజం;
             }
         }
-        if (!new_attributes.isEmpty()) {
-            new_attributes.append('_', status_);
+        ఒకవేళ (!new_లక్షణాలు.is_ఖాళీలు()) {
+            new_లక్షణాలు.append('_', స్థితి_3);
         }
-        new_attributes.append(start, status_);
-        start += uprv_strlen(start) + 1;
+        new_లక్షణాలు.append(ప్రారంభం, స్థితి_3);
+        ప్రారంభం += uprv_strlen(ప్రారంభం) + 1;
     }
-    if (!inserted) {
-        if (!new_attributes.isEmpty()) {
-            new_attributes.append('_', status_);
+    ఒకవేళ (!inserted) {
+        ఒకవేళ (!new_లక్షణాలు.is_ఖాళీలు()) {
+            new_లక్షణాలు.append('_', స్థితి_3);
         }
-        new_attributes.append(value_str.data(), status_);
+        new_లక్షణాలు.append(విలువ_str.దత్తాంశం(), స్థితి_3);
     }
     // Not yet in the attributes, set the attribute.
-    extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-    return *this;
+    extensions_->సమితి_Keyword_విలువ(k_Attribute_కీలకం, new_లక్షణాలు.దత్తాంశం(), స్థితి_3);
+    తిరిగి *ఇది;
 }
 
 LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
-        status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    CharString విలువ_str(value, స్థితి_3);
+    ఒకవేళ (U_FAILURE(స్థితి_3)) { తిరిగి *ఇది; }
+    transform(విలువ_str.దత్తాంశం(), విలువ_str.length());
+    ఒకవేళ (!ultag_isUnicodeLocaleAttribute(విలువ_str.దత్తాంశం(), విలువ_str.length())) {
+        స్థితి_3 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి *ఇది;
     }
-    if (extensions_ == nullptr) { return *this; }
-    UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
+    ఒకవేళ (extensions_ == శూన్యసూచిక) { తిరిగి *ఇది; }
+    UError_సంకేతం local_Error_సంకేతం = U_ZERO_ERROR;
+    స్వయంచాలక లక్షణాలు = extensions_->get_Keyword_విలువ<CharString>(k_Attribute_కీలకం, local_Error_సంకేతం);
     // get failure, just return
-    if (U_FAILURE(localErrorCode)) { return *this; }
+    ఒకవేళ (U_FAILURE(local_Error_సంకేతం)) { తిరిగి *ఇది; }
     // Do not have any attributes, just return.
-    if (attributes.isEmpty()) { return *this; }
+    ఒకవేళ (లక్షణాలు.is_ఖాళీలు()) { తిరిగి *ఇది; }
 
-    char* p = attributes.data();
+    అక్షరం* p = లక్షణాలు.దత్తాంశం();
     // Replace null terminiator in place for _ and - so later
     // we can use uprv_strcmp to compare.
-    for (int32_t i = 0; i < attributes.length(); i++, p++) {
+    కొరకు (int32_t i = 0; i < లక్షణాలు.length(); i++, p++) {
         *p = (*p == '_' || *p == '-') ? '\0' : uprv_tolower(*p);
     }
 
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
-    CharString new_attributes;
-    bool found = false;
-    while (start < limit) {
-        if (uprv_strcmp(start, value_str.data()) == 0) {
-            found = true;
-        } else {
-            if (!new_attributes.isEmpty()) {
-                new_attributes.append('_', status_);
+    స్థిరరాశి అక్షరం* ప్రారంభం = లక్షణాలు.దత్తాంశం();
+    స్థిరరాశి అక్షరం* హద్దు = లక్షణాలు.దత్తాంశం() + లక్షణాలు.length();
+    CharString new_లక్షణాలు;
+    తార్కిక దొరికింది = అబద్ధం;
+    అయితే (ప్రారంభం < హద్దు) {
+        ఒకవేళ (uprv_strcmp(ప్రారంభం, విలువ_str.దత్తాంశం()) == 0) {
+            దొరికింది = నిజం;
+        } లేకపోతే {
+            ఒకవేళ (!new_లక్షణాలు.is_ఖాళీలు()) {
+                new_లక్షణాలు.append('_', స్థితి_3);
             }
-            new_attributes.append(start, status_);
+            new_లక్షణాలు.append(ప్రారంభం, స్థితి_3);
         }
-        start += uprv_strlen(start) + 1;
+        ప్రారంభం += uprv_strlen(ప్రారంభం) + 1;
     }
     // Found the value in attributes, set the attribute.
-    if (found) {
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
+    ఒకవేళ (దొరికింది) {
+        extensions_->సమితి_Keyword_విలువ(k_Attribute_కీలకం, new_లక్షణాలు.దత్తాంశం(), స్థితి_3);
     }
-    return *this;
+    తిరిగి *ఇది;
 }
 
 LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
 {
-    status_ = U_ZERO_ERROR;
+    స్థితి_3 = U_ZERO_ERROR;
     language_[0] = 0;
     script_[0] = 0;
     region_[0] = 0;
-    delete variant_;
-    variant_ = nullptr;
+    తొలగించు variant_;
+    variant_ = శూన్యసూచిక;
     clearExtensions();
-    return *this;
+    తిరిగి *ఇది;
 }
 
 LocaleBuilder& LocaleBuilder::clearExtensions() U_LIFETIME_BOUND
 {
-    delete extensions_;
-    extensions_ = nullptr;
-    return *this;
+    తొలగించు extensions_;
+    extensions_ = శూన్యసూచిక;
+    తిరిగి *ఇది;
 }
 
 Locale makeBogusLocale() {
   Locale bogus;
-  bogus.setToBogus();
-  return bogus;
+  bogus.సమితి_గమ్యం_Bogus();
+  తిరిగి bogus;
 }
 
-void LocaleBuilder::copyExtensionsFrom(const Locale& src, UErrorCode& errorCode)
+శూన్య LocaleBuilder::copyExtensionsFrom(స్థిరరాశి Locale& src, UError_సంకేతం& error_సంకేతం)
 {
-    if (U_FAILURE(errorCode)) { return; }
-    LocalPointer<icu::StringEnumeration> keywords(src.createKeywords(errorCode));
-    if (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) { తిరిగి; }
+    Local_సూచిక<icu::StringEnumeration> keywords(src.createKeywords(error_సంకేతం));
+    ఒకవేళ (U_FAILURE(error_సంకేతం) || keywords.isNull() || keywords->count(error_సంకేతం) == 0) {
         // Error, or no extensions to copy.
-        return;
+        తిరిగి;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
-            status_ = U_MEMORY_ALLOCATION_ERROR;
-            return;
+    ఒకవేళ (extensions_ == శూన్యసూచిక) {
+        extensions_ = Locale::get_మూలం().clone();
+        ఒకవేళ (extensions_ == శూన్యసూచిక) {
+            స్థితి_3 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
     }
-    _copyExtensions(src, keywords.getAlias(), *extensions_, false, errorCode);
+    _copyExtensions(src, keywords.getAlias(), *extensions_, అబద్ధం, error_సంకేతం);
 }
 
-Locale LocaleBuilder::build(UErrorCode& errorCode)
+Locale LocaleBuilder::build(UError_సంకేతం& error_సంకేతం)
 {
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి makeBogusLocale();
     }
-    if (U_FAILURE(status_)) {
-        errorCode = status_;
-        return makeBogusLocale();
+    ఒకవేళ (U_FAILURE(స్థితి_3)) {
+        error_సంకేతం = స్థితి_3;
+        తిరిగి makeBogusLocale();
     }
-    CharString locale_str(language_, errorCode);
-    if (uprv_strlen(script_) > 0) {
-        locale_str.append('-', errorCode).append(StringPiece(script_), errorCode);
+    CharString locale_str(language_, error_సంకేతం);
+    ఒకవేళ (uprv_strlen(script_) > 0) {
+        locale_str.append('-', error_సంకేతం).append(StringPiece(script_), error_సంకేతం);
     }
-    if (uprv_strlen(region_) > 0) {
-        locale_str.append('-', errorCode).append(StringPiece(region_), errorCode);
+    ఒకవేళ (uprv_strlen(region_) > 0) {
+        locale_str.append('-', error_సంకేతం).append(StringPiece(region_), error_సంకేతం);
     }
-    if (variant_ != nullptr) {
-        locale_str.append('-', errorCode).append(StringPiece(variant_->data()), errorCode);
+    ఒకవేళ (variant_ != శూన్యసూచిక) {
+        locale_str.append('-', error_సంకేతం).append(StringPiece(variant_->దత్తాంశం()), error_సంకేతం);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి makeBogusLocale();
     }
-    Locale product(locale_str.data());
-    if (extensions_ != nullptr) {
-        _copyExtensions(*extensions_, nullptr, product, true, errorCode);
+    Locale లబ్ధం(locale_str.దత్తాంశం());
+    ఒకవేళ (extensions_ != శూన్యసూచిక) {
+        _copyExtensions(*extensions_, శూన్యసూచిక, లబ్ధం, నిజం, error_సంకేతం);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి makeBogusLocale();
     }
-    return product;
+    తిరిగి లబ్ధం;
 }
 
-UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) {
+UBool LocaleBuilder::copy_Error_గమ్యం(UError_సంకేతం &బహిర్గతం_Error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(బహిర్గతం_Error_సంకేతం)) {
         // Do not overwrite the older error code
-        return true;
+        తిరిగి నిజం;
     }
-    outErrorCode = status_;
-    return U_FAILURE(outErrorCode);
+    బహిర్గతం_Error_సంకేతం = స్థితి_3;
+    తిరిగి U_FAILURE(బహిర్గతం_Error_సంకేతం);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

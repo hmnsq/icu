@@ -15,10 +15,10 @@
 ******************************************************************************
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#అన్తర్భావ "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/chariter.h"
-#include "unicode/schriter.h"
+#అన్తర్భావ "unicode/chariter.h"
+#అన్తర్భావ "unicode/schriter.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,94 +26,94 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(StringCharacterIterator)
 
 StringCharacterIterator::StringCharacterIterator()
   : UCharCharacterIterator(),
-    text()
+    పాఠ్యం()
 {
   // NEVER DEFAULT CONSTRUCT!
 }
 
-StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr)
-  : UCharCharacterIterator(textStr.getBuffer(), textStr.length()),
-    text(textStr)
+StringCharacterIterator::StringCharacterIterator(స్థిరరాశి UnicodeString& పాఠ్యం_Str)
+  : UCharCharacterIterator(పాఠ్యం_Str.get_బఫరు(), పాఠ్యం_Str.length()),
+    పాఠ్యం(పాఠ్యం_Str)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::పాఠ్యం = ఇది->పాఠ్యం.get_బఫరు();
 }
 
-StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr,
-                                                 int32_t textPos)
-  : UCharCharacterIterator(textStr.getBuffer(), textStr.length(), textPos),
-    text(textStr)
+StringCharacterIterator::StringCharacterIterator(స్థిరరాశి UnicodeString& పాఠ్యం_Str,
+                                                 int32_t పాఠ్యం_Pos)
+  : UCharCharacterIterator(పాఠ్యం_Str.get_బఫరు(), పాఠ్యం_Str.length(), పాఠ్యం_Pos),
+    పాఠ్యం(పాఠ్యం_Str)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::పాఠ్యం = ఇది->పాఠ్యం.get_బఫరు();
 }
 
-StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr,
-                                                 int32_t textBegin,
-                                                 int32_t textEnd,
-                                                 int32_t textPos)
-  : UCharCharacterIterator(textStr.getBuffer(), textStr.length(), textBegin, textEnd, textPos),
-    text(textStr)
+StringCharacterIterator::StringCharacterIterator(స్థిరరాశి UnicodeString& పాఠ్యం_Str,
+                                                 int32_t పాఠ్యం_Begin,
+                                                 int32_t పాఠ్యం_చివర,
+                                                 int32_t పాఠ్యం_Pos)
+  : UCharCharacterIterator(పాఠ్యం_Str.get_బఫరు(), పాఠ్యం_Str.length(), పాఠ్యం_Begin, పాఠ్యం_చివర, పాఠ్యం_Pos),
+    పాఠ్యం(పాఠ్యం_Str)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::పాఠ్యం = ఇది->పాఠ్యం.get_బఫరు();
 }
 
-StringCharacterIterator::StringCharacterIterator(const StringCharacterIterator& that)
+StringCharacterIterator::StringCharacterIterator(స్థిరరాశి StringCharacterIterator& that)
   : UCharCharacterIterator(that),
-    text(that.text)
+    పాఠ్యం(that.పాఠ్యం)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::పాఠ్యం = ఇది->పాఠ్యం.get_బఫరు();
 }
 
 StringCharacterIterator::~StringCharacterIterator() {
 }
 
 StringCharacterIterator&
-StringCharacterIterator::operator=(const StringCharacterIterator& that) U_LIFETIME_BOUND {
-    UCharCharacterIterator::operator=(that);
-    text = that.text;
+StringCharacterIterator::క్రియాకారకం=(స్థిరరాశి StringCharacterIterator& that) U_LIFETIME_BOUND {
+    UCharCharacterIterator::క్రియాకారకం=(that);
+    పాఠ్యం = that.పాఠ్యం;
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
-    return *this;
+    UCharCharacterIterator::పాఠ్యం = ఇది->పాఠ్యం.get_బఫరు();
+    తిరిగి *ఇది;
 }
 
-bool
-StringCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+తార్కిక
+StringCharacterIterator::క్రియాకారకం==(స్థిరరాశి ForwardCharacterIterator& that) స్థిరరాశి {
+    ఒకవేళ (ఇది == &that) {
+        తిరిగి నిజం;
     }
 
     // do not call UCharCharacterIterator::operator==()
     // because that checks for array pointer equality
     // while we compare UnicodeString objects
 
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    ఒకవేళ (typeid(*ఇది) != typeid(that)) {
+        తిరిగి అబద్ధం;
     }
 
-    const StringCharacterIterator&    realThat = static_cast<const StringCharacterIterator&>(that);
+    స్థిరరాశి StringCharacterIterator&    realThat = static_cast<స్థిరరాశి StringCharacterIterator&>(that);
 
-    return text == realThat.text
+    తిరిగి పాఠ్యం == realThat.పాఠ్యం
         && pos == realThat.pos
         && begin == realThat.begin
-        && end == realThat.end;
+        && చివర == realThat.చివర;
 }
 
 StringCharacterIterator*
-StringCharacterIterator::clone() const {
-    return new StringCharacterIterator(*this);
+StringCharacterIterator::clone() స్థిరరాశి {
+    తిరిగి కొత్త StringCharacterIterator(*ఇది);
 }
 
-void
-StringCharacterIterator::setText(const UnicodeString& newText) {
-    text = newText;
-    UCharCharacterIterator::setText(text.getBuffer(), text.length());
+శూన్య
+StringCharacterIterator::సమితి_పాఠ్యం(స్థిరరాశి UnicodeString& new_పాఠ్యం) {
+    పాఠ్యం = new_పాఠ్యం;
+    UCharCharacterIterator::సమితి_పాఠ్యం(పాఠ్యం.get_బఫరు(), పాఠ్యం.length());
 }
 
-void
-StringCharacterIterator::getText(UnicodeString& result) {
-    result = text;
+శూన్య
+StringCharacterIterator::get_పాఠ్యం(UnicodeString& ఫలితం) {
+    ఫలితం = పాఠ్యం;
 }
-U_NAMESPACE_END
+U_NAMESPACE_చివర

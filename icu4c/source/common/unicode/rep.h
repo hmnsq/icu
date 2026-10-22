@@ -13,14 +13,14 @@
 **************************************************************************
 */
 
-#ifndef REP_H
-#define REP_H
+#నిర్వచితం_కాకపోతే REP_H
+#నిర్వచించు REP_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/uobject.h"
 
 /**
  * \file 
@@ -74,21 +74,21 @@ class UnicodeString;
  * @author Alan Liu
  * @stable ICU 2.0
  */
-class U_COMMON_API Replaceable : public UObject {
+class U_COMMON_API Replaceable : బహిరంగ UObject {
 
-public:
+బహిరంగ:
     /**
      * Destructor.
      * @stable ICU 2.0
      */
-    virtual ~Replaceable();
+    మాయా ~Replaceable();
 
     /**
      * Returns the number of 16-bit code units in the text.
      * @return number of 16-bit code units in text
      * @stable ICU 1.8
      */ 
-    inline int32_t length() const;
+    అంతఃవరుస int32_t నిడివి() స్థిరరాశి;
 
     /**
      * Returns the 16-bit code unit at the given offset into the text.
@@ -97,7 +97,7 @@ public:
      * @return 16-bit code unit of text at given offset
      * @stable ICU 1.8
      */
-    inline char16_t charAt(int32_t offset) const;
+    అంతఃవరుస char16_t charAt(int32_t స్థానభ్రంశం) స్థిరరాశి;
 
     /**
      * Returns the 32-bit code point at the given 16-bit offset into
@@ -111,7 +111,7 @@ public:
      * @return 32-bit code point of text at given offset
      * @stable ICU 1.8
      */
-    inline UChar32 char32At(int32_t offset) const;
+    అంతఃవరుస UChar32 char32At(int32_t స్థానభ్రంశం) స్థిరరాశి;
 
     /**
      * Copies characters in the range [<tt>start</tt>, <tt>limit</tt>) 
@@ -122,9 +122,9 @@ public:
      * @param target UnicodeString into which to copy characters.
      * @stable ICU 2.1
      */
-    virtual void extractBetween(int32_t start,
-                                int32_t limit,
-                                UnicodeString& target) const = 0;
+    మాయా శూన్య వెలికితీయి_Between(int32_t ప్రారంభం,
+                                int32_t హద్దు,
+                                UnicodeString& లక్ష్యం) స్థిరరాశి = 0;
 
     /**
      * Replaces a substring of this object with the given text.  If the
@@ -146,9 +146,9 @@ public:
      * to <code>limit - 1</code> 
      * @stable ICU 2.0
      */
-    virtual void handleReplaceBetween(int32_t start,
-                                      int32_t limit,
-                                      const UnicodeString& text) = 0;
+    మాయా శూన్య handleReplaceBetween(int32_t ప్రారంభం,
+                                      int32_t హద్దు,
+                                      స్థిరరాశి UnicodeString& పాఠ్యం) = 0;
     // Note: All other methods in this class take the names of
     // existing UnicodeString methods.  This method is the exception.
     // It is named differently because all replace methods of
@@ -174,7 +174,7 @@ public:
      * dest >= limit</code>.
      * @stable ICU 2.0
      */
-    virtual void copy(int32_t start, int32_t limit, int32_t dest) = 0;
+    మాయా శూన్య copy(int32_t ప్రారంభం, int32_t హద్దు, int32_t dest) = 0;
 
     /**
      * Returns true if this object contains metadata.  If a
@@ -185,7 +185,7 @@ public:
      * @return true if this object contains metadata
      * @stable ICU 2.2
      */
-    virtual UBool hasMetaData() const;
+    మాయా UBool has_Meta_దత్తాంశం() స్థిరరాశి;
 
     /**
      * Clone this object, an instance of a subclass of Replaceable.
@@ -199,15 +199,15 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.6
      */
-    virtual Replaceable *clone() const;
+    మాయా Replaceable *clone() స్థిరరాశి;
 
-protected:
+రక్షిత:
 
     /**
      * Default constructor.
      * @stable ICU 2.4
      */
-    inline Replaceable();
+    అంతఃవరుస Replaceable();
 
     /*
      * Assignment operator not declared. The compiler will provide one
@@ -224,42 +224,42 @@ protected:
      * Virtual version of length().
      * @stable ICU 2.4
      */ 
-    virtual int32_t getLength() const = 0;
+    మాయా int32_t get_నిడివి() స్థిరరాశి = 0;
 
     /**
      * Virtual version of charAt().
      * @stable ICU 2.4
      */
-    virtual char16_t getCharAt(int32_t offset) const = 0;
+    మాయా char16_t getCharAt(int32_t స్థానభ్రంశం) స్థిరరాశి = 0;
 
     /**
      * Virtual version of char32At().
      * @stable ICU 2.4
      */
-    virtual UChar32 getChar32At(int32_t offset) const = 0;
+    మాయా UChar32 getChar32At(int32_t స్థానభ్రంశం) స్థిరరాశి = 0;
 };
 
-inline Replaceable::Replaceable() {}
+అంతఃవరుస Replaceable::Replaceable() {}
 
-inline int32_t
-Replaceable::length() const {
-    return getLength();
+అంతఃవరుస int32_t
+Replaceable::నిడివి() స్థిరరాశి {
+    తిరిగి get_నిడివి();
 }
 
-inline char16_t
-Replaceable::charAt(int32_t offset) const {
-    return getCharAt(offset);
+అంతఃవరుస char16_t
+Replaceable::charAt(int32_t స్థానభ్రంశం) స్థిరరాశి {
+    తిరిగి getCharAt(స్థానభ్రంశం);
 }
 
-inline UChar32
-Replaceable::char32At(int32_t offset) const {
-    return getChar32At(offset);
+అంతఃవరుస UChar32
+Replaceable::char32At(int32_t స్థానభ్రంశం) స్థిరరాశి {
+    తిరిగి getChar32At(స్థానభ్రంశం);
 }
 
 // There is no rep.cpp, see unistr.cpp for Replaceable function implementations.
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#అయితే_ముగింపు

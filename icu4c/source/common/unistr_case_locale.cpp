@@ -17,11 +17,11 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/ucasemap.h"
-#include "unicode/unistr.h"
-#include "ucasemap_imp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/locid.h"
+#అన్తర్భావ "unicode/ucasemap.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -30,27 +30,27 @@ U_NAMESPACE_BEGIN
 //========================================
 
 UnicodeString&
-UnicodeString::toLower() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
+UnicodeString::గమ్యం_క్రింది() U_LIFETIME_BOUND {
+  తిరిగి caseMap(ustrcase_getCaseLocale(శూన్యసూచిక), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_అంతర్గత_గమ్యం_క్రింది);
 }
 
 UnicodeString&
-UnicodeString::toLower(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
+UnicodeString::గమ్యం_క్రింది(స్థిరరాశి Locale& locale) U_LIFETIME_BOUND {
+  తిరిగి caseMap(ustrcase_getCaseLocale(locale.get_పునాది_Name()), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_అంతర్గత_గమ్యం_క్రింది);
 }
 
 UnicodeString&
-UnicodeString::toUpper() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
+UnicodeString::గమ్యం_పై() U_LIFETIME_BOUND {
+  తిరిగి caseMap(ustrcase_getCaseLocale(శూన్యసూచిక), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_అంతర్గత_గమ్యం_పై);
 }
 
 UnicodeString&
-UnicodeString::toUpper(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
+UnicodeString::గమ్యం_పై(స్థిరరాశి Locale& locale) U_LIFETIME_BOUND {
+  తిరిగి caseMap(ustrcase_getCaseLocale(locale.get_పునాది_Name()), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_అంతర్గత_గమ్యం_పై);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

@@ -7,21 +7,21 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#అన్తర్భావ "sharedobject.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "umutex.h"
+#అన్తర్భావ "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
 SharedObject::~SharedObject() {}
 
-UnifiedCacheBase::~UnifiedCacheBase() {}
+Unified_Cache_పునాది::~Unified_Cache_పునాది() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+శూన్య
+SharedObject::కూడు_Ref() స్థిరరాశి {
+    umtx_atomic_inc(&hard_Ref_లెక్క);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,31 +32,31 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+శూన్య
+SharedObject::removeRef() స్థిరరాశి {
+    స్థిరరాశి Unified_Cache_పునాది *cache = ఇది->cachePtr;
+    int32_t updated_Ref_లెక్క = umtx_atomic_dec(&hard_Ref_లెక్క);
+    U_ASSERT(updated_Ref_లెక్క >= 0);
+    ఒకవేళ (updated_Ref_లెక్క == 0) {
+        ఒకవేళ (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } లేకపోతే {
+            తొలగించు ఇది;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_లెక్క() స్థిరరాశి {
+    తిరిగి umtx_ఎక్కించు_Acquire(hard_Ref_లెక్క);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+శూన్య
+SharedObject::delete_If_Zero_Ref_లెక్క() స్థిరరాశి {
+    ఒకవేళ (ఇది->cachePtr == శూన్యసూచిక && get_Ref_లెక్క() == 0) {
+        తొలగించు ఇది;
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

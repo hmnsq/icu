@@ -13,85 +13,85 @@
 *   indentation:4
 */
 
-#ifndef CPPUTILS_H
-#define CPPUTILS_H
+#నిర్వచితం_కాకపోతే CPPUTILS_H
+#నిర్వచించు CPPUTILS_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "cmemory.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "cmemory.h"
 
 /*==========================================================================*/
 /* Array copy utility functions */
 /*==========================================================================*/
 
-static
-inline void uprv_arrayCopy(const double* src, double* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+స్థిర
+అంతఃవరుస శూన్య uprv_arrayCopy(స్థిరరాశి ద్విగుణ* src, ద్విగుణ* dst, int32_t లెక్క)
+{ uprv_memcpy(dst, src, (size_t)లెక్క * పరిమాణం(*src)); }
 
-static
-inline void uprv_arrayCopy(const double* src, int32_t srcStart,
-              double* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+స్థిర
+అంతఃవరుస శూన్య uprv_arrayCopy(స్థిరరాశి ద్విగుణ* src, int32_t src_ప్రారంభం,
+              ద్విగుణ* dst, int32_t dst_ప్రారంభం, int32_t లెక్క)
+{ uprv_memcpy(dst+dst_ప్రారంభం, src+src_ప్రారంభం, (size_t)లెక్క * పరిమాణం(*src)); }
 
-static
-inline void uprv_arrayCopy(const int8_t* src, int8_t* dst, int32_t count)
-    { uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+స్థిర
+అంతఃవరుస శూన్య uprv_arrayCopy(స్థిరరాశి int8_t* src, int8_t* dst, int32_t లెక్క)
+    { uprv_memcpy(dst, src, (size_t)లెక్క * పరిమాణం(*src)); }
 
-static
-inline void uprv_arrayCopy(const int8_t* src, int32_t srcStart,
-              int8_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+స్థిర
+అంతఃవరుస శూన్య uprv_arrayCopy(స్థిరరాశి int8_t* src, int32_t src_ప్రారంభం,
+              int8_t* dst, int32_t dst_ప్రారంభం, int32_t లెక్క)
+{ uprv_memcpy(dst+dst_ప్రారంభం, src+src_ప్రారంభం, (size_t)లెక్క * పరిమాణం(*src)); }
 
-static
-inline void uprv_arrayCopy(const int16_t* src, int16_t* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+స్థిర
+అంతఃవరుస శూన్య uprv_arrayCopy(స్థిరరాశి int16_t* src, int16_t* dst, int32_t లెక్క)
+{ uprv_memcpy(dst, src, (size_t)లెక్క * పరిమాణం(*src)); }
 
-static
-inline void uprv_arrayCopy(const int16_t* src, int32_t srcStart,
-              int16_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+స్థిర
+అంతఃవరుస శూన్య uprv_arrayCopy(స్థిరరాశి int16_t* src, int32_t src_ప్రారంభం,
+              int16_t* dst, int32_t dst_ప్రారంభం, int32_t లెక్క)
+{ uprv_memcpy(dst+dst_ప్రారంభం, src+src_ప్రారంభం, (size_t)లెక్క * పరిమాణం(*src)); }
 
-static
-inline void uprv_arrayCopy(const int32_t* src, int32_t* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+స్థిర
+అంతఃవరుస శూన్య uprv_arrayCopy(స్థిరరాశి int32_t* src, int32_t* dst, int32_t లెక్క)
+{ uprv_memcpy(dst, src, (size_t)లెక్క * పరిమాణం(*src)); }
 
-static
-inline void uprv_arrayCopy(const int32_t* src, int32_t srcStart,
-              int32_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+స్థిర
+అంతఃవరుస శూన్య uprv_arrayCopy(స్థిరరాశి int32_t* src, int32_t src_ప్రారంభం,
+              int32_t* dst, int32_t dst_ప్రారంభం, int32_t లెక్క)
+{ uprv_memcpy(dst+dst_ప్రారంభం, src+src_ప్రారంభం, (size_t)లెక్క * పరిమాణం(*src)); }
 
-static
-inline void
-uprv_arrayCopy(const char16_t *src, int32_t srcStart,
-        char16_t *dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
-
-/**
- * Copy an array of UnicodeString OBJECTS (not pointers).
- * @internal
- */
-static inline void
-uprv_arrayCopy(const icu::UnicodeString *src, icu::UnicodeString *dst, int32_t count)
-{ while(count-- > 0) *dst++ = *src++; }
+స్థిర
+అంతఃవరుస శూన్య
+uprv_arrayCopy(స్థిరరాశి char16_t *src, int32_t src_ప్రారంభం,
+        char16_t *dst, int32_t dst_ప్రారంభం, int32_t లెక్క)
+{ uprv_memcpy(dst+dst_ప్రారంభం, src+src_ప్రారంభం, (size_t)లెక్క * పరిమాణం(*src)); }
 
 /**
  * Copy an array of UnicodeString OBJECTS (not pointers).
  * @internal
  */
-static inline void
-uprv_arrayCopy(const icu::UnicodeString *src, int32_t srcStart,
-               icu::UnicodeString *dst, int32_t dstStart, int32_t count)
-{ uprv_arrayCopy(src+srcStart, dst+dstStart, count); }
+స్థిర అంతఃవరుస శూన్య
+uprv_arrayCopy(స్థిరరాశి icu::UnicodeString *src, icu::UnicodeString *dst, int32_t లెక్క)
+{ అయితే(లెక్క-- > 0) *dst++ = *src++; }
+
+/**
+ * Copy an array of UnicodeString OBJECTS (not pointers).
+ * @internal
+ */
+స్థిర అంతఃవరుస శూన్య
+uprv_arrayCopy(స్థిరరాశి icu::UnicodeString *src, int32_t src_ప్రారంభం,
+               icu::UnicodeString *dst, int32_t dst_ప్రారంభం, int32_t లెక్క)
+{ uprv_arrayCopy(src+src_ప్రారంభం, dst+dst_ప్రారంభం, లెక్క); }
 
 /**
  * Checks that the string is readable and writable.
  * Sets U_ILLEGAL_ARGUMENT_ERROR if the string isBogus() or has an open getBuffer().
  */
-inline void
-uprv_checkCanGetBuffer(const icu::UnicodeString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && s.isBogus()) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
+అంతఃవరుస శూన్య
+uprv_check_Can_Get_బఫరు(స్థిరరాశి icu::UnicodeString &s, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_SUCCESS(error_సంకేతం) && s.isBogus()) {
+        error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
     }
 }
 
-#endif /* _CPPUTILS */
+#అయితే_ముగింపు /* _CPPUTILS */

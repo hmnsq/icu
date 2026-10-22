@@ -8,89 +8,89 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ఒకవేళ !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/resbund.h"
+#అన్తర్భావ "uresimp.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "servloc.h"
+#అన్తర్భావ "ustrfmt.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#నిర్వచించు UNDERSCORE_CHAR ((char16_t)0x005f)
+#నిర్వచించు AT_SIGN_CHAR    ((char16_t)64)
+#నిర్వచించు PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
 ICUResourceBundleFactory::ICUResourceBundleFactory()
-  : LocaleKeyFactory(VISIBLE)
+  : Locale_కీలకం_Factory(VISIBLE)
   , _bundleName()
 {
 }
 
-ICUResourceBundleFactory::ICUResourceBundleFactory(const UnicodeString& bundleName)
-  : LocaleKeyFactory(VISIBLE)
+ICUResourceBundleFactory::ICUResourceBundleFactory(స్థిరరాశి UnicodeString& bundleName)
+  : Locale_కీలకం_Factory(VISIBLE)
   , _bundleName(bundleName)
 {
 }
 
 ICUResourceBundleFactory::~ICUResourceBundleFactory() {}
 
-const Hashtable*
-ICUResourceBundleFactory::getSupportedIDs(UErrorCode& status) const
+స్థిరరాశి Hashtable*
+ICUResourceBundleFactory::getSupportedIDs(UError_సంకేతం& స్థితి_2) స్థిరరాశి
 {
-    if (U_SUCCESS(status)) {
-        return LocaleUtility::getAvailableLocaleNames(_bundleName);
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
+        తిరిగి LocaleUtility::get_అందుబాటు_Locale_పేర్లు(_bundleName);
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
 UObject*
-ICUResourceBundleFactory::handleCreate(const Locale& loc, int32_t /* kind */, const ICUService* /* service */, UErrorCode& status) const
+ICUResourceBundleFactory::handleCreate(స్థిరరాశి Locale& loc, int32_t /*రకం*/, స్థిరరాశి ICUService* /* service */, UError_సంకేతం& స్థితి_2) స్థిరరాశి
 {
-    if (U_SUCCESS(status)) {
+    ఒకవేళ (U_SUCCESS(స్థితి_2)) {
         // _bundleName is a package name
         // and should only contain invariant characters
                 // ??? is it always true that the max length of the bundle name is 19?
                 // who made this change? -- dlf
-        char pkg[20];
+        అక్షరం pkg[20];
         int32_t length;
-        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(sizeof(pkg)), US_INV);
-        if (length >= static_cast<int32_t>(sizeof(pkg))) {
-            return nullptr;
+        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(పరిమాణం(pkg)), US_INV);
+        ఒకవేళ (length >= static_cast<int32_t>(పరిమాణం(pkg))) {
+            తిరిగి శూన్యసూచిక;
         }
-        return new ResourceBundle(pkg, loc, status);
+        తిరిగి కొత్త ResourceBundle(pkg, loc, స్థితి_2);
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-#ifdef SERVICE_DEBUG
+#నిర్వచితమైతే SERVICE_DEBUG
 UnicodeString&
-ICUResourceBundleFactory::debug(UnicodeString& result) const
+ICUResourceBundleFactory::debug(UnicodeString& ఫలితం) స్థిరరాశి
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", bundle: ");
-    return result.append(_bundleName);
+    Locale_కీలకం_Factory::debug(ఫలితం);
+    ఫలితం.append((UnicodeString)", bundle: ");
+    తిరిగి ఫలితం.append(_bundleName);
 }
 
 UnicodeString&
-ICUResourceBundleFactory::debugClass(UnicodeString& result) const
+ICUResourceBundleFactory::debugClass(UnicodeString& ఫలితం) స్థిరరాశి
 {
-    return result.append((UnicodeString)"ICUResourceBundleFactory");
+    తిరిగి ఫలితం.append((UnicodeString)"ICUResourceBundleFactory");
 }
-#endif
+#అయితే_ముగింపు
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUResourceBundleFactory)
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#అయితే_ముగింపు
 
 

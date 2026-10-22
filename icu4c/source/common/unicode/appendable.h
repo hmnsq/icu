@@ -14,19 +14,19 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __APPENDABLE_H__
-#define __APPENDABLE_H__
+#నిర్వచితం_కాకపోతే __APPENDABLE_H__
+#నిర్వచించు __APPENDABLE_H__
 
 /**
  * \file
  * \brief C++ API: Appendable class: Sink for Unicode code points and 16-bit code units (char16_ts).
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#అన్తర్భావ "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -51,8 +51,8 @@ class UnicodeString;
  * (e.g., store a UErrorCode, make/keep a UnicodeString bogus).
  * @stable ICU 4.8
  */
-class U_COMMON_API Appendable : public UObject {
-public:
+class U_COMMON_API Appendable : బహిరంగ UObject {
+బహిరంగ:
     /**
      * Destructor.
      * @stable ICU 4.8
@@ -65,7 +65,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendCodeUnit(char16_t c) = 0;
+    మాయా UBool append_సంకేతం_Unit(char16_t c) = 0;
 
     /**
      * Appends a code point.
@@ -74,7 +74,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendCodePoint(UChar32 c);
+    మాయా UBool append_సంకేతం_బిందువు(UChar32 c);
 
     /**
      * Appends a string.
@@ -84,7 +84,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendString(const char16_t *s, int32_t length);
+    మాయా UBool appendString(స్థిరరాశి char16_t *s, int32_t నిడివి);
 
     /**
      * Tells the object that the caller is going to append roughly
@@ -95,7 +95,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool reserveAppendCapacity(int32_t appendCapacity);
+    మాయా UBool reserve_Append_సామర్థ్యం(int32_t append_సామర్థ్యం);
 
     /**
      * Returns a writable buffer for appending and writes the buffer's capacity to
@@ -141,11 +141,11 @@ public:
      * @return a buffer with *resultCapacity>=minCapacity
      * @stable ICU 4.8
      */
-    virtual char16_t* getAppendBuffer(int32_t minCapacity,
-                                      int32_t desiredCapacityHint,
+    మాయా char16_t* get_Append_బఫరు(int32_t min_సామర్థ్యం,
+                                      int32_t desired_సామర్థ్యం_Hint,
                                       char16_t* scratch U_LIFETIME_BOUND,
-                                      int32_t scratchCapacity,
-                                      int32_t* resultCapacity) U_LIFETIME_BOUND;
+                                      int32_t scratch_సామర్థ్యం,
+                                      int32_t* ఫలితం_సామర్థ్యం) U_LIFETIME_BOUND;
 };
 
 /**
@@ -154,8 +154,8 @@ public:
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UnicodeStringAppendable : public Appendable {
-public:
+class U_COMMON_API UnicodeStringAppendable : బహిరంగ Appendable {
+బహిరంగ:
     /**
      * Aliases the UnicodeString (keeps its reference) for writing.
      * @param s The UnicodeString to which this Appendable will write.
@@ -175,7 +175,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendCodeUnit(char16_t c) override;
+    మాయా UBool append_సంకేతం_Unit(char16_t c) override;
 
     /**
      * Appends a code point to the string.
@@ -183,7 +183,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendCodePoint(UChar32 c) override;
+    మాయా UBool append_సంకేతం_బిందువు(UChar32 c) override;
 
     /**
      * Appends a string to the UnicodeString.
@@ -192,7 +192,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendString(const char16_t *s, int32_t length) override;
+    మాయా UBool appendString(స్థిరరాశి char16_t *s, int32_t నిడివి) override;
 
     /**
      * Tells the UnicodeString that the caller is going to append roughly
@@ -201,7 +201,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool reserveAppendCapacity(int32_t appendCapacity) override;
+    మాయా UBool reserve_Append_సామర్థ్యం(int32_t append_సామర్థ్యం) override;
 
     /**
      * Returns a writable buffer for appending and writes the buffer's capacity to
@@ -224,17 +224,17 @@ public:
      * @return a buffer with *resultCapacity>=minCapacity
      * @stable ICU 4.8
      */
-    virtual char16_t* getAppendBuffer(int32_t minCapacity,
-                                      int32_t desiredCapacityHint,
-                                      char16_t* scratch U_LIFETIME_BOUND, int32_t scratchCapacity,
-                                      int32_t* resultCapacity) U_LIFETIME_BOUND override;
+    మాయా char16_t* get_Append_బఫరు(int32_t min_సామర్థ్యం,
+                                      int32_t desired_సామర్థ్యం_Hint,
+                                      char16_t* scratch U_LIFETIME_BOUND, int32_t scratch_సామర్థ్యం,
+                                      int32_t* ఫలితం_సామర్థ్యం) U_LIFETIME_BOUND override;
 
-private:
+అంతరంగ:
     UnicodeString &str;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __APPENDABLE_H__
+#అయితే_ముగింపు  // __APPENDABLE_H__

@@ -15,102 +15,102 @@
 ******************************************************************************
 */
 
-#include "unicode/uchar.h"
-#include "unicode/uscript.h"
-#include "unicode/uloc.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "ulocimp.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/uscript.h"
+#అన్తర్భావ "unicode/uloc.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "ulocimp.h"
 
-static const UScriptCode JAPANESE[3] = { USCRIPT_KATAKANA, USCRIPT_HIRAGANA, USCRIPT_HAN };
-static const UScriptCode KOREAN[2] = { USCRIPT_HANGUL, USCRIPT_HAN };
-static const UScriptCode HAN_BOPO[2] = { USCRIPT_HAN, USCRIPT_BOPOMOFO };
+స్థిర స్థిరరాశి UScript_సంకేతం JAPANESE[3] = { USCRIPT_KATAKANA, USCRIPT_HIRAGANA, USCRIPT_HAN };
+స్థిర స్థిరరాశి UScript_సంకేతం KOREAN[2] = { USCRIPT_HANGUL, USCRIPT_HAN };
+స్థిర స్థిరరాశి UScript_సంకేతం HAN_BOPO[2] = { USCRIPT_HAN, USCRIPT_BOPOMOFO };
 
-static int32_t
-setCodes(const UScriptCode *src, int32_t length,
-         UScriptCode *dest, int32_t capacity, UErrorCode *err) {
+స్థిర int32_t
+సమితి_Codes(స్థిరరాశి UScript_సంకేతం *src, int32_t length,
+         UScript_సంకేతం *dest, int32_t capacity, UError_సంకేతం *err) {
     int32_t i;
-    if(U_FAILURE(*err)) { return 0; }
-    if(length > capacity) {
-        *err = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+    ఒకవేళ(U_FAILURE(*err)) { తిరిగి 0; }
+    ఒకవేళ(length > capacity) {
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
+        తిరిగి length;
     }
-    for(i = 0; i < length; ++i) {
+    కొరకు(i = 0; i < length; ++i) {
         dest[i] = src[i];
     }
-    return length;
+    తిరిగి length;
 }
 
-static int32_t
-setOneCode(UScriptCode script, UScriptCode *scripts, int32_t capacity, UErrorCode *err) {
-    if(U_FAILURE(*err)) { return 0; }
-    if(1 > capacity) {
-        *err = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+స్థిర int32_t
+సమితి_One_సంకేతం(UScript_సంకేతం script, UScript_సంకేతం *scripts, int32_t capacity, UError_సంకేతం *err) {
+    ఒకవేళ(U_FAILURE(*err)) { తిరిగి 0; }
+    ఒకవేళ(1 > capacity) {
+        *err = U_బఫరు_అధికప్రవాహం_ERROR;
+        తిరిగి 1;
     }
     scripts[0] = script;
-    return 1;
+    తిరిగి 1;
 }
 
-static int32_t
-getCodesFromLocale(const char *locale,
-                   UScriptCode *scripts, int32_t capacity, UErrorCode *err) {
-    if (U_FAILURE(*err)) { return 0; }
+స్థిర int32_t
+getCodesFromLocale(స్థిరరాశి అక్షరం *locale,
+                   UScript_సంకేతం *scripts, int32_t capacity, UError_సంకేతం *err) {
+    ఒకవేళ (U_FAILURE(*err)) { తిరిగి 0; }
     icu::CharString lang;
     icu::CharString script;
-    if (locale == nullptr) {
+    ఒకవేళ (locale == శూన్యసూచిక) {
         locale = uloc_getDefault();
     }
-    ulocimp_getSubtags(locale, &lang, &script, nullptr, nullptr, nullptr, *err);
-    if (U_FAILURE(*err)) { return 0; }
+    ulocimp_getSubtags(locale, &lang, &script, శూన్యసూచిక, శూన్యసూచిక, శూన్యసూచిక, *err);
+    ఒకవేళ (U_FAILURE(*err)) { తిరిగి 0; }
     // Multi-script languages, equivalent to the LocaleScript data
     // that we used to load from locale resource bundles.
-    if (lang == "ja") {
-        return setCodes(JAPANESE, UPRV_LENGTHOF(JAPANESE), scripts, capacity, err);
+    ఒకవేళ (lang == "ja") {
+        తిరిగి సమితి_Codes(JAPANESE, UPRV_LENGTHOF(JAPANESE), scripts, capacity, err);
     }
-    if (lang == "ko") {
-        return setCodes(KOREAN, UPRV_LENGTHOF(KOREAN), scripts, capacity, err);
+    ఒకవేళ (lang == "ko") {
+        తిరిగి సమితి_Codes(KOREAN, UPRV_LENGTHOF(KOREAN), scripts, capacity, err);
     }
-    if (lang == "zh" && script == "Hant") {
-        return setCodes(HAN_BOPO, UPRV_LENGTHOF(HAN_BOPO), scripts, capacity, err);
+    ఒకవేళ (lang == "zh" && script == "Hant") {
+        తిరిగి సమితి_Codes(HAN_BOPO, UPRV_LENGTHOF(HAN_BOPO), scripts, capacity, err);
     }
     // Explicit script code.
-    if (!script.isEmpty()) {
-        UScriptCode scriptCode = static_cast<UScriptCode>(u_getPropertyValueEnum(UCHAR_SCRIPT, script.data()));
-        if(scriptCode != USCRIPT_INVALID_CODE) {
-            if(scriptCode == USCRIPT_SIMPLIFIED_HAN || scriptCode == USCRIPT_TRADITIONAL_HAN) {
-                scriptCode = USCRIPT_HAN;
+    ఒకవేళ (!script.is_ఖాళీలు()) {
+        UScript_సంకేతం script_సంకేతం = static_cast<UScript_సంకేతం>(u_get_Property_విలువ_Enum(UCHAR_SCRIPT, script.దత్తాంశం()));
+        ఒకవేళ(script_సంకేతం != USCRIPT_INVALID_సంకేతం) {
+            ఒకవేళ(script_సంకేతం == USCRIPT_SIMPLIFIED_HAN || script_సంకేతం == USCRIPT_TRADITIONAL_HAN) {
+                script_సంకేతం = USCRIPT_HAN;
             }
-            return setOneCode(scriptCode, scripts, capacity, err);
+            తిరిగి సమితి_One_సంకేతం(script_సంకేతం, scripts, capacity, err);
         }
     }
-    return 0;
+    తిరిగి 0;
 }
 
 /* TODO: this is a bad API and should be deprecated, ticket #11141 */
 U_CAPI int32_t  U_EXPORT2
-uscript_getCode(const char* nameOrAbbrOrLocale,
-                UScriptCode* fillIn,
+uscript_get_సంకేతం(స్థిరరాశి అక్షరం* nameOrAbbrOrLocale,
+                UScript_సంకేతం* fill_లోపల,
                 int32_t capacity,
-                UErrorCode* err){
-    UBool triedCode;
-    UErrorCode internalErrorCode;
+                UError_సంకేతం* err){
+    UBool tried_సంకేతం;
+    UError_సంకేతం అంతర్గత_Error_సంకేతం;
     int32_t length;
 
-    if(U_FAILURE(*err)) {
-        return 0;
+    ఒకవేళ(U_FAILURE(*err)) {
+        తిరిగి 0;
     }
-    if(nameOrAbbrOrLocale==nullptr ||
-            (fillIn == nullptr ? capacity != 0 : capacity < 0)) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(nameOrAbbrOrLocale==శూన్యసూచిక ||
+            (fill_లోపల == శూన్యసూచిక ? capacity != 0 : capacity < 0)) {
+        *err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    triedCode = false;
-    const char* lastSepPtr = uprv_strrchr(nameOrAbbrOrLocale, '-');
-    if (lastSepPtr==nullptr) {
-        lastSepPtr = uprv_strrchr(nameOrAbbrOrLocale, '_');
+    tried_సంకేతం = అబద్ధం;
+    స్థిరరాశి అక్షరం* చివరి_Sep_Ptr = uprv_strrchr(nameOrAbbrOrLocale, '-');
+    ఒకవేళ (చివరి_Sep_Ptr==శూన్యసూచిక) {
+        చివరి_Sep_Ptr = uprv_strrchr(nameOrAbbrOrLocale, '_');
     }
     // Favor interpretation of nameOrAbbrOrLocale as a script alias if either
     // 1. nameOrAbbrOrLocale does not contain -/_. Handles Han, Mro, Nko, etc.
@@ -119,34 +119,34 @@ uscript_getCode(const char* nameOrAbbrOrLocale,
     //    Old_Hungarian, Old_Italic, etc. ("old" is a valid language code)
     // 3. The last instance of -/_ is at offset 7, and the portion after that is
     //    3 characters. This handles New_Tai_Lue ("new" is a valid language code).
-    if (lastSepPtr==nullptr
-            || (lastSepPtr-nameOrAbbrOrLocale == 3 && uprv_strlen(nameOrAbbrOrLocale) > 8)
-            || (lastSepPtr-nameOrAbbrOrLocale == 7 && uprv_strlen(nameOrAbbrOrLocale) == 11) ) {
+    ఒకవేళ (చివరి_Sep_Ptr==శూన్యసూచిక
+            || (చివరి_Sep_Ptr-nameOrAbbrOrLocale == 3 && uprv_strlen(nameOrAbbrOrLocale) > 8)
+            || (చివరి_Sep_Ptr-nameOrAbbrOrLocale == 7 && uprv_strlen(nameOrAbbrOrLocale) == 11) ) {
         /* try long and abbreviated script names first */
-        UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
-        if(code!=USCRIPT_INVALID_CODE) {
-            return setOneCode(code, fillIn, capacity, err);
+        UScript_సంకేతం సంకేతం_2 = (UScript_సంకేతం) u_get_Property_విలువ_Enum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
+        ఒకవేళ(సంకేతం_2!=USCRIPT_INVALID_సంకేతం) {
+            తిరిగి సమితి_One_సంకేతం(సంకేతం_2, fill_లోపల, capacity, err);
         }
-        triedCode = true;
+        tried_సంకేతం = నిజం;
     }
-    internalErrorCode = U_ZERO_ERROR;
-    length = getCodesFromLocale(nameOrAbbrOrLocale, fillIn, capacity, err);
-    if(U_FAILURE(*err) || length != 0) {
-        return length;
+    అంతర్గత_Error_సంకేతం = U_ZERO_ERROR;
+    length = getCodesFromLocale(nameOrAbbrOrLocale, fill_లోపల, capacity, err);
+    ఒకవేళ(U_FAILURE(*err) || length != 0) {
+        తిరిగి length;
     }
-    icu::CharString likely = ulocimp_addLikelySubtags(nameOrAbbrOrLocale, internalErrorCode);
-    if(U_SUCCESS(internalErrorCode) && internalErrorCode != U_STRING_NOT_TERMINATED_WARNING) {
-        length = getCodesFromLocale(likely.data(), fillIn, capacity, err);
-        if(U_FAILURE(*err) || length != 0) {
-            return length;
+    icu::CharString likely = ulocimp_కూడు_Likely_Subtags(nameOrAbbrOrLocale, అంతర్గత_Error_సంకేతం);
+    ఒకవేళ(U_SUCCESS(అంతర్గత_Error_సంకేతం) && అంతర్గత_Error_సంకేతం != U_STRING_NOT_TERMINATED_WARNING) {
+        length = getCodesFromLocale(likely.దత్తాంశం(), fill_లోపల, capacity, err);
+        ఒకవేళ(U_FAILURE(*err) || length != 0) {
+            తిరిగి length;
         }
     }
-    if(!triedCode) {
+    ఒకవేళ(!tried_సంకేతం) {
         /* still not found .. try long and abbreviated script names again */
-        UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
-        if(code!=USCRIPT_INVALID_CODE) {
-            return setOneCode(code, fillIn, capacity, err);
+        UScript_సంకేతం సంకేతం_2 = (UScript_సంకేతం) u_get_Property_విలువ_Enum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
+        ఒకవేళ(సంకేతం_2!=USCRIPT_INVALID_సంకేతం) {
+            తిరిగి సమితి_One_సంకేతం(సంకేతం_2, fill_లోపల, capacity, err);
         }
     }
-    return 0;
+    తిరిగి 0;
 }

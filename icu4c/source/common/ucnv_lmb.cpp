@@ -25,23 +25,23 @@
 *   06/28/2000  helena           Major rewrite for the callback API changes.
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ఒకవేళ !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucnv_imp.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
+#అన్తర్భావ "unicode/ucnv_err.h"
+#అన్తర్భావ "unicode/ucnv.h"
+#అన్తర్భావ "unicode/uset.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucnv_imp.h"
+#అన్తర్భావ "ucnv_bld.h"
+#అన్తర్భావ "ucnv_cnv.h"
 
-#ifdef EBCDIC_RTL
-    #include "ascii_a.h"
-#endif
+#నిర్వచితమైతే EBCDIC_RTL
+    #అన్తర్భావ "ascii_a.h"
+#అయితే_ముగింపు
 
 /*
   LMBCS
@@ -83,20 +83,20 @@
   That is, a sometimes-optional 'group' byte, followed by 1 and sometimes 2
   data bytes. The maximum size of a LMBCS character is 3 bytes:
 */
-#define ULMBCS_CHARSIZE_MAX      3
+#నిర్వచించు ULMBCS_CHARSIZE_MAX      3
 /*
   The single-byte values from 0x20 to 0x7F are examples of single D1 bytes.
   We often have to figure out if byte values are below or above this, so we 
   use the ANSI nomenclature 'C0' and 'C1' to refer to the range of control 
   characters just above & below the common lower-ANSI  range */
-#define ULMBCS_C0END           0x1F   
-#define ULMBCS_C1START         0x80   
+#నిర్వచించు ULMBCS_C0_చివర           0x1F   
+#నిర్వచించు ULMBCS_C1_ప్రారంభం         0x80   
 /*
   Since LMBCS is always dealing in byte units. we create a local type here for 
   dealing with these units of LMBCS code units:
 
 */  
-typedef uint8_t ulmbcs_byte_t;
+రకనిర్వచనం uint8_t ulmbcs_byte_t;
 
 /* 
    Most of the values less than 0x20 are reserved in LMBCS to announce 
@@ -105,18 +105,18 @@ typedef uint8_t ulmbcs_byte_t;
    for these character-set announcers:
 */
 
-#define ULMBCS_GRP_L1         0x01   /* Latin-1    :ibm-850  */
-#define ULMBCS_GRP_GR         0x02   /* Greek      :ibm-851  */
-#define ULMBCS_GRP_HE         0x03   /* Hebrew     :ibm-1255 */
-#define ULMBCS_GRP_AR         0x04   /* Arabic     :ibm-1256 */
-#define ULMBCS_GRP_RU         0x05   /* Cyrillic   :ibm-1251 */
-#define ULMBCS_GRP_L2         0x06   /* Latin-2    :ibm-852  */
-#define ULMBCS_GRP_TR         0x08   /* Turkish    :ibm-1254 */
-#define ULMBCS_GRP_TH         0x0B   /* Thai       :ibm-874  */
-#define ULMBCS_GRP_JA         0x10   /* Japanese   :ibm-943  */
-#define ULMBCS_GRP_KO         0x11   /* Korean     :ibm-1261 */
-#define ULMBCS_GRP_TW         0x12   /* Chinese SC :ibm-950  */
-#define ULMBCS_GRP_CN         0x13   /* Chinese TC :ibm-1386 */
+#నిర్వచించు ULMBCS_GRP_L1         0x01   /* Latin-1    :ibm-850  */
+#నిర్వచించు ULMBCS_GRP_GR         0x02   /* Greek      :ibm-851  */
+#నిర్వచించు ULMBCS_GRP_HE         0x03   /* Hebrew     :ibm-1255 */
+#నిర్వచించు ULMBCS_GRP_AR         0x04   /* Arabic     :ibm-1256 */
+#నిర్వచించు ULMBCS_GRP_RU         0x05   /* Cyrillic   :ibm-1251 */
+#నిర్వచించు ULMBCS_GRP_L2         0x06   /* Latin-2    :ibm-852  */
+#నిర్వచించు ULMBCS_GRP_TR         0x08   /* Turkish    :ibm-1254 */
+#నిర్వచించు ULMBCS_GRP_TH         0x0B   /* Thai       :ibm-874  */
+#నిర్వచించు ULMBCS_GRP_JA         0x10   /* Japanese   :ibm-943  */
+#నిర్వచించు ULMBCS_GRP_KO         0x11   /* Korean     :ibm-1261 */
+#నిర్వచించు ULMBCS_GRP_TW         0x12   /* Chinese SC :ibm-950  */
+#నిర్వచించు ULMBCS_GRP_CN         0x13   /* Chinese TC :ibm-1386 */
 
 /*
    So, the beginning of understanding LMBCS is that IF the first byte of a LMBCS 
@@ -130,7 +130,7 @@ typedef uint8_t ulmbcs_byte_t;
    before the multi-byte character sets. When we need to tell whether a 
    group byte is for a single byte char set or not we use this define: */
 
-#define ULMBCS_DOUBLEOPTGROUP_START  0x10   
+#నిర్వచించు ULMBCS_DOUBLEOPTGROUP_ప్రారంభం  0x10   
 
 /* 
 However, to fully understand LMBCS, you must also understand a series of 
@@ -152,26 +152,26 @@ We reserve a few special single byte values for common control
 characters. These are in the same place as their ANSI equivalents for speed.
 */
                      
-#define ULMBCS_HT    0x09   /* Fixed control char - Horizontal Tab */
-#define ULMBCS_LF    0x0A   /* Fixed control char - Line Feed */
-#define ULMBCS_CR    0x0D   /* Fixed control char - Carriage Return */
+#నిర్వచించు ULMBCS_HT    0x09   /* Fixed control char - Horizontal Tab */
+#నిర్వచించు ULMBCS_LF    0x0A   /* Fixed control char - Line Feed */
+#నిర్వచించు ULMBCS_CR    0x0D   /* Fixed control char - Carriage Return */
 
 /* Then, 1-2-3 reserved a special single-byte character to put at the 
 beginning of internal 'system' range names: */
 
-#define ULMBCS_123SYSTEMRANGE  0x19   
+#నిర్వచించు ULMBCS_123SYSTEMRANGE  0x19   
 
 /* Then we needed a place to put all the other ansi control characters 
 that must be moved to different values because LMBCS reserves those 
 values for other purposes. To represent the control characters, we start 
 with a first byte of 0xF & add the control character value as the 
 second byte */
-#define ULMBCS_GRP_CTRL       0x0F   
+#నిర్వచించు ULMBCS_GRP_CTRL       0x0F   
 
 /* For the C0 controls (less than 0x20), we add 0x20 to preserve the 
 useful doctrine that any byte less than 0x20 in a LMBCS char must be 
 the first byte of a character:*/
-#define ULMBCS_CTRLOFFSET      0x20   
+#నిర్వచించు ULMBCS_CTRLOFFSET      0x20   
 
 /* 
 Where to put the characters that aren't part of any of the 12 national 
@@ -186,23 +186,23 @@ LMBCS, was to use up the spaces of the form
  lot of stray values. Internally, in this implementation, we track this 
  as group '0', as a place to tuck this exceptions list.*/
 
-#define ULMBCS_GRP_EXCEPT     0x00    
+#నిర్వచించు ULMBCS_GRP_EXCEPT     0x00    
 /*
  Finally, as the durability and usefulness of UNICODE became clear, 
  LOTUS added a new group 0x14 to hold Unicode values not otherwise 
  represented in LMBCS: */
-#define ULMBCS_GRP_UNICODE    0x14   
+#నిర్వచించు ULMBCS_GRP_UNICODE    0x14   
 /* The two bytes appearing after a 0x14 are interpreted as UFT-16 BE
 (Big-Endian) characters. The exception comes when the UTF16 
 representation would have a zero as the second byte. In that case,
 'F6' is used in its place, and the bytes are swapped. (This prevents 
 LMBCS from encoding any Unicode values of the form U+F6xx, but that's OK:
 0xF6xx is in the middle of the Private Use Area.)*/
-#define ULMBCS_UNICOMPATZERO   0xF6   
+#నిర్వచించు ULMBCS_UNICOMPATZERO   0xF6   
 
 /* It is also useful in our code to have a constant for the size of 
 a LMBCS char that holds a literal Unicode value */
-#define ULMBCS_UNICODE_SIZE      3    
+#నిర్వచించు ULMBCS_UNICODE_కొలత      3    
 
 /* 
 To squish the LMBCS representations down even further, and to make 
@@ -211,7 +211,7 @@ from a LMBCS character. This is decided on a process-by-process basis. The
 group byte that is dropped is called the 'optimization group'.
 
 For Notes, the optimzation group is always 0x1.*/
-#define ULMBCS_DEFAULTOPTGROUP 0x1    
+#నిర్వచించు ULMBCS_DEFAULTOPTGROUP 0x1    
 /* For 1-2-3 files, the optimzation group is stored in the header of the 1-2-3 
 file. 
 
@@ -232,9 +232,9 @@ ICU converters can be created and used as needed. */
 byte, only those at 0x13 or below can map to an actual converter. To limit
 some loops and searches, we define a value for that last group converter:*/
 
-#define ULMBCS_GRP_LAST       0x13   /* last LMBCS group that has a converter */
+#నిర్వచించు ULMBCS_GRP_చివరి       0x13   /* last LMBCS group that has a converter */
 
-static const char * const OptGroupByteToCPName[ULMBCS_GRP_LAST + 1] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి Opt_సమూహం_Byte_గమ్యం_CPName[ULMBCS_GRP_చివరి + 1] = {
    /* 0x0000 */ "lmb-excp", /* internal home for the LOTUS exceptions list */
    /* 0x0001 */ "ibm-850",
    /* 0x0002 */ "ibm-851",
@@ -242,15 +242,15 @@ static const char * const OptGroupByteToCPName[ULMBCS_GRP_LAST + 1] = {
    /* 0x0004 */ "windows-1256",
    /* 0x0005 */ "windows-1251",
    /* 0x0006 */ "ibm-852",
-   /* 0x0007 */ nullptr,      /* Unused */
+   /* 0x0007 */ శూన్యసూచిక,      /* Unused */
    /* 0x0008 */ "windows-1254",
-   /* 0x0009 */ nullptr,      /* Control char HT */
-   /* 0x000A */ nullptr,      /* Control char LF */
+   /* 0x0009 */ శూన్యసూచిక,      /* Control char HT */
+   /* 0x000A */ శూన్యసూచిక,      /* Control char LF */
    /* 0x000B */ "windows-874",
-   /* 0x000C */ nullptr,      /* Unused */
-   /* 0x000D */ nullptr,      /* Control char CR */
-   /* 0x000E */ nullptr,      /* Unused */
-   /* 0x000F */ nullptr,      /* Control chars: 0x0F20 + C0/C1 character: algorithmic */
+   /* 0x000C */ శూన్యసూచిక,      /* Unused */
+   /* 0x000D */ శూన్యసూచిక,      /* Control char CR */
+   /* 0x000E */ శూన్యసూచిక,      /* Unused */
+   /* 0x000F */ శూన్యసూచిక,      /* Control chars: 0x0F20 + C0/C1 character: algorithmic */
    /* 0x0010 */ "windows-932",
    /* 0x0011 */ "windows-949",
    /* 0x0012 */ "windows-950",
@@ -277,30 +277,30 @@ SBCS, the table will place it in the SBCS sets, to make the LMBCS code point
 length as small as possible. Here's the two special markers we use to indicate
 ambiguous mappings: */
 
-#define ULMBCS_AMBIGUOUS_SBCS   0x80   /* could fit in more than one 
+#నిర్వచించు ULMBCS_AMBIGUOUS_SBCS   0x80   /* could fit in more than one 
                                           LMBCS sbcs native encoding 
                                           (example: most accented latin) */
-#define ULMBCS_AMBIGUOUS_MBCS   0x81   /* could fit in more than one 
+#నిర్వచించు ULMBCS_AMBIGUOUS_MBCS   0x81   /* could fit in more than one 
                                           LMBCS mbcs native encoding 
                                           (example: Unihan) */
-#define ULMBCS_AMBIGUOUS_ALL   0x82
+#నిర్వచించు ULMBCS_AMBIGUOUS_ALL   0x82
 /* And here's a simple way to see if a group falls in an appropriate range */
-#define ULMBCS_AMBIGUOUS_MATCH(agroup, xgroup) \
+#నిర్వచించు ULMBCS_AMBIGUOUS_సరిపోలిక(agroup, xgroup) \
                   ((((agroup) == ULMBCS_AMBIGUOUS_SBCS) && \
-                  (xgroup) < ULMBCS_DOUBLEOPTGROUP_START) || \
+                  (xgroup) < ULMBCS_DOUBLEOPTGROUP_ప్రారంభం) || \
                   (((agroup) == ULMBCS_AMBIGUOUS_MBCS) && \
-                  (xgroup) >= ULMBCS_DOUBLEOPTGROUP_START)) || \
+                  (xgroup) >= ULMBCS_DOUBLEOPTGROUP_ప్రారంభం)) || \
                   ((agroup) == ULMBCS_AMBIGUOUS_ALL)
 
 
 /* The table & some code to use it: */
 
 
-static const struct _UniLMBCSGrpMap  
+స్థిర స్థిరరాశి నిర్మాణం _UniLMBCSGrpMap  
 {
-   const char16_t uniStartRange;
-   const char16_t uniEndRange;
-   const ulmbcs_byte_t  GrpType;
+   స్థిరరాశి char16_t uni_ప్రారంభం_Range;
+   స్థిరరాశి char16_t uni_చివర_Range;
+   స్థిరరాశి ulmbcs_byte_t  GrpType;
 } UniLMBCSGrpMap[]
 =
 {
@@ -444,21 +444,21 @@ static const struct _UniLMBCSGrpMap
     {0xFFFF, 0xFFFF,  ULMBCS_GRP_UNICODE}
 };
    
-static ulmbcs_byte_t 
-FindLMBCSUniRange(char16_t uniChar)
+స్థిర ulmbcs_byte_t 
+కనుగొను_LMBCSUni_Range(char16_t uniChar)
 {
-   const struct _UniLMBCSGrpMap * pTable = UniLMBCSGrpMap;
+   స్థిరరాశి నిర్మాణం _UniLMBCSGrpMap * p_పట్టిక = UniLMBCSGrpMap;
 
-   while (uniChar > pTable->uniEndRange) 
+   అయితే (uniChar > p_పట్టిక->uni_చివర_Range) 
    {
-      pTable++;
+      p_పట్టిక++;
    }
 
-   if (uniChar >= pTable->uniStartRange) 
+   ఒకవేళ (uniChar >= p_పట్టిక->uni_ప్రారంభం_Range) 
    {
-      return pTable->GrpType;
+      తిరిగి p_పట్టిక->GrpType;
    }
-   return ULMBCS_GRP_UNICODE;
+   తిరిగి ULMBCS_GRP_UNICODE;
 }
 
 /* 
@@ -483,10 +483,10 @@ do the lookup: */
   search to go quickly.
  *************************************************/
 
-static const struct _LocaleLMBCSGrpMap
+స్థిర స్థిరరాశి నిర్మాణం _LocaleLMBCSGrpMap
 {
-   const char    *LocaleID;
-   const ulmbcs_byte_t OptGroup;
+   స్థిరరాశి అక్షరం    *LocaleID;
+   స్థిరరాశి ulmbcs_byte_t Opt_సమూహం;
 } LocaleLMBCSGrpMap[] =
 {
     {"ar", ULMBCS_GRP_AR},
@@ -530,34 +530,34 @@ static const struct _LocaleLMBCSGrpMap
    /* {"vi", ULMBCS_GRP_L1}, */
     {"zhTW", ULMBCS_GRP_TW},
     {"zh", ULMBCS_GRP_CN},
-    {nullptr, ULMBCS_GRP_L1}
+    {శూన్యసూచిక, ULMBCS_GRP_L1}
 };
 
 
-static ulmbcs_byte_t 
-FindLMBCSLocale(const char *LocaleID)
+స్థిర ulmbcs_byte_t 
+కనుగొను_LMBCSLocale(స్థిరరాశి అక్షరం *LocaleID)
 {
-   const struct _LocaleLMBCSGrpMap *pTable = LocaleLMBCSGrpMap;
+   స్థిరరాశి నిర్మాణం _LocaleLMBCSGrpMap *p_పట్టిక = LocaleLMBCSGrpMap;
 
-   if ((!LocaleID) || (!*LocaleID)) 
+   ఒకవేళ ((!LocaleID) || (!*LocaleID)) 
    {
-      return 0;
+      తిరిగి 0;
    }
 
-   while (pTable->LocaleID)
+   అయితే (p_పట్టిక->LocaleID)
    {
-      if (*pTable->LocaleID == *LocaleID) /* Check only first char for speed */
+      ఒకవేళ (*p_పట్టిక->LocaleID == *LocaleID) /* Check only first char for speed */
       {
          /* First char matches - check whole name, for entry-length */
-         if (uprv_strncmp(pTable->LocaleID, LocaleID, strlen(pTable->LocaleID)) == 0)
-            return pTable->OptGroup;
+         ఒకవేళ (uprv_strncmp(p_పట్టిక->LocaleID, LocaleID, అక్షరశ్రేణి_పొడవు(p_పట్టిక->LocaleID)) == 0)
+            తిరిగి p_పట్టిక->Opt_సమూహం;
       }
-      else
-      if (*pTable->LocaleID > *LocaleID) /* Sorted alphabetically - exit */
-         break;
-      pTable++;
+      లేకపోతే
+      ఒకవేళ (*p_పట్టిక->LocaleID > *LocaleID) /* Sorted alphabetically - exit */
+         ఆపు;
+      p_పట్టిక++;
    }
-   return ULMBCS_GRP_L1;
+   తిరిగి ULMBCS_GRP_L1;
 }
 
 
@@ -574,155 +574,155 @@ FindLMBCSLocale(const char *LocaleID)
   the definitions of these structures, see unicode\ucnv_bld.h
 */
 
-typedef struct
+రకనిర్వచనం నిర్మాణం
   {
-    UConverterSharedData *OptGrpConverter[ULMBCS_GRP_LAST+1];    /* Converter per Opt. grp. */
-    uint8_t    OptGroup;                  /* default Opt. grp. for this LMBCS session */
-    uint8_t    localeConverterIndex;      /* reasonable locale match for index */
+    UConverter_Shared_దత్తాంశం *OptGrpConverter[ULMBCS_GRP_చివరి+1];    /* Converter per Opt. grp. */
+    uint8_t    Opt_సమూహం;                  /* default Opt. grp. for this LMBCS session */
+    uint8_t    locale_Converter_సూచీ;      /* reasonable locale match for index */
   }
-UConverterDataLMBCS;
+UConverter_దత్తాంశం_LMBCS;
 
 U_CDECL_BEGIN
-static void  U_CALLCONV _LMBCSClose(UConverter * _this);
-U_CDECL_END
+స్థిర శూన్య  U_CALLCONV _LMBCSClose(UConverter * _this);
+U_CDECL_చివర
 
-#define DECLARE_LMBCS_DATA(n) \
-static const UConverterImpl _LMBCSImpl##n={\
+#నిర్వచించు DECLARE_LMBCS_దత్తాంశం(n) \
+స్థిర స్థిరరాశి UConverterImpl _LMBCSImpl##n={\
     UCNV_LMBCS_##n,\
-    nullptr,nullptr,\
+    శూన్యసూచిక,శూన్యసూచిక,\
     _LMBCSOpen##n,\
     _LMBCSClose,\
-    nullptr,\
+    శూన్యసూచిక,\
     _LMBCSToUnicodeWithOffsets,\
     _LMBCSToUnicodeWithOffsets,\
     _LMBCSFromUnicode,\
     _LMBCSFromUnicode,\
-    nullptr,\
-    nullptr,\
-    nullptr,\
-    nullptr,\
+    శూన్యసూచిక,\
+    శూన్యసూచిక,\
+    శూన్యసూచిక,\
+    శూన్యసూచిక,\
     _LMBCSSafeClone,\
-    ucnv_getCompleteUnicodeSet,\
-    nullptr,\
-    nullptr\
+    ucnv_get_Complete_Unicode_సమితి,\
+    శూన్యసూచిక,\
+    శూన్యసూచిక\
 };\
-static const UConverterStaticData _LMBCSStaticData##n={\
-  sizeof(UConverterStaticData),\
+స్థిర స్థిరరాశి UConverter_Static_దత్తాంశం LMBCSStatic_దత్తాంశం##n={\
+  పరిమాణం(UConverter_Static_దత్తాంశం),\
  "LMBCS-"  #n,\
     0, UCNV_IBM, UCNV_LMBCS_##n, 1, 3,\
-    { 0x3f, 0, 0, 0 },1,false,false,0,0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} \
+    { 0x3f, 0, 0, 0 },1,అబద్ధం,అబద్ధం,0,0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} \
 };\
-const UConverterSharedData _LMBCSData##n= \
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_LMBCSStaticData##n, &_LMBCSImpl##n);
+స్థిరరాశి UConverter_Shared_దత్తాంశం _LMBCSData##n= \
+        UCNV_IMMUTABLE_SHARED_దత్తాంశం_INITIALIZER(&LMBCSStatic_దత్తాంశం##n, &_LMBCSImpl##n);
 
  /* The only function we needed to duplicate 12 times was the 'open'
 function, which will do basically the same thing except set a  different
 optimization group. So, we put the common stuff into a worker function, 
 and set up another macro to stamp out the 12 open functions:*/
-#define DEFINE_LMBCS_OPEN(n) \
-static void U_CALLCONV \
-   _LMBCSOpen##n(UConverter* _this, UConverterLoadArgs* pArgs, UErrorCode* err) \
-{ _LMBCSOpenWorker(_this, pArgs, err, n); }
+#నిర్వచించు DEFINE_LMBCS_OPEN(n) \
+స్థిర శూన్య U_CALLCONV \
+   _LMBCSOpen##n(UConverter* _this, UConverter_ఎక్కించు_వాదనలు* p_వాదనలు, UError_సంకేతం* err) \
+{ LMBCSOpen_కార్మికుడు(_this, p_వాదనలు, err, n); }
 
 
 
 /* Here's the open worker & the common close function */
-static void 
-_LMBCSOpenWorker(UConverter*  _this,
-                 UConverterLoadArgs *pArgs,
-                 UErrorCode*  err,
-                 ulmbcs_byte_t OptGroup)
+స్థిర శూన్య 
+LMBCSOpen_కార్మికుడు(UConverter*  _this,
+                 UConverter_ఎక్కించు_వాదనలు *p_వాదనలు,
+                 UError_సంకేతం*  err,
+                 ulmbcs_byte_t Opt_సమూహం)
 {
-    UConverterDataLMBCS* extraInfo = static_cast<UConverterDataLMBCS*>(uprv_malloc(sizeof(UConverterDataLMBCS)));
+    UConverter_దత్తాంశం_LMBCS* extraInfo = static_cast<UConverter_దత్తాంశం_LMBCS*>(uprv_malloc(పరిమాణం(UConverter_దత్తాంశం_LMBCS)));
     _this->extraInfo = extraInfo;
-    if(extraInfo != nullptr)
+    ఒకవేళ(extraInfo != శూన్యసూచిక)
     {
-        UConverterNamePieces stackPieces;
-        UConverterLoadArgs stackArgs= UCNV_LOAD_ARGS_INITIALIZER;
+        UConverterNamePieces దొంతర_Pieces;
+        UConverter_ఎక్కించు_వాదనలు దొంతర_వాదనలు= UCNV_ఎక్కించు_వాదనలు_INITIALIZER;
         ulmbcs_byte_t i;
 
-        uprv_memset(extraInfo, 0, sizeof(UConverterDataLMBCS));
+        uprv_memset(extraInfo, 0, పరిమాణం(UConverter_దత్తాంశం_LMBCS));
 
-        stackArgs.onlyTestIsLoadable = pArgs->onlyTestIsLoadable;
+        దొంతర_వాదనలు.onlyTestIsLoadable = p_వాదనలు->onlyTestIsLoadable;
 
-        for (i=0; i <= ULMBCS_GRP_LAST && U_SUCCESS(*err); i++)         
+        కొరకు (i=0; i <= ULMBCS_GRP_చివరి && U_SUCCESS(*err); i++)         
         {
-            if(OptGroupByteToCPName[i] != nullptr) {
-                extraInfo->OptGrpConverter[i] = ucnv_loadSharedData(OptGroupByteToCPName[i], &stackPieces, &stackArgs, err);
+            ఒకవేళ(Opt_సమూహం_Byte_గమ్యం_CPName[i] != శూన్యసూచిక) {
+                extraInfo->OptGrpConverter[i] = ucnv_ఎక్కించు_Shared_దత్తాంశం(Opt_సమూహం_Byte_గమ్యం_CPName[i], &దొంతర_Pieces, &దొంతర_వాదనలు, err);
             }
         }
 
-        if(U_FAILURE(*err) || pArgs->onlyTestIsLoadable) {
+        ఒకవేళ(U_FAILURE(*err) || p_వాదనలు->onlyTestIsLoadable) {
             _LMBCSClose(_this);
-            return;
+            తిరిగి;
         }
-        extraInfo->OptGroup = OptGroup;
-        extraInfo->localeConverterIndex = FindLMBCSLocale(pArgs->locale);
+        extraInfo->Opt_సమూహం = Opt_సమూహం;
+        extraInfo->locale_Converter_సూచీ = కనుగొను_LMBCSLocale(p_వాదనలు->locale);
     }
-    else
+    లేకపోతే
     {
-        *err = U_MEMORY_ALLOCATION_ERROR;
+        *err = U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
 }
 
 U_CDECL_BEGIN
-static void  U_CALLCONV
+స్థిర శూన్య  U_CALLCONV
 _LMBCSClose(UConverter *   _this) 
 {
-    if (_this->extraInfo != nullptr)
+    ఒకవేళ (_this->extraInfo != శూన్యసూచిక)
     {
         ulmbcs_byte_t Ix;
-        UConverterDataLMBCS * extraInfo = (UConverterDataLMBCS *) _this->extraInfo;
+        UConverter_దత్తాంశం_LMBCS * extraInfo = (UConverter_దత్తాంశం_LMBCS *) _this->extraInfo;
 
-        for (Ix=0; Ix <= ULMBCS_GRP_LAST; Ix++)
+        కొరకు (Ix=0; Ix <= ULMBCS_GRP_చివరి; Ix++)
         {
-           if (extraInfo->OptGrpConverter[Ix] != nullptr)
-              ucnv_unloadSharedDataIfReady(extraInfo->OptGrpConverter[Ix]);
+           ఒకవేళ (extraInfo->OptGrpConverter[Ix] != శూన్యసూచిక)
+              ucnv_unload_Shared_దత్తాంశం_If_Ready(extraInfo->OptGrpConverter[Ix]);
         }
-        if (!_this->isExtraLocal) {
+        ఒకవేళ (!_this->isExtraLocal) {
             uprv_free (_this->extraInfo);
-            _this->extraInfo = nullptr;
+            _this->extraInfo = శూన్యసూచిక;
         }
     }
 }
 
-typedef struct LMBCSClone {
+రకనిర్వచనం నిర్మాణం LMBCSClone {
     UConverter cnv;
-    UConverterDataLMBCS lmbcs;
+    UConverter_దత్తాంశం_LMBCS lmbcs;
 } LMBCSClone;
 
-static UConverter *  U_CALLCONV
-_LMBCSSafeClone(const UConverter *cnv, 
-                void *stackBuffer, 
-                int32_t *pBufferSize, 
-                UErrorCode *status) {
-    (void)status;
+స్థిర UConverter *  U_CALLCONV
+_LMBCSSafeClone(స్థిరరాశి UConverter *cnv, 
+                శూన్య *దొంతర_బఫరు, 
+                int32_t *p_బఫరు_కొలత, 
+                UError_సంకేతం *స్థితి_2) {
+    (శూన్య)స్థితి_2;
     LMBCSClone *newLMBCS;
-    UConverterDataLMBCS *extraInfo;
+    UConverter_దత్తాంశం_LMBCS *extraInfo;
     int32_t i;
 
-    if(*pBufferSize<=0) {
-        *pBufferSize=(int32_t)sizeof(LMBCSClone);
-        return nullptr;
+    ఒకవేళ(*p_బఫరు_కొలత<=0) {
+        *p_బఫరు_కొలత=(int32_t)పరిమాణం(LMBCSClone);
+        తిరిగి శూన్యసూచిక;
     }
 
-    extraInfo=(UConverterDataLMBCS *)cnv->extraInfo;
-    newLMBCS=(LMBCSClone *)stackBuffer;
+    extraInfo=(UConverter_దత్తాంశం_LMBCS *)cnv->extraInfo;
+    newLMBCS=(LMBCSClone *)దొంతర_బఫరు;
 
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&newLMBCS->lmbcs, extraInfo, sizeof(UConverterDataLMBCS));
+    uprv_memcpy(&newLMBCS->lmbcs, extraInfo, పరిమాణం(UConverter_దత్తాంశం_LMBCS));
 
     /* share the subconverters */
-    for(i = 0; i <= ULMBCS_GRP_LAST; ++i) {
-        if(extraInfo->OptGrpConverter[i] != nullptr) {
-            ucnv_incrementRefCount(extraInfo->OptGrpConverter[i]);
+    కొరకు(i = 0; i <= ULMBCS_GRP_చివరి; ++i) {
+        ఒకవేళ(extraInfo->OptGrpConverter[i] != శూన్యసూచిక) {
+            ucnv_increment_Ref_లెక్క(extraInfo->OptGrpConverter[i]);
         }
     }
 
     newLMBCS->cnv.extraInfo = &newLMBCS->lmbcs;
-    newLMBCS->cnv.isExtraLocal = true;
-    return &newLMBCS->cnv;
+    newLMBCS->cnv.isExtraLocal = నిజం;
+    తిరిగి &newLMBCS->cnv;
 }
 
 /*
@@ -743,123 +743,123 @@ _LMBCSSafeClone(const UConverter *cnv,
    starting at pStartLMBCS (if any).
 */
 
-static size_t
-LMBCSConversionWorker (
-   UConverterDataLMBCS * extraInfo,    /* subconverters, opt & locale groups */
-   ulmbcs_byte_t group,                /* The group to try */
-   ulmbcs_byte_t  * pStartLMBCS,              /* where to put the results */
+స్థిర size_t
+LMBCSConversion_కార్మికుడు (
+   UConverter_దత్తాంశం_LMBCS * extraInfo,    /* subconverters, opt & locale groups */
+   ulmbcs_byte_t సమూహం,                /* The group to try */
+   ulmbcs_byte_t  * p_ప్రారంభం_LMBCS,              /* where to put the results */
    char16_t * pUniChar,                   /* The input unicode character */
-   ulmbcs_byte_t * lastConverterIndex, /* output: track last successful group used */
+   ulmbcs_byte_t * చివరి_Converter_సూచీ, /* output: track last successful group used */
    UBool * groups_tried                /* output: track any unsuccessful groups */
 )   
 {
-   ulmbcs_byte_t  * pLMBCS = pStartLMBCS;
-   UConverterSharedData * xcnv = extraInfo->OptGrpConverter[group];
+   ulmbcs_byte_t  * pLMBCS = p_ప్రారంభం_LMBCS;
+   UConverter_Shared_దత్తాంశం * xcnv = extraInfo->OptGrpConverter[సమూహం];
 
-   int bytesConverted;
+   పూర్ణాంకం బైట్లు_Converted;
    uint32_t value;
-   ulmbcs_byte_t firstByte;
+   ulmbcs_byte_t మొదటి_Byte;
 
    U_ASSERT(xcnv);
-   U_ASSERT(group<ULMBCS_GRP_UNICODE);
+   U_ASSERT(సమూహం<ULMBCS_GRP_UNICODE);
 
-   bytesConverted = ucnv_MBCSFromUChar32(xcnv, *pUniChar, &value, false);
+   బైట్లు_Converted = ucnv_MBCSFromUChar32(xcnv, *pUniChar, &value, అబద్ధం);
 
    /* get the first result byte */
-   if(bytesConverted > 0) {
-      firstByte = (ulmbcs_byte_t)(value >> ((bytesConverted - 1) * 8));
-   } else {
+   ఒకవేళ(బైట్లు_Converted > 0) {
+      మొదటి_Byte = (ulmbcs_byte_t)(value >> ((బైట్లు_Converted - 1) * 8));
+   } లేకపోతే {
       /* most common failure mode is an unassigned character */
-      groups_tried[group] = true;
-      return 0;
+      groups_tried[సమూహం] = నిజం;
+      తిరిగి 0;
    }
 
-   *lastConverterIndex = group;
+   *చివరి_Converter_సూచీ = సమూహం;
 
    /* All initial byte values in lower ascii range should have been caught by now,
       except with the exception group.
     */
-   U_ASSERT((firstByte <= ULMBCS_C0END) || (firstByte >= ULMBCS_C1START) || (group == ULMBCS_GRP_EXCEPT));
+   U_ASSERT((మొదటి_Byte <= ULMBCS_C0_చివర) || (మొదటి_Byte >= ULMBCS_C1_ప్రారంభం) || (సమూహం == ULMBCS_GRP_EXCEPT));
    
    /* use converted data: first write 0, 1 or two group bytes */
-   if (group != ULMBCS_GRP_EXCEPT && extraInfo->OptGroup != group)
+   ఒకవేళ (సమూహం != ULMBCS_GRP_EXCEPT && extraInfo->Opt_సమూహం != సమూహం)
    {
-      *pLMBCS++ = group;
-      if (bytesConverted == 1 && group >= ULMBCS_DOUBLEOPTGROUP_START)
+      *pLMBCS++ = సమూహం;
+      ఒకవేళ (బైట్లు_Converted == 1 && సమూహం >= ULMBCS_DOUBLEOPTGROUP_ప్రారంభం)
       {
-         *pLMBCS++ = group;
+         *pLMBCS++ = సమూహం;
       }
    }
 
   /* don't emit control chars */
-   if ( bytesConverted == 1 && firstByte < 0x20 )
-      return 0;
+   ఒకవేళ ( బైట్లు_Converted == 1 && మొదటి_Byte < 0x20 )
+      తిరిగి 0;
 
 
    /* then move over the converted data */
-   switch(bytesConverted)
+   ఎంపిక(బైట్లు_Converted)
    {
-   case 4:
+   స్థితి 4:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 24);
       U_FALLTHROUGH;
-   case 3:
+   స్థితి 3:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 16);
       U_FALLTHROUGH;
-   case 2:
+   స్థితి 2:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 8);
       U_FALLTHROUGH;
-   case 1:
+   స్థితి 1:
       *pLMBCS++ = (ulmbcs_byte_t)value;
       U_FALLTHROUGH;
-   default:
+   అప్రమేయ:
       /* will never occur */
-      break;
+      ఆపు;
    }
 
-   return (pLMBCS - pStartLMBCS);
+   తిరిగి (pLMBCS - p_ప్రారంభం_LMBCS);
 }
 
 
 /* This is a much simpler version of above, when we 
 know we are writing LMBCS using the Unicode group
 */
-static size_t 
+స్థిర size_t 
 LMBCSConvertUni(ulmbcs_byte_t * pLMBCS, char16_t uniChar)
 {
      /* encode into LMBCS Unicode range */
-   uint8_t LowCh =   (uint8_t)(uniChar & 0x00FF);
-   uint8_t HighCh  = (uint8_t)(uniChar >> 8);
+   uint8_t దిగువ_Ch =   (uint8_t)(uniChar & 0x00FF);
+   uint8_t ఎగువ_Ch  = (uint8_t)(uniChar >> 8);
 
    *pLMBCS++ = ULMBCS_GRP_UNICODE;
 
-   if (LowCh == 0)
+   ఒకవేళ (దిగువ_Ch == 0)
    {
       *pLMBCS++ = ULMBCS_UNICOMPATZERO;
-      *pLMBCS++ = HighCh;
+      *pLMBCS++ = ఎగువ_Ch;
    }
-   else
+   లేకపోతే
    {
-      *pLMBCS++ = HighCh;
-      *pLMBCS++ = LowCh;
+      *pLMBCS++ = ఎగువ_Ch;
+      *pLMBCS++ = దిగువ_Ch;
    }
-   return ULMBCS_UNICODE_SIZE;
+   తిరిగి ULMBCS_UNICODE_కొలత;
 }
 
 
 
 /* The main Unicode to LMBCS conversion function */
-static void  U_CALLCONV
-_LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
-                  UErrorCode*     err)
+స్థిర శూన్య  U_CALLCONV
+_LMBCSFromUnicode(UConverter_From_Unicode_వాదనలు*     వాదనలు_2,
+                  UError_సంకేతం*     err)
 {
-   ulmbcs_byte_t lastConverterIndex = 0;
+   ulmbcs_byte_t చివరి_Converter_సూచీ = 0;
    char16_t uniChar;
    ulmbcs_byte_t  LMBCS[ULMBCS_CHARSIZE_MAX];
    ulmbcs_byte_t  * pLMBCS;
-   int32_t bytes_written;
-   UBool groups_tried[ULMBCS_GRP_LAST+1];
-   UConverterDataLMBCS * extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-   int sourceIndex = 0; 
+   int32_t బైట్లు_written;
+   UBool groups_tried[ULMBCS_GRP_చివరి+1];
+   UConverter_దత్తాంశం_LMBCS * extraInfo = (UConverter_దత్తాంశం_LMBCS *) వాదనలు_2->converter->extraInfo;
+   పూర్ణాంకం ఆధారం_సూచీ = 0; 
 
    /* Basic strategy: attempt to fill in local LMBCS 1-char buffer.(LMBCS)
       If that succeeds, see if it will all fit into the target & copy it over 
@@ -885,198 +885,198 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
    */
 
     /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-    ulmbcs_byte_t OldConverterIndex = 0;
+    ulmbcs_byte_t Old_Converter_సూచీ = 0;
 
-   while (args->source < args->sourceLimit && !U_FAILURE(*err))
+   అయితే (వాదనలు_2->ఆధారం < వాదనలు_2->ఆధారం_హద్దు && !U_FAILURE(*err))
    {
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      OldConverterIndex = extraInfo->localeConverterIndex;
+      Old_Converter_సూచీ = extraInfo->locale_Converter_సూచీ;
 
-      if (args->target >= args->targetLimit)
+      ఒకవేళ (వాదనలు_2->లక్ష్యం >= వాదనలు_2->లక్ష్యం_హద్దు)
       {
-         *err = U_BUFFER_OVERFLOW_ERROR;
-         break;
+         *err = U_బఫరు_అధికప్రవాహం_ERROR;
+         ఆపు;
       }
-      uniChar = *(args->source);
-      bytes_written = 0;
+      uniChar = *(వాదనలు_2->ఆధారం);
+      బైట్లు_written = 0;
       pLMBCS = LMBCS;
 
       /* check cases in rough order of how common they are, for speed */
 
       /* single byte matches: strategy 1 */
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      if((uniChar>=0x80) && (uniChar<=0xff)
+      ఒకవేళ((uniChar>=0x80) && (uniChar<=0xff)
       /*Fix for SPR#JUYA6XAERU and TSAO7GL5NK (Lotus)*/ &&(uniChar!=0xB1) &&(uniChar!=0xD7) &&(uniChar!=0xF7)
         &&(uniChar!=0xB0) &&(uniChar!=0xB4) &&(uniChar!=0xB6) &&(uniChar!=0xA7) &&(uniChar!=0xA8))
       {
-            extraInfo->localeConverterIndex = ULMBCS_GRP_L1;
+            extraInfo->locale_Converter_సూచీ = ULMBCS_GRP_L1;
       }
-      if (((uniChar > ULMBCS_C0END) && (uniChar < ULMBCS_C1START)) ||
+      ఒకవేళ (((uniChar > ULMBCS_C0_చివర) && (uniChar < ULMBCS_C1_ప్రారంభం)) ||
           uniChar == 0 || uniChar == ULMBCS_HT || uniChar == ULMBCS_CR || 
           uniChar == ULMBCS_LF || uniChar == ULMBCS_123SYSTEMRANGE 
           )
       {
          *pLMBCS++ = (ulmbcs_byte_t ) uniChar;
-         bytes_written = 1;
+         బైట్లు_written = 1;
       }
 
 
-      if (!bytes_written) 
+      ఒకవేళ (!బైట్లు_written) 
       {
          /* Check by UNICODE range (Strategy 2) */
-         ulmbcs_byte_t group = FindLMBCSUniRange(uniChar);
+         ulmbcs_byte_t సమూహం = కనుగొను_LMBCSUni_Range(uniChar);
          
-         if (group == ULMBCS_GRP_UNICODE)  /* (Strategy 2A) */
+         ఒకవేళ (సమూహం == ULMBCS_GRP_UNICODE)  /* (Strategy 2A) */
          {
             pLMBCS += LMBCSConvertUni(pLMBCS,uniChar);
             
-            bytes_written = (int32_t)(pLMBCS - LMBCS);
+            బైట్లు_written = (int32_t)(pLMBCS - LMBCS);
          }
-         else if (group == ULMBCS_GRP_CTRL)  /* (Strategy 2B) */
+         లేకపోతే ఒకవేళ (సమూహం == ULMBCS_GRP_CTRL)  /* (Strategy 2B) */
          {
             /* Handle control characters here */
-            if (uniChar <= ULMBCS_C0END)
+            ఒకవేళ (uniChar <= ULMBCS_C0_చివర)
             {
                *pLMBCS++ = ULMBCS_GRP_CTRL;
                *pLMBCS++ = (ulmbcs_byte_t)(ULMBCS_CTRLOFFSET + uniChar);
             }
-            else if (uniChar >= ULMBCS_C1START && uniChar <= ULMBCS_C1START + ULMBCS_CTRLOFFSET)
+            లేకపోతే ఒకవేళ (uniChar >= ULMBCS_C1_ప్రారంభం && uniChar <= ULMBCS_C1_ప్రారంభం + ULMBCS_CTRLOFFSET)
             {
                *pLMBCS++ = ULMBCS_GRP_CTRL;
                *pLMBCS++ = (ulmbcs_byte_t ) (uniChar & 0x00FF);
             }
-            bytes_written = (int32_t)(pLMBCS - LMBCS);
+            బైట్లు_written = (int32_t)(pLMBCS - LMBCS);
          }
-         else if (group < ULMBCS_GRP_UNICODE)  /* (Strategy 2C) */
+         లేకపోతే ఒకవేళ (సమూహం < ULMBCS_GRP_UNICODE)  /* (Strategy 2C) */
          {
             /* a specific converter has been identified - use it */
-            bytes_written = (int32_t)LMBCSConversionWorker (
-                              extraInfo, group, pLMBCS, &uniChar, 
-                              &lastConverterIndex, groups_tried);
+            బైట్లు_written = (int32_t)LMBCSConversion_కార్మికుడు (
+                              extraInfo, సమూహం, pLMBCS, &uniChar, 
+                              &చివరి_Converter_సూచీ, groups_tried);
          }
-         if (!bytes_written)    /* the ambiguous group cases  (Strategy 3) */
+         ఒకవేళ (!బైట్లు_written)    /* the ambiguous group cases  (Strategy 3) */
          {
-            uprv_memset(groups_tried, 0, sizeof(groups_tried));
+            uprv_memset(groups_tried, 0, పరిమాణం(groups_tried));
 
             /* check for non-default optimization group (Strategy 3A )*/
-            if ((extraInfo->OptGroup != 1) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->OptGroup)))
+            ఒకవేళ ((extraInfo->Opt_సమూహం != 1) && (ULMBCS_AMBIGUOUS_సరిపోలిక(సమూహం, extraInfo->Opt_సమూహం)))
             {
                 /*zhujin: upgrade, merge #39299 here (Lotus) */
                 /*To make R5 compatible translation, look for exceptional group first for non-DBCS*/
 
-                if(extraInfo->localeConverterIndex < ULMBCS_DOUBLEOPTGROUP_START)
+                ఒకవేళ(extraInfo->locale_Converter_సూచీ < ULMBCS_DOUBLEOPTGROUP_ప్రారంభం)
                 {
-                  bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                  బైట్లు_written = (int32_t)LMBCSConversion_కార్మికుడు (extraInfo,
                      ULMBCS_GRP_L1, pLMBCS, &uniChar,
-                     &lastConverterIndex, groups_tried);
+                     &చివరి_Converter_సూచీ, groups_tried);
 
-                  if(!bytes_written)
+                  ఒకవేళ(!బైట్లు_written)
                   {
-                     bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                     బైట్లు_written = (int32_t)LMBCSConversion_కార్మికుడు (extraInfo,
                          ULMBCS_GRP_EXCEPT, pLMBCS, &uniChar,
-                         &lastConverterIndex, groups_tried);
+                         &చివరి_Converter_సూచీ, groups_tried);
                   }
-                  if(!bytes_written)
+                  ఒకవేళ(!బైట్లు_written)
                   {
-                      bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                          extraInfo->localeConverterIndex, pLMBCS, &uniChar,
-                          &lastConverterIndex, groups_tried);
+                      బైట్లు_written = (int32_t)LMBCSConversion_కార్మికుడు (extraInfo,
+                          extraInfo->locale_Converter_సూచీ, pLMBCS, &uniChar,
+                          &చివరి_Converter_సూచీ, groups_tried);
                   }
                 }
-                else
+                లేకపోతే
                 {
-                     bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                         extraInfo->localeConverterIndex, pLMBCS, &uniChar,
-                         &lastConverterIndex, groups_tried);
+                     బైట్లు_written = (int32_t)LMBCSConversion_కార్మికుడు (extraInfo,
+                         extraInfo->locale_Converter_సూచీ, pLMBCS, &uniChar,
+                         &చివరి_Converter_సూచీ, groups_tried);
                 }
             }
             /* check for locale optimization group (Strategy 3B) */
-            if (!bytes_written && (extraInfo->localeConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->localeConverterIndex)))
+            ఒకవేళ (!బైట్లు_written && (extraInfo->locale_Converter_సూచీ) && (ULMBCS_AMBIGUOUS_సరిపోలిక(సమూహం, extraInfo->locale_Converter_సూచీ)))
             {
-                bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                        extraInfo->localeConverterIndex, pLMBCS, &uniChar, &lastConverterIndex, groups_tried);
+                బైట్లు_written = (int32_t)LMBCSConversion_కార్మికుడు (extraInfo,
+                        extraInfo->locale_Converter_సూచీ, pLMBCS, &uniChar, &చివరి_Converter_సూచీ, groups_tried);
             }
             /* check for last optimization group used for this string (Strategy 3C) */
-            if (!bytes_written && (lastConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, lastConverterIndex)))
+            ఒకవేళ (!బైట్లు_written && (చివరి_Converter_సూచీ) && (ULMBCS_AMBIGUOUS_సరిపోలిక(సమూహం, చివరి_Converter_సూచీ)))
             {
-                bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
-                        lastConverterIndex, pLMBCS, &uniChar, &lastConverterIndex, groups_tried);
+                బైట్లు_written = (int32_t)LMBCSConversion_కార్మికుడు (extraInfo,
+                        చివరి_Converter_సూచీ, pLMBCS, &uniChar, &చివరి_Converter_సూచీ, groups_tried);
             }
-            if (!bytes_written)
+            ఒకవేళ (!బైట్లు_written)
             {
                /* just check every possible matching converter (Strategy 3D) */ 
-               ulmbcs_byte_t grp_start;
-               ulmbcs_byte_t grp_end;  
+               ulmbcs_byte_t grp_ప్రారంభం;
+               ulmbcs_byte_t grp_చివర;  
                ulmbcs_byte_t grp_ix;
-               grp_start = (ulmbcs_byte_t)((group == ULMBCS_AMBIGUOUS_MBCS) 
-                        ? ULMBCS_DOUBLEOPTGROUP_START 
+               grp_ప్రారంభం = (ulmbcs_byte_t)((సమూహం == ULMBCS_AMBIGUOUS_MBCS) 
+                        ? ULMBCS_DOUBLEOPTGROUP_ప్రారంభం 
                         :  ULMBCS_GRP_L1);
-               grp_end = (ulmbcs_byte_t)((group == ULMBCS_AMBIGUOUS_MBCS) 
-                        ? ULMBCS_GRP_LAST 
+               grp_చివర = (ulmbcs_byte_t)((సమూహం == ULMBCS_AMBIGUOUS_MBCS) 
+                        ? ULMBCS_GRP_చివరి 
                         :  ULMBCS_GRP_TH);
-               if(group == ULMBCS_AMBIGUOUS_ALL)
+               ఒకవేళ(సమూహం == ULMBCS_AMBIGUOUS_ALL)
                {
-                   grp_start = ULMBCS_GRP_L1;
-                   grp_end = ULMBCS_GRP_LAST;
+                   grp_ప్రారంభం = ULMBCS_GRP_L1;
+                   grp_చివర = ULMBCS_GRP_చివరి;
                }
-               for (grp_ix = grp_start;
-                   grp_ix <= grp_end && !bytes_written; 
+               కొరకు (grp_ix = grp_ప్రారంభం;
+                   grp_ix <= grp_చివర && !బైట్లు_written; 
                     grp_ix++)
                {
-                  if (extraInfo->OptGrpConverter [grp_ix] && !groups_tried [grp_ix])
+                  ఒకవేళ (extraInfo->OptGrpConverter [grp_ix] && !groups_tried [grp_ix])
                   {
-                     bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                     బైట్లు_written = (int32_t)LMBCSConversion_కార్మికుడు (extraInfo,
                        grp_ix, pLMBCS, &uniChar, 
-                       &lastConverterIndex, groups_tried);
+                       &చివరి_Converter_సూచీ, groups_tried);
                   }
                }
                 /* a final conversion fallback to the exceptions group if its likely 
                      to be single byte  (Strategy 3E) */
-               if (!bytes_written && grp_start == ULMBCS_GRP_L1)
+               ఒకవేళ (!బైట్లు_written && grp_ప్రారంభం == ULMBCS_GRP_L1)
                {
-                  bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
+                  బైట్లు_written = (int32_t)LMBCSConversion_కార్మికుడు (extraInfo,
                      ULMBCS_GRP_EXCEPT, pLMBCS, &uniChar, 
-                     &lastConverterIndex, groups_tried);
+                     &చివరి_Converter_సూచీ, groups_tried);
                }
             }
             /* all of our other strategies failed. Fallback to Unicode. (Strategy 4)*/
-            if (!bytes_written)
+            ఒకవేళ (!బైట్లు_written)
             {
 
                pLMBCS += LMBCSConvertUni(pLMBCS, uniChar);
-               bytes_written = (int32_t)(pLMBCS - LMBCS);
+               బైట్లు_written = (int32_t)(pLMBCS - LMBCS);
             }
          }
       }
   
       /* we have a translation. increment source and write as much as possible to target */
-      args->source++;
+      వాదనలు_2->ఆధారం++;
       pLMBCS = LMBCS;
-      while (args->target < args->targetLimit && bytes_written--)
+      అయితే (వాదనలు_2->లక్ష్యం < వాదనలు_2->లక్ష్యం_హద్దు && బైట్లు_written--)
       {
-         *(args->target)++ = *pLMBCS++;
-         if (args->offsets)
+         *(వాదనలు_2->లక్ష్యం)++ = *pLMBCS++;
+         ఒకవేళ (వాదనలు_2->offsets)
          {
-            *(args->offsets)++ = sourceIndex;
+            *(వాదనలు_2->offsets)++ = ఆధారం_సూచీ;
          }
       }
-      sourceIndex++;
-      if (bytes_written > 0)
+      ఆధారం_సూచీ++;
+      ఒకవేళ (బైట్లు_written > 0)
       {
          /* write any bytes that didn't fit in target to the error buffer,
             common code will move this to target if we get called back with
             enough target room
          */
-         uint8_t * pErrorBuffer = args->converter->charErrorBuffer;
-         *err = U_BUFFER_OVERFLOW_ERROR;
-         args->converter->charErrorBufferLength = (int8_t)bytes_written;
-         while (bytes_written--)
+         uint8_t * p_Error_బఫరు = వాదనలు_2->converter->char_Error_బఫరు;
+         *err = U_బఫరు_అధికప్రవాహం_ERROR;
+         వాదనలు_2->converter->char_Error_బఫరు_నిడివి = (int8_t)బైట్లు_written;
+         అయితే (బైట్లు_written--)
          {
-            *pErrorBuffer++ = *pLMBCS++;
+            *p_Error_బఫరు++ = *pLMBCS++;
          }
       }
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      extraInfo->localeConverterIndex = OldConverterIndex;
+      extraInfo->locale_Converter_సూచీ = Old_Converter_సూచీ;
    }     
 }
 
@@ -1085,18 +1085,18 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
 
 
 /* A function to call when we are looking at the Unicode group byte in LMBCS */
-static char16_t
-GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode byte stream */
+స్థిర char16_t
+GetUniFromLMBCSUni(అక్షరం స్థిరరాశి ** ppLMBCSin)  /* Called with LMBCS-style Unicode byte stream */
 {
-   uint8_t  HighCh = *(*ppLMBCSin)++;  /* Big-endian Unicode in LMBCS compatibility group*/
-   uint8_t  LowCh  = *(*ppLMBCSin)++;
+   uint8_t  ఎగువ_Ch = *(*ppLMBCSin)++;  /* Big-endian Unicode in LMBCS compatibility group*/
+   uint8_t  దిగువ_Ch  = *(*ppLMBCSin)++;
 
-   if (HighCh == ULMBCS_UNICOMPATZERO ) 
+   ఒకవేళ (ఎగువ_Ch == ULMBCS_UNICOMPATZERO ) 
    {
-      HighCh = LowCh;
-      LowCh = 0; /* zero-byte in LSB special character */
+      ఎగువ_Ch = దిగువ_Ch;
+      దిగువ_Ch = 0; /* zero-byte in LSB special character */
    }
-   return (char16_t)((HighCh << 8) | LowCh);
+   తిరిగి (char16_t)((ఎగువ_Ch << 8) | దిగువ_Ch);
 }
 
 
@@ -1107,31 +1107,31 @@ GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode 
    all input as required by ICU converter semantics.
 */
 
-#define CHECK_SOURCE_LIMIT(index) UPRV_BLOCK_MACRO_BEGIN { \
-    if (args->source+index > args->sourceLimit) { \
-        *err = U_TRUNCATED_CHAR_FOUND; \
-        args->source = args->sourceLimit; \
-        return 0xffff; \
+#నిర్వచించు CHECK_ఆధారం_హద్దు(సూచీ) UPRV_ఖండం_MACRO_BEGIN { \
+    ఒకవేళ (వాదనలు_2->ఆధారం+సూచీ > వాదనలు_2->ఆధారం_హద్దు) { \
+        *err = U_TRUNCATED_CHAR_దొరికింది; \
+        వాదనలు_2->ఆధారం = వాదనలు_2->ఆధారం_హద్దు; \
+        తిరిగి 0xffff; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ఖండం_MACRO_చివర
 
 /* Return the Unicode representation for the current LMBCS character */
 
-static UChar32  U_CALLCONV
-_LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
-                         UErrorCode*   err)
+స్థిర UChar32  U_CALLCONV
+LMBCSGet_తదుపరి_UChar_కార్మికుడు(UConverter_గమ్యం_Unicode_వాదనలు*   వాదనలు_2,
+                         UError_సంకేతం*   err)
 {
     UChar32 uniChar = 0;    /* an output UNICODE char */
     ulmbcs_byte_t   CurByte; /* A byte from the input stream */
 
     /* error check */
-    if (args->source >= args->sourceLimit)
+    ఒకవేళ (వాదనలు_2->ఆధారం >= వాదనలు_2->ఆధారం_హద్దు)
     {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+        *err = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0xffff;
     }
     /* Grab first byte & save address for error recovery */
-    CurByte = *((ulmbcs_byte_t  *) (args->source++));
+    CurByte = *((ulmbcs_byte_t  *) (వాదనలు_2->ఆధారం++));
    
     /*
     * at entry of each if clause:
@@ -1145,211 +1145,211 @@ _LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
    
     /* First lets check the simple fixed values. */
 
-    if(((CurByte > ULMBCS_C0END) && (CurByte < ULMBCS_C1START)) /* ascii range */
+    ఒకవేళ(((CurByte > ULMBCS_C0_చివర) && (CurByte < ULMBCS_C1_ప్రారంభం)) /* ascii range */
     ||  (CurByte == 0) 
     ||  CurByte == ULMBCS_HT || CurByte == ULMBCS_CR 
     ||  CurByte == ULMBCS_LF || CurByte == ULMBCS_123SYSTEMRANGE)
     {
         uniChar = CurByte;
     }
-    else  
+    లేకపోతే  
     {
-        UConverterDataLMBCS * extraInfo;
-        ulmbcs_byte_t group; 
-        UConverterSharedData *cnv; 
+        UConverter_దత్తాంశం_LMBCS * extraInfo;
+        ulmbcs_byte_t సమూహం; 
+        UConverter_Shared_దత్తాంశం *cnv; 
         
-        if (CurByte == ULMBCS_GRP_CTRL)  /* Control character group - no opt group update */
+        ఒకవేళ (CurByte == ULMBCS_GRP_CTRL)  /* Control character group - no opt group update */
         {
             ulmbcs_byte_t  C0C1byte;
-            CHECK_SOURCE_LIMIT(1);
-            C0C1byte = *(args->source)++;
-            uniChar = (C0C1byte < ULMBCS_C1START) ? C0C1byte - ULMBCS_CTRLOFFSET : C0C1byte;
+            CHECK_ఆధారం_హద్దు(1);
+            C0C1byte = *(వాదనలు_2->ఆధారం)++;
+            uniChar = (C0C1byte < ULMBCS_C1_ప్రారంభం) ? C0C1byte - ULMBCS_CTRLOFFSET : C0C1byte;
         }
-        else 
-        if (CurByte == ULMBCS_GRP_UNICODE) /* Unicode compatibility group: BigEndian UTF16 */
+        లేకపోతే 
+        ఒకవేళ (CurByte == ULMBCS_GRP_UNICODE) /* Unicode compatibility group: BigEndian UTF16 */
         {
-            CHECK_SOURCE_LIMIT(2);
+            CHECK_ఆధారం_హద్దు(2);
      
             /* don't check for error indicators fffe/ffff below */
-            return GetUniFromLMBCSUni(&(args->source));
+            తిరిగి GetUniFromLMBCSUni(&(వాదనలు_2->ఆధారం));
         }
-        else if (CurByte <= ULMBCS_CTRLOFFSET)  
+        లేకపోతే ఒకవేళ (CurByte <= ULMBCS_CTRLOFFSET)  
         {
-            group = CurByte;                   /* group byte is in the source */
-            extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-            if (group > ULMBCS_GRP_LAST || (cnv = extraInfo->OptGrpConverter[group]) == nullptr)
+            సమూహం = CurByte;                   /* group byte is in the source */
+            extraInfo = (UConverter_దత్తాంశం_LMBCS *) వాదనలు_2->converter->extraInfo;
+            ఒకవేళ (సమూహం > ULMBCS_GRP_చివరి || (cnv = extraInfo->OptGrpConverter[సమూహం]) == శూన్యసూచిక)
             {
                 /* this is not a valid group byte - no converter*/
-                *err = U_INVALID_CHAR_FOUND;
+                *err = U_INVALID_CHAR_దొరికింది;
             }      
-            else if (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
+            లేకపోతే ఒకవేళ (సమూహం >= ULMBCS_DOUBLEOPTGROUP_ప్రారంభం)    /* double byte conversion */
             {
 
-                CHECK_SOURCE_LIMIT(2);
+                CHECK_ఆధారం_హద్దు(2);
 
                 /* check for LMBCS doubled-group-byte case */
-                if (*args->source == group) {
+                ఒకవేళ (*వాదనలు_2->ఆధారం == సమూహం) {
                     /* single byte */
-                    ++args->source;
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source, 1, false);
-                    ++args->source;
-                } else {
+                    ++వాదనలు_2->ఆధారం;
+                    uniChar = ucnv_MBCSSimple_Get_తదుపరి_UChar(cnv, వాదనలు_2->ఆధారం, 1, అబద్ధం);
+                    ++వాదనలు_2->ఆధారం;
+                } లేకపోతే {
                     /* double byte */
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source, 2, false);
-                    args->source += 2;
+                    uniChar = ucnv_MBCSSimple_Get_తదుపరి_UChar(cnv, వాదనలు_2->ఆధారం, 2, అబద్ధం);
+                    వాదనలు_2->ఆధారం += 2;
                 }
             }
-            else {                                  /* single byte conversion */
-                CHECK_SOURCE_LIMIT(1);
-                CurByte = *(args->source)++;
+            లేకపోతే {                                  /* single byte conversion */
+                CHECK_ఆధారం_హద్దు(1);
+                CurByte = *(వాదనలు_2->ఆధారం)++;
         
-                if (CurByte >= ULMBCS_C1START)
+                ఒకవేళ (CurByte >= ULMBCS_C1_ప్రారంభం)
                 {
-                    uniChar = _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(cnv, CurByte);
+                    uniChar = MBCS_SINGLE_SIMPLE_GET_తదుపరి_BMP(cnv, CurByte);
                 }
-                else
+                లేకపోతే
                 {
                     /* The non-optimizable oddballs where there is an explicit byte 
                     * AND the second byte is not in the upper ascii range
                     */
-                    char bytes[2];
+                    అక్షరం బైట్లు[2];
 
-                    extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
+                    extraInfo = (UConverter_దత్తాంశం_LMBCS *) వాదనలు_2->converter->extraInfo;
                     cnv = extraInfo->OptGrpConverter [ULMBCS_GRP_EXCEPT];  
         
                     /* Lookup value must include opt group */
-                    bytes[0] = group;
-                    bytes[1] = CurByte;
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, bytes, 2, false);
+                    బైట్లు[0] = సమూహం;
+                    బైట్లు[1] = CurByte;
+                    uniChar = ucnv_MBCSSimple_Get_తదుపరి_UChar(cnv, బైట్లు, 2, అబద్ధం);
                 }
             }
         }
-        else if (CurByte >= ULMBCS_C1START) /* group byte is implicit */
+        లేకపోతే ఒకవేళ (CurByte >= ULMBCS_C1_ప్రారంభం) /* group byte is implicit */
         {
-            extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-            group = extraInfo->OptGroup;
-            cnv = extraInfo->OptGrpConverter[group];
-            if (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
+            extraInfo = (UConverter_దత్తాంశం_LMBCS *) వాదనలు_2->converter->extraInfo;
+            సమూహం = extraInfo->Opt_సమూహం;
+            cnv = extraInfo->OptGrpConverter[సమూహం];
+            ఒకవేళ (సమూహం >= ULMBCS_DOUBLEOPTGROUP_ప్రారంభం)    /* double byte conversion */
             {
-                if (!ucnv_MBCSIsLeadByte(cnv, CurByte))
+                ఒకవేళ (!ucnv_MBCSIsLeadByte(cnv, CurByte))
                 {
-                    CHECK_SOURCE_LIMIT(0);
+                    CHECK_ఆధారం_హద్దు(0);
 
                     /* let the MBCS conversion consume CurByte again */
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source - 1, 1, false);
+                    uniChar = ucnv_MBCSSimple_Get_తదుపరి_UChar(cnv, వాదనలు_2->ఆధారం - 1, 1, అబద్ధం);
                 }
-                else
+                లేకపోతే
                 {
-                    CHECK_SOURCE_LIMIT(1);
+                    CHECK_ఆధారం_హద్దు(1);
                     /* let the MBCS conversion consume CurByte again */
-                    uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source - 1, 2, false);
-                    ++args->source;
+                    uniChar = ucnv_MBCSSimple_Get_తదుపరి_UChar(cnv, వాదనలు_2->ఆధారం - 1, 2, అబద్ధం);
+                    ++వాదనలు_2->ఆధారం;
                 }
             }
-            else                                   /* single byte conversion */
+            లేకపోతే                                   /* single byte conversion */
             {
-                uniChar = _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(cnv, CurByte);
+                uniChar = MBCS_SINGLE_SIMPLE_GET_తదుపరి_BMP(cnv, CurByte);
             }
         }
     }
-    return uniChar;
+    తిరిగి uniChar;
 }
 
 
 /* The exported function that converts lmbcs to one or more
    UChars - currently UTF-16
 */
-static void  U_CALLCONV
-_LMBCSToUnicodeWithOffsets(UConverterToUnicodeArgs*    args,
-                     UErrorCode*    err)
+స్థిర శూన్య  U_CALLCONV
+_LMBCSToUnicodeWithOffsets(UConverter_గమ్యం_Unicode_వాదనలు*    వాదనలు_2,
+                     UError_సంకేతం*    err)
 {
-   char LMBCS [ULMBCS_CHARSIZE_MAX];
+   అక్షరం LMBCS [ULMBCS_CHARSIZE_MAX];
    char16_t uniChar;    /* one output UNICODE char */
-   const char * saveSource; /* beginning of current code point */
-   const char * pStartLMBCS = args->source;  /* beginning of whole string */
-   const char * errSource = nullptr; /* pointer to actual input in case an error occurs */
+   స్థిరరాశి అక్షరం * save_ఆధారం; /* beginning of current code point */
+   స్థిరరాశి అక్షరం * p_ప్రారంభం_LMBCS = వాదనలు_2->ఆధారం;  /* beginning of whole string */
+   స్థిరరాశి అక్షరం * err_ఆధారం = శూన్యసూచిక; /* pointer to actual input in case an error occurs */
    int8_t savebytes = 0;
 
    /* Process from source to limit, or until error */
-   while (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit > args->target)
+   అయితే (U_SUCCESS(*err) && వాదనలు_2->ఆధారం_హద్దు > వాదనలు_2->ఆధారం && వాదనలు_2->లక్ష్యం_హద్దు > వాదనలు_2->లక్ష్యం)
    {
-      saveSource = args->source; /* beginning of current code point */
+      save_ఆధారం = వాదనలు_2->ఆధారం; /* beginning of current code point */
 
-      if (args->converter->toULength) /* reassemble char from previous call */
+      ఒకవేళ (వాదనలు_2->converter->గమ్యం_ULength) /* reassemble char from previous call */
       {
-        const char *saveSourceLimit; 
-        size_t size_old = args->converter->toULength;
+        స్థిరరాశి అక్షరం *save_ఆధారం_హద్దు; 
+        size_t కొలత_old = వాదనలు_2->converter->గమ్యం_ULength;
 
          /* limit from source is either remainder of temp buffer, or user limit on source */
-        size_t size_new_maybe_1 = sizeof(LMBCS) - size_old;
-        size_t size_new_maybe_2 = args->sourceLimit - args->source;
-        size_t size_new = (size_new_maybe_1 < size_new_maybe_2) ? size_new_maybe_1 : size_new_maybe_2;
+        size_t కొలత_new_maybe_1 = పరిమాణం(LMBCS) - కొలత_old;
+        size_t కొలత_new_maybe_2 = వాదనలు_2->ఆధారం_హద్దు - వాదనలు_2->ఆధారం;
+        size_t కొలత_new = (కొలత_new_maybe_1 < కొలత_new_maybe_2) ? కొలత_new_maybe_1 : కొలత_new_maybe_2;
          
       
-        uprv_memcpy(LMBCS, args->converter->toUBytes, size_old);
-        uprv_memcpy(LMBCS + size_old, args->source, size_new);
-        saveSourceLimit = args->sourceLimit;
-        args->source = errSource = LMBCS;
-        args->sourceLimit = LMBCS+size_old+size_new;
-        savebytes = (int8_t)(size_old+size_new);
-        uniChar = (char16_t) _LMBCSGetNextUCharWorker(args, err);
-        args->source = saveSource + ((args->source - LMBCS) - size_old);
-        args->sourceLimit = saveSourceLimit;
+        uprv_memcpy(LMBCS, వాదనలు_2->converter->గమ్యం_UBytes, కొలత_old);
+        uprv_memcpy(LMBCS + కొలత_old, వాదనలు_2->ఆధారం, కొలత_new);
+        save_ఆధారం_హద్దు = వాదనలు_2->ఆధారం_హద్దు;
+        వాదనలు_2->ఆధారం = err_ఆధారం = LMBCS;
+        వాదనలు_2->ఆధారం_హద్దు = LMBCS+కొలత_old+కొలత_new;
+        savebytes = (int8_t)(కొలత_old+కొలత_new);
+        uniChar = (char16_t) LMBCSGet_తదుపరి_UChar_కార్మికుడు(వాదనలు_2, err);
+        వాదనలు_2->ఆధారం = save_ఆధారం + ((వాదనలు_2->ఆధారం - LMBCS) - కొలత_old);
+        వాదనలు_2->ఆధారం_హద్దు = save_ఆధారం_హద్దు;
 
-        if (*err == U_TRUNCATED_CHAR_FOUND)
+        ఒకవేళ (*err == U_TRUNCATED_CHAR_దొరికింది)
         {
             /* evil special case: source buffers so small a char spans more than 2 buffers */
-            args->converter->toULength = savebytes;
-            uprv_memcpy(args->converter->toUBytes, LMBCS, savebytes);
-            args->source = args->sourceLimit;
+            వాదనలు_2->converter->గమ్యం_ULength = savebytes;
+            uprv_memcpy(వాదనలు_2->converter->గమ్యం_UBytes, LMBCS, savebytes);
+            వాదనలు_2->ఆధారం = వాదనలు_2->ఆధారం_హద్దు;
             *err = U_ZERO_ERROR;
-            return;
+            తిరిగి;
          }
-         else
+         లేకపోతే
          {
             /* clear the partial-char marker */
-            args->converter->toULength = 0;
+            వాదనలు_2->converter->గమ్యం_ULength = 0;
          }
       }
-      else
+      లేకపోతే
       {
-         errSource = saveSource;
-         uniChar = (char16_t) _LMBCSGetNextUCharWorker(args, err);
-         savebytes = (int8_t)(args->source - saveSource);
+         err_ఆధారం = save_ఆధారం;
+         uniChar = (char16_t) LMBCSGet_తదుపరి_UChar_కార్మికుడు(వాదనలు_2, err);
+         savebytes = (int8_t)(వాదనలు_2->ఆధారం - save_ఆధారం);
       }
-      if (U_SUCCESS(*err))
+      ఒకవేళ (U_SUCCESS(*err))
       {
-         if (uniChar < 0xfffe)
+         ఒకవేళ (uniChar < 0xfffe)
          {
-            *(args->target)++ = uniChar;
-            if(args->offsets)
+            *(వాదనలు_2->లక్ష్యం)++ = uniChar;
+            ఒకవేళ(వాదనలు_2->offsets)
             {
-               *(args->offsets)++ = (int32_t)(saveSource - pStartLMBCS);
+               *(వాదనలు_2->offsets)++ = (int32_t)(save_ఆధారం - p_ప్రారంభం_LMBCS);
             }
          }
-         else if (uniChar == 0xfffe)
+         లేకపోతే ఒకవేళ (uniChar == 0xfffe)
          {
-            *err = U_INVALID_CHAR_FOUND;
+            *err = U_INVALID_CHAR_దొరికింది;
          }
-         else /* if (uniChar == 0xffff) */
+         లేకపోతే /* if (uniChar == 0xffff) */
          {
-            *err = U_ILLEGAL_CHAR_FOUND;
+            *err = U_ILLEGAL_CHAR_దొరికింది;
          }
       }
    }
    /* if target ran out before source, return U_BUFFER_OVERFLOW_ERROR */
-   if (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit <= args->target)
+   ఒకవేళ (U_SUCCESS(*err) && వాదనలు_2->ఆధారం_హద్దు > వాదనలు_2->ఆధారం && వాదనలు_2->లక్ష్యం_హద్దు <= వాదనలు_2->లక్ష్యం)
    {
-      *err = U_BUFFER_OVERFLOW_ERROR;
+      *err = U_బఫరు_అధికప్రవాహం_ERROR;
    }
-   else if (U_FAILURE(*err)) 
+   లేకపోతే ఒకవేళ (U_FAILURE(*err)) 
    {
       /* If character incomplete or unmappable/illegal, store it in toUBytes[] */
-      args->converter->toULength = savebytes;
-      if (savebytes > 0) {
-         uprv_memcpy(args->converter->toUBytes, errSource, savebytes);
+      వాదనలు_2->converter->గమ్యం_ULength = savebytes;
+      ఒకవేళ (savebytes > 0) {
+         uprv_memcpy(వాదనలు_2->converter->గమ్యం_UBytes, err_ఆధారం, savebytes);
       }
-      if (*err == U_TRUNCATED_CHAR_FOUND) {
+      ఒకవేళ (*err == U_TRUNCATED_CHAR_దొరికింది) {
          *err = U_ZERO_ERROR;
       }
    }
@@ -1370,19 +1370,19 @@ DEFINE_LMBCS_OPEN(18)
 DEFINE_LMBCS_OPEN(19)
 
 
-DECLARE_LMBCS_DATA(1)
-DECLARE_LMBCS_DATA(2)
-DECLARE_LMBCS_DATA(3)
-DECLARE_LMBCS_DATA(4)
-DECLARE_LMBCS_DATA(5)
-DECLARE_LMBCS_DATA(6)
-DECLARE_LMBCS_DATA(8)
-DECLARE_LMBCS_DATA(11)
-DECLARE_LMBCS_DATA(16)
-DECLARE_LMBCS_DATA(17)
-DECLARE_LMBCS_DATA(18)
-DECLARE_LMBCS_DATA(19)
+DECLARE_LMBCS_దత్తాంశం(1)
+DECLARE_LMBCS_దత్తాంశం(2)
+DECLARE_LMBCS_దత్తాంశం(3)
+DECLARE_LMBCS_దత్తాంశం(4)
+DECLARE_LMBCS_దత్తాంశం(5)
+DECLARE_LMBCS_దత్తాంశం(6)
+DECLARE_LMBCS_దత్తాంశం(8)
+DECLARE_LMBCS_దత్తాంశం(11)
+DECLARE_LMBCS_దత్తాంశం(16)
+DECLARE_LMBCS_దత్తాంశం(17)
+DECLARE_LMBCS_దత్తాంశం(18)
+DECLARE_LMBCS_దత్తాంశం(19)
 
-U_CDECL_END
+U_CDECL_చివర
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_LEGACY_CONVERSION */

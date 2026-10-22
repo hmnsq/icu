@@ -10,10 +10,10 @@
 **********************************************************************
 */
 
-#include "unicode/uchar.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
-#include "util.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "patternprops.h"
+#అన్తర్భావ "util.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,45 +25,45 @@ U_NAMESPACE_BEGIN
  * character to parse.  On output, the character after the last
  * parsed character.
  */
-int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32_t limit) {
+int32_t ICU_Utility::parseInteger(స్థిరరాశి UnicodeString& నియమం, int32_t& pos, int32_t హద్దు) {
     int32_t count = 0;
     int32_t value = 0;
     int32_t p = pos;
     int8_t radix = 10;
 
-    if (p < limit && rule.charAt(p) == 48 /*0*/) {
-        if (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
+    ఒకవేళ (p < హద్దు && నియమం.charAt(p) == 48 /*0*/) {
+        ఒకవేళ (p+1 < హద్దు && (నియమం.charAt(p+1) == 0x78 /*x*/ || నియమం.charAt(p+1) == 0x58 /*X*/)) {
             p += 2;
             radix = 16;
         }
-        else {
+        లేకపోతే {
             p++;
             count = 1;
             radix = 8;
         }
     }
 
-    while (p < limit) {
-        int32_t d = u_digit(rule.charAt(p++), radix);
-        if (d < 0) {
+    అయితే (p < హద్దు) {
+        int32_t d = u_digit(నియమం.charAt(p++), radix);
+        ఒకవేళ (d < 0) {
             --p;
-            break;
+            ఆపు;
         }
         ++count;
         int32_t v = (value * radix) + d;
-        if (v <= value) {
+        ఒకవేళ (v <= value) {
             // If there are too many input digits, at some point
             // the value will go negative, e.g., if we have seen
             // "0x8000000" already and there is another '0', when
             // we parse the next 0 the value will go negative.
-            return 0;
+            తిరిగి 0;
         }
         value = v;
     }
-    if (count > 0) {
+    ఒకవేళ (count > 0) {
         pos = p;
     }
-    return value;
+    తిరిగి value;
 }
 
 /**
@@ -85,49 +85,49 @@ int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32
  * @return the position after the last character parsed, or -1 if
  * the parse failed
  */
-int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_t limit,
-                              const UnicodeString& pattern, int32_t* parsedInts) {
+int32_t ICU_Utility::parse_నమూనా(స్థిరరాశి UnicodeString& నియమం, int32_t pos, int32_t హద్దు,
+                              స్థిరరాశి UnicodeString& నమూనా, int32_t* parsedInts) {
     // TODO Update this to handle surrogates
     int32_t p;
-    int32_t intCount = 0; // number of integers parsed
-    for (int32_t i=0; i<pattern.length(); ++i) {
-        char16_t cpat = pattern.charAt(i);
+    int32_t int_లెక్క = 0; // number of integers parsed
+    కొరకు (int32_t i=0; i<నమూనా.length(); ++i) {
+        char16_t cpat = నమూనా.charAt(i);
         char16_t c;
-        switch (cpat) {
-        case 32 /*' '*/:
-            if (pos >= limit) {
-                return -1;
+        ఎంపిక (cpat) {
+        స్థితి 32 /*' '*/:
+            ఒకవేళ (pos >= హద్దు) {
+                తిరిగి -1;
             }
-            c = rule.charAt(pos++);
-            if (!PatternProps::isWhiteSpace(c)) {
-                return -1;
+            c = నియమం.charAt(pos++);
+            ఒకవేళ (!నమూనా_Props::isWhiteSpace(c)) {
+                తిరిగి -1;
             }
             // FALL THROUGH to skipWhitespace
             U_FALLTHROUGH;
-        case 126 /*'~'*/:
-            pos = skipWhitespace(rule, pos);
-            break;
-        case 35 /*'#'*/:
+        స్థితి 126 /*'~'*/:
+            pos = skipWhitespace(నియమం, pos);
+            ఆపు;
+        స్థితి 35 /*'#'*/:
             p = pos;
-            parsedInts[intCount++] = parseInteger(rule, p, limit);
-            if (p == pos) {
+            parsedInts[int_లెక్క++] = parseInteger(నియమం, p, హద్దు);
+            ఒకవేళ (p == pos) {
                 // Syntax error; failed to parse integer
-                return -1;
+                తిరిగి -1;
             }
             pos = p;
-            break;
-        default:
-            if (pos >= limit) {
-                return -1;
+            ఆపు;
+        అప్రమేయ:
+            ఒకవేళ (pos >= హద్దు) {
+                తిరిగి -1;
             }
-            c = static_cast<char16_t>(u_tolower(rule.charAt(pos++)));
-            if (c != cpat) {
-                return -1;
+            c = static_cast<char16_t>(u_tolower(నియమం.charAt(pos++)));
+            ఒకవేళ (c != cpat) {
+                తిరిగి -1;
             }
-            break;
+            ఆపు;
         }
     }
-    return pos;
+    తిరిగి pos;
 }
 
 /**
@@ -143,30 +143,30 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
  * @return the Unicode identifier, or an empty string if there is
  * no valid identifier at pos.
  */
-UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int32_t& pos) {
+UnicodeString ICU_Utility::parseUnicodeIdentifier(స్థిరరాశి UnicodeString& str, int32_t& pos) {
     // assert(pos < str.length());
     UnicodeString buf;
-    int p = pos;
-    while (p < str.length()) {
+    పూర్ణాంకం p = pos;
+    అయితే (p < str.length()) {
         UChar32 ch = str.char32At(p);
-        if (buf.length() == 0) {
-            if (u_isIDStart(ch)) {
+        ఒకవేళ (buf.length() == 0) {
+            ఒకవేళ (u_isIDStart(ch)) {
                 buf.append(ch);
-            } else {
+            } లేకపోతే {
                 buf.truncate(0);
-                return buf;
+                తిరిగి buf;
             }
-        } else {
-            if (u_isIDPart(ch)) {
+        } లేకపోతే {
+            ఒకవేళ (u_isIDPart(ch)) {
                 buf.append(ch);
-            } else {
-                break;
+            } లేకపోతే {
+                ఆపు;
             }
         }
-        p += U16_LENGTH(ch);
+        p += U16_నిడివి(ch);
     }
     pos = p;
-    return buf;
+    తిరిగి buf;
 }
 
 /**
@@ -185,32 +185,32 @@ UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int3
  * point to a valid digit on entry, or if the number to be parsed
  * does not fit into a 31-bit unsigned integer.
  */
-int32_t ICU_Utility::parseNumber(const UnicodeString& text,
+int32_t ICU_Utility::parse_సంఖ్య(స్థిరరాశి UnicodeString& పాఠ్యం,
                                  int32_t& pos, int8_t radix) {
     // assert(pos[0] >= 0);
     // assert(radix >= 2);
     // assert(radix <= 36);
     int32_t n = 0;
     int32_t p = pos;
-    while (p < text.length()) {
-        UChar32 ch = text.char32At(p);
+    అయితే (p < పాఠ్యం.length()) {
+        UChar32 ch = పాఠ్యం.char32At(p);
         int32_t d = u_digit(ch, radix);
-        if (d < 0) {
-            break;
+        ఒకవేళ (d < 0) {
+            ఆపు;
         }
         int64_t update = radix*static_cast<int64_t>(n) + d;
-        if (update > INT32_MAX) {
-            return -1;
+        ఒకవేళ (update > INT32_MAX) {
+            తిరిగి -1;
         }
         n = static_cast<int32_t>(update);
         ++p;
     }
-    if (p == pos) {
-        return -1;
+    ఒకవేళ (p == pos) {
+        తిరిగి -1;
     }
     pos = p;
-    return n;
+    తిరిగి n;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 

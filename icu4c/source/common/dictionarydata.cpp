@@ -11,25 +11,25 @@
 * created by: Markus W. Scherer & Maxime Serrano
 */
 
-#include "dictionarydata.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/bytestrie.h"
-#include "unicode/udata.h"
-#include "cmemory.h"
+#అన్తర్భావ "dictionarydata.h"
+#అన్తర్భావ "unicode/ucharstrie.h"
+#అన్తర్భావ "unicode/bytestrie.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "cmemory.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ఒకవేళ !UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
-const int32_t  DictionaryData::TRIE_TYPE_BYTES = 0;
-const int32_t  DictionaryData::TRIE_TYPE_UCHARS = 1;
-const int32_t  DictionaryData::TRIE_TYPE_MASK = 7;
-const int32_t  DictionaryData::TRIE_HAS_VALUES = 8;
+స్థిరరాశి int32_t  Dictionary_దత్తాంశం::TRIE_TYPE_బైట్లు = 0;
+స్థిరరాశి int32_t  Dictionary_దత్తాంశం::TRIE_TYPE_UCHARS = 1;
+స్థిరరాశి int32_t  Dictionary_దత్తాంశం::TRIE_TYPE_ముసుగు = 7;
+స్థిరరాశి int32_t  Dictionary_దత్తాంశం::TRIE_HAS_విలువలు = 8;
 
-const int32_t  DictionaryData::TRANSFORM_NONE = 0;
-const int32_t  DictionaryData::TRANSFORM_TYPE_OFFSET = 0x1000000;
-const int32_t  DictionaryData::TRANSFORM_TYPE_MASK = 0x7f000000;
-const int32_t  DictionaryData::TRANSFORM_OFFSET_MASK = 0x1fffff;
+స్థిరరాశి int32_t  Dictionary_దత్తాంశం::TRANSFORM_NONE = 0;
+స్థిరరాశి int32_t  Dictionary_దత్తాంశం::TRANSFORM_TYPE_స్థానభ్రంశం = 0x1000000;
+స్థిరరాశి int32_t  Dictionary_దత్తాంశం::TRANSFORM_TYPE_ముసుగు = 0x7f000000;
+స్థిరరాశి int32_t  Dictionary_దత్తాంశం::TRANSFORM_స్థానభ్రంశం_ముసుగు = 0x1fffff;
     
 DictionaryMatcher::~DictionaryMatcher() {
 }
@@ -38,205 +38,205 @@ UCharsDictionaryMatcher::~UCharsDictionaryMatcher() {
     udata_close(file);
 }
 
-int32_t UCharsDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_UCHARS;
+int32_t UCharsDictionaryMatcher::getType() స్థిరరాశి {
+    తిరిగి Dictionary_దత్తాంశం::TRIE_TYPE_UCHARS;
 }
 
-int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
+int32_t UCharsDictionaryMatcher::matches(UText *పాఠ్యం, int32_t max_నిడివి_2, int32_t హద్దు,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *విలువలు,
+                            int32_t *ఉపసర్గ) స్థిరరాశి {
 
     UCharsTrie uct(characters);
-    int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
-    int32_t codePointsMatched = 0;
+    int32_t starting_పాఠ్యం_సూచీ = static_cast<int32_t>(utext_get_Native_సూచీ(పాఠ్యం));
+    int32_t మాట_లెక్క = 0;
+    int32_t సంకేతం_Points_Matched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
-        UStringTrieResult result = (codePointsMatched == 0) ? uct.first(c) : uct.next(c);
-        int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
-        codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = uct.getValue();
+    కొరకు (UChar32 c = utext_next32(పాఠ్యం); c >= 0; c=utext_next32(పాఠ్యం)) {
+        UString_Trie_ఫలితం ఫలితం = (సంకేతం_Points_Matched == 0) ? uct.first(c) : uct.next(c);
+        int32_t నిడివి_Matched = static_cast<int32_t>(utext_get_Native_సూచీ(పాఠ్యం)) - starting_పాఠ్యం_సూచీ;
+        సంకేతం_Points_Matched += 1;
+        ఒకవేళ (USTRINGTRIE_HAS_విలువ(ఫలితం)) {
+            ఒకవేళ (మాట_లెక్క < హద్దు) {
+                ఒకవేళ (విలువలు != శూన్యసూచిక) {
+                    విలువలు[మాట_లెక్క] = uct.get_విలువ();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                ఒకవేళ (lengths != శూన్యసూచిక) {
+                    lengths[మాట_లెక్క] = నిడివి_Matched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                ఒకవేళ (cpLengths != శూన్యసూచిక) {
+                    cpLengths[మాట_లెక్క] = సంకేతం_Points_Matched;
                 }
-                ++wordCount;
+                ++మాట_లెక్క;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            ఒకవేళ (ఫలితం == USTRINGTRIE_FINAL_విలువ) {
+                ఆపు;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        లేకపోతే ఒకవేళ (ఫలితం == USTRINGTRIE_NO_సరిపోలిక) {
+            ఆపు;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        ఒకవేళ (నిడివి_Matched >= max_నిడివి_2) {
+            ఆపు;
         }
     }
 
-    if (prefix != nullptr) {
-        *prefix = codePointsMatched;
+    ఒకవేళ (ఉపసర్గ != శూన్యసూచిక) {
+        *ఉపసర్గ = సంకేతం_Points_Matched;
     }
-    return wordCount;
+    తిరిగి మాట_లెక్క;
 }
 
-BytesDictionaryMatcher::~BytesDictionaryMatcher() {
+బైట్లు_Dictionary_Matcher::~బైట్లు_Dictionary_Matcher() {
     udata_close(file);
 }
 
-UChar32 BytesDictionaryMatcher::transform(UChar32 c) const {
-    if ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
-        if (c == 0x200D) {
-            return 0xFF;
-        } else if (c == 0x200C) {
-            return 0xFE;
+UChar32 బైట్లు_Dictionary_Matcher::transform(UChar32 c) స్థిరరాశి {
+    ఒకవేళ ((transformConstant & Dictionary_దత్తాంశం::TRANSFORM_TYPE_ముసుగు) == Dictionary_దత్తాంశం::TRANSFORM_TYPE_స్థానభ్రంశం) {
+        ఒకవేళ (c == 0x200D) {
+            తిరిగి 0xFF;
+        } లేకపోతే ఒకవేళ (c == 0x200C) {
+            తిరిగి 0xFE;
         }
-        int32_t delta = c - (transformConstant & DictionaryData::TRANSFORM_OFFSET_MASK);
-        if (delta < 0 || 0xFD < delta) {
-            return U_SENTINEL;
+        int32_t delta = c - (transformConstant & Dictionary_దత్తాంశం::TRANSFORM_స్థానభ్రంశం_ముసుగు);
+        ఒకవేళ (delta < 0 || 0xFD < delta) {
+            తిరిగి U_SENTINEL;
         }
-        return static_cast<UChar32>(delta);
+        తిరిగి static_cast<UChar32>(delta);
     }
-    return c;
+    తిరిగి c;
 }
 
-int32_t BytesDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_BYTES;
+int32_t బైట్లు_Dictionary_Matcher::getType() స్థిరరాశి {
+    తిరిగి Dictionary_దత్తాంశం::TRIE_TYPE_బైట్లు;
 }
 
-int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
-    BytesTrie bt(characters);
-    int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
-    int32_t codePointsMatched = 0;
+int32_t బైట్లు_Dictionary_Matcher::matches(UText *పాఠ్యం, int32_t max_నిడివి_2, int32_t హద్దు,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *విలువలు,
+                            int32_t *ఉపసర్గ) స్థిరరాశి {
+    బైట్లు_Trie bt(characters);
+    int32_t starting_పాఠ్యం_సూచీ = static_cast<int32_t>(utext_get_Native_సూచీ(పాఠ్యం));
+    int32_t మాట_లెక్క = 0;
+    int32_t సంకేతం_Points_Matched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
-        UStringTrieResult result = (codePointsMatched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
-        int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
-        codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = bt.getValue();
+    కొరకు (UChar32 c = utext_next32(పాఠ్యం); c >= 0; c=utext_next32(పాఠ్యం)) {
+        UString_Trie_ఫలితం ఫలితం = (సంకేతం_Points_Matched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
+        int32_t నిడివి_Matched = static_cast<int32_t>(utext_get_Native_సూచీ(పాఠ్యం)) - starting_పాఠ్యం_సూచీ;
+        సంకేతం_Points_Matched += 1;
+        ఒకవేళ (USTRINGTRIE_HAS_విలువ(ఫలితం)) {
+            ఒకవేళ (మాట_లెక్క < హద్దు) {
+                ఒకవేళ (విలువలు != శూన్యసూచిక) {
+                    విలువలు[మాట_లెక్క] = bt.get_విలువ();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                ఒకవేళ (lengths != శూన్యసూచిక) {
+                    lengths[మాట_లెక్క] = నిడివి_Matched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                ఒకవేళ (cpLengths != శూన్యసూచిక) {
+                    cpLengths[మాట_లెక్క] = సంకేతం_Points_Matched;
                 }
-                ++wordCount;
+                ++మాట_లెక్క;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            ఒకవేళ (ఫలితం == USTRINGTRIE_FINAL_విలువ) {
+                ఆపు;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        లేకపోతే ఒకవేళ (ఫలితం == USTRINGTRIE_NO_సరిపోలిక) {
+            ఆపు;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        ఒకవేళ (నిడివి_Matched >= max_నిడివి_2) {
+            ఆపు;
         }
     }
 
-    if (prefix != nullptr) {
-        *prefix = codePointsMatched;
+    ఒకవేళ (ఉపసర్గ != శూన్యసూచిక) {
+        *ఉపసర్గ = సంకేతం_Points_Matched;
     }
-    return wordCount;
+    తిరిగి మాట_లెక్క;
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
-           void *outData, UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
-    const int32_t *inIndexes;
-    int32_t indexes[DictionaryData::IX_COUNT];
-    int32_t i, offset, size;
+udict_మార్పిడి(స్థిరరాశి UDataSwapper *ds, స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length,
+           శూన్య *బహిర్గతం_దత్తాంశం, UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి UDataInfo *pInfo;
+    int32_t శీర్షిక_కొలత;
+    స్థిరరాశి uint8_t *లోపల_బైట్లు;
+    uint8_t *బహిర్గతం_బైట్లు;
+    స్థిరరాశి int32_t *లోపల_Indexes;
+    int32_t indexes[Dictionary_దత్తాంశం::IX_లెక్క];
+    int32_t i, స్థానభ్రంశం, size;
 
-    headerSize = udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) return 0;
-    pInfo = (const UDataInfo *)((const char *)inData + 4);
-    if (!(pInfo->dataFormat[0] == 0x44 && 
-          pInfo->dataFormat[1] == 0x69 && 
-          pInfo->dataFormat[2] == 0x63 && 
-          pInfo->dataFormat[3] == 0x74 && 
-          pInfo->formatVersion[0] == 1)) {
+    శీర్షిక_కొలత = udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
+    ఒకవేళ (p_Error_సంకేతం == శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) తిరిగి 0;
+    pInfo = (స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం + 4);
+    ఒకవేళ (!(pInfo->దత్తాంశం_Format[0] == 0x44 && 
+          pInfo->దత్తాంశం_Format[1] == 0x69 && 
+          pInfo->దత్తాంశం_Format[2] == 0x63 && 
+          pInfo->దత్తాంశం_Format[3] == 0x74 && 
+          pInfo->format_సంస్కరణ[0] == 1)) {
         udata_printError(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1], pInfo->dataFormat[2], pInfo->dataFormat[3], pInfo->formatVersion[0]);
-        *pErrorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->దత్తాంశం_Format[0], pInfo->దత్తాంశం_Format[1], pInfo->దత్తాంశం_Format[2], pInfo->దత్తాంశం_Format[3], pInfo->format_సంస్కరణ[0]);
+        *p_Error_సంకేతం = U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    inBytes = (const uint8_t *)inData + headerSize;
-    outBytes = (outData == nullptr) ? nullptr : (uint8_t *)outData + headerSize;
+    లోపల_బైట్లు = (స్థిరరాశి uint8_t *)లోపల_దత్తాంశం + శీర్షిక_కొలత;
+    బహిర్గతం_బైట్లు = (బహిర్గతం_దత్తాంశం == శూన్యసూచిక) ? శూన్యసూచిక : (uint8_t *)బహిర్గతం_దత్తాంశం + శీర్షిక_కొలత;
 
-    inIndexes = (const int32_t *)inBytes;
-    if (length >= 0) {
-        length -= headerSize;
-        if (length < (int32_t)(sizeof(indexes))) {
+    లోపల_Indexes = (స్థిరరాశి int32_t *)లోపల_బైట్లు;
+    ఒకవేళ (length >= 0) {
+        length -= శీర్షిక_కొలత;
+        ఒకవేళ (length < (int32_t)(పరిమాణం(indexes))) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
-            *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి 0;
         }
     }
 
-    for (i = 0; i < DictionaryData::IX_COUNT; i++) {
-        indexes[i] = udata_readInt32(ds, inIndexes[i]);
+    కొరకు (i = 0; i < Dictionary_దత్తాంశం::IX_లెక్క; i++) {
+        indexes[i] = udata_readInt32(ds, లోపల_Indexes[i]);
     }
 
-    size = indexes[DictionaryData::IX_TOTAL_SIZE];
+    size = indexes[Dictionary_దత్తాంశం::IX_మొత్తం_కొలత];
 
-    if (length >= 0) {
-        if (length < size) {
+    ఒకవేళ (length >= 0) {
+        ఒకవేళ (length < size) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
-            *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి 0;
         }
 
-        if (inBytes != outBytes) {
-            uprv_memcpy(outBytes, inBytes, size);
+        ఒకవేళ (లోపల_బైట్లు != బహిర్గతం_బైట్లు) {
+            uprv_memcpy(బహిర్గతం_బైట్లు, లోపల_బైట్లు, size);
         }
 
-        offset = 0;
-        ds->swapArray32(ds, inBytes, sizeof(indexes), outBytes, pErrorCode);
-        offset = (int32_t)sizeof(indexes);
-        int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
-        int32_t nextOffset = indexes[DictionaryData::IX_RESERVED1_OFFSET];
+        స్థానభ్రంశం = 0;
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు, పరిమాణం(indexes), బహిర్గతం_బైట్లు, p_Error_సంకేతం);
+        స్థానభ్రంశం = (int32_t)పరిమాణం(indexes);
+        int32_t trieType = indexes[Dictionary_దత్తాంశం::IX_TRIE_TYPE] & Dictionary_దత్తాంశం::TRIE_TYPE_ముసుగు;
+        int32_t తదుపరి_స్థానభ్రంశం = indexes[Dictionary_దత్తాంశం::IX_RESERVED1_స్థానభ్రంశం];
 
-        if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
-            ds->swapArray16(ds, inBytes + offset, nextOffset - offset, outBytes + offset, pErrorCode);
-        } else if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+        ఒకవేళ (trieType == Dictionary_దత్తాంశం::TRIE_TYPE_UCHARS) {
+            ds->మార్పిడి_Array16(ds, లోపల_బైట్లు + స్థానభ్రంశం, తదుపరి_స్థానభ్రంశం - స్థానభ్రంశం, బహిర్గతం_బైట్లు + స్థానభ్రంశం, p_Error_సంకేతం);
+        } లేకపోతే ఒకవేళ (trieType == Dictionary_దత్తాంశం::TRIE_TYPE_బైట్లు) {
             // nothing to do
-        } else {
+        } లేకపోతే {
             udata_printError(ds, "udict_swap(): unknown trie type!\n");
-            *pErrorCode = U_UNSUPPORTED_ERROR;
-            return 0;
+            *p_Error_సంకేతం = U_UNSUPPORTED_ERROR;
+            తిరిగి 0;
         }
 
         // these next two sections are empty in the current format,
         // but may be used later.
-        offset = nextOffset;
-        nextOffset = indexes[DictionaryData::IX_RESERVED2_OFFSET];
-        offset = nextOffset;
-        nextOffset = indexes[DictionaryData::IX_TOTAL_SIZE];
-        offset = nextOffset;
+        స్థానభ్రంశం = తదుపరి_స్థానభ్రంశం;
+        తదుపరి_స్థానభ్రంశం = indexes[Dictionary_దత్తాంశం::IX_RESERVED2_స్థానభ్రంశం];
+        స్థానభ్రంశం = తదుపరి_స్థానభ్రంశం;
+        తదుపరి_స్థానభ్రంశం = indexes[Dictionary_దత్తాంశం::IX_మొత్తం_కొలత];
+        స్థానభ్రంశం = తదుపరి_స్థానభ్రంశం;
     }
-    return headerSize + size;
+    తిరిగి శీర్షిక_కొలత + size;
 }
-#endif
+#అయితే_ముగింపు

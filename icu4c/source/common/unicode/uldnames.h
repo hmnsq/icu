@@ -7,54 +7,54 @@
 *******************************************************************************
 */
 
-#ifndef __ULDNAMES_H__
-#define __ULDNAMES_H__
+#నిర్వచితం_కాకపోతే __ULDNAMES_H__
+#నిర్వచించు __ULDNAMES_H__
 
 /**
  * \file
  * \brief C API: Provides display names of Locale ids and their components.
  */
 
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
-#include "unicode/udisplaycontext.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uscript.h"
+#అన్తర్భావ "unicode/udisplaycontext.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
+#అన్తర్భావ "unicode/localpointer.h"
+#అయితే_ముగింపు   // U_SHOW_CPLUSPLUS_API
 
 /**
  * Enum used in LocaleDisplayNames::createInstance.
  * @stable ICU 4.4
  */
-typedef enum {
+రకనిర్వచనం గణన {
     /**
      * Use standard names when generating a locale name,
      * e.g. en_GB displays as 'English (United Kingdom)'.
      * @stable ICU 4.4
      */
-    ULDN_STANDARD_NAMES = 0,
+    ULDN_STANDARD_పేర్లు = 0,
     /**
      * Use dialect names, when generating a locale name,
      * e.g. en_GB displays as 'British English'.
      * @stable ICU 4.4
      */
-    ULDN_DIALECT_NAMES
+    ULDN_DIALECT_పేర్లు
 } UDialectHandling;
 
 /**
  * Opaque C service object type for the locale display names API
  * @stable ICU 4.4
  */
-struct ULocaleDisplayNames;
+నిర్మాణం ULocale_Display_పేర్లు;
 
 /** 
  * C typedef for struct ULocaleDisplayNames. 
  * @stable ICU 4.4 
  */
-typedef struct ULocaleDisplayNames ULocaleDisplayNames;  
+రకనిర్వచనం నిర్మాణం ULocale_Display_పేర్లు ULocale_Display_పేర్లు;  
 
-#if !UCONFIG_NO_FORMATTING
+#ఒకవేళ !UCONFIG_NO_FORMATTING
 
 /**
  * Returns an instance of LocaleDisplayNames that returns names
@@ -68,20 +68,20 @@ typedef struct ULocaleDisplayNames ULocaleDisplayNames;
  * @param pErrorCode the status code
  * @stable ICU 4.4
  */
-U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_open(const char * locale,
+U_CAPI ULocale_Display_పేర్లు * U_EXPORT2
+uldn_open(స్థిరరాశి అక్షరం * locale,
           UDialectHandling dialectHandling,
-          UErrorCode *pErrorCode);
+          UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Closes a ULocaleDisplayNames instance obtained from uldn_open().
  * @param ldn the ULocaleDisplayNames instance to be closed
  * @stable ICU 4.4
  */
-U_CAPI void U_EXPORT2
-uldn_close(ULocaleDisplayNames *ldn);
+U_CAPI శూన్య U_EXPORT2
+uldn_close(ULocale_Display_పేర్లు *ldn);
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -94,11 +94,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalULocaleDisplayNamesPointer, ULocaleDisplayNames, uldn_close);
+U_DEFINE_LOCAL_OPEN_సూచిక(Local_ULocale_Display_పేర్లు_సూచిక, ULocale_Display_పేర్లు, uldn_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు
 
 /* getters for state */
 
@@ -109,8 +109,8 @@ U_NAMESPACE_END
  * @return the display locale 
  * @stable ICU 4.4
  */
-U_CAPI const char* U_EXPORT2
-uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
+U_CAPI స్థిరరాశి అక్షరం* U_EXPORT2
+uldn_getLocale(స్థిరరాశి ULocale_Display_పేర్లు* ldn U_LIFETIME_BOUND);
 
 /**
  * Returns the dialect handling used in the display names.
@@ -119,7 +119,7 @@ uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
  * @stable ICU 4.4
  */
 U_CAPI UDialectHandling U_EXPORT2
-uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
+uldn_getDialectHandling(స్థిరరాశి ULocale_Display_పేర్లు *ldn);
 
 /* names for entire locales */
 
@@ -135,11 +135,11 @@ uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *locale,
-                       UChar *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode);
+uldn_localeDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                       స్థిరరాశి అక్షరం *locale,
+                       UChar *ఫలితం,
+                       int32_t max_ఫలితం_కొలత,
+                       UError_సంకేతం *p_Error_సంకేతం);
 
 /* names for components of a locale */
 
@@ -155,11 +155,11 @@ uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *lang,
-                         UChar *result,
-                         int32_t maxResultSize,
-                         UErrorCode *pErrorCode);
+uldn_languageDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                         స్థిరరాశి అక్షరం *lang,
+                         UChar *ఫలితం,
+                         int32_t max_ఫలితం_కొలత,
+                         UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns the display name of the provided script.
@@ -173,11 +173,11 @@ uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *script,
-                       UChar *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode);
+uldn_scriptDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                       స్థిరరాశి అక్షరం *script,
+                       UChar *ఫలితం,
+                       int32_t max_ఫలితం_కొలత,
+                       UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns the display name of the provided script code.
@@ -191,11 +191,11 @@ uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
-                           UScriptCode scriptCode,
-                           UChar *result,
-                           int32_t maxResultSize,
-                           UErrorCode *pErrorCode);
+uldn_script_సంకేతం_Display_Name(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                           UScript_సంకేతం script_సంకేతం,
+                           UChar *ఫలితం,
+                           int32_t max_ఫలితం_కొలత,
+                           UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns the display name of the provided region code.
@@ -209,11 +209,11 @@ uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *region,
-                       UChar *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode);
+uldn_regionDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                       స్థిరరాశి అక్షరం *region,
+                       UChar *ఫలితం,
+                       int32_t max_ఫలితం_కొలత,
+                       UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns the display name of the provided variant
@@ -227,11 +227,11 @@ uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
-                        const char *variant,
-                        UChar *result,
-                        int32_t maxResultSize,
-                        UErrorCode *pErrorCode);
+uldn_variantDisplayName(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                        స్థిరరాశి అక్షరం *variant,
+                        UChar *ఫలితం,
+                        int32_t max_ఫలితం_కొలత,
+                        UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns the display name of the provided locale key
@@ -245,11 +245,11 @@ uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
-                    const char *key,
-                    UChar *result,
-                    int32_t maxResultSize,
-                    UErrorCode *pErrorCode);
+uldn_కీలకం_Display_Name(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                    స్థిరరాశి అక్షరం *కీలకం,
+                    UChar *ఫలితం,
+                    int32_t max_ఫలితం_కొలత,
+                    UError_సంకేతం *p_Error_సంకేతం);
 
 /**
  * Returns the display name of the provided value (used with the provided key).
@@ -264,12 +264,12 @@ uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *key,
-                         const char *value,
-                         UChar *result,
-                         int32_t maxResultSize,
-                         UErrorCode *pErrorCode);
+uldn_కీలకం_విలువ_Display_Name(స్థిరరాశి ULocale_Display_పేర్లు *ldn,
+                         స్థిరరాశి అక్షరం *కీలకం,
+                         స్థిరరాశి అక్షరం *విలువ_2,
+                         UChar *ఫలితం,
+                         int32_t max_ఫలితం_కొలత,
+                         UError_సంకేతం *p_Error_సంకేతం);
 
 /**
 * Returns an instance of LocaleDisplayNames that returns names formatted
@@ -285,9 +285,9 @@ uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
 * @return a ULocaleDisplayNames instance 
 * @stable ICU 51
 */
-U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_openForContext(const char * locale, UDisplayContext *contexts,
-                    int32_t length, UErrorCode *pErrorCode);
+U_CAPI ULocale_Display_పేర్లు * U_EXPORT2
+uldn_openForContext(స్థిరరాశి అక్షరం * locale, UDisplayContext *contexts,
+                    int32_t నిడివి, UError_సంకేతం *p_Error_సంకేతం);
 
 /**
 * Returns the UDisplayContext value for the specified UDisplayContextType.
@@ -300,8 +300,8 @@ uldn_openForContext(const char * locale, UDisplayContext *contexts,
 * @stable ICU 51
 */
 U_CAPI UDisplayContext U_EXPORT2
-uldn_getContext(const ULocaleDisplayNames *ldn, UDisplayContextType type,
-                UErrorCode *pErrorCode);
+uldn_getContext(స్థిరరాశి ULocale_Display_పేర్లు *ldn, UDisplayContextType type,
+                UError_సంకేతం *p_Error_సంకేతం);
 
-#endif  /* !UCONFIG_NO_FORMATTING */
-#endif  /* __ULDNAMES_H__ */
+#అయితే_ముగింపు  /* !UCONFIG_NO_FORMATTING */
+#అయితే_ముగింపు  /* __ULDNAMES_H__ */

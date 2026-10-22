@@ -11,437 +11,437 @@
 * created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ఒకవేళ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/udata.h"
-#include "unicode/localpointer.h"
-#include "unicode/normalizer2.h"
-#include "unicode/ucptrie.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "norm2allmodes.h"
-#include "normalizer2impl.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/localpointer.h"
+#అన్తర్భావ "unicode/normalizer2.h"
+#అన్తర్భావ "unicode/ucptrie.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/unorm.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "norm2allmodes.h"
+#అన్తర్భావ "normalizer2impl.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "uhash.h"
 
 U_NAMESPACE_BEGIN
 
-class LoadedNormalizer2Impl : public Normalizer2Impl {
-public:
-    LoadedNormalizer2Impl() : memory(nullptr), ownedTrie(nullptr) {}
-    virtual ~LoadedNormalizer2Impl();
+తరగతి LoadedNormalizer2Impl : బహిరంగ Normalizer2Impl {
+బహిరంగ:
+    LoadedNormalizer2Impl() : జ్ఞాపకం(శూన్యసూచిక), ownedTrie(శూన్యసూచిక) {}
+    మాయా ~LoadedNormalizer2Impl();
 
-    void load(const char *packageName, const char *name, UErrorCode &errorCode);
+    శూన్య load(స్థిరరాశి అక్షరం *packageName, స్థిరరాశి అక్షరం *name, UError_సంకేతం &error_సంకేతం);
 
-private:
-    static UBool U_CALLCONV
-    isAcceptable(void *context, const char *type, const char *name, const UDataInfo *pInfo);
+అంతరంగ:
+    స్థిర UBool U_CALLCONV
+    isAcceptable(శూన్య *context, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name, స్థిరరాశి UDataInfo *pInfo);
 
-    UDataMemory *memory;
+    UData_జ్ఞాపకం *జ్ఞాపకం;
     UCPTrie *ownedTrie;
 };
 
 LoadedNormalizer2Impl::~LoadedNormalizer2Impl() {
-    udata_close(memory);
+    udata_close(జ్ఞాపకం);
     ucptrie_close(ownedTrie);
 }
 
 UBool U_CALLCONV
-LoadedNormalizer2Impl::isAcceptable(void * /*context*/,
-                                    const char * /* type */, const char * /*name*/,
-                                    const UDataInfo *pInfo) {
-    if(
+LoadedNormalizer2Impl::isAcceptable(శూన్య * /*context*/,
+                                    స్థిరరాశి అక్షరం * /* type */, స్థిరరాశి అక్షరం * /*name*/,
+                                    స్థిరరాశి UDataInfo *pInfo) {
+    ఒకవేళ(
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
-        pInfo->dataFormat[0]==0x4e &&    /* dataFormat="Nrm2" */
-        pInfo->dataFormat[1]==0x72 &&
-        pInfo->dataFormat[2]==0x6d &&
-        pInfo->dataFormat[3]==0x32 &&
-        pInfo->formatVersion[0]==5
+        pInfo->దత్తాంశం_Format[0]==0x4e &&    /* dataFormat="Nrm2" */
+        pInfo->దత్తాంశం_Format[1]==0x72 &&
+        pInfo->దత్తాంశం_Format[2]==0x6d &&
+        pInfo->దత్తాంశం_Format[3]==0x32 &&
+        pInfo->format_సంస్కరణ[0]==5
     ) {
         // Normalizer2Impl *me=(Normalizer2Impl *)context;
         // uprv_memcpy(me->dataVersion, pInfo->dataVersion, 4);
-        return true;
-    } else {
-        return false;
+        తిరిగి నిజం;
+    } లేకపోతే {
+        తిరిగి అబద్ధం;
     }
 }
 
-void
-LoadedNormalizer2Impl::load(const char *packageName, const char *name, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+శూన్య
+LoadedNormalizer2Impl::load(స్థిరరాశి అక్షరం *packageName, స్థిరరాశి అక్షరం *name, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
-    memory=udata_openChoice(packageName, "nrm", name, isAcceptable, this, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    జ్ఞాపకం=udata_openChoice(packageName, "nrm", name, isAcceptable, ఇది, &error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
     }
-    const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(memory));
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
-    int32_t indexesLength=inIndexes[IX_NORM_TRIE_OFFSET]/4;
-    if(indexesLength<=IX_MIN_LCCC_CP) {
-        errorCode=U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
-    }
-
-    int32_t offset=inIndexes[IX_NORM_TRIE_OFFSET];
-    int32_t nextOffset=inIndexes[IX_EXTRA_DATA_OFFSET];
-    ownedTrie=ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_16,
-                                     inBytes+offset, nextOffset-offset, nullptr,
-                                     &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    స్థిరరాశి uint8_t* లోపల_బైట్లు = static_cast<స్థిరరాశి uint8_t*>(udata_get_జ్ఞాపకం(జ్ఞాపకం));
+    స్థిరరాశి int32_t* లోపల_Indexes = reinterpret_cast<స్థిరరాశి int32_t*>(లోపల_బైట్లు);
+    int32_t indexes_నిడివి=లోపల_Indexes[IX_NORM_TRIE_స్థానభ్రంశం]/4;
+    ఒకవేళ(indexes_నిడివి<=IX_MIN_LCCC_CP) {
+        error_సంకేతం=U_INVALID_FORMAT_ERROR;  // Not enough indexes.
+        తిరిగి;
     }
 
-    offset=nextOffset;
-    nextOffset=inIndexes[IX_SMALL_FCD_OFFSET];
-    const uint16_t* inExtraData = reinterpret_cast<const uint16_t*>(inBytes + offset);
+    int32_t స్థానభ్రంశం=లోపల_Indexes[IX_NORM_TRIE_స్థానభ్రంశం];
+    int32_t తదుపరి_స్థానభ్రంశం=లోపల_Indexes[IX_EXTRA_దత్తాంశం_స్థానభ్రంశం];
+    ownedTrie=ucptrie_open_From_ద్విమాన(UCPTRIE_TYPE_FAST, UCPTRIE_విలువ_బిట్లు_16,
+                                     లోపల_బైట్లు+స్థానభ్రంశం, తదుపరి_స్థానభ్రంశం-స్థానభ్రంశం, శూన్యసూచిక,
+                                     &error_సంకేతం);
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి;
+    }
+
+    స్థానభ్రంశం=తదుపరి_స్థానభ్రంశం;
+    తదుపరి_స్థానభ్రంశం=లోపల_Indexes[IX_SMALL_FCD_స్థానభ్రంశం];
+    స్థిరరాశి uint16_t* లోపల_Extra_దత్తాంశం = reinterpret_cast<స్థిరరాశి uint16_t*>(లోపల_బైట్లు + స్థానభ్రంశం);
 
     // smallFCD: new in formatVersion 2
-    offset=nextOffset;
-    const uint8_t *inSmallFCD=inBytes+offset;
+    స్థానభ్రంశం=తదుపరి_స్థానభ్రంశం;
+    స్థిరరాశి uint8_t *లోపల_Small_FCD=లోపల_బైట్లు+స్థానభ్రంశం;
 
-    init(inIndexes, ownedTrie, inExtraData, inSmallFCD);
+    init(లోపల_Indexes, ownedTrie, లోపల_Extra_దత్తాంశం, లోపల_Small_FCD);
 }
 
 // instance cache ---------------------------------------------------------- ***
 
 Norm2AllModes *
-Norm2AllModes::createInstance(const char *packageName,
-                              const char *name,
-                              UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+Norm2AllModes::createInstance(స్థిరరాశి అక్షరం *packageName,
+                              స్థిరరాశి అక్షరం *name,
+                              UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    LoadedNormalizer2Impl *impl=new LoadedNormalizer2Impl;
-    if(impl==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    LoadedNormalizer2Impl *impl=కొత్త LoadedNormalizer2Impl;
+    ఒకవేళ(impl==శూన్యసూచిక) {
+        error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    impl->load(packageName, name, errorCode);
-    return createInstance(impl, errorCode);
+    impl->load(packageName, name, error_సంకేతం);
+    తిరిగి createInstance(impl, error_సంకేతం);
 }
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup();
-U_CDECL_END
+స్థిర UBool U_CALLCONV uprv_loaded_normalizer2_cleanup();
+U_CDECL_చివర
 
-#if !NORM2_HARDCODE_NFC_DATA
-static Norm2AllModes *nfcSingleton;
-static icu::UInitOnce nfcInitOnce {};
-#endif
+#ఒకవేళ !NORM2_HARDCODE_NFC_దత్తాంశం
+స్థిర Norm2AllModes *nfcSingleton;
+స్థిర icu::UInitOnce nfcInitOnce {};
+#అయితే_ముగింపు
 
-static Norm2AllModes *nfkcSingleton;
-static icu::UInitOnce nfkcInitOnce {};
+స్థిర Norm2AllModes *nfkcSingleton;
+స్థిర icu::UInitOnce nfkcInitOnce {};
 
-static Norm2AllModes *nfkc_cfSingleton;
-static icu::UInitOnce nfkc_cfInitOnce {};
+స్థిర Norm2AllModes *nfkc_cfSingleton;
+స్థిర icu::UInitOnce nfkc_cfInitOnce {};
 
-static Norm2AllModes *nfkc_scfSingleton;
-static icu::UInitOnce nfkc_scfInitOnce {};
+స్థిర Norm2AllModes *nfkc_scfSingleton;
+స్థిర icu::UInitOnce nfkc_scfInitOnce {};
 
-static UHashtable    *cache=nullptr;
+స్థిర UHashtable    *cache=శూన్యసూచిక;
 
 // UInitOnce singleton initialization function
-static void U_CALLCONV initSingletons(const char *what, UErrorCode &errorCode) {
-#if !NORM2_HARDCODE_NFC_DATA
-    if (uprv_strcmp(what, "nfc") == 0) {
-        nfcSingleton    = Norm2AllModes::createInstance(nullptr, "nfc", errorCode);
-    } else
-#endif
-    if (uprv_strcmp(what, "nfkc") == 0) {
-        nfkcSingleton    = Norm2AllModes::createInstance(nullptr, "nfkc", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_cf") == 0) {
-        nfkc_cfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_cf", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_scf") == 0) {
-        nfkc_scfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_scf", errorCode);
-    } else {
+స్థిర శూన్య U_CALLCONV initSingletons(స్థిరరాశి అక్షరం *what, UError_సంకేతం &error_సంకేతం) {
+#ఒకవేళ !NORM2_HARDCODE_NFC_దత్తాంశం
+    ఒకవేళ (uprv_strcmp(what, "nfc") == 0) {
+        nfcSingleton    = Norm2AllModes::createInstance(శూన్యసూచిక, "nfc", error_సంకేతం);
+    } లేకపోతే
+#అయితే_ముగింపు
+    ఒకవేళ (uprv_strcmp(what, "nfkc") == 0) {
+        nfkcSingleton    = Norm2AllModes::createInstance(శూన్యసూచిక, "nfkc", error_సంకేతం);
+    } లేకపోతే ఒకవేళ (uprv_strcmp(what, "nfkc_cf") == 0) {
+        nfkc_cfSingleton = Norm2AllModes::createInstance(శూన్యసూచిక, "nfkc_cf", error_సంకేతం);
+    } లేకపోతే ఒకవేళ (uprv_strcmp(what, "nfkc_scf") == 0) {
+        nfkc_scfSingleton = Norm2AllModes::createInstance(శూన్యసూచిక, "nfkc_scf", error_సంకేతం);
+    } లేకపోతే {
         UPRV_UNREACHABLE_EXIT;   // Unknown singleton
     }
-    ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
 }
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV deleteNorm2AllModes(void *allModes) {
-    delete (Norm2AllModes *)allModes;
+స్థిర శూన్య U_CALLCONV deleteNorm2AllModes(శూన్య *allModes) {
+    తొలగించు (Norm2AllModes *)allModes;
 }
 
-static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
-#if !NORM2_HARDCODE_NFC_DATA
-    delete nfcSingleton;
-    nfcSingleton = nullptr;
+స్థిర UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
+#ఒకవేళ !NORM2_HARDCODE_NFC_దత్తాంశం
+    తొలగించు nfcSingleton;
+    nfcSingleton = శూన్యసూచిక;
     nfcInitOnce.reset();
-#endif
+#అయితే_ముగింపు
 
-    delete nfkcSingleton;
-    nfkcSingleton = nullptr;
+    తొలగించు nfkcSingleton;
+    nfkcSingleton = శూన్యసూచిక;
     nfkcInitOnce.reset();
 
-    delete nfkc_cfSingleton;
-    nfkc_cfSingleton = nullptr;
+    తొలగించు nfkc_cfSingleton;
+    nfkc_cfSingleton = శూన్యసూచిక;
     nfkc_cfInitOnce.reset();
 
-    delete nfkc_scfSingleton;
-    nfkc_scfSingleton = nullptr;
+    తొలగించు nfkc_scfSingleton;
+    nfkc_scfSingleton = శూన్యసూచిక;
     nfkc_scfInitOnce.reset();
 
     uhash_close(cache);
-    cache=nullptr;
-    return true;
+    cache=శూన్యసూచిక;
+    తిరిగి నిజం;
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
-#if !NORM2_HARDCODE_NFC_DATA
-const Norm2AllModes *
-Norm2AllModes::getNFCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfcInitOnce, &initSingletons, "nfc", errorCode);
-    return nfcSingleton;
+#ఒకవేళ !NORM2_HARDCODE_NFC_దత్తాంశం
+స్థిరరాశి Norm2AllModes *
+Norm2AllModes::getNFCInstance(UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    umtx_initOnce(nfcInitOnce, &initSingletons, "nfc", error_సంకేతం);
+    తిరిగి nfcSingleton;
 }
-#endif
+#అయితే_ముగింపు
 
-const Norm2AllModes *
-Norm2AllModes::getNFKCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfkcInitOnce, &initSingletons, "nfkc", errorCode);
-    return nfkcSingleton;
-}
-
-const Norm2AllModes *
-Norm2AllModes::getNFKC_CFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfkc_cfInitOnce, &initSingletons, "nfkc_cf", errorCode);
-    return nfkc_cfSingleton;
+స్థిరరాశి Norm2AllModes *
+Norm2AllModes::getNFKCInstance(UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    umtx_initOnce(nfkcInitOnce, &initSingletons, "nfkc", error_సంకేతం);
+    తిరిగి nfkcSingleton;
 }
 
-const Norm2AllModes *
-Norm2AllModes::getNFKC_SCFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfkc_scfInitOnce, &initSingletons, "nfkc_scf", errorCode);
-    return nfkc_scfSingleton;
+స్థిరరాశి Norm2AllModes *
+Norm2AllModes::getNFKC_CFInstance(UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    umtx_initOnce(nfkc_cfInitOnce, &initSingletons, "nfkc_cf", error_సంకేతం);
+    తిరిగి nfkc_cfSingleton;
 }
 
-#if !NORM2_HARDCODE_NFC_DATA
-const Normalizer2 *
-Normalizer2::getNFCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+స్థిరరాశి Norm2AllModes *
+Norm2AllModes::getNFKC_SCFInstance(UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) { తిరిగి శూన్యసూచిక; }
+    umtx_initOnce(nfkc_scfInitOnce, &initSingletons, "nfkc_scf", error_సంకేతం);
+    తిరిగి nfkc_scfSingleton;
 }
 
-const Normalizer2 *
-Normalizer2::getNFDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+#ఒకవేళ !NORM2_HARDCODE_NFC_దత్తాంశం
+స్థిరరాశి Normalizer2 *
+Normalizer2::getNFCInstance(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? &allModes->comp : శూన్యసూచిక;
 }
 
-const Normalizer2 *Normalizer2Factory::getFCDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcd : nullptr;
+స్థిరరాశి Normalizer2 *
+Normalizer2::getNFDInstance(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? &allModes->decomp : శూన్యసూచిక;
 }
 
-const Normalizer2 *Normalizer2Factory::getFCCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcc : nullptr;
+స్థిరరాశి Normalizer2 *Normalizer2Factory::getFCDInstance(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? &allModes->fcd : శూన్యసూచిక;
 }
 
-const Normalizer2Impl *
-Normalizer2Factory::getNFCImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
-}
-#endif
-
-const Normalizer2 *
-Normalizer2::getNFKCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+స్థిరరాశి Normalizer2 *Normalizer2Factory::getFCCInstance(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? &allModes->fcc : శూన్యసూచిక;
 }
 
-const Normalizer2 *
-Normalizer2::getNFKDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+స్థిరరాశి Normalizer2Impl *
+Normalizer2Factory::getNFCImpl(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? allModes->impl : శూన్యసూచిక;
+}
+#అయితే_ముగింపు
+
+స్థిరరాశి Normalizer2 *
+Normalizer2::getNFKCInstance(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? &allModes->comp : శూన్యసూచిక;
 }
 
-const Normalizer2 *
-Normalizer2::getNFKCCasefoldInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+స్థిరరాశి Normalizer2 *
+Normalizer2::getNFKDInstance(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? &allModes->decomp : శూన్యసూచిక;
 }
 
-const Normalizer2 *
-Normalizer2::getNFKCSimpleCasefoldInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+స్థిరరాశి Normalizer2 *
+Normalizer2::getNFKCCasefoldInstance(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? &allModes->comp : శూన్యసూచిక;
 }
 
-const Normalizer2 *
-Normalizer2::getInstance(const char *packageName,
-                         const char *name,
-                         UNormalization2Mode mode,
-                         UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+స్థిరరాశి Normalizer2 *
+Normalizer2::getNFKCSimpleCasefoldInstance(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFKC_SCFInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? &allModes->comp : శూన్యసూచిక;
+}
+
+స్థిరరాశి Normalizer2 *
+Normalizer2::getInstance(స్థిరరాశి అక్షరం *packageName,
+                         స్థిరరాశి అక్షరం *name,
+                         UNormalization2_బహుళకం బహుళకం,
+                         UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    if(name==nullptr || *name==0) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    ఒకవేళ(name==శూన్యసూచిక || *name==0) {
+        error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి శూన్యసూచిక;
     }
-    const Norm2AllModes *allModes=nullptr;
-    if(packageName==nullptr) {
-        if(0==uprv_strcmp(name, "nfc")) {
-            allModes=Norm2AllModes::getNFCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc")) {
-            allModes=Norm2AllModes::getNFKCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_cf")) {
-            allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_scf")) {
-            allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
+    స్థిరరాశి Norm2AllModes *allModes=శూన్యసూచిక;
+    ఒకవేళ(packageName==శూన్యసూచిక) {
+        ఒకవేళ(0==uprv_strcmp(name, "nfc")) {
+            allModes=Norm2AllModes::getNFCInstance(error_సంకేతం);
+        } లేకపోతే ఒకవేళ(0==uprv_strcmp(name, "nfkc")) {
+            allModes=Norm2AllModes::getNFKCInstance(error_సంకేతం);
+        } లేకపోతే ఒకవేళ(0==uprv_strcmp(name, "nfkc_cf")) {
+            allModes=Norm2AllModes::getNFKC_CFInstance(error_సంకేతం);
+        } లేకపోతే ఒకవేళ(0==uprv_strcmp(name, "nfkc_scf")) {
+            allModes=Norm2AllModes::getNFKC_SCFInstance(error_సంకేతం);
         }
     }
-    if(allModes==nullptr && U_SUCCESS(errorCode)) {
+    ఒకవేళ(allModes==శూన్యసూచిక && U_SUCCESS(error_సంకేతం)) {
         {
-            Mutex lock;
-            if(cache!=nullptr) {
+            Mutex తాళం;
+            ఒకవేళ(cache!=శూన్యసూచిక) {
                 allModes = static_cast<Norm2AllModes*>(uhash_get(cache, name));
             }
         }
-        if(allModes==nullptr) {
-            ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
-            LocalPointer<Norm2AllModes> localAllModes(
-                Norm2AllModes::createInstance(packageName, name, errorCode));
-            if(U_SUCCESS(errorCode)) {
-                Mutex lock;
-                if(cache==nullptr) {
-                    cache=uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &errorCode);
-                    if(U_FAILURE(errorCode)) {
-                        return nullptr;
+        ఒకవేళ(allModes==శూన్యసూచిక) {
+            ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
+            Local_సూచిక<Norm2AllModes> localAllModes(
+                Norm2AllModes::createInstance(packageName, name, error_సంకేతం));
+            ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+                Mutex తాళం;
+                ఒకవేళ(cache==శూన్యసూచిక) {
+                    cache=uhash_open(uhash_hashChars, uhash_compareChars, శూన్యసూచిక, &error_సంకేతం);
+                    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+                        తిరిగి శూన్యసూచిక;
                     }
-                    uhash_setKeyDeleter(cache, uprv_free);
-                    uhash_setValueDeleter(cache, deleteNorm2AllModes);
+                    uhash_సమితి_కీలకం_Deleter(cache, uprv_free);
+                    uhash_సమితి_విలువ_Deleter(cache, deleteNorm2AllModes);
                 }
-                void *temp=uhash_get(cache, name);
-                if(temp==nullptr) {
-                    int32_t keyLength= static_cast<int32_t>(uprv_strlen(name)+1);
-                    char* nameCopy = static_cast<char*>(uprv_malloc(keyLength));
-                    if(nameCopy==nullptr) {
-                        errorCode=U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                శూన్య *తాత్కాలిక=uhash_get(cache, name);
+                ఒకవేళ(తాత్కాలిక==శూన్యసూచిక) {
+                    int32_t కీలకం_నిడివి= static_cast<int32_t>(uprv_strlen(name)+1);
+                    అక్షరం* nameCopy = static_cast<అక్షరం*>(uprv_malloc(కీలకం_నిడివి));
+                    ఒకవేళ(nameCopy==శూన్యసూచిక) {
+                        error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                        తిరిగి శూన్యసూచిక;
                     }
-                    uprv_memcpy(nameCopy, name, keyLength);
+                    uprv_memcpy(nameCopy, name, కీలకం_నిడివి);
                     allModes=localAllModes.getAlias();
-                    uhash_put(cache, nameCopy, localAllModes.orphan(), &errorCode);
-                } else {
+                    uhash_put(cache, nameCopy, localAllModes.orphan(), &error_సంకేతం);
+                } లేకపోతే {
                     // race condition
-                    allModes = static_cast<Norm2AllModes*>(temp);
+                    allModes = static_cast<Norm2AllModes*>(తాత్కాలిక);
                 }
             }
         }
     }
-    if(allModes!=nullptr && U_SUCCESS(errorCode)) {
-        switch(mode) {
-        case UNORM2_COMPOSE:
-            return &allModes->comp;
-        case UNORM2_DECOMPOSE:
-            return &allModes->decomp;
-        case UNORM2_FCD:
-            return &allModes->fcd;
-        case UNORM2_COMPOSE_CONTIGUOUS:
-            return &allModes->fcc;
-        default:
-            break;  // do nothing
+    ఒకవేళ(allModes!=శూన్యసూచిక && U_SUCCESS(error_సంకేతం)) {
+        ఎంపిక(బహుళకం) {
+        స్థితి UNORM2_COMPOSE:
+            తిరిగి &allModes->comp;
+        స్థితి UNORM2_DECOMPOSE:
+            తిరిగి &allModes->decomp;
+        స్థితి UNORM2_FCD:
+            తిరిగి &allModes->fcd;
+        స్థితి UNORM2_COMPOSE_CONTIGUOUS:
+            తిరిగి &allModes->fcc;
+        అప్రమేయ:
+            ఆపు;  // do nothing
         }
     }
-    return nullptr;
+    తిరిగి శూన్యసూచిక;
 }
 
-const Normalizer2 *
-Normalizer2Factory::getInstance(UNormalizationMode mode, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+స్థిరరాశి Normalizer2 *
+Normalizer2Factory::getInstance(UNormalization_బహుళకం బహుళకం, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    switch(mode) {
-    case UNORM_NFD:
-        return Normalizer2::getNFDInstance(errorCode);
-    case UNORM_NFKD:
-        return Normalizer2::getNFKDInstance(errorCode);
-    case UNORM_NFC:
-        return Normalizer2::getNFCInstance(errorCode);
-    case UNORM_NFKC:
-        return Normalizer2::getNFKCInstance(errorCode);
-    case UNORM_FCD:
-        return getFCDInstance(errorCode);
-    default:  // UNORM_NONE
-        return getNoopInstance(errorCode);
+    ఎంపిక(బహుళకం) {
+    స్థితి UNORM_NFD:
+        తిరిగి Normalizer2::getNFDInstance(error_సంకేతం);
+    స్థితి UNORM_NFKD:
+        తిరిగి Normalizer2::getNFKDInstance(error_సంకేతం);
+    స్థితి UNORM_NFC:
+        తిరిగి Normalizer2::getNFCInstance(error_సంకేతం);
+    స్థితి UNORM_NFKC:
+        తిరిగి Normalizer2::getNFKCInstance(error_సంకేతం);
+    స్థితి UNORM_FCD:
+        తిరిగి getFCDInstance(error_సంకేతం);
+    అప్రమేయ:  // UNORM_NONE
+        తిరిగి getNoopInstance(error_సంకేతం);
     }
 }
 
-const Normalizer2Impl *
-Normalizer2Factory::getNFKCImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+స్థిరరాశి Normalizer2Impl *
+Normalizer2Factory::getNFKCImpl(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? allModes->impl : శూన్యసూచిక;
 }
 
-const Normalizer2Impl *
-Normalizer2Factory::getNFKC_CFImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+స్థిరరాశి Normalizer2Impl *
+Normalizer2Factory::getNFKC_CFImpl(UError_సంకేతం &error_సంకేతం) {
+    స్థిరరాశి Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(error_సంకేతం);
+    తిరిగి allModes!=శూన్యసూచిక ? allModes->impl : శూన్యసూచిక;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 // C API ------------------------------------------------------------------- ***
 
 U_NAMESPACE_USE
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCInstance(*pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFKCInstance(UError_సంకేతం *p_Error_సంకేతం) {
+    తిరిగి (స్థిరరాశి UNormalizer2 *)Normalizer2::getNFKCInstance(*p_Error_సంకేతం);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKDInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKDInstance(*pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFKDInstance(UError_సంకేతం *p_Error_సంకేతం) {
+    తిరిగి (స్థిరరాశి UNormalizer2 *)Normalizer2::getNFKDInstance(*p_Error_సంకేతం);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFKCCasefoldInstance(UError_సంకేతం *p_Error_సంకేతం) {
+    తిరిగి (స్థిరరాశి UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*p_Error_సంకేతం);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getNFKCSimpleCasefoldInstance(UError_సంకేతం *p_Error_సంకేతం) {
+    తిరిగి (స్థిరరాశి UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*p_Error_సంకేతం);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getInstance(const char *packageName,
-                   const char *name,
-                   UNormalization2Mode mode,
-                   UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getInstance(packageName, name, mode, *pErrorCode);
+U_CAPI స్థిరరాశి UNormalizer2 * U_EXPORT2
+unorm2_getInstance(స్థిరరాశి అక్షరం *packageName,
+                   స్థిరరాశి అక్షరం *name,
+                   UNormalization2_బహుళకం బహుళకం,
+                   UError_సంకేతం *p_Error_సంకేతం) {
+    తిరిగి (స్థిరరాశి UNormalizer2 *)Normalizer2::getInstance(packageName, name, బహుళకం, *p_Error_సంకేతం);
 }
 
-U_CFUNC UNormalizationCheckResult
-unorm_getQuickCheck(UChar32 c, UNormalizationMode mode) {
-    if(mode<=UNORM_NONE || UNORM_FCD<=mode) {
-        return UNORM_YES;
+U_CFUNC UNormalization_Check_ఫలితం
+unorm_get_శీఘ్ర_Check(UChar32 c, UNormalization_బహుళకం బహుళకం) {
+    ఒకవేళ(బహుళకం<=UNORM_NONE || UNORM_FCD<=బహుళకం) {
+        తిరిగి UNORM_YES;
     }
-    UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2 *norm2=Normalizer2Factory::getInstance(mode, errorCode);
-    if(U_SUCCESS(errorCode)) {
-        return ((const Normalizer2WithImpl *)norm2)->getQuickCheck(c);
-    } else {
-        return UNORM_MAYBE;
+    UError_సంకేతం error_సంకేతం=U_ZERO_ERROR;
+    స్థిరరాశి Normalizer2 *norm2=Normalizer2Factory::getInstance(బహుళకం, error_సంకేతం);
+    ఒకవేళ(U_SUCCESS(error_సంకేతం)) {
+        తిరిగి ((స్థిరరాశి Normalizer2WithImpl *)norm2)->get_శీఘ్ర_Check(c);
+    } లేకపోతే {
+        తిరిగి UNORM_MAYBE;
     }
 }
 
-#endif  // !UCONFIG_NO_NORMALIZATION
+#అయితే_ముగింపు  // !UCONFIG_NO_NORMALIZATION

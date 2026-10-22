@@ -20,107 +20,107 @@
 *
 ******************************************************************************
 */
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include <stdlib.h>
+#అన్తర్భావ "unicode/uclean.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ <stdlib.h>
 
 /* uprv_malloc(0) returns a pointer to this read-only data. */
-static const int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
+స్థిర స్థిరరాశి int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
 
 /* Function Pointers for user-supplied heap functions  */
-static const void     *pContext;
-static UMemAllocFn    *pAlloc;
-static UMemReallocFn  *pRealloc;
-static UMemFreeFn     *pFree;
+స్థిర స్థిరరాశి శూన్య     *pContext;
+స్థిర UMemAllocFn    *pAlloc;
+స్థిర UMemReallocFn  *pRealloc;
+స్థిర UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#include <stdio.h>
-static int n=0;
-static long b=0; 
-#endif
+#ఒకవేళ U_DEBUG && defined(UPRV_MALLOC_లెక్క)
+#అన్తర్భావ <stdio.h>
+స్థిర పూర్ణాంకం n=0;
+స్థిర దీర్ఘ b=0; 
+#అయితే_ముగింపు
 
-U_CAPI void * U_EXPORT2
+U_CAPI శూన్య * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
-  putchar('>');
+#ఒకవేళ U_DEBUG && defined(UPRV_MALLOC_లెక్క)
+#ఒకవేళ 1
+  అక్షరం_రాయి('>');
   fflush(stdout);
-#else
+#లేకపోతే
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
-#endif
-#endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+#అయితే_ముగింపు
+#అయితే_ముగింపు
+    ఒకవేళ (s > 0) {
+        ఒకవేళ (pAlloc) {
+            తిరిగి (*pAlloc)(pContext, s);
+        } లేకపోతే {
+            తిరిగి uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } లేకపోతే {
+        తిరిగి (శూన్య *)zeroMem;
     }
 }
 
-U_CAPI void * U_EXPORT2
-uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-  putchar('~');
+U_CAPI శూన్య * U_EXPORT2
+uprv_realloc(శూన్య * బఫరు, size_t size) {
+#ఒకవేళ U_DEBUG && defined(UPRV_MALLOC_లెక్క)
+  అక్షరం_రాయి('~');
   fflush(stdout);
-#endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
-            (*pFree)(pContext, buffer);
-        } else {
-            uprv_default_free(buffer);
+#అయితే_ముగింపు
+    ఒకవేళ (బఫరు == zeroMem) {
+        తిరిగి uprv_malloc(size);
+    } లేకపోతే ఒకవేళ (size == 0) {
+        ఒకవేళ (pFree) {
+            (*pFree)(pContext, బఫరు);
+        } లేకపోతే {
+            uprv_default_free(బఫరు);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        తిరిగి (శూన్య *)zeroMem;
+    } లేకపోతే {
+        ఒకవేళ (pRealloc) {
+            తిరిగి (*pRealloc)(pContext, బఫరు, size);
+        } లేకపోతే {
+            తిరిగి uprv_default_realloc(బఫరు, size);
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-  putchar('<');
+U_CAPI శూన్య U_EXPORT2
+uprv_free(శూన్య *బఫరు) {
+#ఒకవేళ U_DEBUG && defined(UPRV_MALLOC_లెక్క)
+  అక్షరం_రాయి('<');
   fflush(stdout);
-#endif
-    if (buffer != zeroMem) {
-        if (pFree) {
-            (*pFree)(pContext, buffer);
-        } else {
-            uprv_default_free(buffer);
+#అయితే_ముగింపు
+    ఒకవేళ (బఫరు != zeroMem) {
+        ఒకవేళ (pFree) {
+            (*pFree)(pContext, బఫరు);
+        } లేకపోతే {
+            uprv_default_free(బఫరు);
         }
     }
 }
 
-U_CAPI void * U_EXPORT2
+U_CAPI శూన్య * U_EXPORT2
 uprv_calloc(size_t num, size_t size) {
-    void *mem = nullptr;
+    శూన్య *mem = శూన్యసూచిక;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    ఒకవేళ (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    తిరిగి mem;
 }
 
-U_CAPI void U_EXPORT2
-u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
+U_CAPI శూన్య U_EXPORT2
+u_సమితి_జ్ఞాపకం_Functions(స్థిరరాశి శూన్య *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UError_సంకేతం *స్థితి_2)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    ఒకవేళ (U_FAILURE(*స్థితి_2)) {
+        తిరిగి;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ (a==శూన్యసూచిక || r==శూన్యసూచిక || f==శూన్యసూచిక) {
+        *స్థితి_2 = U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
     pContext  = context;
     pAlloc    = a;
@@ -130,9 +130,9 @@ u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMem
 
 
 U_CFUNC UBool cmemory_cleanup() {
-    pContext   = nullptr;
-    pAlloc     = nullptr;
-    pRealloc   = nullptr;
-    pFree      = nullptr;
-    return true;
+    pContext   = శూన్యసూచిక;
+    pAlloc     = శూన్యసూచిక;
+    pRealloc   = శూన్యసూచిక;
+    pFree      = శూన్యసూచిక;
+    తిరిగి నిజం;
 }

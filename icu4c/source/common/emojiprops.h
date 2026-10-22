@@ -4,87 +4,87 @@
 // emojiprops.h
 // created: 2021sep03 Markus W. Scherer
 
-#ifndef __EMOJIPROPS_H__
-#define __EMOJIPROPS_H__
+#నిర్వచితం_కాకపోతే __EMOJIPROPS_H__
+#నిర్వచించు __EMOJIPROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/ucptrie.h"
-#include "unicode/udata.h"
-#include "unicode/uobject.h"
-#include "uset_imp.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/ucptrie.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "uset_imp.h"
 
 U_NAMESPACE_BEGIN
 
-class EmojiProps : public UMemory {
-public:
+class EmojiProps : బహిరంగ UMemory {
+బహిరంగ:
     // @internal
-    EmojiProps(UErrorCode &errorCode) { load(errorCode); }
+    EmojiProps(UError_సంకేతం &error_సంకేతం) { ఎక్కించు(error_సంకేతం); }
     ~EmojiProps();
 
-    static const EmojiProps *getSingleton(UErrorCode &errorCode);
-    static UBool hasBinaryProperty(UChar32 c, UProperty which);
-    static UBool hasBinaryProperty(const char16_t *s, int32_t length, UProperty which);
+    స్థిర స్థిరరాశి EmojiProps *getSingleton(UError_సంకేతం &error_సంకేతం);
+    స్థిర UBool has_ద్విమాన_Property(UChar32 c, UProperty which);
+    స్థిర UBool has_ద్విమాన_Property(స్థిరరాశి char16_t *s, int32_t నిడివి, UProperty which);
 
-    void addPropertyStarts(const USetAdder *sa, UErrorCode &errorCode) const;
-    void addStrings(const USetAdder *sa, UProperty which, UErrorCode &errorCode) const;
+    శూన్య కూడు_Property_Starts(స్థిరరాశి USetAdder *sa, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
+    శూన్య కూడు_అక్షరశ్రేణులు(స్థిరరాశి USetAdder *sa, UProperty which, UError_సంకేతం &error_సంకేతం) స్థిరరాశి;
 
-    enum {
+    గణన {
         // Byte offsets from the start of the data, after the generic header,
         // in ascending order.
         // UCPTrie=CodePointTrie, follows the indexes
-        IX_CPTRIE_OFFSET,
+        IX_CPTRIE_స్థానభ్రంశం,
         IX_RESERVED1,
         IX_RESERVED2,
         IX_RESERVED3,
 
         // UCharsTrie=CharsTrie
-        IX_BASIC_EMOJI_TRIE_OFFSET,
-        IX_EMOJI_KEYCAP_SEQUENCE_TRIE_OFFSET,
-        IX_RGI_EMOJI_MODIFIER_SEQUENCE_TRIE_OFFSET,
-        IX_RGI_EMOJI_FLAG_SEQUENCE_TRIE_OFFSET,
-        IX_RGI_EMOJI_TAG_SEQUENCE_TRIE_OFFSET,
-        IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET,
+        IX_BASIC_EMOJI_TRIE_స్థానభ్రంశం,
+        IX_EMOJI_KEYCAP_SEQUENCE_TRIE_స్థానభ్రంశం,
+        IX_RGI_EMOJI_MODIFIER_SEQUENCE_TRIE_స్థానభ్రంశం,
+        IX_RGI_EMOJI_FLAG_SEQUENCE_TRIE_స్థానభ్రంశం,
+        IX_RGI_EMOJI_ట్యాగ్_SEQUENCE_TRIE_స్థానభ్రంశం,
+        IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_స్థానభ్రంశం,
         IX_RESERVED10,
         IX_RESERVED11,
         IX_RESERVED12,
-        IX_TOTAL_SIZE,
+        IX_మొత్తం_కొలత,
 
         // Not initially byte offsets.
         IX_RESERVED14,
         IX_RESERVED15,
-        IX_COUNT  // 16
+        IX_లెక్క  // 16
     };
 
     // Properties in the code point trie.
-    enum {
+    గణన {
         // https://www.unicode.org/reports/tr51/#Emoji_Properties
-        BIT_EMOJI,
-        BIT_EMOJI_PRESENTATION,
-        BIT_EMOJI_MODIFIER,
-        BIT_EMOJI_MODIFIER_BASE,
-        BIT_EMOJI_COMPONENT,
-        BIT_EXTENDED_PICTOGRAPHIC,
+        బిట్టు_EMOJI,
+        బిట్టు_EMOJI_PRESENTATION,
+        బిట్టు_EMOJI_MODIFIER,
+        బిట్టు_EMOJI_MODIFIER_పునాది,
+        బిట్టు_EMOJI_COMPONENT,
+        బిట్టు_EXTENDED_PICTOGRAPHIC,
         // https://www.unicode.org/reports/tr51/#Emoji_Sets
-        BIT_BASIC_EMOJI
+        బిట్టు_BASIC_EMOJI
     };
 
-private:
-    static UBool U_CALLCONV
-    isAcceptable(void *context, const char *type, const char *name, const UDataInfo *pInfo);
+అంతరంగ:
+    స్థిర UBool U_CALLCONV
+    isAcceptable(శూన్య *context, స్థిరరాశి అక్షరం *type, స్థిరరాశి అక్షరం *name, స్థిరరాశి UDataInfo *pInfo);
     /** Input i: One of the IX_..._TRIE_OFFSET indexes into the data file indexes[] array. */
-    static int32_t getStringTrieIndex(int32_t i) {
-        return i - IX_BASIC_EMOJI_TRIE_OFFSET;
+    స్థిర int32_t get_String_Trie_సూచీ(int32_t i) {
+        తిరిగి i - IX_BASIC_EMOJI_TRIE_స్థానభ్రంశం;
     }
 
-    void load(UErrorCode &errorCode);
-    UBool hasBinaryPropertyImpl(UChar32 c, UProperty which) const;
-    UBool hasBinaryPropertyImpl(const char16_t *s, int32_t length, UProperty which) const;
+    శూన్య ఎక్కించు(UError_సంకేతం &error_సంకేతం);
+    UBool has_ద్విమాన_Property_Impl(UChar32 c, UProperty which) స్థిరరాశి;
+    UBool has_ద్విమాన_Property_Impl(స్థిరరాశి char16_t *s, int32_t నిడివి, UProperty which) స్థిరరాశి;
 
-    UDataMemory *memory = nullptr;
+    UData_జ్ఞాపకం *జ్ఞాపకం = nullptr;
     UCPTrie *cpTrie = nullptr;
-    const char16_t *stringTries[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+    స్థిరరాశి char16_t *stringTries[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif  // __EMOJIPROPS_H__
+#అయితే_ముగింపు  // __EMOJIPROPS_H__

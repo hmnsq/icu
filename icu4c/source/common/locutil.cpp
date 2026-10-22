@@ -6,27 +6,27 @@
  * others. All Rights Reserved.
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
+#ఒకవేళ !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
 
-#include "unicode/resbund.h"
-#include "unicode/uenum.h"
-#include "cmemory.h"
-#include "ustrfmt.h"
-#include "locutil.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
-#include "umutex.h"
+#అన్తర్భావ "unicode/resbund.h"
+#అన్తర్భావ "unicode/uenum.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "ustrfmt.h"
+#అన్తర్భావ "locutil.h"
+#అన్తర్భావ "charstr.h"
+#అన్తర్భావ "ucln_cmn.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "umutex.h"
 
 // see LocaleUtility::getAvailableLocaleNames
-static icu::UInitOnce   LocaleUtilityInitOnce {};
-static icu::Hashtable * LocaleUtility_cache = nullptr;
+స్థిర icu::UInitOnce   LocaleUtilityInitOnce {};
+స్థిర icu::Hashtable * LocaleUtility_cache = శూన్యసూచిక;
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#నిర్వచించు UNDERSCORE_CHAR ((char16_t)0x005f)
+#నిర్వచించు AT_SIGN_CHAR    ((char16_t)64)
+#నిర్వచించు PERIOD_CHAR     ((char16_t)46)
 
 /*
  ******************************************************************
@@ -36,42 +36,42 @@ static icu::Hashtable * LocaleUtility_cache = nullptr;
  * Release all static memory held by Locale Utility.  
  */
 U_CDECL_BEGIN
-static UBool U_CALLCONV service_cleanup() {
-    if (LocaleUtility_cache) {
-        delete LocaleUtility_cache;
-        LocaleUtility_cache = nullptr;
+స్థిర UBool U_CALLCONV service_cleanup() {
+    ఒకవేళ (LocaleUtility_cache) {
+        తొలగించు LocaleUtility_cache;
+        LocaleUtility_cache = శూన్యసూచిక;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 
-static void U_CALLCONV locale_utility_init(UErrorCode &status) {
-    using namespace icu;
-    U_ASSERT(LocaleUtility_cache == nullptr);
-    ucln_common_registerCleanup(UCLN_COMMON_SERVICE, service_cleanup);
-    LocaleUtility_cache = new Hashtable(status);
-    if (U_FAILURE(status)) {
-        delete LocaleUtility_cache;
-        LocaleUtility_cache = nullptr;
-        return;
+స్థిర శూన్య U_CALLCONV locale_utility_init(UError_సంకేతం &స్థితి_2) {
+    ఉపయోగించి నామాకాశ icu;
+    U_ASSERT(LocaleUtility_cache == శూన్యసూచిక);
+    ucln_common_రిజిస్టరు_Cleanup(UCLN_COMMON_SERVICE, service_cleanup);
+    LocaleUtility_cache = కొత్త Hashtable(స్థితి_2);
+    ఒకవేళ (U_FAILURE(స్థితి_2)) {
+        తొలగించు LocaleUtility_cache;
+        LocaleUtility_cache = శూన్యసూచిక;
+        తిరిగి;
     }
-    if (LocaleUtility_cache == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    ఒకవేళ (LocaleUtility_cache == శూన్యసూచిక) {
+        స్థితి_2 = U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి;
     }
-    LocaleUtility_cache->setValueDeleter(uhash_deleteHashtable);
+    LocaleUtility_cache->సమితి_విలువ_Deleter(uhash_deleteHashtable);
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
 U_NAMESPACE_BEGIN
 
 UnicodeString&
-LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& result)
+LocaleUtility::canonicalLocaleString(స్థిరరాశి UnicodeString* id, UnicodeString& ఫలితం)
 {
-  if (id == nullptr) {
-    result.setToBogus();
-  } else {
+  ఒకవేళ (id == శూన్యసూచిక) {
+    ఫలితం.సమితి_గమ్యం_Bogus();
+  } లేకపోతే {
     // Fix case only (no other changes) up to the first '@' or '.' or
     // end of string, whichever comes first.  In 3.0 I changed this to
     // stop at first '@' or '.'.  It used to run out to the end of
@@ -79,38 +79,38 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
     // structurally incorrect.  See below.  [alan 3.0]
 
     // TODO: Doug, you might want to revise this...
-    result = *id;
+    ఫలితం = *id;
     int32_t i = 0;
-    int32_t end = result.indexOf(AT_SIGN_CHAR);
-    int32_t n = result.indexOf(PERIOD_CHAR);
-    if (n >= 0 && n < end) {
-        end = n;
+    int32_t చివర = ఫలితం.సూచీ_యొక్క(AT_SIGN_CHAR);
+    int32_t n = ఫలితం.సూచీ_యొక్క(PERIOD_CHAR);
+    ఒకవేళ (n >= 0 && n < చివర) {
+        చివర = n;
     }
-    if (end < 0) {
-        end = result.length();
+    ఒకవేళ (చివర < 0) {
+        చివర = ఫలితం.length();
     }
-    n = result.indexOf(UNDERSCORE_CHAR);
-    if (n < 0) {
-      n = end;
+    n = ఫలితం.సూచీ_యొక్క(UNDERSCORE_CHAR);
+    ఒకవేళ (n < 0) {
+      n = చివర;
     }
-    for (; i < n; ++i) {
-      char16_t c = result.charAt(i);
-      if (c >= 0x0041 && c <= 0x005a) {
+    కొరకు (; i < n; ++i) {
+      char16_t c = ఫలితం.charAt(i);
+      ఒకవేళ (c >= 0x0041 && c <= 0x005a) {
         c += 0x20;
-        result.setCharAt(i, c);
+        ఫలితం.సమితి_Char_At(i, c);
       }
     }
-    for (n = end; i < n; ++i) {
-      char16_t c = result.charAt(i);
-      if (c >= 0x0061 && c <= 0x007a) {
+    కొరకు (n = చివర; i < n; ++i) {
+      char16_t c = ఫలితం.charAt(i);
+      ఒకవేళ (c >= 0x0061 && c <= 0x007a) {
         c -= 0x20;
-        result.setCharAt(i, c);
+        ఫలితం.సమితి_Char_At(i, c);
       }
     }
   }
-  return result;
+  తిరిగి ఫలితం;
 
-#if 0
+#ఒకవేళ 0
     // This code does a proper full level 2 canonicalization of id.
     // It's nasty to go from char16_t to char to char to char16_t -- but
     // that's what you have to do to use the uloc_canonicalize
@@ -122,32 +122,32 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
     // causes some tests to fail.  [alan 3.0]
 
     // TODO: Doug, you might want to revisit this...
-    result.setToBogus();
-    if (id != 0) {
+    ఫలితం.సమితి_గమ్యం_Bogus();
+    ఒకవేళ (id != 0) {
         int32_t buflen = id->length() + 8; // space for NUL
-        char* buf = (char*) uprv_malloc(buflen);
-        char* canon = (buf == 0) ? 0 : (char*) uprv_malloc(buflen);
-        if (buf != 0 && canon != 0) {
+        అక్షరం* buf = (అక్షరం*) uprv_malloc(buflen);
+        అక్షరం* canon = (buf == 0) ? 0 : (అక్షరం*) uprv_malloc(buflen);
+        ఒకవేళ (buf != 0 && canon != 0) {
             U_ASSERT(id->extract(0, INT32_MAX, buf, buflen) < buflen);
-            UErrorCode ec = U_ZERO_ERROR;
+            UError_సంకేతం ec = U_ZERO_ERROR;
             uloc_canonicalize(buf, canon, buflen, &ec);
-            if (U_SUCCESS(ec)) {
-                result = UnicodeString(canon);
+            ఒకవేళ (U_SUCCESS(ec)) {
+                ఫలితం = UnicodeString(canon);
             }
         }
         uprv_free(buf);
         uprv_free(canon);
     }
-    return result;
-#endif
+    తిరిగి ఫలితం;
+#అయితే_ముగింపు
 }
 
 Locale&
-LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
+LocaleUtility::initLocaleFromName(స్థిరరాశి UnicodeString& id, Locale& ఫలితం)
 {
-    if (id.isBogus()) {
-        result.setToBogus();
-    } else {
+    ఒకవేళ (id.isBogus()) {
+        ఫలితం.సమితి_గమ్యం_Bogus();
+    } లేకపోతే {
         /*
          * We need to convert from a UnicodeString to char * in order to
          * create a Locale.
@@ -166,46 +166,46 @@ LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
          *
          * There should be only at most one '@' in a locale ID.
          */
-        CharString buffer;
+        CharString బఫరు;
         int32_t prev, i;
         prev = 0;
-        UErrorCode status = U_ZERO_ERROR;
-        do {
-            i = id.indexOf(static_cast<char16_t>(0x40), prev);
-            if(i < 0) {
+        UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+        చేయి {
+            i = id.సూచీ_యొక్క(static_cast<char16_t>(0x40), prev);
+            ఒకవేళ(i < 0) {
                 // no @ between prev and the rest of the string
-                buffer.appendInvariantChars(id.tempSubString(prev), status);
-                break; // done
-            } else {
+                బఫరు.appendInvariantChars(id.తాత్కాలిక_Sub_String(prev), స్థితి_2);
+                ఆపు; //పూర్తి
+            } లేకపోతే {
                 // normal invariant-character conversion for text between @s
-                buffer.appendInvariantChars(id.tempSubString(prev, i - prev), status);
+                బఫరు.appendInvariantChars(id.తాత్కాలిక_Sub_String(prev, i - prev), స్థితి_2);
                 // manually "convert" U+0040 at id[i] into '@' at buffer[i]
-                buffer.append('@', status);
+                బఫరు.append('@', స్థితి_2);
                 prev = i + 1;
             }
-        } while (U_SUCCESS(status));
-        if (U_FAILURE(status)) {
-            result.setToBogus();
-        } else {
-            result = Locale::createFromName(buffer.data());
+        } అయితే (U_SUCCESS(స్థితి_2));
+        ఒకవేళ (U_FAILURE(స్థితి_2)) {
+            ఫలితం.సమితి_గమ్యం_Bogus();
+        } లేకపోతే {
+            ఫలితం = Locale::createFromName(బఫరు.దత్తాంశం());
         }
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
 UnicodeString&
-LocaleUtility::initNameFromLocale(const Locale& locale, UnicodeString& result)
+LocaleUtility::initNameFromLocale(స్థిరరాశి Locale& locale, UnicodeString& ఫలితం)
 {
-    if (locale.isBogus()) {
-        result.setToBogus();
-    } else {
-        result.append(UnicodeString(locale.getName(), -1, US_INV));
+    ఒకవేళ (locale.isBogus()) {
+        ఫలితం.సమితి_గమ్యం_Bogus();
+    } లేకపోతే {
+        ఫలితం.append(UnicodeString(locale.getName(), -1, US_INV));
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-const Hashtable*
-LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
+స్థిరరాశి Hashtable*
+LocaleUtility::get_అందుబాటు_Locale_పేర్లు(స్థిరరాశి UnicodeString& bundleID)
 {
     // LocaleUtility_cache is a hash-of-hashes.  The top-level keys
     // are path strings ('bundleID') passed to
@@ -214,63 +214,63 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
     // from ures_openAvailableLocales.  The second-level values are
     // garbage ((void*)1 or other random pointer).
 
-    UErrorCode status = U_ZERO_ERROR;
-    umtx_initOnce(LocaleUtilityInitOnce, locale_utility_init, status);
+    UError_సంకేతం స్థితి_2 = U_ZERO_ERROR;
+    umtx_initOnce(LocaleUtilityInitOnce, locale_utility_init, స్థితి_2);
     Hashtable *cache = LocaleUtility_cache;
-    if (cache == nullptr) {
+    ఒకవేళ (cache == శూన్యసూచిక) {
         // Catastrophic failure.
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 
     Hashtable* htp;
-    umtx_lock(nullptr);
+    umtx_తాళం(శూన్యసూచిక);
     htp = static_cast<Hashtable*>(cache->get(bundleID));
-    umtx_unlock(nullptr);
+    umtx_unlock(శూన్యసూచిక);
 
-    if (htp == nullptr) {
-        htp = new Hashtable(status);
-        if (htp && U_SUCCESS(status)) {
+    ఒకవేళ (htp == శూన్యసూచిక) {
+        htp = కొత్త Hashtable(స్థితి_2);
+        ఒకవేళ (htp && U_SUCCESS(స్థితి_2)) {
             CharString cbundleID;
-            cbundleID.appendInvariantChars(bundleID, status);
-            const char* path = cbundleID.isEmpty() ? nullptr : cbundleID.data();
-            icu::LocalUEnumerationPointer uenum(ures_openAvailableLocales(path, &status));
-            for (;;) {
-                const char16_t* id = uenum_unext(uenum.getAlias(), nullptr, &status);
-                if (id == nullptr) {
-                    break;
+            cbundleID.appendInvariantChars(bundleID, స్థితి_2);
+            స్థిరరాశి అక్షరం* మార్గం = cbundleID.is_ఖాళీలు() ? శూన్యసూచిక : cbundleID.దత్తాంశం();
+            icu::Local_UEnumeration_సూచిక uenum(ures_open_అందుబాటు_Locales(మార్గం, &స్థితి_2));
+            కొరకు (;;) {
+                స్థిరరాశి char16_t* id = uenum_unext(uenum.getAlias(), శూన్యసూచిక, &స్థితి_2);
+                ఒకవేళ (id == శూన్యసూచిక) {
+                    ఆపు;
                 }
-                htp->put(UnicodeString(id), (void*)htp, status);
+                htp->put(UnicodeString(id), (శూన్య*)htp, స్థితి_2);
             }
-            if (U_FAILURE(status)) {
-                delete htp;
-                return nullptr;
+            ఒకవేళ (U_FAILURE(స్థితి_2)) {
+                తొలగించు htp;
+                తిరిగి శూన్యసూచిక;
             }
-            umtx_lock(nullptr);
+            umtx_తాళం(శూన్యసూచిక);
             Hashtable *t = static_cast<Hashtable *>(cache->get(bundleID));
-            if (t != nullptr) {
+            ఒకవేళ (t != శూన్యసూచిక) {
                 // Another thread raced through this code, creating the cache entry first.
                 // Discard ours and return theirs.
-                umtx_unlock(nullptr);
-                delete htp;
+                umtx_unlock(శూన్యసూచిక);
+                తొలగించు htp;
                 htp = t;
-            } else {
-                cache->put(bundleID, (void*)htp, status);
-                umtx_unlock(nullptr);
+            } లేకపోతే {
+                cache->put(bundleID, (శూన్య*)htp, స్థితి_2);
+                umtx_unlock(శూన్యసూచిక);
             }
         }
     }
-    return htp;
+    తిరిగి htp;
 }
 
-bool
-LocaleUtility::isFallbackOf(const UnicodeString& root, const UnicodeString& child)
+తార్కిక
+LocaleUtility::is_Fallback_యొక్క(స్థిరరాశి UnicodeString& మూలం, స్థిరరాశి UnicodeString& బిడ్డ)
 {
-    return child.indexOf(root) == 0 &&
-      (child.length() == root.length() ||
-       child.charAt(root.length()) == UNDERSCORE_CHAR);
+    తిరిగి బిడ్డ.సూచీ_యొక్క(మూలం) == 0 &&
+      (బిడ్డ.length() == మూలం.length() ||
+       బిడ్డ.charAt(మూలం.length()) == UNDERSCORE_CHAR);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#అయితే_ముగింపు

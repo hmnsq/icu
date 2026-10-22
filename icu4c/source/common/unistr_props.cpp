@@ -18,60 +18,60 @@
 *   Character property dependent functions moved here from unistr.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uchar.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 
 UnicodeString& 
 UnicodeString::trim() U_LIFETIME_BOUND
 {
-  if(isBogus()) {
-    return *this;
+  ఒకవేళ(isBogus()) {
+    తిరిగి *ఇది;
   }
 
-  char16_t *array = getArrayStart();
+  char16_t *array = get_Array_ప్రారంభం();
   UChar32 c;
-  int32_t oldLength = this->length();
-  int32_t i = oldLength, length;
+  int32_t old_నిడివి = ఇది->length();
+  int32_t i = old_నిడివి, length;
 
   // first cut off trailing white space
-  for(;;) {
+  కొరకు(;;) {
     length = i;
-    if(i <= 0) {
-      break;
+    ఒకవేళ(i <= 0) {
+      ఆపు;
     }
     U16_PREV(array, 0, i, c);
-    if(!(c == 0x20 || u_isWhitespace(c))) {
-      break;
+    ఒకవేళ(!(c == 0x20 || u_isWhitespace(c))) {
+      ఆపు;
     }
   }
-  if(length < oldLength) {
-    setLength(length);
+  ఒకవేళ(length < old_నిడివి) {
+    సమితి_నిడివి(length);
   }
 
   // find leading white space
-  int32_t start;
+  int32_t ప్రారంభం;
   i = 0;
-  for(;;) {
-    start = i;
-    if(i >= length) {
-      break;
+  కొరకు(;;) {
+    ప్రారంభం = i;
+    ఒకవేళ(i >= length) {
+      ఆపు;
     }
-    U16_NEXT(array, i, length, c);
-    if(!(c == 0x20 || u_isWhitespace(c))) {
-      break;
+    U16_తదుపరి(array, i, length, c);
+    ఒకవేళ(!(c == 0x20 || u_isWhitespace(c))) {
+      ఆపు;
     }
   }
 
   // move string forward over leading white space
-  if(start > 0) {
-    doReplace(0, start, nullptr, 0, 0);
+  ఒకవేళ(ప్రారంభం > 0) {
+    doReplace(0, ప్రారంభం, శూన్యసూచిక, 0, 0);
   }
 
-  return *this;
+  తిరిగి *ఇది;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర

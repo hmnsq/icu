@@ -13,13 +13,13 @@
 //            Most of the code is unchanged from UVector.
 //
 
-#ifndef UVECTOR64_H
-#define UVECTOR64_H
+#నిర్వచితం_కాకపోతే UVECTOR64_H
+#నిర్వచించు UVECTOR64_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "uhash.h"
+#అన్తర్భావ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -57,56 +57,56 @@ U_NAMESPACE_BEGIN
  * <p>Improve the handling of index out of bounds errors.
  *
  */
-class U_COMMON_API UVector64 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector64 : బహిరంగ UObject {
+అంతరంగ:
+    int32_t   లెక్క;
 
-    int32_t   capacity;
+    int32_t   సామర్థ్యం;
     
-    int32_t   maxCapacity;   // Limit beyond which capacity is not permitted to grow.
+    int32_t   max_సామర్థ్యం;   // Limit beyond which capacity is not permitted to grow.
 
     int64_t*  elements;
 
-public:
-    UVector64(UErrorCode &status);
+బహిరంగ:
+    UVector64(UError_సంకేతం &స్థితి_2);
 
-    UVector64(int32_t initialCapacity, UErrorCode &status);
+    UVector64(int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2);
 
-    virtual ~UVector64();
+    మాయా ~UVector64();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector64& other, UErrorCode &ec);
+    శూన్య కేటాయించు(స్థిరరాశి UVector64& other, UError_సంకేతం &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector64& other);
+    bool క్రియాకారకం==(స్థిరరాశి UVector64& other);
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector64& other);
+    అంతఃవరుస bool క్రియాకారకం!=(స్థిరరాశి UVector64& other);
 
     //------------------------------------------------------------
     // subset of java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int64_t elem, UErrorCode &status);
+    అంతఃవరుస శూన్య కూడు_Element(int64_t elem, UError_సంకేతం &స్థితి_2);
 
-    void setElementAt(int64_t elem, int32_t index);
+    శూన్య సమితి_Element_At(int64_t elem, int32_t సూచీ);
 
-    void insertElementAt(int64_t elem, int32_t index, UErrorCode &status);
+    శూన్య చొప్పించు_Element_At(int64_t elem, int32_t సూచీ, UError_సంకేతం &స్థితి_2);
     
-    inline int64_t elementAti(int32_t index) const;
+    అంతఃవరుస int64_t elementAti(int32_t సూచీ) స్థిరరాశి;
 
     //UBool equals(const UVector64 &other) const;
 
-    inline int64_t lastElementi() const;
+    అంతఃవరుస int64_t చివరి_Elementi() స్థిరరాశి;
 
     //int32_t indexOf(int64_t elem, int32_t startIndex = 0) const;
 
@@ -120,17 +120,17 @@ public:
 
     //void removeElementAt(int32_t index);
 
-    void removeAllElements();
+    శూన్య removeAllElements();
 
-    inline int32_t size() const;
+    అంతఃవరుస int32_t కొలత_2() స్థిరరాశి;
 
-    inline UBool isEmpty() const { return count == 0; }
+    అంతఃవరుస UBool is_ఖాళీలు() స్థిరరాశి { తిరిగి లెక్క == 0; }
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    అంతఃవరుస UBool ensure_సామర్థ్యం(int32_t minimum_సామర్థ్యం, UError_సంకేతం &స్థితి_2);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
-    UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
+    UBool expand_సామర్థ్యం(int32_t minimum_సామర్థ్యం, UError_సంకేతం &స్థితి_2);
 
     /**
      * Change the size of this vector as follows: If newSize is
@@ -138,7 +138,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    శూన్య సమితి_కొలత(int32_t new_కొలత);
 
     //------------------------------------------------------------
     // New API
@@ -152,7 +152,7 @@ public:
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int64_t *getBuffer() const;
+    అంతఃవరుస int64_t *get_బఫరు() స్థిరరాశి;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -160,120 +160,120 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (64 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    శూన్య సమితి_Max_సామర్థ్యం(int32_t హద్దు);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    స్థిర UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    మాయా UClassID getDynamicClassID() స్థిరరాశి override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector64(const UVector64&) = delete;
+అంతరంగ:
+    శూన్య _init(int32_t initial_సామర్థ్యం, UError_సంకేతం &స్థితి_2);
 
     // Disallow
-    UVector64& operator=(const UVector64&) = delete;
+    UVector64(స్థిరరాశి UVector64&) = delete;
+
+    // Disallow
+    UVector64& క్రియాకారకం=(స్థిరరాశి UVector64&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector64, they are all together.
-public:
+బహిరంగ:
     //UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
 
     //int64_t peeki() const;
     
-    inline int64_t popi();
+    అంతఃవరుస int64_t popi();
     
-    inline int64_t push(int64_t i, UErrorCode &status);
+    అంతఃవరుస int64_t నెట్టు(int64_t i, UError_సంకేతం &స్థితి_2);
 
-    inline int64_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int64_t *popFrame(int32_t size);
+    అంతఃవరుస int64_t *reserve_ఖండం(int32_t కొలత_2, UError_సంకేతం &స్థితి_2);
+    అంతఃవరుస int64_t *తీయి_చట్రం(int32_t కొలత_2);
 };
 
 
 // UVector64 inlines
 
-inline UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+అంతఃవరుస UBool UVector64::ensure_సామర్థ్యం(int32_t minimum_సామర్థ్యం, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ ((minimum_సామర్థ్యం >= 0) && (సామర్థ్యం >= minimum_సామర్థ్యం)) {
+        తిరిగి true;
+    } లేకపోతే {
+        తిరిగి expand_సామర్థ్యం(minimum_సామర్థ్యం, స్థితి_2);
     }
 }
 
-inline int64_t UVector64::elementAti(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index] : 0;
+అంతఃవరుస int64_t UVector64::elementAti(int32_t సూచీ) స్థిరరాశి {
+    తిరిగి (0 <= సూచీ && సూచీ < లెక్క) ? elements[సూచీ] : 0;
 }
 
 
-inline void UVector64::addElement(int64_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+అంతఃవరుస శూన్య UVector64::కూడు_Element(int64_t elem, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (ensure_సామర్థ్యం(లెక్క + 1, స్థితి_2)) {
+        elements[లెక్క] = elem;
+        లెక్క++;
     }
 }
 
-inline int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+అంతఃవరుస int64_t *UVector64::reserve_ఖండం(int32_t కొలత_2, UError_సంకేతం &స్థితి_2) {
+    ఒకవేళ (ensure_సామర్థ్యం(లెక్క+కొలత_2, స్థితి_2) == false) {
+        తిరిగి nullptr;
     }
-    int64_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int64_t  *rp = elements+లెక్క;
+    లెక్క += కొలత_2;
+    తిరిగి rp;
 }
 
-inline int64_t *UVector64::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+అంతఃవరుస int64_t *UVector64::తీయి_చట్రం(int32_t కొలత_2) {
+    U_ASSERT(లెక్క >= కొలత_2);
+    లెక్క -= కొలత_2;
+    ఒకవేళ (లెక్క < 0) {
+        లెక్క = 0;
     }
-    return elements+count-size;
+    తిరిగి elements+లెక్క-కొలత_2;
 }
 
 
 
-inline int32_t UVector64::size() const {
-    return count;
+అంతఃవరుస int32_t UVector64::కొలత_2() స్థిరరాశి {
+    తిరిగి లెక్క;
 }
 
-inline int64_t UVector64::lastElementi() const {
-    return elementAti(count-1);
+అంతఃవరుస int64_t UVector64::చివరి_Elementi() స్థిరరాశి {
+    తిరిగి elementAti(లెక్క-1);
 }
 
-inline bool UVector64::operator!=(const UVector64& other) {
-    return !operator==(other);
+అంతఃవరుస bool UVector64::క్రియాకారకం!=(స్థిరరాశి UVector64& other) {
+    తిరిగి !క్రియాకారకం==(other);
 }
 
-inline int64_t *UVector64::getBuffer() const {
-    return elements;
+అంతఃవరుస int64_t *UVector64::get_బఫరు() స్థిరరాశి {
+    తిరిగి elements;
 }
 
 
 // UStack inlines
 
-inline int64_t UVector64::push(int64_t i, UErrorCode &status) {
-    addElement(i, status);
-    return i;
+అంతఃవరుస int64_t UVector64::నెట్టు(int64_t i, UError_సంకేతం &స్థితి_2) {
+    కూడు_Element(i, స్థితి_2);
+    తిరిగి i;
 }
 
-inline int64_t UVector64::popi() {
-    int64_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+అంతఃవరుస int64_t UVector64::popi() {
+    int64_t ఫలితం = 0;
+    ఒకవేళ (లెక్క > 0) {
+        లెక్క--;
+        ఫలితం = elements[లెక్క];
     }
-    return result;
+    తిరిగి ఫలితం;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif
+#అయితే_ముగింపు

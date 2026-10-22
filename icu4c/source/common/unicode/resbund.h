@@ -45,17 +45,17 @@
 ******************************************************************************
 */
 
-#ifndef RESBUND_H
-#define RESBUND_H
+#నిర్వచితం_కాకపోతే RESBUND_H
+#నిర్వచించు RESBUND_H
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ఒకవేళ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "unicode/unistr.h"
-#include "unicode/locid.h"
+#అన్తర్భావ "unicode/uobject.h"
+#అన్తర్భావ "unicode/ures.h"
+#అన్తర్భావ "unicode/unistr.h"
+#అన్తర్భావ "unicode/locid.h"
 
 /**
  * \file 
@@ -80,8 +80,8 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 2.0
  */
-class U_COMMON_API ResourceBundle : public UObject {
-public:
+class U_COMMON_API ResourceBundle : బహిరంగ UObject {
+బహిరంగ:
     /**
      * Constructor
      *
@@ -108,9 +108,9 @@ public:
      * fall back locales could be found.
      * @stable ICU 2.0
      */
-    ResourceBundle(const UnicodeString&    packageName,
-                   const Locale&           locale,
-                   UErrorCode&              err);
+    ResourceBundle(స్థిరరాశి UnicodeString&    packageName,
+                   స్థిరరాశి Locale&           locale,
+                   UError_సంకేతం&              err);
 
     /**
      * Construct a resource bundle for the default bundle in the specified package.
@@ -123,8 +123,8 @@ public:
      * @param err A UErrorCode value
      * @stable ICU 2.0
      */
-    ResourceBundle(const UnicodeString&    packageName,
-                   UErrorCode&              err);
+    ResourceBundle(స్థిరరాశి UnicodeString&    packageName,
+                   UError_సంకేతం&              err);
 
     /**
      * Construct a resource bundle for the ICU default bundle.
@@ -132,7 +132,7 @@ public:
      * @param err A UErrorCode value
      * @stable ICU 2.0
      */
-    ResourceBundle(UErrorCode &err);
+    ResourceBundle(UError_సంకేతం &err);
 
     /**
      * Standard constructor, constructs a resource bundle for the locale-specific
@@ -148,9 +148,9 @@ public:
      * @param err A UErrorCode value
      * @stable ICU 2.0
      */
-    ResourceBundle(const char* packageName,
-                   const Locale& locale,
-                   UErrorCode& err);
+    ResourceBundle(స్థిరరాశి అక్షరం* packageName,
+                   స్థిరరాశి Locale& locale,
+                   UError_సంకేతం& err);
 
     /**
      * Copy constructor.
@@ -158,7 +158,7 @@ public:
      * @param original The resource bundle to copy.
      * @stable ICU 2.0
      */
-    ResourceBundle(const ResourceBundle &original);
+    ResourceBundle(స్థిరరాశి ResourceBundle &original);
 
     /**
      * Constructor from a C UResourceBundle. The resource bundle is
@@ -170,7 +170,7 @@ public:
      * @stable ICU 2.0
      */
     ResourceBundle(UResourceBundle *res,
-                   UErrorCode &status);
+                   UError_సంకేతం &స్థితి_2);
 
     /**
      * Assignment operator.
@@ -178,12 +178,12 @@ public:
      * @param other The resource bundle to copy.
      * @stable ICU 2.0
      */
-    ResourceBundle& operator=(const ResourceBundle& other) U_LIFETIME_BOUND;
+    ResourceBundle& క్రియాకారకం=(స్థిరరాశి ResourceBundle& other) U_LIFETIME_BOUND;
 
     /** Destructor.
      * @stable ICU 2.0
      */
-    virtual ~ResourceBundle();
+    మాయా ~ResourceBundle();
 
     /**
      * Clone this object.
@@ -196,7 +196,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ResourceBundle *clone() const;
+    ResourceBundle *clone() స్థిరరాశి;
 
     /**
      * Returns the size of a resource. Size for scalar types is always 1, and for vector/table types is
@@ -208,7 +208,7 @@ public:
      * @return number of resources in a given resource.
      * @stable ICU 2.0
      */
-    int32_t getSize() const;
+    int32_t get_కొలత() స్థిరరాశి;
 
     /**
      * returns a string from a string resource type
@@ -220,7 +220,7 @@ public:
      * @return a pointer to a zero-terminated char16_t array which lives in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    UnicodeString getString(UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getString(UError_సంకేతం& స్థితి_2) స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * returns a binary data from a resource. Can be used at most primitive resource types (binaries,
@@ -234,7 +234,7 @@ public:
      * @return a pointer to a chunk of unsigned bytes which live in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    const uint8_t* getBinary(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND;
+    స్థిరరాశి uint8_t* get_ద్విమాన(int32_t& len, UError_సంకేతం& స్థితి_2) స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * returns an integer vector from a resource.
@@ -247,7 +247,7 @@ public:
      * @return a pointer to a vector of integers that lives in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    const int32_t* getIntVector(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND;
+    స్థిరరాశి int32_t* get_Int_సదిశ(int32_t& len, UError_సంకేతం& స్థితి_2) స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * returns an unsigned integer from a resource.
@@ -261,7 +261,7 @@ public:
      * @stable ICU 2.0
      */
     uint32_t
-      getUInt(UErrorCode& status) const;
+      getUInt(UError_సంకేతం& స్థితి_2) స్థిరరాశి;
 
     /**
      * returns a signed integer from a resource.
@@ -275,7 +275,7 @@ public:
      * @stable ICU 2.0
      */
     int32_t
-      getInt(UErrorCode& status) const;
+      getInt(UError_సంకేతం& స్థితి_2) స్థిరరాశి;
 
     /**
      * Checks whether the resource has another element to iterate over.
@@ -283,14 +283,14 @@ public:
      * @return true if there are more elements, false if there is no more elements
      * @stable ICU 2.0
      */
-    UBool hasNext() const;
+    UBool has_తదుపరి() స్థిరరాశి;
 
     /**
      * Resets the internal context of a resource so that iteration starts from the first element.
      *
      * @stable ICU 2.0
      */
-    void resetIterator();
+    శూన్య resetIterator();
 
     /**
      * Returns the key associated with this resource. Not all the resources have a key - only
@@ -299,7 +299,7 @@ public:
      * @return a key associated to this resource, or nullptr if it doesn't have a key
      * @stable ICU 2.0
      */
-    const char* getKey() const U_LIFETIME_BOUND;
+    స్థిరరాశి అక్షరం* get_కీలకం() స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * Gets the locale ID of the resource bundle as a string.
@@ -308,7 +308,7 @@ public:
      * @return the locale ID of the resource bundle as a string
      * @stable ICU 2.0
      */
-    const char* getName() const U_LIFETIME_BOUND;
+    స్థిరరాశి అక్షరం* getName() స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * Returns the type of a resource. Available types are defined in enum UResType
@@ -316,7 +316,7 @@ public:
      * @return type of the given resource.
      * @stable ICU 2.0
      */
-    UResType getType() const;
+    UResType getType() స్థిరరాశి;
 
     /**
      * Returns the next resource in a given resource or nullptr if there are no more resources
@@ -326,7 +326,7 @@ public:
      * @stable ICU 2.0
      */
     ResourceBundle
-      getNext(UErrorCode& status);
+      get_తదుపరి(UError_సంకేతం& స్థితి_2);
 
     /**
      * Returns the next string in a resource or nullptr if there are no more resources
@@ -336,7 +336,7 @@ public:
      * @return an UnicodeString object.
      * @stable ICU 2.0
      */
-    UnicodeString getNextString(UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString get_తదుపరి_String(UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND;
 
     /**
      * Returns the next string in a resource or nullptr if there are no more resources
@@ -347,7 +347,7 @@ public:
      * @return an UnicodeString object.
      * @stable ICU 2.0
      */
-    UnicodeString getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString get_తదుపరి_String(స్థిరరాశి అక్షరం** కీలకం, UError_సంకేతం& స్థితి_2) U_LIFETIME_BOUND;
 
     /**
      * Returns the resource in a resource at the specified index.
@@ -358,8 +358,8 @@ public:
      * @stable ICU 2.0
      */
     ResourceBundle
-      get(int32_t index,
-          UErrorCode& status) const;
+      get(int32_t సూచీ,
+          UError_సంకేతం& స్థితి_2) స్థిరరాశి;
 
     /**
      * Returns the string in a given resource at the specified index.
@@ -369,7 +369,7 @@ public:
      * @return                  an UnicodeString object. If there is an error, string is bogus
      * @stable ICU 2.0
      */
-    UnicodeString getStringEx(int32_t index, UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getStringEx(int32_t సూచీ, UError_సంకేతం& స్థితి_2) స్థిరరాశి U_LIFETIME_BOUND;
 
     /**
      * Returns a resource in a resource that has a given key. This procedure works only with table
@@ -381,8 +381,8 @@ public:
      * @stable ICU 2.0
      */
     ResourceBundle
-      get(const char* key,
-          UErrorCode& status) const;
+      get(స్థిరరాశి అక్షరం* కీలకం,
+          UError_సంకేతం& స్థితి_2) స్థిరరాశి;
 
     /**
      * Returns a string in a resource that has a given key. This procedure works only with table
@@ -393,9 +393,9 @@ public:
      * @return                  an UnicodeString object. If there is an error, string is bogus
      * @stable ICU 2.0
      */
-    UnicodeString getStringEx(const char* key, UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getStringEx(స్థిరరాశి అక్షరం* కీలకం, UError_సంకేతం& స్థితి_2) స్థిరరాశి U_LIFETIME_BOUND;
 
-#ifndef U_HIDE_DEPRECATED_API
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
     /**
      * Return the version number associated with this ResourceBundle as a string. Please
      * use getVersion, as this method is going to be deprecated.
@@ -405,8 +405,8 @@ public:
      * @see getVersion
      * @deprecated ICU 2.8 Use getVersion instead.
      */
-    const char* getVersionNumber() const U_LIFETIME_BOUND;
-#endif  /* U_HIDE_DEPRECATED_API */
+    స్థిరరాశి అక్షరం* get_సంస్కరణ_సంఖ్య() స్థిరరాశి U_LIFETIME_BOUND;
+#అయితే_ముగింపు  /* U_HIDE_DEPRECATED_API */
 
     /**
      * Return the version number associated with this ResourceBundle as a UVersionInfo array.
@@ -415,18 +415,18 @@ public:
      *                    as specified in the resource bundle or its parent.
      * @stable ICU 2.0
      */
-    void
-      getVersion(UVersionInfo versionInfo) const;
+    శూన్య
+      get_సంస్కరణ(UVersionInfo సంస్కరణ_Info) స్థిరరాశి;
 
-#ifndef U_HIDE_DEPRECATED_API
+#నిర్వచితం_కాకపోతే U_HIDE_DEPRECATED_API
     /**
      * Return the Locale associated with this ResourceBundle.
      *
      * @return a Locale object
      * @deprecated ICU 2.8 Use getLocale(ULocDataLocaleType type, UErrorCode &status) overload instead.
      */
-    const Locale& getLocale() const U_LIFETIME_BOUND;
-#endif  /* U_HIDE_DEPRECATED_API */
+    స్థిరరాశి Locale& getLocale() స్థిరరాశి U_LIFETIME_BOUND;
+#అయితే_ముగింపు  /* U_HIDE_DEPRECATED_API */
 
     /**
      * Return the Locale associated with this ResourceBundle.
@@ -439,39 +439,39 @@ public:
      * @stable ICU 2.8
      */
     Locale
-      getLocale(ULocDataLocaleType type, UErrorCode &status) const;
-#ifndef U_HIDE_INTERNAL_API
+      getLocale(ULoc_దత్తాంశం_Locale_Type type, UError_సంకేతం &స్థితి_2) స్థిరరాశి;
+#నిర్వచితం_కాకపోతే U_HIDE_అంతర్గత_API
     /**
      * This API implements multilevel fallback
      * @internal
      */
     ResourceBundle
-        getWithFallback(const char* key, UErrorCode& status);
-#endif  /* U_HIDE_INTERNAL_API */
+        getWithFallback(స్థిరరాశి అక్షరం* కీలకం, UError_సంకేతం& స్థితి_2);
+#అయితే_ముగింపు  /* U_HIDE_INTERNAL_API */
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    మాయా UClassID getDynamicClassID() స్థిరరాశి override;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    స్థిర UClassID U_EXPORT2 getStaticClassID();
 
-private:
+అంతరంగ:
     ResourceBundle() = delete; // default constructor not implemented
 
     UResourceBundle *fResource;
-    void constructForLocale(const UnicodeString& path, const Locale& locale, UErrorCode& error);
+    శూన్య constructForLocale(స్థిరరాశి UnicodeString& మార్గం, స్థిరరాశి Locale& locale, UError_సంకేతం& error);
     Locale *fLocale;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#అయితే_ముగింపు /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#అయితే_ముగింపు

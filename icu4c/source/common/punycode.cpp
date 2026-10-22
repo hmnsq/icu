@@ -44,46 +44,46 @@ Disclaimer and license
  * - UTF-16 handling
  */
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#ఒకవేళ !UCONFIG_NO_IDNA
 
-#include "unicode/ustring.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "punycode.h"
-#include "uassert.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/utf.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "ustr_imp.h"
+#అన్తర్భావ "cstring.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "punycode.h"
+#అన్తర్భావ "uassert.h"
 
 
 /* Punycode ----------------------------------------------------------------- */
 
 /* Punycode parameters for Bootstring */
-#define BASE            36
-#define TMIN            1
-#define TMAX            26
-#define SKEW            38
-#define DAMP            700
-#define INITIAL_BIAS    72
-#define INITIAL_N       0x80
+#నిర్వచించు పునాది_2            36
+#నిర్వచించు TMIN            1
+#నిర్వచించు TMAX            26
+#నిర్వచించు SKEW            38
+#నిర్వచించు DAMP            700
+#నిర్వచించు INITIAL_BIAS    72
+#నిర్వచించు INITIAL_N       0x80
 
 /* "Basic" Unicode/ASCII code points */
-#define _HYPHEN         0X2d
-#define DELIMITER       _HYPHEN
+#నిర్వచించు _HYPHEN         0X2d
+#నిర్వచించు DELIMITER       _HYPHEN
 
-#define _ZERO_          0X30
-#define _NINE           0x39
+#నిర్వచించు _ZERO_          0X30
+#నిర్వచించు _NINE           0x39
 
-#define _SMALL_A        0X61
-#define _SMALL_Z        0X7a
+#నిర్వచించు _SMALL_A        0X61
+#నిర్వచించు _SMALL_Z        0X7a
 
-#define _CAPITAL_A      0X41
-#define _CAPITAL_Z      0X5a
+#నిర్వచించు _CAPITAL_A      0X41
+#నిర్వచించు _CAPITAL_Z      0X5a
 
-#define IS_BASIC(c) ((c)<0x80)
-#define IS_BASIC_UPPERCASE(c) (_CAPITAL_A<=(c) && (c)<=_CAPITAL_Z)
+#నిర్వచించు IS_BASIC(c) ((c)<0x80)
+#నిర్వచించు IS_BASIC_UPPERCASE(c) (_CAPITAL_A<=(c) && (c)<=_CAPITAL_Z)
 
 /**
  * digitToBasic() returns the basic code point whose value
@@ -91,18 +91,18 @@ Disclaimer and license
  * range 0 to BASE-1. The lowercase form is used unless the uppercase flag is
  * nonzero, in which case the uppercase form is used.
  */
-static inline char
-digitToBasic(int32_t digit, UBool uppercase) {
+స్థిర అంతఃవరుస అక్షరం
+digit_గమ్యం_Basic(int32_t digit, UBool uppercase) {
     /*  0..25 map to ASCII a..z or A..Z */
     /* 26..35 map to ASCII 0..9         */
-    if(digit<26) {
-        if(uppercase) {
-            return static_cast<char>(_CAPITAL_A + digit);
-        } else {
-            return static_cast<char>(_SMALL_A + digit);
+    ఒకవేళ(digit<26) {
+        ఒకవేళ(uppercase) {
+            తిరిగి static_cast<అక్షరం>(_CAPITAL_A + digit);
+        } లేకపోతే {
+            తిరిగి static_cast<అక్షరం>(_SMALL_A + digit);
         }
-    } else {
-        return static_cast<char>((_ZERO_ - 26) + digit);
+    } లేకపోతే {
+        తిరిగి static_cast<అక్షరం>((_ZERO_ - 26) + digit);
     }
 }
 
@@ -110,36 +110,36 @@ digitToBasic(int32_t digit, UBool uppercase) {
  * @return the numeric value of a basic code point (for use in representing integers)
  *         in the range 0 to BASE-1, or a negative value if cp is invalid.
  */
-static int32_t decodeDigit(int32_t cp) {
-    if(cp<=u'Z') {
-        if(cp<=u'9') {
-            if(cp<u'0') {
-                return -1;
-            } else {
-                return cp-u'0'+26;  // 0..9 -> 26..35
+స్థిర int32_t decodeDigit(int32_t cp) {
+    ఒకవేళ(cp<=u'Z') {
+        ఒకవేళ(cp<=u'9') {
+            ఒకవేళ(cp<u'0') {
+                తిరిగి -1;
+            } లేకపోతే {
+                తిరిగి cp-u'0'+26;  // 0..9 -> 26..35
             }
-        } else {
-            return cp-u'A';  // A-Z -> 0..25
+        } లేకపోతే {
+            తిరిగి cp-u'A';  // A-Z -> 0..25
         }
-    } else if(cp<=u'z') {
-        return cp-'a';  // a..z -> 0..25
-    } else {
-        return -1;
+    } లేకపోతే ఒకవేళ(cp<=u'z') {
+        తిరిగి cp-'a';  // a..z -> 0..25
+    } లేకపోతే {
+        తిరిగి -1;
     }
 }
 
-static inline char
-asciiCaseMap(char b, UBool uppercase) {
-    if(uppercase) {
-        if(_SMALL_A<=b && b<=_SMALL_Z) {
+స్థిర అంతఃవరుస అక్షరం
+asciiCaseMap(అక్షరం b, UBool uppercase) {
+    ఒకవేళ(uppercase) {
+        ఒకవేళ(_SMALL_A<=b && b<=_SMALL_Z) {
             b-=(_SMALL_A-_CAPITAL_A);
         }
-    } else {
-        if(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
+    } లేకపోతే {
+        ఒకవేళ(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
             b+=(_SMALL_A-_CAPITAL_A);
         }
     }
-    return b;
+    తిరిగి b;
 }
 
 /* Punycode-specific Bootstring code ---------------------------------------- */
@@ -150,134 +150,134 @@ asciiCaseMap(char b, UBool uppercase) {
  */
 
 /* Bias adaptation function. */
-static int32_t
-adaptBias(int32_t delta, int32_t length, UBool firstTime) {
+స్థిర int32_t
+adaptBias(int32_t delta, int32_t length, UBool మొదటి_సమయం) {
     int32_t count;
 
-    if(firstTime) {
+    ఒకవేళ(మొదటి_సమయం) {
         delta/=DAMP;
-    } else {
+    } లేకపోతే {
         delta/=2;
     }
 
     delta+=delta/length;
-    for(count=0; delta>((BASE-TMIN)*TMAX)/2; count+=BASE) {
-        delta/=(BASE-TMIN);
+    కొరకు(count=0; delta>((పునాది_2-TMIN)*TMAX)/2; count+=పునాది_2) {
+        delta/=(పునాది_2-TMIN);
     }
 
-    return count+(((BASE-TMIN+1)*delta)/(delta+SKEW));
+    తిరిగి count+(((పునాది_2-TMIN+1)*delta)/(delta+SKEW));
 }
 
-namespace {
+నామాకాశ {
 
 // ICU-13727: Limit input length for n^2 algorithm
 // where well-formed strings are at most 59 characters long.
-constexpr int32_t ENCODE_MAX_CODE_UNITS=1000;
+constexpr int32_t ENCODE_MAX_సంకేతం_UNITS=1000;
 constexpr int32_t DECODE_MAX_CHARS=2000;
 
 }  // namespace
 
 // encode
 U_CAPI int32_t
-u_strToPunycode(const char16_t *src, int32_t srcLength,
-                char16_t *dest, int32_t destCapacity,
-                const UBool *caseFlags,
-                UErrorCode *pErrorCode) {
+u_str_గమ్యం_Punycode(స్థిరరాశి char16_t *src, int32_t src_నిడివి,
+                char16_t *dest, int32_t dest_సామర్థ్యం,
+                స్థిరరాశి UBool *caseFlags,
+                UError_సంకేతం *p_Error_సంకేతం) {
 
-    int32_t cpBuffer[ENCODE_MAX_CODE_UNITS];
-    int32_t n, delta, handledCPCount, basicLength, destLength, bias, j, m, q, k, t, srcCPCount;
+    int32_t cp_బఫరు[ENCODE_MAX_సంకేతం_UNITS];
+    int32_t n, delta, handledCPCount, basic_నిడివి, dest_నిడివి, bias, j, m, q, k, t, srcCPCount;
     char16_t c, c2;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
-    if(src==nullptr || srcLength<-1 || destCapacity<0 || (dest==nullptr && destCapacity!=0)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(src==శూన్యసూచిక || src_నిడివి<-1 || dest_సామర్థ్యం<0 || (dest==శూన్యసూచిక && dest_సామర్థ్యం!=0)) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    if (srcLength>ENCODE_MAX_CODE_UNITS) {
-        *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+    ఒకవేళ (src_నిడివి>ENCODE_MAX_సంకేతం_UNITS) {
+        *p_Error_సంకేతం=U_ఆదానం_TOO_LONG_ERROR;
+        తిరిగి 0;
     }
 
     /*
      * Handle the basic code points and
      * convert extended ones to UTF-32 in cpBuffer (caseFlag in sign bit):
      */
-    srcCPCount=destLength=0;
-    if(srcLength==-1) {
+    srcCPCount=dest_నిడివి=0;
+    ఒకవేళ(src_నిడివి==-1) {
         /* NUL-terminated input */
-        for(j=0; /* no condition */; ++j) {
-            if((c=src[j])==0) {
-                break;
+        కొరకు(j=0; /* no condition */; ++j) {
+            ఒకవేళ((c=src[j])==0) {
+                ఆపు;
             }
-            if(j>=ENCODE_MAX_CODE_UNITS) {
-                *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-                return 0;
+            ఒకవేళ(j>=ENCODE_MAX_సంకేతం_UNITS) {
+                *p_Error_సంకేతం=U_ఆదానం_TOO_LONG_ERROR;
+                తిరిగి 0;
             }
-            if(IS_BASIC(c)) {
-                cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
-                    dest[destLength]=
-                        caseFlags!=nullptr ?
-                            asciiCaseMap((char)c, caseFlags[j]) :
-                            (char)c;
+            ఒకవేళ(IS_BASIC(c)) {
+                cp_బఫరు[srcCPCount++]=0;
+                ఒకవేళ(dest_నిడివి<dest_సామర్థ్యం) {
+                    dest[dest_నిడివి]=
+                        caseFlags!=శూన్యసూచిక ?
+                            asciiCaseMap((అక్షరం)c, caseFlags[j]) :
+                            (అక్షరం)c;
                 }
-                ++destLength;
-            } else {
-                n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                ++dest_నిడివి;
+            } లేకపోతే {
+                n=(caseFlags!=శూన్యసూచిక && caseFlags[j])<<31L;
+                ఒకవేళ(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
+                } లేకపోతే ఒకవేళ(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } లేకపోతే {
                     /* error: unmatched surrogate */
-                    *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    *p_Error_సంకేతం=U_INVALID_CHAR_దొరికింది;
+                    తిరిగి 0;
                 }
-                cpBuffer[srcCPCount++]=n;
+                cp_బఫరు[srcCPCount++]=n;
             }
         }
-    } else {
+    } లేకపోతే {
         /* length-specified input */
-        for(j=0; j<srcLength; ++j) {
+        కొరకు(j=0; j<src_నిడివి; ++j) {
             c=src[j];
-            if(IS_BASIC(c)) {
-                cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
-                    dest[destLength]=
-                        caseFlags!=nullptr ?
-                            asciiCaseMap((char)c, caseFlags[j]) :
-                            (char)c;
+            ఒకవేళ(IS_BASIC(c)) {
+                cp_బఫరు[srcCPCount++]=0;
+                ఒకవేళ(dest_నిడివి<dest_సామర్థ్యం) {
+                    dest[dest_నిడివి]=
+                        caseFlags!=శూన్యసూచిక ?
+                            asciiCaseMap((అక్షరం)c, caseFlags[j]) :
+                            (అక్షరం)c;
                 }
-                ++destLength;
-            } else {
-                n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                ++dest_నిడివి;
+            } లేకపోతే {
+                n=(caseFlags!=శూన్యసూచిక && caseFlags[j])<<31L;
+                ఒకవేళ(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && (j+1)<srcLength && U16_IS_TRAIL(c2=src[j+1])) {
+                } లేకపోతే ఒకవేళ(U16_IS_LEAD(c) && (j+1)<src_నిడివి && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } లేకపోతే {
                     /* error: unmatched surrogate */
-                    *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    *p_Error_సంకేతం=U_INVALID_CHAR_దొరికింది;
+                    తిరిగి 0;
                 }
-                cpBuffer[srcCPCount++]=n;
+                cp_బఫరు[srcCPCount++]=n;
             }
         }
     }
 
     /* Finish the basic string - if it is not empty - with a delimiter. */
-    basicLength=destLength;
-    if(basicLength>0) {
-        if(destLength<destCapacity) {
-            dest[destLength]=DELIMITER;
+    basic_నిడివి=dest_నిడివి;
+    ఒకవేళ(basic_నిడివి>0) {
+        ఒకవేళ(dest_నిడివి<dest_సామర్థ్యం) {
+            dest[dest_నిడివి]=DELIMITER;
         }
-        ++destLength;
+        ++dest_నిడివి;
     }
 
     /*
@@ -292,14 +292,14 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
     bias=INITIAL_BIAS;
 
     /* Main encoding loop: */
-    for(handledCPCount=basicLength; handledCPCount<srcCPCount; /* no op */) {
+    కొరకు(handledCPCount=basic_నిడివి; handledCPCount<srcCPCount; /* no op */) {
         /*
          * All non-basic code points < n have been handled already.
          * Find the next larger one:
          */
-        for(m=0x7fffffff, j=0; j<srcCPCount; ++j) {
-            q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(n<=q && q<m) {
+        కొరకు(m=0x7fffffff, j=0; j<srcCPCount; ++j) {
+            q=cp_బఫరు[j]&0x7fffffff; /* remove case flag from the sign bit */
+            ఒకవేళ(n<=q && q<m) {
                 m=q;
             }
         }
@@ -308,21 +308,21 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
          * Increase delta enough to advance the decoder's
          * <n,i> state to <m,0>, but guard against overflow:
          */
-        if(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
-            *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-            return 0;
+        ఒకవేళ(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
+            *p_Error_సంకేతం=U_అంతర్గత_కార్యక్రమం_ERROR;
+            తిరిగి 0;
         }
         delta+=(m-n)*(handledCPCount+1);
         n=m;
 
         /* Encode a sequence of same code points n */
-        for(j=0; j<srcCPCount; ++j) {
-            q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(q<n) {
+        కొరకు(j=0; j<srcCPCount; ++j) {
+            q=cp_బఫరు[j]&0x7fffffff; /* remove case flag from the sign bit */
+            ఒకవేళ(q<n) {
                 ++delta;
-            } else if(q==n) {
+            } లేకపోతే ఒకవేళ(q==n) {
                 /* Represent delta as a generalized variable-length integer: */
-                for(q=delta, k=BASE; /* no condition */; k+=BASE) {
+                కొరకు(q=delta, k=పునాది_2; /* no condition */; k+=పునాది_2) {
 
                     /** RAM: comment out the old code for conformance with draft-ietf-idn-punycode-03.txt
 
@@ -335,28 +335,28 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
                     */
 
                     t=k-bias;
-                    if(t<TMIN) {
+                    ఒకవేళ(t<TMIN) {
                         t=TMIN;
-                    } else if(k>=(bias+TMAX)) {
+                    } లేకపోతే ఒకవేళ(k>=(bias+TMAX)) {
                         t=TMAX;
                     }
 
-                    if(q<t) {
-                        break;
+                    ఒకవేళ(q<t) {
+                        ఆపు;
                     }
 
-                    if(destLength<destCapacity) {
-                        dest[destLength]=digitToBasic(t+(q-t)%(BASE-t), 0);
+                    ఒకవేళ(dest_నిడివి<dest_సామర్థ్యం) {
+                        dest[dest_నిడివి]=digit_గమ్యం_Basic(t+(q-t)%(పునాది_2-t), 0);
                     }
-                    ++destLength;
-                    q=(q-t)/(BASE-t);
+                    ++dest_నిడివి;
+                    q=(q-t)/(పునాది_2-t);
                 }
 
-                if(destLength<destCapacity) {
-                    dest[destLength] = digitToBasic(q, cpBuffer[j] < 0);
+                ఒకవేళ(dest_నిడివి<dest_సామర్థ్యం) {
+                    dest[dest_నిడివి] = digit_గమ్యం_Basic(q, cp_బఫరు[j] < 0);
                 }
-                ++destLength;
-                bias = adaptBias(delta, handledCPCount + 1, handledCPCount == basicLength);
+                ++dest_నిడివి;
+                bias = adaptBias(delta, handledCPCount + 1, handledCPCount == basic_నిడివి);
                 delta=0;
                 ++handledCPCount;
             }
@@ -366,35 +366,35 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
         ++n;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    తిరిగి u_terminateUChars(dest, dest_సామర్థ్యం, dest_నిడివి, p_Error_సంకేతం);
 }
 
 // decode
 U_CAPI int32_t
-u_strFromPunycode(const char16_t *src, int32_t srcLength,
-                  char16_t *dest, int32_t destCapacity,
+u_strFromPunycode(స్థిరరాశి char16_t *src, int32_t src_నిడివి,
+                  char16_t *dest, int32_t dest_సామర్థ్యం,
                   UBool *caseFlags,
-                  UErrorCode *pErrorCode) {
-    int32_t n, destLength, i, bias, basicLength, j, in, oldi, w, k, digit, t,
-            destCPCount, firstSupplementaryIndex, cpLength;
+                  UError_సంకేతం *p_Error_సంకేతం) {
+    int32_t n, dest_నిడివి, i, bias, basic_నిడివి, j, in, oldi, w, k, digit, t,
+            destCPCount, మొదటి_Supplementary_సూచీ, cp_నిడివి;
     char16_t b;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
-    if(src==nullptr || srcLength<-1 || (dest==nullptr && destCapacity!=0)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(src==శూన్యసూచిక || src_నిడివి<-1 || (dest==శూన్యసూచిక && dest_సామర్థ్యం!=0)) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
 
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    ఒకవేళ(src_నిడివి==-1) {
+        src_నిడివి=u_strlen(src);
     }
-    if (srcLength>DECODE_MAX_CHARS) {
-        *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+    ఒకవేళ (src_నిడివి>DECODE_MAX_CHARS) {
+        *p_Error_సంకేతం=U_ఆదానం_TOO_LONG_ERROR;
+        తిరిగి 0;
     }
 
     /*
@@ -405,25 +405,25 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
      *
      * The two following loops iterate backward.
      */
-    for(j=srcLength; j>0;) {
-        if(src[--j]==DELIMITER) {
-            break;
+    కొరకు(j=src_నిడివి; j>0;) {
+        ఒకవేళ(src[--j]==DELIMITER) {
+            ఆపు;
         }
     }
-    destLength=basicLength=destCPCount=j;
-    U_ASSERT(destLength>=0);
+    dest_నిడివి=basic_నిడివి=destCPCount=j;
+    U_ASSERT(dest_నిడివి>=0);
 
-    while(j>0) {
+    అయితే(j>0) {
         b=src[--j];
-        if(!IS_BASIC(b)) {
-            *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+        ఒకవేళ(!IS_BASIC(b)) {
+            *p_Error_సంకేతం=U_INVALID_CHAR_దొరికింది;
+            తిరిగి 0;
         }
 
-        if(j<destCapacity) {
+        ఒకవేళ(j<dest_సామర్థ్యం) {
             dest[j] = b;
 
-            if(caseFlags!=nullptr) {
+            ఒకవేళ(caseFlags!=శూన్యసూచిక) {
                 caseFlags[j]=IS_BASIC_UPPERCASE(b);
             }
         }
@@ -433,14 +433,14 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
     n=INITIAL_N;
     i=0;
     bias=INITIAL_BIAS;
-    firstSupplementaryIndex=1000000000;
+    మొదటి_Supplementary_సూచీ=1000000000;
 
     /*
      * Main decoding loop:
      * Start just after the last delimiter if any
      * basic code points were copied; start at the beginning otherwise.
      */
-    for(in=basicLength>0 ? basicLength+1 : 0; in<srcLength; /* no op */) {
+    కొరకు(in=basic_నిడివి>0 ? basic_నిడివి+1 : 0; in<src_నిడివి; /* no op */) {
         /*
          * in is the index of the next character to be consumed, and
          * destCPCount is the number of code points in the output array.
@@ -450,21 +450,21 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * if we increase i as we go, then subtract off its starting
          * value at the end to obtain delta.
          */
-        for(oldi=i, w=1, k=BASE; /* no condition */; k+=BASE) {
-            if(in>=srcLength) {
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+        కొరకు(oldi=i, w=1, k=పునాది_2; /* no condition */; k+=పునాది_2) {
+            ఒకవేళ(in>=src_నిడివి) {
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                తిరిగి 0;
             }
 
             digit=decodeDigit(src[in++]);
-            if(digit<0) {
-                *pErrorCode=U_INVALID_CHAR_FOUND;
-                return 0;
+            ఒకవేళ(digit<0) {
+                *p_Error_సంకేతం=U_INVALID_CHAR_దొరికింది;
+                తిరిగి 0;
             }
-            if(digit>(0x7fffffff-i)/w) {
+            ఒకవేళ(digit>(0x7fffffff-i)/w) {
                 /* integer overflow */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                తిరిగి 0;
             }
 
             i+=digit*w;
@@ -477,21 +477,21 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
             }
             */
             t=k-bias;
-            if(t<TMIN) {
+            ఒకవేళ(t<TMIN) {
                 t=TMIN;
-            } else if(k>=(bias+TMAX)) {
+            } లేకపోతే ఒకవేళ(k>=(bias+TMAX)) {
                 t=TMAX;
             }
-            if(digit<t) {
-                break;
+            ఒకవేళ(digit<t) {
+                ఆపు;
             }
 
-            if(w>0x7fffffff/(BASE-t)) {
+            ఒకవేళ(w>0x7fffffff/(పునాది_2-t)) {
                 /* integer overflow */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+                తిరిగి 0;
             }
-            w*=BASE-t;
+            w*=పునాది_2-t;
         }
 
         /*
@@ -506,10 +506,10 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * i was supposed to wrap around from (incremented) destCPCount to 0,
          * incrementing n each time, so we'll fix that now:
          */
-        if(i/destCPCount>(0x7fffffff-n)) {
+        ఒకవేళ(i/destCPCount>(0x7fffffff-n)) {
             /* integer overflow */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+            తిరిగి 0;
         }
 
         n+=i/destCPCount;
@@ -517,16 +517,16 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
         /* not needed for Punycode: */
         /* if (decode_digit(n) <= BASE) return punycode_invalid_input; */
 
-        if(n>0x10ffff || U_IS_SURROGATE(n)) {
+        ఒకవేళ(n>0x10ffff || U_IS_SURROGATE(n)) {
             /* Unicode code point overflow */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            *p_Error_సంకేతం=U_ILLEGAL_CHAR_దొరికింది;
+            తిరిగి 0;
         }
 
         /* Insert n at position i of the output: */
-        cpLength=U16_LENGTH(n);
-        if(dest!=nullptr && ((destLength+cpLength)<=destCapacity)) {
-            int32_t codeUnitIndex;
+        cp_నిడివి=U16_నిడివి(n);
+        ఒకవేళ(dest!=శూన్యసూచిక && ((dest_నిడివి+cp_నిడివి)<=dest_సామర్థ్యం)) {
+            int32_t సంకేతం_Unit_సూచీ;
 
             /*
              * Handle indexes when supplementary code points are present.
@@ -538,53 +538,53 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
              * Only the rare cases with supplementary code points are handled
              * more slowly - but not too bad since this is an insertion anyway.
              */
-            if(i<=firstSupplementaryIndex) {
-                codeUnitIndex=i;
-                if(cpLength>1) {
-                    firstSupplementaryIndex=codeUnitIndex;
-                } else {
-                    ++firstSupplementaryIndex;
+            ఒకవేళ(i<=మొదటి_Supplementary_సూచీ) {
+                సంకేతం_Unit_సూచీ=i;
+                ఒకవేళ(cp_నిడివి>1) {
+                    మొదటి_Supplementary_సూచీ=సంకేతం_Unit_సూచీ;
+                } లేకపోతే {
+                    ++మొదటి_Supplementary_సూచీ;
                 }
-            } else {
-                codeUnitIndex=firstSupplementaryIndex;
-                U16_FWD_N(dest, codeUnitIndex, destLength, i-codeUnitIndex);
+            } లేకపోతే {
+                సంకేతం_Unit_సూచీ=మొదటి_Supplementary_సూచీ;
+                U16_FWD_N(dest, సంకేతం_Unit_సూచీ, dest_నిడివి, i-సంకేతం_Unit_సూచీ);
             }
 
             /* use the char16_t index codeUnitIndex instead of the code point index i */
-            if(codeUnitIndex<destLength) {
-                uprv_memmove(dest+codeUnitIndex+cpLength,
-                             dest+codeUnitIndex,
-                             (destLength-codeUnitIndex)*U_SIZEOF_UCHAR);
-                if(caseFlags!=nullptr) {
-                    uprv_memmove(caseFlags+codeUnitIndex+cpLength,
-                                 caseFlags+codeUnitIndex,
-                                 destLength-codeUnitIndex);
+            ఒకవేళ(సంకేతం_Unit_సూచీ<dest_నిడివి) {
+                uprv_memmove(dest+సంకేతం_Unit_సూచీ+cp_నిడివి,
+                             dest+సంకేతం_Unit_సూచీ,
+                             (dest_నిడివి-సంకేతం_Unit_సూచీ)*U_SIZEOF_UCHAR);
+                ఒకవేళ(caseFlags!=శూన్యసూచిక) {
+                    uprv_memmove(caseFlags+సంకేతం_Unit_సూచీ+cp_నిడివి,
+                                 caseFlags+సంకేతం_Unit_సూచీ,
+                                 dest_నిడివి-సంకేతం_Unit_సూచీ);
                 }
             }
-            if(cpLength==1) {
+            ఒకవేళ(cp_నిడివి==1) {
                 /* BMP, insert one code unit */
-                dest[codeUnitIndex]=(char16_t)n;
-            } else {
+                dest[సంకేతం_Unit_సూచీ]=(char16_t)n;
+            } లేకపోతే {
                 /* supplementary character, insert two code units */
-                dest[codeUnitIndex]=U16_LEAD(n);
-                dest[codeUnitIndex+1]=U16_TRAIL(n);
+                dest[సంకేతం_Unit_సూచీ]=U16_LEAD(n);
+                dest[సంకేతం_Unit_సూచీ+1]=U16_TRAIL(n);
             }
-            if(caseFlags!=nullptr) {
+            ఒకవేళ(caseFlags!=శూన్యసూచిక) {
                 /* Case of last character determines uppercase flag: */
-                caseFlags[codeUnitIndex]=IS_BASIC_UPPERCASE(src[in-1]);
-                if(cpLength==2) {
-                    caseFlags[codeUnitIndex+1]=false;
+                caseFlags[సంకేతం_Unit_సూచీ]=IS_BASIC_UPPERCASE(src[in-1]);
+                ఒకవేళ(cp_నిడివి==2) {
+                    caseFlags[సంకేతం_Unit_సూచీ+1]=అబద్ధం;
                 }
             }
         }
-        destLength+=cpLength;
-        U_ASSERT(destLength>=0);
+        dest_నిడివి+=cp_నిడివి;
+        U_ASSERT(dest_నిడివి>=0);
         ++i;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    తిరిగి u_terminateUChars(dest, dest_సామర్థ్యం, dest_నిడివి, p_Error_సంకేతం);
 }
 
 /* ### check notes on overflow handling - only necessary if not IDNA? are these Punycode functions to be public? */
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#అయితే_ముగింపు /* #if !UCONFIG_NO_IDNA */

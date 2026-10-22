@@ -20,170 +20,170 @@
 *   Unicode code points (0..0x10ffff).
 */
 
-#ifdef UTRIE_DEBUG
+#నిర్వచితమైతే UTRIE_DEBUG
 #   include <stdio.h>
-#endif
+#అయితే_ముగింపు
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "utrie.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "utrie.h"
 
 /* miscellaneous ------------------------------------------------------------ */
 
-#undef ABS
-#define ABS(x) ((x)>=0 ? (x) : -(x))
+#నిర్వచనం_రద్దు ABS
+#నిర్వచించు ABS(x) ((x)>=0 ? (x) : -(x))
 
-static inline UBool
-equal_uint32(const uint32_t *s, const uint32_t *t, int32_t length) {
-    while(length>0 && *s==*t) {
+స్థిర అంతఃవరుస UBool
+equal_uint32(స్థిరరాశి uint32_t *s, స్థిరరాశి uint32_t *t, int32_t length) {
+    అయితే(length>0 && *s==*t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    తిరిగి length == 0;
 }
 
 /* Building a trie ----------------------------------------------------------*/
 
 U_CAPI UNewTrie * U_EXPORT2
-utrie_open(UNewTrie *fillIn,
-           uint32_t *aliasData, int32_t maxDataLength,
-           uint32_t initialValue, uint32_t leadUnitValue,
-           UBool latin1Linear) {
+utrie_open(UNewTrie *fill_లోపల,
+           uint32_t *alias_దత్తాంశం, int32_t max_దత్తాంశం_నిడివి,
+           uint32_t initial_విలువ, uint32_t lead_Unit_విలువ,
+           UBool latin1_రేఖీయ) {
     UNewTrie *trie;
     int32_t i, j;
 
-    if( maxDataLength<UTRIE_DATA_BLOCK_LENGTH ||
-        (latin1Linear && maxDataLength<1024)
+    ఒకవేళ( max_దత్తాంశం_నిడివి<UTRIE_దత్తాంశం_ఖండం_నిడివి ||
+        (latin1_రేఖీయ && max_దత్తాంశం_నిడివి<1024)
     ) {
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
 
-    if(fillIn!=nullptr) {
-        trie=fillIn;
-    } else {
-        trie=(UNewTrie *)uprv_malloc(sizeof(UNewTrie));
-        if(trie==nullptr) {
-            return nullptr;
+    ఒకవేళ(fill_లోపల!=శూన్యసూచిక) {
+        trie=fill_లోపల;
+    } లేకపోతే {
+        trie=(UNewTrie *)uprv_malloc(పరిమాణం(UNewTrie));
+        ఒకవేళ(trie==శూన్యసూచిక) {
+            తిరిగి శూన్యసూచిక;
         }
     }
-    uprv_memset(trie, 0, sizeof(UNewTrie));
-    trie->isAllocated = fillIn == nullptr;
+    uprv_memset(trie, 0, పరిమాణం(UNewTrie));
+    trie->isAllocated = fill_లోపల == శూన్యసూచిక;
 
-    if(aliasData!=nullptr) {
-        trie->data=aliasData;
-        trie->isDataAllocated=false;
-    } else {
-        trie->data=(uint32_t *)uprv_malloc(maxDataLength*4);
-        if(trie->data==nullptr) {
+    ఒకవేళ(alias_దత్తాంశం!=శూన్యసూచిక) {
+        trie->దత్తాంశం=alias_దత్తాంశం;
+        trie->is_దత్తాంశం_Allocated=అబద్ధం;
+    } లేకపోతే {
+        trie->దత్తాంశం=(uint32_t *)uprv_malloc(max_దత్తాంశం_నిడివి*4);
+        ఒకవేళ(trie->దత్తాంశం==శూన్యసూచిక) {
             uprv_free(trie);
-            return nullptr;
+            తిరిగి శూన్యసూచిక;
         }
-        trie->isDataAllocated=true;
+        trie->is_దత్తాంశం_Allocated=నిజం;
     }
 
     /* preallocate and reset the first data block (block index 0) */
-    j=UTRIE_DATA_BLOCK_LENGTH;
+    j=UTRIE_దత్తాంశం_ఖండం_నిడివి;
 
-    if(latin1Linear) {
+    ఒకవేళ(latin1_రేఖీయ) {
         /* preallocate and reset the first block (number 0) and Latin-1 (U+0000..U+00ff) after that */
         /* made sure above that maxDataLength>=1024 */
 
         /* set indexes to point to consecutive data blocks */
         i=0;
-        do {
+        చేయి {
             /* do this at least for trie->index[0] even if that block is only partly used for Latin-1 */
-            trie->index[i++]=j;
-            j+=UTRIE_DATA_BLOCK_LENGTH;
-        } while(i<(256>>UTRIE_SHIFT));
+            trie->సూచీ[i++]=j;
+            j+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
+        } అయితే(i<(256>>UTRIE_జరుపు));
     }
 
     /* reset the initially allocated blocks to the initial value */
-    trie->dataLength=j;
-    while(j>0) {
-        trie->data[--j]=initialValue;
+    trie->దత్తాంశం_నిడివి=j;
+    అయితే(j>0) {
+        trie->దత్తాంశం[--j]=initial_విలువ;
     }
 
-    trie->leadUnitValue=leadUnitValue;
-    trie->indexLength=UTRIE_MAX_INDEX_LENGTH;
-    trie->dataCapacity=maxDataLength;
-    trie->isLatin1Linear=latin1Linear;
-    trie->isCompacted=false;
-    return trie;
+    trie->lead_Unit_విలువ=lead_Unit_విలువ;
+    trie->సూచీ_నిడివి=UTRIE_MAX_సూచీ_నిడివి;
+    trie->దత్తాంశం_సామర్థ్యం=max_దత్తాంశం_నిడివి;
+    trie->is_Latin1_రేఖీయ=latin1_రేఖీయ;
+    trie->isCompacted=అబద్ధం;
+    తిరిగి trie;
 }
 
 U_CAPI UNewTrie * U_EXPORT2
-utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_t aliasDataCapacity) {
+utrie_clone(UNewTrie *fill_లోపల, స్థిరరాశి UNewTrie *other, uint32_t *alias_దత్తాంశం, int32_t alias_దత్తాంశం_సామర్థ్యం) {
     UNewTrie *trie;
-    UBool isDataAllocated;
+    UBool is_దత్తాంశం_Allocated;
 
     /* do not clone if other is not valid or already compacted */
-    if(other==nullptr || other->data==nullptr || other->isCompacted) {
-        return nullptr;
+    ఒకవేళ(other==శూన్యసూచిక || other->దత్తాంశం==శూన్యసూచిక || other->isCompacted) {
+        తిరిగి శూన్యసూచిక;
     }
 
     /* clone data */
-    if(aliasData!=nullptr && aliasDataCapacity>=other->dataCapacity) {
-        isDataAllocated=false;
-    } else {
-        aliasDataCapacity=other->dataCapacity;
-        aliasData=(uint32_t *)uprv_malloc(other->dataCapacity*4);
-        if(aliasData==nullptr) {
-            return nullptr;
+    ఒకవేళ(alias_దత్తాంశం!=శూన్యసూచిక && alias_దత్తాంశం_సామర్థ్యం>=other->దత్తాంశం_సామర్థ్యం) {
+        is_దత్తాంశం_Allocated=అబద్ధం;
+    } లేకపోతే {
+        alias_దత్తాంశం_సామర్థ్యం=other->దత్తాంశం_సామర్థ్యం;
+        alias_దత్తాంశం=(uint32_t *)uprv_malloc(other->దత్తాంశం_సామర్థ్యం*4);
+        ఒకవేళ(alias_దత్తాంశం==శూన్యసూచిక) {
+            తిరిగి శూన్యసూచిక;
         }
-        isDataAllocated=true;
+        is_దత్తాంశం_Allocated=నిజం;
     }
 
-    trie=utrie_open(fillIn, aliasData, aliasDataCapacity,
-                    other->data[0], other->leadUnitValue,
-                    other->isLatin1Linear);
-    if(trie==nullptr) {
-        uprv_free(aliasData);
-    } else {
-        uprv_memcpy(trie->index, other->index, sizeof(trie->index));
-        uprv_memcpy(trie->data, other->data, (size_t)other->dataLength*4);
-        trie->dataLength=other->dataLength;
-        trie->isDataAllocated=isDataAllocated;
+    trie=utrie_open(fill_లోపల, alias_దత్తాంశం, alias_దత్తాంశం_సామర్థ్యం,
+                    other->దత్తాంశం[0], other->lead_Unit_విలువ,
+                    other->is_Latin1_రేఖీయ);
+    ఒకవేళ(trie==శూన్యసూచిక) {
+        uprv_free(alias_దత్తాంశం);
+    } లేకపోతే {
+        uprv_memcpy(trie->సూచీ, other->సూచీ, పరిమాణం(trie->సూచీ));
+        uprv_memcpy(trie->దత్తాంశం, other->దత్తాంశం, (size_t)other->దత్తాంశం_నిడివి*4);
+        trie->దత్తాంశం_నిడివి=other->దత్తాంశం_నిడివి;
+        trie->is_దత్తాంశం_Allocated=is_దత్తాంశం_Allocated;
     }
 
-    return trie;
+    తిరిగి trie;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 utrie_close(UNewTrie *trie) {
-    if(trie!=nullptr) {
-        if(trie->isDataAllocated) {
-            uprv_free(trie->data);
-            trie->data=nullptr;
+    ఒకవేళ(trie!=శూన్యసూచిక) {
+        ఒకవేళ(trie->is_దత్తాంశం_Allocated) {
+            uprv_free(trie->దత్తాంశం);
+            trie->దత్తాంశం=శూన్యసూచిక;
         }
-        if(trie->isAllocated) {
+        ఒకవేళ(trie->isAllocated) {
             uprv_free(trie);
         }
     }
 }
 
 U_CAPI uint32_t * U_EXPORT2
-utrie_getData(UNewTrie *trie, int32_t *pLength) {
-    if(trie==nullptr || pLength==nullptr) {
-        return nullptr;
+utrie_get_దత్తాంశం(UNewTrie *trie, int32_t *p_నిడివి) {
+    ఒకవేళ(trie==శూన్యసూచిక || p_నిడివి==శూన్యసూచిక) {
+        తిరిగి శూన్యసూచిక;
     }
 
-    *pLength=trie->dataLength;
-    return trie->data;
+    *p_నిడివి=trie->దత్తాంశం_నిడివి;
+    తిరిగి trie->దత్తాంశం;
 }
 
-static int32_t
-utrie_allocDataBlock(UNewTrie *trie) {
-    int32_t newBlock, newTop;
+స్థిర int32_t
+utrie_alloc_దత్తాంశం_ఖండం(UNewTrie *trie) {
+    int32_t new_ఖండం, new_శిఖరం;
 
-    newBlock=trie->dataLength;
-    newTop=newBlock+UTRIE_DATA_BLOCK_LENGTH;
-    if(newTop>trie->dataCapacity) {
+    new_ఖండం=trie->దత్తాంశం_నిడివి;
+    new_శిఖరం=new_ఖండం+UTRIE_దత్తాంశం_ఖండం_నిడివి;
+    ఒకవేళ(new_శిఖరం>trie->దత్తాంశం_సామర్థ్యం) {
         /* out of memory in the data array */
-        return -1;
+        తిరిగి -1;
     }
-    trie->dataLength=newTop;
-    return newBlock;
+    trie->దత్తాంశం_నిడివి=new_శిఖరం;
+    తిరిగి new_ఖండం;
 }
 
 /**
@@ -192,27 +192,27 @@ utrie_allocDataBlock(UNewTrie *trie) {
  * @return -1 if no new data block available (out of memory in data array)
  * @internal
  */
-static int32_t
-utrie_getDataBlock(UNewTrie *trie, UChar32 c) {
-    int32_t indexValue, newBlock;
+స్థిర int32_t
+utrie_get_దత్తాంశం_ఖండం(UNewTrie *trie, UChar32 c) {
+    int32_t సూచీ_విలువ, new_ఖండం;
 
-    c>>=UTRIE_SHIFT;
-    indexValue=trie->index[c];
-    if(indexValue>0) {
-        return indexValue;
+    c>>=UTRIE_జరుపు;
+    సూచీ_విలువ=trie->సూచీ[c];
+    ఒకవేళ(సూచీ_విలువ>0) {
+        తిరిగి సూచీ_విలువ;
     }
 
     /* allocate a new data block */
-    newBlock=utrie_allocDataBlock(trie);
-    if(newBlock<0) {
+    new_ఖండం=utrie_alloc_దత్తాంశం_ఖండం(trie);
+    ఒకవేళ(new_ఖండం<0) {
         /* out of memory in the data array */
-        return -1;
+        తిరిగి -1;
     }
-    trie->index[c]=newBlock;
+    trie->సూచీ[c]=new_ఖండం;
 
     /* copy-on-write for a block from a setRange() */
-    uprv_memcpy(trie->data+newBlock, trie->data-indexValue, 4*UTRIE_DATA_BLOCK_LENGTH);
-    return newBlock;
+    uprv_memcpy(trie->దత్తాంశం+new_ఖండం, trie->దత్తాంశం-సూచీ_విలువ, 4*UTRIE_దత్తాంశం_ఖండం_నిడివి);
+    తిరిగి new_ఖండం;
 }
 
 /**
@@ -220,175 +220,175 @@ utrie_getDataBlock(UNewTrie *trie, UChar32 c) {
  */
 U_CAPI UBool U_EXPORT2
 utrie_set32(UNewTrie *trie, UChar32 c, uint32_t value) {
-    int32_t block;
+    int32_t ఖండం;
 
     /* valid, uncompacted trie and valid c? */
-    if(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
-        return false;
+    ఒకవేళ(trie==శూన్యసూచిక || trie->isCompacted || (uint32_t)c>0x10ffff) {
+        తిరిగి అబద్ధం;
     }
 
-    block=utrie_getDataBlock(trie, c);
-    if(block<0) {
-        return false;
+    ఖండం=utrie_get_దత్తాంశం_ఖండం(trie, c);
+    ఒకవేళ(ఖండం<0) {
+        తిరిగి అబద్ధం;
     }
 
-    trie->data[block+(c&UTRIE_MASK)]=value;
-    return true;
+    trie->దత్తాంశం[ఖండం+(c&UTRIE_ముసుగు)]=value;
+    తిరిగి నిజం;
 }
 
 U_CAPI uint32_t U_EXPORT2
-utrie_get32(UNewTrie *trie, UChar32 c, UBool *pInBlockZero) {
-    int32_t block;
+utrie_get32(UNewTrie *trie, UChar32 c, UBool *p_లోపల_ఖండం_Zero) {
+    int32_t ఖండం;
 
     /* valid, uncompacted trie and valid c? */
-    if(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
-        if(pInBlockZero!=nullptr) {
-            *pInBlockZero=true;
+    ఒకవేళ(trie==శూన్యసూచిక || trie->isCompacted || (uint32_t)c>0x10ffff) {
+        ఒకవేళ(p_లోపల_ఖండం_Zero!=శూన్యసూచిక) {
+            *p_లోపల_ఖండం_Zero=నిజం;
         }
-        return 0;
+        తిరిగి 0;
     }
 
-    block=trie->index[c>>UTRIE_SHIFT];
-    if(pInBlockZero!=nullptr) {
-        *pInBlockZero = block == 0;
+    ఖండం=trie->సూచీ[c>>UTRIE_జరుపు];
+    ఒకవేళ(p_లోపల_ఖండం_Zero!=శూన్యసూచిక) {
+        *p_లోపల_ఖండం_Zero = ఖండం == 0;
     }
 
-    return trie->data[ABS(block)+(c&UTRIE_MASK)];
+    తిరిగి trie->దత్తాంశం[ABS(ఖండం)+(c&UTRIE_ముసుగు)];
 }
 
 /**
  * @internal
  */
-static void
-utrie_fillBlock(uint32_t *block, UChar32 start, UChar32 limit,
-                uint32_t value, uint32_t initialValue, UBool overwrite) {
-    uint32_t *pLimit;
+స్థిర శూన్య
+utrie_fill_ఖండం(uint32_t *ఖండం, UChar32 ప్రారంభం, UChar32 హద్దు,
+                uint32_t value, uint32_t initial_విలువ, UBool overwrite) {
+    uint32_t *p_హద్దు;
 
-    pLimit=block+limit;
-    block+=start;
-    if(overwrite) {
-        while(block<pLimit) {
-            *block++=value;
+    p_హద్దు=ఖండం+హద్దు;
+    ఖండం+=ప్రారంభం;
+    ఒకవేళ(overwrite) {
+        అయితే(ఖండం<p_హద్దు) {
+            *ఖండం++=value;
         }
-    } else {
-        while(block<pLimit) {
-            if(*block==initialValue) {
-                *block=value;
+    } లేకపోతే {
+        అయితే(ఖండం<p_హద్దు) {
+            ఒకవేళ(*ఖండం==initial_విలువ) {
+                *ఖండం=value;
             }
-            ++block;
+            ++ఖండం;
         }
     }
 }
 
 U_CAPI UBool U_EXPORT2
-utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, UBool overwrite) {
+utrie_సమితి_Range32(UNewTrie *trie, UChar32 ప్రారంభం, UChar32 హద్దు, uint32_t value, UBool overwrite) {
     /*
      * repeat value in [start..limit[
      * mark index values for repeat-data blocks by setting bit 31 of the index values
      * fill around existing values if any, if(overwrite)
      */
-    uint32_t initialValue;
-    int32_t block, rest, repeatBlock;
+    uint32_t initial_విలువ;
+    int32_t ఖండం, rest, repeat_ఖండం;
 
     /* valid, uncompacted trie and valid indexes? */
-    if( trie==nullptr || trie->isCompacted ||
-        (uint32_t)start>0x10ffff || (uint32_t)limit>0x110000 || start>limit
+    ఒకవేళ( trie==శూన్యసూచిక || trie->isCompacted ||
+        (uint32_t)ప్రారంభం>0x10ffff || (uint32_t)హద్దు>0x110000 || ప్రారంభం>హద్దు
     ) {
-        return false;
+        తిరిగి అబద్ధం;
     }
-    if(start==limit) {
-        return true; /* nothing to do */
+    ఒకవేళ(ప్రారంభం==హద్దు) {
+        తిరిగి నిజం; /* nothing to do */
     }
 
-    initialValue=trie->data[0];
-    if(start&UTRIE_MASK) {
-        UChar32 nextStart;
+    initial_విలువ=trie->దత్తాంశం[0];
+    ఒకవేళ(ప్రారంభం&UTRIE_ముసుగు) {
+        UChar32 తదుపరి_ప్రారంభం;
 
         /* set partial block at [start..following block boundary[ */
-        block=utrie_getDataBlock(trie, start);
-        if(block<0) {
-            return false;
+        ఖండం=utrie_get_దత్తాంశం_ఖండం(trie, ప్రారంభం);
+        ఒకవేళ(ఖండం<0) {
+            తిరిగి అబద్ధం;
         }
 
-        nextStart=(start+UTRIE_DATA_BLOCK_LENGTH)&~UTRIE_MASK;
-        if(nextStart<=limit) {
-            utrie_fillBlock(trie->data+block, start&UTRIE_MASK, UTRIE_DATA_BLOCK_LENGTH,
-                            value, initialValue, overwrite);
-            start=nextStart;
-        } else {
-            utrie_fillBlock(trie->data+block, start&UTRIE_MASK, limit&UTRIE_MASK,
-                            value, initialValue, overwrite);
-            return true;
+        తదుపరి_ప్రారంభం=(ప్రారంభం+UTRIE_దత్తాంశం_ఖండం_నిడివి)&~UTRIE_ముసుగు;
+        ఒకవేళ(తదుపరి_ప్రారంభం<=హద్దు) {
+            utrie_fill_ఖండం(trie->దత్తాంశం+ఖండం, ప్రారంభం&UTRIE_ముసుగు, UTRIE_దత్తాంశం_ఖండం_నిడివి,
+                            value, initial_విలువ, overwrite);
+            ప్రారంభం=తదుపరి_ప్రారంభం;
+        } లేకపోతే {
+            utrie_fill_ఖండం(trie->దత్తాంశం+ఖండం, ప్రారంభం&UTRIE_ముసుగు, హద్దు&UTRIE_ముసుగు,
+                            value, initial_విలువ, overwrite);
+            తిరిగి నిజం;
         }
     }
 
     /* number of positions in the last, partial block */
-    rest=limit&UTRIE_MASK;
+    rest=హద్దు&UTRIE_ముసుగు;
 
     /* round down limit to a block boundary */
-    limit&=~UTRIE_MASK;
+    హద్దు&=~UTRIE_ముసుగు;
 
     /* iterate over all-value blocks */
-    if(value==initialValue) {
-        repeatBlock=0;
-    } else {
-        repeatBlock=-1;
+    ఒకవేళ(value==initial_విలువ) {
+        repeat_ఖండం=0;
+    } లేకపోతే {
+        repeat_ఖండం=-1;
     }
-    while(start<limit) {
+    అయితే(ప్రారంభం<హద్దు) {
         /* get index value */
-        block=trie->index[start>>UTRIE_SHIFT];
-        if(block>0) {
+        ఖండం=trie->సూచీ[ప్రారంభం>>UTRIE_జరుపు];
+        ఒకవేళ(ఖండం>0) {
             /* already allocated, fill in value */
-            utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, value, initialValue, overwrite);
-        } else if(trie->data[-block]!=value && (block==0 || overwrite)) {
+            utrie_fill_ఖండం(trie->దత్తాంశం+ఖండం, 0, UTRIE_దత్తాంశం_ఖండం_నిడివి, value, initial_విలువ, overwrite);
+        } లేకపోతే ఒకవేళ(trie->దత్తాంశం[-ఖండం]!=value && (ఖండం==0 || overwrite)) {
             /* set the repeatBlock instead of the current block 0 or range block */
-            if(repeatBlock>=0) {
-                trie->index[start>>UTRIE_SHIFT]=-repeatBlock;
-            } else {
+            ఒకవేళ(repeat_ఖండం>=0) {
+                trie->సూచీ[ప్రారంభం>>UTRIE_జరుపు]=-repeat_ఖండం;
+            } లేకపోతే {
                 /* create and set and fill the repeatBlock */
-                repeatBlock=utrie_getDataBlock(trie, start);
-                if(repeatBlock<0) {
-                    return false;
+                repeat_ఖండం=utrie_get_దత్తాంశం_ఖండం(trie, ప్రారంభం);
+                ఒకవేళ(repeat_ఖండం<0) {
+                    తిరిగి అబద్ధం;
                 }
 
                 /* set the negative block number to indicate that it is a repeat block */
-                trie->index[start>>UTRIE_SHIFT]=-repeatBlock;
-                utrie_fillBlock(trie->data+repeatBlock, 0, UTRIE_DATA_BLOCK_LENGTH, value, initialValue, true);
+                trie->సూచీ[ప్రారంభం>>UTRIE_జరుపు]=-repeat_ఖండం;
+                utrie_fill_ఖండం(trie->దత్తాంశం+repeat_ఖండం, 0, UTRIE_దత్తాంశం_ఖండం_నిడివి, value, initial_విలువ, నిజం);
             }
         }
 
-        start+=UTRIE_DATA_BLOCK_LENGTH;
+        ప్రారంభం+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
     }
 
-    if(rest>0) {
+    ఒకవేళ(rest>0) {
         /* set partial block at [last block boundary..limit[ */
-        block=utrie_getDataBlock(trie, start);
-        if(block<0) {
-            return false;
+        ఖండం=utrie_get_దత్తాంశం_ఖండం(trie, ప్రారంభం);
+        ఒకవేళ(ఖండం<0) {
+            తిరిగి అబద్ధం;
         }
 
-        utrie_fillBlock(trie->data+block, 0, rest, value, initialValue, overwrite);
+        utrie_fill_ఖండం(trie->దత్తాంశం+ఖండం, 0, rest, value, initial_విలువ, overwrite);
     }
 
-    return true;
+    తిరిగి నిజం;
 }
 
-static int32_t
-_findSameIndexBlock(const int32_t *idx, int32_t indexLength,
-                    int32_t otherBlock) {
-    int32_t block, i;
+స్థిర int32_t
+కనుగొను_Same_సూచీ_ఖండం(స్థిరరాశి int32_t *idx, int32_t సూచీ_నిడివి,
+                    int32_t other_ఖండం) {
+    int32_t ఖండం, i;
 
-    for(block=UTRIE_BMP_INDEX_LENGTH; block<indexLength; block+=UTRIE_SURROGATE_BLOCK_COUNT) {
-        for(i=0; i<UTRIE_SURROGATE_BLOCK_COUNT; ++i) {
-            if(idx[block+i]!=idx[otherBlock+i]) {
-                break;
+    కొరకు(ఖండం=UTRIE_BMP_సూచీ_నిడివి; ఖండం<సూచీ_నిడివి; ఖండం+=UTRIE_SURROGATE_ఖండం_లెక్క) {
+        కొరకు(i=0; i<UTRIE_SURROGATE_ఖండం_లెక్క; ++i) {
+            ఒకవేళ(idx[ఖండం+i]!=idx[other_ఖండం+i]) {
+                ఆపు;
             }
         }
-        if(i==UTRIE_SURROGATE_BLOCK_COUNT) {
-            return block;
+        ఒకవేళ(i==UTRIE_SURROGATE_ఖండం_లెక్క) {
+            తిరిగి ఖండం;
         }
     }
-    return indexLength;
+    తిరిగి సూచీ_నిడివి;
 }
 
 /*
@@ -401,21 +401,21 @@ _findSameIndexBlock(const int32_t *idx, int32_t indexLength,
  * to just after the BMP area, where they can be retrieved for
  * code point lookups.
  */
-static void
-utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *pErrorCode) {
-    int32_t leadIndexes[UTRIE_SURROGATE_BLOCK_COUNT];
+స్థిర శూన్య
+utrie_fold(UNewTrie *trie, UNew_Trie_Get_Folded_విలువ *get_Folded_విలువ, UError_సంకేతం *p_Error_సంకేతం) {
+    int32_t leadIndexes[UTRIE_SURROGATE_ఖండం_లెక్క];
     int32_t *idx;
     uint32_t value;
     UChar32 c;
-    int32_t indexLength, block;
-#ifdef UTRIE_DEBUG
-    int countLeadCUWithData=0;
-#endif
+    int32_t సూచీ_నిడివి, ఖండం;
+#నిర్వచితమైతే UTRIE_DEBUG
+    పూర్ణాంకం లెక్క_Lead_CUWith_దత్తాంశం=0;
+#అయితే_ముగింపు
 
-    idx=trie->index;
+    idx=trie->సూచీ;
 
     /* copy the lead surrogate indexes into a temporary array */
-    uprv_memcpy(leadIndexes, idx+(0xd800>>UTRIE_SHIFT), 4*UTRIE_SURROGATE_BLOCK_COUNT);
+    uprv_memcpy(leadIndexes, idx+(0xd800>>UTRIE_జరుపు), 4*UTRIE_SURROGATE_ఖండం_లెక్క);
 
     /*
      * set all values for lead surrogate code *units* to leadUnitValue
@@ -427,21 +427,21 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * the above saved the indexes for surrogate code *points*
      * fill the indexes with simplified code from utrie_setRange32()
      */
-    if(trie->leadUnitValue==trie->data[0]) {
-        block=0; /* leadUnitValue==initialValue, use all-initial-value block */
-    } else {
+    ఒకవేళ(trie->lead_Unit_విలువ==trie->దత్తాంశం[0]) {
+        ఖండం=0; /* leadUnitValue==initialValue, use all-initial-value block */
+    } లేకపోతే {
         /* create and fill the repeatBlock */
-        block=utrie_allocDataBlock(trie);
-        if(block<0) {
+        ఖండం=utrie_alloc_దత్తాంశం_ఖండం(trie);
+        ఒకవేళ(ఖండం<0) {
             /* data table overflow */
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+            తిరిగి;
         }
-        utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, trie->leadUnitValue, trie->data[0], true);
-        block=-block; /* negative block number to indicate that it is a repeat block */
+        utrie_fill_ఖండం(trie->దత్తాంశం+ఖండం, 0, UTRIE_దత్తాంశం_ఖండం_నిడివి, trie->lead_Unit_విలువ, trie->దత్తాంశం[0], నిజం);
+        ఖండం=-ఖండం; /* negative block number to indicate that it is a repeat block */
     }
-    for(c=(0xd800>>UTRIE_SHIFT); c<(0xdc00>>UTRIE_SHIFT); ++c) {
-        trie->index[c]=block;
+    కొరకు(c=(0xd800>>UTRIE_జరుపు); c<(0xdc00>>UTRIE_జరుపు); ++c) {
+        trie->సూచీ[c]=ఖండం;
     }
 
     /*
@@ -451,54 +451,54 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * Later all folded index blocks are moved up one to insert the copied
      * lead surrogate indexes.
      */
-    indexLength=UTRIE_BMP_INDEX_LENGTH;
+    సూచీ_నిడివి=UTRIE_BMP_సూచీ_నిడివి;
 
     /* search for any index (stage 1) entries for supplementary code points */
-    for(c=0x10000; c<0x110000;) {
-        if(idx[c>>UTRIE_SHIFT]!=0) {
+    కొరకు(c=0x10000; c<0x110000;) {
+        ఒకవేళ(idx[c>>UTRIE_జరుపు]!=0) {
             /* there is data, treat the full block for a lead surrogate */
             c&=~0x3ff;
 
-#ifdef UTRIE_DEBUG
-            ++countLeadCUWithData;
+#నిర్వచితమైతే UTRIE_DEBUG
+            ++లెక్క_Lead_CUWith_దత్తాంశం;
             /* printf("supplementary data for lead surrogate U+%04lx\n", (long)(0xd7c0+(c>>10))); */
-#endif
+#అయితే_ముగింపు
 
             /* is there an identical index block? */
-            block=_findSameIndexBlock(idx, indexLength, c>>UTRIE_SHIFT);
+            ఖండం=కనుగొను_Same_సూచీ_ఖండం(idx, సూచీ_నిడివి, c>>UTRIE_జరుపు);
 
             /*
              * get a folded value for [c..c+0x400[ and,
              * if different from the value for the lead surrogate code point,
              * set it for the lead surrogate code unit
              */
-            value=getFoldedValue(trie, c, block+UTRIE_SURROGATE_BLOCK_COUNT);
-            if(value!=utrie_get32(trie, U16_LEAD(c), nullptr)) {
-                if(!utrie_set32(trie, U16_LEAD(c), value)) {
+            value=get_Folded_విలువ(trie, c, ఖండం+UTRIE_SURROGATE_ఖండం_లెక్క);
+            ఒకవేళ(value!=utrie_get32(trie, U16_LEAD(c), శూన్యసూచిక)) {
+                ఒకవేళ(!utrie_set32(trie, U16_LEAD(c), value)) {
                     /* data table overflow */
-                    *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                    *p_Error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+                    తిరిగి;
                 }
 
                 /* if we did not find an identical index block... */
-                if(block==indexLength) {
+                ఒకవేళ(ఖండం==సూచీ_నిడివి) {
                     /* move the actual index (stage 1) entries from the supplementary position to the new one */
-                    uprv_memmove(idx+indexLength,
-                                 idx+(c>>UTRIE_SHIFT),
-                                 4*UTRIE_SURROGATE_BLOCK_COUNT);
-                    indexLength+=UTRIE_SURROGATE_BLOCK_COUNT;
+                    uprv_memmove(idx+సూచీ_నిడివి,
+                                 idx+(c>>UTRIE_జరుపు),
+                                 4*UTRIE_SURROGATE_ఖండం_లెక్క);
+                    సూచీ_నిడివి+=UTRIE_SURROGATE_ఖండం_లెక్క;
                 }
             }
             c+=0x400;
-        } else {
-            c+=UTRIE_DATA_BLOCK_LENGTH;
+        } లేకపోతే {
+            c+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
         }
     }
-#ifdef UTRIE_DEBUG
-    if(countLeadCUWithData>0) {
-        printf("supplementary data for %d lead surrogates\n", countLeadCUWithData);
+#నిర్వచితమైతే UTRIE_DEBUG
+    ఒకవేళ(లెక్క_Lead_CUWith_దత్తాంశం>0) {
+        రాయి("supplementary data for %d lead surrogates\n", లెక్క_Lead_CUWith_దత్తాంశం);
     }
-#endif
+#అయితే_ముగింపు
 
     /*
      * index array overflow?
@@ -509,29 +509,29 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * In fact, it can only ever become n==1024 with completely unfoldable data and
      * the additional block of duplicated values for lead surrogates.
      */
-    if(indexLength>=UTRIE_MAX_INDEX_LENGTH) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+    ఒకవేళ(సూచీ_నిడివి>=UTRIE_MAX_సూచీ_నిడివి) {
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+        తిరిగి;
     }
 
     /*
      * make space for the lead surrogate index block and
      * insert it between the BMP indexes and the folded ones
      */
-    uprv_memmove(idx+UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT,
-                 idx+UTRIE_BMP_INDEX_LENGTH,
-                 4*(indexLength-UTRIE_BMP_INDEX_LENGTH));
-    uprv_memcpy(idx+UTRIE_BMP_INDEX_LENGTH,
+    uprv_memmove(idx+UTRIE_BMP_సూచీ_నిడివి+UTRIE_SURROGATE_ఖండం_లెక్క,
+                 idx+UTRIE_BMP_సూచీ_నిడివి,
+                 4*(సూచీ_నిడివి-UTRIE_BMP_సూచీ_నిడివి));
+    uprv_memcpy(idx+UTRIE_BMP_సూచీ_నిడివి,
                 leadIndexes,
-                4*UTRIE_SURROGATE_BLOCK_COUNT);
-    indexLength+=UTRIE_SURROGATE_BLOCK_COUNT;
+                4*UTRIE_SURROGATE_ఖండం_లెక్క);
+    సూచీ_నిడివి+=UTRIE_SURROGATE_ఖండం_లెక్క;
 
-#ifdef UTRIE_DEBUG
-    printf("trie index count: BMP %ld  all Unicode %ld  folded %ld\n",
-           UTRIE_BMP_INDEX_LENGTH, (long)UTRIE_MAX_INDEX_LENGTH, indexLength);
-#endif
+#నిర్వచితమైతే UTRIE_DEBUG
+    రాయి("trie index count: BMP %ld  all Unicode %ld  folded %ld\n",
+           UTRIE_BMP_సూచీ_నిడివి, (దీర్ఘ)UTRIE_MAX_సూచీ_నిడివి, సూచీ_నిడివి);
+#అయితే_ముగింపు
 
-    trie->indexLength=indexLength;
+    trie->సూచీ_నిడివి=సూచీ_నిడివి;
 }
 
 /*
@@ -542,36 +542,36 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
  * - 0 if it is used
  * - -1 if it is not used
  */
-static void
-_findUnusedBlocks(UNewTrie *trie) {
+స్థిర శూన్య
+కనుగొను_వాడని_ఖండాలు(UNewTrie *trie) {
     int32_t i;
 
     /* fill the entire map with "not used" */
-    uprv_memset(trie->map, 0xff, (UTRIE_MAX_BUILD_TIME_DATA_LENGTH>>UTRIE_SHIFT)*4);
+    uprv_memset(trie->map, 0xff, (UTRIE_MAX_BUILD_సమయం_దత్తాంశం_నిడివి>>UTRIE_జరుపు)*4);
 
     /* mark each block that _is_ used with 0 */
-    for(i=0; i<trie->indexLength; ++i) {
-        trie->map[ABS(trie->index[i])>>UTRIE_SHIFT]=0;
+    కొరకు(i=0; i<trie->సూచీ_నిడివి; ++i) {
+        trie->map[ABS(trie->సూచీ[i])>>UTRIE_జరుపు]=0;
     }
 
     /* never move the all-initial-value block 0 */
     trie->map[0]=0;
 }
 
-static int32_t
-_findSameDataBlock(const uint32_t *data, int32_t dataLength,
-                   int32_t otherBlock, int32_t step) {
-    int32_t block;
+స్థిర int32_t
+కనుగొను_Same_దత్తాంశం_ఖండం(స్థిరరాశి uint32_t *దత్తాంశం, int32_t దత్తాంశం_నిడివి,
+                   int32_t other_ఖండం, int32_t అడుగు) {
+    int32_t ఖండం;
 
     /* ensure that we do not even partially get past dataLength */
-    dataLength-=UTRIE_DATA_BLOCK_LENGTH;
+    దత్తాంశం_నిడివి-=UTRIE_దత్తాంశం_ఖండం_నిడివి;
 
-    for(block=0; block<=dataLength; block+=step) {
-        if(equal_uint32(data+block, data+otherBlock, UTRIE_DATA_BLOCK_LENGTH)) {
-            return block;
+    కొరకు(ఖండం=0; ఖండం<=దత్తాంశం_నిడివి; ఖండం+=అడుగు) {
+        ఒకవేళ(equal_uint32(దత్తాంశం+ఖండం, దత్తాంశం+other_ఖండం, UTRIE_దత్తాంశం_ఖండం_నిడివి)) {
+            తిరిగి ఖండం;
         }
     }
-    return -1;
+    తిరిగి -1;
 }
 
 /*
@@ -586,37 +586,37 @@ _findSameDataBlock(const uint32_t *data, int32_t dataLength,
  * It does not
  * - try to move and overlap blocks that are not already adjacent
  */
-static void
-utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
-    int32_t i, start, newStart, overlapStart;
+స్థిర శూన్య
+utrie_compact(UNewTrie *trie, UBool overlap, UError_సంకేతం *p_Error_సంకేతం) {
+    int32_t i, ప్రారంభం, new_ప్రారంభం, overlap_ప్రారంభం;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి;
     }
 
     /* valid, uncompacted trie? */
-    if(trie==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ఒకవేళ(trie==శూన్యసూచిక) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి;
     }
-    if(trie->isCompacted) {
-        return; /* nothing left to do */
+    ఒకవేళ(trie->isCompacted) {
+        తిరిగి; /* nothing left to do */
     }
 
     /* compaction */
 
     /* initialize the index map with "block is used/unused" flags */
-    _findUnusedBlocks(trie);
+    కనుగొను_వాడని_ఖండాలు(trie);
 
     /* if Latin-1 is preallocated and linear, then do not compact Latin-1 data */
-    if(trie->isLatin1Linear && UTRIE_SHIFT<=8) {
-        overlapStart=UTRIE_DATA_BLOCK_LENGTH+256;
-    } else {
-        overlapStart=UTRIE_DATA_BLOCK_LENGTH;
+    ఒకవేళ(trie->is_Latin1_రేఖీయ && UTRIE_జరుపు<=8) {
+        overlap_ప్రారంభం=UTRIE_దత్తాంశం_ఖండం_నిడివి+256;
+    } లేకపోతే {
+        overlap_ప్రారంభం=UTRIE_దత్తాంశం_ఖండం_నిడివి;
     }
 
-    newStart=UTRIE_DATA_BLOCK_LENGTH;
-    for(start=newStart; start<trie->dataLength;) {
+    new_ప్రారంభం=UTRIE_దత్తాంశం_ఖండం_నిడివి;
+    కొరకు(ప్రారంభం=new_ప్రారంభం; ప్రారంభం<trie->దత్తాంశం_నిడివి;) {
         /*
          * start: index of first entry of current block
          * newStart: index where the current block is to be moved
@@ -624,74 +624,74 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
          */
 
         /* skip blocks that are not used */
-        if(trie->map[start>>UTRIE_SHIFT]<0) {
+        ఒకవేళ(trie->map[ప్రారంభం>>UTRIE_జరుపు]<0) {
             /* advance start to the next block */
-            start+=UTRIE_DATA_BLOCK_LENGTH;
+            ప్రారంభం+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
 
             /* leave newStart with the previous block! */
-            continue;
+            కొనసాగు;
         }
 
         /* search for an identical block */
-        if( start>=overlapStart &&
-            (i=_findSameDataBlock(trie->data, newStart, start,
-                            overlap ? UTRIE_DATA_GRANULARITY : UTRIE_DATA_BLOCK_LENGTH))
+        ఒకవేళ( ప్రారంభం>=overlap_ప్రారంభం &&
+            (i=కనుగొను_Same_దత్తాంశం_ఖండం(trie->దత్తాంశం, new_ప్రారంభం, ప్రారంభం,
+                            overlap ? UTRIE_దత్తాంశం_GRANULARITY : UTRIE_దత్తాంశం_ఖండం_నిడివి))
              >=0
         ) {
             /* found an identical block, set the other block's index value for the current block */
-            trie->map[start>>UTRIE_SHIFT]=i;
+            trie->map[ప్రారంభం>>UTRIE_జరుపు]=i;
 
             /* advance start to the next block */
-            start+=UTRIE_DATA_BLOCK_LENGTH;
+            ప్రారంభం+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
 
             /* leave newStart with the previous block! */
-            continue;
+            కొనసాగు;
         }
 
         /* see if the beginning of this block can be overlapped with the end of the previous block */
-        if(overlap && start>=overlapStart) {
+        ఒకవేళ(overlap && ప్రారంభం>=overlap_ప్రారంభం) {
             /* look for maximum overlap (modulo granularity) with the previous, adjacent block */
-            for(i=UTRIE_DATA_BLOCK_LENGTH-UTRIE_DATA_GRANULARITY;
-                i>0 && !equal_uint32(trie->data+(newStart-i), trie->data+start, i);
-                i-=UTRIE_DATA_GRANULARITY) {}
-        } else {
+            కొరకు(i=UTRIE_దత్తాంశం_ఖండం_నిడివి-UTRIE_దత్తాంశం_GRANULARITY;
+                i>0 && !equal_uint32(trie->దత్తాంశం+(new_ప్రారంభం-i), trie->దత్తాంశం+ప్రారంభం, i);
+                i-=UTRIE_దత్తాంశం_GRANULARITY) {}
+        } లేకపోతే {
             i=0;
         }
 
-        if(i>0) {
+        ఒకవేళ(i>0) {
             /* some overlap */
-            trie->map[start>>UTRIE_SHIFT]=newStart-i;
+            trie->map[ప్రారంభం>>UTRIE_జరుపు]=new_ప్రారంభం-i;
 
             /* move the non-overlapping indexes to their new positions */
-            start+=i;
-            for(i=UTRIE_DATA_BLOCK_LENGTH-i; i>0; --i) {
-                trie->data[newStart++]=trie->data[start++];
+            ప్రారంభం+=i;
+            కొరకు(i=UTRIE_దత్తాంశం_ఖండం_నిడివి-i; i>0; --i) {
+                trie->దత్తాంశం[new_ప్రారంభం++]=trie->దత్తాంశం[ప్రారంభం++];
             }
-        } else if(newStart<start) {
+        } లేకపోతే ఒకవేళ(new_ప్రారంభం<ప్రారంభం) {
             /* no overlap, just move the indexes to their new positions */
-            trie->map[start>>UTRIE_SHIFT]=newStart;
-            for(i=UTRIE_DATA_BLOCK_LENGTH; i>0; --i) {
-                trie->data[newStart++]=trie->data[start++];
+            trie->map[ప్రారంభం>>UTRIE_జరుపు]=new_ప్రారంభం;
+            కొరకు(i=UTRIE_దత్తాంశం_ఖండం_నిడివి; i>0; --i) {
+                trie->దత్తాంశం[new_ప్రారంభం++]=trie->దత్తాంశం[ప్రారంభం++];
             }
-        } else /* no overlap && newStart==start */ {
-            trie->map[start>>UTRIE_SHIFT]=start;
-            newStart+=UTRIE_DATA_BLOCK_LENGTH;
-            start=newStart;
+        } లేకపోతే /* no overlap && newStart==start */ {
+            trie->map[ప్రారంభం>>UTRIE_జరుపు]=ప్రారంభం;
+            new_ప్రారంభం+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
+            ప్రారంభం=new_ప్రారంభం;
         }
     }
 
     /* now adjust the index (stage 1) table */
-    for(i=0; i<trie->indexLength; ++i) {
-        trie->index[i]=trie->map[ABS(trie->index[i])>>UTRIE_SHIFT];
+    కొరకు(i=0; i<trie->సూచీ_నిడివి; ++i) {
+        trie->సూచీ[i]=trie->map[ABS(trie->సూచీ[i])>>UTRIE_జరుపు];
     }
 
-#ifdef UTRIE_DEBUG
+#నిర్వచితమైతే UTRIE_DEBUG
     /* we saved some space */
-    printf("compacting trie: count of 32-bit words %lu->%lu\n",
-            (long)trie->dataLength, (long)newStart);
-#endif
+    రాయి("compacting trie: count of 32-bit words %lu->%lu\n",
+            (దీర్ఘ)trie->దత్తాంశం_నిడివి, (దీర్ఘ)new_ప్రారంభం);
+#అయితే_ముగింపు
 
-    trie->dataLength=newStart;
+    trie->దత్తాంశం_నిడివి=new_ప్రారంభం;
 }
 
 /* serialization ------------------------------------------------------------ */
@@ -717,422 +717,422 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
  * data file formats, and we would probably not make it smaller because of
  * the then even larger BMP index length even for empty tries.
  */
-static uint32_t U_CALLCONV
-defaultGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset) {
-    uint32_t value, initialValue;
-    UChar32 limit;
-    UBool inBlockZero;
+స్థిర uint32_t U_CALLCONV
+default_Get_Folded_విలువ(UNewTrie *trie, UChar32 ప్రారంభం, int32_t స్థానభ్రంశం) {
+    uint32_t value, initial_విలువ;
+    UChar32 హద్దు;
+    UBool లోపల_ఖండం_Zero;
 
-    initialValue=trie->data[0];
-    limit=start+0x400;
-    while(start<limit) {
-        value=utrie_get32(trie, start, &inBlockZero);
-        if(inBlockZero) {
-            start+=UTRIE_DATA_BLOCK_LENGTH;
-        } else if(value!=initialValue) {
-            return static_cast<uint32_t>(offset);
-        } else {
-            ++start;
+    initial_విలువ=trie->దత్తాంశం[0];
+    హద్దు=ప్రారంభం+0x400;
+    అయితే(ప్రారంభం<హద్దు) {
+        value=utrie_get32(trie, ప్రారంభం, &లోపల_ఖండం_Zero);
+        ఒకవేళ(లోపల_ఖండం_Zero) {
+            ప్రారంభం+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
+        } లేకపోతే ఒకవేళ(value!=initial_విలువ) {
+            తిరిగి static_cast<uint32_t>(స్థానభ్రంశం);
+        } లేకపోతే {
+            ++ప్రారంభం;
         }
     }
-    return 0;
+    తిరిగి 0;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
-                UNewTrieGetFoldedValue *getFoldedValue,
-                UBool reduceTo16Bits,
-                UErrorCode *pErrorCode) {
-    UTrieHeader *header;
+utrie_serialize(UNewTrie *trie, శూన్య *dt, int32_t capacity,
+                UNew_Trie_Get_Folded_విలువ *get_Folded_విలువ,
+                UBool reduce_To16_బిట్లు,
+                UError_సంకేతం *p_Error_సంకేతం) {
+    UTrie_శీర్షిక *శీర్షిక;
     uint32_t *p;
     uint16_t *dest16;
     int32_t i, length;
-    uint8_t* data = nullptr;
+    uint8_t* దత్తాంశం = శూన్యసూచిక;
 
     /* argument check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
-    if(trie==nullptr || capacity<0 || (capacity>0 && dt==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ఒకవేళ(trie==శూన్యసూచిక || capacity<0 || (capacity>0 && dt==శూన్యసూచిక)) {
+        *p_Error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి 0;
     }
-    if(getFoldedValue==nullptr) {
-        getFoldedValue=defaultGetFoldedValue;
+    ఒకవేళ(get_Folded_విలువ==శూన్యసూచిక) {
+        get_Folded_విలువ=default_Get_Folded_విలువ;
     }
 
-    data = (uint8_t*)dt;
+    దత్తాంశం = (uint8_t*)dt;
     /* fold and compact if necessary, also checks that indexLength is within limits */
-    if(!trie->isCompacted) {
+    ఒకవేళ(!trie->isCompacted) {
         /* compact once without overlap to improve folding */
-        utrie_compact(trie, false, pErrorCode);
+        utrie_compact(trie, అబద్ధం, p_Error_సంకేతం);
 
         /* fold the supplementary part of the index array */
-        utrie_fold(trie, getFoldedValue, pErrorCode);
+        utrie_fold(trie, get_Folded_విలువ, p_Error_సంకేతం);
 
         /* compact again with overlap for minimum data array length */
-        utrie_compact(trie, true, pErrorCode);
+        utrie_compact(trie, నిజం, p_Error_సంకేతం);
 
-        trie->isCompacted=true;
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+        trie->isCompacted=నిజం;
+        ఒకవేళ(U_FAILURE(*p_Error_సంకేతం)) {
+            తిరిగి 0;
         }
     }
 
     /* is dataLength within limits? */
-    if( (reduceTo16Bits ? (trie->dataLength+trie->indexLength) : trie->dataLength) >= UTRIE_MAX_DATA_LENGTH) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
+    ఒకవేళ( (reduce_To16_బిట్లు ? (trie->దత్తాంశం_నిడివి+trie->సూచీ_నిడివి) : trie->దత్తాంశం_నిడివి) >= UTRIE_MAX_దత్తాంశం_నిడివి) {
+        *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
     }
 
-    length=sizeof(UTrieHeader)+2*trie->indexLength;
-    if(reduceTo16Bits) {
-        length+=2*trie->dataLength;
-    } else {
-        length+=4*trie->dataLength;
+    length=పరిమాణం(UTrie_శీర్షిక)+2*trie->సూచీ_నిడివి;
+    ఒకవేళ(reduce_To16_బిట్లు) {
+        length+=2*trie->దత్తాంశం_నిడివి;
+    } లేకపోతే {
+        length+=4*trie->దత్తాంశం_నిడివి;
     }
 
-    if(length>capacity) {
-        return length; /* preflighting */
+    ఒకవేళ(length>capacity) {
+        తిరిగి length; /* preflighting */
     }
 
-#ifdef UTRIE_DEBUG
-    printf("**UTrieLengths(serialize)** index:%6ld  data:%6ld  serialized:%6ld\n",
-           (long)trie->indexLength, (long)trie->dataLength, (long)length);
-#endif
+#నిర్వచితమైతే UTRIE_DEBUG
+    రాయి("**UTrieLengths(serialize)** index:%6ld  data:%6ld  serialized:%6ld\n",
+           (దీర్ఘ)trie->సూచీ_నిడివి, (దీర్ఘ)trie->దత్తాంశం_నిడివి, (దీర్ఘ)length);
+#అయితే_ముగింపు
 
     /* set the header fields */
-    header=(UTrieHeader *)data;
-    data+=sizeof(UTrieHeader);
+    శీర్షిక=(UTrie_శీర్షిక *)దత్తాంశం;
+    దత్తాంశం+=పరిమాణం(UTrie_శీర్షిక);
 
-    header->signature=0x54726965; /* "Trie" */
-    header->options=UTRIE_SHIFT | (UTRIE_INDEX_SHIFT<<UTRIE_OPTIONS_INDEX_SHIFT);
+    శీర్షిక->signature=0x54726965; /* "Trie" */
+    శీర్షిక->options=UTRIE_జరుపు | (UTRIE_సూచీ_జరుపు<<UTRIE_OPTIONS_సూచీ_జరుపు);
 
-    if(!reduceTo16Bits) {
-        header->options|=UTRIE_OPTIONS_DATA_IS_32_BIT;
+    ఒకవేళ(!reduce_To16_బిట్లు) {
+        శీర్షిక->options|=UTRIE_OPTIONS_దత్తాంశం_IS_32_బిట్టు;
     }
-    if(trie->isLatin1Linear) {
-        header->options|=UTRIE_OPTIONS_LATIN1_IS_LINEAR;
+    ఒకవేళ(trie->is_Latin1_రేఖీయ) {
+        శీర్షిక->options|=UTRIE_OPTIONS_LATIN1_IS_రేఖీయ;
     }
 
-    header->indexLength=trie->indexLength;
-    header->dataLength=trie->dataLength;
+    శీర్షిక->సూచీ_నిడివి=trie->సూచీ_నిడివి;
+    శీర్షిక->దత్తాంశం_నిడివి=trie->దత్తాంశం_నిడివి;
 
     /* write the index (stage 1) array and the 16/32-bit data (stage 2) array */
-    if(reduceTo16Bits) {
+    ఒకవేళ(reduce_To16_బిట్లు) {
         /* write 16-bit index values shifted right by UTRIE_INDEX_SHIFT, after adding indexLength */
-        p=(uint32_t *)trie->index;
-        dest16=(uint16_t *)data;
-        for(i=trie->indexLength; i>0; --i) {
-            *dest16++=(uint16_t)((*p++ + trie->indexLength)>>UTRIE_INDEX_SHIFT);
+        p=(uint32_t *)trie->సూచీ;
+        dest16=(uint16_t *)దత్తాంశం;
+        కొరకు(i=trie->సూచీ_నిడివి; i>0; --i) {
+            *dest16++=(uint16_t)((*p++ + trie->సూచీ_నిడివి)>>UTRIE_సూచీ_జరుపు);
         }
 
         /* write 16-bit data values */
-        p=trie->data;
-        for(i=trie->dataLength; i>0; --i) {
+        p=trie->దత్తాంశం;
+        కొరకు(i=trie->దత్తాంశం_నిడివి; i>0; --i) {
             *dest16++=(uint16_t)*p++;
         }
-    } else {
+    } లేకపోతే {
         /* write 16-bit index values shifted right by UTRIE_INDEX_SHIFT */
-        p=(uint32_t *)trie->index;
-        dest16=(uint16_t *)data;
-        for(i=trie->indexLength; i>0; --i) {
-            *dest16++=(uint16_t)(*p++ >> UTRIE_INDEX_SHIFT);
+        p=(uint32_t *)trie->సూచీ;
+        dest16=(uint16_t *)దత్తాంశం;
+        కొరకు(i=trie->సూచీ_నిడివి; i>0; --i) {
+            *dest16++=(uint16_t)(*p++ >> UTRIE_సూచీ_జరుపు);
         }
 
         /* write 32-bit data values */
-        uprv_memcpy(dest16, trie->data, 4*(size_t)trie->dataLength);
+        uprv_memcpy(dest16, trie->దత్తాంశం, 4*(size_t)trie->దత్తాంశం_నిడివి);
     }
 
-    return length;
+    తిరిగి length;
 }
 
 /* inverse to defaultGetFoldedValue() */
 U_CAPI int32_t U_EXPORT2
-utrie_defaultGetFoldingOffset(uint32_t data) {
-    return (int32_t)data;
+utrie_default_Get_Folding_స్థానభ్రంశం(uint32_t దత్తాంశం) {
+    తిరిగి (int32_t)దత్తాంశం;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pErrorCode) {
-    const UTrieHeader *header;
-    const uint16_t *p16;
+utrie_unserialize(UTrie *trie, స్థిరరాశి శూన్య *దత్తాంశం, int32_t length, UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి UTrie_శీర్షిక *శీర్షిక;
+    స్థిరరాశి uint16_t *p16;
     uint32_t options;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return -1;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి -1;
     }
 
     /* enough data for a trie header? */
-    if(length<(int32_t)sizeof(UTrieHeader)) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+    ఒకవేళ(length<(int32_t)పరిమాణం(UTrie_శీర్షిక)) {
+        *p_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        తిరిగి -1;
     }
 
     /* check the signature */
-    header=(const UTrieHeader *)data;
-    if(header->signature!=0x54726965) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+    శీర్షిక=(స్థిరరాశి UTrie_శీర్షిక *)దత్తాంశం;
+    ఒకవేళ(శీర్షిక->signature!=0x54726965) {
+        *p_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        తిరిగి -1;
     }
 
     /* get the options and check the shift values */
-    options=header->options;
-    if( (options&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_SHIFT ||
-        ((options>>UTRIE_OPTIONS_INDEX_SHIFT)&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_INDEX_SHIFT
+    options=శీర్షిక->options;
+    ఒకవేళ( (options&UTRIE_OPTIONS_జరుపు_ముసుగు)!=UTRIE_జరుపు ||
+        ((options>>UTRIE_OPTIONS_సూచీ_జరుపు)&UTRIE_OPTIONS_జరుపు_ముసుగు)!=UTRIE_సూచీ_జరుపు
     ) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+        *p_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        తిరిగి -1;
     }
-    trie->isLatin1Linear = (options & UTRIE_OPTIONS_LATIN1_IS_LINEAR) != 0;
+    trie->is_Latin1_రేఖీయ = (options & UTRIE_OPTIONS_LATIN1_IS_రేఖీయ) != 0;
 
     /* get the length values */
-    trie->indexLength=header->indexLength;
-    trie->dataLength=header->dataLength;
+    trie->సూచీ_నిడివి=శీర్షిక->సూచీ_నిడివి;
+    trie->దత్తాంశం_నిడివి=శీర్షిక->దత్తాంశం_నిడివి;
 
-    length-=(int32_t)sizeof(UTrieHeader);
+    length-=(int32_t)పరిమాణం(UTrie_శీర్షిక);
 
     /* enough data for the index? */
-    if(length<2*trie->indexLength) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+    ఒకవేళ(length<2*trie->సూచీ_నిడివి) {
+        *p_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
+        తిరిగి -1;
     }
-    p16=(const uint16_t *)(header+1);
-    trie->index=p16;
-    p16+=trie->indexLength;
-    length-=2*trie->indexLength;
+    p16=(స్థిరరాశి uint16_t *)(శీర్షిక+1);
+    trie->సూచీ=p16;
+    p16+=trie->సూచీ_నిడివి;
+    length-=2*trie->సూచీ_నిడివి;
 
     /* get the data */
-    if(options&UTRIE_OPTIONS_DATA_IS_32_BIT) {
-        if(length<4*trie->dataLength) {
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return -1;
+    ఒకవేళ(options&UTRIE_OPTIONS_దత్తాంశం_IS_32_బిట్టు) {
+        ఒకవేళ(length<4*trie->దత్తాంశం_నిడివి) {
+            *p_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
+            తిరిగి -1;
         }
-        trie->data32=(const uint32_t *)p16;
-        trie->initialValue=trie->data32[0];
-        length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+4*trie->dataLength;
-    } else {
-        if(length<2*trie->dataLength) {
-            *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return -1;
+        trie->data32=(స్థిరరాశి uint32_t *)p16;
+        trie->initial_విలువ=trie->data32[0];
+        length=(int32_t)పరిమాణం(UTrie_శీర్షిక)+2*trie->సూచీ_నిడివి+4*trie->దత్తాంశం_నిడివి;
+    } లేకపోతే {
+        ఒకవేళ(length<2*trie->దత్తాంశం_నిడివి) {
+            *p_Error_సంకేతం=U_INVALID_FORMAT_ERROR;
+            తిరిగి -1;
         }
 
         /* the "data16" data is used via the index pointer */
-        trie->data32=nullptr;
-        trie->initialValue=trie->index[trie->indexLength];
-        length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+2*trie->dataLength;
+        trie->data32=శూన్యసూచిక;
+        trie->initial_విలువ=trie->సూచీ[trie->సూచీ_నిడివి];
+        length=(int32_t)పరిమాణం(UTrie_శీర్షిక)+2*trie->సూచీ_నిడివి+2*trie->దత్తాంశం_నిడివి;
     }
 
-    trie->getFoldingOffset=utrie_defaultGetFoldingOffset;
+    trie->get_Folding_స్థానభ్రంశం=utrie_default_Get_Folding_స్థానభ్రంశం;
 
-    return length;
+    తిరిగి length;
 }
 
 U_CAPI int32_t U_EXPORT2
 utrie_unserializeDummy(UTrie *trie,
-                       void *data, int32_t length,
-                       uint32_t initialValue, uint32_t leadUnitValue,
-                       UBool make16BitTrie,
-                       UErrorCode *pErrorCode) {
+                       శూన్య *దత్తాంశం, int32_t length,
+                       uint32_t initial_విలువ, uint32_t lead_Unit_విలువ,
+                       UBool make16_బిట్టు_Trie,
+                       UError_సంకేతం *p_Error_సంకేతం) {
     uint16_t *p16;
-    int32_t actualLength, latin1Length, i, limit;
-    uint16_t block;
+    int32_t actual_నిడివి, latin1_నిడివి, i, హద్దు;
+    uint16_t ఖండం;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return -1;
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి -1;
     }
 
     /* calculate the actual size of the dummy trie data */
 
     /* max(Latin-1, block 0) */
-    latin1Length= 256; /*UTRIE_SHIFT<=8 ? 256 : UTRIE_DATA_BLOCK_LENGTH;*/
+    latin1_నిడివి= 256; /*UTRIE_SHIFT<=8 ? 256 : UTRIE_DATA_BLOCK_LENGTH;*/
 
-    trie->indexLength=UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT;
-    trie->dataLength=latin1Length;
-    if(leadUnitValue!=initialValue) {
-        trie->dataLength+=UTRIE_DATA_BLOCK_LENGTH;
+    trie->సూచీ_నిడివి=UTRIE_BMP_సూచీ_నిడివి+UTRIE_SURROGATE_ఖండం_లెక్క;
+    trie->దత్తాంశం_నిడివి=latin1_నిడివి;
+    ఒకవేళ(lead_Unit_విలువ!=initial_విలువ) {
+        trie->దత్తాంశం_నిడివి+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
     }
 
-    actualLength=trie->indexLength*2;
-    if(make16BitTrie) {
-        actualLength+=trie->dataLength*2;
-    } else {
-        actualLength+=trie->dataLength*4;
+    actual_నిడివి=trie->సూచీ_నిడివి*2;
+    ఒకవేళ(make16_బిట్టు_Trie) {
+        actual_నిడివి+=trie->దత్తాంశం_నిడివి*2;
+    } లేకపోతే {
+        actual_నిడివి+=trie->దత్తాంశం_నిడివి*4;
     }
 
     /* enough space for the dummy trie? */
-    if(length<actualLength) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return actualLength;
+    ఒకవేళ(length<actual_నిడివి) {
+        *p_Error_సంకేతం=U_బఫరు_అధికప్రవాహం_ERROR;
+        తిరిగి actual_నిడివి;
     }
 
-    trie->isLatin1Linear=true;
-    trie->initialValue=initialValue;
+    trie->is_Latin1_రేఖీయ=నిజం;
+    trie->initial_విలువ=initial_విలువ;
 
     /* fill the index and data arrays */
-    p16=(uint16_t *)data;
-    trie->index=p16;
+    p16=(uint16_t *)దత్తాంశం;
+    trie->సూచీ=p16;
 
-    if(make16BitTrie) {
+    ఒకవేళ(make16_బిట్టు_Trie) {
         /* indexes to block 0 */
-        block=(uint16_t)(trie->indexLength>>UTRIE_INDEX_SHIFT);
-        limit=trie->indexLength;
-        for(i=0; i<limit; ++i) {
-            p16[i]=block;
+        ఖండం=(uint16_t)(trie->సూచీ_నిడివి>>UTRIE_సూచీ_జరుపు);
+        హద్దు=trie->సూచీ_నిడివి;
+        కొరకు(i=0; i<హద్దు; ++i) {
+            p16[i]=ఖండం;
         }
 
-        if(leadUnitValue!=initialValue) {
+        ఒకవేళ(lead_Unit_విలువ!=initial_విలువ) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
-            block+=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
-            i=0xd800>>UTRIE_SHIFT;
-            limit=0xdc00>>UTRIE_SHIFT;
-            for(; i<limit; ++i) {
-                p16[i]=block;
+            ఖండం+=(uint16_t)(latin1_నిడివి>>UTRIE_సూచీ_జరుపు);
+            i=0xd800>>UTRIE_జరుపు;
+            హద్దు=0xdc00>>UTRIE_జరుపు;
+            కొరకు(; i<హద్దు; ++i) {
+                p16[i]=ఖండం;
             }
         }
 
-        trie->data32=nullptr;
+        trie->data32=శూన్యసూచిక;
 
         /* Latin-1 data */
-        p16+=trie->indexLength;
-        for(i=0; i<latin1Length; ++i) {
-            p16[i]=(uint16_t)initialValue;
+        p16+=trie->సూచీ_నిడివి;
+        కొరకు(i=0; i<latin1_నిడివి; ++i) {
+            p16[i]=(uint16_t)initial_విలువ;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
-            limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
-            for(/* i=latin1Length */; i<limit; ++i) {
-                p16[i]=(uint16_t)leadUnitValue;
+        ఒకవేళ(lead_Unit_విలువ!=initial_విలువ) {
+            హద్దు=latin1_నిడివి+UTRIE_దత్తాంశం_ఖండం_నిడివి;
+            కొరకు(/* i=latin1Length */; i<హద్దు; ++i) {
+                p16[i]=(uint16_t)lead_Unit_విలువ;
             }
         }
-    } else {
+    } లేకపోతే {
         uint32_t *p32;
 
         /* indexes to block 0 */
-        uprv_memset(p16, 0, trie->indexLength*2);
+        uprv_memset(p16, 0, trie->సూచీ_నిడివి*2);
 
-        if(leadUnitValue!=initialValue) {
+        ఒకవేళ(lead_Unit_విలువ!=initial_విలువ) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
-            block=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
-            i=0xd800>>UTRIE_SHIFT;
-            limit=0xdc00>>UTRIE_SHIFT;
-            for(; i<limit; ++i) {
-                p16[i]=block;
+            ఖండం=(uint16_t)(latin1_నిడివి>>UTRIE_సూచీ_జరుపు);
+            i=0xd800>>UTRIE_జరుపు;
+            హద్దు=0xdc00>>UTRIE_జరుపు;
+            కొరకు(; i<హద్దు; ++i) {
+                p16[i]=ఖండం;
             }
         }
 
-        trie->data32=p32=(uint32_t *)(p16+trie->indexLength);
+        trie->data32=p32=(uint32_t *)(p16+trie->సూచీ_నిడివి);
 
         /* Latin-1 data */
-        for(i=0; i<latin1Length; ++i) {
-            p32[i]=initialValue;
+        కొరకు(i=0; i<latin1_నిడివి; ++i) {
+            p32[i]=initial_విలువ;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
-            limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
-            for(/* i=latin1Length */; i<limit; ++i) {
-                p32[i]=leadUnitValue;
+        ఒకవేళ(lead_Unit_విలువ!=initial_విలువ) {
+            హద్దు=latin1_నిడివి+UTRIE_దత్తాంశం_ఖండం_నిడివి;
+            కొరకు(/* i=latin1Length */; i<హద్దు; ++i) {
+                p32[i]=lead_Unit_విలువ;
             }
         }
     }
 
-    trie->getFoldingOffset=utrie_defaultGetFoldingOffset;
+    trie->get_Folding_స్థానభ్రంశం=utrie_default_Get_Folding_స్థానభ్రంశం;
 
-    return actualLength;
+    తిరిగి actual_నిడివి;
 }
 
 /* enumeration -------------------------------------------------------------- */
 
 /* default UTrieEnumValue() returns the input value itself */
-static uint32_t U_CALLCONV
-enumSameValue(const void * /*context*/, uint32_t value) {
-    return value;
+స్థిర uint32_t U_CALLCONV
+enum_Same_విలువ(స్థిరరాశి శూన్య * /*context*/, uint32_t value) {
+    తిరిగి value;
 }
 
 /**
  * Enumerate all ranges of code points with the same relevant values.
  * The values are transformed from the raw trie entries by the enumValue function.
  */
-U_CAPI void U_EXPORT2
-utrie_enum(const UTrie *trie,
-           UTrieEnumValue *enumValue, UTrieEnumRange *enumRange, const void *context) {
-    const uint32_t *data32;
-    const uint16_t *idx;
+U_CAPI శూన్య U_EXPORT2
+utrie_enum(స్థిరరాశి UTrie *trie,
+           UTrie_Enum_విలువ *enum_విలువ, UTrieEnumRange *enumRange, స్థిరరాశి శూన్య *context) {
+    స్థిరరాశి uint32_t *data32;
+    స్థిరరాశి uint16_t *idx;
 
-    uint32_t value, prevValue, initialValue;
+    uint32_t value, prev_విలువ, initial_విలువ;
     UChar32 c, prev;
-    int32_t l, i, j, block, prevBlock, nullBlock, offset;
+    int32_t l, i, j, ఖండం, prev_ఖండం, null_ఖండం, స్థానభ్రంశం;
 
     /* check arguments */
-    if(trie==nullptr || trie->index==nullptr || enumRange==nullptr) {
-        return;
+    ఒకవేళ(trie==శూన్యసూచిక || trie->సూచీ==శూన్యసూచిక || enumRange==శూన్యసూచిక) {
+        తిరిగి;
     }
-    if(enumValue==nullptr) {
-        enumValue=enumSameValue;
+    ఒకవేళ(enum_విలువ==శూన్యసూచిక) {
+        enum_విలువ=enum_Same_విలువ;
     }
 
-    idx=trie->index;
+    idx=trie->సూచీ;
     data32=trie->data32;
 
     /* get the enumeration value that corresponds to an initial-value trie data entry */
-    initialValue=enumValue(context, trie->initialValue);
+    initial_విలువ=enum_విలువ(context, trie->initial_విలువ);
 
-    if(data32==nullptr) {
-        nullBlock=trie->indexLength;
-    } else {
-        nullBlock=0;
+    ఒకవేళ(data32==శూన్యసూచిక) {
+        null_ఖండం=trie->సూచీ_నిడివి;
+    } లేకపోతే {
+        null_ఖండం=0;
     }
 
     /* set variables for previous range */
-    prevBlock=nullBlock;
+    prev_ఖండం=null_ఖండం;
     prev=0;
-    prevValue=initialValue;
+    prev_విలువ=initial_విలువ;
 
     /* enumerate BMP - the main loop enumerates data blocks */
-    for(i=0, c=0; c<=0xffff; ++i) {
-        if(c==0xd800) {
+    కొరకు(i=0, c=0; c<=0xffff; ++i) {
+        ఒకవేళ(c==0xd800) {
             /* skip lead surrogate code _units_, go to lead surr. code _points_ */
-            i=UTRIE_BMP_INDEX_LENGTH;
-        } else if(c==0xdc00) {
+            i=UTRIE_BMP_సూచీ_నిడివి;
+        } లేకపోతే ఒకవేళ(c==0xdc00) {
             /* go back to regular BMP code points */
-            i=c>>UTRIE_SHIFT;
+            i=c>>UTRIE_జరుపు;
         }
 
-        block=idx[i]<<UTRIE_INDEX_SHIFT;
-        if(block==prevBlock) {
+        ఖండం=idx[i]<<UTRIE_సూచీ_జరుపు;
+        ఒకవేళ(ఖండం==prev_ఖండం) {
             /* the block is the same as the previous one, and filled with value */
-            c+=UTRIE_DATA_BLOCK_LENGTH;
-        } else if(block==nullBlock) {
+            c+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
+        } లేకపోతే ఒకవేళ(ఖండం==null_ఖండం) {
             /* this is the all-initial-value block */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            ఒకవేళ(prev_విలువ!=initial_విలువ) {
+                ఒకవేళ(prev<c) {
+                    ఒకవేళ(!enumRange(context, prev, c, prev_విలువ)) {
+                        తిరిగి;
                     }
                 }
-                prevBlock=nullBlock;
+                prev_ఖండం=null_ఖండం;
                 prev=c;
-                prevValue=initialValue;
+                prev_విలువ=initial_విలువ;
             }
-            c+=UTRIE_DATA_BLOCK_LENGTH;
-        } else {
-            prevBlock=block;
-            for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
-                value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                if(value!=prevValue) {
-                    if(prev<c) {
-                        if(!enumRange(context, prev, c, prevValue)) {
-                            return;
+            c+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
+        } లేకపోతే {
+            prev_ఖండం=ఖండం;
+            కొరకు(j=0; j<UTRIE_దత్తాంశం_ఖండం_నిడివి; ++j) {
+                value=enum_విలువ(context, data32!=శూన్యసూచిక ? data32[ఖండం+j] : idx[ఖండం+j]);
+                ఒకవేళ(value!=prev_విలువ) {
+                    ఒకవేళ(prev<c) {
+                        ఒకవేళ(!enumRange(context, prev, c, prev_విలువ)) {
+                            తిరిగి;
                         }
                     }
-                    if(j>0) {
+                    ఒకవేళ(j>0) {
                         /* the block is not filled with all the same value */
-                        prevBlock=-1;
+                        prev_ఖండం=-1;
                     }
                     prev=c;
-                    prevValue=value;
+                    prev_విలువ=value;
                 }
                 ++c;
             }
@@ -1140,95 +1140,95 @@ utrie_enum(const UTrie *trie,
     }
 
     /* enumerate supplementary code points */
-    for(l=0xd800; l<0xdc00;) {
+    కొరకు(l=0xd800; l<0xdc00;) {
         /* lead surrogate access */
-        offset=idx[l>>UTRIE_SHIFT]<<UTRIE_INDEX_SHIFT;
-        if(offset==nullBlock) {
+        స్థానభ్రంశం=idx[l>>UTRIE_జరుపు]<<UTRIE_సూచీ_జరుపు;
+        ఒకవేళ(స్థానభ్రంశం==null_ఖండం) {
             /* no entries for a whole block of lead surrogates */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            ఒకవేళ(prev_విలువ!=initial_విలువ) {
+                ఒకవేళ(prev<c) {
+                    ఒకవేళ(!enumRange(context, prev, c, prev_విలువ)) {
+                        తిరిగి;
                     }
                 }
-                prevBlock=nullBlock;
+                prev_ఖండం=null_ఖండం;
                 prev=c;
-                prevValue=initialValue;
+                prev_విలువ=initial_విలువ;
             }
 
-            l+=UTRIE_DATA_BLOCK_LENGTH;
-            c+=UTRIE_DATA_BLOCK_LENGTH<<10;
-            continue;
+            l+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
+            c+=UTRIE_దత్తాంశం_ఖండం_నిడివి<<10;
+            కొనసాగు;
         }
 
-        value= data32!=nullptr ? data32[offset+(l&UTRIE_MASK)] : idx[offset+(l&UTRIE_MASK)];
+        value= data32!=శూన్యసూచిక ? data32[స్థానభ్రంశం+(l&UTRIE_ముసుగు)] : idx[స్థానభ్రంశం+(l&UTRIE_ముసుగు)];
 
         /* enumerate trail surrogates for this lead surrogate */
-        offset=trie->getFoldingOffset(value);
-        if(offset<=0) {
+        స్థానభ్రంశం=trie->get_Folding_స్థానభ్రంశం(value);
+        ఒకవేళ(స్థానభ్రంశం<=0) {
             /* no data for this lead surrogate */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            ఒకవేళ(prev_విలువ!=initial_విలువ) {
+                ఒకవేళ(prev<c) {
+                    ఒకవేళ(!enumRange(context, prev, c, prev_విలువ)) {
+                        తిరిగి;
                     }
                 }
-                prevBlock=nullBlock;
+                prev_ఖండం=null_ఖండం;
                 prev=c;
-                prevValue=initialValue;
+                prev_విలువ=initial_విలువ;
             }
 
             /* nothing else to do for the supplementary code points for this lead surrogate */
             c+=0x400;
-        } else {
+        } లేకపోతే {
             /* enumerate code points for this lead surrogate */
-            i=offset;
-            offset+=UTRIE_SURROGATE_BLOCK_COUNT;
-            do {
+            i=స్థానభ్రంశం;
+            స్థానభ్రంశం+=UTRIE_SURROGATE_ఖండం_లెక్క;
+            చేయి {
                 /* copy of most of the body of the BMP loop */
-                block=idx[i]<<UTRIE_INDEX_SHIFT;
-                if(block==prevBlock) {
+                ఖండం=idx[i]<<UTRIE_సూచీ_జరుపు;
+                ఒకవేళ(ఖండం==prev_ఖండం) {
                     /* the block is the same as the previous one, and filled with value */
-                    c+=UTRIE_DATA_BLOCK_LENGTH;
-                } else if(block==nullBlock) {
+                    c+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
+                } లేకపోతే ఒకవేళ(ఖండం==null_ఖండం) {
                     /* this is the all-initial-value block */
-                    if(prevValue!=initialValue) {
-                        if(prev<c) {
-                            if(!enumRange(context, prev, c, prevValue)) {
-                                return;
+                    ఒకవేళ(prev_విలువ!=initial_విలువ) {
+                        ఒకవేళ(prev<c) {
+                            ఒకవేళ(!enumRange(context, prev, c, prev_విలువ)) {
+                                తిరిగి;
                             }
                         }
-                        prevBlock=nullBlock;
+                        prev_ఖండం=null_ఖండం;
                         prev=c;
-                        prevValue=initialValue;
+                        prev_విలువ=initial_విలువ;
                     }
-                    c+=UTRIE_DATA_BLOCK_LENGTH;
-                } else {
-                    prevBlock=block;
-                    for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
-                        value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                        if(value!=prevValue) {
-                            if(prev<c) {
-                                if(!enumRange(context, prev, c, prevValue)) {
-                                    return;
+                    c+=UTRIE_దత్తాంశం_ఖండం_నిడివి;
+                } లేకపోతే {
+                    prev_ఖండం=ఖండం;
+                    కొరకు(j=0; j<UTRIE_దత్తాంశం_ఖండం_నిడివి; ++j) {
+                        value=enum_విలువ(context, data32!=శూన్యసూచిక ? data32[ఖండం+j] : idx[ఖండం+j]);
+                        ఒకవేళ(value!=prev_విలువ) {
+                            ఒకవేళ(prev<c) {
+                                ఒకవేళ(!enumRange(context, prev, c, prev_విలువ)) {
+                                    తిరిగి;
                                 }
                             }
-                            if(j>0) {
+                            ఒకవేళ(j>0) {
                                 /* the block is not filled with all the same value */
-                                prevBlock=-1;
+                                prev_ఖండం=-1;
                             }
                             prev=c;
-                            prevValue=value;
+                            prev_విలువ=value;
                         }
                         ++c;
                     }
                 }
-            } while(++i<offset);
+            } అయితే(++i<స్థానభ్రంశం);
         }
 
         ++l;
     }
 
     /* deliver last range */
-    enumRange(context, prev, c, prevValue);
+    enumRange(context, prev, c, prev_విలువ);
 }

@@ -1,14 +1,14 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#ifndef __RESTRACE_H__
-#define __RESTRACE_H__
+#నిర్వచితం_కాకపోతే __RESTRACE_H__
+#నిర్వచించు __RESTRACE_H__
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#ఒకవేళ U_ENABLE_TRACING
 
-struct UResourceBundle;
+నిర్మాణం UResourceBundle;
 
 U_NAMESPACE_BEGIN
 
@@ -26,67 +26,67 @@ class CharString;
  * in other exported types.
  */
 class U_COMMON_API ResourceTracer {
-public:
+బహిరంగ:
     ResourceTracer() :
         fResB(nullptr),
-        fParent(nullptr),
-        fKey(nullptr),
-        fIndex(-1) {}
+        f_మాతృ(nullptr),
+        f_కీలకం(nullptr),
+        f_సూచీ(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB) :
+    ResourceTracer(స్థిరరాశి UResourceBundle* resB) :
         fResB(resB),
-        fParent(nullptr),
-        fKey(nullptr),
-        fIndex(-1) {}
+        f_మాతృ(nullptr),
+        f_కీలకం(nullptr),
+        f_సూచీ(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, const char* key) :
+    ResourceTracer(స్థిరరాశి UResourceBundle* resB, స్థిరరాశి అక్షరం* కీలకం) :
         fResB(resB),
-        fParent(nullptr),
-        fKey(key),
-        fIndex(-1) {}
+        f_మాతృ(nullptr),
+        f_కీలకం(కీలకం),
+        f_సూచీ(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, int32_t index) :
+    ResourceTracer(స్థిరరాశి UResourceBundle* resB, int32_t సూచీ) :
         fResB(resB),
-        fParent(nullptr),
-        fKey(nullptr),
-        fIndex(index) {}
+        f_మాతృ(nullptr),
+        f_కీలకం(nullptr),
+        f_సూచీ(సూచీ) {}
 
-    ResourceTracer(const ResourceTracer& parent, const char* key) :
+    ResourceTracer(స్థిరరాశి ResourceTracer& మాతృ, స్థిరరాశి అక్షరం* కీలకం) :
         fResB(nullptr),
-        fParent(&parent),
-        fKey(key),
-        fIndex(-1) {}
+        f_మాతృ(&మాతృ),
+        f_కీలకం(కీలకం),
+        f_సూచీ(-1) {}
 
-    ResourceTracer(const ResourceTracer& parent, int32_t index) :
+    ResourceTracer(స్థిరరాశి ResourceTracer& మాతృ, int32_t సూచీ) :
         fResB(nullptr),
-        fParent(&parent),
-        fKey(nullptr),
-        fIndex(index) {}
+        f_మాతృ(&మాతృ),
+        f_కీలకం(nullptr),
+        f_సూచీ(సూచీ) {}
 
     ~ResourceTracer();
 
-    void trace(const char* type) const;
-    void traceOpen() const;
+    శూన్య trace(స్థిరరాశి అక్షరం* type) స్థిరరాశి;
+    శూన్య traceOpen() స్థిరరాశి;
 
     /**
      * Calls trace() if the resB or parent provided to the constructor was
      * non-null; otherwise, does nothing.
      */
-    void maybeTrace(const char* type) const {
-        if (fResB || fParent) {
+    శూన్య maybeTrace(స్థిరరాశి అక్షరం* type) స్థిరరాశి {
+        ఒకవేళ (fResB || f_మాతృ) {
             trace(type);
         }
     }
 
-private:
-    const UResourceBundle* fResB;
-    const ResourceTracer* fParent;
-    const char* fKey;
-    int32_t fIndex;
+అంతరంగ:
+    స్థిరరాశి UResourceBundle* fResB;
+    స్థిరరాశి ResourceTracer* f_మాతృ;
+    స్థిరరాశి అక్షరం* f_కీలకం;
+    int32_t f_సూచీ;
 
-    CharString& getFilePath(CharString& output, UErrorCode& status) const;
+    CharString& get_File_మార్గం(CharString& output, UError_సంకేతం& స్థితి_2) స్థిరరాశి;
 
-    CharString& getResPath(CharString& output, UErrorCode& status) const;
+    CharString& get_Res_మార్గం(CharString& output, UError_సంకేతం& స్థితి_2) స్థిరరాశి;
 };
 
 /**
@@ -94,17 +94,17 @@ private:
  * with --enable-tracing.
  */
 class FileTracer {
-public:
-    static void traceOpen(const char* path, const char* type, const char* name);
+బహిరంగ:
+    స్థిర శూన్య traceOpen(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి అక్షరం* type, స్థిరరాశి అక్షరం* name);
 
-private:
-    static void traceOpenDataFile(const char* path, const char* type, const char* name);
-    static void traceOpenResFile(const char* path, const char* name);
+అంతరంగ:
+    స్థిర శూన్య trace_Open_దత్తాంశం_File(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి అక్షరం* type, స్థిరరాశి అక్షరం* name);
+    స్థిర శూన్య traceOpenResFile(స్థిరరాశి అక్షరం* మార్గం, స్థిరరాశి అక్షరం* name);
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#else // U_ENABLE_TRACING
+#లేకపోతే // U_ENABLE_TRACING
 
 U_NAMESPACE_BEGIN
 
@@ -112,36 +112,36 @@ U_NAMESPACE_BEGIN
  * Default trivial implementation when --enable-tracing is not used.
  */
 class U_COMMON_API ResourceTracer {
-public:
+బహిరంగ:
     ResourceTracer() {}
 
-    ResourceTracer(const void*) {}
+    ResourceTracer(స్థిరరాశి శూన్య*) {}
 
-    ResourceTracer(const void*, const char*) {}
+    ResourceTracer(స్థిరరాశి శూన్య*, స్థిరరాశి అక్షరం*) {}
 
-    ResourceTracer(const void*, int32_t) {}
+    ResourceTracer(స్థిరరాశి శూన్య*, int32_t) {}
 
-    ResourceTracer(const ResourceTracer&, const char*) {}
+    ResourceTracer(స్థిరరాశి ResourceTracer&, స్థిరరాశి అక్షరం*) {}
 
-    ResourceTracer(const ResourceTracer&, int32_t) {}
+    ResourceTracer(స్థిరరాశి ResourceTracer&, int32_t) {}
 
-    void trace(const char*) const {}
+    శూన్య trace(స్థిరరాశి అక్షరం*) స్థిరరాశి {}
 
-    void traceOpen() const {}
+    శూన్య traceOpen() స్థిరరాశి {}
 
-    void maybeTrace(const char*) const {}
+    శూన్య maybeTrace(స్థిరరాశి అక్షరం*) స్థిరరాశి {}
 };
 
 /**
  * Default trivial implementation when --enable-tracing is not used.
  */
 class FileTracer {
-public:
-    static void traceOpen(const char*, const char*, const char*) {}
+బహిరంగ:
+    స్థిర శూన్య traceOpen(స్థిరరాశి అక్షరం*, స్థిరరాశి అక్షరం*, స్థిరరాశి అక్షరం*) {}
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
-#endif // U_ENABLE_TRACING
+#అయితే_ముగింపు // U_ENABLE_TRACING
 
-#endif //__RESTRACE_H__
+#అయితే_ముగింపు //__RESTRACE_H__

@@ -10,11 +10,11 @@
 * Since: ICU 2.6
 **********************************************************************
 */
-#ifndef UCAT_H
-#define UCAT_H
+#నిర్వచితం_కాకపోతే UCAT_H
+#నిర్వచించు UCAT_H
 
-#include "unicode/utypes.h"
-#include "unicode/ures.h"
+#అన్తర్భావ "unicode/utypes.h"
+#అన్తర్భావ "unicode/ures.h"
 
 /**
  * \file
@@ -70,7 +70,7 @@ U_CDECL_BEGIN
  * 
  * @stable ICU 2.6
  */
-typedef UResourceBundle* u_nl_catd;
+రకనిర్వచనం UResourceBundle* u_nl_catd;
 
 /**
  * Open and return an ICU message catalog descriptor. The descriptor
@@ -104,7 +104,7 @@ typedef UResourceBundle* u_nl_catd;
  * @stable ICU 2.6
  */
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec);
+u_catopen(స్థిరరాశి అక్షరం* name, స్థిరరాశి అక్షరం* locale, UError_సంకేతం* ec);
 
 /**
  * Close an ICU message catalog, given its descriptor.
@@ -114,7 +114,7 @@ u_catopen(const char* name, const char* locale, UErrorCode* ec);
  * 
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI శూన్య U_EXPORT2
 u_catclose(u_nl_catd catd);
 
 /**
@@ -149,15 +149,15 @@ u_catclose(u_nl_catd catd);
  * 
  * @stable ICU 2.6
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI స్థిరరాశి UChar* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
-          const UChar* s U_LIFETIME_BOUND,
+          int32_t సమితి_అంకె,
+          int32_t సందేశం_అంకె,
+          స్థిరరాశి UChar* s U_LIFETIME_BOUND,
           int32_t* len,
-          UErrorCode* ec);
+          UError_సంకేతం* ec);
 
-U_CDECL_END
+U_CDECL_చివర
 
-#endif /*UCAT_H*/
+#అయితే_ముగింపు /*UCAT_H*/
 /*eof*/

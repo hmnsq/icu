@@ -18,47 +18,47 @@
 
 // #define UCPTRIE_DEBUG
 
-#include "unicode/utypes.h"
+#అన్తర్భావ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ఒకవేళ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/bytestream.h"
-#include "unicode/edits.h"
-#include "unicode/normalizer2.h"
-#include "unicode/stringoptions.h"
-#include "unicode/ucptrie.h"
-#include "unicode/udata.h"
-#include "unicode/umutablecptrie.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "unicode/utf8.h"
-#include "bytesinkutil.h"
-#include "cmemory.h"
-#include "mutex.h"
-#include "normalizer2impl.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "ucptrie_impl.h"
-#include "uset_imp.h"
-#include "uvector.h"
+#అన్తర్భావ "unicode/bytestream.h"
+#అన్తర్భావ "unicode/edits.h"
+#అన్తర్భావ "unicode/normalizer2.h"
+#అన్తర్భావ "unicode/stringoptions.h"
+#అన్తర్భావ "unicode/ucptrie.h"
+#అన్తర్భావ "unicode/udata.h"
+#అన్తర్భావ "unicode/umutablecptrie.h"
+#అన్తర్భావ "unicode/ustring.h"
+#అన్తర్భావ "unicode/utf16.h"
+#అన్తర్భావ "unicode/utf8.h"
+#అన్తర్భావ "bytesinkutil.h"
+#అన్తర్భావ "cmemory.h"
+#అన్తర్భావ "mutex.h"
+#అన్తర్భావ "normalizer2impl.h"
+#అన్తర్భావ "putilimp.h"
+#అన్తర్భావ "uassert.h"
+#అన్తర్భావ "ucptrie_impl.h"
+#అన్తర్భావ "uset_imp.h"
+#అన్తర్భావ "uvector.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+నామాకాశ {
 
 /**
  * UTF-8 lead byte for minNoMaybeCP.
  * Can be lower than the actual lead byte for c.
  * Typically U+0300 for NFC/NFD, U+00A0 for NFKC/NFKD, U+0041 for NFKC_Casefold.
  */
-inline uint8_t leadByteForCP(UChar32 c) {
-    if (c <= 0x7f) {
-        return static_cast<uint8_t>(c);
-    } else if (c <= 0x7ff) {
-        return static_cast<uint8_t>(0xc0 + (c >> 6));
-    } else {
+అంతఃవరుస uint8_t leadByteForCP(UChar32 c) {
+    ఒకవేళ (c <= 0x7f) {
+        తిరిగి static_cast<uint8_t>(c);
+    } లేకపోతే ఒకవేళ (c <= 0x7ff) {
+        తిరిగి static_cast<uint8_t>(0xc0 + (c >> 6));
+    } లేకపోతే {
         // Should not occur because ccc(U+0300)!=0.
-        return 0xe0;
+        తిరిగి 0xe0;
     }
 }
 
@@ -71,21 +71,21 @@ inline uint8_t leadByteForCP(UChar32 c) {
  * We should not need it for normalization-inert data (norm16==0).
  * Illegal sequences yield the error value norm16==0 just like real normalization-inert code points.
  */
-UChar32 codePointFromValidUTF8(const uint8_t *cpStart, const uint8_t *cpLimit) {
+UChar32 సంకేతం_బిందువు_From_Valid_UTF8(స్థిరరాశి uint8_t *cp_ప్రారంభం, స్థిరరాశి uint8_t *cp_హద్దు) {
     // Similar to U8_NEXT_UNSAFE(s, i, c).
-    U_ASSERT(cpStart < cpLimit);
-    uint8_t c = *cpStart;
-    switch(cpLimit-cpStart) {
-    case 1:
-        return c;
-    case 2:
-        return ((c&0x1f)<<6) | (cpStart[1]&0x3f);
-    case 3:
+    U_ASSERT(cp_ప్రారంభం < cp_హద్దు);
+    uint8_t c = *cp_ప్రారంభం;
+    ఎంపిక(cp_హద్దు-cp_ప్రారంభం) {
+    స్థితి 1:
+        తిరిగి c;
+    స్థితి 2:
+        తిరిగి ((c&0x1f)<<6) | (cp_ప్రారంభం[1]&0x3f);
+    స్థితి 3:
         // no need for (c&0xf) because the upper bits are truncated after <<12 in the cast to (char16_t)
-        return static_cast<char16_t>((c << 12) | ((cpStart[1] & 0x3f) << 6) | (cpStart[2] & 0x3f));
-    case 4:
-        return ((c&7)<<18) | ((cpStart[1]&0x3f)<<12) | ((cpStart[2]&0x3f)<<6) | (cpStart[3]&0x3f);
-    default:
+        తిరిగి static_cast<char16_t>((c << 12) | ((cp_ప్రారంభం[1] & 0x3f) << 6) | (cp_ప్రారంభం[2] & 0x3f));
+    స్థితి 4:
+        తిరిగి ((c&7)<<18) | ((cp_ప్రారంభం[1]&0x3f)<<12) | ((cp_ప్రారంభం[2]&0x3f)<<6) | (cp_ప్రారంభం[3]&0x3f);
+    అప్రమేయ:
         UPRV_UNREACHABLE_EXIT;  // Should not occur.
     }
 }
@@ -94,684 +94,684 @@ UChar32 codePointFromValidUTF8(const uint8_t *cpStart, const uint8_t *cpLimit) {
  * Returns the last code point in [start, p[ if it is valid and in U+1000..U+D7FF.
  * Otherwise returns a negative value.
  */
-UChar32 previousHangulOrJamo(const uint8_t *start, const uint8_t *p) {
-    if ((p - start) >= 3) {
+UChar32 మునుపటి_Hangul_Or_Jamo(స్థిరరాశి uint8_t *ప్రారంభం, స్థిరరాశి uint8_t *p) {
+    ఒకవేళ ((p - ప్రారంభం) >= 3) {
         p -= 3;
         uint8_t l = *p;
         uint8_t t1, t2;
-        if (0xe1 <= l && l <= 0xed &&
+        ఒకవేళ (0xe1 <= l && l <= 0xed &&
                 (t1 = static_cast<uint8_t>(p[1] - 0x80)) <= 0x3f &&
                 (t2 = static_cast<uint8_t>(p[2] - 0x80)) <= 0x3f &&
                 (l < 0xed || t1 <= 0x1f)) {
-            return ((l & 0xf) << 12) | (t1 << 6) | t2;
+            తిరిగి ((l & 0xf) << 12) | (t1 << 6) | t2;
         }
     }
-    return U_SENTINEL;
+    తిరిగి U_SENTINEL;
 }
 
 /**
  * Returns the offset from the Jamo T base if [src, limit[ starts with a single Jamo T code point.
  * Otherwise returns a negative value.
  */
-int32_t getJamoTMinusBase(const uint8_t *src, const uint8_t *limit) {
+int32_t get_Jamo_TMinus_పునాది(స్థిరరాశి uint8_t *src, స్థిరరాశి uint8_t *హద్దు) {
     // Jamo T: E1 86 A8..E1 87 82
-    if ((limit - src) >= 3 && *src == 0xe1) {
-        if (src[1] == 0x86) {
+    ఒకవేళ ((హద్దు - src) >= 3 && *src == 0xe1) {
+        ఒకవేళ (src[1] == 0x86) {
             uint8_t t = src[2];
             // The first Jamo T is U+11A8 but JAMO_T_BASE is 11A7.
             // Offset 0 does not correspond to any conjoining Jamo.
-            if (0xa8 <= t && t <= 0xbf) {
-                return t - 0xa7;
+            ఒకవేళ (0xa8 <= t && t <= 0xbf) {
+                తిరిగి t - 0xa7;
             }
-        } else if (src[1] == 0x87) {
+        } లేకపోతే ఒకవేళ (src[1] == 0x87) {
             uint8_t t = src[2];
-            if (static_cast<int8_t>(t) <= static_cast<int8_t>(0x82u)) {
-                return t - (0xa7 - 0x40);
+            ఒకవేళ (static_cast<int8_t>(t) <= static_cast<int8_t>(0x82u)) {
+                తిరిగి t - (0xa7 - 0x40);
             }
         }
     }
-    return -1;
+    తిరిగి -1;
 }
 
-void
-appendCodePointDelta(const uint8_t *cpStart, const uint8_t *cpLimit, int32_t delta,
+శూన్య
+append_సంకేతం_బిందువు_Delta(స్థిరరాశి uint8_t *cp_ప్రారంభం, స్థిరరాశి uint8_t *cp_హద్దు, int32_t delta,
                      ByteSink &sink, Edits *edits) {
-    char buffer[U8_MAX_LENGTH];
+    అక్షరం బఫరు[U8_MAX_నిడివి];
     int32_t length;
-    int32_t cpLength = static_cast<int32_t>(cpLimit - cpStart);
-    if (cpLength == 1) {
+    int32_t cp_నిడివి = static_cast<int32_t>(cp_హద్దు - cp_ప్రారంభం);
+    ఒకవేళ (cp_నిడివి == 1) {
         // The builder makes ASCII map to ASCII.
-        buffer[0] = static_cast<uint8_t>(*cpStart + delta);
+        బఫరు[0] = static_cast<uint8_t>(*cp_ప్రారంభం + delta);
         length = 1;
-    } else {
-        int32_t trail = *(cpLimit-1) + delta;
-        if (0x80 <= trail && trail <= 0xbf) {
+    } లేకపోతే {
+        int32_t trail = *(cp_హద్దు-1) + delta;
+        ఒకవేళ (0x80 <= trail && trail <= 0xbf) {
             // The delta only changes the last trail byte.
-            --cpLimit;
+            --cp_హద్దు;
             length = 0;
-            do { buffer[length++] = *cpStart++; } while (cpStart < cpLimit);
-            buffer[length++] = static_cast<uint8_t>(trail);
-        } else {
+            చేయి { బఫరు[length++] = *cp_ప్రారంభం++; } అయితే (cp_ప్రారంభం < cp_హద్దు);
+            బఫరు[length++] = static_cast<uint8_t>(trail);
+        } లేకపోతే {
             // Decode the code point, add the delta, re-encode.
-            UChar32 c = codePointFromValidUTF8(cpStart, cpLimit) + delta;
+            UChar32 c = సంకేతం_బిందువు_From_Valid_UTF8(cp_ప్రారంభం, cp_హద్దు) + delta;
             length = 0;
-            U8_APPEND_UNSAFE(buffer, length, c);
+            U8_APPEND_UNSAFE(బఫరు, length, c);
         }
     }
-    if (edits != nullptr) {
-        edits->addReplace(cpLength, length);
+    ఒకవేళ (edits != శూన్యసూచిక) {
+        edits->కూడు_Replace(cp_నిడివి, length);
     }
-    sink.Append(buffer, length);
+    sink.Append(బఫరు, length);
 }
 
 }  // namespace
 
 // ReorderingBuffer -------------------------------------------------------- ***
 
-ReorderingBuffer::ReorderingBuffer(const Normalizer2Impl &ni, UnicodeString &dest,
-                                   UErrorCode &errorCode) :
+Reordering_బఫరు::Reordering_బఫరు(స్థిరరాశి Normalizer2Impl &ni, UnicodeString &dest,
+                                   UError_సంకేతం &error_సంకేతం) :
         impl(ni), str(dest),
-        start(str.getBuffer(8)), reorderStart(start), limit(start),
-        remainingCapacity(str.getCapacity()), lastCC(0) {
-    if (start == nullptr && U_SUCCESS(errorCode)) {
+        ప్రారంభం(str.get_బఫరు(8)), reorder_ప్రారంభం(ప్రారంభం), హద్దు(ప్రారంభం),
+        మిగిలిన_సామర్థ్యం(str.get_సామర్థ్యం()), చివరి_CC(0) {
+    ఒకవేళ (ప్రారంభం == శూన్యసూచిక && U_SUCCESS(error_సంకేతం)) {
         // getBuffer() already did str.setToBogus()
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
+        error_సంకేతం = U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
 }
 
-UBool ReorderingBuffer::init(int32_t destCapacity, UErrorCode &errorCode) {
+UBool Reordering_బఫరు::init(int32_t dest_సామర్థ్యం, UError_సంకేతం &error_సంకేతం) {
     int32_t length=str.length();
-    start=str.getBuffer(destCapacity);
-    if(start==nullptr) {
+    ప్రారంభం=str.get_బఫరు(dest_సామర్థ్యం);
+    ఒకవేళ(ప్రారంభం==శూన్యసూచిక) {
         // getBuffer() already did str.setToBogus()
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి అబద్ధం;
     }
-    limit=start+length;
-    remainingCapacity=str.getCapacity()-length;
-    reorderStart=start;
-    if(start==limit) {
-        lastCC=0;
-    } else {
-        setIterator();
-        lastCC=previousCC();
+    హద్దు=ప్రారంభం+length;
+    మిగిలిన_సామర్థ్యం=str.get_సామర్థ్యం()-length;
+    reorder_ప్రారంభం=ప్రారంభం;
+    ఒకవేళ(ప్రారంభం==హద్దు) {
+        చివరి_CC=0;
+    } లేకపోతే {
+        సమితి_Iterator();
+        చివరి_CC=మునుపటి_CC();
         // Set reorderStart after the last code point with cc<=1 if there is one.
-        if(lastCC>1) {
-            while(previousCC()>1) {}
+        ఒకవేళ(చివరి_CC>1) {
+            అయితే(మునుపటి_CC()>1) {}
         }
-        reorderStart=codePointLimit;
+        reorder_ప్రారంభం=సంకేతం_బిందువు_హద్దు;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-UBool ReorderingBuffer::equals(const char16_t *otherStart, const char16_t *otherLimit) const {
-    int32_t length = static_cast<int32_t>(limit - start);
-    return
-        length == static_cast<int32_t>(otherLimit - otherStart) &&
-        0==u_memcmp(start, otherStart, length);
+UBool Reordering_బఫరు::equals(స్థిరరాశి char16_t *other_ప్రారంభం, స్థిరరాశి char16_t *other_హద్దు) స్థిరరాశి {
+    int32_t length = static_cast<int32_t>(హద్దు - ప్రారంభం);
+    తిరిగి
+        length == static_cast<int32_t>(other_హద్దు - other_ప్రారంభం) &&
+        0==u_memcmp(ప్రారంభం, other_ప్రారంభం, length);
 }
 
-UBool ReorderingBuffer::equals(const uint8_t *otherStart, const uint8_t *otherLimit) const {
-    U_ASSERT((otherLimit - otherStart) <= INT32_MAX);  // ensured by caller
-    int32_t length = static_cast<int32_t>(limit - start);
-    int32_t otherLength = static_cast<int32_t>(otherLimit - otherStart);
+UBool Reordering_బఫరు::equals(స్థిరరాశి uint8_t *other_ప్రారంభం, స్థిరరాశి uint8_t *other_హద్దు) స్థిరరాశి {
+    U_ASSERT((other_హద్దు - other_ప్రారంభం) <= INT32_MAX);  // ensured by caller
+    int32_t length = static_cast<int32_t>(హద్దు - ప్రారంభం);
+    int32_t other_నిడివి = static_cast<int32_t>(other_హద్దు - other_ప్రారంభం);
     // For equal strings, UTF-8 is at least as long as UTF-16, and at most three times as long.
-    if (otherLength < length || (otherLength / 3) > length) {
-        return false;
+    ఒకవేళ (other_నిడివి < length || (other_నిడివి / 3) > length) {
+        తిరిగి అబద్ధం;
     }
     // Compare valid strings from between normalization boundaries.
     // (Invalid sequences are normalization-inert.)
-    for (int32_t i = 0, j = 0;;) {
-        if (i >= length) {
-            return j >= otherLength;
-        } else if (j >= otherLength) {
-            return false;
+    కొరకు (int32_t i = 0, j = 0;;) {
+        ఒకవేళ (i >= length) {
+            తిరిగి j >= other_నిడివి;
+        } లేకపోతే ఒకవేళ (j >= other_నిడివి) {
+            తిరిగి అబద్ధం;
         }
         // Not at the end of either string yet.
         UChar32 c, other;
-        U16_NEXT_UNSAFE(start, i, c);
-        U8_NEXT_UNSAFE(otherStart, j, other);
-        if (c != other) {
-            return false;
+        U16_తదుపరి_UNSAFE(ప్రారంభం, i, c);
+        U8_తదుపరి_UNSAFE(other_ప్రారంభం, j, other);
+        ఒకవేళ (c != other) {
+            తిరిగి అబద్ధం;
         }
     }
 }
 
-UBool ReorderingBuffer::appendSupplementary(UChar32 c, uint8_t cc, UErrorCode &errorCode) {
-    if(remainingCapacity<2 && !resize(2, errorCode)) {
-        return false;
+UBool Reordering_బఫరు::appendSupplementary(UChar32 c, uint8_t cc, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(మిగిలిన_సామర్థ్యం<2 && !resize(2, error_సంకేతం)) {
+        తిరిగి అబద్ధం;
     }
-    if(lastCC<=cc || cc==0) {
-        limit[0]=U16_LEAD(c);
-        limit[1]=U16_TRAIL(c);
-        limit+=2;
-        lastCC=cc;
-        if(cc<=1) {
-            reorderStart=limit;
+    ఒకవేళ(చివరి_CC<=cc || cc==0) {
+        హద్దు[0]=U16_LEAD(c);
+        హద్దు[1]=U16_TRAIL(c);
+        హద్దు+=2;
+        చివరి_CC=cc;
+        ఒకవేళ(cc<=1) {
+            reorder_ప్రారంభం=హద్దు;
         }
-    } else {
+    } లేకపోతే {
         insert(c, cc);
     }
-    remainingCapacity-=2;
-    return true;
+    మిగిలిన_సామర్థ్యం-=2;
+    తిరిగి నిజం;
 }
 
-UBool ReorderingBuffer::append(const char16_t *s, int32_t length, UBool isNFD,
+UBool Reordering_బఫరు::append(స్థిరరాశి char16_t *s, int32_t length, UBool isNFD,
                                uint8_t leadCC, uint8_t trailCC,
-                               UErrorCode &errorCode) {
-    if(length==0) {
-        return true;
+                               UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(length==0) {
+        తిరిగి నిజం;
     }
-    if(remainingCapacity<length && !resize(length, errorCode)) {
-        return false;
+    ఒకవేళ(మిగిలిన_సామర్థ్యం<length && !resize(length, error_సంకేతం)) {
+        తిరిగి అబద్ధం;
     }
-    remainingCapacity-=length;
-    if(lastCC<=leadCC || leadCC==0) {
-        if(trailCC<=1) {
-            reorderStart=limit+length;
-        } else if(leadCC<=1) {
-            reorderStart=limit+1;  // Ok if not a code point boundary.
+    మిగిలిన_సామర్థ్యం-=length;
+    ఒకవేళ(చివరి_CC<=leadCC || leadCC==0) {
+        ఒకవేళ(trailCC<=1) {
+            reorder_ప్రారంభం=హద్దు+length;
+        } లేకపోతే ఒకవేళ(leadCC<=1) {
+            reorder_ప్రారంభం=హద్దు+1;  // Ok if not a code point boundary.
         }
-        const char16_t *sLimit=s+length;
-        do { *limit++=*s++; } while(s!=sLimit);
-        lastCC=trailCC;
-    } else {
+        స్థిరరాశి char16_t *s_హద్దు=s+length;
+        చేయి { *హద్దు++=*s++; } అయితే(s!=s_హద్దు);
+        చివరి_CC=trailCC;
+    } లేకపోతే {
         int32_t i=0;
         UChar32 c;
-        U16_NEXT(s, i, length, c);
+        U16_తదుపరి(s, i, length, c);
         insert(c, leadCC);  // insert first code point
-        while(i<length) {
-            U16_NEXT(s, i, length, c);
-            if(i<length) {
-                if (isNFD) {
+        అయితే(i<length) {
+            U16_తదుపరి(s, i, length, c);
+            ఒకవేళ(i<length) {
+                ఒకవేళ (isNFD) {
                     leadCC = Normalizer2Impl::getCCFromYesOrMaybeYes(impl.getRawNorm16(c));
-                } else {
+                } లేకపోతే {
                     leadCC = impl.getCC(impl.getNorm16(c));
                 }
-            } else {
+            } లేకపోతే {
                 leadCC=trailCC;
             }
-            append(c, leadCC, errorCode);
+            append(c, leadCC, error_సంకేతం);
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-UBool ReorderingBuffer::appendZeroCC(UChar32 c, UErrorCode &errorCode) {
-    int32_t cpLength=U16_LENGTH(c);
-    if(remainingCapacity<cpLength && !resize(cpLength, errorCode)) {
-        return false;
+UBool Reordering_బఫరు::appendZeroCC(UChar32 c, UError_సంకేతం &error_సంకేతం) {
+    int32_t cp_నిడివి=U16_నిడివి(c);
+    ఒకవేళ(మిగిలిన_సామర్థ్యం<cp_నిడివి && !resize(cp_నిడివి, error_సంకేతం)) {
+        తిరిగి అబద్ధం;
     }
-    remainingCapacity-=cpLength;
-    if(cpLength==1) {
-        *limit++ = static_cast<char16_t>(c);
-    } else {
-        limit[0]=U16_LEAD(c);
-        limit[1]=U16_TRAIL(c);
-        limit+=2;
+    మిగిలిన_సామర్థ్యం-=cp_నిడివి;
+    ఒకవేళ(cp_నిడివి==1) {
+        *హద్దు++ = static_cast<char16_t>(c);
+    } లేకపోతే {
+        హద్దు[0]=U16_LEAD(c);
+        హద్దు[1]=U16_TRAIL(c);
+        హద్దు+=2;
     }
-    lastCC=0;
-    reorderStart=limit;
-    return true;
+    చివరి_CC=0;
+    reorder_ప్రారంభం=హద్దు;
+    తిరిగి నిజం;
 }
 
-UBool ReorderingBuffer::appendZeroCC(const char16_t *s, const char16_t *sLimit, UErrorCode &errorCode) {
-    if(s==sLimit) {
-        return true;
+UBool Reordering_బఫరు::appendZeroCC(స్థిరరాశి char16_t *s, స్థిరరాశి char16_t *s_హద్దు, UError_సంకేతం &error_సంకేతం) {
+    ఒకవేళ(s==s_హద్దు) {
+        తిరిగి నిజం;
     }
-    int32_t length = static_cast<int32_t>(sLimit - s);
-    if(remainingCapacity<length && !resize(length, errorCode)) {
-        return false;
+    int32_t length = static_cast<int32_t>(s_హద్దు - s);
+    ఒకవేళ(మిగిలిన_సామర్థ్యం<length && !resize(length, error_సంకేతం)) {
+        తిరిగి అబద్ధం;
     }
-    u_memcpy(limit, s, length);
-    limit+=length;
-    remainingCapacity-=length;
-    lastCC=0;
-    reorderStart=limit;
-    return true;
+    u_memcpy(హద్దు, s, length);
+    హద్దు+=length;
+    మిగిలిన_సామర్థ్యం-=length;
+    చివరి_CC=0;
+    reorder_ప్రారంభం=హద్దు;
+    తిరిగి నిజం;
 }
 
-void ReorderingBuffer::remove() {
-    reorderStart=limit=start;
-    remainingCapacity=str.getCapacity();
-    lastCC=0;
+శూన్య Reordering_బఫరు::remove() {
+    reorder_ప్రారంభం=హద్దు=ప్రారంభం;
+    మిగిలిన_సామర్థ్యం=str.get_సామర్థ్యం();
+    చివరి_CC=0;
 }
 
-void ReorderingBuffer::removeSuffix(int32_t suffixLength) {
-    if(suffixLength<(limit-start)) {
-        limit-=suffixLength;
-        remainingCapacity+=suffixLength;
-    } else {
-        limit=start;
-        remainingCapacity=str.getCapacity();
+శూన్య Reordering_బఫరు::removeSuffix(int32_t suffix_నిడివి) {
+    ఒకవేళ(suffix_నిడివి<(హద్దు-ప్రారంభం)) {
+        హద్దు-=suffix_నిడివి;
+        మిగిలిన_సామర్థ్యం+=suffix_నిడివి;
+    } లేకపోతే {
+        హద్దు=ప్రారంభం;
+        మిగిలిన_సామర్థ్యం=str.get_సామర్థ్యం();
     }
-    lastCC=0;
-    reorderStart=limit;
+    చివరి_CC=0;
+    reorder_ప్రారంభం=హద్దు;
 }
 
-UBool ReorderingBuffer::resize(int32_t appendLength, UErrorCode &errorCode) {
-    int32_t reorderStartIndex = static_cast<int32_t>(reorderStart - start);
-    int32_t length = static_cast<int32_t>(limit - start);
-    str.releaseBuffer(length);
-    int32_t newCapacity=length+appendLength;
-    int32_t doubleCapacity=2*str.getCapacity();
-    if(newCapacity<doubleCapacity) {
-        newCapacity=doubleCapacity;
+UBool Reordering_బఫరు::resize(int32_t append_నిడివి, UError_సంకేతం &error_సంకేతం) {
+    int32_t reorder_ప్రారంభం_సూచీ = static_cast<int32_t>(reorder_ప్రారంభం - ప్రారంభం);
+    int32_t length = static_cast<int32_t>(హద్దు - ప్రారంభం);
+    str.release_బఫరు(length);
+    int32_t new_సామర్థ్యం=length+append_నిడివి;
+    int32_t double_సామర్థ్యం=2*str.get_సామర్థ్యం();
+    ఒకవేళ(new_సామర్థ్యం<double_సామర్థ్యం) {
+        new_సామర్థ్యం=double_సామర్థ్యం;
     }
-    if(newCapacity<256) {
-        newCapacity=256;
+    ఒకవేళ(new_సామర్థ్యం<256) {
+        new_సామర్థ్యం=256;
     }
-    start=str.getBuffer(newCapacity);
-    if(start==nullptr) {
+    ప్రారంభం=str.get_బఫరు(new_సామర్థ్యం);
+    ఒకవేళ(ప్రారంభం==శూన్యసూచిక) {
         // getBuffer() already did str.setToBogus()
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
+        తిరిగి అబద్ధం;
     }
-    reorderStart=start+reorderStartIndex;
-    limit=start+length;
-    remainingCapacity=str.getCapacity()-length;
-    return true;
+    reorder_ప్రారంభం=ప్రారంభం+reorder_ప్రారంభం_సూచీ;
+    హద్దు=ప్రారంభం+length;
+    మిగిలిన_సామర్థ్యం=str.get_సామర్థ్యం()-length;
+    తిరిగి నిజం;
 }
 
-void ReorderingBuffer::skipPrevious() {
-    codePointLimit=codePointStart;
-    char16_t c=*--codePointStart;
-    if(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(*(codePointStart-1))) {
-        --codePointStart;
+శూన్య Reordering_బఫరు::skip_మునుపటి() {
+    సంకేతం_బిందువు_హద్దు=సంకేతం_బిందువు_ప్రారంభం;
+    char16_t c=*--సంకేతం_బిందువు_ప్రారంభం;
+    ఒకవేళ(U16_IS_TRAIL(c) && ప్రారంభం<సంకేతం_బిందువు_ప్రారంభం && U16_IS_LEAD(*(సంకేతం_బిందువు_ప్రారంభం-1))) {
+        --సంకేతం_బిందువు_ప్రారంభం;
     }
 }
 
-uint8_t ReorderingBuffer::previousCC() {
-    codePointLimit=codePointStart;
-    if(reorderStart>=codePointStart) {
-        return 0;
+uint8_t Reordering_బఫరు::మునుపటి_CC() {
+    సంకేతం_బిందువు_హద్దు=సంకేతం_బిందువు_ప్రారంభం;
+    ఒకవేళ(reorder_ప్రారంభం>=సంకేతం_బిందువు_ప్రారంభం) {
+        తిరిగి 0;
     }
-    UChar32 c=*--codePointStart;
+    UChar32 c=*--సంకేతం_బిందువు_ప్రారంభం;
     char16_t c2;
-    if(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(c2=*(codePointStart-1))) {
-        --codePointStart;
+    ఒకవేళ(U16_IS_TRAIL(c) && ప్రారంభం<సంకేతం_బిందువు_ప్రారంభం && U16_IS_LEAD(c2=*(సంకేతం_బిందువు_ప్రారంభం-1))) {
+        --సంకేతం_బిందువు_ప్రారంభం;
         c=U16_GET_SUPPLEMENTARY(c2, c);
     }
-    return impl.getCCFromYesOrMaybeYesCP(c);
+    తిరిగి impl.getCCFromYesOrMaybeYesCP(c);
 }
 
 // Inserts c somewhere before the last character.
 // Requires 0<cc<lastCC which implies reorderStart<limit.
-void ReorderingBuffer::insert(UChar32 c, uint8_t cc) {
-    for(setIterator(), skipPrevious(); previousCC()>cc;) {}
+శూన్య Reordering_బఫరు::insert(UChar32 c, uint8_t cc) {
+    కొరకు(సమితి_Iterator(), skip_మునుపటి(); మునుపటి_CC()>cc;) {}
     // insert c at codePointLimit, after the character with prevCC<=cc
-    char16_t *q=limit;
-    char16_t *r=limit+=U16_LENGTH(c);
-    do {
+    char16_t *q=హద్దు;
+    char16_t *r=హద్దు+=U16_నిడివి(c);
+    చేయి {
         *--r=*--q;
-    } while(codePointLimit!=q);
-    writeCodePoint(q, c);
-    if(cc<=1) {
-        reorderStart=r;
+    } అయితే(సంకేతం_బిందువు_హద్దు!=q);
+    write_సంకేతం_బిందువు(q, c);
+    ఒకవేళ(cc<=1) {
+        reorder_ప్రారంభం=r;
     }
 }
 
 // Normalizer2Impl --------------------------------------------------------- ***
 
-struct CanonIterData : public UMemory {
-    CanonIterData(UErrorCode &errorCode);
-    ~CanonIterData();
-    void addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode);
+నిర్మాణం Canon_Iter_దత్తాంశం : బహిరంగ UMemory {
+    Canon_Iter_దత్తాంశం(UError_సంకేతం &error_సంకేతం);
+    ~Canon_Iter_దత్తాంశం();
+    శూన్య కూడు_గమ్యం_ప్రారంభం_సమితి(UChar32 origin, UChar32 decompLead, UError_సంకేతం &error_సంకేతం);
     UMutableCPTrie *mutableTrie;
     UCPTrie *trie;
-    UVector canonStartSets;  // contains UnicodeSet *
+    UVector canon_ప్రారంభం_Sets;  // contains UnicodeSet *
 };
 
 Normalizer2Impl::~Normalizer2Impl() {
-    delete fCanonIterData;
+    తొలగించు f_Canon_Iter_దత్తాంశం;
 }
 
-void
-Normalizer2Impl::init(const int32_t *inIndexes, const UCPTrie *inTrie,
-                      const uint16_t *inExtraData, const uint8_t *inSmallFCD) {
-    minDecompNoCP = static_cast<char16_t>(inIndexes[IX_MIN_DECOMP_NO_CP]);
-    minCompNoMaybeCP = static_cast<char16_t>(inIndexes[IX_MIN_COMP_NO_MAYBE_CP]);
-    minLcccCP = static_cast<char16_t>(inIndexes[IX_MIN_LCCC_CP]);
+శూన్య
+Normalizer2Impl::init(స్థిరరాశి int32_t *లోపల_Indexes, స్థిరరాశి UCPTrie *లోపల_Trie,
+                      స్థిరరాశి uint16_t *లోపల_Extra_దత్తాంశం, స్థిరరాశి uint8_t *లోపల_Small_FCD) {
+    minDecompNoCP = static_cast<char16_t>(లోపల_Indexes[IX_MIN_DECOMP_NO_CP]);
+    minCompNoMaybeCP = static_cast<char16_t>(లోపల_Indexes[IX_MIN_COMP_NO_MAYBE_CP]);
+    minLcccCP = static_cast<char16_t>(లోపల_Indexes[IX_MIN_LCCC_CP]);
 
-    minYesNo = static_cast<uint16_t>(inIndexes[IX_MIN_YES_NO]);
-    minYesNoMappingsOnly = static_cast<uint16_t>(inIndexes[IX_MIN_YES_NO_MAPPINGS_ONLY]);
-    minNoNo = static_cast<uint16_t>(inIndexes[IX_MIN_NO_NO]);
-    minNoNoCompBoundaryBefore = static_cast<uint16_t>(inIndexes[IX_MIN_NO_NO_COMP_BOUNDARY_BEFORE]);
-    minNoNoCompNoMaybeCC = static_cast<uint16_t>(inIndexes[IX_MIN_NO_NO_COMP_NO_MAYBE_CC]);
-    minNoNoEmpty = static_cast<uint16_t>(inIndexes[IX_MIN_NO_NO_EMPTY]);
-    limitNoNo = static_cast<uint16_t>(inIndexes[IX_LIMIT_NO_NO]);
-    minMaybeNo = static_cast<uint16_t>(inIndexes[IX_MIN_MAYBE_NO]);
-    minMaybeNoCombinesFwd = static_cast<uint16_t>(inIndexes[IX_MIN_MAYBE_NO_COMBINES_FWD]);
-    minMaybeYes = static_cast<uint16_t>(inIndexes[IX_MIN_MAYBE_YES]);
+    minYesNo = static_cast<uint16_t>(లోపల_Indexes[IX_MIN_YES_NO]);
+    minYesNoMappingsOnly = static_cast<uint16_t>(లోపల_Indexes[IX_MIN_YES_NO_MAPPINGS_ONLY]);
+    minNoNo = static_cast<uint16_t>(లోపల_Indexes[IX_MIN_NO_NO]);
+    minNoNoCompBoundaryBefore = static_cast<uint16_t>(లోపల_Indexes[IX_MIN_NO_NO_COMP_BOUNDARY_BEFORE]);
+    minNoNoCompNoMaybeCC = static_cast<uint16_t>(లోపల_Indexes[IX_MIN_NO_NO_COMP_NO_MAYBE_CC]);
+    min_No_No_ఖాళీలు = static_cast<uint16_t>(లోపల_Indexes[IX_MIN_NO_NO_ఖాళీలు]);
+    హద్దు_No_No = static_cast<uint16_t>(లోపల_Indexes[IX_హద్దు_NO_NO]);
+    minMaybeNo = static_cast<uint16_t>(లోపల_Indexes[IX_MIN_MAYBE_NO]);
+    minMaybeNoCombinesFwd = static_cast<uint16_t>(లోపల_Indexes[IX_MIN_MAYBE_NO_COMBINES_FWD]);
+    minMaybeYes = static_cast<uint16_t>(లోపల_Indexes[IX_MIN_MAYBE_YES]);
     U_ASSERT((minMaybeNo & 7) == 0);  // 8-aligned for noNoDelta bit fields
-    centerNoNoDelta = (minMaybeNo >> DELTA_SHIFT) - MAX_DELTA - 1;
+    centerNoNoDelta = (minMaybeNo >> DELTA_జరుపు) - MAX_DELTA - 1;
 
-    normTrie=inTrie;
-    extraData=inExtraData;
-    smallFCD=inSmallFCD;
+    normTrie=లోపల_Trie;
+    extra_దత్తాంశం=లోపల_Extra_దత్తాంశం;
+    smallFCD=లోపల_Small_FCD;
 }
 
 U_CDECL_BEGIN
 
-static uint32_t U_CALLCONV
-segmentStarterMapper(const void * /*context*/, uint32_t value) {
-    return value&CANON_NOT_SEGMENT_STARTER;
+స్థిర uint32_t U_CALLCONV
+segmentStarterMapper(స్థిరరాశి శూన్య * /*context*/, uint32_t value) {
+    తిరిగి value&CANON_NOT_SEGMENT_STARTER;
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
-void
-Normalizer2Impl::addLcccChars(UnicodeSet &set) const {
-    UChar32 start = 0, end;
+శూన్య
+Normalizer2Impl::కూడు_Lccc_Chars(Unicode_సమితి &సమితి) స్థిరరాశి {
+    UChar32 ప్రారంభం = 0, చివర;
     uint32_t norm16;
-    while ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
-                                   nullptr, nullptr, &norm16)) >= 0) {
-        if (norm16 > Normalizer2Impl::MIN_NORMAL_MAYBE_YES &&
+    అయితే ((చివర = ucptrie_getRange(normTrie, ప్రారంభం, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
+                                   శూన్యసూచిక, శూన్యసూచిక, &norm16)) >= 0) {
+        ఒకవేళ (norm16 > Normalizer2Impl::MIN_సాధారణ_MAYBE_YES &&
                 norm16 != Normalizer2Impl::JAMO_VT) {
-            set.add(start, end);
-        } else if (minNoNoCompNoMaybeCC <= norm16 && norm16 < limitNoNo) {
-            uint16_t fcd16 = getFCD16(start);
-            if (fcd16 > 0xff) { set.add(start, end); }
+            సమితి.కూడు(ప్రారంభం, చివర);
+        } లేకపోతే ఒకవేళ (minNoNoCompNoMaybeCC <= norm16 && norm16 < హద్దు_No_No) {
+            uint16_t fcd16 = getFCD16(ప్రారంభం);
+            ఒకవేళ (fcd16 > 0xff) { సమితి.కూడు(ప్రారంభం, చివర); }
         }
-        start = end + 1;
+        ప్రారంభం = చివర + 1;
     }
 }
 
-void
-Normalizer2Impl::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode*/) const {
+శూన్య
+Normalizer2Impl::కూడు_Property_Starts(స్థిరరాశి USetAdder *sa, UError_సంకేతం & /*errorCode*/) స్థిరరాశి {
     // Add the start code point of each same-value range of the trie.
-    UChar32 start = 0, end;
+    UChar32 ప్రారంభం = 0, చివర;
     uint32_t value;
-    while ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
-                                   nullptr, nullptr, &value)) >= 0) {
-        sa->add(sa->set, start);
-        if (start != end && isAlgorithmicNoNo(static_cast<uint16_t>(value)) &&
-                (value & Normalizer2Impl::DELTA_TCCC_MASK) > Normalizer2Impl::DELTA_TCCC_1) {
+    అయితే ((చివర = ucptrie_getRange(normTrie, ప్రారంభం, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
+                                   శూన్యసూచిక, శూన్యసూచిక, &value)) >= 0) {
+        sa->కూడు(sa->సమితి, ప్రారంభం);
+        ఒకవేళ (ప్రారంభం != చివర && isAlgorithmicNoNo(static_cast<uint16_t>(value)) &&
+                (value & Normalizer2Impl::DELTA_TCCC_ముసుగు) > Normalizer2Impl::DELTA_TCCC_1) {
             // Range of code points with same-norm16-value algorithmic decompositions.
             // They might have different non-zero FCD16 values.
-            uint16_t prevFCD16 = getFCD16(start);
-            while (++start <= end) {
-                uint16_t fcd16 = getFCD16(start);
-                if (fcd16 != prevFCD16) {
-                    sa->add(sa->set, start);
+            uint16_t prevFCD16 = getFCD16(ప్రారంభం);
+            అయితే (++ప్రారంభం <= చివర) {
+                uint16_t fcd16 = getFCD16(ప్రారంభం);
+                ఒకవేళ (fcd16 != prevFCD16) {
+                    sa->కూడు(sa->సమితి, ప్రారంభం);
                     prevFCD16 = fcd16;
                 }
             }
         }
-        start = end + 1;
+        ప్రారంభం = చివర + 1;
     }
 
     /* add Hangul LV syllables and LV+1 because of skippables */
-    for(char16_t c=Hangul::HANGUL_BASE; c<Hangul::HANGUL_LIMIT; c+=Hangul::JAMO_T_COUNT) {
-        sa->add(sa->set, c);
-        sa->add(sa->set, c+1);
+    కొరకు(char16_t c=Hangul::HANGUL_పునాది; c<Hangul::HANGUL_హద్దు; c+=Hangul::JAMO_T_లెక్క) {
+        sa->కూడు(sa->సమితి, c);
+        sa->కూడు(sa->సమితి, c+1);
     }
-    sa->add(sa->set, Hangul::HANGUL_LIMIT); /* add Hangul+1 to continue with other properties */
+    sa->కూడు(sa->సమితి, Hangul::HANGUL_హద్దు); /* add Hangul+1 to continue with other properties */
 }
 
-void
-Normalizer2Impl::addCanonIterPropertyStarts(const USetAdder *sa, UErrorCode &errorCode) const {
+శూన్య
+Normalizer2Impl::కూడు_Canon_Iter_Property_Starts(స్థిరరాశి USetAdder *sa, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
     // Add the start code point of each same-value range of the canonical iterator data trie.
-    if (!ensureCanonIterData(errorCode)) { return; }
+    ఒకవేళ (!ensure_Canon_Iter_దత్తాంశం(error_సంకేతం)) { తిరిగి; }
     // Currently only used for the SEGMENT_STARTER property.
-    UChar32 start = 0, end;
+    UChar32 ప్రారంభం = 0, చివర;
     uint32_t value;
-    while ((end = ucptrie_getRange(fCanonIterData->trie, start, UCPMAP_RANGE_NORMAL, 0,
-                                   segmentStarterMapper, nullptr, &value)) >= 0) {
-        sa->add(sa->set, start);
-        start = end + 1;
+    అయితే ((చివర = ucptrie_getRange(f_Canon_Iter_దత్తాంశం->trie, ప్రారంభం, UCPMAP_RANGE_సాధారణ, 0,
+                                   segmentStarterMapper, శూన్యసూచిక, &value)) >= 0) {
+        sa->కూడు(sa->సమితి, ప్రారంభం);
+        ప్రారంభం = చివర + 1;
     }
 }
 
-const char16_t *
-Normalizer2Impl::copyLowPrefixFromNulTerminated(const char16_t *src,
-                                                UChar32 minNeedDataCP,
-                                                ReorderingBuffer *buffer,
-                                                UErrorCode &errorCode) const {
+స్థిరరాశి char16_t *
+Normalizer2Impl::copy_దిగువ_ఉపసర్గ_From_Nul_Terminated(స్థిరరాశి char16_t *src,
+                                                UChar32 min_Need_దత్తాంశం_CP,
+                                                Reordering_బఫరు *బఫరు,
+                                                UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
     // Make some effort to support NUL-terminated strings reasonably.
     // Take the part of the fast quick check loop that does not look up
     // data and check the first part of the string.
     // After this prefix, determine the string length to simplify the rest
     // of the code.
-    const char16_t *prevSrc=src;
+    స్థిరరాశి char16_t *prevSrc=src;
     char16_t c;
-    while((c=*src++)<minNeedDataCP && c!=0) {}
+    అయితే((c=*src++)<min_Need_దత్తాంశం_CP && c!=0) {}
     // Back out the last character for full processing.
     // Copy this prefix.
-    if(--src!=prevSrc) {
-        if(buffer!=nullptr) {
-            buffer->appendZeroCC(prevSrc, src, errorCode);
+    ఒకవేళ(--src!=prevSrc) {
+        ఒకవేళ(బఫరు!=శూన్యసూచిక) {
+            బఫరు->appendZeroCC(prevSrc, src, error_సంకేతం);
         }
     }
-    return src;
+    తిరిగి src;
 }
 
 UnicodeString &
-Normalizer2Impl::decompose(const UnicodeString &src, UnicodeString &dest,
-                           UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        dest.setToBogus();
-        return dest;
+Normalizer2Impl::decompose(స్థిరరాశి UnicodeString &src, UnicodeString &dest,
+                           UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+        dest.సమితి_గమ్యం_Bogus();
+        తిరిగి dest;
     }
-    const char16_t *sArray=src.getBuffer();
-    if(&dest==&src || sArray==nullptr) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        dest.setToBogus();
-        return dest;
+    స్థిరరాశి char16_t *sArray=src.get_బఫరు();
+    ఒకవేళ(&dest==&src || sArray==శూన్యసూచిక) {
+        error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        dest.సమితి_గమ్యం_Bogus();
+        తిరిగి dest;
     }
-    decompose(sArray, sArray+src.length(), dest, src.length(), errorCode);
-    return dest;
+    decompose(sArray, sArray+src.length(), dest, src.length(), error_సంకేతం);
+    తిరిగి dest;
 }
 
-void
-Normalizer2Impl::decompose(const char16_t *src, const char16_t *limit,
+శూన్య
+Normalizer2Impl::decompose(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
                            UnicodeString &dest,
-                           int32_t destLengthEstimate,
-                           UErrorCode &errorCode) const {
-    if(destLengthEstimate<0 && limit!=nullptr) {
-        destLengthEstimate = static_cast<int32_t>(limit - src);
+                           int32_t dest_నిడివి_Estimate,
+                           UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(dest_నిడివి_Estimate<0 && హద్దు!=శూన్యసూచిక) {
+        dest_నిడివి_Estimate = static_cast<int32_t>(హద్దు - src);
     }
     dest.remove();
-    ReorderingBuffer buffer(*this, dest);
-    if(buffer.init(destLengthEstimate, errorCode)) {
-        decompose(src, limit, &buffer, errorCode);
+    Reordering_బఫరు బఫరు(*ఇది, dest);
+    ఒకవేళ(బఫరు.init(dest_నిడివి_Estimate, error_సంకేతం)) {
+        decompose(src, హద్దు, &బఫరు, error_సంకేతం);
     }
 }
 
 // Dual functionality:
 // buffer!=nullptr: normalize
 // buffer==nullptr: isNormalized/spanQuickCheckYes
-const char16_t *
-Normalizer2Impl::decompose(const char16_t *src, const char16_t *limit,
-                           ReorderingBuffer *buffer,
-                           UErrorCode &errorCode) const {
-    if(src==nullptr) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return src;
+స్థిరరాశి char16_t *
+Normalizer2Impl::decompose(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
+                           Reordering_బఫరు *బఫరు,
+                           UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(src==శూన్యసూచిక) {
+        error_సంకేతం=U_ILLEGAL_వాదం_ERROR;
+        తిరిగి src;
     }
     UChar32 minNoCP=minDecompNoCP;
-    if(limit==nullptr) {
-        src=copyLowPrefixFromNulTerminated(src, minNoCP, buffer, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return src;
+    ఒకవేళ(హద్దు==శూన్యసూచిక) {
+        src=copy_దిగువ_ఉపసర్గ_From_Nul_Terminated(src, minNoCP, బఫరు, error_సంకేతం);
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి src;
         }
-        limit=u_strchr(src, 0);
+        హద్దు=u_strchr(src, 0);
     }
 
-    const char16_t *prevSrc;
+    స్థిరరాశి char16_t *prevSrc;
     UChar32 c=0;
     uint16_t norm16=0;
 
     // only for quick check
-    const char16_t *prevBoundary=src;
+    స్థిరరాశి char16_t *prevBoundary=src;
     uint8_t prevCC=0;
 
-    for(;;) {
+    కొరకు(;;) {
         // count code units below the minimum or with irrelevant data for the quick check
-        for(prevSrc=src; src!=limit;) {
-            if( (c=*src)<minNoCP ||
+        కొరకు(prevSrc=src; src!=హద్దు;) {
+            ఒకవేళ( (c=*src)<minNoCP ||
                 isMostDecompYesAndZeroCC(norm16=UCPTRIE_FAST_BMP_GET(normTrie, UCPTRIE_16, c))
             ) {
                 ++src;
-            } else if(!U16_IS_LEAD(c)) {
-                break;
-            } else {
+            } లేకపోతే ఒకవేళ(!U16_IS_LEAD(c)) {
+                ఆపు;
+            } లేకపోతే {
                 char16_t c2;
-                if((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
+                ఒకవేళ((src+1)!=హద్దు && U16_IS_TRAIL(c2=src[1])) {
                     c=U16_GET_SUPPLEMENTARY(c, c2);
                     norm16=UCPTRIE_FAST_SUPP_GET(normTrie, UCPTRIE_16, c);
-                    if(isMostDecompYesAndZeroCC(norm16)) {
+                    ఒకవేళ(isMostDecompYesAndZeroCC(norm16)) {
                         src+=2;
-                    } else {
-                        break;
+                    } లేకపోతే {
+                        ఆపు;
                     }
-                } else {
+                } లేకపోతే {
                     ++src;  // unpaired lead surrogate: inert
                 }
             }
         }
         // copy these code units all at once
-        if(src!=prevSrc) {
-            if(buffer!=nullptr) {
-                if(!buffer->appendZeroCC(prevSrc, src, errorCode)) {
-                    break;
+        ఒకవేళ(src!=prevSrc) {
+            ఒకవేళ(బఫరు!=శూన్యసూచిక) {
+                ఒకవేళ(!బఫరు->appendZeroCC(prevSrc, src, error_సంకేతం)) {
+                    ఆపు;
                 }
-            } else {
+            } లేకపోతే {
                 prevCC=0;
                 prevBoundary=src;
             }
         }
-        if(src==limit) {
-            break;
+        ఒకవేళ(src==హద్దు) {
+            ఆపు;
         }
 
         // Check one above-minimum, relevant code point.
-        src+=U16_LENGTH(c);
-        if(buffer!=nullptr) {
-            if(!decompose(c, norm16, *buffer, errorCode)) {
-                break;
+        src+=U16_నిడివి(c);
+        ఒకవేళ(బఫరు!=శూన్యసూచిక) {
+            ఒకవేళ(!decompose(c, norm16, *బఫరు, error_సంకేతం)) {
+                ఆపు;
             }
-        } else {
-            if(isDecompYes(norm16)) {
+        } లేకపోతే {
+            ఒకవేళ(isDecompYes(norm16)) {
                 uint8_t cc=getCCFromYesOrMaybeYes(norm16);
-                if(prevCC<=cc || cc==0) {
+                ఒకవేళ(prevCC<=cc || cc==0) {
                     prevCC=cc;
-                    if(cc<=1) {
+                    ఒకవేళ(cc<=1) {
                         prevBoundary=src;
                     }
-                    continue;
+                    కొనసాగు;
                 }
             }
-            return prevBoundary;  // "no" or cc out of order
+            తిరిగి prevBoundary;  // "no" or cc out of order
         }
     }
-    return src;
+    తిరిగి src;
 }
 
 // Decompose a short piece of text which is likely to contain characters that
 // fail the quick check loop and/or where the quick check loop's overhead
 // is unlikely to be amortized.
 // Called by the compose() and makeFCD() implementations.
-const char16_t *
-Normalizer2Impl::decomposeShort(const char16_t *src, const char16_t *limit,
+స్థిరరాశి char16_t *
+Normalizer2Impl::decomposeShort(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
                                 UBool stopAtCompBoundary, UBool onlyContiguous,
-                                ReorderingBuffer &buffer, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+                                Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    while(src<limit) {
-        if (stopAtCompBoundary && *src < minCompNoMaybeCP) {
-            return src;
+    అయితే(src<హద్దు) {
+        ఒకవేళ (stopAtCompBoundary && *src < minCompNoMaybeCP) {
+            తిరిగి src;
         }
-        const char16_t *prevSrc = src;
+        స్థిరరాశి char16_t *prevSrc = src;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, src, limit, c, norm16);
-        if (stopAtCompBoundary && norm16HasCompBoundaryBefore(norm16)) {
-            return prevSrc;
+        UCPTRIE_FAST_U16_తదుపరి(normTrie, UCPTRIE_16, src, హద్దు, c, norm16);
+        ఒకవేళ (stopAtCompBoundary && norm16HasCompBoundaryBefore(norm16)) {
+            తిరిగి prevSrc;
         }
-        if(!decompose(c, norm16, buffer, errorCode)) {
-            return nullptr;
+        ఒకవేళ(!decompose(c, norm16, బఫరు, error_సంకేతం)) {
+            తిరిగి శూన్యసూచిక;
         }
-        if (stopAtCompBoundary && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-            return src;
+        ఒకవేళ (stopAtCompBoundary && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            తిరిగి src;
         }
     }
-    return src;
+    తిరిగి src;
 }
 
 UBool Normalizer2Impl::decompose(UChar32 c, uint16_t norm16,
-                                 ReorderingBuffer &buffer,
-                                 UErrorCode &errorCode) const {
+                                 Reordering_బఫరు &బఫరు,
+                                 UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
     // get the decomposition and the lead and trail cc's
-    if (norm16 >= limitNoNo) {
-        if (isMaybeYesOrNonZeroCC(norm16)) {
-            return buffer.append(c, getCCFromYesOrMaybeYes(norm16), errorCode);
-        } else if (norm16 < minMaybeNo) {
+    ఒకవేళ (norm16 >= హద్దు_No_No) {
+        ఒకవేళ (isMaybeYesOrNonZeroCC(norm16)) {
+            తిరిగి బఫరు.append(c, getCCFromYesOrMaybeYes(norm16), error_సంకేతం);
+        } లేకపోతే ఒకవేళ (norm16 < minMaybeNo) {
             // Maps to an isCompYesAndZeroCC.
             c=mapAlgorithmic(c, norm16);
             norm16=getRawNorm16(c);
         }
     }
-    if (norm16 < minYesNo) {
+    ఒకవేళ (norm16 < minYesNo) {
         // c does not decompose
-        return buffer.append(c, 0, errorCode);
-    } else if(isHangulLV(norm16) || isHangulLVT(norm16)) {
+        తిరిగి బఫరు.append(c, 0, error_సంకేతం);
+    } లేకపోతే ఒకవేళ(isHangulLV(norm16) || isHangulLVT(norm16)) {
         // Hangul syllable: decompose algorithmically
         char16_t jamos[3];
-        return buffer.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode);
+        తిరిగి బఫరు.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), error_సంకేతం);
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
-    uint16_t firstUnit=*mapping;
-    int32_t length=firstUnit&MAPPING_LENGTH_MASK;
+    స్థిరరాశి uint16_t *mapping=get_దత్తాంశం(norm16);
+    uint16_t మొదటి_Unit=*mapping;
+    int32_t length=మొదటి_Unit&MAPPING_నిడివి_ముసుగు;
     uint8_t leadCC, trailCC;
-    trailCC = static_cast<uint8_t>(firstUnit >> 8);
-    if(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
+    trailCC = static_cast<uint8_t>(మొదటి_Unit >> 8);
+    ఒకవేళ(మొదటి_Unit&MAPPING_HAS_CCC_LCCC_మాట) {
         leadCC = static_cast<uint8_t>(*(mapping - 1) >> 8);
-    } else {
+    } లేకపోతే {
         leadCC=0;
     }
-    return buffer.append(reinterpret_cast<const char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode);
+    తిరిగి బఫరు.append(reinterpret_cast<స్థిరరాశి char16_t*>(mapping) + 1, length, నిజం, leadCC, trailCC, error_సంకేతం);
 }
 
 // Dual functionality:
 // sink != nullptr: normalize
 // sink == nullptr: isNormalized/spanQuickCheckYes
-const uint8_t *
+స్థిరరాశి uint8_t *
 Normalizer2Impl::decomposeUTF8(uint32_t options,
-                               const uint8_t *src, const uint8_t *limit,
-                               ByteSink *sink, Edits *edits, UErrorCode &errorCode) const {
-    U_ASSERT(limit != nullptr);
+                               స్థిరరాశి uint8_t *src, స్థిరరాశి uint8_t *హద్దు,
+                               ByteSink *sink, Edits *edits, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    U_ASSERT(హద్దు != శూన్యసూచిక);
     UnicodeString s16;
     uint8_t minNoLead = leadByteForCP(minDecompNoCP);
 
-    const uint8_t *prevBoundary = src;
+    స్థిరరాశి uint8_t *prevBoundary = src;
     // only for quick check
     uint8_t prevCC = 0;
 
-    for (;;) {
+    కొరకు (;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no" code point,
         // or with (decompYes && ccc==0) properties.
-        const uint8_t *fastStart = src;
-        const uint8_t *prevSrc;
+        స్థిరరాశి uint8_t *fast_ప్రారంభం = src;
+        స్థిరరాశి uint8_t *prevSrc;
         uint16_t norm16 = 0;
 
-        for (;;) {
-            if (src == limit) {
-                if (prevBoundary != limit && sink != nullptr) {
-                    ByteSinkUtil::appendUnchanged(prevBoundary, limit,
-                                                  *sink, options, edits, errorCode);
+        కొరకు (;;) {
+            ఒకవేళ (src == హద్దు) {
+                ఒకవేళ (prevBoundary != హద్దు && sink != శూన్యసూచిక) {
+                    ByteSinkUtil::appendUnchanged(prevBoundary, హద్దు,
+                                                  *sink, options, edits, error_సంకేతం);
                 }
-                return src;
+                తిరిగి src;
             }
-            if (*src < minNoLead) {
+            ఒకవేళ (*src < minNoLead) {
                 ++src;
-            } else {
+            } లేకపోతే {
                 prevSrc = src;
-                UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
-                if (!isMostDecompYesAndZeroCC(norm16)) {
-                    break;
+                UCPTRIE_FAST_U8_తదుపరి(normTrie, UCPTRIE_16, src, హద్దు, norm16);
+                ఒకవేళ (!isMostDecompYesAndZeroCC(norm16)) {
+                    ఆపు;
                 }
             }
         }
@@ -779,123 +779,123 @@ Normalizer2Impl::decomposeUTF8(uint32_t options,
         // and the current character at [prevSrc..src[ is not a common case with cc=0
         // (MIN_NORMAL_MAYBE_YES or JAMO_VT).
         // It could still be a maybeYes with cc=0.
-        if (prevSrc != fastStart) {
+        ఒకవేళ (prevSrc != fast_ప్రారంభం) {
             // The fast path looped over yes/0 characters before the current one.
-            if (sink != nullptr &&
+            ఒకవేళ (sink != శూన్యసూచిక &&
                     !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
-                                                   *sink, options, edits, errorCode)) {
-                break;
+                                                   *sink, options, edits, error_సంకేతం)) {
+                ఆపు;
             }
             prevBoundary = prevSrc;
             prevCC = 0;
         }
 
         // Medium-fast path: Quick check.
-        if (isMaybeYesOrNonZeroCC(norm16)) {
+        ఒకవేళ (isMaybeYesOrNonZeroCC(norm16)) {
             // Does not decompose.
             uint8_t cc = getCCFromYesOrMaybeYes(norm16);
-            if (prevCC <= cc || cc == 0) {
+            ఒకవేళ (prevCC <= cc || cc == 0) {
                 prevCC = cc;
-                if (cc <= 1) {
-                    if (sink != nullptr &&
+                ఒకవేళ (cc <= 1) {
+                    ఒకవేళ (sink != శూన్యసూచిక &&
                             !ByteSinkUtil::appendUnchanged(prevBoundary, src,
-                                                           *sink, options, edits, errorCode)) {
-                        break;
+                                                           *sink, options, edits, error_సంకేతం)) {
+                        ఆపు;
                     }
                     prevBoundary = src;
                 }
-                continue;
+                కొనసాగు;
             }
         }
-        if (sink == nullptr) {
-            return prevBoundary;  // quick check: "no" or cc out of order
+        ఒకవేళ (sink == శూన్యసూచిక) {
+            తిరిగి prevBoundary;  // quick check: "no" or cc out of order
         }
 
         // Slow path
         // Decompose up to and including the current character.
-        if (prevBoundary != prevSrc && norm16HasDecompBoundaryBefore(norm16)) {
-            if (!ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
-                                               *sink, options, edits, errorCode)) {
-                break;
+        ఒకవేళ (prevBoundary != prevSrc && norm16HasDecompBoundaryBefore(norm16)) {
+            ఒకవేళ (!ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+                                               *sink, options, edits, error_సంకేతం)) {
+                ఆపు;
             }
             prevBoundary = prevSrc;
         }
-        ReorderingBuffer buffer(*this, s16, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        Reordering_బఫరు బఫరు(*ఇది, s16, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            ఆపు;
         }
-        decomposeShort(prevBoundary, src, STOP_AT_LIMIT, false /* onlyContiguous */,
-                       buffer, errorCode);
+        decomposeShort(prevBoundary, src, STOP_AT_హద్దు, అబద్ధం /* onlyContiguous */,
+                       బఫరు, error_సంకేతం);
         // Decompose until the next boundary.
-        if (buffer.getLastCC() > 1) {
-            src = decomposeShort(src, limit, STOP_AT_DECOMP_BOUNDARY, false /* onlyContiguous */,
-                                 buffer, errorCode);
+        ఒకవేళ (బఫరు.get_చివరి_CC() > 1) {
+            src = decomposeShort(src, హద్దు, STOP_AT_DECOMP_BOUNDARY, అబద్ధం /* onlyContiguous */,
+                                 బఫరు, error_సంకేతం);
         }
-        if (U_FAILURE(errorCode)) {
-            break;
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            ఆపు;
         }
-        if ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            break;
+        ఒకవేళ ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
+            error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
+            ఆపు;
         }
         // We already know there was a change if the original character decomposed;
         // otherwise compare.
-        if (isMaybeYesOrNonZeroCC(norm16) && buffer.equals(prevBoundary, src)) {
-            if (!ByteSinkUtil::appendUnchanged(prevBoundary, src,
-                                               *sink, options, edits, errorCode)) {
-                break;
+        ఒకవేళ (isMaybeYesOrNonZeroCC(norm16) && బఫరు.equals(prevBoundary, src)) {
+            ఒకవేళ (!ByteSinkUtil::appendUnchanged(prevBoundary, src,
+                                               *sink, options, edits, error_సంకేతం)) {
+                ఆపు;
             }
-        } else {
-            if (!ByteSinkUtil::appendChange(prevBoundary, src, buffer.getStart(), buffer.length(),
-                                            *sink, edits, errorCode)) {
-                break;
+        } లేకపోతే {
+            ఒకవేళ (!ByteSinkUtil::appendChange(prevBoundary, src, బఫరు.get_ప్రారంభం(), బఫరు.length(),
+                                            *sink, edits, error_సంకేతం)) {
+                ఆపు;
             }
         }
         prevBoundary = src;
         prevCC = 0;
     }
-    return src;
+    తిరిగి src;
 }
 
-const uint8_t *
-Normalizer2Impl::decomposeShort(const uint8_t *src, const uint8_t *limit,
+స్థిరరాశి uint8_t *
+Normalizer2Impl::decomposeShort(స్థిరరాశి uint8_t *src, స్థిరరాశి uint8_t *హద్దు,
                                 StopAt stopAt, UBool onlyContiguous,
-                                ReorderingBuffer &buffer, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+                                Reordering_బఫరు &బఫరు, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తిరిగి శూన్యసూచిక;
     }
-    while (src < limit) {
-        const uint8_t *prevSrc = src;
+    అయితే (src < హద్దు) {
+        స్థిరరాశి uint8_t *prevSrc = src;
         uint16_t norm16;
-        UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
+        UCPTRIE_FAST_U8_తదుపరి(normTrie, UCPTRIE_16, src, హద్దు, norm16);
         // Get the decomposition and the lead and trail cc's.
         UChar32 c = U_SENTINEL;
-        if (norm16 >= limitNoNo) {
-            if (isMaybeYesOrNonZeroCC(norm16)) {
+        ఒకవేళ (norm16 >= హద్దు_No_No) {
+            ఒకవేళ (isMaybeYesOrNonZeroCC(norm16)) {
                 // No comp boundaries around this character.
                 uint8_t cc = getCCFromYesOrMaybeYes(norm16);
-                if (cc == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
-                    return prevSrc;
+                ఒకవేళ (cc == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
+                    తిరిగి prevSrc;
                 }
-                c = codePointFromValidUTF8(prevSrc, src);
-                if (!buffer.append(c, cc, errorCode)) {
-                    return nullptr;
+                c = సంకేతం_బిందువు_From_Valid_UTF8(prevSrc, src);
+                ఒకవేళ (!బఫరు.append(c, cc, error_సంకేతం)) {
+                    తిరిగి శూన్యసూచిక;
                 }
-                if (stopAt == STOP_AT_DECOMP_BOUNDARY && buffer.getLastCC() <= 1) {
-                    return src;
+                ఒకవేళ (stopAt == STOP_AT_DECOMP_BOUNDARY && బఫరు.get_చివరి_CC() <= 1) {
+                    తిరిగి src;
                 }
-                continue;
-            } else if (norm16 < minMaybeNo) {
+                కొనసాగు;
+            } లేకపోతే ఒకవేళ (norm16 < minMaybeNo) {
                 // Maps to an isCompYesAndZeroCC.
-                if (stopAt != STOP_AT_LIMIT) {
-                    return prevSrc;
+                ఒకవేళ (stopAt != STOP_AT_హద్దు) {
+                    తిరిగి prevSrc;
                 }
-                c = codePointFromValidUTF8(prevSrc, src);
+                c = సంకేతం_బిందువు_From_Valid_UTF8(prevSrc, src);
                 c = mapAlgorithmic(c, norm16);
                 norm16 = getRawNorm16(c);
             }
-        } else if (stopAt != STOP_AT_LIMIT && norm16 < minNoNoCompNoMaybeCC) {
-            return prevSrc;
+        } లేకపోతే ఒకవేళ (stopAt != STOP_AT_హద్దు && norm16 < minNoNoCompNoMaybeCC) {
+            తిరిగి prevSrc;
         }
         // norm16!=INERT guarantees that [prevSrc, src[ is valid UTF-8.
         // We do not see invalid UTF-8 here because
@@ -904,219 +904,219 @@ Normalizer2Impl::decomposeShort(const uint8_t *src, const uint8_t *limit,
         // and we stop the slow path where invalid UTF-8 begins.
         // c >= 0 is the result of an algorithmic mapping.
         U_ASSERT(c >= 0 || norm16 != INERT);
-        if (norm16 < minYesNo) {
-            if (c < 0) {
-                c = codePointFromValidUTF8(prevSrc, src);
+        ఒకవేళ (norm16 < minYesNo) {
+            ఒకవేళ (c < 0) {
+                c = సంకేతం_బిందువు_From_Valid_UTF8(prevSrc, src);
             }
             // does not decompose
-            if (!buffer.append(c, 0, errorCode)) {
-                return nullptr;
+            ఒకవేళ (!బఫరు.append(c, 0, error_సంకేతం)) {
+                తిరిగి శూన్యసూచిక;
             }
-        } else if (isHangulLV(norm16) || isHangulLVT(norm16)) {
+        } లేకపోతే ఒకవేళ (isHangulLV(norm16) || isHangulLVT(norm16)) {
             // Hangul syllable: decompose algorithmically
-            if (c < 0) {
-                c = codePointFromValidUTF8(prevSrc, src);
+            ఒకవేళ (c < 0) {
+                c = సంకేతం_బిందువు_From_Valid_UTF8(prevSrc, src);
             }
             char16_t jamos[3];
-            if (!buffer.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode)) {
-                return nullptr;
+            ఒకవేళ (!బఫరు.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), error_సంకేతం)) {
+                తిరిగి శూన్యసూచిక;
             }
-        } else {
+        } లేకపోతే {
             // The character decomposes, get everything from the variable-length extra data.
-            const uint16_t *mapping = getData(norm16);
-            uint16_t firstUnit = *mapping;
-            int32_t length = firstUnit & MAPPING_LENGTH_MASK;
-            uint8_t trailCC = static_cast<uint8_t>(firstUnit >> 8);
+            స్థిరరాశి uint16_t *mapping = get_దత్తాంశం(norm16);
+            uint16_t మొదటి_Unit = *mapping;
+            int32_t length = మొదటి_Unit & MAPPING_నిడివి_ముసుగు;
+            uint8_t trailCC = static_cast<uint8_t>(మొదటి_Unit >> 8);
             uint8_t leadCC;
-            if (firstUnit & MAPPING_HAS_CCC_LCCC_WORD) {
+            ఒకవేళ (మొదటి_Unit & MAPPING_HAS_CCC_LCCC_మాట) {
                 leadCC = static_cast<uint8_t>(*(mapping - 1) >> 8);
-            } else {
+            } లేకపోతే {
                 leadCC = 0;
             }
-            if (leadCC == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
-                return prevSrc;
+            ఒకవేళ (leadCC == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
+                తిరిగి prevSrc;
             }
-            if (!buffer.append(reinterpret_cast<const char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode)) {
-                return nullptr;
+            ఒకవేళ (!బఫరు.append(reinterpret_cast<స్థిరరాశి char16_t*>(mapping) + 1, length, నిజం, leadCC, trailCC, error_సంకేతం)) {
+                తిరిగి శూన్యసూచిక;
             }
         }
-        if ((stopAt == STOP_AT_COMP_BOUNDARY && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) ||
-                (stopAt == STOP_AT_DECOMP_BOUNDARY && buffer.getLastCC() <= 1)) {
-            return src;
+        ఒకవేళ ((stopAt == STOP_AT_COMP_BOUNDARY && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) ||
+                (stopAt == STOP_AT_DECOMP_BOUNDARY && బఫరు.get_చివరి_CC() <= 1)) {
+            తిరిగి src;
         }
     }
-    return src;
+    తిరిగి src;
 }
 
-const char16_t *
-Normalizer2Impl::getDecomposition(UChar32 c, char16_t buffer[4], int32_t &length) const {
+స్థిరరాశి char16_t *
+Normalizer2Impl::getDecomposition(UChar32 c, char16_t బఫరు[4], int32_t &length) స్థిరరాశి {
     uint16_t norm16;
-    if(c<minDecompNoCP || isMaybeYesOrNonZeroCC(norm16=getNorm16(c))) {
+    ఒకవేళ(c<minDecompNoCP || isMaybeYesOrNonZeroCC(norm16=getNorm16(c))) {
         // c does not decompose
-        return nullptr;
+        తిరిగి శూన్యసూచిక;
     }
-    const char16_t *decomp = nullptr;
-    if(isDecompNoAlgorithmic(norm16)) {
+    స్థిరరాశి char16_t *decomp = శూన్యసూచిక;
+    ఒకవేళ(isDecompNoAlgorithmic(norm16)) {
         // Maps to an isCompYesAndZeroCC.
         c=mapAlgorithmic(c, norm16);
-        decomp=buffer;
+        decomp=బఫరు;
         length=0;
-        U16_APPEND_UNSAFE(buffer, length, c);
+        U16_APPEND_UNSAFE(బఫరు, length, c);
         // The mapping might decompose further.
         norm16 = getRawNorm16(c);
     }
-    if (norm16 < minYesNo) {
-        return decomp;
-    } else if(isHangulLV(norm16) || isHangulLVT(norm16)) {
+    ఒకవేళ (norm16 < minYesNo) {
+        తిరిగి decomp;
+    } లేకపోతే ఒకవేళ(isHangulLV(norm16) || isHangulLVT(norm16)) {
         // Hangul syllable: decompose algorithmically
-        length=Hangul::decompose(c, buffer);
-        return buffer;
+        length=Hangul::decompose(c, బఫరు);
+        తిరిగి బఫరు;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
-    length=*mapping&MAPPING_LENGTH_MASK;
-    return reinterpret_cast<const char16_t*>(mapping) + 1;
+    స్థిరరాశి uint16_t *mapping=get_దత్తాంశం(norm16);
+    length=*mapping&MAPPING_నిడివి_ముసుగు;
+    తిరిగి reinterpret_cast<స్థిరరాశి char16_t*>(mapping) + 1;
 }
 
 // The capacity of the buffer must be 30=MAPPING_LENGTH_MASK-1
 // so that a raw mapping fits that consists of one unit ("rm0")
 // plus all but the first two code units of the normal mapping.
 // The maximum length of a normal mapping is 31=MAPPING_LENGTH_MASK.
-const char16_t *
-Normalizer2Impl::getRawDecomposition(UChar32 c, char16_t buffer[30], int32_t &length) const {
+స్థిరరాశి char16_t *
+Normalizer2Impl::getRawDecomposition(UChar32 c, char16_t బఫరు[30], int32_t &length) స్థిరరాశి {
     uint16_t norm16;
-    if(c<minDecompNoCP || isDecompYes(norm16=getNorm16(c))) {
+    ఒకవేళ(c<minDecompNoCP || isDecompYes(norm16=getNorm16(c))) {
         // c does not decompose
-        return nullptr;
-    } else if(isHangulLV(norm16) || isHangulLVT(norm16)) {
+        తిరిగి శూన్యసూచిక;
+    } లేకపోతే ఒకవేళ(isHangulLV(norm16) || isHangulLVT(norm16)) {
         // Hangul syllable: decompose algorithmically
-        Hangul::getRawDecomposition(c, buffer);
+        Hangul::getRawDecomposition(c, బఫరు);
         length=2;
-        return buffer;
-    } else if(isDecompNoAlgorithmic(norm16)) {
+        తిరిగి బఫరు;
+    } లేకపోతే ఒకవేళ(isDecompNoAlgorithmic(norm16)) {
         c=mapAlgorithmic(c, norm16);
         length=0;
-        U16_APPEND_UNSAFE(buffer, length, c);
-        return buffer;
+        U16_APPEND_UNSAFE(బఫరు, length, c);
+        తిరిగి బఫరు;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
-    uint16_t firstUnit=*mapping;
-    int32_t mLength=firstUnit&MAPPING_LENGTH_MASK;  // length of normal mapping
-    if(firstUnit&MAPPING_HAS_RAW_MAPPING) {
+    స్థిరరాశి uint16_t *mapping=get_దత్తాంశం(norm16);
+    uint16_t మొదటి_Unit=*mapping;
+    int32_t m_నిడివి=మొదటి_Unit&MAPPING_నిడివి_ముసుగు;  // length of normal mapping
+    ఒకవేళ(మొదటి_Unit&MAPPING_HAS_RAW_MAPPING) {
         // Read the raw mapping from before the firstUnit and before the optional ccc/lccc word.
         // Bit 7=MAPPING_HAS_CCC_LCCC_WORD
-        const uint16_t *rawMapping=mapping-((firstUnit>>7)&1)-1;
+        స్థిరరాశి uint16_t *rawMapping=mapping-((మొదటి_Unit>>7)&1)-1;
         uint16_t rm0=*rawMapping;
-        if(rm0<=MAPPING_LENGTH_MASK) {
+        ఒకవేళ(rm0<=MAPPING_నిడివి_ముసుగు) {
             length=rm0;
-            return reinterpret_cast<const char16_t*>(rawMapping) - rm0;
-        } else {
+            తిరిగి reinterpret_cast<స్థిరరాశి char16_t*>(rawMapping) - rm0;
+        } లేకపోతే {
             // Copy the normal mapping and replace its first two code units with rm0.
-            buffer[0] = static_cast<char16_t>(rm0);
-            u_memcpy(buffer + 1, reinterpret_cast<const char16_t*>(mapping) + 1 + 2, mLength - 2);
-            length=mLength-1;
-            return buffer;
+            బఫరు[0] = static_cast<char16_t>(rm0);
+            u_memcpy(బఫరు + 1, reinterpret_cast<స్థిరరాశి char16_t*>(mapping) + 1 + 2, m_నిడివి - 2);
+            length=m_నిడివి-1;
+            తిరిగి బఫరు;
         }
-    } else {
-        length=mLength;
-        return reinterpret_cast<const char16_t*>(mapping) + 1;
+    } లేకపోతే {
+        length=m_నిడివి;
+        తిరిగి reinterpret_cast<స్థిరరాశి char16_t*>(mapping) + 1;
     }
 }
 
-void Normalizer2Impl::decomposeAndAppend(const char16_t *src, const char16_t *limit,
+శూన్య Normalizer2Impl::decomposeAndAppend(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
                                          UBool doDecompose,
-                                         UnicodeString &safeMiddle,
-                                         ReorderingBuffer &buffer,
-                                         UErrorCode &errorCode) const {
-    buffer.copyReorderableSuffixTo(safeMiddle);
-    if(doDecompose) {
-        decompose(src, limit, &buffer, errorCode);
-        return;
+                                         UnicodeString &సురక్షిత_మధ్య,
+                                         Reordering_బఫరు &బఫరు,
+                                         UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    బఫరు.copy_Reorderable_Suffix_గమ్యం(సురక్షిత_మధ్య);
+    ఒకవేళ(doDecompose) {
+        decompose(src, హద్దు, &బఫరు, error_సంకేతం);
+        తిరిగి;
     }
     // Just merge the strings at the boundary.
-    bool isFirst = true;
-    uint8_t firstCC = 0, prevCC = 0, cc;
-    const char16_t *p = src;
-    while (p != limit) {
-        const char16_t *codePointStart = p;
+    తార్కిక is_మొదటి = నిజం;
+    uint8_t మొదటి_CC = 0, prevCC = 0, cc;
+    స్థిరరాశి char16_t *p = src;
+    అయితే (p != హద్దు) {
+        స్థిరరాశి char16_t *సంకేతం_బిందువు_ప్రారంభం = p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
-        if ((cc = getCC(norm16)) == 0) {
-            p = codePointStart;
-            break;
+        UCPTRIE_FAST_U16_తదుపరి(normTrie, UCPTRIE_16, p, హద్దు, c, norm16);
+        ఒకవేళ ((cc = getCC(norm16)) == 0) {
+            p = సంకేతం_బిందువు_ప్రారంభం;
+            ఆపు;
         }
-        if (isFirst) {
-            firstCC = cc;
-            isFirst = false;
+        ఒకవేళ (is_మొదటి) {
+            మొదటి_CC = cc;
+            is_మొదటి = అబద్ధం;
         }
         prevCC = cc;
     }
-    if(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
-        limit=u_strchr(p, 0);
+    ఒకవేళ(హద్దు==శూన్యసూచిక) {  // appendZeroCC() needs limit!=nullptr
+        హద్దు=u_strchr(p, 0);
     }
 
-    if (buffer.append(src, static_cast<int32_t>(p - src), false, firstCC, prevCC, errorCode)) {
-        buffer.appendZeroCC(p, limit, errorCode);
+    ఒకవేళ (బఫరు.append(src, static_cast<int32_t>(p - src), అబద్ధం, మొదటి_CC, prevCC, error_సంకేతం)) {
+        బఫరు.appendZeroCC(p, హద్దు, error_సంకేతం);
     }
 }
 
-UBool Normalizer2Impl::hasDecompBoundaryBefore(UChar32 c) const {
-    return c < minLcccCP || (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) ||
+UBool Normalizer2Impl::hasDecompBoundaryBefore(UChar32 c) స్థిరరాశి {
+    తిరిగి c < minLcccCP || (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) ||
         norm16HasDecompBoundaryBefore(getNorm16(c));
 }
 
-UBool Normalizer2Impl::norm16HasDecompBoundaryBefore(uint16_t norm16) const {
-    if (norm16 < minNoNoCompNoMaybeCC) {
-        return true;
+UBool Normalizer2Impl::norm16HasDecompBoundaryBefore(uint16_t norm16) స్థిరరాశి {
+    ఒకవేళ (norm16 < minNoNoCompNoMaybeCC) {
+        తిరిగి నిజం;
     }
-    if (norm16 >= limitNoNo) {
-        return norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
+    ఒకవేళ (norm16 >= హద్దు_No_No) {
+        తిరిగి norm16 <= MIN_సాధారణ_MAYBE_YES || norm16 == JAMO_VT;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getDataForYesOrNo(norm16);
-    uint16_t firstUnit=*mapping;
+    స్థిరరాశి uint16_t *mapping=get_దత్తాంశం_For_Yes_Or_No(norm16);
+    uint16_t మొదటి_Unit=*mapping;
     // true if leadCC==0 (hasFCDBoundaryBefore())
-    return (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
+    తిరిగి (మొదటి_Unit&MAPPING_HAS_CCC_LCCC_మాట)==0 || (*(mapping-1)&0xff00)==0;
 }
 
-UBool Normalizer2Impl::hasDecompBoundaryAfter(UChar32 c) const {
-    if (c < minDecompNoCP) {
-        return true;
+UBool Normalizer2Impl::hasDecompBoundaryAfter(UChar32 c) స్థిరరాశి {
+    ఒకవేళ (c < minDecompNoCP) {
+        తిరిగి నిజం;
     }
-    if (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) {
-        return true;
+    ఒకవేళ (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) {
+        తిరిగి నిజం;
     }
-    return norm16HasDecompBoundaryAfter(getNorm16(c));
+    తిరిగి norm16HasDecompBoundaryAfter(getNorm16(c));
 }
 
-UBool Normalizer2Impl::norm16HasDecompBoundaryAfter(uint16_t norm16) const {
-    if(norm16 <= minYesNo || isHangulLVT(norm16)) {
-        return true;
+UBool Normalizer2Impl::norm16HasDecompBoundaryAfter(uint16_t norm16) స్థిరరాశి {
+    ఒకవేళ(norm16 <= minYesNo || isHangulLVT(norm16)) {
+        తిరిగి నిజం;
     }
-    if (norm16 >= limitNoNo) {
-        if (isMaybeYesOrNonZeroCC(norm16)) {
-            return norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
-        } else if (norm16 < minMaybeNo) {
+    ఒకవేళ (norm16 >= హద్దు_No_No) {
+        ఒకవేళ (isMaybeYesOrNonZeroCC(norm16)) {
+            తిరిగి norm16 <= MIN_సాధారణ_MAYBE_YES || norm16 == JAMO_VT;
+        } లేకపోతే ఒకవేళ (norm16 < minMaybeNo) {
             // Maps to an isCompYesAndZeroCC.
-            return (norm16 & DELTA_TCCC_MASK) <= DELTA_TCCC_1;
+            తిరిగి (norm16 & DELTA_TCCC_ముసుగు) <= DELTA_TCCC_1;
         }
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
-    uint16_t firstUnit=*mapping;
+    స్థిరరాశి uint16_t *mapping=get_దత్తాంశం(norm16);
+    uint16_t మొదటి_Unit=*mapping;
     // decomp after-boundary: same as hasFCDBoundaryAfter(),
     // fcd16<=1 || trailCC==0
-    if(firstUnit>0x1ff) {
-        return false;  // trailCC>1
+    ఒకవేళ(మొదటి_Unit>0x1ff) {
+        తిరిగి అబద్ధం;  // trailCC>1
     }
-    if(firstUnit<=0xff) {
-        return true;  // trailCC==0
+    ఒకవేళ(మొదటి_Unit<=0xff) {
+        తిరిగి నిజం;  // trailCC==0
     }
     // if(trailCC==1) test leadCC==0, same as checking for before-boundary
     // true if leadCC==0 (hasFCDBoundaryBefore())
-    return (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
+    తిరిగి (మొదటి_Unit&MAPPING_HAS_CCC_LCCC_మాట)==0 || (*(mapping-1)&0xff00)==0;
 }
 
 /*
@@ -1141,75 +1141,75 @@ UBool Normalizer2Impl::norm16HasDecompBoundaryAfter(uint16_t norm16) const {
  * See normalizer2impl.h for a more detailed description
  * of the compositions list format.
  */
-int32_t Normalizer2Impl::combine(const uint16_t *list, UChar32 trail) {
-    uint16_t key1, firstUnit;
-    if(trail<COMP_1_TRAIL_LIMIT) {
+int32_t Normalizer2Impl::combine(స్థిరరాశి uint16_t *list, UChar32 trail) {
+    uint16_t key1, మొదటి_Unit;
+    ఒకవేళ(trail<COMP_1_TRAIL_హద్దు) {
         // trail character is 0..33FF
         // result entry may have 2 or 3 units
         key1 = static_cast<uint16_t>(trail << 1);
-        while(key1>(firstUnit=*list)) {
-            list+=2+(firstUnit&COMP_1_TRIPLE);
+        అయితే(key1>(మొదటి_Unit=*list)) {
+            list+=2+(మొదటి_Unit&COMP_1_TRIPLE);
         }
-        if(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
-            if(firstUnit&COMP_1_TRIPLE) {
-                return (static_cast<int32_t>(list[1]) << 16) | list[2];
-            } else {
-                return list[1];
+        ఒకవేళ(key1==(మొదటి_Unit&COMP_1_TRAIL_ముసుగు)) {
+            ఒకవేళ(మొదటి_Unit&COMP_1_TRIPLE) {
+                తిరిగి (static_cast<int32_t>(list[1]) << 16) | list[2];
+            } లేకపోతే {
+                తిరిగి list[1];
             }
         }
-    } else {
+    } లేకపోతే {
         // trail character is 3400..10FFFF
         // result entry has 3 units
-        key1 = static_cast<uint16_t>(COMP_1_TRAIL_LIMIT +
-                        (((trail>>COMP_1_TRAIL_SHIFT))&
+        key1 = static_cast<uint16_t>(COMP_1_TRAIL_హద్దు +
+                        (((trail>>COMP_1_TRAIL_జరుపు))&
                           ~COMP_1_TRIPLE));
-        uint16_t key2 = static_cast<uint16_t>(trail << COMP_2_TRAIL_SHIFT);
-        uint16_t secondUnit;
-        for(;;) {
-            if(key1>(firstUnit=*list)) {
-                list+=2+(firstUnit&COMP_1_TRIPLE);
-            } else if(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
-                if(key2>(secondUnit=list[1])) {
-                    if(firstUnit&COMP_1_LAST_TUPLE) {
-                        break;
-                    } else {
+        uint16_t key2 = static_cast<uint16_t>(trail << COMP_2_TRAIL_జరుపు);
+        uint16_t రెండవ_Unit;
+        కొరకు(;;) {
+            ఒకవేళ(key1>(మొదటి_Unit=*list)) {
+                list+=2+(మొదటి_Unit&COMP_1_TRIPLE);
+            } లేకపోతే ఒకవేళ(key1==(మొదటి_Unit&COMP_1_TRAIL_ముసుగు)) {
+                ఒకవేళ(key2>(రెండవ_Unit=list[1])) {
+                    ఒకవేళ(మొదటి_Unit&COMP_1_చివరి_TUPLE) {
+                        ఆపు;
+                    } లేకపోతే {
                         list+=3;
                     }
-                } else if(key2==(secondUnit&COMP_2_TRAIL_MASK)) {
-                    return (static_cast<int32_t>(secondUnit & ~COMP_2_TRAIL_MASK) << 16) | list[2];
-                } else {
-                    break;
+                } లేకపోతే ఒకవేళ(key2==(రెండవ_Unit&COMP_2_TRAIL_ముసుగు)) {
+                    తిరిగి (static_cast<int32_t>(రెండవ_Unit & ~COMP_2_TRAIL_ముసుగు) << 16) | list[2];
+                } లేకపోతే {
+                    ఆపు;
                 }
-            } else {
-                break;
+            } లేకపోతే {
+                ఆపు;
             }
         }
     }
-    return -1;
+    తిరిగి -1;
 }
 
 /**
   * @param list some character's compositions list
   * @param set recursively receives the composites from these compositions
   */
-void Normalizer2Impl::addComposites(const uint16_t *list, UnicodeSet &set) const {
-    uint16_t firstUnit;
-    int32_t compositeAndFwd;
-    do {
-        firstUnit=*list;
-        if((firstUnit&COMP_1_TRIPLE)==0) {
-            compositeAndFwd=list[1];
+శూన్య Normalizer2Impl::కూడు_Composites(స్థిరరాశి uint16_t *list, Unicode_సమితి &సమితి) స్థిరరాశి {
+    uint16_t మొదటి_Unit;
+    int32_t సంయుక్త_And_Fwd;
+    చేయి {
+        మొదటి_Unit=*list;
+        ఒకవేళ((మొదటి_Unit&COMP_1_TRIPLE)==0) {
+            సంయుక్త_And_Fwd=list[1];
             list+=2;
-        } else {
-            compositeAndFwd = ((static_cast<int32_t>(list[1]) & ~COMP_2_TRAIL_MASK) << 16) | list[2];
+        } లేకపోతే {
+            సంయుక్త_And_Fwd = ((static_cast<int32_t>(list[1]) & ~COMP_2_TRAIL_ముసుగు) << 16) | list[2];
             list+=3;
         }
-        UChar32 composite=compositeAndFwd>>1;
-        if((compositeAndFwd&1)!=0) {
-            addComposites(getCompositionsListForComposite(getRawNorm16(composite)), set);
+        UChar32 సంయుక్త=సంయుక్త_And_Fwd>>1;
+        ఒకవేళ((సంయుక్త_And_Fwd&1)!=0) {
+            కూడు_Composites(get_Compositions_List_For_సంయుక్త(getRawNorm16(సంయుక్త)), సమితి);
         }
-        set.add(composite);
-    } while((firstUnit&COMP_1_LAST_TUPLE)==0);
+        సమితి.కూడు(సంయుక్త);
+    } అయితే((మొదటి_Unit&COMP_1_చివరి_TUPLE)==0);
 }
 
 /*
@@ -1222,51 +1222,51 @@ void Normalizer2Impl::addComposites(const uint16_t *list, UnicodeSet &set) const
  * a composition may contain at most one more code unit than the original starter,
  * while the combining mark that is removed has at least one code unit.
  */
-void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStartIndex,
-                                UBool onlyContiguous) const {
-    char16_t *p=buffer.getStart()+recomposeStartIndex;
-    char16_t *limit=buffer.getLimit();
-    if(p==limit) {
-        return;
+శూన్య Normalizer2Impl::recompose(Reordering_బఫరు &బఫరు, int32_t recompose_ప్రారంభం_సూచీ,
+                                UBool onlyContiguous) స్థిరరాశి {
+    char16_t *p=బఫరు.get_ప్రారంభం()+recompose_ప్రారంభం_సూచీ;
+    char16_t *హద్దు=బఫరు.get_హద్దు();
+    ఒకవేళ(p==హద్దు) {
+        తిరిగి;
     }
 
     char16_t *starter, *pRemove, *q, *r;
-    const uint16_t *compositionsList;
-    UChar32 c, compositeAndFwd;
+    స్థిరరాశి uint16_t *compositionsList;
+    UChar32 c, సంయుక్త_And_Fwd;
     uint16_t norm16;
     uint8_t cc, prevCC;
     UBool starterIsSupplementary;
 
     // Some of the following variables are not used until we have a forward-combining starter
     // and are only initialized now to avoid compiler warnings.
-    compositionsList=nullptr;  // used as indicator for whether we have a forward-combining starter
-    starter=nullptr;
-    starterIsSupplementary=false;
+    compositionsList=శూన్యసూచిక;  // used as indicator for whether we have a forward-combining starter
+    starter=శూన్యసూచిక;
+    starterIsSupplementary=అబద్ధం;
     prevCC=0;
 
-    for(;;) {
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
+    కొరకు(;;) {
+        UCPTRIE_FAST_U16_తదుపరి(normTrie, UCPTRIE_16, p, హద్దు, c, norm16);
         cc=getCCFromYesOrMaybeYes(norm16);
-        if( // this character combines backward and
+        ఒకవేళ( // this character combines backward and
             isMaybe(norm16) &&
             // we have seen a starter that combines forward and
-            compositionsList!=nullptr &&
+            compositionsList!=శూన్యసూచిక &&
             // the backward-combining character is not blocked
             (prevCC<cc || prevCC==0)
         ) {
-            if(isJamoVT(norm16)) {
+            ఒకవేళ(isJamoVT(norm16)) {
                 // c is a Jamo V/T, see if we can compose it with the previous character.
-                if(c<Hangul::JAMO_T_BASE) {
+                ఒకవేళ(c<Hangul::JAMO_T_పునాది) {
                     // c is a Jamo Vowel, compose with previous Jamo L and following Jamo T.
-                    char16_t prev = static_cast<char16_t>(*starter - Hangul::JAMO_L_BASE);
-                    if(prev<Hangul::JAMO_L_COUNT) {
+                    char16_t prev = static_cast<char16_t>(*starter - Hangul::JAMO_L_పునాది);
+                    ఒకవేళ(prev<Hangul::JAMO_L_లెక్క) {
                         pRemove=p-1;
                         char16_t syllable = static_cast<char16_t>(
-                            Hangul::HANGUL_BASE +
-                             (prev*Hangul::JAMO_V_COUNT+(c-Hangul::JAMO_V_BASE))*
-                             Hangul::JAMO_T_COUNT);
+                            Hangul::HANGUL_పునాది +
+                             (prev*Hangul::JAMO_V_లెక్క+(c-Hangul::JAMO_V_పునాది))*
+                             Hangul::JAMO_T_లెక్క);
                         char16_t t;
-                        if (p != limit && (t = static_cast<char16_t>(*p - Hangul::JAMO_T_BASE)) < Hangul::JAMO_T_COUNT) {
+                        ఒకవేళ (p != హద్దు && (t = static_cast<char16_t>(*p - Hangul::JAMO_T_పునాది)) < Hangul::JAMO_T_లెక్క) {
                             ++p;
                             syllable+=t;  // The next character was a Jamo T.
                         }
@@ -1274,10 +1274,10 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                         // remove the Jamo V/T
                         q=pRemove;
                         r=p;
-                        while(r<limit) {
+                        అయితే(r<హద్దు) {
                             *q++=*r++;
                         }
-                        limit=q;
+                        హద్దు=q;
                         p=pRemove;
                     }
                 }
@@ -1287,225 +1287,225 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                  * a Jamo T could combine with.
                  * All Jamo Ts are combined above when handling Jamo Vs.
                  */
-                if(p==limit) {
-                    break;
+                ఒకవేళ(p==హద్దు) {
+                    ఆపు;
                 }
-                compositionsList=nullptr;
-                continue;
-            } else if((compositeAndFwd=combine(compositionsList, c))>=0) {
+                compositionsList=శూన్యసూచిక;
+                కొనసాగు;
+            } లేకపోతే ఒకవేళ((సంయుక్త_And_Fwd=combine(compositionsList, c))>=0) {
                 // The starter and the combining mark (c) do combine.
-                UChar32 composite=compositeAndFwd>>1;
+                UChar32 సంయుక్త=సంయుక్త_And_Fwd>>1;
 
                 // Replace the starter with the composite, remove the combining mark.
-                pRemove=p-U16_LENGTH(c);  // pRemove & p: start & limit of the combining mark
-                if(starterIsSupplementary) {
-                    if(U_IS_SUPPLEMENTARY(composite)) {
+                pRemove=p-U16_నిడివి(c);  // pRemove & p: start & limit of the combining mark
+                ఒకవేళ(starterIsSupplementary) {
+                    ఒకవేళ(U_IS_SUPPLEMENTARY(సంయుక్త)) {
                         // both are supplementary
-                        starter[0]=U16_LEAD(composite);
-                        starter[1]=U16_TRAIL(composite);
-                    } else {
-                        *starter = static_cast<char16_t>(composite);
+                        starter[0]=U16_LEAD(సంయుక్త);
+                        starter[1]=U16_TRAIL(సంయుక్త);
+                    } లేకపోతే {
+                        *starter = static_cast<char16_t>(సంయుక్త);
                         // The composite is shorter than the starter,
                         // move the intermediate characters forward one.
-                        starterIsSupplementary=false;
+                        starterIsSupplementary=అబద్ధం;
                         q=starter+1;
                         r=q+1;
-                        while(r<pRemove) {
+                        అయితే(r<pRemove) {
                             *q++=*r++;
                         }
                         --pRemove;
                     }
-                } else if(U_IS_SUPPLEMENTARY(composite)) {
+                } లేకపోతే ఒకవేళ(U_IS_SUPPLEMENTARY(సంయుక్త)) {
                     // The composite is longer than the starter,
                     // move the intermediate characters back one.
-                    starterIsSupplementary=true;
+                    starterIsSupplementary=నిజం;
                     ++starter;  // temporarily increment for the loop boundary
                     q=pRemove;
                     r=++pRemove;
-                    while(starter<q) {
+                    అయితే(starter<q) {
                         *--r=*--q;
                     }
-                    *starter=U16_TRAIL(composite);
-                    *--starter=U16_LEAD(composite);  // undo the temporary increment
-                } else {
+                    *starter=U16_TRAIL(సంయుక్త);
+                    *--starter=U16_LEAD(సంయుక్త);  // undo the temporary increment
+                } లేకపోతే {
                     // both are on the BMP
-                    *starter = static_cast<char16_t>(composite);
+                    *starter = static_cast<char16_t>(సంయుక్త);
                 }
 
                 /* remove the combining mark by moving the following text over it */
-                if(pRemove<p) {
+                ఒకవేళ(pRemove<p) {
                     q=pRemove;
                     r=p;
-                    while(r<limit) {
+                    అయితే(r<హద్దు) {
                         *q++=*r++;
                     }
-                    limit=q;
+                    హద్దు=q;
                     p=pRemove;
                 }
                 // Keep prevCC because we removed the combining mark.
 
-                if(p==limit) {
-                    break;
+                ఒకవేళ(p==హద్దు) {
+                    ఆపు;
                 }
                 // Is the composite a starter that combines forward?
-                if(compositeAndFwd&1) {
+                ఒకవేళ(సంయుక్త_And_Fwd&1) {
                     compositionsList=
-                        getCompositionsListForComposite(getRawNorm16(composite));
-                } else {
-                    compositionsList=nullptr;
+                        get_Compositions_List_For_సంయుక్త(getRawNorm16(సంయుక్త));
+                } లేకపోతే {
+                    compositionsList=శూన్యసూచిక;
                 }
 
                 // We combined; continue with looking for compositions.
-                continue;
+                కొనసాగు;
             }
         }
 
         // no combination this time
         prevCC=cc;
-        if(p==limit) {
-            break;
+        ఒకవేళ(p==హద్దు) {
+            ఆపు;
         }
 
         // If c did not combine, then check if it is a starter.
-        if(cc==0) {
+        ఒకవేళ(cc==0) {
             // Found a new starter.
-            if((compositionsList=getCompositionsListForDecompYes(norm16))!=nullptr) {
+            ఒకవేళ((compositionsList=getCompositionsListForDecompYes(norm16))!=శూన్యసూచిక) {
                 // It may combine with something, prepare for it.
-                if(U_IS_BMP(c)) {
-                    starterIsSupplementary=false;
+                ఒకవేళ(U_IS_BMP(c)) {
+                    starterIsSupplementary=అబద్ధం;
                     starter=p-1;
-                } else {
-                    starterIsSupplementary=true;
+                } లేకపోతే {
+                    starterIsSupplementary=నిజం;
                     starter=p-2;
                 }
             }
-        } else if(onlyContiguous) {
+        } లేకపోతే ఒకవేళ(onlyContiguous) {
             // FCC: no discontiguous compositions; any intervening character blocks.
-            compositionsList=nullptr;
+            compositionsList=శూన్యసూచిక;
         }
     }
-    buffer.setReorderingLimit(limit);
+    బఫరు.సమితి_Reordering_హద్దు(హద్దు);
 }
 
 UChar32
-Normalizer2Impl::composePair(UChar32 a, UChar32 b) const {
+Normalizer2Impl::composePair(UChar32 a, UChar32 b) స్థిరరాశి {
     uint16_t norm16=getNorm16(a);  // maps an out-of-range 'a' to inert norm16
-    const uint16_t *list;
-    if(isInert(norm16)) {
-        return U_SENTINEL;
-    } else if(norm16<minYesNoMappingsOnly) {
+    స్థిరరాశి uint16_t *list;
+    ఒకవేళ(isInert(norm16)) {
+        తిరిగి U_SENTINEL;
+    } లేకపోతే ఒకవేళ(norm16<minYesNoMappingsOnly) {
         // a combines forward.
-        if(isJamoL(norm16)) {
-            if (b < Hangul::JAMO_V_BASE) {
-                return U_SENTINEL;
+        ఒకవేళ(isJamoL(norm16)) {
+            ఒకవేళ (b < Hangul::JAMO_V_పునాది) {
+                తిరిగి U_SENTINEL;
             }
-            b-=Hangul::JAMO_V_BASE;
-            if(b<Hangul::JAMO_V_COUNT) {
-                return
-                    (Hangul::HANGUL_BASE+
-                     ((a-Hangul::JAMO_L_BASE)*Hangul::JAMO_V_COUNT+b)*
-                     Hangul::JAMO_T_COUNT);
-            } else {
-                return U_SENTINEL;
+            b-=Hangul::JAMO_V_పునాది;
+            ఒకవేళ(b<Hangul::JAMO_V_లెక్క) {
+                తిరిగి
+                    (Hangul::HANGUL_పునాది+
+                     ((a-Hangul::JAMO_L_పునాది)*Hangul::JAMO_V_లెక్క+b)*
+                     Hangul::JAMO_T_లెక్క);
+            } లేకపోతే {
+                తిరిగి U_SENTINEL;
             }
-        } else if(isHangulLV(norm16)) {
-            if (b <= Hangul::JAMO_T_BASE) {
-               return U_SENTINEL;
+        } లేకపోతే ఒకవేళ(isHangulLV(norm16)) {
+            ఒకవేళ (b <= Hangul::JAMO_T_పునాది) {
+               తిరిగి U_SENTINEL;
             }
-            b-=Hangul::JAMO_T_BASE;
-            if(b<Hangul::JAMO_T_COUNT) {  // not b==0!
-                return a+b;
-            } else {
-                return U_SENTINEL;
+            b-=Hangul::JAMO_T_పునాది;
+            ఒకవేళ(b<Hangul::JAMO_T_లెక్క) {  // not b==0!
+                తిరిగి a+b;
+            } లేకపోతే {
+                తిరిగి U_SENTINEL;
             }
-        } else {
+        } లేకపోతే {
             // 'a' has a compositions list in extraData
-            list=getDataForYesOrNo(norm16);
-            if(norm16>minYesNo) {  // composite 'a' has both mapping & compositions list
+            list=get_దత్తాంశం_For_Yes_Or_No(norm16);
+            ఒకవేళ(norm16>minYesNo) {  // composite 'a' has both mapping & compositions list
                 list+=  // mapping pointer
                     1+  // +1 to skip the first unit with the mapping length
-                    (*list&MAPPING_LENGTH_MASK);  // + mapping length
+                    (*list&MAPPING_నిడివి_ముసుగు);  // + mapping length
             }
         }
-    } else if(norm16<minMaybeNoCombinesFwd || MIN_NORMAL_MAYBE_YES<=norm16) {
-        return U_SENTINEL;
-    } else {
-        list=getDataForMaybe(norm16);
-        if(norm16<minMaybeYes) {  // composite 'a' has both mapping & compositions list
+    } లేకపోతే ఒకవేళ(norm16<minMaybeNoCombinesFwd || MIN_సాధారణ_MAYBE_YES<=norm16) {
+        తిరిగి U_SENTINEL;
+    } లేకపోతే {
+        list=get_దత్తాంశం_For_Maybe(norm16);
+        ఒకవేళ(norm16<minMaybeYes) {  // composite 'a' has both mapping & compositions list
             list+=  // mapping pointer
                 1+  // +1 to skip the first unit with the mapping length
-                (*list&MAPPING_LENGTH_MASK);  // + mapping length
+                (*list&MAPPING_నిడివి_ముసుగు);  // + mapping length
         }
     }
-    if(b<0 || 0x10ffff<b) {  // combine(list, b) requires a valid code point b
-        return U_SENTINEL;
+    ఒకవేళ(b<0 || 0x10ffff<b) {  // combine(list, b) requires a valid code point b
+        తిరిగి U_SENTINEL;
     }
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
-    return combine(list, b)>>1;
-#else
-    int32_t compositeAndFwd=combine(list, b);
-    return compositeAndFwd>=0 ? compositeAndFwd>>1 : U_SENTINEL;
-#endif
+#ఒకవేళ U_SIGNED_కుడి_జరుపు_IS_ARITHMETIC
+    తిరిగి combine(list, b)>>1;
+#లేకపోతే
+    int32_t సంయుక్త_And_Fwd=combine(list, b);
+    తిరిగి సంయుక్త_And_Fwd>=0 ? సంయుక్త_And_Fwd>>1 : U_SENTINEL;
+#అయితే_ముగింపు
 }
 
 // Very similar to composeQuickCheck(): Make the same changes in both places if relevant.
 // doCompose: normalize
 // !doCompose: isNormalized (buffer must be empty and initialized)
 UBool
-Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
+Normalizer2Impl::compose(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
                          UBool onlyContiguous,
                          UBool doCompose,
-                         ReorderingBuffer &buffer,
-                         UErrorCode &errorCode) const {
-    const char16_t *prevBoundary=src;
+                         Reordering_బఫరు &బఫరు,
+                         UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    స్థిరరాశి char16_t *prevBoundary=src;
     UChar32 minNoMaybeCP=minCompNoMaybeCP;
-    if(limit==nullptr) {
-        src=copyLowPrefixFromNulTerminated(src, minNoMaybeCP,
-                                           doCompose ? &buffer : nullptr,
-                                           errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+    ఒకవేళ(హద్దు==శూన్యసూచిక) {
+        src=copy_దిగువ_ఉపసర్గ_From_Nul_Terminated(src, minNoMaybeCP,
+                                           doCompose ? &బఫరు : శూన్యసూచిక,
+                                           error_సంకేతం);
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి అబద్ధం;
         }
-        limit=u_strchr(src, 0);
-        if (prevBoundary != src) {
-            if (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
+        హద్దు=u_strchr(src, 0);
+        ఒకవేళ (prevBoundary != src) {
+            ఒకవేళ (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
                 prevBoundary = src;
-            } else {
-                buffer.removeSuffix(1);
+            } లేకపోతే {
+                బఫరు.removeSuffix(1);
                 prevBoundary = --src;
             }
         }
     }
 
-    for (;;) {
+    కొరకు (;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no or maybe" code point,
         // or with (compYes && ccc==0) properties.
-        const char16_t *prevSrc;
+        స్థిరరాశి char16_t *prevSrc;
         UChar32 c = 0;
         uint16_t norm16 = 0;
-        for (;;) {
-            if (src == limit) {
-                if (prevBoundary != limit && doCompose) {
-                    buffer.appendZeroCC(prevBoundary, limit, errorCode);
+        కొరకు (;;) {
+            ఒకవేళ (src == హద్దు) {
+                ఒకవేళ (prevBoundary != హద్దు && doCompose) {
+                    బఫరు.appendZeroCC(prevBoundary, హద్దు, error_సంకేతం);
                 }
-                return true;
+                తిరిగి నిజం;
             }
-            if( (c=*src)<minNoMaybeCP ||
+            ఒకవేళ( (c=*src)<minNoMaybeCP ||
                 isCompYesAndZeroCC(norm16=UCPTRIE_FAST_BMP_GET(normTrie, UCPTRIE_16, c))
             ) {
                 ++src;
-            } else {
+            } లేకపోతే {
                 prevSrc = src++;
-                if(!U16_IS_LEAD(c)) {
-                    break;
-                } else {
+                ఒకవేళ(!U16_IS_LEAD(c)) {
+                    ఆపు;
+                } లేకపోతే {
                     char16_t c2;
-                    if(src!=limit && U16_IS_TRAIL(c2=*src)) {
+                    ఒకవేళ(src!=హద్దు && U16_IS_TRAIL(c2=*src)) {
                         ++src;
                         c=U16_GET_SUPPLEMENTARY(c, c2);
                         norm16=UCPTRIE_FAST_SUPP_GET(normTrie, UCPTRIE_16, c);
-                        if(!isCompYesAndZeroCC(norm16)) {
-                            break;
+                        ఒకవేళ(!isCompYesAndZeroCC(norm16)) {
+                            ఆపు;
                         }
                     }
                 }
@@ -1518,91 +1518,91 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
         // It is not a Hangul syllable or Jamo L because those have "yes" properties.
 
         // Medium-fast path: Handle cases that do not require full decomposition and recomposition.
-        if (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
-            if (!doCompose) {
-                return false;
+        ఒకవేళ (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
+            ఒకవేళ (!doCompose) {
+                తిరిగి అబద్ధం;
             }
             // Fast path for mapping a character that is immediately surrounded by boundaries.
             // In this case, we need not decompose around the current character.
-            if (isDecompNoAlgorithmic(norm16)) {
+            ఒకవేళ (isDecompNoAlgorithmic(norm16)) {
                 // Maps to a single isCompYesAndZeroCC character
                 // which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
-                        hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                        break;
+                ఒకవేళ (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                        hasCompBoundaryBefore(src, హద్దు)) {
+                    ఒకవేళ (prevBoundary != prevSrc && !బఫరు.appendZeroCC(prevBoundary, prevSrc, error_సంకేతం)) {
+                        ఆపు;
                     }
-                    if(!buffer.append(mapAlgorithmic(c, norm16), 0, errorCode)) {
-                        break;
+                    ఒకవేళ(!బఫరు.append(mapAlgorithmic(c, norm16), 0, error_సంకేతం)) {
+                        ఆపు;
                     }
                     prevBoundary = src;
-                    continue;
+                    కొనసాగు;
                 }
-            } else if (norm16 < minNoNoCompBoundaryBefore) {
+            } లేకపోతే ఒకవేళ (norm16 < minNoNoCompBoundaryBefore) {
                 // The mapping is comp-normalized which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
-                        hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                        break;
+                ఒకవేళ (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                        hasCompBoundaryBefore(src, హద్దు)) {
+                    ఒకవేళ (prevBoundary != prevSrc && !బఫరు.appendZeroCC(prevBoundary, prevSrc, error_సంకేతం)) {
+                        ఆపు;
                     }
-                    const char16_t *mapping = reinterpret_cast<const char16_t *>(getDataForYesOrNo(norm16));
-                    int32_t length = *mapping++ & MAPPING_LENGTH_MASK;
-                    if(!buffer.appendZeroCC(mapping, mapping + length, errorCode)) {
-                        break;
+                    స్థిరరాశి char16_t *mapping = reinterpret_cast<స్థిరరాశి char16_t *>(get_దత్తాంశం_For_Yes_Or_No(norm16));
+                    int32_t length = *mapping++ & MAPPING_నిడివి_ముసుగు;
+                    ఒకవేళ(!బఫరు.appendZeroCC(mapping, mapping + length, error_సంకేతం)) {
+                        ఆపు;
                     }
                     prevBoundary = src;
-                    continue;
+                    కొనసాగు;
                 }
-            } else if (norm16 >= minNoNoEmpty) {
+            } లేకపోతే ఒకవేళ (norm16 >= min_No_No_ఖాళీలు) {
                 // The current character maps to nothing.
                 // Simply omit it from the output if there is a boundary before _or_ after it.
                 // The character itself implies no boundaries.
-                if (hasCompBoundaryBefore(src, limit) ||
+                ఒకవేళ (hasCompBoundaryBefore(src, హద్దు) ||
                         hasCompBoundaryAfter(prevBoundary, prevSrc, onlyContiguous)) {
-                    if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                        break;
+                    ఒకవేళ (prevBoundary != prevSrc && !బఫరు.appendZeroCC(prevBoundary, prevSrc, error_సంకేతం)) {
+                        ఆపు;
                     }
                     prevBoundary = src;
-                    continue;
+                    కొనసాగు;
                 }
             }
             // Other "noNo" type, or need to examine more text around this character:
             // Fall through to the slow path.
-        } else if (isJamoVT(norm16) && prevBoundary != prevSrc) {
+        } లేకపోతే ఒకవేళ (isJamoVT(norm16) && prevBoundary != prevSrc) {
             char16_t prev=*(prevSrc-1);
-            if(c<Hangul::JAMO_T_BASE) {
+            ఒకవేళ(c<Hangul::JAMO_T_పునాది) {
                 // The current character is a Jamo Vowel,
                 // compose with previous Jamo L and following Jamo T.
-                char16_t l = static_cast<char16_t>(prev - Hangul::JAMO_L_BASE);
-                if(l<Hangul::JAMO_L_COUNT) {
-                    if (!doCompose) {
-                        return false;
+                char16_t l = static_cast<char16_t>(prev - Hangul::JAMO_L_పునాది);
+                ఒకవేళ(l<Hangul::JAMO_L_లెక్క) {
+                    ఒకవేళ (!doCompose) {
+                        తిరిగి అబద్ధం;
                     }
                     int32_t t;
-                    if (src != limit &&
-                            0 < (t = (static_cast<int32_t>(*src) - Hangul::JAMO_T_BASE)) &&
-                            t < Hangul::JAMO_T_COUNT) {
+                    ఒకవేళ (src != హద్దు &&
+                            0 < (t = (static_cast<int32_t>(*src) - Hangul::JAMO_T_పునాది)) &&
+                            t < Hangul::JAMO_T_లెక్క) {
                         // The next character is a Jamo T.
                         ++src;
-                    } else if (hasCompBoundaryBefore(src, limit)) {
+                    } లేకపోతే ఒకవేళ (hasCompBoundaryBefore(src, హద్దు)) {
                         // No Jamo T follows, not even via decomposition.
                         t = 0;
-                    } else {
+                    } లేకపోతే {
                         t = -1;
                     }
-                    if (t >= 0) {
-                        UChar32 syllable = Hangul::HANGUL_BASE +
-                            (l*Hangul::JAMO_V_COUNT + (c-Hangul::JAMO_V_BASE)) *
-                            Hangul::JAMO_T_COUNT + t;
+                    ఒకవేళ (t >= 0) {
+                        UChar32 syllable = Hangul::HANGUL_పునాది +
+                            (l*Hangul::JAMO_V_లెక్క + (c-Hangul::JAMO_V_పునాది)) *
+                            Hangul::JAMO_T_లెక్క + t;
                         --prevSrc;  // Replace the Jamo L as well.
-                        if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                            break;
+                        ఒకవేళ (prevBoundary != prevSrc && !బఫరు.appendZeroCC(prevBoundary, prevSrc, error_సంకేతం)) {
+                            ఆపు;
                         }
-                        if (!buffer.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
-                            break;
+                        ఒకవేళ (!బఫరు.appendBMP(static_cast<char16_t>(syllable), 0, error_సంకేతం)) {
+                            ఆపు;
                         }
                         prevBoundary = src;
-                        continue;
+                        కొనసాగు;
                     }
                     // If we see L+V+x where x!=T then we drop to the slow path,
                     // decompose and recompose.
@@ -1612,70 +1612,70 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
                     // (which would complicate the code and may not work with strange custom data)
                     // or use the slow path.
                 }
-            } else if (Hangul::isHangulLV(prev)) {
+            } లేకపోతే ఒకవేళ (Hangul::isHangulLV(prev)) {
                 // The current character is a Jamo Trailing consonant,
                 // compose with previous Hangul LV that does not contain a Jamo T.
-                if (!doCompose) {
-                    return false;
+                ఒకవేళ (!doCompose) {
+                    తిరిగి అబద్ధం;
                 }
-                UChar32 syllable = prev + c - Hangul::JAMO_T_BASE;
+                UChar32 syllable = prev + c - Hangul::JAMO_T_పునాది;
                 --prevSrc;  // Replace the Hangul LV as well.
-                if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                    break;
+                ఒకవేళ (prevBoundary != prevSrc && !బఫరు.appendZeroCC(prevBoundary, prevSrc, error_సంకేతం)) {
+                    ఆపు;
                 }
-                if (!buffer.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
-                    break;
+                ఒకవేళ (!బఫరు.appendBMP(static_cast<char16_t>(syllable), 0, error_సంకేతం)) {
+                    ఆపు;
                 }
                 prevBoundary = src;
-                continue;
+                కొనసాగు;
             }
             // No matching context, or may need to decompose surrounding text first:
             // Fall through to the slow path.
-        } else if (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
+        } లేకపోతే ఒకవేళ (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
             // One or more combining marks that do not combine-back:
             // Check for canonical order, copy unchanged if ok and
             // if followed by a character with a boundary-before.
-            uint8_t cc = getCCFromNormalYesOrMaybe(norm16);  // cc!=0
-            if (onlyContiguous /* FCC */ && getPreviousTrailCC(prevBoundary, prevSrc) > cc) {
+            uint8_t cc = get_CCFrom_సాధారణ_Yes_Or_Maybe(norm16);  // cc!=0
+            ఒకవేళ (onlyContiguous /* FCC */ && get_మునుపటి_Trail_CC(prevBoundary, prevSrc) > cc) {
                 // Fails FCD test, need to decompose and contiguously recompose.
-                if (!doCompose) {
-                    return false;
+                ఒకవేళ (!doCompose) {
+                    తిరిగి అబద్ధం;
                 }
-            } else {
+            } లేకపోతే {
                 // If !onlyContiguous (not FCC), then we ignore the tccc of
                 // the previous character which passed the quick check "yes && ccc==0" test.
-                const char16_t *nextSrc;
+                స్థిరరాశి char16_t *తదుపరి_Src;
                 uint16_t n16;
-                for (;;) {
-                    if (src == limit) {
-                        if (doCompose) {
-                            buffer.appendZeroCC(prevBoundary, limit, errorCode);
+                కొరకు (;;) {
+                    ఒకవేళ (src == హద్దు) {
+                        ఒకవేళ (doCompose) {
+                            బఫరు.appendZeroCC(prevBoundary, హద్దు, error_సంకేతం);
                         }
-                        return true;
+                        తిరిగి నిజం;
                     }
                     uint8_t prevCC = cc;
-                    nextSrc = src;
-                    UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, nextSrc, limit, c, n16);
-                    if (n16 >= MIN_YES_YES_WITH_CC) {
-                        cc = getCCFromNormalYesOrMaybe(n16);
-                        if (prevCC > cc) {
-                            if (!doCompose) {
-                                return false;
+                    తదుపరి_Src = src;
+                    UCPTRIE_FAST_U16_తదుపరి(normTrie, UCPTRIE_16, తదుపరి_Src, హద్దు, c, n16);
+                    ఒకవేళ (n16 >= MIN_YES_YES_WITH_CC) {
+                        cc = get_CCFrom_సాధారణ_Yes_Or_Maybe(n16);
+                        ఒకవేళ (prevCC > cc) {
+                            ఒకవేళ (!doCompose) {
+                                తిరిగి అబద్ధం;
                             }
-                            break;
+                            ఆపు;
                         }
-                    } else {
-                        break;
+                    } లేకపోతే {
+                        ఆపు;
                     }
-                    src = nextSrc;
+                    src = తదుపరి_Src;
                 }
                 // src is after the last in-order combining mark.
                 // If there is a boundary here, then we continue with no change.
-                if (norm16HasCompBoundaryBefore(n16)) {
-                    if (isCompYesAndZeroCC(n16)) {
-                        src = nextSrc;
+                ఒకవేళ (norm16HasCompBoundaryBefore(n16)) {
+                    ఒకవేళ (isCompYesAndZeroCC(n16)) {
+                        src = తదుపరి_Src;
                     }
-                    continue;
+                    కొనసాగు;
                 }
                 // Use the slow path. There is no boundary in [prevSrc, src[.
             }
@@ -1683,90 +1683,90 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
 
         // Slow path: Find the nearest boundaries around the current character,
         // decompose and recompose.
-        if (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
-            const char16_t *p = prevSrc;
+        ఒకవేళ (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
+            స్థిరరాశి char16_t *p = prevSrc;
             UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, prevBoundary, p, c, norm16);
-            if (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            ఒకవేళ (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
                 prevSrc = p;
             }
         }
-        if (doCompose && prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-            break;
+        ఒకవేళ (doCompose && prevBoundary != prevSrc && !బఫరు.appendZeroCC(prevBoundary, prevSrc, error_సంకేతం)) {
+            ఆపు;
         }
-        int32_t recomposeStartIndex=buffer.length();
+        int32_t recompose_ప్రారంభం_సూచీ=బఫరు.length();
         // We know there is not a boundary here.
-        decomposeShort(prevSrc, src, false /* !stopAtCompBoundary */, onlyContiguous,
-                       buffer, errorCode);
+        decomposeShort(prevSrc, src, అబద్ధం /* !stopAtCompBoundary */, onlyContiguous,
+                       బఫరు, error_సంకేతం);
         // Decompose until the next boundary.
-        src = decomposeShort(src, limit, true /* stopAtCompBoundary */, onlyContiguous,
-                             buffer, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        src = decomposeShort(src, హద్దు, నిజం /* stopAtCompBoundary */, onlyContiguous,
+                             బఫరు, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            ఆపు;
         }
-        if ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return true;
+        ఒకవేళ ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
+            error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి నిజం;
         }
-        recompose(buffer, recomposeStartIndex, onlyContiguous);
-        if(!doCompose) {
-            if(!buffer.equals(prevSrc, src)) {
-                return false;
+        recompose(బఫరు, recompose_ప్రారంభం_సూచీ, onlyContiguous);
+        ఒకవేళ(!doCompose) {
+            ఒకవేళ(!బఫరు.equals(prevSrc, src)) {
+                తిరిగి అబద్ధం;
             }
-            buffer.remove();
+            బఫరు.remove();
         }
         prevBoundary=src;
     }
-    return true;
+    తిరిగి నిజం;
 }
 
 // Very similar to compose(): Make the same changes in both places if relevant.
 // pQCResult==nullptr: spanQuickCheckYes
 // pQCResult!=nullptr: quickCheck (*pQCResult must be UNORM_YES)
-const char16_t *
-Normalizer2Impl::composeQuickCheck(const char16_t *src, const char16_t *limit,
+స్థిరరాశి char16_t *
+Normalizer2Impl::compose_శీఘ్ర_Check(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
                                    UBool onlyContiguous,
-                                   UNormalizationCheckResult *pQCResult) const {
-    const char16_t *prevBoundary=src;
+                                   UNormalization_Check_ఫలితం *pQCResult) స్థిరరాశి {
+    స్థిరరాశి char16_t *prevBoundary=src;
     UChar32 minNoMaybeCP=minCompNoMaybeCP;
-    if(limit==nullptr) {
-        UErrorCode errorCode=U_ZERO_ERROR;
-        src=copyLowPrefixFromNulTerminated(src, minNoMaybeCP, nullptr, errorCode);
-        limit=u_strchr(src, 0);
-        if (prevBoundary != src) {
-            if (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
+    ఒకవేళ(హద్దు==శూన్యసూచిక) {
+        UError_సంకేతం error_సంకేతం=U_ZERO_ERROR;
+        src=copy_దిగువ_ఉపసర్గ_From_Nul_Terminated(src, minNoMaybeCP, శూన్యసూచిక, error_సంకేతం);
+        హద్దు=u_strchr(src, 0);
+        ఒకవేళ (prevBoundary != src) {
+            ఒకవేళ (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
                 prevBoundary = src;
-            } else {
+            } లేకపోతే {
                 prevBoundary = --src;
             }
         }
     }
 
-    for(;;) {
+    కొరకు(;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no or maybe" code point,
         // or with (compYes && ccc==0) properties.
-        const char16_t *prevSrc;
+        స్థిరరాశి char16_t *prevSrc;
         UChar32 c = 0;
         uint16_t norm16 = 0;
-        for (;;) {
-            if(src==limit) {
-                return src;
+        కొరకు (;;) {
+            ఒకవేళ(src==హద్దు) {
+                తిరిగి src;
             }
-            if( (c=*src)<minNoMaybeCP ||
+            ఒకవేళ( (c=*src)<minNoMaybeCP ||
                 isCompYesAndZeroCC(norm16=UCPTRIE_FAST_BMP_GET(normTrie, UCPTRIE_16, c))
             ) {
                 ++src;
-            } else {
+            } లేకపోతే {
                 prevSrc = src++;
-                if(!U16_IS_LEAD(c)) {
-                    break;
-                } else {
+                ఒకవేళ(!U16_IS_LEAD(c)) {
+                    ఆపు;
+                } లేకపోతే {
                     char16_t c2;
-                    if(src!=limit && U16_IS_TRAIL(c2=*src)) {
+                    ఒకవేళ(src!=హద్దు && U16_IS_TRAIL(c2=*src)) {
                         ++src;
                         c=U16_GET_SUPPLEMENTARY(c, c2);
                         norm16=UCPTRIE_FAST_SUPP_GET(normTrie, UCPTRIE_16, c);
-                        if(!isCompYesAndZeroCC(norm16)) {
-                            break;
+                        ఒకవేళ(!isCompYesAndZeroCC(norm16)) {
+                            ఆపు;
                         }
                     }
                 }
@@ -1779,138 +1779,138 @@ Normalizer2Impl::composeQuickCheck(const char16_t *src, const char16_t *limit,
         // It is not a Hangul syllable or Jamo L because those have "yes" properties.
 
         uint16_t prevNorm16 = INERT;
-        if (prevBoundary != prevSrc) {
-            if (norm16HasCompBoundaryBefore(norm16)) {
+        ఒకవేళ (prevBoundary != prevSrc) {
+            ఒకవేళ (norm16HasCompBoundaryBefore(norm16)) {
                 prevBoundary = prevSrc;
-            } else {
-                const char16_t *p = prevSrc;
+            } లేకపోతే {
+                స్థిరరాశి char16_t *p = prevSrc;
                 uint16_t n16;
                 UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, prevBoundary, p, c, n16);
-                if (norm16HasCompBoundaryAfter(n16, onlyContiguous)) {
+                ఒకవేళ (norm16HasCompBoundaryAfter(n16, onlyContiguous)) {
                     prevBoundary = prevSrc;
-                } else {
+                } లేకపోతే {
                     prevBoundary = p;
                     prevNorm16 = n16;
                 }
             }
         }
 
-        if (norm16 >= minMaybeNo) {
+        ఒకవేళ (norm16 >= minMaybeNo) {
             uint16_t fcd16 = getFCD16FromMaybeOrNonZeroCC(norm16);
             uint8_t cc = fcd16 >> 8;
-            if (onlyContiguous /* FCC */ && cc != 0 &&
+            ఒకవేళ (onlyContiguous /* FCC */ && cc != 0 &&
                     getTrailCCFromCompYesAndZeroCC(prevNorm16) > cc) {
                 // The [prevBoundary..prevSrc[ character
                 // passed the quick check "yes && ccc==0" test
                 // but is out of canonical order with the current combining mark.
-            } else {
+            } లేకపోతే {
                 // If !onlyContiguous (not FCC), then we ignore the tccc of
                 // the previous character which passed the quick check "yes && ccc==0" test.
-                const char16_t *nextSrc;
-                for (;;) {
-                    if (norm16 < MIN_YES_YES_WITH_CC) {
-                        if (pQCResult != nullptr) {
+                స్థిరరాశి char16_t *తదుపరి_Src;
+                కొరకు (;;) {
+                    ఒకవేళ (norm16 < MIN_YES_YES_WITH_CC) {
+                        ఒకవేళ (pQCResult != శూన్యసూచిక) {
                             *pQCResult = UNORM_MAYBE;
-                        } else {
-                            return prevBoundary;
+                        } లేకపోతే {
+                            తిరిగి prevBoundary;
                         }
                     }
-                    if (src == limit) {
-                        return src;
+                    ఒకవేళ (src == హద్దు) {
+                        తిరిగి src;
                     }
                     uint8_t prevCC = fcd16;
-                    nextSrc = src;
-                    UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, nextSrc, limit, c, norm16);
-                    if (norm16 >= minMaybeNo) {
+                    తదుపరి_Src = src;
+                    UCPTRIE_FAST_U16_తదుపరి(normTrie, UCPTRIE_16, తదుపరి_Src, హద్దు, c, norm16);
+                    ఒకవేళ (norm16 >= minMaybeNo) {
                         fcd16 = getFCD16FromMaybeOrNonZeroCC(norm16);
                         cc = fcd16 >> 8;
-                        if (!(prevCC <= cc || cc == 0)) {
-                            break;
+                        ఒకవేళ (!(prevCC <= cc || cc == 0)) {
+                            ఆపు;
                         }
-                    } else {
-                        break;
+                    } లేకపోతే {
+                        ఆపు;
                     }
-                    src = nextSrc;
+                    src = తదుపరి_Src;
                 }
                 // src is after the last in-order combining mark.
-                if (isCompYesAndZeroCC(norm16)) {
+                ఒకవేళ (isCompYesAndZeroCC(norm16)) {
                     prevBoundary = src;
-                    src = nextSrc;
-                    continue;
+                    src = తదుపరి_Src;
+                    కొనసాగు;
                 }
             }
         }
-        if(pQCResult!=nullptr) {
+        ఒకవేళ(pQCResult!=శూన్యసూచిక) {
             *pQCResult=UNORM_NO;
         }
-        return prevBoundary;
+        తిరిగి prevBoundary;
     }
 }
 
-void Normalizer2Impl::composeAndAppend(const char16_t *src, const char16_t *limit,
+శూన్య Normalizer2Impl::composeAndAppend(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
                                        UBool doCompose,
                                        UBool onlyContiguous,
-                                       UnicodeString &safeMiddle,
-                                       ReorderingBuffer &buffer,
-                                       UErrorCode &errorCode) const {
-    if(!buffer.isEmpty()) {
-        const char16_t *firstStarterInSrc=findNextCompBoundary(src, limit, onlyContiguous);
-        if(src!=firstStarterInSrc) {
-            const char16_t *lastStarterInDest=findPreviousCompBoundary(buffer.getStart(),
-                                                                    buffer.getLimit(), onlyContiguous);
-            int32_t destSuffixLength = static_cast<int32_t>(buffer.getLimit() - lastStarterInDest);
-            UnicodeString middle(lastStarterInDest, destSuffixLength);
-            buffer.removeSuffix(destSuffixLength);
-            safeMiddle=middle;
-            middle.append(src, static_cast<int32_t>(firstStarterInSrc - src));
-            const char16_t *middleStart=middle.getBuffer();
-            compose(middleStart, middleStart+middle.length(), onlyContiguous,
-                    true, buffer, errorCode);
-            if(U_FAILURE(errorCode)) {
-                return;
+                                       UnicodeString &సురక్షిత_మధ్య,
+                                       Reordering_బఫరు &బఫరు,
+                                       UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(!బఫరు.is_ఖాళీలు()) {
+        స్థిరరాశి char16_t *మొదటి_Starter_లోపల_Src=కనుగొను_తదుపరి_Comp_Boundary(src, హద్దు, onlyContiguous);
+        ఒకవేళ(src!=మొదటి_Starter_లోపల_Src) {
+            స్థిరరాశి char16_t *చివరి_Starter_లోపల_Dest=కనుగొను_మునుపటి_Comp_Boundary(బఫరు.get_ప్రారంభం(),
+                                                                    బఫరు.get_హద్దు(), onlyContiguous);
+            int32_t dest_Suffix_నిడివి = static_cast<int32_t>(బఫరు.get_హద్దు() - చివరి_Starter_లోపల_Dest);
+            UnicodeString మధ్య(చివరి_Starter_లోపల_Dest, dest_Suffix_నిడివి);
+            బఫరు.removeSuffix(dest_Suffix_నిడివి);
+            సురక్షిత_మధ్య=మధ్య;
+            మధ్య.append(src, static_cast<int32_t>(మొదటి_Starter_లోపల_Src - src));
+            స్థిరరాశి char16_t *మధ్య_ప్రారంభం=మధ్య.get_బఫరు();
+            compose(మధ్య_ప్రారంభం, మధ్య_ప్రారంభం+మధ్య.length(), onlyContiguous,
+                    నిజం, బఫరు, error_సంకేతం);
+            ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+                తిరిగి;
             }
-            src=firstStarterInSrc;
+            src=మొదటి_Starter_లోపల_Src;
         }
     }
-    if(doCompose) {
-        compose(src, limit, onlyContiguous, true, buffer, errorCode);
-    } else {
-        if(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
-            limit=u_strchr(src, 0);
+    ఒకవేళ(doCompose) {
+        compose(src, హద్దు, onlyContiguous, నిజం, బఫరు, error_సంకేతం);
+    } లేకపోతే {
+        ఒకవేళ(హద్దు==శూన్యసూచిక) {  // appendZeroCC() needs limit!=nullptr
+            హద్దు=u_strchr(src, 0);
         }
-        buffer.appendZeroCC(src, limit, errorCode);
+        బఫరు.appendZeroCC(src, హద్దు, error_సంకేతం);
     }
 }
 
 UBool
 Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
-                             const uint8_t *src, const uint8_t *limit,
-                             ByteSink *sink, Edits *edits, UErrorCode &errorCode) const {
-    U_ASSERT(limit != nullptr);
+                             స్థిరరాశి uint8_t *src, స్థిరరాశి uint8_t *హద్దు,
+                             ByteSink *sink, Edits *edits, UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    U_ASSERT(హద్దు != శూన్యసూచిక);
     UnicodeString s16;
     uint8_t minNoMaybeLead = leadByteForCP(minCompNoMaybeCP);
-    const uint8_t *prevBoundary = src;
+    స్థిరరాశి uint8_t *prevBoundary = src;
 
-    for (;;) {
+    కొరకు (;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no or maybe" code point,
         // or with (compYes && ccc==0) properties.
-        const uint8_t *prevSrc;
+        స్థిరరాశి uint8_t *prevSrc;
         uint16_t norm16 = 0;
-        for (;;) {
-            if (src == limit) {
-                if (prevBoundary != limit && sink != nullptr) {
-                    ByteSinkUtil::appendUnchanged(prevBoundary, limit,
-                                                  *sink, options, edits, errorCode);
+        కొరకు (;;) {
+            ఒకవేళ (src == హద్దు) {
+                ఒకవేళ (prevBoundary != హద్దు && sink != శూన్యసూచిక) {
+                    ByteSinkUtil::appendUnchanged(prevBoundary, హద్దు,
+                                                  *sink, options, edits, error_సంకేతం);
                 }
-                return true;
+                తిరిగి నిజం;
             }
-            if (*src < minNoMaybeLead) {
+            ఒకవేళ (*src < minNoMaybeLead) {
                 ++src;
-            } else {
+            } లేకపోతే {
                 prevSrc = src;
-                UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
-                if (!isCompYesAndZeroCC(norm16)) {
-                    break;
+                UCPTRIE_FAST_U8_తదుపరి(normTrie, UCPTRIE_16, src, హద్దు, norm16);
+                ఒకవేళ (!isCompYesAndZeroCC(norm16)) {
+                    ఆపు;
                 }
             }
         }
@@ -1921,99 +1921,99 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
         // It is not a Hangul syllable or Jamo L because those have "yes" properties.
 
         // Medium-fast path: Handle cases that do not require full decomposition and recomposition.
-        if (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
-            if (sink == nullptr) {
-                return false;
+        ఒకవేళ (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
+            ఒకవేళ (sink == శూన్యసూచిక) {
+                తిరిగి అబద్ధం;
             }
             // Fast path for mapping a character that is immediately surrounded by boundaries.
             // In this case, we need not decompose around the current character.
-            if (isDecompNoAlgorithmic(norm16)) {
+            ఒకవేళ (isDecompNoAlgorithmic(norm16)) {
                 // Maps to a single isCompYesAndZeroCC character
                 // which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
-                        hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc &&
+                ఒకవేళ (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                        hasCompBoundaryBefore(src, హద్దు)) {
+                    ఒకవేళ (prevBoundary != prevSrc &&
                             !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
-                                                           *sink, options, edits, errorCode)) {
-                        break;
+                                                           *sink, options, edits, error_సంకేతం)) {
+                        ఆపు;
                     }
-                    appendCodePointDelta(prevSrc, src, getAlgorithmicDelta(norm16), *sink, edits);
+                    append_సంకేతం_బిందువు_Delta(prevSrc, src, getAlgorithmicDelta(norm16), *sink, edits);
                     prevBoundary = src;
-                    continue;
+                    కొనసాగు;
                 }
-            } else if (norm16 < minNoNoCompBoundaryBefore) {
+            } లేకపోతే ఒకవేళ (norm16 < minNoNoCompBoundaryBefore) {
                 // The mapping is comp-normalized which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
-                        hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc &&
+                ఒకవేళ (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                        hasCompBoundaryBefore(src, హద్దు)) {
+                    ఒకవేళ (prevBoundary != prevSrc &&
                             !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
-                                                           *sink, options, edits, errorCode)) {
-                        break;
+                                                           *sink, options, edits, error_సంకేతం)) {
+                        ఆపు;
                     }
-                    const uint16_t *mapping = getDataForYesOrNo(norm16);
-                    int32_t length = *mapping++ & MAPPING_LENGTH_MASK;
-                    if (!ByteSinkUtil::appendChange(prevSrc, src, reinterpret_cast<const char16_t*>(mapping), length,
-                                                    *sink, edits, errorCode)) {
-                        break;
+                    స్థిరరాశి uint16_t *mapping = get_దత్తాంశం_For_Yes_Or_No(norm16);
+                    int32_t length = *mapping++ & MAPPING_నిడివి_ముసుగు;
+                    ఒకవేళ (!ByteSinkUtil::appendChange(prevSrc, src, reinterpret_cast<స్థిరరాశి char16_t*>(mapping), length,
+                                                    *sink, edits, error_సంకేతం)) {
+                        ఆపు;
                     }
                     prevBoundary = src;
-                    continue;
+                    కొనసాగు;
                 }
-            } else if (norm16 >= minNoNoEmpty) {
+            } లేకపోతే ఒకవేళ (norm16 >= min_No_No_ఖాళీలు) {
                 // The current character maps to nothing.
                 // Simply omit it from the output if there is a boundary before _or_ after it.
                 // The character itself implies no boundaries.
-                if (hasCompBoundaryBefore(src, limit) ||
+                ఒకవేళ (hasCompBoundaryBefore(src, హద్దు) ||
                         hasCompBoundaryAfter(prevBoundary, prevSrc, onlyContiguous)) {
-                    if (prevBoundary != prevSrc &&
+                    ఒకవేళ (prevBoundary != prevSrc &&
                             !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
-                                                           *sink, options, edits, errorCode)) {
-                        break;
+                                                           *sink, options, edits, error_సంకేతం)) {
+                        ఆపు;
                     }
-                    if (edits != nullptr) {
-                        edits->addReplace(static_cast<int32_t>(src - prevSrc), 0);
+                    ఒకవేళ (edits != శూన్యసూచిక) {
+                        edits->కూడు_Replace(static_cast<int32_t>(src - prevSrc), 0);
                     }
                     prevBoundary = src;
-                    continue;
+                    కొనసాగు;
                 }
             }
             // Other "noNo" type, or need to examine more text around this character:
             // Fall through to the slow path.
-        } else if (isJamoVT(norm16)) {
+        } లేకపోతే ఒకవేళ (isJamoVT(norm16)) {
             // Jamo L: E1 84 80..92
             // Jamo V: E1 85 A1..B5
             // Jamo T: E1 86 A8..E1 87 82
             U_ASSERT((src - prevSrc) == 3 && *prevSrc == 0xe1);
-            UChar32 prev = previousHangulOrJamo(prevBoundary, prevSrc);
-            if (prevSrc[1] == 0x85) {
+            UChar32 prev = మునుపటి_Hangul_Or_Jamo(prevBoundary, prevSrc);
+            ఒకవేళ (prevSrc[1] == 0x85) {
                 // The current character is a Jamo Vowel,
                 // compose with previous Jamo L and following Jamo T.
-                UChar32 l = prev - Hangul::JAMO_L_BASE;
-                if (static_cast<uint32_t>(l) < Hangul::JAMO_L_COUNT) {
-                    if (sink == nullptr) {
-                        return false;
+                UChar32 l = prev - Hangul::JAMO_L_పునాది;
+                ఒకవేళ (static_cast<uint32_t>(l) < Hangul::JAMO_L_లెక్క) {
+                    ఒకవేళ (sink == శూన్యసూచిక) {
+                        తిరిగి అబద్ధం;
                     }
-                    int32_t t = getJamoTMinusBase(src, limit);
-                    if (t >= 0) {
+                    int32_t t = get_Jamo_TMinus_పునాది(src, హద్దు);
+                    ఒకవేళ (t >= 0) {
                         // The next character is a Jamo T.
                         src += 3;
-                    } else if (hasCompBoundaryBefore(src, limit)) {
+                    } లేకపోతే ఒకవేళ (hasCompBoundaryBefore(src, హద్దు)) {
                         // No Jamo T follows, not even via decomposition.
                         t = 0;
                     }
-                    if (t >= 0) {
-                        UChar32 syllable = Hangul::HANGUL_BASE +
-                            (l*Hangul::JAMO_V_COUNT + (prevSrc[2]-0xa1)) *
-                            Hangul::JAMO_T_COUNT + t;
+                    ఒకవేళ (t >= 0) {
+                        UChar32 syllable = Hangul::HANGUL_పునాది +
+                            (l*Hangul::JAMO_V_లెక్క + (prevSrc[2]-0xa1)) *
+                            Hangul::JAMO_T_లెక్క + t;
                         prevSrc -= 3;  // Replace the Jamo L as well.
-                        if (prevBoundary != prevSrc &&
+                        ఒకవేళ (prevBoundary != prevSrc &&
                                 !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
-                                                               *sink, options, edits, errorCode)) {
-                            break;
+                                                               *sink, options, edits, error_సంకేతం)) {
+                            ఆపు;
                         }
-                        ByteSinkUtil::appendCodePoint(prevSrc, src, syllable, *sink, edits);
+                        ByteSinkUtil::append_సంకేతం_బిందువు(prevSrc, src, syllable, *sink, edits);
                         prevBoundary = src;
-                        continue;
+                        కొనసాగు;
                     }
                     // If we see L+V+x where x!=T then we drop to the slow path,
                     // decompose and recompose.
@@ -2023,71 +2023,71 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
                     // (which would complicate the code and may not work with strange custom data)
                     // or use the slow path.
                 }
-            } else if (Hangul::isHangulLV(prev)) {
+            } లేకపోతే ఒకవేళ (Hangul::isHangulLV(prev)) {
                 // The current character is a Jamo Trailing consonant,
                 // compose with previous Hangul LV that does not contain a Jamo T.
-                if (sink == nullptr) {
-                    return false;
+                ఒకవేళ (sink == శూన్యసూచిక) {
+                    తిరిగి అబద్ధం;
                 }
-                UChar32 syllable = prev + getJamoTMinusBase(prevSrc, src);
+                UChar32 syllable = prev + get_Jamo_TMinus_పునాది(prevSrc, src);
                 prevSrc -= 3;  // Replace the Hangul LV as well.
-                if (prevBoundary != prevSrc &&
+                ఒకవేళ (prevBoundary != prevSrc &&
                         !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
-                                                       *sink, options, edits, errorCode)) {
-                    break;
+                                                       *sink, options, edits, error_సంకేతం)) {
+                    ఆపు;
                 }
-                ByteSinkUtil::appendCodePoint(prevSrc, src, syllable, *sink, edits);
+                ByteSinkUtil::append_సంకేతం_బిందువు(prevSrc, src, syllable, *sink, edits);
                 prevBoundary = src;
-                continue;
+                కొనసాగు;
             }
             // No matching context, or may need to decompose surrounding text first:
             // Fall through to the slow path.
-        } else if (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
+        } లేకపోతే ఒకవేళ (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
             // One or more combining marks that do not combine-back:
             // Check for canonical order, copy unchanged if ok and
             // if followed by a character with a boundary-before.
-            uint8_t cc = getCCFromNormalYesOrMaybe(norm16);  // cc!=0
-            if (onlyContiguous /* FCC */ && getPreviousTrailCC(prevBoundary, prevSrc) > cc) {
+            uint8_t cc = get_CCFrom_సాధారణ_Yes_Or_Maybe(norm16);  // cc!=0
+            ఒకవేళ (onlyContiguous /* FCC */ && get_మునుపటి_Trail_CC(prevBoundary, prevSrc) > cc) {
                 // Fails FCD test, need to decompose and contiguously recompose.
-                if (sink == nullptr) {
-                    return false;
+                ఒకవేళ (sink == శూన్యసూచిక) {
+                    తిరిగి అబద్ధం;
                 }
-            } else {
+            } లేకపోతే {
                 // If !onlyContiguous (not FCC), then we ignore the tccc of
                 // the previous character which passed the quick check "yes && ccc==0" test.
-                const uint8_t *nextSrc;
+                స్థిరరాశి uint8_t *తదుపరి_Src;
                 uint16_t n16;
-                for (;;) {
-                    if (src == limit) {
-                        if (sink != nullptr) {
-                            ByteSinkUtil::appendUnchanged(prevBoundary, limit,
-                                                          *sink, options, edits, errorCode);
+                కొరకు (;;) {
+                    ఒకవేళ (src == హద్దు) {
+                        ఒకవేళ (sink != శూన్యసూచిక) {
+                            ByteSinkUtil::appendUnchanged(prevBoundary, హద్దు,
+                                                          *sink, options, edits, error_సంకేతం);
                         }
-                        return true;
+                        తిరిగి నిజం;
                     }
                     uint8_t prevCC = cc;
-                    nextSrc = src;
-                    UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, nextSrc, limit, n16);
-                    if (n16 >= MIN_YES_YES_WITH_CC) {
-                        cc = getCCFromNormalYesOrMaybe(n16);
-                        if (prevCC > cc) {
-                            if (sink == nullptr) {
-                                return false;
+                    తదుపరి_Src = src;
+                    UCPTRIE_FAST_U8_తదుపరి(normTrie, UCPTRIE_16, తదుపరి_Src, హద్దు, n16);
+                    ఒకవేళ (n16 >= MIN_YES_YES_WITH_CC) {
+                        cc = get_CCFrom_సాధారణ_Yes_Or_Maybe(n16);
+                        ఒకవేళ (prevCC > cc) {
+                            ఒకవేళ (sink == శూన్యసూచిక) {
+                                తిరిగి అబద్ధం;
                             }
-                            break;
+                            ఆపు;
                         }
-                    } else {
-                        break;
+                    } లేకపోతే {
+                        ఆపు;
                     }
-                    src = nextSrc;
+                    src = తదుపరి_Src;
                 }
                 // src is after the last in-order combining mark.
                 // If there is a boundary here, then we continue with no change.
-                if (norm16HasCompBoundaryBefore(n16)) {
-                    if (isCompYesAndZeroCC(n16)) {
-                        src = nextSrc;
+                ఒకవేళ (norm16HasCompBoundaryBefore(n16)) {
+                    ఒకవేళ (isCompYesAndZeroCC(n16)) {
+                        src = తదుపరి_Src;
                     }
-                    continue;
+                    కొనసాగు;
                 }
                 // Use the slow path. There is no boundary in [prevSrc, src[.
             }
@@ -2095,142 +2095,142 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
 
         // Slow path: Find the nearest boundaries around the current character,
         // decompose and recompose.
-        if (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
-            const uint8_t *p = prevSrc;
+        ఒకవేళ (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
+            స్థిరరాశి uint8_t *p = prevSrc;
             UCPTRIE_FAST_U8_PREV(normTrie, UCPTRIE_16, prevBoundary, p, norm16);
-            if (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            ఒకవేళ (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
                 prevSrc = p;
             }
         }
-        ReorderingBuffer buffer(*this, s16, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        Reordering_బఫరు బఫరు(*ఇది, s16, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            ఆపు;
         }
         // We know there is not a boundary here.
-        decomposeShort(prevSrc, src, STOP_AT_LIMIT, onlyContiguous,
-                       buffer, errorCode);
+        decomposeShort(prevSrc, src, STOP_AT_హద్దు, onlyContiguous,
+                       బఫరు, error_సంకేతం);
         // Decompose until the next boundary.
-        src = decomposeShort(src, limit, STOP_AT_COMP_BOUNDARY, onlyContiguous,
-                             buffer, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        src = decomposeShort(src, హద్దు, STOP_AT_COMP_BOUNDARY, onlyContiguous,
+                             బఫరు, error_సంకేతం);
+        ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+            ఆపు;
         }
-        if ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return true;
+        ఒకవేళ ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
+            error_సంకేతం = U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి నిజం;
         }
-        recompose(buffer, 0, onlyContiguous);
-        if (!buffer.equals(prevSrc, src)) {
-            if (sink == nullptr) {
-                return false;
+        recompose(బఫరు, 0, onlyContiguous);
+        ఒకవేళ (!బఫరు.equals(prevSrc, src)) {
+            ఒకవేళ (sink == శూన్యసూచిక) {
+                తిరిగి అబద్ధం;
             }
-            if (prevBoundary != prevSrc &&
+            ఒకవేళ (prevBoundary != prevSrc &&
                     !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
-                                                   *sink, options, edits, errorCode)) {
-                break;
+                                                   *sink, options, edits, error_సంకేతం)) {
+                ఆపు;
             }
-            if (!ByteSinkUtil::appendChange(prevSrc, src, buffer.getStart(), buffer.length(),
-                                            *sink, edits, errorCode)) {
-                break;
+            ఒకవేళ (!ByteSinkUtil::appendChange(prevSrc, src, బఫరు.get_ప్రారంభం(), బఫరు.length(),
+                                            *sink, edits, error_సంకేతం)) {
+                ఆపు;
             }
             prevBoundary = src;
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-UBool Normalizer2Impl::hasCompBoundaryBefore(const char16_t *src, const char16_t *limit) const {
-    if (src == limit || *src < minCompNoMaybeCP) {
-        return true;
+UBool Normalizer2Impl::hasCompBoundaryBefore(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు) స్థిరరాశి {
+    ఒకవేళ (src == హద్దు || *src < minCompNoMaybeCP) {
+        తిరిగి నిజం;
     }
     UChar32 c;
     uint16_t norm16;
-    UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, src, limit, c, norm16);
-    return norm16HasCompBoundaryBefore(norm16);
+    UCPTRIE_FAST_U16_తదుపరి(normTrie, UCPTRIE_16, src, హద్దు, c, norm16);
+    తిరిగి norm16HasCompBoundaryBefore(norm16);
 }
 
-UBool Normalizer2Impl::hasCompBoundaryBefore(const uint8_t *src, const uint8_t *limit) const {
-    if (src == limit) {
-        return true;
+UBool Normalizer2Impl::hasCompBoundaryBefore(స్థిరరాశి uint8_t *src, స్థిరరాశి uint8_t *హద్దు) స్థిరరాశి {
+    ఒకవేళ (src == హద్దు) {
+        తిరిగి నిజం;
     }
     uint16_t norm16;
-    UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
-    return norm16HasCompBoundaryBefore(norm16);
+    UCPTRIE_FAST_U8_తదుపరి(normTrie, UCPTRIE_16, src, హద్దు, norm16);
+    తిరిగి norm16HasCompBoundaryBefore(norm16);
 }
 
-UBool Normalizer2Impl::hasCompBoundaryAfter(const char16_t *start, const char16_t *p,
-                                            UBool onlyContiguous) const {
-    if (start == p) {
-        return true;
+UBool Normalizer2Impl::hasCompBoundaryAfter(స్థిరరాశి char16_t *ప్రారంభం, స్థిరరాశి char16_t *p,
+                                            UBool onlyContiguous) స్థిరరాశి {
+    ఒకవేళ (ప్రారంభం == p) {
+        తిరిగి నిజం;
     }
     UChar32 c;
     uint16_t norm16;
-    UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, start, p, c, norm16);
-    return norm16HasCompBoundaryAfter(norm16, onlyContiguous);
+    UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, ప్రారంభం, p, c, norm16);
+    తిరిగి norm16HasCompBoundaryAfter(norm16, onlyContiguous);
 }
 
-UBool Normalizer2Impl::hasCompBoundaryAfter(const uint8_t *start, const uint8_t *p,
-                                            UBool onlyContiguous) const {
-    if (start == p) {
-        return true;
+UBool Normalizer2Impl::hasCompBoundaryAfter(స్థిరరాశి uint8_t *ప్రారంభం, స్థిరరాశి uint8_t *p,
+                                            UBool onlyContiguous) స్థిరరాశి {
+    ఒకవేళ (ప్రారంభం == p) {
+        తిరిగి నిజం;
     }
     uint16_t norm16;
-    UCPTRIE_FAST_U8_PREV(normTrie, UCPTRIE_16, start, p, norm16);
-    return norm16HasCompBoundaryAfter(norm16, onlyContiguous);
+    UCPTRIE_FAST_U8_PREV(normTrie, UCPTRIE_16, ప్రారంభం, p, norm16);
+    తిరిగి norm16HasCompBoundaryAfter(norm16, onlyContiguous);
 }
 
-const char16_t *Normalizer2Impl::findPreviousCompBoundary(const char16_t *start, const char16_t *p,
-                                                       UBool onlyContiguous) const {
-    while (p != start) {
-        const char16_t *codePointLimit = p;
+స్థిరరాశి char16_t *Normalizer2Impl::కనుగొను_మునుపటి_Comp_Boundary(స్థిరరాశి char16_t *ప్రారంభం, స్థిరరాశి char16_t *p,
+                                                       UBool onlyContiguous) స్థిరరాశి {
+    అయితే (p != ప్రారంభం) {
+        స్థిరరాశి char16_t *సంకేతం_బిందువు_హద్దు = p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, start, p, c, norm16);
-        if (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-            return codePointLimit;
+        UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, ప్రారంభం, p, c, norm16);
+        ఒకవేళ (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            తిరిగి సంకేతం_బిందువు_హద్దు;
         }
-        if (hasCompBoundaryBefore(c, norm16)) {
-            return p;
+        ఒకవేళ (hasCompBoundaryBefore(c, norm16)) {
+            తిరిగి p;
         }
     }
-    return p;
+    తిరిగి p;
 }
 
-const char16_t *Normalizer2Impl::findNextCompBoundary(const char16_t *p, const char16_t *limit,
-                                                   UBool onlyContiguous) const {
-    while (p != limit) {
-        const char16_t *codePointStart = p;
+స్థిరరాశి char16_t *Normalizer2Impl::కనుగొను_తదుపరి_Comp_Boundary(స్థిరరాశి char16_t *p, స్థిరరాశి char16_t *హద్దు,
+                                                   UBool onlyContiguous) స్థిరరాశి {
+    అయితే (p != హద్దు) {
+        స్థిరరాశి char16_t *సంకేతం_బిందువు_ప్రారంభం = p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
-        if (hasCompBoundaryBefore(c, norm16)) {
-            return codePointStart;
+        UCPTRIE_FAST_U16_తదుపరి(normTrie, UCPTRIE_16, p, హద్దు, c, norm16);
+        ఒకవేళ (hasCompBoundaryBefore(c, norm16)) {
+            తిరిగి సంకేతం_బిందువు_ప్రారంభం;
         }
-        if (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-            return p;
+        ఒకవేళ (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            తిరిగి p;
         }
     }
-    return p;
+    తిరిగి p;
 }
 
-uint8_t Normalizer2Impl::getPreviousTrailCC(const char16_t *start, const char16_t *p) const {
-    if (start == p) {
-        return 0;
+uint8_t Normalizer2Impl::get_మునుపటి_Trail_CC(స్థిరరాశి char16_t *ప్రారంభం, స్థిరరాశి char16_t *p) స్థిరరాశి {
+    ఒకవేళ (ప్రారంభం == p) {
+        తిరిగి 0;
     }
-    int32_t i = static_cast<int32_t>(p - start);
+    int32_t i = static_cast<int32_t>(p - ప్రారంభం);
     UChar32 c;
-    U16_PREV(start, 0, i, c);
-    return static_cast<uint8_t>(getFCD16(c));
+    U16_PREV(ప్రారంభం, 0, i, c);
+    తిరిగి static_cast<uint8_t>(getFCD16(c));
 }
 
-uint8_t Normalizer2Impl::getPreviousTrailCC(const uint8_t *start, const uint8_t *p) const {
-    if (start == p) {
-        return 0;
+uint8_t Normalizer2Impl::get_మునుపటి_Trail_CC(స్థిరరాశి uint8_t *ప్రారంభం, స్థిరరాశి uint8_t *p) స్థిరరాశి {
+    ఒకవేళ (ప్రారంభం == p) {
+        తిరిగి 0;
     }
-    int32_t i = static_cast<int32_t>(p - start);
+    int32_t i = static_cast<int32_t>(p - ప్రారంభం);
     UChar32 c;
-    U8_PREV(start, 0, i, c);
-    return static_cast<uint8_t>(getFCD16(c));
+    U8_PREV(ప్రారంభం, 0, i, c);
+    తిరిగి static_cast<uint8_t>(getFCD16(c));
 }
 
 // Note: normalizer2impl.cpp r30982 (2011-nov-27)
@@ -2245,89 +2245,89 @@ uint8_t Normalizer2Impl::getPreviousTrailCC(const uint8_t *start, const uint8_t 
 // function on Windows ARM64. As a work-around, we disable optimizations for this function.
 // This work-around could/should be removed once the following versions of Visual Studio are no
 // longer supported: All versions of VS2017, and versions of VS2019 below 16.4.
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", off )
-#endif
+#ఒకవేళ (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#సూచన optimize( "", off )
+#అయితే_ముగింపు
 // Gets the FCD value from the regular normalization data.
-uint16_t Normalizer2Impl::getFCD16FromNormData(UChar32 c) const {
+uint16_t Normalizer2Impl::get_FCD16_From_Norm_దత్తాంశం(UChar32 c) స్థిరరాశి {
     uint16_t norm16=getNorm16(c);
-    if (norm16 >= limitNoNo) {
-        if(norm16>=MIN_NORMAL_MAYBE_YES) {
+    ఒకవేళ (norm16 >= హద్దు_No_No) {
+        ఒకవేళ(norm16>=MIN_సాధారణ_MAYBE_YES) {
             // combining mark
-            norm16=getCCFromNormalYesOrMaybe(norm16);
-            return norm16|(norm16<<8);
-        } else if(norm16>=minMaybeYes) {
-            return 0;
-        } else if(norm16<minMaybeNo) {  // isDecompNoAlgorithmic(norm16)
-            uint16_t deltaTrailCC = norm16 & DELTA_TCCC_MASK;
-            if (deltaTrailCC <= DELTA_TCCC_1) {
-                return deltaTrailCC >> OFFSET_SHIFT;
+            norm16=get_CCFrom_సాధారణ_Yes_Or_Maybe(norm16);
+            తిరిగి norm16|(norm16<<8);
+        } లేకపోతే ఒకవేళ(norm16>=minMaybeYes) {
+            తిరిగి 0;
+        } లేకపోతే ఒకవేళ(norm16<minMaybeNo) {  // isDecompNoAlgorithmic(norm16)
+            uint16_t deltaTrailCC = norm16 & DELTA_TCCC_ముసుగు;
+            ఒకవేళ (deltaTrailCC <= DELTA_TCCC_1) {
+                తిరిగి deltaTrailCC >> స్థానభ్రంశం_జరుపు;
             }
             // Maps to an isCompYesAndZeroCC.
             c=mapAlgorithmic(c, norm16);
             norm16=getRawNorm16(c);
         }
     }
-    if(norm16<=minYesNo || isHangulLVT(norm16)) {
+    ఒకవేళ(norm16<=minYesNo || isHangulLVT(norm16)) {
         // no decomposition or Hangul syllable, all zeros
-        return 0;
+        తిరిగి 0;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
-    uint16_t firstUnit=*mapping;
-    norm16=firstUnit>>8;  // tccc
-    if(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
+    స్థిరరాశి uint16_t *mapping=get_దత్తాంశం(norm16);
+    uint16_t మొదటి_Unit=*mapping;
+    norm16=మొదటి_Unit>>8;  // tccc
+    ఒకవేళ(మొదటి_Unit&MAPPING_HAS_CCC_LCCC_మాట) {
         norm16|=*(mapping-1)&0xff00;  // lccc
     }
-    return norm16;
+    తిరిగి norm16;
 }
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", on )
-#endif
+#ఒకవేళ (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#సూచన optimize( "", on )
+#అయితే_ముగింపు
 
-uint16_t Normalizer2Impl::getFCD16FromMaybeOrNonZeroCC(uint16_t norm16) const {
+uint16_t Normalizer2Impl::getFCD16FromMaybeOrNonZeroCC(uint16_t norm16) స్థిరరాశి {
     U_ASSERT(norm16 >= minMaybeNo);
-    if (norm16 >= MIN_NORMAL_MAYBE_YES) {
+    ఒకవేళ (norm16 >= MIN_సాధారణ_MAYBE_YES) {
         // combining mark
-        norm16 = getCCFromNormalYesOrMaybe(norm16);
-        return norm16 | (norm16<<8);
-    } else if (norm16 >= minMaybeYes) {
-        return 0;
+        norm16 = get_CCFrom_సాధారణ_Yes_Or_Maybe(norm16);
+        తిరిగి norm16 | (norm16<<8);
+    } లేకపోతే ఒకవేళ (norm16 >= minMaybeYes) {
+        తిరిగి 0;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping = getDataForMaybe(norm16);
-    uint16_t firstUnit = *mapping;
+    స్థిరరాశి uint16_t *mapping = get_దత్తాంశం_For_Maybe(norm16);
+    uint16_t మొదటి_Unit = *mapping;
     // maybeNo has lccc = 0
-    U_ASSERT((firstUnit & MAPPING_HAS_CCC_LCCC_WORD) == 0 || (*(mapping - 1) & 0xff00) == 0);
-    return firstUnit >> 8;  // tccc
+    U_ASSERT((మొదటి_Unit & MAPPING_HAS_CCC_LCCC_మాట) == 0 || (*(mapping - 1) & 0xff00) == 0);
+    తిరిగి మొదటి_Unit >> 8;  // tccc
 }
 
 // Dual functionality:
 // buffer!=nullptr: normalize
 // buffer==nullptr: isNormalized/quickCheck/spanQuickCheckYes
-const char16_t *
-Normalizer2Impl::makeFCD(const char16_t *src, const char16_t *limit,
-                         ReorderingBuffer *buffer,
-                         UErrorCode &errorCode) const {
+స్థిరరాశి char16_t *
+Normalizer2Impl::makeFCD(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
+                         Reordering_బఫరు *బఫరు,
+                         UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
     // Tracks the last FCD-safe boundary, before lccc=0 or after properly-ordered tccc<=1.
     // Similar to the prevBoundary in the compose() implementation.
-    const char16_t *prevBoundary=src;
+    స్థిరరాశి char16_t *prevBoundary=src;
     int32_t prevFCD16=0;
-    if(limit==nullptr) {
-        src=copyLowPrefixFromNulTerminated(src, minLcccCP, buffer, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return src;
+    ఒకవేళ(హద్దు==శూన్యసూచిక) {
+        src=copy_దిగువ_ఉపసర్గ_From_Nul_Terminated(src, minLcccCP, బఫరు, error_సంకేతం);
+        ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+            తిరిగి src;
         }
-        if(prevBoundary<src) {
+        ఒకవేళ(prevBoundary<src) {
             prevBoundary=src;
             // We know that the previous character's lccc==0.
             // Fetching the fcd16 value was deferred for this below-U+0300 code point.
             prevFCD16=getFCD16(*(src-1));
-            if(prevFCD16>1) {
+            ఒకవేళ(prevFCD16>1) {
                 --prevBoundary;
             }
         }
-        limit=u_strchr(src, 0);
+        హద్దు=u_strchr(src, 0);
     }
 
     // Note: In this function we use buffer->appendZeroCC() because we track
@@ -2336,276 +2336,276 @@ Normalizer2Impl::makeFCD(const char16_t *src, const char16_t *limit,
     // The exception is the call to decomposeShort() which uses the buffer
     // in the normal way.
 
-    const char16_t *prevSrc;
+    స్థిరరాశి char16_t *prevSrc;
     UChar32 c=0;
     uint16_t fcd16=0;
 
-    for(;;) {
+    కొరకు(;;) {
         // count code units with lccc==0
-        for(prevSrc=src; src!=limit;) {
-            if((c=*src)<minLcccCP) {
+        కొరకు(prevSrc=src; src!=హద్దు;) {
+            ఒకవేళ((c=*src)<minLcccCP) {
                 prevFCD16=~c;
                 ++src;
-            } else if(!singleLeadMightHaveNonZeroFCD16(c)) {
+            } లేకపోతే ఒకవేళ(!singleLeadMightHaveNonZeroFCD16(c)) {
                 prevFCD16=0;
                 ++src;
-            } else {
-                if(U16_IS_LEAD(c)) {
+            } లేకపోతే {
+                ఒకవేళ(U16_IS_LEAD(c)) {
                     char16_t c2;
-                    if((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
+                    ఒకవేళ((src+1)!=హద్దు && U16_IS_TRAIL(c2=src[1])) {
                         c=U16_GET_SUPPLEMENTARY(c, c2);
                     }
                 }
-                if((fcd16=getFCD16FromNormData(c))<=0xff) {
+                ఒకవేళ((fcd16=get_FCD16_From_Norm_దత్తాంశం(c))<=0xff) {
                     prevFCD16=fcd16;
-                    src+=U16_LENGTH(c);
-                } else {
-                    break;
+                    src+=U16_నిడివి(c);
+                } లేకపోతే {
+                    ఆపు;
                 }
             }
         }
         // copy these code units all at once
-        if(src!=prevSrc) {
-            if(buffer!=nullptr && !buffer->appendZeroCC(prevSrc, src, errorCode)) {
-                break;
+        ఒకవేళ(src!=prevSrc) {
+            ఒకవేళ(బఫరు!=శూన్యసూచిక && !బఫరు->appendZeroCC(prevSrc, src, error_సంకేతం)) {
+                ఆపు;
             }
-            if(src==limit) {
-                break;
+            ఒకవేళ(src==హద్దు) {
+                ఆపు;
             }
             prevBoundary=src;
             // We know that the previous character's lccc==0.
-            if(prevFCD16<0) {
+            ఒకవేళ(prevFCD16<0) {
                 // Fetching the fcd16 value was deferred for this below-minLcccCP code point.
                 UChar32 prev=~prevFCD16;
-                if(prev<minDecompNoCP) {
+                ఒకవేళ(prev<minDecompNoCP) {
                     prevFCD16=0;
-                } else {
-                    prevFCD16=getFCD16FromNormData(prev);
-                    if(prevFCD16>1) {
+                } లేకపోతే {
+                    prevFCD16=get_FCD16_From_Norm_దత్తాంశం(prev);
+                    ఒకవేళ(prevFCD16>1) {
                         --prevBoundary;
                     }
                 }
-            } else {
-                const char16_t *p=src-1;
-                if(U16_IS_TRAIL(*p) && prevSrc<p && U16_IS_LEAD(*(p-1))) {
+            } లేకపోతే {
+                స్థిరరాశి char16_t *p=src-1;
+                ఒకవేళ(U16_IS_TRAIL(*p) && prevSrc<p && U16_IS_LEAD(*(p-1))) {
                     --p;
                     // Need to fetch the previous character's FCD value because
                     // prevFCD16 was just for the trail surrogate code point.
-                    prevFCD16=getFCD16FromNormData(U16_GET_SUPPLEMENTARY(p[0], p[1]));
+                    prevFCD16=get_FCD16_From_Norm_దత్తాంశం(U16_GET_SUPPLEMENTARY(p[0], p[1]));
                     // Still known to have lccc==0 because its lead surrogate unit had lccc==0.
                 }
-                if(prevFCD16>1) {
+                ఒకవేళ(prevFCD16>1) {
                     prevBoundary=p;
                 }
             }
             // The start of the current character (c).
             prevSrc=src;
-        } else if(src==limit) {
-            break;
+        } లేకపోతే ఒకవేళ(src==హద్దు) {
+            ఆపు;
         }
 
-        src+=U16_LENGTH(c);
+        src+=U16_నిడివి(c);
         // The current character (c) at [prevSrc..src[ has a non-zero lead combining class.
         // Check for proper order, and decompose locally if necessary.
-        if((prevFCD16&0xff)<=(fcd16>>8)) {
+        ఒకవేళ((prevFCD16&0xff)<=(fcd16>>8)) {
             // proper order: prev tccc <= current lccc
-            if((fcd16&0xff)<=1) {
+            ఒకవేళ((fcd16&0xff)<=1) {
                 prevBoundary=src;
             }
-            if(buffer!=nullptr && !buffer->appendZeroCC(c, errorCode)) {
-                break;
+            ఒకవేళ(బఫరు!=శూన్యసూచిక && !బఫరు->appendZeroCC(c, error_సంకేతం)) {
+                ఆపు;
             }
             prevFCD16=fcd16;
-            continue;
-        } else if(buffer==nullptr) {
-            return prevBoundary;  // quick check "no"
-        } else {
+            కొనసాగు;
+        } లేకపోతే ఒకవేళ(బఫరు==శూన్యసూచిక) {
+            తిరిగి prevBoundary;  // quick check "no"
+        } లేకపోతే {
             /*
              * Back out the part of the source that we copied or appended
              * already but is now going to be decomposed.
              * prevSrc is set to after what was copied/appended.
              */
-            buffer->removeSuffix(static_cast<int32_t>(prevSrc - prevBoundary));
+            బఫరు->removeSuffix(static_cast<int32_t>(prevSrc - prevBoundary));
             /*
              * Find the part of the source that needs to be decomposed,
              * up to the next safe boundary.
              */
-            src=findNextFCDBoundary(src, limit);
+            src=కనుగొను_తదుపరి_FCDBoundary(src, హద్దు);
             /*
              * The source text does not fulfill the conditions for FCD.
              * Decompose and reorder a limited piece of the text.
              */
-            decomposeShort(prevBoundary, src, false, false, *buffer, errorCode);
-            if (U_FAILURE(errorCode)) {
-                break;
+            decomposeShort(prevBoundary, src, అబద్ధం, అబద్ధం, *బఫరు, error_సంకేతం);
+            ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+                ఆపు;
             }
             prevBoundary=src;
             prevFCD16=0;
         }
     }
-    return src;
+    తిరిగి src;
 }
 
-void Normalizer2Impl::makeFCDAndAppend(const char16_t *src, const char16_t *limit,
+శూన్య Normalizer2Impl::makeFCDAndAppend(స్థిరరాశి char16_t *src, స్థిరరాశి char16_t *హద్దు,
                                        UBool doMakeFCD,
-                                       UnicodeString &safeMiddle,
-                                       ReorderingBuffer &buffer,
-                                       UErrorCode &errorCode) const {
-    if(!buffer.isEmpty()) {
-        const char16_t *firstBoundaryInSrc=findNextFCDBoundary(src, limit);
-        if(src!=firstBoundaryInSrc) {
-            const char16_t *lastBoundaryInDest=findPreviousFCDBoundary(buffer.getStart(),
-                                                                    buffer.getLimit());
-            int32_t destSuffixLength = static_cast<int32_t>(buffer.getLimit() - lastBoundaryInDest);
-            UnicodeString middle(lastBoundaryInDest, destSuffixLength);
-            buffer.removeSuffix(destSuffixLength);
-            safeMiddle=middle;
-            middle.append(src, static_cast<int32_t>(firstBoundaryInSrc - src));
-            const char16_t *middleStart=middle.getBuffer();
-            makeFCD(middleStart, middleStart+middle.length(), &buffer, errorCode);
-            if(U_FAILURE(errorCode)) {
-                return;
+                                       UnicodeString &సురక్షిత_మధ్య,
+                                       Reordering_బఫరు &బఫరు,
+                                       UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(!బఫరు.is_ఖాళీలు()) {
+        స్థిరరాశి char16_t *మొదటి_Boundary_లోపల_Src=కనుగొను_తదుపరి_FCDBoundary(src, హద్దు);
+        ఒకవేళ(src!=మొదటి_Boundary_లోపల_Src) {
+            స్థిరరాశి char16_t *చివరి_Boundary_లోపల_Dest=కనుగొను_మునుపటి_FCDBoundary(బఫరు.get_ప్రారంభం(),
+                                                                    బఫరు.get_హద్దు());
+            int32_t dest_Suffix_నిడివి = static_cast<int32_t>(బఫరు.get_హద్దు() - చివరి_Boundary_లోపల_Dest);
+            UnicodeString మధ్య(చివరి_Boundary_లోపల_Dest, dest_Suffix_నిడివి);
+            బఫరు.removeSuffix(dest_Suffix_నిడివి);
+            సురక్షిత_మధ్య=మధ్య;
+            మధ్య.append(src, static_cast<int32_t>(మొదటి_Boundary_లోపల_Src - src));
+            స్థిరరాశి char16_t *మధ్య_ప్రారంభం=మధ్య.get_బఫరు();
+            makeFCD(మధ్య_ప్రారంభం, మధ్య_ప్రారంభం+మధ్య.length(), &బఫరు, error_సంకేతం);
+            ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+                తిరిగి;
             }
-            src=firstBoundaryInSrc;
+            src=మొదటి_Boundary_లోపల_Src;
         }
     }
-    if(doMakeFCD) {
-        makeFCD(src, limit, &buffer, errorCode);
-    } else {
-        if(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
-            limit=u_strchr(src, 0);
+    ఒకవేళ(doMakeFCD) {
+        makeFCD(src, హద్దు, &బఫరు, error_సంకేతం);
+    } లేకపోతే {
+        ఒకవేళ(హద్దు==శూన్యసూచిక) {  // appendZeroCC() needs limit!=nullptr
+            హద్దు=u_strchr(src, 0);
         }
-        buffer.appendZeroCC(src, limit, errorCode);
+        బఫరు.appendZeroCC(src, హద్దు, error_సంకేతం);
     }
 }
 
-const char16_t *Normalizer2Impl::findPreviousFCDBoundary(const char16_t *start, const char16_t *p) const {
-    while(start<p) {
-        const char16_t *codePointLimit = p;
+స్థిరరాశి char16_t *Normalizer2Impl::కనుగొను_మునుపటి_FCDBoundary(స్థిరరాశి char16_t *ప్రారంభం, స్థిరరాశి char16_t *p) స్థిరరాశి {
+    అయితే(ప్రారంభం<p) {
+        స్థిరరాశి char16_t *సంకేతం_బిందువు_హద్దు = p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, start, p, c, norm16);
-        if (c < minDecompNoCP || norm16HasDecompBoundaryAfter(norm16)) {
-            return codePointLimit;
+        UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, ప్రారంభం, p, c, norm16);
+        ఒకవేళ (c < minDecompNoCP || norm16HasDecompBoundaryAfter(norm16)) {
+            తిరిగి సంకేతం_బిందువు_హద్దు;
         }
-        if (norm16HasDecompBoundaryBefore(norm16)) {
-            return p;
+        ఒకవేళ (norm16HasDecompBoundaryBefore(norm16)) {
+            తిరిగి p;
         }
     }
-    return p;
+    తిరిగి p;
 }
 
-const char16_t *Normalizer2Impl::findNextFCDBoundary(const char16_t *p, const char16_t *limit) const {
-    while(p<limit) {
-        const char16_t *codePointStart=p;
+స్థిరరాశి char16_t *Normalizer2Impl::కనుగొను_తదుపరి_FCDBoundary(స్థిరరాశి char16_t *p, స్థిరరాశి char16_t *హద్దు) స్థిరరాశి {
+    అయితే(p<హద్దు) {
+        స్థిరరాశి char16_t *సంకేతం_బిందువు_ప్రారంభం=p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
-        if (c < minLcccCP || norm16HasDecompBoundaryBefore(norm16)) {
-            return codePointStart;
+        UCPTRIE_FAST_U16_తదుపరి(normTrie, UCPTRIE_16, p, హద్దు, c, norm16);
+        ఒకవేళ (c < minLcccCP || norm16HasDecompBoundaryBefore(norm16)) {
+            తిరిగి సంకేతం_బిందువు_ప్రారంభం;
         }
-        if (norm16HasDecompBoundaryAfter(norm16)) {
-            return p;
+        ఒకవేళ (norm16HasDecompBoundaryAfter(norm16)) {
+            తిరిగి p;
         }
     }
-    return p;
+    తిరిగి p;
 }
 
 // CanonicalIterator data -------------------------------------------------- ***
 
-CanonIterData::CanonIterData(UErrorCode &errorCode) :
-        mutableTrie(umutablecptrie_open(0, 0, &errorCode)), trie(nullptr),
-        canonStartSets(uprv_deleteUObject, nullptr, errorCode) {}
+Canon_Iter_దత్తాంశం::Canon_Iter_దత్తాంశం(UError_సంకేతం &error_సంకేతం) :
+        mutableTrie(umutablecptrie_open(0, 0, &error_సంకేతం)), trie(శూన్యసూచిక),
+        canon_ప్రారంభం_Sets(uprv_deleteUObject, శూన్యసూచిక, error_సంకేతం) {}
 
-CanonIterData::~CanonIterData() {
+Canon_Iter_దత్తాంశం::~Canon_Iter_దత్తాంశం() {
     umutablecptrie_close(mutableTrie);
     ucptrie_close(trie);
 }
 
-void CanonIterData::addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode) {
-    uint32_t canonValue = umutablecptrie_get(mutableTrie, decompLead);
-    if((canonValue&(CANON_HAS_SET|CANON_VALUE_MASK))==0 && origin!=0) {
+శూన్య Canon_Iter_దత్తాంశం::కూడు_గమ్యం_ప్రారంభం_సమితి(UChar32 origin, UChar32 decompLead, UError_సంకేతం &error_సంకేతం) {
+    uint32_t canon_విలువ = umutablecptrie_get(mutableTrie, decompLead);
+    ఒకవేళ((canon_విలువ&(CANON_HAS_సమితి|CANON_విలువ_ముసుగు))==0 && origin!=0) {
         // origin is the first character whose decomposition starts with
         // the character for which we are setting the value.
-        umutablecptrie_set(mutableTrie, decompLead, canonValue|origin, &errorCode);
-    } else {
+        umutablecptrie_సమితి(mutableTrie, decompLead, canon_విలువ|origin, &error_సంకేతం);
+    } లేకపోతే {
         // origin is not the first character, or it is U+0000.
-        UnicodeSet *set;
-        if((canonValue&CANON_HAS_SET)==0) {
-            LocalPointer<UnicodeSet> lpSet(new UnicodeSet, errorCode);
-            set=lpSet.getAlias();
-            if(U_FAILURE(errorCode)) {
-                return;
+        Unicode_సమితి *సమితి;
+        ఒకవేళ((canon_విలువ&CANON_HAS_సమితి)==0) {
+            Local_సూచిక<Unicode_సమితి> lp_సమితి(కొత్త Unicode_సమితి, error_సంకేతం);
+            సమితి=lp_సమితి.getAlias();
+            ఒకవేళ(U_FAILURE(error_సంకేతం)) {
+                తిరిగి;
             }
-            UChar32 firstOrigin = static_cast<UChar32>(canonValue & CANON_VALUE_MASK);
-            canonValue = (canonValue & ~CANON_VALUE_MASK) | CANON_HAS_SET | static_cast<uint32_t>(canonStartSets.size());
-            umutablecptrie_set(mutableTrie, decompLead, canonValue, &errorCode);
-            canonStartSets.adoptElement(lpSet.orphan(), errorCode);
-            if (U_FAILURE(errorCode)) {
-                return;
+            UChar32 మొదటి_Origin = static_cast<UChar32>(canon_విలువ & CANON_విలువ_ముసుగు);
+            canon_విలువ = (canon_విలువ & ~CANON_విలువ_ముసుగు) | CANON_HAS_సమితి | static_cast<uint32_t>(canon_ప్రారంభం_Sets.size());
+            umutablecptrie_సమితి(mutableTrie, decompLead, canon_విలువ, &error_సంకేతం);
+            canon_ప్రారంభం_Sets.adoptElement(lp_సమితి.orphan(), error_సంకేతం);
+            ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+                తిరిగి;
             }
-            if(firstOrigin!=0) {
-                set->add(firstOrigin);
+            ఒకవేళ(మొదటి_Origin!=0) {
+                సమితి->కూడు(మొదటి_Origin);
             }
-        } else {
-            set = static_cast<UnicodeSet*>(canonStartSets[static_cast<int32_t>(canonValue & CANON_VALUE_MASK)]);
+        } లేకపోతే {
+            సమితి = static_cast<Unicode_సమితి*>(canon_ప్రారంభం_Sets[static_cast<int32_t>(canon_విలువ & CANON_విలువ_ముసుగు)]);
         }
-        set->add(origin);
+        సమితి->కూడు(origin);
     }
 }
 
 // C++ class for friend access to private Normalizer2Impl members.
-class InitCanonIterData {
-public:
-    static void doInit(Normalizer2Impl *impl, UErrorCode &errorCode);
+తరగతి Init_Canon_Iter_దత్తాంశం {
+బహిరంగ:
+    స్థిర శూన్య doInit(Normalizer2Impl *impl, UError_సంకేతం &error_సంకేతం);
 };
 
 U_CDECL_BEGIN
 
 // UInitOnce instantiation function for CanonIterData
-static void U_CALLCONV
-initCanonIterData(Normalizer2Impl *impl, UErrorCode &errorCode) {
-    InitCanonIterData::doInit(impl, errorCode);
+స్థిర శూన్య U_CALLCONV
+init_Canon_Iter_దత్తాంశం(Normalizer2Impl *impl, UError_సంకేతం &error_సంకేతం) {
+    Init_Canon_Iter_దత్తాంశం::doInit(impl, error_సంకేతం);
 }
 
-U_CDECL_END
+U_CDECL_చివర
 
-void InitCanonIterData::doInit(Normalizer2Impl *impl, UErrorCode &errorCode) {
-    U_ASSERT(impl->fCanonIterData == nullptr);
-    impl->fCanonIterData = new CanonIterData(errorCode);
-    if (impl->fCanonIterData == nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+శూన్య Init_Canon_Iter_దత్తాంశం::doInit(Normalizer2Impl *impl, UError_సంకేతం &error_సంకేతం) {
+    U_ASSERT(impl->f_Canon_Iter_దత్తాంశం == శూన్యసూచిక);
+    impl->f_Canon_Iter_దత్తాంశం = కొత్త Canon_Iter_దత్తాంశం(error_సంకేతం);
+    ఒకవేళ (impl->f_Canon_Iter_దత్తాంశం == శూన్యసూచిక) {
+        error_సంకేతం=U_జ్ఞాపకం_కేటాయింపు_ERROR;
     }
-    if (U_SUCCESS(errorCode)) {
-        UChar32 start = 0, end;
+    ఒకవేళ (U_SUCCESS(error_సంకేతం)) {
+        UChar32 ప్రారంభం = 0, చివర;
         uint32_t value;
-        while ((end = ucptrie_getRange(impl->normTrie, start,
+        అయితే ((చివర = ucptrie_getRange(impl->normTrie, ప్రారంభం,
                                        UCPMAP_RANGE_FIXED_LEAD_SURROGATES, Normalizer2Impl::INERT,
-                                       nullptr, nullptr, &value)) >= 0) {
+                                       శూన్యసూచిక, శూన్యసూచిక, &value)) >= 0) {
             // Call Normalizer2Impl::makeCanonIterDataFromNorm16() for a range of same-norm16 characters.
-            if (value != Normalizer2Impl::INERT) {
-                impl->makeCanonIterDataFromNorm16(start, end, value, *impl->fCanonIterData, errorCode);
+            ఒకవేళ (value != Normalizer2Impl::INERT) {
+                impl->make_Canon_Iter_దత్తాంశం_From_Norm16(ప్రారంభం, చివర, value, *impl->f_Canon_Iter_దత్తాంశం, error_సంకేతం);
             }
-            start = end + 1;
+            ప్రారంభం = చివర + 1;
         }
-#ifdef UCPTRIE_DEBUG
-        umutablecptrie_setName(impl->fCanonIterData->mutableTrie, "CanonIterData");
-#endif
-        impl->fCanonIterData->trie = umutablecptrie_buildImmutable(
-            impl->fCanonIterData->mutableTrie, UCPTRIE_TYPE_SMALL, UCPTRIE_VALUE_BITS_32, &errorCode);
-        umutablecptrie_close(impl->fCanonIterData->mutableTrie);
-        impl->fCanonIterData->mutableTrie = nullptr;
+#నిర్వచితమైతే UCPTRIE_DEBUG
+        umutablecptrie_సమితి_Name(impl->f_Canon_Iter_దత్తాంశం->mutableTrie, "CanonIterData");
+#అయితే_ముగింపు
+        impl->f_Canon_Iter_దత్తాంశం->trie = umutablecptrie_buildImmutable(
+            impl->f_Canon_Iter_దత్తాంశం->mutableTrie, UCPTRIE_TYPE_SMALL, UCPTRIE_విలువ_బిట్లు_32, &error_సంకేతం);
+        umutablecptrie_close(impl->f_Canon_Iter_దత్తాంశం->mutableTrie);
+        impl->f_Canon_Iter_దత్తాంశం->mutableTrie = శూన్యసూచిక;
     }
-    if (U_FAILURE(errorCode)) {
-        delete impl->fCanonIterData;
-        impl->fCanonIterData = nullptr;
+    ఒకవేళ (U_FAILURE(error_సంకేతం)) {
+        తొలగించు impl->f_Canon_Iter_దత్తాంశం;
+        impl->f_Canon_Iter_దత్తాంశం = శూన్యసూచిక;
     }
 }
 
-void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, const uint16_t norm16,
-                                                  CanonIterData &newData,
-                                                  UErrorCode &errorCode) const {
-    if(isInert(norm16) ||
+శూన్య Normalizer2Impl::make_Canon_Iter_దత్తాంశం_From_Norm16(UChar32 ప్రారంభం, UChar32 చివర, స్థిరరాశి uint16_t norm16,
+                                                  Canon_Iter_దత్తాంశం &new_దత్తాంశం,
+                                                  UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
+    ఒకవేళ(isInert(norm16) ||
             (minYesNo<=norm16 && norm16<minNoNo) ||
             (minMaybeNo<=norm16 && norm16<minMaybeYes)) {
         // Inert, or 2-way mapping (including Hangul syllable).
@@ -2614,233 +2614,233 @@ void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, co
         // starter's compositions list, and the other characters in
         // 2-way mappings get CANON_NOT_SEGMENT_STARTER set because they are
         // "maybe" characters.
-        return;
+        తిరిగి;
     }
-    for(UChar32 c=start; c<=end; ++c) {
-        uint32_t oldValue = umutablecptrie_get(newData.mutableTrie, c);
-        uint32_t newValue=oldValue;
-        if(isMaybeYesOrNonZeroCC(norm16)) {
+    కొరకు(UChar32 c=ప్రారంభం; c<=చివర; ++c) {
+        uint32_t old_విలువ = umutablecptrie_get(new_దత్తాంశం.mutableTrie, c);
+        uint32_t new_విలువ=old_విలువ;
+        ఒకవేళ(isMaybeYesOrNonZeroCC(norm16)) {
             // not a segment starter if it occurs in a decomposition or has cc!=0
-            newValue|=CANON_NOT_SEGMENT_STARTER;
-            if(norm16<MIN_NORMAL_MAYBE_YES) {
-                newValue|=CANON_HAS_COMPOSITIONS;
+            new_విలువ|=CANON_NOT_SEGMENT_STARTER;
+            ఒకవేళ(norm16<MIN_సాధారణ_MAYBE_YES) {
+                new_విలువ|=CANON_HAS_COMPOSITIONS;
             }
-        } else if(norm16<minYesNo) {
-            newValue|=CANON_HAS_COMPOSITIONS;
-        } else {
+        } లేకపోతే ఒకవేళ(norm16<minYesNo) {
+            new_విలువ|=CANON_HAS_COMPOSITIONS;
+        } లేకపోతే {
             // c has a one-way decomposition
             UChar32 c2=c;
             // Do not modify the whole-range norm16 value.
             uint16_t norm16_2=norm16;
-            if (isDecompNoAlgorithmic(norm16_2)) {
+            ఒకవేళ (isDecompNoAlgorithmic(norm16_2)) {
                 // Maps to an isCompYesAndZeroCC.
                 c2 = mapAlgorithmic(c2, norm16_2);
                 norm16_2 = getRawNorm16(c2);
                 // No compatibility mappings for the CanonicalIterator.
                 U_ASSERT(!(isHangulLV(norm16_2) || isHangulLVT(norm16_2)));
             }
-            if (norm16_2 > minYesNo) {
+            ఒకవేళ (norm16_2 > minYesNo) {
                 // c decomposes, get everything from the variable-length extra data
-                const uint16_t *mapping=getDataForYesOrNo(norm16_2);
-                uint16_t firstUnit=*mapping;
-                int32_t length=firstUnit&MAPPING_LENGTH_MASK;
-                if((firstUnit&MAPPING_HAS_CCC_LCCC_WORD)!=0) {
-                    if(c==c2 && (*(mapping-1)&0xff)!=0) {
-                        newValue|=CANON_NOT_SEGMENT_STARTER;  // original c has cc!=0
+                స్థిరరాశి uint16_t *mapping=get_దత్తాంశం_For_Yes_Or_No(norm16_2);
+                uint16_t మొదటి_Unit=*mapping;
+                int32_t length=మొదటి_Unit&MAPPING_నిడివి_ముసుగు;
+                ఒకవేళ((మొదటి_Unit&MAPPING_HAS_CCC_LCCC_మాట)!=0) {
+                    ఒకవేళ(c==c2 && (*(mapping-1)&0xff)!=0) {
+                        new_విలువ|=CANON_NOT_SEGMENT_STARTER;  // original c has cc!=0
                     }
                 }
                 // Skip empty mappings (no characters in the decomposition).
-                if(length!=0) {
+                ఒకవేళ(length!=0) {
                     ++mapping;  // skip over the firstUnit
                     // add c to first code point's start set
                     int32_t i=0;
-                    U16_NEXT_UNSAFE(mapping, i, c2);
-                    newData.addToStartSet(c, c2, errorCode);
+                    U16_తదుపరి_UNSAFE(mapping, i, c2);
+                    new_దత్తాంశం.కూడు_గమ్యం_ప్రారంభం_సమితి(c, c2, error_సంకేతం);
                     // Set CANON_NOT_SEGMENT_STARTER for each remaining code point of a
                     // one-way mapping. A 2-way mapping is possible here after
                     // intermediate algorithmic mapping.
-                    if(norm16_2>=minNoNo) {
-                        while(i<length) {
-                            U16_NEXT_UNSAFE(mapping, i, c2);
-                            uint32_t c2Value = umutablecptrie_get(newData.mutableTrie, c2);
-                            if((c2Value&CANON_NOT_SEGMENT_STARTER)==0) {
-                                umutablecptrie_set(newData.mutableTrie, c2,
-                                                   c2Value|CANON_NOT_SEGMENT_STARTER, &errorCode);
+                    ఒకవేళ(norm16_2>=minNoNo) {
+                        అయితే(i<length) {
+                            U16_తదుపరి_UNSAFE(mapping, i, c2);
+                            uint32_t c2_విలువ = umutablecptrie_get(new_దత్తాంశం.mutableTrie, c2);
+                            ఒకవేళ((c2_విలువ&CANON_NOT_SEGMENT_STARTER)==0) {
+                                umutablecptrie_సమితి(new_దత్తాంశం.mutableTrie, c2,
+                                                   c2_విలువ|CANON_NOT_SEGMENT_STARTER, &error_సంకేతం);
                             }
                         }
                     }
                 }
-            } else {
+            } లేకపోతే {
                 // c decomposed to c2 algorithmically; c has cc==0
-                newData.addToStartSet(c, c2, errorCode);
+                new_దత్తాంశం.కూడు_గమ్యం_ప్రారంభం_సమితి(c, c2, error_సంకేతం);
             }
         }
-        if(newValue!=oldValue) {
-            umutablecptrie_set(newData.mutableTrie, c, newValue, &errorCode);
+        ఒకవేళ(new_విలువ!=old_విలువ) {
+            umutablecptrie_సమితి(new_దత్తాంశం.mutableTrie, c, new_విలువ, &error_సంకేతం);
         }
     }
 }
 
-UBool Normalizer2Impl::ensureCanonIterData(UErrorCode &errorCode) const {
+UBool Normalizer2Impl::ensure_Canon_Iter_దత్తాంశం(UError_సంకేతం &error_సంకేతం) స్థిరరాశి {
     // Logically const: Synchronized instantiation.
-    Normalizer2Impl *me=const_cast<Normalizer2Impl *>(this);
-    umtx_initOnce(me->fCanonIterDataInitOnce, &initCanonIterData, me, errorCode);
-    return U_SUCCESS(errorCode);
+    Normalizer2Impl *me=const_cast<Normalizer2Impl *>(ఇది);
+    umtx_initOnce(me->f_Canon_Iter_దత్తాంశం_Init_Once, &init_Canon_Iter_దత్తాంశం, me, error_సంకేతం);
+    తిరిగి U_SUCCESS(error_సంకేతం);
 }
 
-int32_t Normalizer2Impl::getCanonValue(UChar32 c) const {
-    return static_cast<int32_t>(ucptrie_get(fCanonIterData->trie, c));
+int32_t Normalizer2Impl::get_Canon_విలువ(UChar32 c) స్థిరరాశి {
+    తిరిగి static_cast<int32_t>(ucptrie_get(f_Canon_Iter_దత్తాంశం->trie, c));
 }
 
-const UnicodeSet &Normalizer2Impl::getCanonStartSet(int32_t n) const {
-    return *static_cast<const UnicodeSet*>(fCanonIterData->canonStartSets[n]);
+స్థిరరాశి Unicode_సమితి &Normalizer2Impl::get_Canon_ప్రారంభం_సమితి(int32_t n) స్థిరరాశి {
+    తిరిగి *static_cast<స్థిరరాశి Unicode_సమితి*>(f_Canon_Iter_దత్తాంశం->canon_ప్రారంభం_Sets[n]);
 }
 
-UBool Normalizer2Impl::isCanonSegmentStarter(UChar32 c) const {
-    return getCanonValue(c)>=0;
+UBool Normalizer2Impl::isCanonSegmentStarter(UChar32 c) స్థిరరాశి {
+    తిరిగి get_Canon_విలువ(c)>=0;
 }
 
-UBool Normalizer2Impl::getCanonStartSet(UChar32 c, UnicodeSet &set) const {
-    int32_t canonValue=getCanonValue(c)&~CANON_NOT_SEGMENT_STARTER;
-    if(canonValue==0) {
-        return false;
+UBool Normalizer2Impl::get_Canon_ప్రారంభం_సమితి(UChar32 c, Unicode_సమితి &సమితి) స్థిరరాశి {
+    int32_t canon_విలువ=get_Canon_విలువ(c)&~CANON_NOT_SEGMENT_STARTER;
+    ఒకవేళ(canon_విలువ==0) {
+        తిరిగి అబద్ధం;
     }
-    set.clear();
-    int32_t value=canonValue&CANON_VALUE_MASK;
-    if((canonValue&CANON_HAS_SET)!=0) {
-        set.addAll(getCanonStartSet(value));
-    } else if(value!=0) {
-        set.add(value);
+    సమితి.clear();
+    int32_t value=canon_విలువ&CANON_విలువ_ముసుగు;
+    ఒకవేళ((canon_విలువ&CANON_HAS_సమితి)!=0) {
+        సమితి.కూడు_All(get_Canon_ప్రారంభం_సమితి(value));
+    } లేకపోతే ఒకవేళ(value!=0) {
+        సమితి.కూడు(value);
     }
-    if((canonValue&CANON_HAS_COMPOSITIONS)!=0) {
+    ఒకవేళ((canon_విలువ&CANON_HAS_COMPOSITIONS)!=0) {
         uint16_t norm16=getRawNorm16(c);
-        if(norm16==JAMO_L) {
+        ఒకవేళ(norm16==JAMO_L) {
             UChar32 syllable=
-                static_cast<UChar32>(Hangul::HANGUL_BASE + (c - Hangul::JAMO_L_BASE) * Hangul::JAMO_VT_COUNT);
-            set.add(syllable, syllable+Hangul::JAMO_VT_COUNT-1);
-        } else {
-            addComposites(getCompositionsList(norm16), set);
+                static_cast<UChar32>(Hangul::HANGUL_పునాది + (c - Hangul::JAMO_L_పునాది) * Hangul::JAMO_VT_లెక్క);
+            సమితి.కూడు(syllable, syllable+Hangul::JAMO_VT_లెక్క-1);
+        } లేకపోతే {
+            కూడు_Composites(getCompositionsList(norm16), సమితి);
         }
     }
-    return true;
+    తిరిగి నిజం;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_చివర
 
 // Normalizer2 data swapping ----------------------------------------------- ***
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-unorm2_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+unorm2_మార్పిడి(స్థిరరాశి UDataSwapper *ds,
+            స్థిరరాశి శూన్య *లోపల_దత్తాంశం, int32_t length, శూన్య *బహిర్గతం_దత్తాంశం,
+            UError_సంకేతం *p_Error_సంకేతం) {
+    స్థిరరాశి UDataInfo *pInfo;
+    int32_t శీర్షిక_కొలత;
 
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+    స్థిరరాశి uint8_t *లోపల_బైట్లు;
+    uint8_t *బహిర్గతం_బైట్లు;
 
-    const int32_t *inIndexes;
-    int32_t indexes[Normalizer2Impl::IX_TOTAL_SIZE+1];
+    స్థిరరాశి int32_t *లోపల_Indexes;
+    int32_t indexes[Normalizer2Impl::IX_మొత్తం_కొలత+1];
 
-    int32_t i, offset, nextOffset, size;
+    int32_t i, స్థానభ్రంశం, తదుపరి_స్థానభ్రంశం, size;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    శీర్షిక_కొలత=udata_మార్పిడి_దత్తాంశం_శీర్షిక(ds, లోపల_దత్తాంశం, length, బహిర్గతం_దత్తాంశం, p_Error_సంకేతం);
+    ఒకవేళ(p_Error_సంకేతం==శూన్యసూచిక || U_FAILURE(*p_Error_సంకేతం)) {
+        తిరిగి 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    uint8_t formatVersion0=pInfo->formatVersion[0];
-    if(!(
-        pInfo->dataFormat[0]==0x4e &&   /* dataFormat="Nrm2" */
-        pInfo->dataFormat[1]==0x72 &&
-        pInfo->dataFormat[2]==0x6d &&
-        pInfo->dataFormat[3]==0x32 &&
+    pInfo=(స్థిరరాశి UDataInfo *)((స్థిరరాశి అక్షరం *)లోపల_దత్తాంశం+4);
+    uint8_t formatVersion0=pInfo->format_సంస్కరణ[0];
+    ఒకవేళ(!(
+        pInfo->దత్తాంశం_Format[0]==0x4e &&   /* dataFormat="Nrm2" */
+        pInfo->దత్తాంశం_Format[1]==0x72 &&
+        pInfo->దత్తాంశం_Format[2]==0x6d &&
+        pInfo->దత్తాంశం_Format[3]==0x32 &&
         (1<=formatVersion0 && formatVersion0<=5)
     )) {
         udata_printError(ds, "unorm2_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as Normalizer2 data\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->దత్తాంశం_Format[0], pInfo->దత్తాంశం_Format[1],
+                         pInfo->దత్తాంశం_Format[2], pInfo->దత్తాంశం_Format[3],
+                         pInfo->format_సంస్కరణ[0]);
+        *p_Error_సంకేతం=U_UNSUPPORTED_ERROR;
+        తిరిగి 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes=(outData == nullptr) ? nullptr : (uint8_t *)outData+headerSize;
+    లోపల_బైట్లు=(స్థిరరాశి uint8_t *)లోపల_దత్తాంశం+శీర్షిక_కొలత;
+    బహిర్గతం_బైట్లు=(బహిర్గతం_దత్తాంశం == శూన్యసూచిక) ? శూన్యసూచిక : (uint8_t *)బహిర్గతం_దత్తాంశం+శీర్షిక_కొలత;
 
-    inIndexes=(const int32_t *)inBytes;
-    int32_t minIndexesLength;
-    if(formatVersion0==1) {
-        minIndexesLength=Normalizer2Impl::IX_MIN_MAYBE_YES+1;
-    } else if(formatVersion0==2) {
-        minIndexesLength=Normalizer2Impl::IX_MIN_YES_NO_MAPPINGS_ONLY+1;
-    } else if(formatVersion0<=4) {
-        minIndexesLength=Normalizer2Impl::IX_MIN_LCCC_CP+1;
-    } else {
-        minIndexesLength=Normalizer2Impl::IX_MIN_MAYBE_NO_COMBINES_FWD+1;
+    లోపల_Indexes=(స్థిరరాశి int32_t *)లోపల_బైట్లు;
+    int32_t min_Indexes_నిడివి;
+    ఒకవేళ(formatVersion0==1) {
+        min_Indexes_నిడివి=Normalizer2Impl::IX_MIN_MAYBE_YES+1;
+    } లేకపోతే ఒకవేళ(formatVersion0==2) {
+        min_Indexes_నిడివి=Normalizer2Impl::IX_MIN_YES_NO_MAPPINGS_ONLY+1;
+    } లేకపోతే ఒకవేళ(formatVersion0<=4) {
+        min_Indexes_నిడివి=Normalizer2Impl::IX_MIN_LCCC_CP+1;
+    } లేకపోతే {
+        min_Indexes_నిడివి=Normalizer2Impl::IX_MIN_MAYBE_NO_COMBINES_FWD+1;
     }
 
-    if(length>=0) {
-        length-=headerSize;
-        if(length<minIndexesLength*4) {
+    ఒకవేళ(length>=0) {
+        length-=శీర్షిక_కొలత;
+        ఒకవేళ(length<min_Indexes_నిడివి*4) {
             udata_printError(ds, "unorm2_swap(): too few bytes (%d after header) for Normalizer2 data\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి 0;
         }
     }
 
     /* read the first few indexes */
-    for(i=0; i<UPRV_LENGTHOF(indexes); ++i) {
-        indexes[i]=udata_readInt32(ds, inIndexes[i]);
+    కొరకు(i=0; i<UPRV_LENGTHOF(indexes); ++i) {
+        indexes[i]=udata_readInt32(ds, లోపల_Indexes[i]);
     }
 
     /* get the total length of the data */
-    size=indexes[Normalizer2Impl::IX_TOTAL_SIZE];
+    size=indexes[Normalizer2Impl::IX_మొత్తం_కొలత];
 
-    if(length>=0) {
-        if(length<size) {
+    ఒకవేళ(length>=0) {
+        ఒకవేళ(length<size) {
             udata_printError(ds, "unorm2_swap(): too few bytes (%d after header) for all of Normalizer2 data\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_సంకేతం=U_సూచీ_OUTOFBOUNDS_ERROR;
+            తిరిగి 0;
         }
 
         /* copy the data for inaccessible bytes */
-        if(inBytes!=outBytes) {
-            uprv_memcpy(outBytes, inBytes, size);
+        ఒకవేళ(లోపల_బైట్లు!=బహిర్గతం_బైట్లు) {
+            uprv_memcpy(బహిర్గతం_బైట్లు, లోపల_బైట్లు, size);
         }
 
-        offset=0;
+        స్థానభ్రంశం=0;
 
         /* swap the int32_t indexes[] */
-        nextOffset=indexes[Normalizer2Impl::IX_NORM_TRIE_OFFSET];
-        ds->swapArray32(ds, inBytes, nextOffset-offset, outBytes, pErrorCode);
-        offset=nextOffset;
+        తదుపరి_స్థానభ్రంశం=indexes[Normalizer2Impl::IX_NORM_TRIE_స్థానభ్రంశం];
+        ds->మార్పిడి_Array32(ds, లోపల_బైట్లు, తదుపరి_స్థానభ్రంశం-స్థానభ్రంశం, బహిర్గతం_బైట్లు, p_Error_సంకేతం);
+        స్థానభ్రంశం=తదుపరి_స్థానభ్రంశం;
 
         /* swap the trie */
-        nextOffset=indexes[Normalizer2Impl::IX_EXTRA_DATA_OFFSET];
-        utrie_swapAnyVersion(ds, inBytes+offset, nextOffset-offset, outBytes+offset, pErrorCode);
-        offset=nextOffset;
+        తదుపరి_స్థానభ్రంశం=indexes[Normalizer2Impl::IX_EXTRA_దత్తాంశం_స్థానభ్రంశం];
+        utrie_మార్పిడి_Any_సంస్కరణ(ds, లోపల_బైట్లు+స్థానభ్రంశం, తదుపరి_స్థానభ్రంశం-స్థానభ్రంశం, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
+        స్థానభ్రంశం=తదుపరి_స్థానభ్రంశం;
 
         /* swap the uint16_t extraData[] */
-        nextOffset=indexes[Normalizer2Impl::IX_SMALL_FCD_OFFSET];
-        ds->swapArray16(ds, inBytes+offset, nextOffset-offset, outBytes+offset, pErrorCode);
-        offset=nextOffset;
+        తదుపరి_స్థానభ్రంశం=indexes[Normalizer2Impl::IX_SMALL_FCD_స్థానభ్రంశం];
+        ds->మార్పిడి_Array16(ds, లోపల_బైట్లు+స్థానభ్రంశం, తదుపరి_స్థానభ్రంశం-స్థానభ్రంశం, బహిర్గతం_బైట్లు+స్థానభ్రంశం, p_Error_సంకేతం);
+        స్థానభ్రంశం=తదుపరి_స్థానభ్రంశం;
 
         /* no need to swap the uint8_t smallFCD[] (new in formatVersion 2) */
-        nextOffset=indexes[Normalizer2Impl::IX_SMALL_FCD_OFFSET+1];
-        offset=nextOffset;
+        తదుపరి_స్థానభ్రంశం=indexes[Normalizer2Impl::IX_SMALL_FCD_స్థానభ్రంశం+1];
+        స్థానభ్రంశం=తదుపరి_స్థానభ్రంశం;
 
-        U_ASSERT(offset==size);
+        U_ASSERT(స్థానభ్రంశం==size);
     }
 
-    return headerSize+size;
+    తిరిగి శీర్షిక_కొలత+size;
 }
 
-#endif  // !UCONFIG_NO_NORMALIZATION
+#అయితే_ముగింపు  // !UCONFIG_NO_NORMALIZATION
